@@ -1,0 +1,2076 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1996 Ben Wing.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/internationalization.info
+@node MULE, Tips, Internationalization, top
+@chapter MULE
+
+  @dfn{MULE} is the name originally given to the version of GNU Emacs
+extended for multi-lingual (and in particular Asian-language) support.
+``MULE'' is short for ``MUlti-Lingual Emacs''.  It is an extension and
+complete rewrite of Nemacs (``Nihon Emacs'' where ``Nihon'' is the
+Japanese word for ``Japan''), which only provided support for Japanese.
+XEmacs refers to its multi-lingual support as @dfn{MULE support} since
+it is based on @dfn{MULE}.
+
+@menu
+* Internationalization Terminology::
+                        Definition of various internationalization terms.
+* Charsets::            Sets of related characters.
+* MULE Characters::     Working with characters in XEmacs/MULE.
+* Composite Characters:: Making new characters by overstriking other ones.
+* Coding Systems::      Ways of representing a string of chars using integers.
+* CCL::                 A special language for writing fast converters.
+* Category Tables::     Subdividing charsets into groups.
+@end menu
+
+@node Internationalization Terminology, Charsets, , MULE
+@section Internationalization Terminology
+
+  In internationalization terminology, a string of text is divided up
+into @dfn{characters}, which are the printable units that make up the
+text.  A single character is (for example) a capital @samp{A}, the
+number @samp{2}, a Katakana character, a Hangul character, a Kanji
+ideograph (an @dfn{ideograph} is a ``picture'' character, such as is
+used in Japanese Kanji, Chinese Hanzi, and Korean Hanja; typically there
+are thousands of such ideographs in each language), etc.  The basic
+property of a character is that it is the smallest unit of text with
+semantic significance in text processing.
+
+  Human beings normally process text visually, so to a first approximation
+a character may be identified with its shape.  Note that the same
+character may be drawn by two different people (or in two different
+fonts) in slightly different ways, although the "basic shape" will be the
+same.  But consider the works of Scott Kim; human beings can recognize
+hugely variant shapes as the "same" character.  Sometimes, especially
+where characters are extremely complicated to write, completely
+different shapes may be defined as the "same" character in national
+standards.  The Taiwanese variant of Hanzi is generally the most
+complicated; over the centuries, the Japanese, Koreans, and the People's
+Republic of China have adopted simplifications of the shape, but the
+line of descent from the original shape is recorded, and the meanings
+and pronunciation of different forms of the same character are
+considered to be identical within each language.  (Of course, it may
+take a specialist to recognize the related form; the point is that the
+relations are standardized, despite the differing shapes.)
+
+  In some cases, the differences will be significant enough that it is
+actually possible to identify two or more distinct shapes that both
+represent the same character.  For example, the lowercase letters
+@samp{a} and @samp{g} each have two distinct possible shapes---the
+@samp{a} can optionally have a curved tail projecting off the top, and
+the @samp{g} can be formed either of two loops, or of one loop and a
+tail hanging off the bottom.  Such distinct possible shapes of a
+character are called @dfn{glyphs}.  The important characteristic of two
+glyphs making up the same character is that the choice between one or
+the other is purely stylistic and has no linguistic effect on a word
+(this is the reason why a capital @samp{A} and lowercase @samp{a}
+are different characters rather than different glyphs---e.g.
+@samp{Aspen} is a city while @samp{aspen} is a kind of tree).
+
+  Note that @dfn{character} and @dfn{glyph} are used differently
+here than elsewhere in XEmacs.
+
+  A @dfn{character set} is essentially a set of related characters.  ASCII,
+for example, is a set of 94 characters (or 128, if you count
+non-printing characters).  Other character sets are ISO8859-1 (ASCII
+plus various accented characters and other international symbols),
+JIS X 0201 (ASCII, more or less, plus half-width Katakana), JIS X 0208
+(Japanese Kanji), JIS X 0212 (a second set of less-used Japanese Kanji),
+GB2312 (Mainland Chinese Hanzi), etc.
+
+  The definition of a character set will implicitly or explicitly give
+it an @dfn{ordering}, a way of assigning a number to each character in
+the set.  For many character sets, there is a natural ordering, for
+example the ``ABC'' ordering of the Roman letters.  But it is not clear
+whether digits should come before or after the letters, and in fact
+different European languages treat the ordering of accented characters
+differently.  It is useful to use the natural order where available, of
+course.  The number assigned to any particular character is called the
+character's @dfn{code point}.  (Within a given character set, each
+character has a unique code point.  Thus the word "set" is ill-chosen;
+different orderings of the same characters are different character sets.
+Identifying characters is simple enough for alphabetic character sets,
+but the difference in ordering can cause great headaches when the same
+thousands of characters are used by different cultures as in the Hanzi.)
+
+  A code point may be broken into a number of @dfn{position codes}.  The
+number of position codes required to index a particular character in a
+character set is called the @dfn{dimension} of the character set.  For
+practical purposes, a position code may be thought of as a byte-sized
+index.  The printing characters of ASCII, being a relatively small
+character set, is of dimension one, and each character in the set is
+indexed using a single position code, in the range 1 through 94.  Use of
+this unusual range, rather than the familiar 33 through 126, is an
+intentional abstraction; to understand the programming issues you must
+break the equation between character sets and encodings.
+
+  JIS X 0208, i.e. Japanese Kanji, has thousands of characters, and is
+of dimension two -- every character is indexed by two position codes,
+each in the range 1 through 94.  (This number ``94'' is not a
+coincidence; we shall see that the JIS position codes were chosen so
+that JIS kanji could be encoded without using codes that in ASCII are
+associated with device control functions.)  Note that the choice of the
+range here is somewhat arbitrary.  You could just as easily index the
+printing characters in ASCII using numbers in the range 0 through 93, 2
+through 95, 3 through 96, etc.  In fact, the standardized
+@emph{encoding} for the ASCII @emph{character set} uses the range 33
+through 126.
+
+  An @dfn{encoding} is a way of numerically representing characters from
+one or more character sets into a stream of like-sized numerical values
+called @dfn{words}; typically these are 8-bit, 16-bit, or 32-bit
+quantities.  If an encoding encompasses only one character set, then the
+position codes for the characters in that character set could be used
+directly.  (This is the case with the trivial cipher used by children,
+assigning 1 to `A', 2 to `B', and so on.)  However, even with ASCII,
+other considerations intrude.  For example, why are the upper- and
+lowercase alphabets separated by 8 characters?  Why do the digits start
+with `0' being assigned the code 48?  In both cases because semantically
+interesting operations (case conversion and numerical value extraction)
+become convenient masking operations.  Other artificial aspects (the
+control characters being assigned to codes 0--31 and 127) are historical
+accidents.  (The use of 127 for @samp{DEL} is an artifact of the "punch
+once" nature of paper tape, for example.)
+
+  Naive use of the position code is not possible, however, if more than
+one character set is to be used in the encoding.  For example, printed
+Japanese text typically requires characters from multiple character sets
+-- ASCII, JIS X 0208, and JIS X 0212, to be specific.  Each of these is
+indexed using one or more position codes in the range 1 through 94, so
+the position codes could not be used directly or there would be no way
+to tell which character was meant.  Different Japanese encodings handle
+this differently -- JIS uses special escape characters to denote
+different character sets; EUC sets the high bit of the position codes
+for JIS X 0208 and JIS X 0212, and puts a special extra byte before each
+JIS X 0212 character; etc.  (JIS, EUC, and most of the other encodings
+you will encounter in files are 7-bit or 8-bit encodings.  There is one
+common 16-bit encoding, which is Unicode; this strives to represent all
+the world's characters in a single large character set.  32-bit
+encodings are often used internally in programs, such as XEmacs with
+MULE support, to simplify the code that manipulates them; however, they
+are not used externally because they are not very space-efficient.)
+
+  A general method of handling text using multiple character sets
+(whether for multilingual text, or simply text in an extremely
+complicated single language like Japanese) is defined in the
+international standard ISO 2022.  ISO 2022 will be discussed in more
+detail later (@pxref{ISO 2022}), but for now suffice it to say that text
+needs control functions (at least spacing), and if escape sequences are
+to be used, an escape sequence introducer.  It was decided to make all
+text streams compatible with ASCII in the sense that the codes 0--31
+(and 128-159) would always be control codes, never graphic characters,
+and where defined by the character set the @samp{SPC} character would be
+assigned code 32, and @samp{DEL} would be assigned 127.  Thus there are
+94 code points remaining if 7 bits are used.  This is the reason that
+most character sets are defined using position codes in the range 1
+through 94.  Then ISO 2022 compatible encodings are produced by shifting
+the position codes 1 to 94 into character codes 33 to 126, or (if 8 bit
+codes are available) into character codes 161 to 254.
+
+  Encodings are classified as either @dfn{modal} or @dfn{non-modal}.  In
+a @dfn{modal encoding}, there are multiple states that the encoding can
+be in, and the interpretation of the values in the stream depends on the
+current global state of the encoding.  Special values in the encoding,
+called @dfn{escape sequences}, are used to change the global state.
+JIS, for example, is a modal encoding.  The bytes @samp{ESC $ B}
+indicate that, from then on, bytes are to be interpreted as position
+codes for JIS X 0208, rather than as ASCII.  This effect is cancelled
+using the bytes @samp{ESC ( B}, which mean ``switch from whatever the
+current state is to ASCII''.  To switch to JIS X 0212, the escape
+sequence @samp{ESC $ ( D}. (Note that here, as is common, the escape
+sequences do in fact begin with @samp{ESC}.  This is not necessarily the
+case, however.  Some encodings use control characters called "locking
+shifts" (effect persists until cancelled) to switch character sets.)
+
+  A @dfn{non-modal encoding} has no global state that extends past the
+character currently being interpreted.  EUC, for example, is a
+non-modal encoding.  Characters in JIS X 0208 are encoded by setting
+the high bit of the position codes, and characters in JIS X 0212 are
+encoded by doing the same but also prefixing the character with the
+byte 0x8F.
+
+  The advantage of a modal encoding is that it is generally more
+space-efficient, and is easily extendible because there are essentially
+an arbitrary number of escape sequences that can be created.  The
+disadvantage, however, is that it is much more difficult to work with
+if it is not being processed in a sequential manner.  In the non-modal
+EUC encoding, for example, the byte 0x41 always refers to the letter
+@samp{A}; whereas in JIS, it could either be the letter @samp{A}, or
+one of the two position codes in a JIS X 0208 character, or one of the
+two position codes in a JIS X 0212 character.  Determining exactly which
+one is meant could be difficult and time-consuming if the previous
+bytes in the string have not already been processed, or impossible if
+they are drawn from an external stream that cannot be rewound.
+
+  Non-modal encodings are further divided into @dfn{fixed-width} and
+@dfn{variable-width} formats.  A fixed-width encoding always uses
+the same number of words per character, whereas a variable-width
+encoding does not.  EUC is a good example of a variable-width
+encoding: one to three bytes are used per character, depending on
+the character set.  16-bit and 32-bit encodings are nearly always
+fixed-width, and this is in fact one of the main reasons for using
+an encoding with a larger word size.  The advantages of fixed-width
+encodings should be obvious.  The advantages of variable-width
+encodings are that they are generally more space-efficient and allow
+for compatibility with existing 8-bit encodings such as ASCII.  (For
+example, in Unicode ASCII characters are simply promoted to a 16-bit
+representation.  That means that every ASCII character contains a
+@samp{NUL} byte; evidently all of the standard string manipulation
+functions will lose badly in a fixed-width Unicode environment.)
+
+  The bytes in an 8-bit encoding are often referred to as @dfn{octets}
+rather than simply as bytes.  This terminology dates back to the days
+before 8-bit bytes were universal, when some computers had 9-bit bytes,
+others had 10-bit bytes, etc.
+
+@node Charsets, MULE Characters, Internationalization Terminology, MULE
+@section Charsets
+
+  A @dfn{charset} in MULE is an object that encapsulates a
+particular character set as well as an ordering of those characters.
+Charsets are permanent objects and are named using symbols, like
+faces.
+
+@defun charsetp object
+This function returns non-@code{nil} if @var{object} is a charset.
+@end defun
+
+@menu
+* Charset Properties::          Properties of a charset.
+* Basic Charset Functions::     Functions for working with charsets.
+* Charset Property Functions::  Functions for accessing charset properties.
+* Predefined Charsets::         Predefined charset objects.
+@end menu
+
+@node Charset Properties, Basic Charset Functions, , Charsets
+@subsection Charset Properties
+
+  Charsets have the following properties:
+
+@table @code
+@item name
+A symbol naming the charset.  Every charset must have a different name;
+this allows a charset to be referred to using its name rather than
+the actual charset object.
+@item doc-string
+A documentation string describing the charset.
+@item registry
+A regular expression matching the font registry field for this character
+set.  For example, both the @code{ascii} and @code{latin-iso8859-1}
+charsets use the registry @code{"ISO8859-1"}.  This field is used to
+choose an appropriate font when the user gives a general font
+specification such as @samp{-*-courier-medium-r-*-140-*}, i.e. a
+14-point upright medium-weight Courier font.
+@item dimension
+Number of position codes used to index a character in the character set.
+XEmacs/MULE can only handle character sets of dimension 1 or 2.
+This property defaults to 1.
+@item chars
+Number of characters in each dimension.  In XEmacs/MULE, the only
+allowed values are 94 or 96. (There are a couple of pre-defined
+character sets, such as ASCII, that do not follow this, but you cannot
+define new ones like this.) Defaults to 94.  Note that if the dimension
+is 2, the character set thus described is 94x94 or 96x96.
+@item columns
+Number of columns used to display a character in this charset.
+Only used in TTY mode. (Under X, the actual width of a character
+can be derived from the font used to display the characters.)
+If unspecified, defaults to the dimension. (This is almost
+always the correct value, because character sets with dimension 2
+are usually ideograph character sets, which need two columns to
+display the intricate ideographs.)
+@item direction
+A symbol, either @code{l2r} (left-to-right) or @code{r2l}
+(right-to-left).  Defaults to @code{l2r}.  This specifies the
+direction that the text should be displayed in, and will be
+left-to-right for most charsets but right-to-left for Hebrew
+and Arabic. (Right-to-left display is not currently implemented.)
+@item final
+Final byte of the standard ISO 2022 escape sequence designating this
+charset.  Must be supplied.  Each combination of (@var{dimension},
+@var{chars}) defines a separate namespace for final bytes, and each
+charset within a particular namespace must have a different final byte.
+Note that ISO 2022 restricts the final byte to the range 0x30 - 0x7E if
+dimension == 1, and 0x30 - 0x5F if dimension == 2.  Note also that final
+bytes in the range 0x30 - 0x3F are reserved for user-defined (not
+official) character sets.  For more information on ISO 2022, see @ref{Coding
+Systems}.
+@item graphic
+0 (use left half of font on output) or 1 (use right half of font on
+output).  Defaults to 0.  This specifies how to convert the position
+codes that index a character in a character set into an index into the
+font used to display the character set.  With @code{graphic} set to 0,
+position codes 33 through 126 map to font indices 33 through 126; with
+it set to 1, position codes 33 through 126 map to font indices 161
+through 254 (i.e. the same number but with the high bit set).  For
+example, for a font whose registry is ISO8859-1, the left half of the
+font (octets 0x20 - 0x7F) is the @code{ascii} charset, while the right
+half (octets 0xA0 - 0xFF) is the @code{latin-iso8859-1} charset.
+@item ccl-program
+A compiled CCL program used to convert a character in this charset into
+an index into the font.  This is in addition to the @code{graphic}
+property.  If a CCL program is defined, the position codes of a
+character will first be processed according to @code{graphic} and
+then passed through the CCL program, with the resulting values used
+to index the font.
+
+  This is used, for example, in the Big5 character set (used in Taiwan).
+This character set is not ISO-2022-compliant, and its size (94x157) does
+not fit within the maximum 96x96 size of ISO-2022-compliant character
+sets.  As a result, XEmacs/MULE splits it (in a rather complex fashion,
+so as to group the most commonly used characters together) into two
+charset objects (@code{big5-1} and @code{big5-2}), each of size 94x94,
+and each charset object uses a CCL program to convert the modified
+position codes back into standard Big5 indices to retrieve a character
+from a Big5 font.
+@end table
+
+  Most of the above properties can only be set when the charset is
+initialized, and cannot be changed later.
+@xref{Charset Property Functions}.
+
+@node Basic Charset Functions, Charset Property Functions, Charset Properties, Charsets
+@subsection Basic Charset Functions
+
+@defun find-charset charset-or-name
+This function retrieves the charset of the given name.  If
+@var{charset-or-name} is a charset object, it is simply returned.
+Otherwise, @var{charset-or-name} should be a symbol.  If there is no
+such charset, @code{nil} is returned.  Otherwise the associated charset
+object is returned.
+@end defun
+
+@defun get-charset name
+This function retrieves the charset of the given name.  Same as
+@code{find-charset} except an error is signalled if there is no such
+charset instead of returning @code{nil}.
+@end defun
+
+@defun charset-list
+This function returns a list of the names of all defined charsets.
+@end defun
+
+@defun make-charset name doc-string props
+This function defines a new character set.  This function is for use
+with MULE support.  @var{name} is a symbol, the name by which the
+character set is normally referred.  @var{doc-string} is a string
+describing the character set.  @var{props} is a property list,
+describing the specific nature of the character set.  The recognized
+properties are @code{registry}, @code{dimension}, @code{columns},
+@code{chars}, @code{final}, @code{graphic}, @code{direction}, and
+@code{ccl-program}, as previously described.
+@end defun
+
+@defun make-reverse-direction-charset charset new-name
+This function makes a charset equivalent to @var{charset} but which goes
+in the opposite direction.  @var{new-name} is the name of the new
+charset.  The new charset is returned.
+@end defun
+
+@defun charset-from-attributes dimension chars final &optional direction
+This function returns a charset with the given @var{dimension},
+@var{chars}, @var{final}, and @var{direction}.  If @var{direction} is
+omitted, both directions will be checked (left-to-right will be returned
+if character sets exist for both directions).
+@end defun
+
+@defun charset-reverse-direction-charset charset
+This function returns the charset (if any) with the same dimension,
+number of characters, and final byte as @var{charset}, but which is
+displayed in the opposite direction.
+@end defun
+
+@node Charset Property Functions, Predefined Charsets, Basic Charset Functions, Charsets
+@subsection Charset Property Functions
+
+  All of these functions accept either a charset name or charset object.
+
+@defun charset-property charset prop
+This function returns property @var{prop} of @var{charset}.
+@xref{Charset Properties}.
+@end defun
+
+  Convenience functions are also provided for retrieving individual
+properties of a charset.
+
+@defun charset-name charset
+This function returns the name of @var{charset}.  This will be a symbol.
+@end defun
+
+@defun charset-description charset
+This function returns the documentation string of @var{charset}.
+@end defun
+
+@defun charset-registry charset
+This function returns the registry of @var{charset}.
+@end defun
+
+@defun charset-dimension charset
+This function returns the dimension of @var{charset}.
+@end defun
+
+@defun charset-chars charset
+This function returns the number of characters per dimension of
+@var{charset}.
+@end defun
+
+@defun charset-width charset
+This function returns the number of display columns per character (in
+TTY mode) of @var{charset}.
+@end defun
+
+@defun charset-direction charset
+This function returns the display direction of @var{charset}---either
+@code{l2r} or @code{r2l}.
+@end defun
+
+@defun charset-iso-final-char charset
+This function returns the final byte of the ISO 2022 escape sequence
+designating @var{charset}.
+@end defun
+
+@defun charset-iso-graphic-plane charset
+This function returns either 0 or 1, depending on whether the position
+codes of characters in @var{charset} map to the left or right half
+of their font, respectively.
+@end defun
+
+@defun charset-ccl-program charset
+This function returns the CCL program, if any, for converting
+position codes of characters in @var{charset} into font indices.
+@end defun
+
+  The two properties of a charset that can currently be set after the
+charset has been created are the CCL program and the font registry.
+
+@defun set-charset-ccl-program charset ccl-program
+This function sets the @code{ccl-program} property of @var{charset} to
+@var{ccl-program}.
+@end defun
+
+@defun set-charset-registry charset registry
+This function sets the @code{registry} property of @var{charset} to
+@var{registry}.
+@end defun
+
+@node Predefined Charsets, , Charset Property Functions, Charsets
+@subsection Predefined Charsets
+
+  The following charsets are predefined in the C code.
+
+@example
+Name                    Type  Fi Gr Dir Registry
+--------------------------------------------------------------
+ascii                    94    B  0  l2r ISO8859-1
+control-1                94       0  l2r ---
+latin-iso8859-1          94    A  1  l2r ISO8859-1
+latin-iso8859-2          96    B  1  l2r ISO8859-2
+latin-iso8859-3          96    C  1  l2r ISO8859-3
+latin-iso8859-4          96    D  1  l2r ISO8859-4
+cyrillic-iso8859-5       96    L  1  l2r ISO8859-5
+arabic-iso8859-6         96    G  1  r2l ISO8859-6
+greek-iso8859-7          96    F  1  l2r ISO8859-7
+hebrew-iso8859-8         96    H  1  r2l ISO8859-8
+latin-iso8859-9          96    M  1  l2r ISO8859-9
+thai-tis620              96    T  1  l2r TIS620
+katakana-jisx0201        94    I  1  l2r JISX0201.1976
+latin-jisx0201           94    J  0  l2r JISX0201.1976
+japanese-jisx0208-1978   94x94 @@  0  l2r JISX0208.1978
+japanese-jisx0208        94x94 B  0  l2r JISX0208.19(83|90)
+japanese-jisx0212        94x94 D  0  l2r JISX0212
+chinese-gb2312           94x94 A  0  l2r GB2312
+chinese-cns11643-1       94x94 G  0  l2r CNS11643.1
+chinese-cns11643-2       94x94 H  0  l2r CNS11643.2
+chinese-big5-1           94x94 0  0  l2r Big5
+chinese-big5-2           94x94 1  0  l2r Big5
+korean-ksc5601           94x94 C  0  l2r KSC5601
+composite                96x96    0  l2r ---
+@end example
+
+  The following charsets are predefined in the Lisp code.
+
+@example
+Name                     Type  Fi Gr Dir Registry
+--------------------------------------------------------------
+arabic-digit             94    2  0  l2r MuleArabic-0
+arabic-1-column          94    3  0  r2l MuleArabic-1
+arabic-2-column          94    4  0  r2l MuleArabic-2
+sisheng                  94    0  0  l2r sisheng_cwnn\|OMRON_UDC_ZH
+chinese-cns11643-3       94x94 I  0  l2r CNS11643.1
+chinese-cns11643-4       94x94 J  0  l2r CNS11643.1
+chinese-cns11643-5       94x94 K  0  l2r CNS11643.1
+chinese-cns11643-6       94x94 L  0  l2r CNS11643.1
+chinese-cns11643-7       94x94 M  0  l2r CNS11643.1
+ethiopic                 94x94 2  0  l2r Ethio
+ascii-r2l                94    B  0  r2l ISO8859-1
+ipa                      96    0  1  l2r MuleIPA
+vietnamese-viscii-lower  96    1  1  l2r VISCII1.1
+vietnamese-viscii-upper  96    2  1  l2r VISCII1.1
+@end example
+
+For all of the above charsets, the dimension and number of columns are
+the same.
+
+  Note that ASCII, Control-1, and Composite are handled specially.
+This is why some of the fields are blank; and some of the filled-in
+fields (e.g. the type) are not really accurate.
+
+@node MULE Characters, Composite Characters, Charsets, MULE
+@section MULE Characters
+
+@defun make-char charset arg1 &optional arg2
+This function makes a multi-byte character from @var{charset} and octets
+@var{arg1} and @var{arg2}.
+@end defun
+
+@defun char-charset character
+This function returns the character set of char @var{character}.
+@end defun
+
+@defun char-octet character &optional n
+This function returns the octet (i.e. position code) numbered @var{n}
+(should be 0 or 1) of char @var{character}.  @var{n} defaults to 0 if omitted.
+@end defun
+
+@defun find-charset-region start end &optional buffer
+This function returns a list of the charsets in the region between
+@var{start} and @var{end}.  @var{buffer} defaults to the current buffer
+if omitted.
+@end defun
+
+@defun find-charset-string string
+This function returns a list of the charsets in @var{string}.
+@end defun
+
+@node Composite Characters, Coding Systems, MULE Characters, MULE
+@section Composite Characters
+
+  Composite characters are not yet completely implemented.
+
+@defun make-composite-char string
+This function converts a string into a single composite character.  The
+character is the result of overstriking all the characters in the
+string.
+@end defun
+
+@defun composite-char-string character
+This function returns a string of the characters comprising a composite
+character.
+@end defun
+
+@defun compose-region start end &optional buffer
+This function composes the characters in the region from @var{start} to
+@var{end} in @var{buffer} into one composite character.  The composite
+character replaces the composed characters.  @var{buffer} defaults to
+the current buffer if omitted.
+@end defun
+
+@defun decompose-region start end &optional buffer
+This function decomposes any composite characters in the region from
+@var{start} to @var{end} in @var{buffer}.  This converts each composite
+character into one or more characters, the individual characters out of
+which the composite character was formed.  Non-composite characters are
+left as-is.  @var{buffer} defaults to the current buffer if omitted.
+@end defun
+
+@node Coding Systems, CCL, Composite Characters, MULE
+@section Coding Systems
+
+  A coding system is an object that defines how text containing multiple
+character sets is encoded into a stream of (typically 8-bit) bytes.  The
+coding system is used to decode the stream into a series of characters
+(which may be from multiple charsets) when the text is read from a file
+or process, and is used to encode the text back into the same format
+when it is written out to a file or process.
+
+  For example, many ISO-2022-compliant coding systems (such as Compound
+Text, which is used for inter-client data under the X Window System) use
+escape sequences to switch between different charsets -- Japanese Kanji,
+for example, is invoked with @samp{ESC $ ( B}; ASCII is invoked with
+@samp{ESC ( B}; and Cyrillic is invoked with @samp{ESC - L}.  See
+@code{make-coding-system} for more information.
+
+  Coding systems are normally identified using a symbol, and the symbol is
+accepted in place of the actual coding system object whenever a coding
+system is called for. (This is similar to how faces and charsets work.)
+
+@defun coding-system-p object
+This function returns non-@code{nil} if @var{object} is a coding system.
+@end defun
+
+@menu
+* Coding System Types::               Classifying coding systems.
+* ISO 2022::                          An international standard for
+                                        charsets and encodings.
+* EOL Conversion::                    Dealing with different ways of denoting
+                                        the end of a line.
+* Coding System Properties::          Properties of a coding system.
+* Basic Coding System Functions::     Working with coding systems.
+* Coding System Property Functions::  Retrieving a coding system's properties.
+* Encoding and Decoding Text::        Encoding and decoding text.
+* Detection of Textual Encoding::     Determining how text is encoded.
+* Big5 and Shift-JIS Functions::      Special functions for these non-standard
+                                        encodings.
+* Predefined Coding Systems::         Coding systems implemented by MULE.
+@end menu
+
+@node Coding System Types, ISO 2022, , Coding Systems
+@subsection Coding System Types
+
+  The coding system type determines the basic algorithm XEmacs will use to
+decode or encode a data stream.  Character encodings will be converted
+to the MULE encoding, escape sequences processed, and newline sequences
+converted to XEmacs's internal representation.  There are three basic
+classes of coding system type: no-conversion, ISO-2022, and special.
+
+  No conversion allows you to look at the file's internal representation.
+Since XEmacs is basically a text editor, "no conversion" does convert
+newline conventions by default.  (Use the 'binary coding-system if this
+is not desired.)
+
+  ISO 2022 (@pxref{ISO 2022}) is the basic international standard regulating
+use of "coded character sets for the exchange of data", ie, text
+streams.  ISO 2022 contains functions that make it possible to encode
+text streams to comply with restrictions of the Internet mail system and
+de facto restrictions of most file systems (eg, use of the separator
+character in file names).  Coding systems which are not ISO 2022
+conformant can be difficult to handle.  Perhaps more important, they are
+not adaptable to multilingual information interchange, with the obvious
+exception of ISO 10646 (Unicode).  (Unicode is partially supported by
+XEmacs with the addition of the Lisp package ucs-conv.)
+
+  The special class of coding systems includes automatic detection, CCL (a
+"little language" embedded as an interpreter, useful for translating
+between variants of a single character set), non-ISO-2022-conformant
+encodings like Unicode, Shift JIS, and Big5, and MULE internal coding.
+(NB: this list is based on XEmacs 21.2.  Terminology may vary slightly
+for other versions of XEmacs and for GNU Emacs 20.)
+
+@table @code
+@item no-conversion
+No conversion, for binary files, and a few special cases of non-ISO-2022
+coding systems where conversion is done by hook functions (usually
+implemented in CCL).  On output, graphic characters that are not in
+ASCII or Latin-1 will be replaced by a @samp{?}. (For a
+no-conversion-encoded buffer, these characters will only be present if
+you explicitly insert them.)
+@item iso2022
+Any ISO-2022-compliant encoding.  Among others, this includes JIS (the
+Japanese encoding commonly used for e-mail), national variants of EUC
+(the standard Unix encoding for Japanese and other languages), and
+Compound Text (an encoding used in X11).  You can specify more specific
+information about the conversion with the @var{flags} argument.
+@item ucs-4
+ISO 10646 UCS-4 encoding.  A 31-bit fixed-width superset of Unicode.
+@item utf-8
+ISO 10646 UTF-8 encoding.  A ``file system safe'' transformation format
+that can be used with both UCS-4 and Unicode.
+@item undecided
+Automatic conversion.  XEmacs attempts to detect the coding system used
+in the file.
+@item shift-jis
+Shift-JIS (a Japanese encoding commonly used in PC operating systems).
+@item big5
+Big5 (the encoding commonly used for Taiwanese).
+@item ccl
+The conversion is performed using a user-written pseudo-code program.
+CCL (Code Conversion Language) is the name of this pseudo-code.  For
+example, CCL is used to map KOI8-R characters (an encoding for Russian
+Cyrillic) to ISO8859-5 (the form used internally by MULE).
+@item internal
+Write out or read in the raw contents of the memory representing the
+buffer's text.  This is primarily useful for debugging purposes, and is
+only enabled when XEmacs has been compiled with @code{DEBUG_XEMACS} set
+(the @samp{--debug} configure option).  @strong{Warning}: Reading in a
+file using @code{internal} conversion can result in an internal
+inconsistency in the memory representing a buffer's text, which will
+produce unpredictable results and may cause XEmacs to crash.  Under
+normal circumstances you should never use @code{internal} conversion.
+@end table
+
+@node ISO 2022, EOL Conversion, Coding System Types, Coding Systems
+@section ISO 2022
+
+  This section briefly describes the ISO 2022 encoding standard.  A more
+thorough treatment is available in the original document of ISO
+2022 as well as various national standards (such as JIS X 0202).
+
+  Character sets (@dfn{charsets}) are classified into the following four
+categories, according to the number of characters in the charset:
+94-charset, 96-charset, 94x94-charset, and 96x96-charset.  This means
+that although an ISO 2022 coding system may have variable width
+characters, each charset used is fixed-width (in contrast to the MULE
+character set and UTF-8, for example).
+
+  ISO 2022 provides for switching between character sets via escape
+sequences.  This switching is somewhat complicated, because ISO 2022
+provides for both legacy applications like Internet mail that accept
+only 7 significant bits in some contexts (RFC 822 headers, for example),
+and more modern "8-bit clean" applications.  It also provides for
+compact and transparent representation of languages like Japanese which
+mix ASCII and a national script (even outside of computer programs).
+
+  First, ISO 2022 codified prevailing practice by dividing the code space
+into "control" and "graphic" regions.  The code points 0x00-0x1F and
+0x80-0x9F are reserved for "control characters", while "graphic
+characters" must be assigned to code points in the regions 0x20-0x7F and
+0xA0-0xFF.  The positions 0x20 and 0x7F are special, and under some
+circumstances must be assigned the graphic character "ASCII SPACE" and
+the control character "ASCII DEL" respectively.
+
+  The various regions are given the name C0 (0x00-0x1F), GL (0x20-0x7F),
+C1 (0x80-0x9F), and GR (0xA0-0xFF).  GL and GR stand for "graphic left"
+and "graphic right", respectively, because of the standard method of
+displaying graphic character sets in tables with the high byte indexing
+columns and the low byte indexing rows.  I don't find it very intuitive,
+but these are called "registers".
+
+  An ISO 2022-conformant encoding for a graphic character set must use a
+fixed number of bytes per character, and the values must fit into a
+single register; that is, each byte must range over either 0x20-0x7F, or
+0xA0-0xFF.  It is not allowed to extend the range of the repertoire of a
+character set by using both ranges at the same.  This is why a standard
+character set such as ISO 8859-1 is actually considered by ISO 2022 to
+be an aggregation of two character sets, ASCII and LATIN-1, and why it
+is technically incorrect to refer to ISO 8859-1 as "Latin 1".  Also, a
+single character's bytes must all be drawn from the same register; this
+is why Shift JIS (for Japanese) and Big 5 (for Chinese) are not ISO
+2022-compatible encodings.
+
+  The reason for this restriction becomes clear when you attempt to define
+an efficient, robust encoding for a language like Japanese.  Like ISO
+8859, Japanese encodings are aggregations of several character sets.  In
+practice, the vast majority of characters are drawn from the "JIS Roman"
+character set (a derivative of ASCII; it won't hurt to think of it as
+ASCII) and the JIS X 0208 standard "basic Japanese" character set
+including not only ideographic characters ("kanji") but syllabic
+Japanese characters ("kana"), a wide variety of symbols, and many
+alphabetic characters (Roman, Greek, and Cyrillic) as well.  Although
+JIS X 0208 includes the whole Roman alphabet, as a 2-byte code it is not
+suited to programming; thus the inclusion of ASCII in the standard
+Japanese encodings.
+
+  For normal Japanese text such as in newspapers, a broad repertoire of
+approximately 3000 characters is used.  Evidently this won't fit into
+one byte; two must be used.  But much of the text processed by Japanese
+computers is computer source code, nearly all of which is ASCII.  A not
+insignificant portion of ordinary text is English (as such or as
+borrowed Japanese vocabulary) or other languages which can represented
+at least approximately in ASCII, as well.  It seems reasonable then to
+represent ASCII in one byte, and JIS X 0208 in two.  And this is exactly
+what the Extended Unix Code for Japanese (EUC-JP) does.  ASCII is
+invoked to the GL register, and JIS X 0208 is invoked to the GR
+register.  Thus, each byte can be tested for its character set by
+looking at the high bit; if set, it is Japanese, if clear, it is ASCII.
+Furthermore, since control characters like newline can never be part of
+a graphic character, even in the case of corruption in transmission the
+stream will be resynchronized at every line break, on the order of 60-80
+bytes.  This coding system requires no escape sequences or special
+control codes to represent 99.9% of all Japanese text.
+
+  Note carefully the distinction between the character sets (ASCII and JIS
+X 0208), the encoding (EUC-JP), and the coding system (ISO 2022).  The
+JIS X 0208 character set is used in three different encodings for
+Japanese, but in ISO-2022-JP it is invoked into GL (so the high bit is
+always clear), in EUC-JP it is invoked into GR (setting the high bit in
+the process), and in Shift JIS the high bit may be set or reset, and the
+significant bits are shifted within the 16-bit character so that the two
+main character sets can coexist with a third (the "halfwidth katakana"
+of JIS X 0201).  As the name implies, the ISO-2022-JP encoding is also a
+version of the ISO-2022 coding system.
+
+  In order to systematically treat subsidiary character sets (like the
+"halfwidth katakana" already mentioned, and the "supplementary kanji" of
+JIS X 0212), four further registers are defined: G0, G1, G2, and G3.
+Unlike GL and GR, they are not logically distinguished by internal
+format.  Instead, the process of "invocation" mentioned earlier is
+broken into two steps: first, a character set is @dfn{designated} to one
+of the registers G0-G3 by use of an @dfn{escape sequence} of the form:
+
+@example
+        ESC [@var{I}] @var{I} @var{F}
+@end example
+
+where @var{I} is an intermediate character or characters in the range
+0x20 - 0x3F, and @var{F}, from the range 0x30-0x7Fm is the final
+character identifying this charset.  (Final characters in the range
+0x30-0x3F are reserved for private use and will never have a publicly
+registered meaning.)
+
+  Then that register is @dfn{invoked} to either GL or GR, either
+automatically (designations to G0 normally involve invocation to GL as
+well), or by use of shifting (affecting only the following character in
+the data stream) or locking (effective until the next designation or
+locking) control sequences.  An encoding conformant to ISO 2022 is
+typically defined by designating the initial contents of the G0-G3
+registers, specifying a 7 or 8 bit environment, and specifying whether
+further designations will be recognized.
+
+  Some examples of character sets and the registered final characters
+@var{F} used to designate them:
+
+@need 1000
+@table @asis
+@item 94-charset
+ ASCII (B), left (J) and right (I) half of JIS X 0201, ...
+@item 96-charset
+ Latin-1 (A), Latin-2 (B), Latin-3 (C), ...
+@item 94x94-charset
+ GB2312 (A), JIS X 0208 (B), KSC5601 (C), ...
+@item 96x96-charset
+ none for the moment
+@end table
+
+  The meanings of the various characters in these sequences, where not
+specified by the ISO 2022 standard (such as the ESC character), are
+assigned by @dfn{ECMA}, the European Computer Manufacturers Association.
+
+  The meaning of intermediate characters are:
+
+@example
+@group
+        $ [0x24]: indicate charset of dimension 2 (94x94 or 96x96).
+        ( [0x28]: designate to G0 a 94-charset whose final byte is @var{F}.
+        ) [0x29]: designate to G1 a 94-charset whose final byte is @var{F}.
+        * [0x2A]: designate to G2 a 94-charset whose final byte is @var{F}.
+        + [0x2B]: designate to G3 a 94-charset whose final byte is @var{F}.
+        , [0x2C]: designate to G0 a 96-charset whose final byte is @var{F}.
+        - [0x2D]: designate to G1 a 96-charset whose final byte is @var{F}.
+        . [0x2E]: designate to G2 a 96-charset whose final byte is @var{F}.
+        / [0x2F]: designate to G3 a 96-charset whose final byte is @var{F}.
+@end group
+@end example
+
+  The comma may be used in files read and written only by MULE, as a MULE
+extension, but this is illegal in ISO 2022.  (The reason is that in ISO
+2022 G0 must be a 94-member character set, with 0x20 assigned the value
+SPACE, and 0x7F assigned the value DEL.)
+
+  Here are examples of designations:
+
+@example
+@group
+        ESC ( B :              designate to G0 ASCII
+        ESC - A :              designate to G1 Latin-1
+        ESC $ ( A or ESC $ A : designate to G0 GB2312
+        ESC $ ( B or ESC $ B : designate to G0 JISX0208
+        ESC $ ) C :            designate to G1 KSC5601
+@end group
+@end example
+
+(The short forms used to designate GB2312 and JIS X 0208 are for
+backwards compatibility; the long forms are preferred.)
+
+  To use a charset designated to G2 or G3, and to use a charset designated
+to G1 in a 7-bit environment, you must explicitly invoke G1, G2, or G3
+into GL.  There are two types of invocation, Locking Shift (forever) and
+Single Shift (one character only).
+
+  Locking Shift is done as follows:
+
+@example
+        LS0 or SI (0x0F): invoke G0 into GL
+        LS1 or SO (0x0E): invoke G1 into GL
+        LS2:  invoke G2 into GL
+        LS3:  invoke G3 into GL
+        LS1R: invoke G1 into GR
+        LS2R: invoke G2 into GR
+        LS3R: invoke G3 into GR
+@end example
+
+  Single Shift is done as follows:
+
+@example
+@group
+        SS2 or ESC N: invoke G2 into GL
+        SS3 or ESC O: invoke G3 into GL
+@end group
+@end example
+
+  The shift functions (such as LS1R and SS3) are represented by control
+characters (from C1) in 8 bit environments and by escape sequences in 7
+bit environments.
+
+(#### Ben says: I think the above is slightly incorrect.  It appears that
+SS2 invokes G2 into GR and SS3 invokes G3 into GR, whereas ESC N and
+ESC O behave as indicated.  The above definitions will not parse
+EUC-encoded text correctly, and it looks like the code in mule-coding.c
+has similar problems.)
+
+  Evidently there are a lot of ISO-2022-compliant ways of encoding
+multilingual text.  Now, in the world, there exist many coding systems
+such as X11's Compound Text, Japanese JUNET code, and so-called EUC
+(Extended UNIX Code); all of these are variants of ISO 2022.
+
+  In MULE, we characterize a version of ISO 2022 by the following
+attributes:
+
+@enumerate
+@item
+The character sets initially designated to G0 thru G3.
+@item
+Whether short form designations are allowed for Japanese and Chinese.
+@item
+Whether ASCII should be designated to G0 before control characters.
+@item
+Whether ASCII should be designated to G0 at the end of line.
+@item
+7-bit environment or 8-bit environment.
+@item
+Whether Locking Shifts are used or not.
+@item
+Whether to use ASCII or the variant JIS X 0201-1976-Roman.
+@item
+Whether to use JIS X 0208-1983 or the older version JIS X 0208-1976.
+@end enumerate
+
+(The last two are only for Japanese.)
+
+  By specifying these attributes, you can create any variant
+of ISO 2022.
+
+  Here are several examples:
+
+@example
+@group
+ISO-2022-JP -- Coding system used in Japanese email (RFC 1463 #### check).
+        1. G0 <- ASCII, G1..3 <- never used
+        2. Yes.
+        3. Yes.
+        4. Yes.
+        5. 7-bit environment
+        6. No.
+        7. Use ASCII
+        8. Use JIS X 0208-1983
+@end group
+
+@group
+ctext -- X11 Compound Text
+        1. G0 <- ASCII, G1 <- Latin-1, G2,3 <- never used.
+        2. No.
+        3. No.
+        4. Yes.
+        5. 8-bit environment.
+        6. No.
+        7. Use ASCII.
+        8. Use JIS X 0208-1983.
+@end group
+
+@group
+euc-china -- Chinese EUC.  Often called the "GB encoding", but that is
+technically incorrect.
+        1. G0 <- ASCII, G1 <- GB 2312, G2,3 <- never used.
+        2. No.
+        3. Yes.
+        4. Yes.
+        5. 8-bit environment.
+        6. No.
+        7. Use ASCII.
+        8. Use JIS X 0208-1983.
+@end group
+
+@group
+ISO-2022-KR -- Coding system used in Korean email.
+        1. G0 <- ASCII, G1 <- KSC 5601, G2,3 <- never used.
+        2. No.
+        3. Yes.
+        4. Yes.
+        5. 7-bit environment.
+        6. Yes.
+        7. Use ASCII.
+        8. Use JIS X 0208-1983.
+@end group
+@end example
+
+MULE creates all of these coding systems by default.
+
+@node EOL Conversion, Coding System Properties, ISO 2022, Coding Systems
+@subsection EOL Conversion
+
+@table @code
+@item nil
+Automatically detect the end-of-line type (LF, CRLF, or CR).  Also
+generate subsidiary coding systems named @code{@var{name}-unix},
+@code{@var{name}-dos}, and @code{@var{name}-mac}, that are identical to
+this coding system but have an EOL-TYPE value of @code{lf}, @code{crlf},
+and @code{cr}, respectively.
+@item lf
+The end of a line is marked externally using ASCII LF.  Since this is
+also the way that XEmacs represents an end-of-line internally,
+specifying this option results in no end-of-line conversion.  This is
+the standard format for Unix text files.
+@item crlf
+The end of a line is marked externally using ASCII CRLF.  This is the
+standard format for MS-DOS text files.
+@item cr
+The end of a line is marked externally using ASCII CR.  This is the
+standard format for Macintosh text files.
+@item t
+Automatically detect the end-of-line type but do not generate subsidiary
+coding systems.  (This value is converted to @code{nil} when stored
+internally, and @code{coding-system-property} will return @code{nil}.)
+@end table
+
+@node Coding System Properties, Basic Coding System Functions, EOL Conversion, Coding Systems
+@subsection Coding System Properties
+
+@table @code
+@item mnemonic
+String to be displayed in the modeline when this coding system is
+active.
+
+@item eol-type
+End-of-line conversion to be used.  It should be one of the types
+listed in @ref{EOL Conversion}.
+
+@item eol-lf
+The coding system which is the same as this one, except that it uses the
+Unix line-breaking convention.
+
+@item eol-crlf
+The coding system which is the same as this one, except that it uses the
+DOS line-breaking convention.
+
+@item eol-cr
+The coding system which is the same as this one, except that it uses the
+Macintosh line-breaking convention.
+
+@item post-read-conversion
+Function called after a file has been read in, to perform the decoding.
+Called with two arguments, @var{start} and @var{end}, denoting a region of
+the current buffer to be decoded.
+
+@item pre-write-conversion
+Function called before a file is written out, to perform the encoding.
+Called with two arguments, @var{start} and @var{end}, denoting a region of
+the current buffer to be encoded.
+@end table
+
+  The following additional properties are recognized if @var{type} is
+@code{iso2022}:
+
+@table @code
+@item charset-g0
+@itemx charset-g1
+@itemx charset-g2
+@itemx charset-g3
+The character set initially designated to the G0 - G3 registers.
+The value should be one of
+
+@itemize @bullet
+@item
+A charset object (designate that character set)
+@item
+@code{nil} (do not ever use this register)
+@item
+@code{t} (no character set is initially designated to the register, but
+may be later on; this automatically sets the corresponding
+@code{force-g*-on-output} property)
+@end itemize
+
+@item force-g0-on-output
+@itemx force-g1-on-output
+@itemx force-g2-on-output
+@itemx force-g3-on-output
+If non-@code{nil}, send an explicit designation sequence on output
+before using the specified register.
+
+@item short
+If non-@code{nil}, use the short forms @samp{ESC $ @@}, @samp{ESC $ A},
+and @samp{ESC $ B} on output in place of the full designation sequences
+@samp{ESC $ ( @@}, @samp{ESC $ ( A}, and @samp{ESC $ ( B}.
+
+@item no-ascii-eol
+If non-@code{nil}, don't designate ASCII to G0 at each end of line on
+output.  Setting this to non-@code{nil} also suppresses other
+state-resetting that normally happens at the end of a line.
+
+@item no-ascii-cntl
+If non-@code{nil}, don't designate ASCII to G0 before control chars on
+output.
+
+@item seven
+If non-@code{nil}, use 7-bit environment on output.  Otherwise, use 8-bit
+environment.
+
+@item lock-shift
+If non-@code{nil}, use locking-shift (SO/SI) instead of single-shift or
+designation by escape sequence.
+
+@item no-iso6429
+If non-@code{nil}, don't use ISO6429's direction specification.
+
+@item escape-quoted
+If non-@code{nil}, literal control characters that are the same as the
+beginning of a recognized ISO 2022 or ISO 6429 escape sequence (in
+particular, ESC (0x1B), SO (0x0E), SI (0x0F), SS2 (0x8E), SS3 (0x8F),
+and CSI (0x9B)) are ``quoted'' with an escape character so that they can
+be properly distinguished from an escape sequence.  (Note that doing
+this results in a non-portable encoding.) This encoding flag is used for
+byte-compiled files.  Note that ESC is a good choice for a quoting
+character because there are no escape sequences whose second byte is a
+character from the Control-0 or Control-1 character sets; this is
+explicitly disallowed by the ISO 2022 standard.
+
+@item input-charset-conversion
+A list of conversion specifications, specifying conversion of characters
+in one charset to another when decoding is performed.  Each
+specification is a list of two elements: the source charset, and the
+destination charset.
+
+@item output-charset-conversion
+A list of conversion specifications, specifying conversion of characters
+in one charset to another when encoding is performed.  The form of each
+specification is the same as for @code{input-charset-conversion}.
+@end table
+
+  The following additional properties are recognized (and required) if
+@var{type} is @code{ccl}:
+
+@table @code
+@item decode
+CCL program used for decoding (converting to internal format).
+
+@item encode
+CCL program used for encoding (converting to external format).
+@end table
+
+  The following properties are used internally:  @var{eol-cr},
+@var{eol-crlf}, @var{eol-lf}, and @var{base}.
+
+@node Basic Coding System Functions, Coding System Property Functions, Coding System Properties, Coding Systems
+@subsection Basic Coding System Functions
+
+@defun find-coding-system coding-system-or-name
+This function retrieves the coding system of the given name.
+
+  If @var{coding-system-or-name} is a coding-system object, it is simply
+returned.  Otherwise, @var{coding-system-or-name} should be a symbol.
+If there is no such coding system, @code{nil} is returned.  Otherwise
+the associated coding system object is returned.
+@end defun
+
+@defun get-coding-system name
+This function retrieves the coding system of the given name.  Same as
+@code{find-coding-system} except an error is signalled if there is no
+such coding system instead of returning @code{nil}.
+@end defun
+
+@defun coding-system-list
+This function returns a list of the names of all defined coding systems.
+@end defun
+
+@defun coding-system-name coding-system
+This function returns the name of the given coding system.
+@end defun
+
+@defun coding-system-base coding-system
+Returns the base coding system (undecided EOL convention)
+coding system.
+@end defun
+
+@defun make-coding-system name type &optional doc-string props
+This function registers symbol @var{name} as a coding system.
+
+@var{type} describes the conversion method used and should be one of
+the types listed in @ref{Coding System Types}.
+
+@var{doc-string} is a string describing the coding system.
+
+@var{props} is a property list, describing the specific nature of the
+character set.  Recognized properties are as in @ref{Coding System
+Properties}.
+@end defun
+
+@defun copy-coding-system old-coding-system new-name
+This function copies @var{old-coding-system} to @var{new-name}.  If
+@var{new-name} does not name an existing coding system, a new one will
+be created.
+@end defun
+
+@defun subsidiary-coding-system coding-system eol-type
+This function returns the subsidiary coding system of
+@var{coding-system} with eol type @var{eol-type}.
+@end defun
+
+@node Coding System Property Functions, Encoding and Decoding Text, Basic Coding System Functions, Coding Systems
+@subsection Coding System Property Functions
+
+@defun coding-system-doc-string coding-system
+This function returns the doc string for @var{coding-system}.
+@end defun
+
+@defun coding-system-type coding-system
+This function returns the type of @var{coding-system}.
+@end defun
+
+@defun coding-system-property coding-system prop
+This function returns the @var{prop} property of @var{coding-system}.
+@end defun
+
+@node Encoding and Decoding Text, Detection of Textual Encoding, Coding System Property Functions, Coding Systems
+@subsection Encoding and Decoding Text
+
+@defun decode-coding-region start end coding-system &optional buffer
+This function decodes the text between @var{start} and @var{end} which
+is encoded in @var{coding-system}.  This is useful if you've read in
+encoded text from a file without decoding it (e.g. you read in a
+JIS-formatted file but used the @code{binary} or @code{no-conversion} coding
+system, so that it shows up as @samp{^[$B!<!+^[(B}).  The length of the
+encoded text is returned.  @var{buffer} defaults to the current buffer
+if unspecified.
+@end defun
+
+@defun encode-coding-region start end coding-system &optional buffer
+This function encodes the text between @var{start} and @var{end} using
+@var{coding-system}.  This will, for example, convert Japanese
+characters into stuff such as @samp{^[$B!<!+^[(B} if you use the JIS
+encoding.  The length of the encoded text is returned.  @var{buffer}
+defaults to the current buffer if unspecified.
+@end defun
+
+@node Detection of Textual Encoding, Big5 and Shift-JIS Functions, Encoding and Decoding Text, Coding Systems
+@subsection Detection of Textual Encoding
+
+@defun coding-category-list
+This function returns a list of all recognized coding categories.
+@end defun
+
+@defun set-coding-priority-list list
+This function changes the priority order of the coding categories.
+@var{list} should be a list of coding categories, in descending order of
+priority.  Unspecified coding categories will be lower in priority than
+all specified ones, in the same relative order they were in previously.
+@end defun
+
+@defun coding-priority-list
+This function returns a list of coding categories in descending order of
+priority.
+@end defun
+
+@defun set-coding-category-system coding-category coding-system
+This function changes the coding system associated with a coding category.
+@end defun
+
+@defun coding-category-system coding-category
+This function returns the coding system associated with a coding category.
+@end defun
+
+@defun detect-coding-region start end &optional buffer
+This function detects coding system of the text in the region between
+@var{start} and @var{end}.  Returned value is a list of possible coding
+systems ordered by priority.  If only ASCII characters are found, it
+returns @code{autodetect} or one of its subsidiary coding systems
+according to a detected end-of-line type.  Optional arg @var{buffer}
+defaults to the current buffer.
+@end defun
+
+@node Big5 and Shift-JIS Functions, Predefined Coding Systems, Detection of Textual Encoding, Coding Systems
+@subsection Big5 and Shift-JIS Functions
+
+  These are special functions for working with the non-standard
+Shift-JIS and Big5 encodings.
+
+@defun decode-shift-jis-char code
+This function decodes a JIS X 0208 character of Shift-JIS coding-system.
+@var{code} is the character code in Shift-JIS as a cons of type bytes.
+The corresponding character is returned.
+@end defun
+
+@defun encode-shift-jis-char character
+This function encodes a JIS X 0208 character @var{character} to
+SHIFT-JIS coding-system.  The corresponding character code in SHIFT-JIS
+is returned as a cons of two bytes.
+@end defun
+
+@defun decode-big5-char code
+This function decodes a Big5 character @var{code} of BIG5 coding-system.
+@var{code} is the character code in BIG5.  The corresponding character
+is returned.
+@end defun
+
+@defun encode-big5-char character
+This function encodes the Big5 character @var{character} to BIG5
+coding-system.  The corresponding character code in Big5 is returned.
+@end defun
+
+@node Predefined Coding Systems, , Big5 and Shift-JIS Functions, Coding Systems
+@subsection Coding Systems Implemented
+
+  MULE initializes most of the commonly used coding systems at XEmacs's
+startup.  A few others are initialized only when the relevant language
+environment is selected and support libraries are loaded.  (NB: The
+following list is based on XEmacs 21.2.19, the development branch at the
+time of writing.  The list may be somewhat different for other
+versions.  Recent versions of GNU Emacs 20 implement a few more rare
+coding systems; work is being done to port these to XEmacs.)
+
+  Unfortunately, there is not a consistent naming convention for character
+sets, and for practical purposes coding systems often take their name
+from their principal character sets (ASCII, KOI8-R, Shift JIS).  Others
+take their names from the coding system (ISO-2022-JP, EUC-KR), and a few
+from their non-text usages (internal, binary).  To provide for this, and
+for the fact that many coding systems have several common names, an
+aliasing system is provided.  Finally, some effort has been made to use
+names that are registered as MIME charsets (this is why the name
+'shift_jis contains that un-Lisp-y underscore).
+
+  There is a systematic naming convention regarding end-of-line (EOL)
+conventions for different systems.  A coding system whose name ends in
+"-unix" forces the assumptions that lines are broken by newlines (0x0A).
+A coding system whose name ends in "-mac" forces the assumptions that
+lines are broken by ASCII CRs (0x0D).  A coding system whose name ends
+in "-dos" forces the assumptions that lines are broken by CRLF sequences
+(0x0D 0x0A).  These subsidiary coding systems are automatically derived
+from a base coding system.  Use of the base coding system implies
+autodetection of the text file convention.  (The fact that the -unix,
+-mac, and -dos are derived from a base system results in them showing up
+as "aliases" in `list-coding-systems'.)  These subsidiaries have a
+consistent modeline indicator as well.  "-dos" coding systems have ":T"
+appended to their modeline indicator, while "-mac" coding systems have
+":t" appended (eg, "ISO8:t" for iso-2022-8-mac).
+
+  In the following table, each coding system is given with its mode line
+indicator in parentheses.  Non-textual coding systems are listed first,
+followed by textual coding systems and their aliases. (The coding system
+subsidiary modeline indicators ":T" and ":t" will be omitted from the
+table of coding systems.)
+
+  ### SJT 1999-08-23 Maybe should order these by language?  Definitely
+need language usage for the ISO-8859 family.
+
+  Note that although true coding system aliases have been implemented for
+XEmacs 21.2, the coding system initialization has not yet been converted
+as of 21.2.19.  So coding systems described as aliases have the same
+properties as the aliased coding system, but will not be equal as Lisp
+objects.
+
+@table @code
+
+@item automatic-conversion
+@itemx undecided
+@itemx undecided-dos
+@itemx undecided-mac
+@itemx undecided-unix
+
+Modeline indicator: @code{Auto}.  A type @code{undecided} coding system.
+Attempts to determine an appropriate coding system from file contents or
+the environment.
+
+@item raw-text
+@itemx no-conversion
+@itemx raw-text-dos
+@itemx raw-text-mac
+@itemx raw-text-unix
+@itemx no-conversion-dos
+@itemx no-conversion-mac
+@itemx no-conversion-unix
+
+Modeline indicator: @code{Raw}.  A type @code{no-conversion} coding system,
+which converts only line-break-codes.  An implementation quirk means
+that this coding system is also used for ISO8859-1.
+
+@item binary
+Modeline indicator: @code{Binary}.  A type @code{no-conversion} coding
+system which does no character coding or EOL conversions.  An alias for
+@code{raw-text-unix}.
+
+@item alternativnyj
+@itemx alternativnyj-dos
+@itemx alternativnyj-mac
+@itemx alternativnyj-unix
+
+Modeline indicator: @code{Cy.Alt}.  A type @code{ccl} coding system used for
+Alternativnyj, an encoding of the Cyrillic alphabet.
+
+@item big5
+@itemx big5-dos
+@itemx big5-mac
+@itemx big5-unix
+
+Modeline indicator: @code{Zh/Big5}.  A type @code{big5} coding system used for
+BIG5, the most common encoding of traditional Chinese as used in Taiwan.
+
+@item cn-gb-2312
+@itemx cn-gb-2312-dos
+@itemx cn-gb-2312-mac
+@itemx cn-gb-2312-unix
+
+Modeline indicator: @code{Zh-GB/EUC}.  A type @code{iso2022} coding system used
+for simplified Chinese (as used in the People's Republic of China), with
+the @code{ascii} (G0), @code{chinese-gb2312} (G1), and @code{sisheng}
+(G2) character sets initially designated.  Chinese EUC (Extended Unix
+Code).
+
+@item ctext-hebrew
+@itemx ctext-hebrew-dos
+@itemx ctext-hebrew-mac
+@itemx ctext-hebrew-unix
+
+Modeline indicator: @code{CText/Hbrw}.  A type @code{iso2022} coding system
+with the @code{ascii} (G0) and @code{hebrew-iso8859-8} (G1) character
+sets initially designated for Hebrew.
+
+@item ctext
+@itemx ctext-dos
+@itemx ctext-mac
+@itemx ctext-unix
+
+Modeline indicator: @code{CText}.  A type @code{iso2022} 8-bit coding system
+with the @code{ascii} (G0) and @code{latin-iso8859-1} (G1) character
+sets initially designated.  X11 Compound Text Encoding.  Often
+mistakenly recognized instead of EUC encodings; usual cause is
+inappropriate setting of @code{coding-priority-list}.
+
+@item escape-quoted
+
+Modeline indicator: @code{ESC/Quot}.  A type @code{iso2022} 8-bit coding
+system with the @code{ascii} (G0) and @code{latin-iso8859-1} (G1)
+character sets initially designated and escape quoting.  Unix EOL
+conversion (ie, no conversion).  It is used for .ELC files.
+
+@item euc-jp
+@itemx euc-jp-dos
+@itemx euc-jp-mac
+@itemx euc-jp-unix
+
+Modeline indicator: @code{Ja/EUC}.  A type @code{iso2022} 8-bit coding system
+with @code{ascii} (G0), @code{japanese-jisx0208} (G1),
+@code{katakana-jisx0201} (G2), and @code{japanese-jisx0212} (G3)
+initially designated.  Japanese EUC (Extended Unix Code).
+
+@item euc-kr
+@itemx euc-kr-dos
+@itemx euc-kr-mac
+@itemx euc-kr-unix
+
+Modeline indicator: @code{ko/EUC}.  A type @code{iso2022} 8-bit coding system
+with @code{ascii} (G0) and @code{korean-ksc5601} (G1) initially
+designated.  Korean EUC (Extended Unix Code).
+
+@item hz-gb-2312
+Modeline indicator: @code{Zh-GB/Hz}.  A type @code{no-conversion} coding
+system with Unix EOL convention (ie, no conversion) using
+post-read-decode and pre-write-encode functions to translate the Hz/ZW
+coding system used for Chinese.
+
+@item iso-2022-7bit
+@itemx iso-2022-7bit-unix
+@itemx iso-2022-7bit-dos
+@itemx iso-2022-7bit-mac
+@itemx iso-2022-7
+
+Modeline indicator: @code{ISO7}.  A type @code{iso2022} 7-bit coding system
+with @code{ascii} (G0) initially designated.  Other character sets must
+be explicitly designated to be used.
+
+@item iso-2022-7bit-ss2
+@itemx iso-2022-7bit-ss2-dos
+@itemx iso-2022-7bit-ss2-mac
+@itemx iso-2022-7bit-ss2-unix
+
+Modeline indicator: @code{ISO7/SS}.  A type @code{iso2022} 7-bit coding system
+with @code{ascii} (G0) initially designated.  Other character sets must
+be explicitly designated to be used.  SS2 is used to invoke a
+96-charset, one character at a time.
+
+@item iso-2022-8
+@itemx iso-2022-8-dos
+@itemx iso-2022-8-mac
+@itemx iso-2022-8-unix
+
+Modeline indicator: @code{ISO8}.  A type @code{iso2022} 8-bit coding system
+with @code{ascii} (G0) and @code{latin-iso8859-1} (G1) initially
+designated.  Other character sets must be explicitly designated to be
+used.  No single-shift or locking-shift.
+
+@item iso-2022-8bit-ss2
+@itemx iso-2022-8bit-ss2-dos
+@itemx iso-2022-8bit-ss2-mac
+@itemx iso-2022-8bit-ss2-unix
+
+Modeline indicator: @code{ISO8/SS}.  A type @code{iso2022} 8-bit coding system
+with @code{ascii} (G0) and @code{latin-iso8859-1} (G1) initially
+designated.  Other character sets must be explicitly designated to be
+used.  SS2 is used to invoke a 96-charset, one character at a time.
+
+@item iso-2022-int-1
+@itemx iso-2022-int-1-dos
+@itemx iso-2022-int-1-mac
+@itemx iso-2022-int-1-unix
+
+Modeline indicator: @code{INT-1}.  A type @code{iso2022} 7-bit coding system
+with @code{ascii} (G0) and @code{korean-ksc5601} (G1) initially
+designated.  ISO-2022-INT-1.
+
+@item iso-2022-jp-1978-irv
+@itemx iso-2022-jp-1978-irv-dos
+@itemx iso-2022-jp-1978-irv-mac
+@itemx iso-2022-jp-1978-irv-unix
+
+Modeline indicator: @code{Ja-78/7bit}.  A type @code{iso2022} 7-bit coding
+system.  For compatibility with old Japanese terminals; if you need to
+know, look at the source.
+
+@item iso-2022-jp
+@itemx iso-2022-jp-2 (ISO7/SS)
+@itemx iso-2022-jp-dos
+@itemx iso-2022-jp-mac
+@itemx iso-2022-jp-unix
+@itemx iso-2022-jp-2-dos
+@itemx iso-2022-jp-2-mac
+@itemx iso-2022-jp-2-unix
+
+Modeline indicator: @code{MULE/7bit}.  A type @code{iso2022} 7-bit coding
+system with @code{ascii} (G0) initially designated, and complex
+specifications to insure backward compatibility with old Japanese
+systems.  Used for communication with mail and news in Japan.  The "-2"
+versions also use SS2 to invoke a 96-charset one character at a time.
+
+@item iso-2022-kr
+Modeline indicator: @code{Ko/7bit}  A type @code{iso2022} 7-bit coding
+system with @code{ascii} (G0) and @code{korean-ksc5601} (G1) initially
+designated.  Used for e-mail in Korea.
+
+@item iso-2022-lock
+@itemx iso-2022-lock-dos
+@itemx iso-2022-lock-mac
+@itemx iso-2022-lock-unix
+
+Modeline indicator: @code{ISO7/Lock}.  A type @code{iso2022} 7-bit coding
+system with @code{ascii} (G0) initially designated, using Locking-Shift
+to invoke a 96-charset.
+
+@item iso-8859-1
+@itemx iso-8859-1-dos
+@itemx iso-8859-1-mac
+@itemx iso-8859-1-unix
+
+Due to implementation, this is not a type @code{iso2022} coding system,
+but rather an alias for the @code{raw-text} coding system.
+
+@item iso-8859-2
+@itemx iso-8859-2-dos
+@itemx iso-8859-2-mac
+@itemx iso-8859-2-unix
+
+Modeline indicator: @code{MIME/Ltn-2}.  A type @code{iso2022} coding
+system with @code{ascii} (G0) and @code{latin-iso8859-2} (G1) initially
+invoked.
+
+@item iso-8859-3
+@itemx iso-8859-3-dos
+@itemx iso-8859-3-mac
+@itemx iso-8859-3-unix
+
+Modeline indicator: @code{MIME/Ltn-3}.  A type @code{iso2022} coding system
+with @code{ascii} (G0) and @code{latin-iso8859-3} (G1) initially
+invoked.
+
+@item iso-8859-4
+@itemx iso-8859-4-dos
+@itemx iso-8859-4-mac
+@itemx iso-8859-4-unix
+
+Modeline indicator: @code{MIME/Ltn-4}.  A type @code{iso2022} coding system
+with @code{ascii} (G0) and @code{latin-iso8859-4} (G1) initially
+invoked.
+
+@item iso-8859-5
+@itemx iso-8859-5-dos
+@itemx iso-8859-5-mac
+@itemx iso-8859-5-unix
+
+Modeline indicator: @code{ISO8/Cyr}.  A type @code{iso2022} coding system with
+@code{ascii} (G0) and @code{cyrillic-iso8859-5} (G1) initially invoked.
+
+@item iso-8859-7
+@itemx iso-8859-7-dos
+@itemx iso-8859-7-mac
+@itemx iso-8859-7-unix
+
+Modeline indicator: @code{Grk}.  A type @code{iso2022} coding system with
+@code{ascii} (G0) and @code{greek-iso8859-7} (G1) initially invoked.
+
+@item iso-8859-8
+@itemx iso-8859-8-dos
+@itemx iso-8859-8-mac
+@itemx iso-8859-8-unix
+
+Modeline indicator: @code{MIME/Hbrw}.  A type @code{iso2022} coding system with
+@code{ascii} (G0) and @code{hebrew-iso8859-8} (G1) initially invoked.
+
+@item iso-8859-9
+@itemx iso-8859-9-dos
+@itemx iso-8859-9-mac
+@itemx iso-8859-9-unix
+
+Modeline indicator: @code{MIME/Ltn-5}.  A type @code{iso2022} coding system
+with @code{ascii} (G0) and @code{latin-iso8859-9} (G1) initially
+invoked.
+
+@item koi8-r
+@itemx koi8-r-dos
+@itemx koi8-r-mac
+@itemx koi8-r-unix
+
+Modeline indicator: @code{KOI8}.  A type @code{ccl} coding-system used for
+KOI8-R, an encoding of the Cyrillic alphabet.
+
+@item shift_jis
+@itemx shift_jis-dos
+@itemx shift_jis-mac
+@itemx shift_jis-unix
+
+Modeline indicator: @code{Ja/SJIS}.  A type @code{shift-jis} coding-system
+implementing the Shift-JIS encoding for Japanese.  The underscore is to
+conform to the MIME charset implementing this encoding.
+
+@item tis-620
+@itemx tis-620-dos
+@itemx tis-620-mac
+@itemx tis-620-unix
+
+Modeline indicator: @code{TIS620}.  A type @code{ccl} encoding for Thai.  The
+external encoding is defined by TIS620, the internal encoding is
+peculiar to MULE, and called @code{thai-xtis}.
+
+@item viqr
+
+Modeline indicator: @code{VIQR}.  A type @code{no-conversion} coding
+system with Unix EOL convention (ie, no conversion) using
+post-read-decode and pre-write-encode functions to translate the VIQR
+coding system for Vietnamese.
+
+@item viscii
+@itemx viscii-dos
+@itemx viscii-mac
+@itemx viscii-unix
+
+Modeline indicator: @code{VISCII}.  A type @code{ccl} coding-system used
+for VISCII 1.1 for Vietnamese.  Differs slightly from VSCII; VISCII is
+given priority by XEmacs.
+
+@item vscii
+@itemx vscii-dos
+@itemx vscii-mac
+@itemx vscii-unix
+
+Modeline indicator: @code{VSCII}.  A type @code{ccl} coding-system used
+for VSCII 1.1 for Vietnamese.  Differs slightly from VISCII, which is
+given priority by XEmacs.  Use
+@code{(prefer-coding-system 'vietnamese-vscii)} to give priority to VSCII.
+
+@end table
+
+@node CCL, Category Tables, Coding Systems, MULE
+@section CCL
+
+  CCL (Code Conversion Language) is a simple structured programming
+language designed for character coding conversions.  A CCL program is
+compiled to CCL code (represented by a vector of integers) and executed
+by the CCL interpreter embedded in Emacs.  The CCL interpreter
+implements a virtual machine with 8 registers called @code{r0}, ...,
+@code{r7}, a number of control structures, and some I/O operators.  Take
+care when using registers @code{r0} (used in implicit @dfn{set}
+statements) and especially @code{r7} (used internally by several
+statements and operations, especially for multiple return values and I/O
+operations).
+
+  CCL is used for code conversion during process I/O and file I/O for
+non-ISO2022 coding systems.  (It is the only way for a user to specify a
+code conversion function.)  It is also used for calculating the code
+point of an X11 font from a character code.  However, since CCL is
+designed as a powerful programming language, it can be used for more
+generic calculation where efficiency is demanded.  A combination of
+three or more arithmetic operations can be calculated faster by CCL than
+by Emacs Lisp.
+
+  @strong{Warning:}  The code in @file{src/mule-ccl.c} and
+@file{$packages/lisp/mule-base/mule-ccl.el} is the definitive
+description of CCL's semantics.  The previous version of this section
+contained several typos and obsolete names left from earlier versions of
+MULE, and many may remain.  (I am not an experienced CCL programmer; the
+few who know CCL well find writing English painful.)
+
+  A CCL program transforms an input data stream into an output data
+stream.  The input stream, held in a buffer of constant bytes, is left
+unchanged.  The buffer may be filled by an external input operation,
+taken from an Emacs buffer, or taken from a Lisp string.  The output
+buffer is a dynamic array of bytes, which can be written by an external
+output operation, inserted into an Emacs buffer, or returned as a Lisp
+string.
+
+  A CCL program is a (Lisp) list containing two or three members.  The
+first member is the @dfn{buffer magnification}, which indicates the
+required minimum size of the output buffer as a multiple of the input
+buffer.  It is followed by the @dfn{main block} which executes while
+there is input remaining, and an optional @dfn{EOF block} which is
+executed when the input is exhausted.  Both the main block and the EOF
+block are CCL blocks.
+
+  A @dfn{CCL block} is either a CCL statement or list of CCL statements.
+A @dfn{CCL statement} is either a @dfn{set statement} (either an integer
+or an @dfn{assignment}, which is a list of a register to receive the
+assignment, an assignment operator, and an expression) or a @dfn{control
+statement} (a list starting with a keyword, whose allowable syntax
+depends on the keyword).
+
+@menu
+* CCL Syntax::          CCL program syntax in BNF notation.
+* CCL Statements::      Semantics of CCL statements.
+* CCL Expressions::     Operators and expressions in CCL.
+* Calling CCL::         Running CCL programs.
+* CCL Examples::        The encoding functions for Big5 and KOI-8.
+@end menu
+
+@node    CCL Syntax, CCL Statements, , CCL
+@comment Node,       Next,           Previous,  Up
+@subsection CCL Syntax
+
+  The full syntax of a CCL program in BNF notation:
+
+@format
+CCL_PROGRAM :=
+        (BUFFER_MAGNIFICATION
+         CCL_MAIN_BLOCK
+         [ CCL_EOF_BLOCK ])
+
+BUFFER_MAGNIFICATION := integer
+CCL_MAIN_BLOCK := CCL_BLOCK
+CCL_EOF_BLOCK := CCL_BLOCK
+
+CCL_BLOCK :=
+        STATEMENT | (STATEMENT [STATEMENT ...])
+STATEMENT :=
+        SET | IF | BRANCH | LOOP | REPEAT | BREAK | READ | WRITE
+        | CALL | END
+
+SET :=
+        (REG = EXPRESSION)
+        | (REG ASSIGNMENT_OPERATOR EXPRESSION)
+        | integer
+
+EXPRESSION := ARG | (EXPRESSION OPERATOR ARG)
+
+IF := (if EXPRESSION CCL_BLOCK [CCL_BLOCK])
+BRANCH := (branch EXPRESSION CCL_BLOCK [CCL_BLOCK ...])
+LOOP := (loop STATEMENT [STATEMENT ...])
+BREAK := (break)
+REPEAT :=
+        (repeat)
+        | (write-repeat [REG | integer | string])
+        | (write-read-repeat REG [integer | ARRAY])
+READ :=
+        (read REG ...)
+        | (read-if (REG OPERATOR ARG) CCL_BLOCK CCL_BLOCK)
+        | (read-branch REG CCL_BLOCK [CCL_BLOCK ...])
+WRITE :=
+        (write REG ...)
+        | (write EXPRESSION)
+        | (write integer) | (write string) | (write REG ARRAY)
+        | string
+CALL := (call ccl-program-name)
+END := (end)
+
+REG := r0 | r1 | r2 | r3 | r4 | r5 | r6 | r7
+ARG := REG | integer
+OPERATOR :=
+        + | - | * | / | % | & | '|' | ^ | << | >> | <8 | >8 | //
+        | < | > | == | <= | >= | != | de-sjis | en-sjis
+ASSIGNMENT_OPERATOR :=
+        += | -= | *= | /= | %= | &= | '|=' | ^= | <<= | >>=
+ARRAY := '[' integer ... ']'
+@end format
+
+@node    CCL Statements, CCL Expressions, CCL Syntax, CCL
+@comment Node,           Next,            Previous,   Up
+@subsection CCL Statements
+
+  The Emacs Code Conversion Language provides the following statement
+types: @dfn{set}, @dfn{if}, @dfn{branch}, @dfn{loop}, @dfn{repeat},
+@dfn{break}, @dfn{read}, @dfn{write}, @dfn{call}, and @dfn{end}.
+
+@heading Set statement:
+
+  The @dfn{set} statement has three variants with the syntaxes
+@samp{(@var{reg} = @var{expression})},
+@samp{(@var{reg} @var{assignment_operator} @var{expression})}, and
+@samp{@var{integer}}.  The assignment operator variation of the
+@dfn{set} statement works the same way as the corresponding C expression
+statement does.  The assignment operators are @code{+=}, @code{-=},
+@code{*=}, @code{/=}, @code{%=}, @code{&=}, @code{|=}, @code{^=},
+@code{<<=}, and @code{>>=}, and they have the same meanings as in C.  A
+"naked integer" @var{integer} is equivalent to a @var{set} statement of
+the form @code{(r0 = @var{integer})}.
+
+@heading I/O statements:
+
+  The @dfn{read} statement takes one or more registers as arguments.  It
+reads one byte (a C char) from the input into each register in turn.
+
+  The @dfn{write} takes several forms.  In the form @samp{(write @var{reg}
+...)} it takes one or more registers as arguments and writes each in
+turn to the output.  The integer in a register (interpreted as an
+Emchar) is encoded to multibyte form (ie, Bufbytes) and written to the
+current output buffer.  If it is less than 256, it is written as is.
+The forms @samp{(write @var{expression})} and @samp{(write
+@var{integer})} are treated analogously.  The form @samp{(write
+@var{string})} writes the constant string to the output.  A
+"naked string" @samp{@var{string}} is equivalent to the statement @samp{(write
+@var{string})}.  The form @samp{(write @var{reg} @var{array})} writes
+the @var{reg}th element of the @var{array} to the output.
+
+@heading Conditional statements:
+
+  The @dfn{if} statement takes an @var{expression}, a @var{CCL block}, and
+an optional @var{second CCL block} as arguments.  If the
+@var{expression} evaluates to non-zero, the first @var{CCL block} is
+executed.  Otherwise, if there is a @var{second CCL block}, it is
+executed.
+
+  The @dfn{read-if} variant of the @dfn{if} statement takes an
+@var{expression}, a @var{CCL block}, and an optional @var{second CCL
+block} as arguments.  The @var{expression} must have the form
+@code{(@var{reg} @var{operator} @var{operand})} (where @var{operand} is
+a register or an integer).  The @code{read-if} statement first reads
+from the input into the first register operand in the @var{expression},
+then conditionally executes a CCL block just as the @code{if} statement
+does.
+
+  The @dfn{branch} statement takes an @var{expression} and one or more CCL
+blocks as arguments.  The CCL blocks are treated as a zero-indexed
+array, and the @code{branch} statement uses the @var{expression} as the
+index of the CCL block to execute.  Null CCL blocks may be used as
+no-ops, continuing execution with the statement following the
+@code{branch} statement in the containing CCL block.  Out-of-range
+values for the @var{expression} are also treated as no-ops.
+
+  The @dfn{read-branch} variant of the @dfn{branch} statement takes an
+@var{register}, a @var{CCL block}, and an optional @var{second CCL
+block} as arguments.  The @code{read-branch} statement first reads from
+the input into the @var{register}, then conditionally executes a CCL
+block just as the @code{branch} statement does.
+
+@heading Loop control statements:
+
+  The @dfn{loop} statement creates a block with an implied jump from the
+end of the block back to its head.  The loop is exited on a @code{break}
+statement, and continued without executing the tail by a @code{repeat}
+statement.
+
+  The @dfn{break} statement, written @samp{(break)}, terminates the
+current loop and continues with the next statement in the current
+block.
+
+  The @dfn{repeat} statement has three variants, @code{repeat},
+@code{write-repeat}, and @code{write-read-repeat}.  Each continues the
+current loop from its head, possibly after performing I/O.
+@code{repeat} takes no arguments and does no I/O before jumping.
+@code{write-repeat} takes a single argument (a register, an
+integer, or a string), writes it to the output, then jumps.
+@code{write-read-repeat} takes one or two arguments.  The first must
+be a register.  The second may be an integer or an array; if absent, it
+is implicitly set to the first (register) argument.
+@code{write-read-repeat} writes its second argument to the output, then
+reads from the input into the register, and finally jumps.  See the
+@code{write} and @code{read} statements for the semantics of the I/O
+operations for each type of argument.
+
+@heading Other control statements:
+
+  The @dfn{call} statement, written @samp{(call @var{ccl-program-name})},
+executes a CCL program as a subroutine.  It does not return a value to
+the caller, but can modify the register status.
+
+  The @dfn{end} statement, written @samp{(end)}, terminates the CCL
+program successfully, and returns to caller (which may be a CCL
+program).  It does not alter the status of the registers.
+
+@node    CCL Expressions, Calling CCL, CCL Statements, CCL
+@comment Node,            Next,        Previous,       Up
+@subsection CCL Expressions
+
+  CCL, unlike Lisp, uses infix expressions.  The simplest CCL expressions
+consist of a single @var{operand}, either a register (one of @code{r0},
+..., @code{r0}) or an integer.  Complex expressions are lists of the
+form @code{( @var{expression} @var{operator} @var{operand} )}.  Unlike
+C, assignments are not expressions.
+
+  In the following table, @var{X} is the target resister for a @dfn{set}.
+In subexpressions, this is implicitly @code{r7}.  This means that
+@code{>8}, @code{//}, @code{de-sjis}, and @code{en-sjis} cannot be used
+freely in subexpressions, since they return parts of their values in
+@code{r7}.  @var{Y} may be an expression, register, or integer, while
+@var{Z} must be a register or an integer.
+
+@multitable @columnfractions .22 .14 .09 .55
+@item Name @tab Operator @tab Code @tab C-like Description
+@item CCL_PLUS @tab @code{+} @tab 0x00 @tab X = Y + Z
+@item CCL_MINUS @tab @code{-} @tab 0x01 @tab X = Y - Z
+@item CCL_MUL @tab @code{*} @tab 0x02 @tab X = Y * Z
+@item CCL_DIV @tab @code{/} @tab 0x03 @tab X = Y / Z
+@item CCL_MOD @tab @code{%} @tab 0x04 @tab X = Y % Z
+@item CCL_AND @tab @code{&} @tab 0x05 @tab X = Y & Z
+@item CCL_OR @tab @code{|} @tab 0x06 @tab X = Y | Z
+@item CCL_XOR @tab @code{^} @tab 0x07 @tab X = Y ^ Z
+@item CCL_LSH @tab @code{<<} @tab 0x08 @tab X = Y << Z
+@item CCL_RSH @tab @code{>>} @tab 0x09 @tab X = Y >> Z
+@item CCL_LSH8 @tab @code{<8} @tab 0x0A @tab X = (Y << 8) | Z
+@item CCL_RSH8 @tab @code{>8} @tab 0x0B @tab X = Y >> 8, r[7] = Y & 0xFF
+@item CCL_DIVMOD @tab @code{//} @tab 0x0C @tab X = Y / Z, r[7] = Y % Z
+@item CCL_LS @tab @code{<} @tab 0x10 @tab X = (X < Y)
+@item CCL_GT @tab @code{>} @tab 0x11 @tab X = (X > Y)
+@item CCL_EQ @tab @code{==} @tab 0x12 @tab X = (X == Y)
+@item CCL_LE @tab @code{<=} @tab 0x13 @tab X = (X <= Y)
+@item CCL_GE @tab @code{>=} @tab 0x14 @tab X = (X >= Y)
+@item CCL_NE @tab @code{!=} @tab 0x15 @tab X = (X != Y)
+@item CCL_ENCODE_SJIS @tab @code{en-sjis} @tab 0x16 @tab X = HIGHER_BYTE (SJIS (Y, Z))
+@item @tab @tab @tab r[7] = LOWER_BYTE (SJIS (Y, Z)
+@item CCL_DECODE_SJIS @tab @code{de-sjis} @tab 0x17 @tab X = HIGHER_BYTE (DE-SJIS (Y, Z))
+@item @tab @tab @tab r[7] = LOWER_BYTE (DE-SJIS (Y, Z))
+@end multitable
+
+  The CCL operators are as in C, with the addition of CCL_LSH8, CCL_RSH8,
+CCL_DIVMOD, CCL_ENCODE_SJIS, and CCL_DECODE_SJIS.  The CCL_ENCODE_SJIS
+and CCL_DECODE_SJIS treat their first and second bytes as the high and
+low bytes of a two-byte character code.  (SJIS stands for Shift JIS, an
+encoding of Japanese characters used by Microsoft.  CCL_ENCODE_SJIS is a
+complicated transformation of the Japanese standard JIS encoding to
+Shift JIS.  CCL_DECODE_SJIS is its inverse.)  It is somewhat odd to
+represent the SJIS operations in infix form.
+
+@node    Calling CCL, CCL Examples, CCL Expressions, CCL
+@comment Node,        Next,          Previous,        Up
+@subsection Calling CCL
+
+  CCL programs are called automatically during Emacs buffer I/O when the
+external representation has a coding system type of @code{shift-jis},
+@code{big5}, or @code{ccl}.  The program is specified by the coding
+system (@pxref{Coding Systems}).  You can also call CCL programs from
+other CCL programs, and from Lisp using these functions:
+
+@defun ccl-execute ccl-program status
+Execute @var{ccl-program} with registers initialized by
+@var{status}.  @var{ccl-program} is a vector of compiled CCL code
+created by @code{ccl-compile}.  It is an error for the program to try to
+execute a CCL I/O command.  @var{status} must be a vector of nine
+values, specifying the initial value for the R0, R1 .. R7 registers and
+for the instruction counter IC.  A @code{nil} value for a register
+initializer causes the register to be set to 0.  A @code{nil} value for
+the IC initializer causes execution to start at the beginning of the
+program.  When the program is done, @var{status} is modified (by
+side-effect) to contain the ending values for the corresponding
+registers and IC.
+@end defun
+
+@defun ccl-execute-on-string ccl-program status string &optional continue
+Execute @var{ccl-program} with initial @var{status} on
+@var{string}.  @var{ccl-program} is a vector of compiled CCL code
+created by @code{ccl-compile}.  @var{status} must be a vector of nine
+values, specifying the initial value for the R0, R1 .. R7 registers and
+for the instruction counter IC.  A @code{nil} value for a register
+initializer causes the register to be set to 0.  A @code{nil} value for
+the IC initializer causes execution to start at the beginning of the
+program.  An optional fourth argument @var{continue}, if non-@code{nil}, causes
+the IC to
+remain on the unsatisfied read operation if the program terminates due
+to exhaustion of the input buffer.  Otherwise the IC is set to the end
+of the program.  When the program is done, @var{status} is modified (by
+side-effect) to contain the ending values for the corresponding
+registers and IC.  Returns the resulting string.
+@end defun
+
+  To call a CCL program from another CCL program, it must first be
+registered:
+
+@defun register-ccl-program name ccl-program
+Register @var{name} for CCL program @var{ccl-program} in
+@code{ccl-program-table}.  @var{ccl-program} should be the compiled form of
+a CCL program, or @code{nil}.  Return index number of the registered CCL
+program.
+@end defun
+
+  Information about the processor time used by the CCL interpreter can be
+obtained using these functions:
+
+@defun ccl-elapsed-time
+Returns the elapsed processor time of the CCL interpreter as cons of
+user and system time, as
+floating point numbers measured in seconds.  If only one
+overall value can be determined, the return value will be a cons of that
+value and 0.
+@end defun
+
+@defun ccl-reset-elapsed-time
+Resets the CCL interpreter's internal elapsed time registers.
+@end defun
+
+@node    CCL Examples, ,  Calling CCL, CCL
+@comment Node,         Next, Previous,    Up
+@subsection CCL Examples
+
+  This section is not yet written.
+
+@node Category Tables, , CCL, MULE
+@section Category Tables
+
+  A category table is a type of char table used for keeping track of
+categories.  Categories are used for classifying characters for use in
+regexps---you can refer to a category rather than having to use a
+complicated [] expression (and category lookups are significantly
+faster).
+
+  There are 95 different categories available, one for each printable
+character (including space) in the ASCII charset.  Each category is
+designated by one such character, called a @dfn{category designator}.
+They are specified in a regexp using the syntax @samp{\cX}, where X is a
+category designator. (This is not yet implemented.)
+
+  A category table specifies, for each character, the categories that
+the character is in.  Note that a character can be in more than one
+category.  More specifically, a category table maps from a character to
+either the value @code{nil} (meaning the character is in no categories)
+or a 95-element bit vector, specifying for each of the 95 categories
+whether the character is in that category.
+
+  Special Lisp functions are provided that abstract this, so you do not
+have to directly manipulate bit vectors.
+
+@defun category-table-p object
+This function returns @code{t} if @var{object} is a category table.
+@end defun
+
+@defun category-table &optional buffer
+This function returns the current category table.  This is the one
+specified by the current buffer, or by @var{buffer} if it is
+non-@code{nil}.
+@end defun
+
+@defun standard-category-table
+This function returns the standard category table.  This is the one used
+for new buffers.
+@end defun
+
+@defun copy-category-table &optional category-table
+This function returns a new category table which is a copy of
+@var{category-table}, which defaults to the standard category table.
+@end defun
+
+@defun set-category-table category-table &optional buffer
+This function selects @var{category-table} as the new category table for
+@var{buffer}.  @var{buffer} defaults to the current buffer if omitted.
+@end defun
+
+@defun category-designator-p object
+This function returns @code{t} if @var{object} is a category designator (a
+char in the range @samp{' '} to @samp{'~'}).
+@end defun
+
+@defun category-table-value-p object
+This function returns @code{t} if @var{object} is a category table value.
+Valid values are @code{nil} or a bit vector of size 95.
+@end defun
+

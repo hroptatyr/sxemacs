@@ -1,0 +1,236 @@
+: #-*- Perl -*-
+# Copyright (C) 1998 Free Software Foundation, Inc.
+
+# This file is part of XEmacs.
+#
+# XEmacs is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2, or (at your option) any
+# later version.
+#
+# XEmacs is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with XEmacs; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+# Author: Martin Buchholz
+eval 'exec perl -w -S $0 ${1+"$@"}'
+  if 0;
+
+use strict;
+my ($myName, $srcdir);
+
+($myName = $0) =~ s@.*/@@; my $usage ="
+Usage: $myName
+
+Generates header file fragments from the Emacs sources
+and writes them to stdout.\n";
+
+die $usage if @ARGV;
+
+($srcdir = $0) =~ s@[^/]+$@@;
+chdir $srcdir or die "$srcdir: $!";
+
+# Find include dependencies
+my (%exists, %uses);
+opendir SRCDIR, "." or die "$srcdir: $!";
+for (grep (/\.[ch]$/, readdir (SRCDIR))) { $exists{$_} = 1; }
+closedir SRCDIR;
+{
+  my %generated_header;
+  for (qw (config.h sheap-adjust.h paths.h Emacs.ad.h)) {
+    $generated_header{$_} = 1;
+  }
+
+  for my $file (keys %exists) {
+    open (FILE, $file) or die "$file: $!";
+    undef $/; $_ = <FILE>;
+    RemoveComments ($_);
+    s/[ \t]+//g;
+    for (/^\#include([^\n]+)/gmo) {
+      if (m@^\"([A-Za-z0-9_-]+\.h)\"@) {
+	$uses{$file}{$1} = 1 if exists $exists{$1};
+      } elsif (m@<([A-Za-z0-9_-]+\.h)>@) {
+	$uses{$file}{$1} = 1 if exists $generated_header{$1};
+      } elsif (m@\"../lwlib/([A-Za-z0-9_-]+\.h)\"@) {
+	$uses{$file}{"\$(LWLIB_SRCDIR)/lwlib.h"} = 1;
+      }
+    }
+  }
+
+  # Make transitive closure of %uses
+  while (1) {
+    my $changedP = 0;
+    for my $x (keys %uses) {
+      for my $y (keys %{$uses{$x}}) {
+	for my $z (keys %{$uses{$y}}) {
+	  if (! exists $uses{$x}{$z}) {
+	    $uses{$x}{$z} = 1;
+	    $changedP = 1;
+	  }
+	}
+      }
+    }
+    last if !$changedP;
+  }
+} # End of finding include dependencies
+
+my (%used, %maxargs);
+my $minargs = '(?:[0-8])';
+my $maxargs = '(?:[0-8]|MANY|UNEVALLED)';
+my $doc = "(?:0|STR)";
+my $fun = '(?:\\bF[a-z0-9_]+X?\\b)';
+my $defun = "^DEFUN\\s*\\(\\s+STR\\s+($fun)\\s+$minargs\\s+($maxargs)\\s+$doc\\s+\\(";
+my $var = '(?:\\b(?:Q[KS]?[a-z0-9_]+D?|V(?:[a-z0-9_]+)|Q_TT[A-Z]+)\\b)';
+my $pat = "(?:$var|$fun)";
+my %automagic;
+my (%decl_file, %defn_file);
+
+for my $file (keys %exists) {
+  open (FILE, $file) or die "$file: $!";
+  undef $/; $_ = <FILE>;
+  RemoveComments($_);
+  RemoveStrings ($_);
+  s/,/ /gmo;
+  s/^\s*EXFUN[^\n]+//gmo;
+
+  # Now search for DECLARE_LRECORD to find types for predicates
+  for my $sym (/^DECLARE_LRECORD\s*\(\s*([a-z_]+)\s+struct /gmo) {
+    $automagic{"Q${sym}p"} = 1;
+  }
+
+  if ($file =~ /\.c$/) {
+    my @match = (/$defun/gmo);
+    while (my $fun = shift @match) {
+      $defn_file{$fun} = $file;
+      $maxargs{$fun} = shift @match;
+    }
+
+    # Now do Lisp_Object variables
+    for my $defs (/^\s*Lisp_Object\s+((?:$var\s*)+)\s*;/gmo) {
+      for my $var (split (' ',$defs)) {
+	$defn_file{$var} = $file;
+      }
+    }
+  }
+
+  # Remove declarations of Lisp_Objects
+  s/^extern\s+Lisp_Object\s+(?:$var\s*)+\s*;//gmo;
+
+  # Remove declarations of functions
+  s/^Lisp_Object $fun//;
+
+  # Find all uses of symbols
+  for (/($pat)/gmo) { $used{$_}{$file} = 1; }
+}
+
+my %candidates;
+for my $file (keys %exists) {
+  @{$candidates{$file}} = ();
+  my $header1 = $file;    $header1 =~ s/\.c$/.h/;
+  my $header2 = $header1; $header2 =~ s/-\w+\././;
+  push @{$candidates{$file}}, $header1 if exists $exists{$header1};
+  push @{$candidates{$file}}, $header2 if exists $exists{$header2} &&
+    $header1 ne $header2;
+}
+
+SYM: for my $sym (keys %used) {
+  next SYM unless my $defn_file = $defn_file{$sym};
+  my @users = keys %{$used{$sym}};
+  if (@users == 1) {
+    die "$sym\n" unless $defn_file eq $users[0];
+    next SYM;
+  }
+  for my $candidate (@{$candidates{$defn_file}}) {
+    if (!grep (!exists $uses{$_}{$candidate}, @users)) {
+      $decl_file{$sym} = $candidate;
+      next SYM;
+    }
+  }
+  $decl_file{$sym} = 'lisp.h';
+}
+
+# Print global Lisp_Objects
+{
+  my $line;
+  sub flushvars {
+    if (defined $line) {
+      print "extern Lisp_Object $line;\n";
+      undef $line;
+    }
+  }
+
+  sub printvar {
+    my $var = shift;
+    if (!defined $line) { $line = $var; return; }
+    if ($var =~ /^Vcharset_/) {
+      flushvars ();
+      $line = $var;
+      flushvars ();
+      return;
+    }
+    if (length "$line, $var" > 59) {
+      flushvars (); $line = $var; return;
+    }
+    $line = "$line, $var";
+  }
+  END { flushvars (); }
+}
+
+delete @decl_file{ keys %automagic, qw(Qzero Qnull_pointer)};
+
+# Print Lisp_Object var declarations
+for my $file (keys %exists) {
+
+  # Print EXFUNs
+  if (my @funs = grep ($decl_file{$_} eq $file && exists $maxargs{$_},
+		       keys %decl_file)) {
+    print "\n\n$file:\n\n";
+    for $fun (sort @funs) {
+      print "EXFUN ($fun, $maxargs{$fun});\n";
+    }
+    print "\n";
+  }
+
+  if (my @vars = grep ($decl_file{$_} eq $file && /^[QV]/, keys %decl_file)) {
+    print "\n\n$file:\n\n";
+    for $var (sort @vars) {
+      printvar ($var);
+    }
+    flushvars ();
+    print "\n\n";
+  }
+}
+
+#for my $var (sort grep (keys %{$used{$_}} > 1 , keys %defn_file)) {
+#  printvar ($var);
+#}
+
+sub RemoveComments {
+  $_[0] =~
+    s{ (
+	[^\"\'/]+ |
+	(?:\"[^\"\\]*(?:\\.[^\"\\]*)*\" [^\"\'/]*)+ |
+	(?:\'[^\'\\]*(?:\\.[^\'\\]*)*\' [^\"\'/]*)+
+       )
+       | / (?:
+	    \*[^*]*\*+(?:[^/*][^*]*\*+)*/
+	    |
+	    /[^\n]*
+	   )
+     }{defined $1 ? $1 : ""}gsxeo;
+}
+
+sub RemoveStrings {
+  $_[0] =~
+    s{ (
+	(?:\"[^\"\\]*(?:\\.[^\"\\]*)*\") |
+	(?:\'[^\'\\]*(?:\\.[^\'\\]*)*\')
+       )
+     }{ STR }gxo;
+}

@@ -1,0 +1,1268 @@
+\input texinfo
+@c %**start of header
+@setfilename ../info/sppm.info
+@settitle SXEmacs Policies & Procedures Manual
+@finalout
+@setchapternewpage on
+@c %**end of header
+
+@c Define a macro or 2 (abbrevs)
+@macro syc
+Copyright @copyright{} 2004 Steve Youngs
+@end macro
+
+@macro sye
+@email{steve@@sxemacs.org, Steve Youngs}
+@end macro
+
+@set EDITION First
+@set UPDATED Dec 30th, 2004
+
+@c Things would be a lot easier if everything supported the `@copying'
+@c command, I wouldn't have to put in these conditionals.  --SY.
+@ifnottex
+@copying
+This is the SXEmacs Policies & Procedures Manual.
+It was last updated @value{UPDATED}.
+
+@syc{}.
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU General Public Licence, Version 2.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions.
+@end quotation
+
+@ignore
+Permission is granted to process this file through Tex and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+@end ignore
+@end copying
+@end ifnottex
+
+@dircategory SXEmacs Development
+@direntry
+* SXEmacs Policies & Procedures::      SXEmacs Policies & Procedures Manual
+@end direntry
+
+@titlepage
+@title SXEmacs Policies & Procedures Manual
+@subtitle @value{EDITION} edition, last updated on @value{UPDATED}.
+@vskip 0pt plus 1filll
+@ifnottex
+@insertcopying
+@end ifnottex
+@iftex
+This is the SXEmacs Policies & Procedures Manual.
+It was last updated @value{UPDATED}.
+
+@syc{}.
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU General Public Licence, Version 2.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions.
+@end quotation
+
+@ignore
+Permission is granted to process this file through Tex and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+@end ignore
+@end iftex
+@author by @sye{}
+@end titlepage
+@c Set up the headers and footers for the printed output (postscript).
+@headings off
+@everyheading @thischapter @|@| @thispage
+@everyfooting @thistitle @|@| @syc{}
+
+@contents
+
+@node Top, Mission Statement, (dir), (dir)
+
+@ifinfo
+This is the @value{EDITION} edition of the @cite{SXEmacs Policies & Procedures Manual}
+@end ifinfo
+
+@ifnottex
+@insertcopying
+@end ifnottex
+
+This document, as its name implies, is directed towards anyone who is
+actively involved (or thinking of becoming actively involved) in the
+development of @uref{http://www.sxemacs.org/, SXEmacs}.
+
+@menu
+* Mission Statement::           Why we do what we do
+* Online Presence::             Where we make our first impressions
+* Dispute Resolution::          Arguments can be resolved
+* Coding Style::                Making sure your code looks like our code
+* Patches::                     Handling contributed code/docs
+* Feature Requests::            Dealing with feature requests
+* Support Requests::            Handling support requests
+* Bug Reports::                 Dealing with bug reports
+* Making Releases::             Getting the finished product to the user
+* New Features::                Getting new stuff into the code base
+* Compatibility::               With XEmacs and GNU/Emacs
+* Copyright and Licencing::     We won't accept just any old licence
+* Developer Recruitment::       How to get new blood
+* Making/Altering Policies::    Changing or updating this document
+* Version Control::             How we keep track of the source
+* Concept Index::               Concept Index
+@end menu
+
+@node Mission Statement, Online Presence, Top, Top
+@chapter SXEmacs Mission Statement
+@cindex mission statement
+@cindex motivation
+@cindex drive
+
+Our mission is to@dots{}
+
+@quotation
+To provide the Open Source community with a text editing and development
+environment that is based on XEmacs and is 2nd to none in regards to
+stability, features, and innovation.
+
+To foster a user and developer friendly project environment.
+
+And, above all, to have fun doing it.
+@end quotation
+
+@node Online Presence, Dispute Resolution, Mission Statement, Top
+@comment  node-name,  next,  previous,  up
+@chapter SXEmacs' Online Presence
+@cindex http
+@cindex www
+@cindex web
+@cindex online
+@cindex ftp
+@cindex sxemacs online
+@cindex online, sxemacs
+
+The SXEmacs project maintains a number of @dfn{online} services.
+Including@dots{}
+
+@itemize @bullet
+@item
+WWW -- @uref{http://www.sxemacs.org/}
+@item
+FTP -- @uref{ftp://ftp.sxemacs.org/}
+@item
+IRC -- Channel @dfn{#sxemacs} on irc.freenode.org
+@item
+Issue Tracking -- @uref{http://issues.sxemacs.org/} @ref{Bug Reports}
+@ref{Feature Requests} @ref{Support Requests}.  Unfortunately, this is
+currently not operational.  For the time being, simply send your issues
+to the mailing list.
+@end itemize
+
+@menu
+* SXEmacs Web Site::            Our shop front
+* SXEmacs FTP Site::            Who says FTP is dead
+* IRC::                         For those who like to talk about it
+@end menu
+
+@node SXEmacs Web Site, SXEmacs FTP Site, Online Presence, Online Presence
+@comment  node-name,  next,  previous,  up
+@chapter SXEmacs Web Site
+@cindex web
+@cindex http
+@cindex www.sxemacs.org
+
+The SXEmacs web site is currently the responsibility of
+@email{rendhalver@@sxemacs.org, Peter @dfn{Rendhalver} Brown}.
+
+To be done.
+
+@c Pete! and/or Nick Put in here things about how we can make updates to
+@c the site, etc.  This is also a good place to describe how the ``dev
+@c todo lists'' work.  Mention the version control (if any) for the site
+@c content. Yadda yadda yadda blah blah blah.
+
+@c Try to go into as much detail as you can.  Ideally, I'd like this
+@c section to give enough for someone to take over your role should
+@c anything ever happen to you.
+
+@node SXEmacs FTP Site, IRC, SXEmacs Web Site, Online Presence
+@comment  node-name,  next,  previous,  up
+@chapter SXEmacs FTP Site
+@cindex ftp
+
+The SXEmacs FTP site doesn't actually exist yet, but when it does it will
+be the responsibility of @sye{}.
+
+We will make release tarballs and release to release patches available
+for download via FTP. @ref{Making Releases}.
+
+Once we have somewhere to host our FTP site this section will provide
+details as to where/how to upload etc.
+
+@node IRC,, SXEmacs FTP Site, Online Presence
+@comment  node-name,  next,  previous,  up
+@chapter SXEmacs on IRC
+
+Developers official communcation platform is the mailing list provided
+at sxemacs.org. However, to discuss problems and assist users more
+efficiently there is an official IRC channel.
+
+SXEmacs IRC channel #sxemacs is located at freenode (formerly known as
+OPN). Please use following URI to refer to it:
+
+@uref{irc://irc.freenode.net/#sxemacs}
+
+@subheading Various IRC HowTOs
+
+@itemize @bullet
+@item
+Connecting to the network and joining the channel
+
+Fire up your favourite irc client and use:
+@code{/server irc.freenode.net} to connect to the network and
+@code{/join #sxemacs} to join the community.
+@item
+HowTo become a respected regular
+
+Okay, you've decided to be active on IRC and hopefully help other
+users. You have joined the channel and idle around thirsting for hard
+problems by helpless users.
+
+In that case you will have to have a reliable (not-changing) nickname
+that is linked to your person in order to refer to you.  This will help
+us in blaming you if you misdirect users with your answers and even help
+us to praise you if you convinced RMS to switch to SXEmacs ;)
+
+Therefore, freenode provides a mechanism to eternalise yourself via
+the nickname you carry. Use @code{/nickserv register <password>}
+to engrave your nickname for your personal use.
+
+This nickname is yours from now on. To identify yourself to freenode
+use @code{/nickserv identify <samepasswordasabove>}
+
+Your user mode will be changed to @dfn{+e} in case of successful
+identification.
+
+Whenever you see unscrupulous people carrying your nickname or your
+nickname is ghosted because of a reconnection, you can just
+@code{/nickserv ghost <yournickname> <yourpassword>} to send the 
+other client to oblivion.
+
+Okay, now that you've registered yourself with freenode, you're
+nickname can be referred to, independently from whether you are
+carrying that nick or not. Just do @code{/nickserv info <nickname>}
+to obtain some information on a nickname you see and like to refer 
+to.
+@item
+HowTo to be listed in the channel access list
+
+There is no influence on this access list on the users and developer's
+side.  It is merely up to the project lead who has control over it.
+@item
+Host cloaks
+
+The only way to get one is to ask the project lead (JackaLX).
+@end itemize
+
+@node Dispute Resolution, Coding Style, Online Presence, Top
+@comment  node-name,  next,  previous,  up
+@chapter Dispute Resolution
+@cindex dispute resolution
+@cindex resolution, dispute
+@cindex resolving disputes
+@cindex disputes, resolving
+@cindex argue
+@cindex arguments
+
+@quotation
+When two people agree on everything, one of them isn't needed.
+@end quotation
+
+I can't remember where that quote comes from so if anyone reading this
+knows, please let us know so we can give credit where credit is due.
+
+We are all mature adults and most of the time we don't let our egos get
+in the way of getting things done.  But human nature being what it is
+means that from time to time we'll have conflict or disagreements.  In
+the vast majority of these cases a resolution will come quickly and
+easily through reasonable discussion.
+
+This section is for those rare occasions that will be the exception to
+the above.
+
+In the event of a unresolvable dispute, the SXEmacs Project Lead,
+@sye{}, will, at his discretion, take one or more of the following
+steps@dots{}
+
+@itemize
+@item
+Decide the outcome.
+@item
+Call a @dfn{vote} @ref{Voting}.
+@item
+Call a @dfn{postponement}.  This will mean that all parties will be
+asked to stop discussing the matter until some date in the future.  This
+future date will be given at the time the SXEmacs Project Lead calls the
+postponement.  The idea here is to give everyone a chance to cool down
+so that reasonable discussion can continue.
+@end itemize
+
+@menu
+* Voting::                      Deciding things via ballot
+@end menu
+
+@node Voting,, Dispute Resolution, Dispute Resolution
+@comment  node-name,  next,  previous,  up
+@chapter Voting
+@cindex voting
+@cindex vote
+@cindex ballot
+
+Sometimes things are best decided with a vote.  This section describes
+how these votes are to be held.
+
+Who may participate in a vote?  Anyone subscribed to the SXEmacs
+Developers' mailing list, @email{sxemacs-devel@@sxemacs.org}.
+
+Who may call a vote?  The SXEmacs Project Lead, @sye{}.  Of course
+anyone may ask the Project Lead to call a vote.
+
+@subsection Mechanics of the Vote
+
+@enumerate
+@item
+The votes will be cast via email on the SXEmacs Developers' mailing
+list, @email{sxemacs-devel@@sxemacs.org}.
+@item
+The @dfn{ballot paper} will have the email subject
+@dfn{[Vote] Subject of vote}. The body of this email will contain the
+details of the ballot.  The actual questions or points that make up what
+is being voted on should be in a form that makes it easy to respond to.
+In other words they should be either multiple choice or yes/no type
+questions.
+@item
+Each person wishing to participate in the vote will simply reply
+@emph{once} to this email.  The reply or @dfn{vote} @emph{must} come to
+the mailing list.
+@item
+Anyone wishing to abstain need not do anything.  Just don't reply to the
+ballot email.
+@item
+There will be a time limit restriction on voting on any matter.  This
+time limit will be a minimum of one calendar week from the time the vote
+is declared @dfn{open}.  The vote is declared @dfn{open} with the
+posting of the initial ballot email (with the subject prefix of
+@dfn{[Vote]}.
+@end enumerate
+
+
+@subsection Deciding the Outcome
+
+As soon as practicable after the vote closes (when the time limit has
+expired) the SXEmacs Project Lead will tally up all the votes and post
+the results to the SXEmacs Developers' mailing list,
+@email{sxemacs-devel@@sxemacs.org}.  This post will have the email
+subject @dfn{[Vote Results] Subject of vote}.
+
+For an issue to be decided via vote it must receive the majority of the
+total number of votes with a minimum of four votes.
+
+@smallexample
+Issue decided:
+
+  A - 5 votes
+  B - 2 votes
+
+A - wins
+@end smallexample
+
+@smallexample
+Issue undecided:
+
+  A - 3 votes
+  B - 2 votes
+@end smallexample
+
+
+@node Coding Style, Patches, Dispute Resolution, Top
+@comment  node-name,  next,  previous,  up
+@chapter Coding Style
+@cindex coding style
+@cindex style, coding
+@cindex style
+@cindex coding
+
+SXEmacs has two main programming languages, Emacs Lisp, and C, therefore
+we need two sets of coding styles.
+
+@subsection Coding Style -- Emacs Lisp
+@cindex emacs lisp coding style
+@cindex coding style, emacs lisp
+@cindex lisp coding style
+@cindex coding style, lisp
+
+Read @pxref{(lispref)Style Tips}
+
+Please take particular note of@dots{}
+
+@quotation
+Don't make a habit of putting close-parentheses on lines by
+themselves; Lisp programmers find this disconcerting.  Once in a
+while, when there is a sequence of many consecutive
+close-parentheses, it may make sense to split them in one or two
+significant places.
+@end quotation
+
+The only other thing I have to say about lisp coding style is to keep
+your lines @emph{under} 80 columns in length.
+
+@subsection Coding Style -- C
+@cindex C coding style
+@cindex coding style, C
+
+@quotation
+First off, I'd suggest printing out a copy of the GNU coding standards,
+and NOT read it.  Burn them, it's a great symbolic gesture.
+
+  -- Linus Torvalds
+@end quotation
+
+@menu
+* General C Style::             What you should use everywhere
+* SXEmacs Specific Style::      Our idiosyncrasies
+@end menu
+
+@node General C Style, SXEmacs Specific Style, Coding Style, Coding Style
+@chapter General C Style
+@cindex C coding style
+@cindex coding style, C
+@cindex general coding style
+@cindex coding style, general
+
+SXEmacs C code follows, to a large degree, the coding style of the Linux
+Kernel source.  Much of this section is a verbatim copy of
+@file{./Documentation/CodingStyle} from the Linux kernel sources.
+
+@heading Indentation
+@cindex indentation
+@cindex indentation coding style
+@cindex coding style, indentation
+
+Tabs are 8 characters, and thus indentations are also 8 characters.
+There are heretic movements that try to make indentations 4 (or even 2!)
+characters deep, and that is akin to trying to define the value of PI to
+be 3.
+
+Rationale: The whole idea behind indentation is to clearly define where
+a block of control starts and ends.  Especially when you've been looking
+at your screen for 20 straight hours, you'll find it a lot easier to see
+how the indentation works if you have large indentations.
+
+Now, some people will claim that having 8-character indentations makes
+the code move too far to the right, and makes it hard to read on a
+80-character terminal screen.  The answer to that is that if you need
+more than 3 levels of indentation, you're screwed anyway, and should
+fix your program.
+
+In short, 8-char indents make things easier to read, and have the added
+benefit of warning you when you're nesting your functions too deep.
+Heed that warning.
+
+Don't put multiple statements on a single line unless you have something
+to hide:
+
+@smallexample
+	if (condition) do_this;
+	  do_something_everytime;
+@end smallexample
+
+Outside of comments and documentation, spaces are never used for
+indentation, and the above example is deliberately broken.
+
+@cindex coding style, whitespace
+@cindex whitespace
+Don't leave whitespace at the end of lines.  There is a
+@file{whitespace.el} which you can get from
+@uref{http://www.dsmit.com/lisp/}.  Use it.
+
+@heading Breaking long lines and strings
+@cindex long lines
+Coding style is all about readability and maintainability using commonly
+available tools.
+
+The limit on the length of lines is 80 columns and this is a hard limit.
+
+Statements longer than 80 columns will be broken into sensible chunks.
+Descendants are always substantially shorter than the parent and are placed
+substantially to the right. The same applies to function headers with a long
+argument list. Long strings are as well broken into shorter strings.
+
+@smallexample
+void
+fun(int a, int b, int c)
+@{
+	if (condition)
+		printf("Warning this is a very very very long printf with "
+						"3 parameters a: %u b: %u "
+						"c: %u \n", a, b, c);
+	else
+		next_statement;
+@}
+@end smallexample
+
+@heading Placing Braces
+@cindex braces
+@cindex coding style, braces
+The other issue that always comes up in C styling is the placement of
+braces.  Unlike the indent size, there are few technical reasons to
+choose one placement strategy over the other, but the preferred way, as
+shown to us by the prophets Kernighan and Ritchie, is to put the opening
+brace last on the line, and put the closing brace first, thusly:
+
+@smallexample
+	if (x is true) @{
+		we do y
+	@}
+@end smallexample
+
+However, there is one special case, namely functions: they have the
+opening brace at the beginning of the next line, thus:
+
+@smallexample
+	int function(int x)
+	@{
+		body of function
+	@}
+@end smallexample
+
+Heretic people all over the world have claimed that this inconsistency
+is ...  well ...  inconsistent, but all right-thinking people know that
+(a) K&R are @emph{right} and (b) K&R are right.  Besides, functions are
+special anyway (you can't nest them in C).
+
+Note that the closing brace is empty on a line of its own, @emph{except}
+in the cases where it is followed by a continuation of the same statement,
+ie a "while" in a do-statement or an "else" in an if-statement, like this:
+
+@smallexample
+	do @{
+		body of do-loop
+	@} while (condition);
+@end smallexample
+
+and
+
+@smallexample
+	if (x == y) @{
+		..
+	@} else if (x > y) @{
+		...
+	@} else @{
+		....
+	@}
+@end smallexample
+
+@heading Naming
+@cindex naming
+@cindex coding style, naming
+C is a Spartan language, and so should your naming be.  Unlike Modula-2
+and Pascal programmers, C programmers do not use cute names like
+@var{ThisVariableIsATemporaryCounter}.  A C programmer would call that
+variable @var{tmp}, which is much easier to write, and not the least more
+difficult to understand.
+
+HOWEVER, while mixed-case names are frowned upon, descriptive names for
+global variables are a must.  To call a global function "foo" is a
+shooting offense.
+
+GLOBAL variables (to be used only if you _really_ need them) need to
+have descriptive names, as do global functions.  If you have a function
+that counts the number of hidden buffers, you should call that
+@code{count_hidden_buffers()} or similar, you should @emph{not} call it
+@code{cntbuf()}.
+
+Encoding the type of a function into the name (so-called Hungarian
+notation) is brain damaged - the compiler knows the types anyway and can
+check those, and it only confuses the programmer.  No wonder MicroSoft
+makes buggy programs.
+
+LOCAL variable names should be short, and to the point.  If you have
+some random integer loop counter, it should probably be called @var{i}.
+Calling it @var{loop_counter} is non-productive, if there is no chance
+of it being mis-understood.  Similarly, @var{tmp} can be just about any
+type of variable that is used to hold a temporary value.
+
+If you are afraid to mix up your local variable names, you have another
+problem, which is called the @dfn{function-growth-hormone-imbalance
+syndrome}.  See next.
+
+@heading Functions
+@cindex functions
+@cindex coding style, functions
+Functions should be short and sweet, and do just one thing.  They should
+fit on one or two screenfuls of text (the ISO/ANSI screen size is 80x24,
+as we all know), and do one thing and do that well.
+
+A function's return type should be put on a line by itself like this:
+
+@smallexample
+int
+main(int argc, char **argv)
+@{
+	...
+	...
+@}
+@end smallexample
+
+This also helps things like @code{etags}.
+
+The maximum length of a function is inversely proportional to the
+complexity and indentation level of that function.  So, if you have a
+conceptually simple function that is just one long (but simple)
+case-statement, where you have to do lots of small things for a lot of
+different cases, it's OK to have a longer function.
+
+However, if you have a complex function, and you suspect that a
+less-than-gifted first-year high-school student might not even
+understand what the function is all about, you should adhere to the
+maximum limits all the more closely.  Use helper functions with
+descriptive names (you can ask the compiler to in-line them if you think
+it's performance-critical, and it will probably do a better job of it
+than you would have done).
+
+Another measure of the function is the number of local variables.  They
+shouldn't exceed 5-10, or you're doing something wrong.  Re-think the
+function, and split it into smaller pieces.  A human brain can
+generally easily keep track of about 7 different things, anything more
+and it gets confused.  You know you're brilliant, but maybe you'd like
+to understand what you did 2 weeks from now.
+
+@heading Commenting
+@cindex commenting
+@cindex comments
+@cindex coding style, commenting
+@cindex coding style, comments
+Comments are good, but there is also a danger of over-commenting.
+@emph{NEVER} try to explain @emph{HOW} your code works in a comment:
+it's much better to write the code so that the @emph{working} is
+obvious, and it's a waste of time to explain badly written code.
+
+Generally, you want your comments to tell @emph{WHAT} your code does, not
+@emph{HOW}.  Also, try to avoid putting comments inside a function body:
+if the function is so complex that you need to separately comment parts of
+it, you should probably go back to section on @dfn{Functions} for a while.
+You can make small comments to note or warn about something particularly
+clever (or ugly), but try to avoid excess.  Instead, put the comments at
+the head of the function, telling people what it does, and possibly WHY it
+does it.
+
+A comment in C looks like @code{/* a comment */}.  A comment in C++
+looks like @code{// a comment}.  Don't get them confused and don't
+@emph{ever} use C++ style comments.
+
+This style of commenting in C @emph{is} acceptable:
+
+@smallexample
+/*
+ * A comment style in C that is quite often used
+ * for multi-line comments.
+ */
+@end smallexample
+
+
+@heading Macros
+@cindex macro
+@cindex coding style, macros
+Names of macros defining constants and labels in enums are capitalised.
+
+@smallexample
+#define CONSTANT 0x12345
+@end smallexample
+
+Enums are preferred when defining several related constants.
+
+CAPITALISED macro names are appreciated but macros resembling functions
+may be named in lower case.
+
+Generally, inline functions are preferable to macros resembling functions.
+
+Macros with multiple statements should be enclosed in a do - while block:
+
+@smallexample
+#define macrofun(a,b,c)			\
+	do @{					\
+		if (a == 5)			\
+			do_this(b,c);		\
+	@} while (0)
+@end smallexample
+
+@subheading Things to avoid when using macros:
+@cindex macro
+@enumerate
+@item
+macros that affect control flow:
+
+@smallexample
+#define FOO(x)					\
+	do @{					\
+		if (blah(x) < 0)		\
+			return -EBUGGERED;	\
+	@} while(0)
+@end smallexample
+
+is a @emph{very} bad idea.  It looks like a function call but exits the "calling"
+function; don't break the internal parsers of those who will read the code.
+
+@item
+macros that depend on having a local variable with a magic name:
+
+@smallexample
+#define FOO(val) bar(index, val)
+@end smallexample
+
+might look like a good thing, but it's confusing as hell when one reads the
+code and it's prone to breakage from seemingly innocent changes.
+
+@item
+macros with arguments that are used as l-values: FOO(x) = y; will
+bite you if somebody e.g. turns FOO into an inline function.
+
+@item
+forgetting about precedence: macros defining constants using expressions
+must enclose the expression in parentheses. Beware of similar issues with
+macros using parameters.
+
+@smallexample
+#define CONSTANT 0x4000
+#define CONSTEXP (CONSTANT | 3)
+@end smallexample
+@end enumerate
+
+@heading Further Reading
+@cindex further reading
+@cindex coding style, further reading
+@display
+The C Programming Language, Second Edition
+by Brian W. Kernighan and Dennis M. Ritchie.
+Prentice Hall, Inc., 1988.
+ISBN 0-13-110362-8 (paperback), 0-13-110370-9 (hardback).
+@uref{http://cm.bell-labs.com/cm/cs/cbook/}
+
+The Practice of Programming
+by Brian W. Kernighan and Rob Pike.
+Addison-Wesley, Inc., 1999.
+ISBN 0-201-61586-X.
+@uref{http://cm.bell-labs.com/cm/cs/tpop/}
+@end display
+
+GNU manuals - where in compliance with K&R and this text - for cpp, gcc,
+gcc internals and indent, all available from @uref{http://www.gnu.org/}
+
+WG14 is the international standardization working group for the programming
+language C, @uref{http://std.dkuug.dk/JTC1/SC22/WG14/}
+
+@node SXEmacs Specific Style,,General C Style, Coding Style
+
+@chapter SXEmacs Specific Style
+@cindex sxemacs specific coding style
+@cindex coding style, sxemacs specific
+
+This section was lifted almost word for word from the XEmacs
+@file{CODING-STANDARDS} by Ben Wing.
+
+@heading Specially-prefixed functions/variables:
+@cindex coding style, function prefix
+@cindex coding style, variable prefix
+@cindex coding style, functions
+@cindex coding style, variables
+@itemize @bullet
+@item
+All global C variables whose value is constant and is a symbol begin
+with a capital Q, e.g. @var{Qkey_press_event}. (The type will always be
+@dfn{Lisp_Object}.)
+
+@item
+All other global C variables whose value is a @dfn{Lisp_Object} (this
+includes variables that forward into Lisp variables plus others like
+@var{Vselected_console}) begin with a capital V.
+
+@item
+No C variables whose value is other than a @dfn{Lisp_Object} should begin
+with a capital V. (This includes C variables that forward into
+integer or boolean Lisp variables.)
+All global C variables whose value is a struct Lisp_Subr begin with a
+capital S. (This only occurs in connection with DEFUN ()).
+
+@item
+All C functions that are Lisp primitives begin with a capital F,
+and no others should begin this way.
+@end itemize
+
+@heading Functions for manipulating Lisp types:
+@cindex coding style, functions
+@itemize @bullet
+@item
+Any function that creates an empty or mostly empty Lisp object
+should begin allocate_(). (*Not* make_().) (Except, of course,
+for Lisp primitives, which usually begin Fmake_()).
+
+@item
+Any function that converts a pointer into an equivalent Lisp_Object
+should begin make_().
+
+@item
+Any function that converts a Lisp_Object into its equivalent pointer
+and checks the type and validity of the object (e.g. making sure
+it's not dead) should begin decode_().
+
+@item
+Any function that looks up a Lisp object (e.g. buffer, face) given
+a symbol or string should begin get_(). (Except, of course, for
+Lisp primitives, which usually begin Fget_()).
+@end itemize
+
+@heading Other:
+
+Any header-file declarations of the sort
+
+@smallexample
+   struct foobar;
+@end smallexample
+
+go into the @dfn{types} section of @file{lisp.h}.
+
+
+@node Patches, Feature Requests, Coding Style, Top
+@comment  node-name,  next,  previous,  up
+@chapter Patches
+@cindex patches
+@cindex contributions
+@cindex diff
+@cindex patch
+
+Ideally, the best way to get your patches into the SXEmacs code base is
+to set up your own tla repo for SXEmacs and create a new branch.  You
+can then send your merge requests to the
+@email{sxemacs-patches@@sxemacs.org, SXEmacs Patches} mailing list.
+
+You can even automate the process of sending patches by using 
+@dfn{tla hooks}.  Take a look at@dots{}
+
+@smallexample
+  ndim-utils--main--0.1 at
+
+  hun@@n-dimensional.de--2004-public \
+  http://arch.n-dimensional.de/2004-public
+@end smallexample
+
+There are a number of different situations and circumstances that you
+may find yourself in with regards to contributing to the SXEmacs
+project.  I'll try to cover the main ones here, but please note that
+they @emph{all} have two things in common@dots{}
+
+@enumerate
+@item
+A diff is always sent to 
+@email{sxemacs-patches@@sxemacs.org, SXEmacs Patches}.
+@item
+The diff is always in @dfn{unified} format  
+@code{diff -u oldfile newfile}
+@end enumerate
+
+@menu
+* Mirrored branch::             Your own branch of the main repo.
+* Non-mirrored branch::         As above, but it isn't mirrored anywhere.
+* Non-branched repo::           A copy of the main repo, not branched or
+                                mirrored.
+* Vanilla sources (no repo)::   Just the source tree that isn't under
+                                arch control.
+@end menu
+
+@node Mirrored branch, Non-mirrored branch, Patches, Patches
+@comment  node-name,  next,  previous,  up
+@chapter Mirrored branch
+@cindex patches
+@cindex contributions
+@cindex diff
+@cindex patch
+
+Are you in the right place?  You have set up your own branch of the
+SXEmacs arch repository, something like:
+@dfn{sxemacs--yourname--22.1.0}.  And your repository is mirrored
+somewhere that is accessible to at least the SXEmacs Project Lead (Steve
+Youngs).
+
+Yes?  OK, great, read on.
+
+The first thing you want to do, if you haven't already is to set up some
+tla hooks to make life much easier.  I highly recommend
+
+@smallexample
+  ndim-utils--main--0.1 at
+
+  hun@@n-dimensional.de--2004-public \
+  http://arch.n-dimensional.de/2004-public
+@end smallexample
+
+In the @file{tla} directory there you'll find a very flexible and
+powerful set of tla hooks.  And if you will allow me to digress just a
+little bit more, the following patch will allow you to selectively
+bypass your hooks@dots{}
+
+@smallexample
+--- orig/tla/arch-meta-hook
++++ mod/tla/arch-meta-hook
+@@@@ -81,6 +81,14 @@@@
+ #
+ # You may even symlink these kinds of scripts...
+ 
++# If you want to bypass the hooks for whatever reason, do...
++# NOHOOKS=1 tla cmd
++if [ $NOHOOKS ]; then
++    echo "Bypassing hooks"
++    unset NOHOOKS
++    exit 0
++fi
++
+ # Default hook directory
+ ARCH_HOOKDIR="$(dirname "$0")/hooks"
+ # Override hook dir if found
+@end smallexample
+
+Now all you need is to combine @file{arch-meta-hook} with a couple of
+tiny shell scripts.  These are the ones that I use@dots{}
+
+For automatic mirroring:
+
+@smallexample
+#!/bin/bash
+
+# I recommend you either
+# a) Run in the background and redirect input and output
+# b) Do neither of that.
+
+echo "Mirroring $@{ARCH_BRANCH@} in $@{ARCH_ARCHIVE@}"
+
+tla archive-mirror \
+    "$@{ARCH_ARCHIVE@}" "$@{ARCH_ARCHIVE@}-MIRROR" \
+    "$@{ARCH_CATEGORY@}" < /dev/null >& /dev/null &
+
+exit 0
+@end smallexample
+
+For sending commit logs/merge requests:
+@smallexample
+#!/bin/bash
+
+if [ "$ARCH_REVISION" = "" ]; then
+    echo "$0 called without ARCH_REVISION set. Aborting."
+    exit 1
+fi
+
+email="sxemacs-patches@@sxemacs.org"
+
+# This is where _other_ people access your repo.
+location=http://your.archive.mirror/
+
+echo "Sending mail to SXEmacs Patches <$@{email@}>"
+echo "  about $@{ARCH_REVISION@} changes."
+
+# We may want to start that as a background process if it starts to
+# take too long...
+(
+echo "From: $(tla my-id)"
+echo "Date: $(date --rfc-822)"
+echo "Subject: [Merge Req] Summary for $@{ARCH_REVISION@}"
+echo "To: SXEmacs Patches <$@{email@}>"
+echo
+echo "Location: $@{ARCH_ARCHIVE@} $@{location@}"
+echo
+tla cat-archive-log "$@{ARCH_ARCHIVE@}/$@{ARCH_REVISION@}"
+echo
+cd $@{ARCH_TREE_ROOT@}
+dir="$@{ARCH_REVISION@}.changeset-$$"
+tla get-changeset "$@{ARCH_REVISION@}" "$@{dir@}"
+tla show-changeset --diffs "$@{dir@}"
+rm -rf "$@{dir@}"
+) | /usr/sbin/sendmail "$@{email@}"
+
+exit 0
+@end smallexample
+
+With all that in place, getting patches in front of the SXEmacs
+developers is a snap.
+
+@enumerate
+@item
+@code{tla star-merge MAIN_SXEmacs_REPO} (to make sure you are working
+with up to date sources).
+@item
+@code{tla make-log}
+@item
+hack hack hack hack
+@item
+edit the log
+@item
+@code{tla commit}
+@end enumerate
+
+BTW, if you've gone to this much effort to set things up, you @emph{are}
+subscribed to the sxemacs-patches and sxemacs-devel mailing lists aren't
+you? :-)
+
+
+@node Non-mirrored branch, Non-branched repo, Mirrored branch, Patches
+@comment  node-name,  next,  previous,  up
+@chapter Non-mirrored branch
+@cindex patches
+@cindex contributions
+@cindex diff
+@cindex patch
+
+Are you in the right place?  You have set up your own branch of the
+SXEmacs arch repository, something like:
+@dfn{sxemacs--yourname--22.1.0}.  But your repository is @emph{not}
+mirrored anywhere that is accessible to at least the SXEmacs Project
+Lead (Steve Youngs).
+
+Yes?  OK, great, read on.
+
+Firstly, if you can mirror your archive, please do so.  It will make
+things so much easier for everyone.  We do understand that there may be
+some valid reasons why you can't mirror, hence, this section.
+
+This section differs from the previous only in that because you have no
+mirror the SXEmacs developers can't pull in your changesets.  You will
+have to send them to the patches mailing list yourself.
+
+To create a changeset that you can send as a MIME attachment to the
+mailing list, take these steps after you have committed your changes to
+your repo:
+
+@enumerate
+@item
+@code{tla get-changeset patch-n} (@dfn{patch-n} is the patch number you
+just committed)
+When that finishes you will find a new directory in your WD, it will be
+named something like @file{sxemacs--yourname--22.1.0--patch-3.patches}.
+@item
+tar/gz that directory
+@item
+Send the @file{file.tar.gz} as a MIME attachment to the
+@email{sxemacs-patches@@sxemacs.org, SXEmacs Patches} mailing list.
+@end enumerate
+
+
+@node Non-branched repo, Vanilla sources (no repo), Non-mirrored branch, Patches
+@comment  node-name,  next,  previous,  up
+@chapter Non-branched repo
+@cindex patches
+@cindex contributions
+@cindex diff
+@cindex patch
+
+Are you in the right place?  You did something like:
+@code{tla get -A steve@@sxemacs.org--2004 sxemacs--main--22.1.0 sxemacs}
+But for whatever reason you haven't made your own branch of the repo
+(perhaps you don't wish to become a regular contributor, which is
+totally cool, BTW).
+
+Yes?  OK, great, read on.
+
+If this is the right section for you then you need not worry about
+setting up any tla hooks or stuff like that.  Why?  Because you won't be
+committing anything.
+
+Your hacking cycle will look something like this:
+
+@enumerate
+@item
+@code{tla update}
+@item
+@code{tla make-log}
+@item
+hack hack hack
+@item
+edit the log
+@item
+send the log and the output from @code{tla changes --diffs} to the
+@email{sxemacs-patches@@sxemacs.org, SXEmacs Patches} mailing list.
+@end enumerate
+
+@node Vanilla sources (no repo),, Non-branched repo, Patches
+@comment  node-name,  next,  previous,  up
+@chapter Vanilla sources (no repo)
+@cindex patches
+@cindex contributions
+@cindex diff
+@cindex patch
+
+Are you in the right place?  All you have is a SXEmacs source tarball
+and you don't have @file{tla} installed.
+
+Yes?  OK, great, read on.
+
+You will have the toughest time of it I'm afraid because you will have
+to do everything manually.  But it isn't too bad.  No worse than for any
+other project.
+
+Your hacking cycle will look something like this:
+
+@enumerate
+@item
+Unpack the source tarball somewhere and @emph{don't touch it}.  This
+will be your pristine sources.
+@item
+Make a copy of your pristine sources somewhere else.  This will be your
+working tree where you make your changes.
+@item
+cd into your working tree and hack hack hack
+@item
+Jump out of your working tree and do:
+@code{diff -urNp pristine-tree working-tree > my-sxemacs.diff}
+
+A note of caution here: Please ensure that you are diff'ing clean
+trees.  In other words, run @code{make distclean} in your working tree
+@emph{before} creating the diff.
+@item
+Send @file{my-sxemacs.diff} (gzip'd if large) as a MIME attachment
+together with a detailed description of your changes to the
+@email{sxemacs-patches@@sxemacs.org, SXEmacs Patches} mailing list.
+@end enumerate
+
+
+@node Feature Requests, Support Requests, Patches, Top
+@comment  node-name,  next,  previous,  up
+@chapter Feature Requests
+
+To be done.  
+
+This will more than likely be handled by our issue tracker
+once it is operational.  In the meantime just send your requests to
+@email{sxemacs-devel@@sxemacs.org, SXEmacs Devel}.
+
+@node Support Requests, Bug Reports, Feature Requests, Top
+@comment  node-name,  next,  previous,  up
+@chapter Support Requests
+
+To be done.
+
+This will more than likely be handled by our issue tracker
+once it is operational.  In the meantime just send your requests to
+@email{sxemacs-devel@@sxemacs.org, SXEmacs Devel}.
+
+@node Bug Reports, Making Releases, Support Requests, Top
+@comment  node-name,  next,  previous,  up
+@chapter Bug Reports
+
+To be done.
+
+This will be handled by our issue tracker once it is operational.  In
+the meantime just send your bug reports to
+@email{sxemacs-devel@@sxemacs.org, SXEmacs Devel}.
+
+The following code could be helpful as a stop-gap:
+
+@lisp
+(defun my-report-sxemacs-bug ()
+  "Send a bug report to the SXEmacs team."
+  (interactive)
+  (require 'xemacsbug)
+  (let ((report-xemacs-bug-address 
+	 "SXEmacs Devel <sxemacs-devel@@sxemacs.org>")
+	(report-xemacs-bug-beta-address
+	 "SXEmacs Devel <sxemacs-devel@@sxemacs.org>")
+	(xemacs-betaname sxemacs-betaname))
+    (call-interactively 'report-xemacs-bug)))
+@end lisp
+
+
+@node Making Releases, New Features, Bug Reports, Top
+@comment  node-name,  next,  previous,  up
+@chapter Making Releases
+
+To be done.
+
+@node New Features, Compatibility, Making Releases, Top
+@comment  node-name,  next,  previous,  up
+@chapter New Features
+
+To be done.
+
+@node Compatibility, Copyright and Licencing, New Features, Top
+@comment  node-name,  next,  previous,  up
+@chapter Compatibility
+
+To be done.
+
+@node Copyright and Licencing, Developer Recruitment, Compatibility, Top
+@comment  node-name,  next,  previous,  up
+@chapter Copyright and Licencing
+
+To be done.
+
+@node Developer Recruitment, Making/Altering Policies, Copyright and Licencing, Top
+@comment  node-name,  next,  previous,  up
+@chapter Developer Recruitment
+
+To be done.
+
+@node Making/Altering Policies, Version Control, Developer Recruitment, Top
+@comment  node-name,  next,  previous,  up
+@chapter Making/Altering Policies
+
+To be done.
+
+@node Version Control, Concept Index, Making/Altering Policies, Top
+@comment  node-name,  next,  previous,  up
+@chapter Version Control
+
+To be completed.
+
+The SXEmacs Project keeps control of its sources with GNU/arch (tla).
+The main repository is that of the Project Lead (Steve Youngs).  It is
+located at:
+
+@smallexample
+  steve@@sxemacs.org--2004
+  http://arch.sxemacs.org/2004/
+@end smallexample
+
+To ``check out'' a copy of SXEmacs from Steve's repo, take the following
+steps (this assumes that you have tla installed/configured):
+
+@enumerate
+@item
+@code{tla register-archive steve@@sxemacs.org--2004 http://arch.sxemacs.org/2004}
+@item
+@code{tla get -A steve@@sxemacs.org--2004 sxemacs--main--22.1.0 sxemacs}
+@end enumerate
+
+@subheading Other Developers' Repositories
+
+@itemize @bullet
+@item
+sxemacs--hrop--22.1.0
+
+hroptatyr@@sxemacs.org--sxemacs
+http://www.math.tu-berlin.de/~freundt/archives/sxemacs
+@item
+sxemacs--ckent--22.1.0
+
+dev@@xwem.org--2004-w
+http://arch.xwem.org/2004-w/
+@end itemize
+
+
+@node Concept Index,, Version Control, Top
+@unnumbered Concept Index
+@printindex cp
+
+@bye

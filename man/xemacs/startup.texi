@@ -1,0 +1,195 @@
+@node Startup Paths, Packages, Command Switches, Top
+@comment  node-name,  next,  previous,  up
+@section How XEmacs finds Directories and Files
+
+@cindex startup paths
+@cindex directories
+
+XEmacs deals with a multitude of files during operation.  These files
+are spread over many directories, and XEmacs determines the location of
+most of these directories at startup and organizes them into various
+paths.  (A @dfn{path},
+@cindex path
+for the purposes of this section, is simply a list of directories which
+XEmacs searches successively in order to locate a file.)
+
+@subsection XEmacs Directory Hierarchies
+@cindex hierarchies
+@cindex directory hierarchies
+
+Many of the files XEmacs looks for are located within the XEmacs
+installation itself.  However, there are several views of what actually
+constitutes the "XEmacs installation": XEmacs may be run from the
+compilation directory, it may be installed into arbitrary directories,
+spread over several directories unrelated to each other.  Moreover, it
+may subsequently be moved to a different place.  (This last case is not
+as uncommon as it sounds.  Binary kits work this way.)  Consequently,
+XEmacs has quite complex procedures in place to find directories, no
+matter where they may be hidden.
+
+XEmacs will always respect directory options passed to @code{configure}.
+However, if it cannot locate a directory at the configured place, it
+will initiate a search for the directory in any of a number of
+@dfn{hierarchies} rooted under a directory which XEmacs assumes contain
+parts of the XEmacs installation; it may locate several such hierarchies
+and search across them.  (Typically, there are just one or two
+hierarchies: the hierarchy where XEmacs was or will be installed, and
+the one where it is being built.)  Such a directory containing a
+hierarchy is called a @dfn{root}.
+@cindex root of a hierarchy
+Whenever this section refers to a directory using the shorthand
+@code{<root>}, it means that XEmacs searches for it under all
+hierarchies XEmacs was able to scrounge up.  In a
+running XEmacs, the hierarchy roots are stored in the variable
+@code{emacs-roots}.
+@vindex emacs-roots
+
+@subsection Package Hierarchies
+@cindex package hierarchies
+
+Many relevant directories and files XEmacs uses are actually not part of
+the core installation.  They are part of any of the many packages
+usually installed on top of an XEmacs installation.  (@xref{Packages}.)
+Hence, they play a prominent role in the various paths XEmacs sets up.
+
+XEmacs locates packages in any of a number of package hierarchies.
+Package hierarchies fall into three groups: @dfn{early}, @dfn{late},
+and @dfn{last},
+@cindex early package hierarchies
+@cindex late package hierarchies
+@cindex last package hierarchies
+according to the relative location at which they show
+up in the various XEmacs paths.  Early package hierarchies are at the
+very front, late ones somewhere in the middle, and last hierarchies are
+(you guessed it) last.
+
+By default, XEmacs expects an early package hierarchy in the
+subdirectory @file{.xemacs/xemacs-packages} of the user's home
+directory.
+
+Moreover, XEmacs expects late hierarchies in the subdirectories
+@file{site-packages}, @file{mule-packages}, and @file{xemacs-packages}
+(in that order) of the @file{<root>/lib/xemacs} subdirectory of one of
+the installation hierarchies.  (If you run in-place, these are direct
+subdirectories of the build directory.)  Furthermore, XEmacs will also
+search these subdirectories in the @file{<root>/lib/xemacs-<VERSION>}
+subdirectory and prefer directories found there.
+
+By default, XEmacs does not have a pre-configured last package
+hierarchy.  Last hierarchies are primarily for using package hierarchies
+of outdated versions of XEmacs as a fallback option.  For example, it is
+possible to run XEmacs 21 with the 20.4 package hierarchy as a last
+hierarchy.
+
+It is possible to specify at configure-time the location of the various
+package hierarchies with the @code{--package-path} option to configure.
+@cindex package path
+The early, late, and last components of the package path are separated
+by double instead of single colons.  If all three components are
+present, they locate the early, late, and last package hierarchies
+respectively.  If two components are present, they locate the early and
+late hierarchies.  If only one component is present, it locates the
+late hierarchy.  At run time, the package path may also be specified via
+the @code{EMACSPACKAGEPATH} environment variable.
+
+An XEmacs package is laid out just like a normal installed XEmacs lisp
+directory.  It may have @file{lisp}, @file{etc}, @file{info}, and
+@file{lib-src} subdirectories.  XEmacs adds these at appropriate places
+within the various system-wide paths.
+
+There may be any number of package hierarchy directories.
+
+@subsection Directories and Paths
+@cindex paths
+
+Here is a list of the various directories and paths XEmacs tries to
+locate during startup.  XEmacs distinguishes between directories and
+paths specific to @dfn{version}, @dfn{site}, and @dfn{architecture}
+when looking for them.
+
+@table @code
+@item version-specific
+@cindex version-specific directories
+directories are specific to the version of XEmacs they belong to and
+typically reside under @file{<root>/lib/xemacs-<VERSION>}.
+@item site-specific
+@cindex site-specific directories
+directories are independent of the version of XEmacs they belong to and
+typically reside under @file{<root>/lib/xemacs}
+@item architecture-specific
+@cindex architecture-specific directories
+directories are specific both to the version of XEmacs and the
+architecture it runs on and typically reside under
+@file{<root>/lib/xemacs-<VERSION>/<ARCHITECTURE>}.
+@end table
+
+During installation, all of these directories may also reside directly
+under @file{<root>}, because that is where they are in the XEmacs tarball.
+
+If XEmacs runs with the @code{-debug-paths} option (@pxref{Command
+Switches}), it will print the values of these variables, hopefully
+aiding in debugging any problems which come up.
+
+@table @code
+
+@item lisp-directory
+@vindex lisp-directory
+Contains the version-specific location of the Lisp files that come with
+the core distribution of XEmacs.  XEmacs will search it recursively to a
+depth of 1 when setting up @code{load-path}.
+
+@item load-path
+@vindex load-path
+Is where XEmacs searches for XEmacs Lisp files with commands like
+@code{load-library}.
+@findex load-library
+It contains the package lisp directories (see further down) and the
+version-specific core Lisp directories.  If the environment variable
+@code{EMACSLOADPATH} is set at startup, its directories are prepended to
+@code{load-path}.
+@vindex EMACSLOADPATH
+
+@item Info-directory-list
+@vindex Info-directory-list
+Contains the location of info files.  (See @ref{(info)}.)  It contains
+the package info directories and the version-specific core
+documentation.  Moreover, XEmacs will add @file{/usr/info},
+@file{/usr/local/info} as well as the directories of the environment
+variable @code{INFOPATH}
+@vindex INFOPATH
+to @code{Info-directory-list}.
+
+@item exec-directory
+@vindex exec-directory
+Is the directory of architecture-dependent files that come with XEmacs,
+especially executable programs intended for XEmacs to invoke.
+
+@item exec-path
+@vindex exec-path
+Is the path for executables which XEmacs may want to start.  It contains
+the package executable paths as well as @code{exec-directory}, and the
+directories of the environment variables @code{PATH}
+@vindex PATH
+and @code{EMACSPATH}.
+@vindex EMACSPATH
+
+@item doc-directory
+@vindex doc-directory
+Is the directory containing the architecture-specific @file{DOC} file
+that contains documentation for XEmacs' commands.
+
+@item data-directory
+@vindex data-directory
+Is the version-specific directory that contains core data files XEmacs uses.
+It may be initialized from the @code{EMACSDATA}
+@vindex EMACSDATA
+environment variable.
+
+@item data-directory-list
+@vindex data-directory-list
+Is the path where XEmacs looks for data files.  It contains package data
+directories as well as @code{data-directory}.
+
+@end table
+
+

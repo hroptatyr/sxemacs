@@ -1,0 +1,397 @@
+##   Makefile for lib-src subdirectory in XEmacs.
+##   Copyright (C) 1985, 1987, 1988, 1993, 1994 Free Software Foundation, Inc.
+##   Copyright (C) 1996, 1997 Sun Microsystems, Inc.
+
+## This file is part of XEmacs.
+
+## XEmacs is free software; you can redistribute it and/or modify it
+## under the terms of the GNU General Public License as published by the
+## Free Software Foundation; either version 2, or (at your option) any
+## later version.
+
+## XEmacs is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+## FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+## for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with XEmacs; see the file COPYING.  If not, write to
+## the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+## Boston, MA 02111-1307, USA.
+
+## Note: FSF Makefile.in.in does something weird so that the comments
+## above a certain point in this file are in shell format instead of
+## in C format.  How the hell is this supposed to work? */
+
+## For performance and consistency, no built-in rules
+.SUFFIXES:
+.SUFFIXES: .c .h .o
+## ==================== Things "configure" will edit ====================
+
+@SET_MAKE@
+SHELL = /bin/sh
+RM = rm -f
+pwd = /bin/pwd
+
+CC=@CC@
+CPP=@CPP@
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@
+LDFLAGS=@LDFLAGS@
+ALLOCA=@ALLOCA@
+LN_S=@LN_S@
+version=@version@
+
+## This will be the name of the generated binary and is set automatically
+## by configure.
+PROGNAME=@PROGNAME@
+
+## ==================== Where To Install Things ====================
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+libdir=@libdir@
+srcdir=@srcdir@
+datadir=@datadir@
+instvardir=@instvardir@
+top_srcdir=@top_srcdir@
+archlibdir=@archlibdir@
+configuration=@configuration@
+moduledir=@moduledir@
+sitemoduledir=@sitemoduledir@
+
+## ==================== Utility Programs for the Build =================
+
+INSTALL = @install_pp@ @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+
+## ========================== Lists of Files ===========================
+
+#define NO_SHORTNAMES
+#define NOT_C_CODE
+#include "../src/config.h"
+
+#ifndef WIN32_NATIVE
+#define INSTALL_GNUSERV
+#endif
+
+## ----------------------------------------------------------------
+## Things that a user might actually run directly,
+## which should be installed in ${bindir}.
+
+PUBLIC_INSTALLABLE_EXES=\
+#ifdef INSTALL_GNUSERV
+ gnuclient\
+#endif
+#ifdef HAVE_SHLIB
+ ellcc\
+#endif
+#ifdef HAVE_MS_WINDOWS
+ winclient\
+#endif
+ etags ctags b2m ootags
+
+PUBLIC_INSTALLABLE_SCRIPTS=\
+#ifdef INSTALL_GNUSERV
+ gnudoit gnuattach\
+#endif
+ rcs-checkin
+
+PUBLIC_INSTALLABLES = ${PUBLIC_INSTALLABLE_EXES} ${PUBLIC_INSTALLABLE_SCRIPTS}
+
+## ----------------------------------------------------------------
+## Things that XEmacs runs internally on the user's behalf,
+## which should be installed in ${archlibdir}.
+
+PRIVATE_INSTALLABLE_EXES=\
+#ifdef INSTALL_GNUSERV
+ gnuserv\
+#endif
+#ifdef WIN32_NATIVE
+ i minitar\
+#else
+ fakemail\
+#endif
+ wakeup profile make-docfile digest-doc\
+ sorted-doc movemail cvtmail yow hexl mmencode
+
+GEN_SCRIPTS = rcs2log vcdiff gzip-el.sh
+PKG_SCRIPTS = add-big-package.sh
+PRIVATE_INSTALLABLE_SCRIPTS = $(GEN_SCRIPTS) $(PKG_SCRIPTS)
+
+PRIVATE_INSTALLABLES = ${PRIVATE_INSTALLABLE_EXES} ${PRIVATE_INSTALLABLE_SCRIPTS}
+
+## These need to be conditional on I18N3: make-msgfile make-po
+
+## ----------------------------------------------------------------
+## Things that XEmacs uses during the build process itself.
+## Not installed.
+
+BUILD_UTILITIES = make-path make-dump-id
+
+EXES    = ${PUBLIC_INSTALLABLE_EXES} ${PRIVATE_INSTALLABLE_EXES} ${BUILD_UTILITIES}
+SCRIPTS = ${PUBLIC_INSTALLABLE_SCRIPTS} ${PRIVATE_INSTALLABLE_SCRIPTS}
+PROGS   = ${EXES} ${SCRIPTS}
+
+## Additional -D flags for movemail (add to MOVE_FLAGS if desired):
+## MAIL_USE_POP		Support mail retrieval from a POP mailbox.
+## MAIL_USE_MMDF		Support MMDF mailboxes.
+## MAIL_USE_FLOCK	Use flock for file locking (see the comments
+##			about locking in movemail.c)
+## MAIL_UNLINK_SPOOL	Unlink the user spool mailbox after reading
+##			it (instead of just emptying it).
+## KERBEROS		Support Kerberized POP.
+## KRB5			Support Kerberos Version 5 pop instead of
+##			Version 4 (define this in addition to
+##			KERBEROS).
+## HESIOD		Support Hesiod lookups of user mailboxes.
+## MAILHOST		A string, the host name of the default POP
+##			mail host for the site.
+
+MOVE_FLAGS=
+##
+## Additional libraries for movemail:
+## For KERBEROS
+## MOVE_LIBS= -lkrb -ldes -lcom_err
+## For KERBEROS + KRB5
+## MOVE_LIBS= -lkrb5 -lcrypto -lisode -lcom_err
+## Add "-lhesiod" if HESIOD is defined.
+
+MOVE_LIBS=
+
+## ========================== start of cpp stuff =======================
+
+#ifdef USE_GNU_MAKE
+vpath %.c @srcdir@
+vpath %.h @srcdir@
+#else
+VPATH=@srcdir@
+#endif
+
+c_switch_general=@c_switch_general@
+c_switch_all=@c_switch_all@
+ld_switch_general=@ld_switch_general@
+ld_switch_all=@ld_switch_all@
+ld_libs_general=@ld_libs_general@
+
+## We need to #define emacs to get the right versions of some files.
+
+## To understand the order of -I flags, consider what happens if you run
+## ./configure in the source tree, and then run
+## $(srcdir).2.26/configure in some other build tree.
+## Where will the generated files like config.h be included from?
+## This is also why you _must_ use <...> instead of "..." 
+## when #include'ing generated files.
+cppflags = -I. -I../src -I$(srcdir) -I$(top_srcdir)/src $(CPPFLAGS)
+cflags   = $(CFLAGS) $(cppflags) $(c_switch_general)
+ldflags  = $(LDFLAGS) $(ld_switch_general) $(ld_libs_general)
+
+## This is the default compilation command.
+## But we should never rely on it, because some make version
+## failed to find it for getopt.o.
+## Using an explicit command made it work.
+.c.o:
+	${CC} -c $(cflags) $<
+
+.PHONY : all maybe-blessmail install uninstall check
+
+all: ${PROGS}
+
+## Make symlinks for shell scripts if using --srcdir
+${SCRIPTS}:
+	for f in ${SCRIPTS}; do \
+		if test ! -r $$f; then ${LN_S} ${srcdir}/$$f $$f; fi; \
+	done
+
+#undef MOVEMAIL_NEEDS_BLESSING
+#if !defined (MAIL_USE_FLOCK) && ! defined (MAIL_USE_LOCKF)
+#define MOVEMAIL_NEEDS_BLESSING
+blessmail = blessmail
+blessmail:
+	../src/xemacs -batch -l ../lisp/blessmail.el
+	chmod +x $@
+#endif /* movemail needs blessing */
+
+maybe-blessmail: $(blessmail)
+#ifdef MOVEMAIL_NEEDS_BLESSING
+## Do not charge ahead and do it!  Let the installer decide.
+##	  ./blessmail ${archlibdir}/movemail
+	@if test `wc -l <blessmail` != 2; then \
+	  dir=`sed -n -e 's/echo mail directory = \(.*\)/\1/p' blessmail`; \
+	  echo "*************************************************************";\
+	  echo "Assuming $$dir is really the mail spool directory, you should";\
+	  echo "run  lib-src/blessmail ${archlibdir}/movemail"; \
+	  echo "as root, to give  movemail  appropriate permissions."; \
+	  echo "Do that after running  make install."; \
+	  echo "You can also do  make blessmail. "; \
+	  echo "*************************************************************";\
+	fi
+#endif
+
+do-blessmail: $(blessmail)
+#ifdef MOVEMAIL_NEEDS_BLESSING
+	./blessmail ${archlibdir}/movemail
+#endif
+
+## Install the internal utilities.  Until they are installed, we can
+## just run them directly from lib-src.
+${archlibdir}: all
+	@echo; echo "Installing utilities run internally by XEmacs."
+	./make-path ${archlibdir}
+	if test "`(cd ${archlibdir} && $(pwd))`" != "`$(pwd)`"; then \
+	  for f in ${PRIVATE_INSTALLABLE_EXES}; do \
+	    (cd .. && $(INSTALL_PROGRAM) lib-src/$$f ${archlibdir}/$$f) ; \
+	  done ; \
+	fi
+	if test "`(cd ${archlibdir} && $(pwd))`" \
+	     != "`(cd ${srcdir}     && $(pwd))`"; then \
+	  for f in ${PRIVATE_INSTALLABLE_SCRIPTS}; do \
+	    (cd .. && $(INSTALL_PROGRAM) ${srcdir}/$$f ${archlibdir}/$$f); \
+	  done ; \
+	fi
+
+install: ${archlibdir}
+	@echo; echo "Installing utilities for users to run."
+	for file in ${PUBLIC_INSTALLABLE_EXES} ; do \
+	  (cd .. && $(INSTALL_PROGRAM) lib-src/$${file} ${bindir}/$${file}) ; \
+	done
+	for file in ${PUBLIC_INSTALLABLE_SCRIPTS} ; do \
+	  (cd .. && $(INSTALL_PROGRAM) ${srcdir}/$${file} ${bindir}/$${file}) ; \
+	done
+
+uninstall:
+	cd ${bindir} && $(RM) ${PUBLIC_INSTALLABLES}
+	cd ${archlibdir} && $(RM) ${PRIVATE_INSTALLABLES}
+
+.PHONY: mostlyclean clean distclean realclean extraclean
+mostlyclean:
+	$(RM) *.o *.i core
+clean: mostlyclean
+	$(RM) ${EXES} *.exe
+distclean: clean
+	$(RM) DOC *.tab.c *.tab.h TAGS ellcc.h
+	$(RM) GNUmakefile Makefile Makefile.in blessmail config.values
+realclean: distclean
+extraclean: distclean
+	$(RM) *~ \#*
+
+## Test the contents of the directory.
+check:
+	@echo "We don't have any tests for lib-src yet."
+
+TAGS: etags
+	etags *.[ch]
+
+GETOPTOBJS = getopt.o getopt1.o $(ALLOCA)
+GETOPTDEPS = $(GETOPTOBJS) ${srcdir}/getopt.h
+getopt.o: ${srcdir}/getopt.c ${srcdir}/getopt.h
+	${CC} -c $(cflags) ${srcdir}/getopt.c
+getopt1.o: ${srcdir}/getopt1.c ${srcdir}/getopt.h
+	${CC} -c $(cflags) ${srcdir}/getopt1.c
+alloca.o: ${top_srcdir}/src/alloca.c
+	${CC} -c $(cflags) ${srcdir}/../src/alloca.c
+
+regex.o: ${srcdir}/../src/regex.c ${top_srcdir}/src/regex.h
+	$(CC) -c $(cflags) \
+	-DINHIBIT_STRING_HEADER ${top_srcdir}/src/regex.c
+
+etags_args = $(cflags) -DVERSION='"${version}"' ${srcdir}/etags.c \
+	$(GETOPTOBJS) regex.o $(ldflags)
+etags_deps = ${srcdir}/etags.c $(GETOPTDEPS) regex.o ../src/config.h
+
+etags: ${etags_deps}
+	$(CC) ${etags_args} -o $@
+
+ellcc_args = $(cflags) ${srcdir}/ellcc.c $(ldflags)
+ellcc_deps = ${srcdir}/ellcc.c ellcc.h ../src/config.h
+
+ellcc: ${ellcc_deps}
+	$(CC) ${ellcc_args} -o $@
+
+ootags_args = $(cflags) -DVERSION='"${version}"' ${srcdir}/ootags.c \
+	$(GETOPTOBJS) regex.o $(ldflags)
+ootags_deps = ${srcdir}/ootags.c $(GETOPTDEPS) regex.o ../src/config.h
+
+ootags: ${ootags_deps}
+	$(CC) ${ootags_args} -o $@
+
+## ctags depends on etags to assure that parallel makes do not write
+## two etags.o files on top of each other.
+ctags: ${etags_deps} etags
+	$(CC) -DCTAGS ${etags_args} -o $@
+
+wakeup: ${srcdir}/wakeup.c
+	$(CC) $(cflags) ${srcdir}/wakeup.c $(ldflags) -o $@
+
+profile: ${srcdir}/profile.c
+	$(CC) $(cflags) ${srcdir}/profile.c $(ldflags) -o $@
+
+make-docfile: ${srcdir}/make-docfile.c
+	$(CC) $(cflags) ${srcdir}/make-docfile.c $(ldflags) -o $@
+
+digest-doc: ${srcdir}/digest-doc.c
+	$(CC) -Demacs $(cflags) ${srcdir}/digest-doc.c $(ldflags) -o $@
+
+sorted-doc: ${srcdir}/sorted-doc.c
+	$(CC) $(cflags) ${srcdir}/sorted-doc.c $(ldflags) -o $@
+
+b2m: ${srcdir}/b2m.c ../src/config.h
+	$(CC) $(cflags) ${srcdir}/b2m.c $(ldflags) -o $@
+
+movemail: ${srcdir}/movemail.c ${srcdir}/pop.c ${srcdir}/pop.h $(GETOPTDEPS) regex.o \
+	../src/config.h
+	$(CC) $(cflags) ${MOVE_FLAGS} ${srcdir}/movemail.c ${srcdir}/pop.c \
+	$(GETOPTOBJS) regex.o $(ldflags) ${MOVE_LIBS} -o $@
+
+cvtmail: ${srcdir}/cvtmail.c
+	$(CC) $(cflags) ${srcdir}/cvtmail.c $(ldflags) -o $@
+
+fakemail: ${srcdir}/fakemail.c ../src/config.h
+	$(CC) $(cflags) ${srcdir}/fakemail.c $(ldflags) -o $@
+
+yow: ${srcdir}/yow.c ../src/paths.h
+	$(CC) $(cflags) ${srcdir}/yow.c $(ldflags) -o $@
+
+i: ${srcdir}/i.c
+	$(CC) $(cflags) ${srcdir}/i.c $(ldflags) -o $@
+
+minitar: ${srcdir}/../nt/minitar.c
+	$(CC) $(cflags) ${srcdir}/../nt/minitar.c $(ldflags) -lz -o $@
+
+winclient: ${srcdir}/winclient.c
+	$(CC) $(cflags) ${srcdir}/winclient.c $(ldflags) -o $@
+
+hexl: ${srcdir}/hexl.c
+	$(CC) $(cflags) ${srcdir}/hexl.c $(ldflags) -o $@
+
+make-msgfile: ${srcdir}/make-msgfile.c
+	$(CC) $(cflags) ${srcdir}/make-msgfile.c $(ldflags) -o $@
+
+make-po: ${srcdir}/make-po.c
+	$(CC) $(cflags) ${srcdir}/make-po.c $(ldflags) -o $@
+
+make-dump-id: ${srcdir}/make-dump-id.c
+	$(CC) $(cflags) ${srcdir}/make-dump-id.c $(ldflags) -o $@
+
+cflags_gnuserv  = $(CFLAGS) $(cppflags) $(c_switch_all)
+ldflags_gnuserv = $(LDFLAGS) $(ld_switch_all) @libs_xauth@ $(ld_libs_general)
+gnuslib.o: ${srcdir}/gnuslib.c ${srcdir}/gnuserv.h ../src/config.h
+	$(CC) -c $(cflags_gnuserv) ${srcdir}/gnuslib.c
+gnuclient: ${srcdir}/gnuclient.c gnuslib.o ${srcdir}/gnuserv.h
+	$(CC) $(cflags_gnuserv) ${srcdir}/$@.c gnuslib.o ${ldflags_gnuserv} -o $@
+gnuserv: ${srcdir}/gnuserv.c gnuslib.o ${srcdir}/gnuserv.h
+	$(CC) $(cflags_gnuserv) ${srcdir}/$@.c gnuslib.o ${ldflags_gnuserv} -o $@
+
+## mmencode binary is used by tm - but is really part of the metamail package
+## mmencode.c was merged copy of mmencode.c and codes.c of metamail
+mmencode : ${srcdir}/mmencode.c
+	$(CC) $(cflags) ${srcdir}/mmencode.c $(ldflags) -o $@
+
+
+## The timer utility (timer.c, getdate.y) is not used in XEmacs
+## because XEmacs provides built-in timer facilities.
+
+make-path: ${srcdir}/make-path.c ../src/config.h
+	$(CC) -Demacs $(cflags) ${srcdir}/make-path.c $(ldflags) -o $@

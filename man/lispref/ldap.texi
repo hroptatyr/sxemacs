@@ -1,0 +1,490 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1998 Free Software Foundation, Inc.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/ldap.info
+@node LDAP Support, PostgreSQL Support, ToolTalk Support, top
+@chapter LDAP Support
+@cindex LDAP
+
+XEmacs can be linked with a LDAP client library to provide Elisp primitives
+to access directory servers using the Lightweight Directory Access Protocol.
+
+@menu
+* Building XEmacs with LDAP support::  How to add LDAP support to XEmacs
+* XEmacs LDAP API::             Lisp access to LDAP functions
+* Syntax of Search Filters::    A brief summary of RFC 1558
+@end menu
+
+@node Building XEmacs with LDAP support, XEmacs LDAP API, LDAP Support, LDAP Support
+@comment  node-name,  next,  previous,  up
+@section Building XEmacs with LDAP support
+
+LDAP support must be added to XEmacs at build time since it requires
+linking to an external LDAP client library.  As of 21.2, XEmacs has been
+successfully built and tested with
+
+@itemize @bullet
+@item OpenLDAP 1.2 (@url{http://www.openldap.org/})
+@item University of Michigan's LDAP 3.3 (@url{http://www.umich.edu/~dirsvcs/ldap/})
+@item LDAP SDK 1.0 from Netscape Corp. (@url{http://developer.netscape.com/})
+@end itemize
+
+Other libraries conforming to RFC 1823 will probably work also but may
+require some minor tweaking at C level.
+
+The standard XEmacs configure script auto-detects an installed LDAP
+library provided the library itself and the corresponding header files
+can be found in the library and include paths.  A successful detection
+will be signalled in the final output of the configure script.
+
+
+
+@node XEmacs LDAP API, Syntax of Search Filters, Building XEmacs with LDAP support, LDAP Support
+@comment  node-name,  next,  previous,  up
+@section XEmacs LDAP API
+
+XEmacs LDAP API consists of two layers:  a low-level layer which tries
+to stay as close as possible to the C API (where practical) and a
+higher-level layer which provides more convenient primitives to
+effectively use LDAP.
+
+The low-level API should be used directly for very specific purposes
+(such as multiple operations on a connection) only.  The higher-level
+functions provide a more convenient way to access LDAP directories
+hiding the subtleties of handling the connection, translating arguments
+and ensuring compliance with LDAP internationalization rules and formats
+(currently partly implemented only).
+
+@menu
+* LDAP Variables::              Lisp variables related to LDAP
+* The High-Level LDAP API::     High-level LDAP lisp functions
+* The Low-Level LDAP API::      Low-level LDAP lisp primitives
+* LDAP Internationalization::   I18n variables and functions
+@end menu
+
+
+@node LDAP Variables, The High-Level LDAP API, XEmacs LDAP API, XEmacs LDAP API
+@comment  node-name,  next,  previous,  up
+@subsection LDAP Variables
+
+@defvar ldap-default-host
+The default LDAP server hostname.
+A TCP port number can be appended to that name using a colon as
+a separator.
+@end defvar
+
+@defvar ldap-default-port
+Default TCP port for LDAP connections.
+Initialized from the LDAP library. Default value is 389.
+@end defvar
+
+@defvar ldap-default-base
+Default base for LDAP searches.
+This is a string using the syntax of RFC 1779.
+For instance, "o=ACME, c=US" limits the search to the
+Acme organization in the United States.
+@end defvar
+
+@defvar ldap-host-parameters-alist
+An alist of per host options for LDAP transactions.
+The list elements look like @code{(HOST PROP1 VAL1 PROP2 VAL2 ...)}
+@var{host} is the name of an LDAP server. A TCP port number can be
+appended to that name using a colon as a separator.
+@var{propn} and @var{valn} are
+property/value pairs describing parameters for the server.  Valid
+properties:
+@table @code
+@item binddn
+The distinguished name of the user to bind as.  This may look like
+@samp{cn=Babs Jensen,o=ACME,c=US}, see RFC 1779 for details.
+@item passwd
+The password to use for authentication.
+@item auth
+The authentication method to use, possible values depend on the LDAP
+library XEmacs was compiled with, they may include @code{simple},
+@code{krbv41} and @code{krbv42}.
+@item base
+The base for the search. This may look like @samp{cÿ, o¬me}, see
+RFC 1779 for syntax details.
+@item scope
+One of the symbols @code{base}, @code{onelevel} or @code{subtree}
+indicating the scope of the search limited to a base
+object, to a single level or to the whole subtree.
+@item deref
+The dereference policy is one of the symbols @code{never},
+@code{always}, @code{search} or @code{find} and defines how aliases are
+dereferenced.
+@table @code
+@item never
+Aliases are never dereferenced
+@item always
+Aliases are always dereferenced
+@item search
+Aliases are dereferenced when searching
+@item find
+Aliases are dereferenced when locating the base object for the search
+@end table
+@item timelimit
+The timeout limit for the connection in seconds.
+@item sizelimit
+The maximum number of matches to return for searches performed on this connection.
+@end table
+@end defvar
+
+@defvar ldap-verbose
+If non-@code{nil}, LDAP operations will echo progress messages. Defaults to @code{nil}.
+@end defvar
+
+
+@node The High-Level LDAP API, The Low-Level LDAP API, LDAP Variables, XEmacs LDAP API
+@comment  node-name,  next,  previous,  up
+@subsection The High-Level LDAP API
+
+The following functions provide the most convenient interface to perform
+LDAP operations.  All of them open a connection to a host, perform an
+operation (add/search/modify/delete) on one or several entries and
+cleanly close the connection thus insulating the user from all the
+details of the low-level interface such as LDAP Lisp objects @pxref{The
+Low-Level LDAP API}.
+
+Note that @code{ldap-search} which used to be the name of the high-level
+search function in XEmacs 21.1 is now obsolete.  For consistency  in the
+naming as well as backward compatibility, that function now acts as a
+wrapper that calls either @code{ldap-search-basic} (low-level search
+function) or @code{ldap-search-entries} (high-level search function)
+according to the actual parameters.  A direct call to one of these two
+functions is preferred since it is faster and unambiguous.
+
+@deffn Command ldap-search-entries filter &optional host attributes attrsonly withdn
+Perform an LDAP search.
+@var{filter} is the search filter @pxref{Syntax of Search Filters}
+@var{host} is the LDAP host on which to perform the search.
+@var{attributes} is the specific attributes to retrieve, @code{nil} means
+retrieve all.
+@var{attrsonly} if non-@code{nil} retrieves the attributes only without
+their associated values.
+If @var{withdn} is non-@code{nil} each entry in the result will be prepended with
+its distinguished name DN.
+Additional search parameters can be specified through
+@code{ldap-host-parameters-alist}.
+The function returns a list of matching entries.  Each entry is itself
+an alist of attribute/value pairs optionally preceded by the DN of the
+entry according to the value of @var{withdn}.
+@end deffn
+
+@defun ldap-add-entries entries &optional host binddn passwd
+Add entries to an LDAP directory.  @var{entries} is a list of entry
+specifications of the form @code{(DN (ATTR . VALUE) (ATTR . VALUE) ...)}
+where @var{dn} the distinguished name of an entry to add, the following
+are cons cells containing attribute/value string pairs.
+@var{host} is the LDAP host, defaulting to @code{ldap-default-host}.
+@var{binddn} is the DN to bind as to the server.
+@var{passwd} is the corresponding password.
+@end defun
+
+@defun ldap-modify-entries entry-mods &optional host binddn passwd
+Modify entries of an LDAP directory.
+@var{entry_mods} is a list of entry modifications of the form
+@code{(DN MOD-SPEC1 MOD-SPEC2 ...)} where @var{dn} is the distinguished name of
+the entry to modify, the following are modification specifications.
+A modification specification is itself a list of the form
+@code{(MOD-OP ATTR VALUE1 VALUE2 ...)} @var{mod-op} and @var{attr} are mandatory,
+@var{values} are optional depending on @var{mod-op}.
+@var{mod-op} is the type of modification, one of the symbols @code{add}, @code{delete}
+or @code{replace}. @var{attr} is the LDAP attribute type to modify.
+@var{host} is the LDAP host, defaulting to @code{ldap-default-host}.
+@var{binddn} is the DN to bind as to the server.
+@var{passwd} is the corresponding password.
+@end defun
+
+@defun ldap-delete-entries dn &optional host binddn passwd
+Delete an entry from an LDAP directory.
+@var{dn} is the distinguished name of an entry to delete or
+a list of those.
+@var{host} is the LDAP host, defaulting to @code{ldap-default-host}.
+@var{binddn} is the DN to bind as to the server.
+@var{passwd} is the corresponding password.
+@end defun
+
+
+@node The Low-Level LDAP API, LDAP Internationalization, The High-Level LDAP API, XEmacs LDAP API
+@comment  node-name,  next,  previous,  up
+@subsection The Low-Level LDAP API
+
+The low-level API should be used directly for very specific purposes
+(such as multiple operations on a connection) only.  The higher-level
+functions provide a more convenient way to access LDAP directories
+hiding the subtleties of handling the connection, translating arguments
+and ensuring compliance with LDAP internationalization rules and formats
+(currently partly implemented only). See @pxref{The High-Level LDAP API}
+
+Note that the former functions @code{ldap-*-internal} functions have been
+renamed in XEmacs 21.2
+
+@menu
+* The LDAP Lisp Object::
+* Opening and Closing a LDAP Connection::
+* Low-level Operations on a LDAP Server::
+@end menu
+
+@node The LDAP Lisp Object, Opening and Closing a LDAP Connection, The Low-Level LDAP API, The Low-Level LDAP API
+@comment  node-name,  next,  previous,  up
+@subsubsection The LDAP Lisp Object
+
+An internal built-in @code{ldap} lisp object represents a LDAP
+connection.
+
+@defun ldapp object
+This function returns non-@code{nil} if @var{object} is a @code{ldap} object.
+@end defun
+
+@defun ldap-host ldap
+Return the server host of the connection represented by @var{ldap}.
+@end defun
+
+@defun ldap-live-p ldap
+Return non-@code{nil} if @var{ldap} is an active LDAP connection.
+@end defun
+
+
+@node Opening and Closing a LDAP Connection, Low-level Operations on a LDAP Server, The LDAP Lisp Object, The Low-Level LDAP API
+@comment  node-name,  next,  previous,  up
+@subsubsection Opening and Closing a LDAP Connection
+
+@defun ldap-open host &optional plist
+Open a LDAP connection to @var{host}.
+@var{plist} is a property list containing additional parameters for the connection.
+Valid keys in that list are:
+@table @code
+@item port
+The TCP port to use for the connection if different from
+@code{ldap-default-port} or the library builtin value
+@item auth
+The authentication method to use, possible values depend on the LDAP
+library XEmacs was compiled with, they may include @code{simple},
+@code{krbv41} and @code{krbv42}.
+@item binddn
+The distinguished name of the user to bind as.  This may look like
+@samp{c=com, o=Acme, cn=Babs Jensen}, see RFC 1779 for details.
+@item passwd
+The password to use for authentication.
+@item deref
+The dereference policy is one of the symbols @code{never},
+@code{always}, @code{search} or @code{find} and defines how aliases are
+dereferenced.
+@table @code
+@item never
+Aliases are never dereferenced.
+@item always
+Aliases are always dereferenced.
+@item search
+Aliases are dereferenced when searching.
+@item find
+Aliases are dereferenced when locating the base object for the search.
+@end table
+The default is @code{never}.
+@item timelimit
+The timeout limit for the connection in seconds.
+@item sizelimit
+The maximum number of matches to return for searches performed on this connection.
+@end table
+@end defun
+
+@defun ldap-close ldap
+Close the connection represented by @var{ldap}.
+@end defun
+
+
+@node Low-level Operations on a LDAP Server,  , Opening and Closing a LDAP Connection, The Low-Level LDAP API
+@comment  node-name,  next,  previous,  up
+@subsubsection Low-level Operations on a LDAP Server
+
+@code{ldap-search-basic} is the low-level primitive to perform a
+search on a LDAP server.  It works directly on an open LDAP connection
+thus requiring a preliminary call to @code{ldap-open}.  Multiple
+searches can be made on the same connection, then the session must be
+closed with @code{ldap-close}.
+
+@defun ldap-search-basic ldap filter &optional base scope attrs attrsonly withdn verbose
+Perform a search on an open connection @var{ldap} created with @code{ldap-open}.
+@var{filter} is a filter string for the search @pxref{Syntax of Search Filters}
+@var{base} is the distinguished name at which to start the search.
+@var{scope} is one of the symbols @code{base}, @code{onelevel} or
+@code{subtree} indicating the scope of the search limited to a base
+object, to a single level or to the whole subtree.  The default is
+@code{subtree}.
+@var{attrs} is a list of strings indicating which attributes to retrieve
+for each matching entry. If @code{nil} all available attributes are returned.
+If @var{attrsonly} is non-@code{nil} then only the attributes are
+retrieved, not their associated values.
+If @var{withdn} is non-@code{nil} then each entry in the result is
+prepended with its distinguished name DN.
+If @var{verbose} is non-@code{nil} then progress messages are echoed
+The function returns a list of matching entries.  Each entry  is itself
+an alist of attribute/value pairs optionally preceded by the DN of the
+entry according to the value of @var{withdn}.
+@end defun
+
+@defun ldap-add ldap dn entry
+Add @var{entry} to a LDAP directory which a connection @var{ldap} has
+been opened to with @code{ldap-open}.
+@var{dn} is the distinguished name of the entry to add.
+@var{entry} is an entry specification, i.e., a list of cons cells
+containing attribute/value string pairs.
+@end defun
+
+@defun ldap-modify ldap dn mods
+Modify an entry in an LDAP directory.
+@var{ldap} is an LDAP connection object created with @code{ldap-open}.
+@var{dn} is the distinguished name of the entry to modify.
+@var{mods} is a list of modifications to apply.
+A modification is a list of the form @code{(MOD-OP ATTR VALUE1 VALUE2 ...)}
+@var{mod-op} and @var{attr} are mandatory, @var{values} are optional depending on @var{mod-op}.
+@var{mod-op} is the type of modification, one of the symbols @code{add}, @code{delete}
+or @code{replace}. @var{attr} is the LDAP attribute type to modify.
+@end defun
+
+@defun ldap-delete ldap dn
+Delete an entry to an LDAP directory.
+@var{ldap} is an LDAP connection object created with @code{ldap-open}.
+@var{dn} is the distinguished name of the entry to delete.
+@end defun
+
+
+
+@node LDAP Internationalization,  , The Low-Level LDAP API, XEmacs LDAP API
+@comment  node-name,  next,  previous,  up
+@subsection LDAP Internationalization
+
+The XEmacs LDAP API provides basic internationalization features based
+on the LDAP v3 specification (essentially RFC2252 on "LDAP v3 Attribute
+Syntax Definitions").  Unfortunately since there is currently no free
+LDAP v3 server software, this part has not received much testing and
+should be considered experimental.  The framework is in place though.
+
+@defun ldap-decode-attribute attr
+Decode the attribute/value pair @var{attr} according to LDAP rules.
+The attribute name is looked up in @code{ldap-attribute-syntaxes-alist}
+and the corresponding decoder is then retrieved from
+@code{ldap-attribute-syntax-decoders}' and applied on the value(s).
+@end defun
+
+@menu
+* LDAP Internationalization Variables::
+* Encoder/Decoder Functions::
+@end menu
+
+@node LDAP Internationalization Variables, Encoder/Decoder Functions, LDAP Internationalization, LDAP Internationalization
+@comment  node-name,  next,  previous,  up
+@subsubsection LDAP Internationalization Variables
+
+@defvar ldap-ignore-attribute-codings
+If non-@code{nil}, no encoding/decoding will be performed LDAP attribute values
+@end defvar
+
+@defvar ldap-coding-system
+Coding system of LDAP string values.
+LDAP v3 specifies the coding system of strings to be UTF-8.
+You need an XEmacs with Mule support for this.
+@end defvar
+
+@defvar ldap-default-attribute-decoder
+Decoder function to use for attributes whose syntax is unknown.  Such a
+function receives an encoded attribute value as a string and should
+return the decoded value as a string.
+@end defvar
+
+@defvar ldap-attribute-syntax-encoders
+A vector of functions used to encode LDAP attribute values.
+The sequence of functions corresponds to the sequence of LDAP attribute syntax
+object identifiers of the form 1.3.6.1.4.1.1466.1115.121.1.* as defined in
+RFC2252 section 4.3.2. As of this writing, only a few encoder functions
+are available.
+@end defvar
+
+@defvar ldap-attribute-syntax-decoders
+A vector of functions used to decode LDAP attribute values.
+The sequence of functions corresponds to the sequence of LDAP attribute syntax
+object identifiers of the form 1.3.6.1.4.1.1466.1115.121.1.* as defined in
+RFC2252 section 4.3.2. As of this writing, only a few decoder functions
+are available.
+@end defvar
+
+@defvar ldap-attribute-syntaxes-alist
+A map of LDAP attribute names to their type object id minor number.
+This table is built from RFC2252 Section 5 and RFC2256 Section 5.
+@end defvar
+
+@node Encoder/Decoder Functions,  , LDAP Internationalization Variables, LDAP Internationalization
+@comment  node-name,  next,  previous,  up
+@subsubsection Encoder/Decoder Functions
+
+@defun ldap-encode-boolean bool
+A function that encodes an elisp boolean @var{bool} into a LDAP
+boolean string representation.
+@end defun
+
+@defun ldap-decode-boolean str
+A function that decodes a LDAP boolean string representation
+@var{str} into an elisp boolean.
+@end defun
+
+@defun ldap-decode-string str
+Decode a string @var{str} according to @code{ldap-coding-system}.
+@end defun
+
+@defun ldap-encode-string str
+Encode a string @var{str} according to @code{ldap-coding-system}.
+@end defun
+
+@defun ldap-decode-address str
+Decode an address @var{str} according to @code{ldap-coding-system} and
+replacing $ signs with newlines as specified by LDAP encoding rules for
+addresses.
+@end defun
+
+@defun ldap-encode-address str
+Encode an address @var{str} according to @code{ldap-coding-system} and
+replacing newlines with $ signs as specified by LDAP encoding rules for
+addresses.
+@end defun
+
+
+
+@node Syntax of Search Filters,  , XEmacs LDAP API, LDAP Support
+@comment  node-name,  next,  previous,  up
+@section Syntax of Search Filters
+
+LDAP search functions use RFC1558 syntax to describe the search filter.
+In that syntax simple filters have the form:
+
+@example
+(<attr> <filtertype> <value>)
+@end example
+
+@code{<attr>} is an attribute name such as @code{cn} for Common Name,
+@code{o} for Organization, etc...
+
+@code{<value>} is the corresponding value.  This is generally an exact
+string but may also contain @code{*} characters as wildcards
+
+@code{filtertype} is one @code{=} @code{~=}, @code{<=}, @code{>=} which
+respectively describe equality, approximate equality, inferiority and
+superiority.
+
+Thus @code{(cn=John Smith)} matches all records having a canonical name
+equal to John Smith.
+
+A special case is the presence filter @code{(<attr>=*} which matches
+records containing a particular attribute.  For instance @code{(mail=*)}
+matches all records containing a @code{mail} attribute.
+
+Simple filters can be connected together with the logical operators
+@code{&}, @code{|} and @code{!} which stand for the usual and, or and
+not operators.
+
+@code{(&(objectClass=Person)(mail=*)(|(sn=Smith)(givenname=John)))}
+matches records of class @code{Person} containing a @code{mail}
+attribute and corresponding to people whose last name is @code{Smith} or
+whose first name is @code{John}.

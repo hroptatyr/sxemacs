@@ -1,0 +1,90 @@
+This directory contains the source files for the C component of XEmacs.
+Nothing in this directory is needed for using XEmacs once it is built
+and installed, if the dumped Emacs is copied elsewhere.
+
+See the files ../README and then ../INSTALL for installation instructions.
+
+Under Unix, the file `Makefile.in.in' is used as a template by the script
+`../configure' to produce `Makefile.in'.  The same script then uses `cpp'
+to produce the machine-dependent `Makefile' from `Makefile.in';
+`Makefile' is the file which actually controls the compilation of
+Emacs.  Most of this should work transparently to the user; you should
+only need to run `../configure', and then type `make'.
+
+General changes for XEmacs:
+---------------------------
+1. Lisp objects.
+
+   -- XFASTINT has been eliminated.  Use of this expression as an lvalue
+      is incompatible with the union form of Lisp objects, and use as
+      an rvalue is likely to lead to errors and doesn't really save much
+      time.  Expressions of the form `XFASTINT (obj) = num;' get replaced
+      by `obj = make_int (num);' or `XSETINT (obj, num);' and
+      expressions of the form `num = XFASTINT (obj);' get replaced by
+      `num = XINT (obj);'.  Use Qzero in place of `make_int (0)'.
+
+   -- Use of XTYPE gets replaced by the appropriate predicate.  Using
+      XTYPE only works for the small number of types that are not stored
+      using the Lisp_Record type (int, cons, string, and vector).  For
+      example, `(XTYPE (foo) == Lisp_Buffer)' gets replaced by
+      `(BUFFERP (foo))'.
+
+   -- `XSET (obj, Lisp_Int, num)' gets replaced by `XSETINT (obj, num)',
+      for consistency.
+
+   -- Some occurrences of XSET need to get replaced by XSETR --
+      specifically, those where the type is not a primitive type
+      (primitive types are int, cons, string, and vector).
+
+   -- References to `XSTRING (obj)->size' get replaced with
+      `XSTRING_LENGTH (obj)'.  This is currently for cosmetic reasons
+      but there may be other reasons in the future.  (This change is
+      currently incomplete in the source files.)
+
+
+2. Storage classes:
+
+   -- All occurrences of `register' should be replaced by `REGISTER'.
+      It interferes with backtraces so we disable it if DEBUG_XEMACS
+      is defined.
+
+
+3. Errors, messages, I18N3 snarfing:
+
+   -- Errors are continuable in XEmacs but are not in FSF Emacs.
+      Therefore, it's important that functions do something reasonable
+      if an error gets continued.  If you want to signal a non-
+      continuable error, the call to Fsignal() gets put inside a
+      `while (1)' loop.  To facilitate this, and also for proper I18N3
+      message snarfing, most calls to Fsignal() have been replaced by
+      calls to signal_error(), signal_simple_error(), etc.  Look at
+      eval.c for a classification of various error functions.
+
+   -- Constant strings occurring in source files need to get wrapped
+      in a call to GETTEXT (or if inside of a call to `build_string',
+      change that function to `build_translated_string') if they don't
+      occur in certain places where the I18N3 message snarfer will see
+      them.  For a complete discussion of this, see the file
+      lib-src/make-msgfile.lex.
+
+      NOTE: I18N3 support is not currently working, so the above may
+      or may not apply.  Thus it is not a good idea to add random
+      GETTEXTs, unless you really know what you are doing.
+
+   -- Calls to `fprintf (stderr, ...)' and `printf (...)' get replaced
+      with calls to `stderr_out' and `stdout_out'.  This is for I18N3
+      message snarfing.
+
+4. Initialization:
+
+   -- FSF constructs like `obj = intern ("string"); staticpro (&obj);'
+      get replaced by `defsymbol (&obj);'.  This is for code cleanness
+      and better purespace usage.
+   -- FSF constructs like
+        obj = intern ("error");
+        Fput (obj, Qerror_message, "message");
+	Fput (obj, Qerror_conditions, some list);
+      get replaced by calls to deferror().  See the definition of
+      deferror() for how the correct arguments to pass.  This is for
+      code cleanness and I18N3 message snarfing.
+   -- Code in keys_of_foo() functions has been moved into Lisp.

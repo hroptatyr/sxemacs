@@ -1,0 +1,254 @@
+@comment  node-name,  next,  previous,  up
+@node Files, Other Customizations, Modes, Top
+@chapter Files
+@cindex files
+
+   The basic unit of stored data in Unix is the @dfn{file}.  To edit a file,
+you must tell Emacs to read the file into a buffer. This is called
+@dfn{visiting} the file. You can now edit the buffer and to save the
+changes you must write the buffer back to the file.
+
+  In addition to visiting and saving files, Emacs can delete, copy, rename,
+and append to files, and operate on file directories.
+
+@comment  node-name,  next,  previous,  up
+@menu
+* File Names::                  How to type and edit file name arguments.
+* Visiting::                    Visiting a file prepares Emacs to edit the file.
+* Saving Files::                How to save Emacs files.
+@end menu
+
+@node File Names, Visiting, Files, Files
+@section File Names
+@cindex file names
+
+   Most of the Emacs commands that operate on a file require you to
+specify a file name. For example, you might specify the file name
+initially when you enter Emacs :
+
+@example
+xemacs myfile RET
+@end example
+
+@noindent
+After you hit @key{RET}, you will enter XEmacs with "myfile" read into
+the current buffer. If you do not specify the filename when entering
+Emacs, you can use the @b{Open...} option from the @b{File} menu. You
+will be prompted for a filename in the echo area:
+
+@example
+Find file: /usr/workspace/
+@end example
+
+@vindex default-directory
+@noindent
+Type in a file name which you want to open after the "/" and hit
+@key{RET}. The specified file will be read into the current buffer. The
+"/usr/workspace" might be the @dfn{default directory}. When Emacs
+prompts you for a file, it uses the default-directory unless you specify
+a directory. You can see what the default directory of the current
+buffer is by using the @b{Describe Variable} option from the @b{Help}
+menu. When Emacs prompts you for the variable name to describe, type
+@code{default-directory}. If you wish to open a file in some other
+directory, use @key{DEL} or the @key{BackSpace} key to go back and type
+the path name of the new directory.
+
+   You can create a new directory by typing @kbd{M-x
+make-directory}. This command will prompt you for a directory name:
+
+@example
+Create directory: /usr/workspace/
+@end example
+
+@findex make-directory
+@findex remove-directory
+@cindex creating-directories
+@cindex removing-directories
+@noindent
+After you type a directory name and press @key{RET}, a new directory
+with the specified name will be created. If you do not wish to create a
+new directory, then simply press @kbd{C-g} to quit the
+command. Similarly, you can also remove a directory by using the command
+@kbd{remove-directory}. The command @kbd{M-x pwd} will print the current
+buffer's default directory. For more information on file names,
+@xref{File Names,,,xemacs,XEmacs User's Manual}.
+
+
+@node Visiting, Saving Files, File Names, Files
+@section Visiting Files
+@cindex visiting files
+
+   To edit a file in Emacs you need to @dfn{visit} it. @dfn{Visiting} a
+file means copying its contents (or reading them) into the current
+buffer. Emacs will create a new buffer for each file that you visit. The
+buffer will be named after the file that you open. If you open a file
+@file{/usr/workspace/myfile.texinfo}, the buffer will be called
+"myfile.texinfo". If a buffer with this name already exists, a unique
+name will be constructed by appending @samp{<2>}, @samp{<3>}, etc. If
+this is the second buffer with the same name, a "<2>" will be appended,
+"<3>" for a third buffer and so on. The name of the buffer which is
+being displayed in the window will be shown both at the top and bottom
+of the frame. Once you are in XEmacs, you can use the following
+commands:
+
+@table @kbd
+@item C-x C-f
+@findex find-file
+@kindex C-x C-f
+This command will visit a file (@code{find-file}). It will prompt you
+for a file name to visit. The @b{Open...} option from the @b{File} menu
+does the same thing:
+
+@example
+Find file: /usr/workspace/
+@end example
+
+@noindent
+Type in a filename and press @key{RET}. You will see a new buffer on the
+screen with its name in the mode-line. If the filename you specify
+already exists in Emacs, the buffer containing that file will be
+selected. You will get an error message if the filename does not
+exist. If you still press @key{RET}, a new buffer with the given
+filename will be displayed on the screen.
+
+@item C-x C-v
+@kindex C-x C-v
+@findex find-alternate-file
+This command (@code{find-alternate-file}), will visit a different file
+instead of the one visited last. It is similar to @kbd{C-c C-f} except
+that it kills the current buffer (after offering to save it).
+
+@item C-x 5 C-f
+@kindex C-x 5 C-f
+@findex find-file-other-frame
+This command will visit a file in another frame
+(@code{find-file-other-frame}) without changing the current window or
+frame. The @b{Open in New Frame...} from the @b{File} menu will do the
+same thing. It will prompt you for a file name in the echo area. After
+you type the file name and press @key{RET}, the specified file will be
+read into a new buffer and displayed on a new frame.
+@end table
+
+@node Saving Files,  , Visiting, Files
+@section Saving Files
+@cindex saving files
+
+   The changes that you make after visiting a file will not be saved
+unless you save the buffer. When you save the buffer, Emacs writes the
+current contents of the buffer into the visited file. Some commands to
+save buffers are:
+
+@table @kbd
+@item C-x C-s
+@findex save-buffer
+@kindex C-x C-s
+This command will permanently save the current buffer in its visited
+file (@code{save-buffer}). You will see the following message in the
+echo area if you save a file called "myfile.texinfo" :
+
+@example
+Wrote /usr/workspace/myfile.texinfo
+@end example
+
+@noindent
+Try using this command twice. You will get the above message the first
+time you use this command, the second time you will get the following
+message:
+
+@example
+(No changes need to be saved)
+@end example
+
+@noindent
+This message indicates that you haven't made any changes since the last
+time you saved the file.
+
+@item C-x s
+@kindex C-x s
+@findex save-some-buffers
+This command will save all the buffers in their visited files
+(@code{save-some-buffers}). It will prompt you for typing yes or no:
+
+@example
+Save file /usr/workspace/myfile.texinfo? (y or n)
+@end example
+
+@noindent
+You will get the above message for all the buffers. Type "y" if you want
+to save the buffer.
+
+@item C-x C-w
+@findex write file
+@kindex C-x C-w
+This command will prompt you for a file name and save the current buffer
+in that file. (@code{write-file}). You will see the following message in
+the echo area:
+
+@example
+Write file: /usr/workspace/
+@end example
+
+@noindent
+After you type in a file name, press @key{RET}. The buffer will be saved
+in a new file. You can make copies of a particular file using this
+command.
+@end table
+
+   You can also undo all the changes made since the file was visited or
+saved by reading the text from the file again (called
+@dfn{reverting}). For more information on this option,
+@xref{Reverting,,,xemacs,XEmacs User's Manual}.
+
+@vindex make-backup-files
+   When you save a file in Emacs, it destroys its old contents. However,
+if you set the variable @code{make-backup-files} to non-@code{nil}
+i.e. @samp{t}, Emacs will create a @dfn{backup} file. Select the
+@b{Describe variable} option from the @b{Help} menu and look at the
+documentation for this variable. Its default value should be
+@samp{t}. However, if its not then use @kbd{M-x set-variable} to set it
+to @samp{t} (@pxref{Setting Variables}). The backup file will contain
+the contents from the last time you visited the file. Emacs also
+provides options for creating numbered backups. For more information on
+backups, @xref{Backup,,,xemacs,XEmacs User's Manual}.
+
+@cindex auto saving
+   Emacs also saves all the files from time to time so that in case of a
+system crash you don't lose lot of your work. You will see the message
+@samp{Auto-saving...} displayed in the echo area when the buffer is
+being saved automatically. The auto saved files are named by putting the
+character @samp{#} in front and back. For example a file called
+"myfile.texinfo" would be named as @file{#myfile.texinfo#}. For
+information on controlling auto-saving and recovering data from
+auto-saving, @xref{Auto Save Files,,,xemacs,XEmacs User's Manual}.
+
+@cindex simultaneous editing
+   Emacs provides protection from simultaneous editing which occurs if
+two users are visiting the same file and trying to save their
+changes. It will put a lock on a file which is being visited and
+modified. If any other user tries to modify that file, it will inform
+the user about the lock and provide some
+options. For more information on protection against simultaneous
+editing, @xref{Interlocking,,,xemacs,XEmacs User's Manual}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

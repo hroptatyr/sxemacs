@@ -1,0 +1,17 @@
+This directory contains a number of sample Emacs dynamic modules.
+These modules can be loaded with the command 'M-x load-module'.
+
+To compile one of these modules, simply enter the desired directory
+and type 'make'. Then, from within Emacs, load the module by
+specifying the path to the directory which contains the compiled
+module.
+
+Each of these samples describes different features and limitations
+of the Emacs module loading technology. Please refer to the README
+files in each directory for a brief discussion on what the sample
+in that directory is demonstrating.  For a complete discussion on
+Emacs dynamic modules, please consult the Emacs Module Writers Guide,
+which can be found in the ../info directory.
+
+NOTE: As this technology matures, this directory will eventually contain
+large parts of XEmacs itself, which will be loaded in as required.

@@ -1,0 +1,376 @@
+CHANGES-release
+
+This file briefly describes all changes to XEmacs in the OXYMORON
+series of releases.  In principle there should be no user interface
+changes listed here, since this is intended to be a stable series.  In
+practice, some bugfixes do involve user-visible changes.  In general
+users should be happy about them, but they may affect workarounds you
+have put in place.  So those that do are noted here with (**).
+
+Also, the MS Windows platform support is not fully mature, and the GTK
+platform support is explicitly experimental.  In those cases
+improvements that provably do not affect other platforms are accepted.
+The platform affected is noted, and the change is flagged (**).
+
+Fixing a critical bug is not considered a "user interface change" in the
+sense that there should be no way for it to interfere with you getting
+more work done.
+
+Where there are many changes, they will be grouped into run-time,
+build-time, and "documentation and data" changes.
+
+For more details, including developers involved and dates, see the
+ChangeLogs, or use CVS diff to view the patches.
+
+to 21.4.12 "Portable Code"
+
+-- Fix: Type typos (welcome back!) -- Martin Buchholz
+-- Fix: Cygwin link breakage with new binutils -- Sergey Okhapkin
+-- Fix: Cygwin: Bump stack size to 8MB for large regexps -- Andy Piper
+-- Fix: Cygwin build breakage from Ben's printing patch -- Rick Rankin
+-- Fix: Don't require GNOME for Mozilla -- Ville Skyttä
+-- Fix: nnimap hangs in process output -- Daiki Ueno
+-- Update: about.el information -- Ilya Golubev
+-- Update: More tests/automated/regexp-tests.el cases -- Stephen Turnbull
+
+to 21.4.11 "Native Windows TTY Support"
+
+-- (**) More menubar options for browse-url -- Ville Skyttä
+-- Fix: Can't find dumpfile of symlinked xemacs -- Vin Shelton
+-- Fix: Deadlock in Xt timers -- Stephen Turnbull
+-- Fix: mmap crash (glibc 2.3.x) in build -- Wolfram Gloger
+-- Fix: Restore layout patch -- Andy Piper
+-- Fix: Minor bugs -- Ben Wing
+-- New: Berkeley db 4.1 support -- Greg Allen
+-- New: Dynamic initialization of auto-mode-alist -- Ville Skyttä
+-- New: Print memory check results in crash -- Ben Wing
+-- Build: Default pdump on for Linux -- Stephen Turnbull
+-- Build: Native Windows utilities build right -- Ben Wing
+-- Build: Mule regexp tests -- Daiki Ueno, Stephen Turnbull
+-- Docs: regex/alloca PROBLEM -- Stephen Turnbull
+-- Docs: Lesstif PROBLEM -- Frank McIngvale
+-- Docs: Examples, corrections, and oxymorons -- Katsumi Yamaoka, John Paul Wallington, Stephen Turnbull, Giacomo Boffi, Ville Skyttä, Ilya Golubev, Andy Piper, Ben Wing
+
+to 21.4.10 "Military Intelligence"
+
+-- (**) C-x r d invokes delete-rectangle -- Katsumi Yamaoka
+-- (**) Check Mule coding cookie in 2d line, too -- Stephen Turnbull
+-- (**) Default lookup-syntax-properties to nil -- Andy Piper, Stephen Turnbull
+-- Fix: Always generate auto-autoloads.el -- Stephen Turnbull
+-- Fix: Code typos -- Stephen Turnbull, Katsumi Yamaoka
+-- Fix: Freeze in certain modal dialogs -- Andy Piper
+-- Fix: Layout geometry bug -- Andy Piper
+-- Fix: Resizing bug in layouts -- Andy Piper
+-- Fix: Stale match data bug -- Stephen Turnbull
+-- Fix: Ugly dialog layouts -- Andy Piper
+-- Fix: font-lock-syntax-keywords tromps font-lock-keywords -- Daiki Ueno
+-- Fix: revert-buffer bugs -- Andy Piper
+-- Fix: (Cygwin) Regex crashes; increase stack size -- Andy Piper
+-- Fix: (HP/UX) Don't use getaddrinfo -- Darryl Okahata, Stephen Turnbull
+-- Fix: (MS Windows) Handle leak -- Mike Alexander
+-- Fix: (Native Windows) Truename bug  -- Stephen Turnbull
+-- Fix: (Unix) Subprocess problems -- Mike Sperber, Stephen Turnbull
+-- Fix: (X11) CPU-eating XEmacs process at gdm logout -- Ben Sigelman
+-- Fix: (X11) Crash in external widget -- I. N. Golubev
+-- New: NAS 1.6 support -- Raymond Toy
+-- Improve: (Build) New regression tests -- Stephen Turnbull
+-- Improve: Crash message -- Stephen Turnbull
+-- Improve: FontSet defaults -- Ville Skyttä, Stephen Turnbull
+-- Improve: GNU synchs: parse-sexp-lookup-properties -- Alan Mackenzie, Stephen Turnbull
+-- Improve: Optimize update_syntax_cache -- Stephen Turnbull
+-- Improve: Test suite more friendly, some docs -- Stephen Turnbull
+-- Docs: Improve PROBLEMS, INSTALL, etc/BETA -- Stephen Turnbull
+-- Docs: New FAQs -- Stephen Turnbull
+-- Docs: New PROBLEMs -- Stephen Turnbull
+-- Docs: New configure.usage -- Stephen Turnbull
+-- Docs: New oxymorons -- Stephen Turnbull, Christopher Sekiya
+-- Docs: Typo fixes -- Jerry James, Ville Skyttä, Stephen Turnbull, Norbert Koch, Juergen Stuber
+-- Docs: Update manuals on syntax functions, byte-compiler options -- Stephen Turnbull
+-- Docs: Update package sites and Texi docs -- Ville Skyttä
+-- Docs: (Native Windows) Remove redundant quoting in Installation -- Adrian Aichner
+
+to 21.4.9 "Informed Management"
+
+-- (**) (MS Windows) new winclient -- Andy Piper, others
+-- (**) Mule auto-decompresses in find-library -- Steve Youngs
+-- (**) PUI displays author and package versions, balloon-help -- Steve Youngs
+-- (**) autoload and bind `replace-rectangle -- Didier Verna
+-- Crash fix: (HP/UX) in Motif on updating non-labels -- Darryl Okahata,
+   Andy Piper
+-- Crash fix: (MS Windows) on bogus time -- Nick Pakoulin, Stephen Turnbull
+-- Crash fix: in handling of dead consoles -- Ben Wing
+-- Crash fix: in process handling (several) -- Mike Sperber
+-- Crash fix: in skip-chars -- Ben Wing, Stephen Turnbull
+-- Crash fix: on finding non-existent XML file -- Stephen Turnbull, Ben Wing,
+   Michael Sperber
+-- Fix: URL handling (Cygwin) -- Andy Piper
+-- Fix: bogus arguments in custom-theme-set-variables -- Andy Piper
+-- Fix: bogus reinitialization breaking ru-keys.el -- Dmitry Astapov
+-- Fix: call-process-region deletes region after use -- Mike Alexander
+-- Fix: case (in)sensitivity in replace-in-string -- Didier Verna
+-- Fix: completion refers to correct history -- Christoph Wedler
+-- Fix: don't use RTLD_GLOBAL in DSOs -- Jerry James
+-- Fix: failures to redisplay (MS Windows) -- Mike Alexander, Andy Piper,
+   Adrian Aichner
+-- Fix: file renaming (MS Windows) -- Mathias Grimmberger
+-- Fix: find architecture directory correctly -- Jerry James
+-- Fix: freeze on virtual desktop switch (MS Windows) -- Rick Rankin
+-- Fix: glyph handling, especially baselines -- Andy Piper, Nix
+-- Fix: handle popup dialogs correlcty (MS Windows) -- Andy Piper
+-- Fix: mousewheel handling (MS Windows) -- Andy Piper
+-- Fix: short file name handling (MS Windows) -- Andy Piper, Peter Arius
+-- Fix: shrink to fit windows work -- Jerry James
+-- Fix: toolbar doesn't update if gutters move bug -- Andy Piper
+-- Fix: uneven horizontal window splits -- Jerry James
+-- Improve: GNU synchs in Lisp API: join-line, :set-after, add-to-list,
+   custom-local-buffer, font-lock-doc-face, font-lock-builtin-face,
+   font-lock-constant-face, custom-set-default
+   -- Ville Skyttä, John Paul Wallington, Andy Piper
+-- Improve: revert-buffer omits expensive operations if no change -- Andy Piper
+-- Improve: change registry key to XEmacs (MS Windows) -- Andy Piper
+-- Improve: 2d arg of split-string-by-char is required -- Brian A Palmer
+-- Improve: printer handling on MS (native and Cygwin) -- Andy Piper
+-- Fix: (Build) allow disabling Internet sockets in gnuserv -- Gregory Steuck
+-- Fix: (Build) unsigned-signed compare warnings -- Stephen Turnbull
+-- Fix: (Build/Cygwin) X + Windows build gets widgets -- Andy Piper
+-- Fix: (Build/Unix) configure --usage -- Jerry James
+-- Fix: (Build/Unix) protect linker args for PPC -- Malcolm Purvis
+-- Improve: (Build) make-autoload supports define-derived-mode
+   -- Stephen Turnbull and Didier Verna
+-- Improve: (Build/MS Windows) Maintainer build process -- Andy Piper
+-- Improve: (Build/MS Windows) default to pdump -- Jonathan Harris
+-- Improve: (Build/MS Windows) update documentation -- Jonathan Harris
+-- Improve: (Build/Unix) 64-bit ELF support -- Gregory Steuck
+-- Improve: (Build/Unix) OpenBSD support -- Gregory Steuck
+-- Docs: "vanity" updates -- Andy Piper
+-- Docs: Info minor updates -- Simon Josefsson, Ville Skyttä, Adrian Aichner,
+   Steve Youngs, Jerry James
+-- Docs: Info new nodes: Regression Testing XEmacs -- Stephen Turnbull
+-- Docs: Info typo fixes -- Adrian Aichner (many!)
+-- Docs: docstring typo fixes -- John Paul Wallington, Stephen Turnbull,
+   Ville Skyttä, Andy Piper, Jerry James, Adrian Aichner
+-- Docs: new FAQs: Killing is slow, Q2.0.15 -- Stephen Turnbull, Adrian Aichner
+-- Docs: new PROBLEMS -- Stephen Turnbull
+
+to XEmacs 21.4.8 "Honest Recruiter"
+
+-- Fix: "yank-pop twice" bug -- Jerry James, Stephen J. Turnbull
+-- Fix: broken process input from race condition patch -- Nix
+
+to XEmacs 21.4.7 "Economic Science"
+
+-- Fix: prevent migration code from trashing .emacs -- Stephen J. Turnbull
+-- Fix: XmProcessTraversal crash -- Stephen J. Turnbull
+-- Fix: crash in GTK popup menu -- William M. Perry
+-- Fix: dll_load to avoid incorrect symbol binding -- Andrew Begel
+-- Fix: emodules_load to avoid multiple loading of same module -- Jerry James
+-- Fix: recover gracefully from XOpenDevice failure -- Mike Sperber
+
+-- (**) Fix: write-region-pre-hook obeys coding-system argument -- Stephen J.
+   Turnbull
+-- (**) Improve: GTK selection handling -- Eric Gillespie, Jr.
+-- (**) New: auto-modes: .siv, .sieve, GNUmakefile, Xdefaults -- Ville Skyttä,
+   Simon Josefsson
+-- Fix: race condition detecting dead process -- Nix
+-- Fix: default Info-auto-generate-directory to 'if-outdated. -- Adrian
+   Aichner
+-- Fix: generic-print-region passes correct arguments Nevin Kapur, Björn
+   Torkelsson, Adrian Aichner
+-- Fix: regenerate info dir when missing -- Mike Sperber
+-- Fix: truncate menu item to width -- Adrian Aichner
+-- Update: GNU synchs: assq-delete-all, function-interactive, describe-mode
+   -- John Paul Wallington
+
+-- Fix: "--with-widgets" means "=yes", and autodetect athena. -- Jan Vroonhof
+-- Fix: add -Wno-shadow for GTK -- William M. Perry
+-- Fix: make moduledir option work -- Mike Fabian
+-- Fix: native Windows build dependencies with pdump -- Adrian Aichner
+-- Fix: clean up name space after automated tests -- Stephen J. Turnbull
+-- Improve: native Windows build -- Jonathan Harris
+-- Fix: typo in macro definition -- Martin Buchholz
+
+-- Fix: typos -- Adrian Aichner, Steve Youngs, Charles Waldman
+-- Improve: Packages node -- Stephen J. Turnbull
+-- Improve: comments and docstrings -- Stephen J. Turnbull, Christoph Wedler,
+   Valdis Kletnieks, John H. Palmieri
+-- Improve: etc/BETA -- Stephen J. Turnbull, Jarl Friis
+-- New: External Client Widget Internals node -- Stephen J. Turnbull
+-- New: FAQ: Unicode support via Mule-UCS. -- Stephen J. Turnbull
+-- New: FAQ: remote files -- Stephen J. Turnbull
+-- New: Glyph, graphics examples node -- Darryl Okahata
+-- New: TUTORIAL.se -- Mats Lidell
+-- New: The User's View [of packages] node -- Stephen J. Turnbull
+-- New: autoconfiscate MacOS/X "Darwin" -- Greg Parker, Martin Buchholz
+-- New: s/linux.h for 64-bit libs -- Andreas Jaeger
+-- Update: photos -- Hrvoje Niksic
+-- Update: Files node: remote file editing, EFS, TRAMP -- Stephen J. Turnbull
+-- Update: URLs in FAQ -- Adrian Aichner, Stephen J. Turnbull
+-- Update: package-index.LATEST.pgp -- Steve Youngs
+
+to XEmacs 21.4.6 "Common Lisp"
+
+-- Changing coding system marks buffer as modified.
+-- More file/directory dialogs available on Windows.
+-- In replace-regexp, subexpression replacement supported.
+-- Motif bug causes intermittent crashes.  Patch Motif: see PROBLEMS.
+-- Common subexpression optimization caused an illegal pointer
+   reference in regexp replace; fixed.
+-- Autosave files are now saved in current coding system (where file
+   coding supported).  This resolves the "doubled escape" bug common
+   in Japanese mail files, but increases the chance that autosave
+   files will contain garbage (because the buffer contents cannot be
+   saved correctly in the current coding system).
+-- Failure to save certain customizations fixed.
+-- Ability to customize fonts improved, especially the "cannot
+   customize italic" bug
+-- Window loop now properly iterates over multiple devices; some
+   problems with wrong window being selected (eg, with gnuclient)
+   resolved.
+-- Certain infloops in password prompts, etc, fixed.
+-- Make space for symbols defined in modules in Lisp symbol tables
+-- Errors due to failure to conform to pop-up menu API in GTK fixed.
+-- Cygwin URL handling in shell calls fixed.
+-- Inability to select directories fixed.
+-- Initial VC.NET support.
+-- New node on "packaging" for library developers in Lispref.
+-- Fix incorrect ctime to Lisp conversion.
+-- HP-UX LDFLAGS fix.
+-- Many typo fixes and small documentation enhancements.
+-- New section of examples of glyph usage in Lispref.
+-- Make `truncate-partial-width-windows' effect buffer-local.
+-- Suppress bogus focus changes.
+-- Fix custom's handling of font size and family.
+-- Fix comboreloc crash (common on Linux when making first frame).
+-- Default --with-ipv6-cname=no.
+-- From 21.4.5 "Civil Service (Windows)":
+   -- Fixed a scrollbar problem when selecting the frame with focus.
+   -- Fixed `mswindows-shell-execute' under cygwin.
+   -- Added a new function `mswindows-cygwin-to-win32-path' for JDE.
+   -- Added support for dialog-based directory selection.
+   -- The installer version has been updated to the 21.5 netinstaller.  The
+      21.5 installer now does proper dde file association and adds uninstall
+      capability.
+   -- Handle leak fix from Mike Alexander.
+   -- New release build script.
+
+to XEmacs 21.4.5 "Civil Service"
+
+-- Now installs arch-specific files relative to $execdir, not $prefix.
+-- New configure.ac guards against autoconf 2.5x, not yet supported.
+-- (**) configure.ac added to auto-mode-alist.
+-- Synch configure.usage with configure.in.
+-- Add GTK defaults in several places.
+-- Fix Lisp syntax in several files.
+-- call-process-internal reads files as 'binary, now writes 'binary too.
+-- FAQ corrections.
+-- Many typo fixes.
+-- Correct case for XEmacs file names under msw (Cygwin is pedantic).
+-- Fix progress gauge flashing under OpenMotif.
+-- Texinfo syntax corrections in Info sources.
+-- Bug reporting now politically correct.
+-- Now detects xpm-nox on Cygwin.
+-- Conditionalize `-msw.c against Cygwin and MSVC5 deficiencies.
+-- .9 files now recognized as manpages (shadowed by ChangeLog and .scm).
+-- Fix "gc in window proc" and "setitimer" crashes on msw.
+-- Quote null arguments correctly on msw.
+-- Fix pty allocation on SCO Unix.
+-- Eliminate a few warnings.
+
+to XEmacs 21.4.4 "Artificial Intelligence"
+
+-- (**) There is a bug in "window procedures" under MS Windows only.
+   Non-debug builds print a warning on stderr, and you may want to
+   consider XEmacs unstable (save and restart) if you see it (debug
+   builds assert here).
+-- Printing the selection is implemented for MS Windows
+-- C-g now works on MS Windows
+-- Kinsoku (text wrapping for Asian scripts) fixes
+-- "Scrolling with no scrollbar" crash on MS Windows fixed
+-- Case conversion works for Cyrillic
+-- Help is available with C-x s
+-- M-x locate-library completes library names
+-- (**) `replace-match' supports FSF-style match subexpressions
+-- `compose-mail' is supported in about.el
+-- (**) Renaming custom.el to inhibit loading it works
+-- (**) "Reset to standard" works with "set" and "saved" Custom
+   buffers
+-- `Unbalanced parentheses' bug when dealing with mixed comment
+   styles in c++/java/etc. mode fixed
+-- Byte-compiler optimization fixes
+-- Dired can handle directory names with unusual characters
+-- Popup menus work with popup-menu-titles turned off
+-- (**) M-? now invokes Help
+-- Data corruption in network streams on MS Windows fixed
+-- A few improvements and bug fixes in GTK support.
+
+-- (**) EsounD support is no longer autodetected; you must explicitly
+   request it.  EsounD does evil things with signals and XEmacs
+   cannot protect itself from the race conditions created.
+-- (**) The "excessively long startup when not networked" (often on
+   Red Hat Linux) problem is addressed with a configure option that
+   defeats IPv6 host name canonicalization, `--with-ipv6-cname=no'.
+   See also the discussion in PROBLEMS.
+-- Better detection of Cygwin Perl
+-- Support for old Cygwin betas dropped
+-- Better support for Windows Millenium Edition
+-- --with-widgets=no no longer autodetects Athena
+-- Self tests work if directory is a symlink
+-- Use ld reported by gcc, not gcc itself, to link
+-- TAR define added to src/Makefile
+
+-- Many small and medium documentation fixes, including an improved
+   etc/sample.init.el, German tutorial, CCL fonts documentation
+-- etc/xemacs-ja.1 replaced with new translation
+-- much improved FAQ
+
+to XEmacs 21.4.3 "Academic Rigor"
+
+-- Restore include of src/events-mod.h.
+-- Detect Windows native sound under Cygwin
+-- Restore patch for building --with-scrollbars=no
+
+-- Update package docs
+-- More photos
+-- Misc comment fixes in source
+
+to XEmacs 21.4.2 "Developer-Friendly Unix APIs"
+
+-- (**) Stop shifted motion from making active region persist if no motion.
+-- (**) MS Windows: Printer support now (optionally) adds headers/footers.
+-- (**) MS Windows: Critical-quit works.
+-- (**) GTK: Face editor changes can apply to GTK too.
+-- Fix hang in Customize menu on Windows platforms.
+-- Fix crash with xlc -O3 on AIX.
+-- make-charset handles short-name correctly.
+
+-- Trivial sign-compare warning fix.
+-- MS Windows: nt/*.mak version string fix and assorted build cleanups.
+-- GCC 3.0 link error from cruft fixed.
+-- make-stds.info builds again with makeinfo 3.12
+
+-- Remove CVS keywords from build-report.el.
+-- Miscellaneous documentation fixes.
+-- Add photos, update descriptions in about.el.
+-- Update copyright notice on splash screen.
+-- FTP mirror site updates
+
+to XEmacs 21.4.1 "Copyleft"
+
+-- Temporary fix to crash in map-keymap applied.
+-- Crash in Motif builds on closing frame fixed.
+
+-- Descriptions of workarounds for crashes and hangs related to ESD
+   (don't configure it) and Athena3d (how to configure it properly)
+   added to PROBLEMS.
+
+-- about.el overhauled, a few new hackers' entries or photos added,
+   and old ones updated.
+-- More etc\NEWS.
+-- Typo fix in etc\sample.init.el.
+-- Typos fixed in a number of documents.
+
+to XEmacs 21.4.0 "Solid Vapor"
+
+-- Initial release of 21.4 series.  See NEWS for changes since the last
+   stable release, 21.1.
+

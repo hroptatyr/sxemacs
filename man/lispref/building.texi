@@ -1,0 +1,495 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993 Free Software Foundation, Inc.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/building.info
+@node Building XEmacs and Object Allocation, Standard Errors, Tips, Top
+@appendix Building XEmacs; Allocation of Objects
+
+  This chapter describes how the runnable XEmacs executable is dumped
+with the preloaded Lisp libraries in it and how storage is allocated.
+
+  There is an entire separate document, the @cite{XEmacs Internals
+Manual}, devoted to the internals of XEmacs from the perspective of the
+C programmer.  It contains much more detailed information about the
+build process, the allocation and garbage-collection process, and other
+aspects related to the internals of XEmacs.
+
+@menu
+* Building XEmacs::     How to preload Lisp libraries into XEmacs.
+* Pure Storage::        A kludge to make preloaded Lisp functions sharable.
+* Garbage Collection::  Reclaiming space for Lisp objects no longer used.
+@end menu
+
+@node Building XEmacs
+@appendixsec Building XEmacs
+@cindex building XEmacs
+@pindex temacs
+
+  This section explains the steps involved in building the XEmacs
+executable.  You don't have to know this material to build and install
+XEmacs, since the makefiles do all these things automatically.  This
+information is pertinent to XEmacs maintenance.
+
+  The @cite{XEmacs Internals Manual} contains more information about this.
+
+  Compilation of the C source files in the @file{src} directory
+produces an executable file called @file{temacs}, also called a
+@dfn{bare impure XEmacs}.  It contains the XEmacs Lisp interpreter and I/O
+routines, but not the editing commands.
+
+@cindex @file{loadup.el}
+  Before XEmacs is actually usable, a number of Lisp files need to be
+loaded.  These define all the editing commands, plus most of the startup
+code and many very basic Lisp primitives.  This is accomplished by
+loading the file @file{loadup.el}, which in turn loads all of the other
+standardly-loaded Lisp files.
+
+  It takes a substantial time to load the standard Lisp files.  Luckily,
+you don't have to do this each time you run XEmacs; @file{temacs} can
+dump out an executable program called @file{xemacs} that has these files
+preloaded.  @file{xemacs} starts more quickly because it does not need to
+load the files.  This is the XEmacs executable that is normally
+installed.
+
+  To create @file{xemacs}, use the command @samp{temacs -batch -l loadup
+dump}.  The purpose of @samp{-batch} here is to tell @file{temacs} to run
+in non-interactive, command-line mode. (@file{temacs} can @emph{only} run
+in this fashion.  Part of the code required to initialize frames and faces
+is in Lisp, and must be loaded before XEmacs is able to create any frames.)
+The argument @samp{dump} tells @file{loadup.el} to dump a new executable
+named @file{xemacs}.
+
+  The dumping process is highly system-specific, and some operating
+systems don't support dumping.  On those systems, you must start XEmacs
+with the @samp{temacs -batch -l loadup run-temacs} command each time you
+use it.  This takes a substantial time, but since you need to start
+Emacs once a day at most---or once a week if you never log out---the
+extra time is not too severe a problem. (In older versions of Emacs,
+you started Emacs from @file{temacs} using @samp{temacs -l loadup}.)
+
+@cindex runnable @file{temacs}
+@cindex bootstrapping XEmacs from @file{temacs}
+  You are free to start XEmacs directly from @file{temacs} if you want,
+even if there is already a dumped @file{xemacs}.  Normally you wouldn't
+want to do that; but the Makefiles do this when you rebuild XEmacs using
+@samp{make all-elc}, which builds XEmacs and simultaneously compiles any
+out-of-date Lisp files. (You need @file{xemacs} in order to compile Lisp
+files.  However, you also need the compiled Lisp files in order to dump
+out @file{xemacs}.  If both of these are missing or corrupted, you are
+out of luck unless you're able to bootstrap @file{xemacs} from
+@file{temacs}.  Note that @samp{make all-elc} actually loads the
+alternative loadup file @file{loadup-el.el}, which works like
+@file{loadup.el} but disables the pure-copying process and forces
+XEmacs to ignore any compiled Lisp files even if they exist.)
+
+@cindex @file{site-load.el}
+  You can specify additional files to preload by writing a library named
+@file{site-load.el} that loads them.  You may need to increase the value
+of @code{PURESIZE}, in @file{src/puresize.h}, to make room for the
+additional files.  You should @emph{not} modify this file directly,
+however; instead, use the @samp{--puresize} configuration option. (If
+you run out of pure space while dumping @file{xemacs}, you will be told
+how much pure space you actually will need.) However, the advantage of
+preloading additional files decreases as machines get faster.  On modern
+machines, it is often not advisable, especially if the Lisp code is
+on a file system local to the machine running XEmacs.
+
+@cindex @file{site-init.el}
+  You can specify other Lisp expressions to execute just before dumping
+by putting them in a library named @file{site-init.el}.  However, if
+they might alter the behavior that users expect from an ordinary
+unmodified XEmacs, it is better to put them in @file{default.el}, so that
+users can override them if they wish.  @xref{Start-up Summary}.
+
+  Before @file{loadup.el} dumps the new executable, it finds the
+documentation strings for primitive and preloaded functions (and
+variables) in the file where they are stored, by calling
+@code{Snarf-documentation} (@pxref{Accessing Documentation}).  These
+strings were moved out of the @file{xemacs} executable to make it
+smaller.  @xref{Documentation Basics}.
+
+@defun dump-emacs to-file from-file
+@cindex unexec
+  This function dumps the current state of XEmacs into an executable file
+@var{to-file}.  It takes symbols from @var{from-file} (this is normally
+the executable file @file{temacs}).
+
+If you use this function in an XEmacs that was already dumped, you must
+set @code{command-line-processed} to @code{nil} first for good results.
+@xref{Command Line Arguments}.
+@end defun
+
+@defun run-emacs-from-temacs &rest args
+  This is the function that implements the @file{run-temacs} command-line
+argument.  It is called from @file{loadup.el} as appropriate.  You should
+most emphatically @emph{not} call this yourself; it will reinitialize
+your XEmacs process and you'll be sorry.
+@end defun
+
+@deffn Command emacs-version &optional arg
+  This function returns a string describing the version of XEmacs that is
+running.  It is useful to include this string in bug reports.
+
+When called interactively with a prefix argument, insert string at point.
+Don't use this function in programs to choose actions according
+to the system configuration; look at @code{system-configuration} instead.
+
+@example
+@group
+(emacs-version)
+  @result{} "XEmacs 20.1 [Lucid] (i586-unknown-linux2.0.29)
+                 of Mon Apr  7 1997 on altair.xemacs.org"
+@end group
+@end example
+
+Called interactively, the function prints the same information in the
+echo area.
+@end deffn
+
+@defvar emacs-build-time
+The value of this variable is the time at which XEmacs was built at the
+local site.
+
+@example
+@group
+emacs-build-time "Mon Apr  7 20:28:52 1997"
+     @result{}
+@end group
+@end example
+@end defvar
+
+@defvar emacs-version
+The value of this variable is the version of Emacs being run.  It is a
+string, e.g. @code{"20.1 XEmacs Lucid"}.
+@end defvar
+
+  The following two variables did not exist before FSF GNU Emacs version
+19.23 and XEmacs version 19.10, which reduces their usefulness at
+present, but we hope they will be convenient in the future.
+
+@defvar emacs-major-version
+The major version number of Emacs, as an integer.  For XEmacs version
+20.1, the value is 20.
+@end defvar
+
+@defvar emacs-minor-version
+The minor version number of Emacs, as an integer.  For XEmacs version
+20.1, the value is 1.
+@end defvar
+
+@node Pure Storage
+@appendixsec Pure Storage
+@cindex pure storage
+
+  XEmacs Lisp uses two kinds of storage for user-created Lisp objects:
+@dfn{normal storage} and @dfn{pure storage}.  Normal storage is where
+all the new data created during an XEmacs session is kept; see the
+following section for information on normal storage.  Pure storage is
+used for certain data in the preloaded standard Lisp files---data that
+should never change during actual use of XEmacs.
+
+  Pure storage is allocated only while @file{temacs} is loading the
+standard preloaded Lisp libraries.  In the file @file{xemacs}, it is
+marked as read-only (on operating systems that permit this), so that the
+memory space can be shared by all the XEmacs jobs running on the machine
+at once.  Pure storage is not expandable; a fixed amount is allocated
+when XEmacs is compiled, and if that is not sufficient for the preloaded
+libraries, @file{temacs} aborts with an error message.  If that happens,
+you must increase the compilation parameter @code{PURESIZE} using the
+@samp{--puresize} option to @file{configure}.  This normally won't
+happen unless you try to preload additional libraries or add features to
+the standard ones.
+
+@defun purecopy object
+This function makes a copy of @var{object} in pure storage and returns
+it.  It copies strings by simply making a new string with the same
+characters in pure storage.  It recursively copies the contents of
+vectors and cons cells.  It does not make copies of other objects such
+as symbols, but just returns them unchanged.  It signals an error if
+asked to copy markers.
+
+This function is a no-op in XEmacs, and its use in new code is deprecated.
+@end defun
+
+@defvar pure-bytes-used
+The value of this variable is the number of bytes of pure storage
+allocated so far.  Typically, in a dumped XEmacs, this number is very
+close to the total amount of pure storage available---if it were not,
+we would preallocate less.
+@end defvar
+
+@defvar purify-flag
+This variable determines whether @code{defun} should make a copy of the
+function definition in pure storage.  If it is non-@code{nil}, then the
+function definition is copied into pure storage.
+
+This flag is @code{t} while loading all of the basic functions for
+building XEmacs initially (allowing those functions to be sharable and
+non-collectible).  Dumping XEmacs as an executable always writes
+@code{nil} in this variable, regardless of the value it actually has
+before and after dumping.
+
+You should not change this flag in a running XEmacs.
+@end defvar
+
+@node Garbage Collection
+@appendixsec Garbage Collection
+@cindex garbage collector
+
+@cindex memory allocation
+  When a program creates a list or the user defines a new function (such
+as by loading a library), that data is placed in normal storage.  If
+normal storage runs low, then XEmacs asks the operating system to
+allocate more memory in blocks of 2k bytes.  Each block is used for one
+type of Lisp object, so symbols, cons cells, markers, etc., are
+segregated in distinct blocks in memory.  (Vectors, long strings,
+buffers and certain other editing types, which are fairly large, are
+allocated in individual blocks, one per object, while small strings are
+packed into blocks of 8k bytes. [More correctly, a string is allocated
+in two sections: a fixed size chunk containing the length, list of
+extents, etc.; and a chunk containing the actual characters in the
+string.  It is this latter chunk that is either allocated individually
+or packed into 8k blocks.  The fixed size chunk is packed into 2k
+blocks, as for conses, markers, etc.])
+
+  It is quite common to use some storage for a while, then release it by
+(for example) killing a buffer or deleting the last pointer to an
+object.  XEmacs provides a @dfn{garbage collector} to reclaim this
+abandoned storage.  (This name is traditional, but ``garbage recycler''
+might be a more intuitive metaphor for this facility.)
+
+  The garbage collector operates by finding and marking all Lisp objects
+that are still accessible to Lisp programs.  To begin with, it assumes
+all the symbols, their values and associated function definitions, and
+any data presently on the stack, are accessible.  Any objects that can
+be reached indirectly through other accessible objects are also
+accessible.
+
+  When marking is finished, all objects still unmarked are garbage.  No
+matter what the Lisp program or the user does, it is impossible to refer
+to them, since there is no longer a way to reach them.  Their space
+might as well be reused, since no one will miss them.  The second
+(``sweep'') phase of the garbage collector arranges to reuse them.
+
+@cindex free list
+  The sweep phase puts unused cons cells onto a @dfn{free list} for
+future allocation; likewise for symbols, markers, extents, events,
+floats, compiled-function objects, and the fixed-size portion of
+strings.  It compacts the accessible small string-chars chunks so they
+occupy fewer 8k blocks; then it frees the other 8k blocks.  Vectors,
+buffers, windows, and other large objects are individually allocated and
+freed using @code{malloc} and @code{free}.
+
+@cindex CL note---allocate more storage
+@quotation
+@b{Common Lisp note:} unlike other Lisps, XEmacs Lisp does not
+call the garbage collector when the free list is empty.  Instead, it
+simply requests the operating system to allocate more storage, and
+processing continues until @code{gc-cons-threshold} bytes have been
+used.
+
+This means that you can make sure that the garbage collector will not
+run during a certain portion of a Lisp program by calling the garbage
+collector explicitly just before it (provided that portion of the
+program does not use so much space as to force a second garbage
+collection).
+@end quotation
+
+@deffn Command garbage-collect
+This command runs a garbage collection, and returns information on
+the amount of space in use.  (Garbage collection can also occur
+spontaneously if you use more than @code{gc-cons-threshold} bytes of
+Lisp data since the previous garbage collection.)
+
+@code{garbage-collect} returns a list containing the following
+information:
+
+@example
+@group
+((@var{used-conses} . @var{free-conses})
+ (@var{used-syms} . @var{free-syms})
+@end group
+ (@var{used-markers} . @var{free-markers})
+ @var{used-string-chars}
+ @var{used-vector-slots}
+ (@var{plist}))
+
+@group
+@result{} ((73362 . 8325) (13718 . 164)
+(5089 . 5098) 949121 118677
+(conses-used 73362 conses-free 8329 cons-storage 658168
+symbols-used 13718 symbols-free 164 symbol-storage 335216
+bit-vectors-used 0 bit-vectors-total-length 0
+bit-vector-storage 0 vectors-used 7882
+vectors-total-length 118677 vector-storage 537764
+compiled-functions-used 1336 compiled-functions-free 37
+compiled-function-storage 44440 short-strings-used 28829
+long-strings-used 2 strings-free 7722
+short-strings-total-length 916657 short-string-storage 1179648
+long-strings-total-length 32464 string-header-storage 441504
+floats-used 3 floats-free 43 float-storage 2044 markers-used 5089
+markers-free 5098 marker-storage 245280 events-used 103
+events-free 835 event-storage 110656 extents-used 10519
+extents-free 2718 extent-storage 372736
+extent-auxiliarys-used 111 extent-auxiliarys-freed 3
+extent-auxiliary-storage 4440 window-configurations-used 39
+window-configurations-on-free-list 5
+window-configurations-freed 10 window-configuration-storage 9492
+popup-datas-used 3 popup-data-storage 72 toolbar-buttons-used 62
+toolbar-button-storage 4960 toolbar-datas-used 12
+toolbar-data-storage 240 symbol-value-buffer-locals-used 182
+symbol-value-buffer-local-storage 5824
+symbol-value-lisp-magics-used 22
+symbol-value-lisp-magic-storage 1496
+symbol-value-varaliases-used 43
+symbol-value-varalias-storage 1032 opaque-lists-used 2
+opaque-list-storage 48 color-instances-used 12
+color-instance-storage 288 font-instances-used 5
+font-instance-storage 180 opaques-used 11 opaque-storage 312
+range-tables-used 1 range-table-storage 16 faces-used 34
+face-storage 2584 glyphs-used 124 glyph-storage 4464
+specifiers-used 775 specifier-storage 43869 weak-lists-used 786
+weak-list-storage 18864 char-tables-used 40
+char-table-storage 41920 buffers-used 25 buffer-storage 7000
+extent-infos-used 457 extent-infos-freed 73
+extent-info-storage 9140 keymaps-used 275 keymap-storage 12100
+consoles-used 4 console-storage 384 command-builders-used 2
+command-builder-storage 120 devices-used 2 device-storage 344
+frames-used 3 frame-storage 624 image-instances-used 47
+image-instance-storage 3008 windows-used 27 windows-freed 2
+window-storage 9180 lcrecord-lists-used 15
+lcrecord-list-storage 360 hash-tables-used 631
+hash-table-storage 25240 streams-used 1 streams-on-free-list 3
+streams-freed 12 stream-storage 91))
+@end group
+@end example
+
+Here is a table explaining each element:
+
+@table @var
+@item used-conses
+The number of cons cells in use.
+
+@item free-conses
+The number of cons cells for which space has been obtained from the
+operating system, but that are not currently being used.
+
+@item used-syms
+The number of symbols in use.
+
+@item free-syms
+The number of symbols for which space has been obtained from the
+operating system, but that are not currently being used.
+
+@item used-markers
+The number of markers in use.
+
+@item free-markers
+The number of markers for which space has been obtained from the
+operating system, but that are not currently being used.
+
+@item used-string-chars
+The total size of all strings, in characters.
+
+@item used-vector-slots
+The total number of elements of existing vectors.
+
+@item plist
+A list of alternating keyword/value pairs providing more detailed
+information. (As you can see above, quite a lot of information is
+provided.)
+@ignore  @c Different in XEmacs
+
+@item used-floats
+@c Emacs 19 feature
+The number of floats in use.
+
+@item free-floats
+@c Emacs 19 feature
+The number of floats for which space has been obtained from the
+operating system, but that are not currently being used.
+@end ignore
+@end table
+@end deffn
+
+@defopt gc-cons-threshold
+The value of this variable is the number of bytes of storage that must
+be allocated for Lisp objects after one garbage collection in order to
+trigger another garbage collection.  A cons cell counts as eight bytes,
+a string as one byte per character plus a few bytes of overhead, and so
+on; space allocated to the contents of buffers does not count.  Note
+that the subsequent garbage collection does not happen immediately when
+the threshold is exhausted, but only the next time the Lisp evaluator is
+called.
+
+The initial threshold value is 500,000.  If you specify a larger
+value, garbage collection will happen less often.  This reduces the
+amount of time spent garbage collecting, but increases total memory use.
+You may want to do this when running a program that creates lots of
+Lisp data.
+
+You can make collections more frequent by specifying a smaller value,
+down to 10,000.  A value less than 10,000 will remain in effect only
+until the subsequent garbage collection, at which time
+@code{garbage-collect} will set the threshold back to 10,000. (This does
+not apply if XEmacs was configured with @samp{--debug}.  Therefore, be
+careful when setting @code{gc-cons-threshold} in that case!)
+@end defopt
+
+@ignore
+@c Emacs 19 feature
+@defun memory-limit
+This function returns the address of the last byte XEmacs has allocated,
+divided by 1024.  We divide the value by 1024 to make sure it fits in a
+Lisp integer.
+
+You can use this to get a general idea of how your actions affect the
+memory usage.
+@end defun
+@end ignore
+
+@defvar pre-gc-hook
+This is a normal hook to be run just before each garbage collection.
+Interrupts, garbage collection, and errors are inhibited while this hook
+runs, so be extremely careful in what you add here.  In particular,
+avoid consing, and do not interact with the user.
+@end defvar
+
+@defvar post-gc-hook
+This is a normal hook to be run just after each garbage collection.
+Interrupts, garbage collection, and errors are inhibited while this hook
+runs, so be extremely careful in what you add here.  In particular,
+avoid consing, and do not interact with the user.
+@end defvar
+
+@defvar gc-message
+This is a string to print to indicate that a garbage collection is in
+progress.  This is printed in the echo area.  If the selected frame is
+on a window system and @code{gc-pointer-glyph} specifies a value (i.e. a
+pointer image instance) in the domain of the selected frame, the mouse
+cursor will change instead of this message being printed.
+@end defvar
+
+@defvr Glyph gc-pointer-glyph
+This holds the pointer glyph used to indicate that a garbage collection
+is in progress.  If the selected window is on a window system and this
+glyph specifies a value (i.e. a pointer image instance) in the domain of
+the selected window, the cursor will be changed as specified during
+garbage collection.  Otherwise, a message will be printed in the echo
+area, as controlled by @code{gc-message}.  @xref{Glyphs}.
+@end defvr
+
+If XEmacs was configured with @samp{--debug}, you can set the following
+two variables to get direct information about all the allocation that
+is happening in a segment of Lisp code.
+
+@defvar debug-allocation
+If non-zero, print out information to stderr about all objects
+allocated.
+@end defvar
+
+@defvar debug-allocation-backtrace
+Length (in stack frames) of short backtrace printed out by
+@code{debug-allocation}.
+@end defvar

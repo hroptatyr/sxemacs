@@ -1,0 +1,310 @@
+                                                            -*- Outline -*-
+This file is in Outline mode.  It is best viewed under XEmacs.
+
+Press C-c C-o (Ctrl+c Ctrl+o) now to see a list of headings.
+  To expand a heading:  Put the cursor on the heading and press C-c C-s
+To collapse a heading:  Press C-c C-d
+
+For general XEmacs navigation tips: Press C-h t
+
+The XEmacs Packages Quick Start Guide
+-------------------------------------
+
+This text is intended to help you get started installing a new XEmacs and
+its packages.  For more details see the 'Startup Paths' and 'Packages'
+sections of the XEmacs info manual.
+
+* Real Real Quickstart FAQ
+--------------------------
+
+Q. Do I need to have the packages to compile XEmacs?
+
+A. Theoretically, no -- XEmacs will build and install just fine without any
+   packages installed.  However, only the most basic editing functions will
+   be available with no packages installed, so installing packages is an
+   essential part of making your installed XEmacs _useful_.
+
+Q. I really liked the old way that packages were bundled and do not
+   want to mess with packages at all.
+
+A. You can grab all the packages at once like you used to with old
+   XEmacs versions, skip to the 'Sumo Tarball' section below.
+
+Q. How do I tell XEmacs where to find the packages?
+
+A. Normally, you put the packages under $prefix/lib/packages, where
+   $prefix is specified using the `--prefix' parameter to `configure'.
+   (See `Package hierarchies' below).  However, if you have the packages
+   somewhere else (e.g. you're a developer and are compiling the packages
+   yourself, and want your own private copy of everything), use the
+   `--package-path' parameter, something like this:
+
+   configure --package-path="~/.xemacs::/src/xemacs/site-packages:/src/xemacs/xemacs-packages:/src/xemacs/mule-packages" ...
+
+Q. After installing, I want XEmacs to do `foo', but when I invoke it
+   (or click the toolbar button or select the menu item), nothing (or
+   an error) happens, and it used to work.
+
+A. See the first FAQ; you may be missing a package that is essential to
+   you.  You can either track it down and install it, or install the
+   `Sumo Tarball' (see the second FAQ).
+
+* A note of caution
+-------------------
+
+The XEmacs package system is still in its infancy. Please expect a few
+minor hurdles on the way. Also neither the interface nor the structure is
+set in stone. The XEmacs maintainers reserve the right to sacrifice
+backwards compatibility as quirks are worked out over the coming
+releases.
+
+* Some package theory
+---------------------
+
+In order to reduce the size and increase the maintainability of XEmacs,
+the majority of the Elisp packages that came with previous releases
+have been unbundled. They have been replaced by the package system.
+Each elisp add-on (or groups of them when they are small) now comes
+in its own tarball that contains a small search hierarchy.
+
+You select just the ones you need. Install them by untarring them into
+the right place. On startup XEmacs will find them, set up the load
+path correctly, install autoloads, etc, etc.
+
+* Package hierarchies
+---------------------
+
+On Startup XEmacs looks for packages in so-called package hierarchies.
+Normally, there are three system wide hierarchies, like this:
+
+$prefix/lib/xemacs/xemacs-packages/
+     Normal packages go here.
+
+$prefix/lib/xemacs/mule-packages/
+     Mule packages go here and are only searched by MULE-enabled XEmacsen.
+
+$prefix/lib/xemacs/site-packages/
+     Local and 3rd party packages go here.
+
+This is what you get when you untar the SUMO tarballs under
+$prefix/lib/xemacs.
+
+$prefix is specified using the `--prefix' parameter to `configure', and
+defaults to `usr/local'.
+
+If your packages are located in the above directories, XEmacs will
+automatically find them at startup; however, if you have your packages
+somewhere else (e.g. you're a developer and are compiling the packages
+yourself, and want your own private copy of everything), you can tell
+XEmacs specifically where to look for the packages by using the
+`--package-path' parameter to the 'configure' script.  Normally, it looks
+like this:
+
+configure --package-path="~/.xemacs::/src/xemacs/site-packages:/src/xemacs/xemacs-packages:/src/xemacs/mule-packages" ...
+
+See `configure.usage' for more info about the format of this parameter.
+
+* Where to get the packages
+---------------------------
+
+Packages are available from ftp://ftp.xemacs.org/pub/xemacs/packages
+and its mirrors.
+
+* How to install the packages
+-----------------------------
+There are a few different ways to install packages:
+
+	1. Automatically, using the package tools from XEmacs.
+	2. Manually, using individual package tarballs.
+	3. Manually, all at once, using the 'Sumo Tarball'.
+
+** Automatically, using the package tools from XEmacs
+-----------------------------------------------------
+
+XEmacs comes with some tools to make the periodic updating and
+installing easier. It will notice if new packages or versions are
+available and will fetch them from the FTP site.
+
+Unfortunately this requires that a few packages are already in place.
+You will have to install them by hand as above or use a SUMO tarball.
+This requirement will hopefully go away in the future. The packages
+you need are:
+
+   efs          - To fetch the files from the FTP site or mirrors.
+   xemacs-base  - Needed by efs.
+
+and optionally:
+
+   mailcrypt    - For PGP verification of the package-index file.
+
+After installing these by hand, fire up XEmacs and follow these
+steps.
+
+  (1) Choose a download site.
+      - via menu: Tools -> Packages -> Set Download Site 
+      - via keyb: M-x customize-variable RET package-get-remote RET
+        (put in the details of remote host and directory)
+
+      If the package tarballs _AND_ the package-index file are in a
+      local directory, you can: M-x pui-set-local-package-get-directory RET
+
+  (2) Obtain a list of packages and display the list in a buffer named
+      "*Packages*".
+      - menu: Tools -> Packages -> List & Install
+      - keyb: M-x pui-list-packages RET
+
+      XEmacs will now connect to the remote site and download the
+      latest package-index file.
+
+      The resulting buffer, "*Packages*" has brief instructions at the
+      end of the buffer.
+
+  (3) Choose the packages you wish to install.
+      - mouse: Click button 2 on the package name.
+      -  keyb: RET on the package name
+
+  (4) Make sure you have everything you need.
+      - menu: Packages -> Add Required
+      - keyb: r
+
+      XEmacs will now search for packages that are required by the
+      ones that you have chosen to install and offer to select
+      those packages also.
+
+      For novices and gurus alike, this step can save your bacon.
+      It's easy to forget to install a critical package.
+
+  (5) Download and install the packages.
+      - menu: Packages -> Install/Remove Selected
+      - keyb: x
+
+** Manually, using individual package tarballs
+----------------------------------------------
+
+Fetch the packages from the FTP site, CD-ROM whatever. The filenames
+have the form name-<version>-pkg.tar.gz and are gzipped tar files. For
+a fresh install it is sufficient to untar the file at the top of the
+package hierarchy. 
+
+Note: If you are upgrading packages already installed, it's best to
+remove the old package first (see 'Upgrading/Removing Packages' below).
+
+For example if we are installing the 'xemacs-base'
+package (version 1.48):
+
+   mkdir $prefix/lib/xemacs/xemacs-packages RET # if it does not exist yet
+   cd $prefix/lib/xemacs/xemacs-packages RET
+   gunzip -c /path/to/xemacs-base-1.48-pkg.tar.gz | tar xvf - RET
+
+Or if you have GNU tar, the last step can be:
+
+   tar zxvf /path/to/xemacs-base-1.48-pkg.tar.gz RET
+
+For MULE related packages, it is best to untar into the mule-packages
+hierarchy, i.e. for the mule-base package, version 1.37:
+
+   mkdir $prefix/lib/xemacs/mule-packages RET # if it does not exist yet
+   cd $prefix/lib/xemacs/mule-packages RET
+   gunzip -c /path/to/mule-base-1.37-pkg.tar.gz | tar xvf - RET
+
+Or if you have GNU tar, the last step can be:
+
+   tar zxvf /path/to/mule-base-1.37-pkg.tar.gz RET
+
+
+** Manually, all at once, using the 'Sumo Tarball'
+--------------------------------------------------
+
+Those with little time, cheap connections and plenty of disk space can
+install all the packages at once using the sumo tarballs.
+Download the file:
+
+   xemacs-sumo.tar.gz
+
+For an XEmacs compiled with Mule you also need:
+
+   xemacs-mule-sumo.tar.gz
+
+N.B. They are called 'Sumo Tarballs' for good reason. They are
+currently about 19MB and 4.5MB (gzipped) respectively.
+
+Install them by:
+
+   cd $prefix/lib/xemacs ; gunzip -c <tarballname> | tar xvf - RET
+
+Or, if you have GNU tar:
+
+   cd $prefix/lib/xemacs ; tar zxvf /path/to/<tarballname> RET
+
+As the Sumo tarballs are not regenerated as often as the individual
+packages, it is recommended that you use the automatic package tools
+afterwards to pick up any recent updates.
+
+* After Installation
+--------------------
+
+Updated packages can only be used by XEmacs after a restart.
+
+* Which Packages to install?
+----------------------------
+
+This is difficult to say. When in doubt install a package. If you
+administrate a big site it might be a good idea to just install
+everything. A good minimal set of packages for XEmacs-latin1 would be
+
+xemacs-base, xemacs-devel, c-support, cc-mode, debug, dired, efs,
+edit-utils, fsf-compat, mail-lib, net-utils, os-utils, prog-modes,
+text-modes, time, mailcrypt
+
+If you are using the XEmacs package tools, don't forget to do:
+
+	Packages -> Add Required
+
+To make sure you have everything that the packages you have chosen to
+install need.
+
+See also '.../etc/PACKAGES' for further descriptions of the individual
+packages.
+
+* Upgrading/Removing Packages
+-----------------------------
+
+As the exact files and their locations contained in a package may
+change it is recommended to remove a package first before installing a
+new version. In order to facilitate removal each package contains an
+pgkinfo/MANIFEST.pkgname file which list all the files belong to the
+package. M-x package-admin-delete-binary-package RET can be used to
+remove a package using this file.
+
+Note that the interactive package tools included with XEmacs already do
+this for you.
+
+* User Package directories
+--------------------------
+
+In addition to the system wide packages, each user can have his own
+packages installed under "~/.xemacs/". If you want to install packages
+there using the interactive tools, you need to set
+'package-get-install-to-user-init-directory' to 't'
+
+* Site lisp/Site start
+----------------------
+
+The site-packages hierarchy replaces the old 'site-lisp' directory.
+XEmacs no longer looks into a 'site-lisp' directly by default.
+A good place to put 'site-start.el' would be in
+$prefix/lib/xemacs/site-packages/lisp/
+
+* Finding the right packages
+----------------------------
+
+If you want to find out which package contains the functionality you
+are looking for, use M-x package-get-package-provider, and give it a
+symbol that is likely to be in that package.  
+
+For example, if some code you want to use has a (require 'thingatpt)
+in it:
+
+	M-x package-get-package-provider RET thingatpt RET
+
+which will return something like: (fsf-compat "1.08").

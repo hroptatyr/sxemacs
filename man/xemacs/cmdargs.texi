@@ -1,0 +1,309 @@
+
+@node Command Switches, Startup Paths, Exiting, Top
+@section Command Line Switches and Arguments
+@cindex command line arguments
+@cindex arguments (from shell)
+
+  XEmacs supports command line arguments you can use to request
+various actions when invoking Emacs.  The commands are for compatibility
+with other editors and for sophisticated activities.  If you are using
+XEmacs under the X window system, you can also use a number of
+standard Xt command line arguments. Command line arguments are not usually
+needed for editing with Emacs; new users can skip this section.
+
+  Many editors are designed to be started afresh each time you want to
+edit.  You start the editor to edit one file; then exit the editor.  The
+next time you want to edit either another file or the same one, you
+start the editor again.  Under these circumstances, it makes sense to use a
+command line argument to say which file to edit.
+
+  The recommended way to use XEmacs is to start it only once, just
+after you log in, and do all your editing in the same Emacs process.
+Each time you want to edit a file, you visit it using the existing
+Emacs.  Emacs creates a new buffer for each file, and (unless you kill
+some of the buffers) Emacs eventually has many files in it ready for
+editing.  Usually you do not kill the Emacs process until you are about
+to log out.  Since you usually read files by typing commands to Emacs,
+command line arguments for specifying a file when Emacs is started are seldom
+needed.
+
+  Emacs accepts command-line arguments that specify files to visit,
+functions to call, and other activities and operating modes.  If you
+are running XEmacs under the X window system, a number of standard Xt
+command line arguments are available, as well as a few X parameters
+that are XEmacs-specific.
+
+  Options with long names with a single initial hyphen are also
+recognized with the GNU double initial hyphen syntax.  (The reverse
+is not true.)
+
+The following subsections list:
+@itemize @bullet
+@item 
+Command line arguments that you can always use
+@item 
+Command line arguments that have to appear at the beginning of the
+argument list
+@item
+Command line arguments that are only relevant if you are running XEmacs
+under X
+@end itemize
+
+@subsection Command Line Arguments for Any Position
+ Command line arguments are processed in the order they appear on the
+command line; however, certain arguments (the ones in the
+second table) must be at the front of the list if they are used.
+
+  Here are the arguments allowed:
+
+@table @samp
+@item @var{file}
+Visit @var{file} using @code{find-file}.  @xref{Visiting}.
+
+@item +@var{linenum} @var{file}
+Visit @var{file} using @code{find-file}, then go to line number
+@var{linenum} in it.
+
+@item -load @var{file}
+@itemx -l @var{file}
+Load a file @var{file} of Lisp code with the function @code{load}.
+@xref{Lisp Libraries}.
+
+@item -funcall @var{function}
+@itemx -f @var{function}
+Call Lisp function @var{function} with no arguments.
+
+@item -eval @var{function}
+Interpret the next argument as a Lisp expression, and evaluate it.
+You must be very careful of the shell quoting here.
+
+@item -insert @var{file}
+@itemx -i @var{file}
+Insert the contents of @var{file} into the current buffer.  This is like
+what @kbd{M-x insert-buffer} does; @xref{Misc File Ops}.
+
+@item -kill
+Exit from Emacs without asking for confirmation.  Always the last
+argument processed, no matter where it appears in the command line.
+
+@item -version
+@itemx -V
+Prints version information.  This implies @samp{-batch}.
+
+@example
+% xemacs -version
+XEmacs 19.13 of Mon Aug 21 1995 on willow (usg-unix-v) [formerly Lucid Emacs]
+@end example
+
+@item -help
+Prints a summary of command-line options and then exits.
+@end table
+
+@subsection Command Line Arguments (Beginning of Line Only)
+  The following arguments are recognized only at the beginning of the
+command line.  If more than one of them appears, they must appear in the
+order in which they appear in this table.
+
+@table @samp
+@item --show-dump-id
+@itemx -sd
+Print the ID for the new portable dumper's dump file on the terminal and
+exit.  (Prints an error message and exits if XEmacs was not configured
+@samp{--pdump}.)
+
+@item --no-dump-file
+@itemx -nd
+Don't load the dump file.  Roughly equivalent to old temacs.  (Ignored if
+XEmacs was not configured @samp{--pdump}.)
+
+@item --terminal @var{file}
+@itemx -t @var{file}
+Use @var{file} instead of the terminal for input and output.  This
+implies the @samp{-nw} option, documented below.
+
+@cindex batch mode
+@item -batch
+Run Emacs in @dfn{batch mode}, which means that the text being edited is
+not displayed and the standard Unix interrupt characters such as
+@kbd{C-z} and @kbd{C-c} continue to have their normal effect.  Emacs in
+batch mode outputs to @code{stderr} only what would normally be printed
+in the echo area under program control.
+
+Batch mode is used for running programs written in Emacs Lisp from shell
+scripts, makefiles, and so on.  Normally the @samp{-l} switch or
+@samp{-f} switch will be used as well, to invoke a Lisp program to do
+the batch processing.
+
+@samp{-batch} implies @samp{-q} (do not load an init file).  It also
+causes Emacs to kill itself after all command switches have been
+processed.  In addition, auto-saving is not done except in buffers for
+which it has been explicitly requested.
+
+@item --no-windows
+@itemx -nw
+Start up XEmacs in TTY mode (using the TTY XEmacs was started from),
+rather than trying to connect to an X display.  Note that this happens
+automatically if the @samp{DISPLAY} environment variable is not set.
+
+@item -debug-init
+Enter the debugger if an error in the init file occurs.
+
+@item -debug-paths
+Displays information on how XEmacs constructs the various paths into its
+hierarchy on startup.  (See also @pxref{Startup Paths}.)
+
+@item -unmapped
+Do not map the initial frame.  This is useful if you want to start up
+XEmacs as a server (e.g. for gnuserv screens or external client widgets).
+
+@item -no-init-file
+@itemx -q
+Do not load your Emacs init file.  @xref{Init File}.
+
+@item -no-site-file
+Do not load the site-specific init file @file{lisp/site-start.el}.
+
+@item -no-autoloads
+Do not load global symbol files (@file{auto-autoloads}) at startup.
+This implies @samp{-vanilla}. 
+
+@item -no-early-packages
+Do not process early packages.  (For more information on startup issues
+concerning the package system, @xref{Startup Paths}.)
+
+@item -vanilla
+This is equivalent to @samp{-q -no-site-file -no-early-packages}.
+
+@item -user-init-file @var{file}
+Load @var{file} as your Emacs init file instead of
+@file{~/.xemacs/init.el}/@file{~/.emacs}.
+
+@item -user-init-directory @var{directory}
+Use @var{directory} as the location of your early package hierarchies
+and the various user-specific initialization files.
+
+@item -user @var{user}
+@itemx -u @var{user}
+Equivalent to @samp{-user-init-file ~@var{user}/.xemacs/init.el
+-user-init-directory ~@var{user}/.xemacs}, or @samp{-user-init-file
+~@var{user}/.emacs -user-init-directory ~@var{user}/.xemacs}, whichever
+init file comes first.  @xref{Init File}.
+
+@end table
+
+@vindex command-line-args
+  Note that the init file can get access to the command line argument
+values as the elements of a list in the variable
+@code{command-line-args}.  (The arguments in the second table above will
+already have been processed and will not be in the list.)  The init file
+can override the normal processing of the other arguments by setting
+this variable.
+
+  One way to use command switches is to visit many files automatically:
+
+@example
+xemacs *.c
+@end example
+
+@noindent
+passes each @code{.c} file as a separate argument to Emacs, so that
+Emacs visits each file (@pxref{Visiting}).
+
+  Here is an advanced example that assumes you have a Lisp program file
+called @file{hack-c-program.el} which, when loaded, performs some useful
+operation on the current buffer, expected to be a C program.
+
+@example
+xemacs -batch foo.c -l hack-c-program -f save-buffer -kill > log
+@end example
+
+@noindent
+Here Emacs is told to visit @file{foo.c}, load @file{hack-c-program.el}
+(which makes changes in the visited file), save @file{foo.c} (note that
+@code{save-buffer} is the function that @kbd{C-x C-s} is bound to), and
+then exit to the shell from which the command was executed.  @samp{-batch}
+guarantees there will be no problem redirecting output to @file{log},
+because Emacs will not assume that it has a display terminal to work
+with.
+
+@subsection Command Line Arguments (for XEmacs Under X)
+@vindex frame-title-format
+@vindex frame-icon-title-format
+If you are running XEmacs under X, a number of options are
+available to control color, border, and window title and icon name:
+
+@table @samp
+@item -title @var{title}
+@itemx -wn @var{title}
+@itemx -T @var{title}
+Use @var{title} as the window title. This sets the
+@code{frame-title-format} variable, which controls the title of the X
+window corresponding to the selected frame.  This is the same format as
+@code{mode-line-format}.
+
+@item -iconname @var{title}
+@itemx -in @var{title}
+Use @var{title} as the icon name. This sets the
+@code{frame-icon-title-format} variable, which controls the title of
+the icon corresponding to the selected frame.
+
+@item -mc @var{color}
+Use @var{color} as the mouse color.
+
+@item -cr @var{color}
+Use @var{color} as the text-cursor foreground color.
+
+@item -private
+Install a private colormap for XEmacs.
+@end table
+
+In addition, XEmacs allows you to use a number of standard Xt
+command line arguments. 
+
+@table @samp
+
+@item -background @var{color}
+@itemx -bg @var{color}
+Use @var{color} as the background color.
+
+@item -bordercolor @var{color}
+@itemx -bd @var{color}
+Use @var{color} as the border color.
+
+@item -borderwidth @var{width}
+@itemx -bw @var{width}
+Use @var{width} as the border width.
+
+@item -display @var{display}
+@itemx -d @var{display}
+When running under the X window system, create the window containing the
+Emacs frame on the display named @var{display}.
+
+@item -foreground @var{color}
+@itemx -fg @var{color}
+Use @var{color} as the foreground color.
+
+@item -font @var{name}
+@itemx -fn @var{name}
+Use @var{name} as the default font.
+
+@item -geometry @var{spec}
+@itemx -geom @var{spec}
+@itemx -g @var{spec}
+Use the geometry (window size and/or position) specified by @var{spec}.
+
+@item -iconic
+Start up iconified.
+
+@item -rv
+Bring up Emacs in reverse video.
+
+@item -name @var{name}
+Use the resource manager resources specified by @var{name}.
+The default is to use the name of the program (@code{argv[0]}) as
+the resource manager name.
+
+@item -xrm
+Read something into the resource database for this invocation of Emacs only.
+
+@end table

@@ -1,0 +1,472 @@
+@comment  node-name,  next,  previous,  up
+@node Windows and Menus, Edit, Entering, Top
+@chapter XEmacs Windows and Menus
+@cindex selected window
+@cindex windows
+@findex delete-window
+@findex delete-other-windows
+@findex scroll-other-window
+  
+  The first section of this chapter will show you how you can manipulate
+XEmacs Windows and the other section will explain the Pull-down Menus of
+an XEmacs window.
+
+@comment  node-name,  next,  previous,  up
+@menu
+* XEmacs Window::               Manipulating XEmacs Windows
+* Pull-down Menus::             Description of XEmacs Pull-down Menus
+@end menu
+
+@node XEmacs Window, Pull-down Menus, Windows and Menus, Windows and Menus
+@section XEmacs Windows
+  When you use XEmacs under X, you can open multiple windows and each
+window can display one buffer or multiple parts of one buffer. Each window
+will have its own @dfn{mode line} and @dfn{echo area}. At any one time
+there is only one @dfn{selected window} and the buffer it displays is
+the @dfn{selected buffer}. There are some commands for manipulating
+windows:
+
+@kindex C-x 0
+@kindex C-x 1
+@kindex C-x 2
+@kindex C-x 3
+@kindex C-x 4
+@kindex M-C-v
+@table @kbd
+@item M-C-v
+@findex scroll-other-window
+This command will scroll the window which is not @dfn{selected} 
+(@code{scroll-other-window}).
+
+@findex delete-window
+@item C-x 0
+This command will get rid of the selected window (@code{delete-window}).
+That is a zero. If there is more than one Emacs frame, deleting the
+sole remaining window on that frame deletes the frame as well. If the
+current frame is the only frame, it is not deleted.
+
+@findex delete-other-windows 
+@item C-x 1
+This command will get rid of all the windows except the selected one. 
+(@code{delete-other-windows}). For example, if you use the @b{Describe
+variable} option from the @b{Help} menu, the window will split
+vertically and the bottom window will contain documentation for that
+variable. After you are done looking at that variable's documentation
+you might want to come back to your original single window. Just type
+@kbd{C-x 1} after your cursor is in the top window (the window which you
+want to keep) and hit @key{RET}.
+
+@findex split-window-vertically 
+@item C-x 2
+This command will split the selected window into two windows, one above
+the other (@code{split-window-vertically}). Both the windows will start
+out by displaying the same buffer. The window in which you have your
+cursor will be your @dfn{selected window}.
+
+@findex split-window-horizontally
+@item C-x 3
+This will split the selected window into two windows positioned side by
+side (@code{split-window-horizontally}). A line of vertical bars will
+separate the window.
+@end table
+@noindent
+
+You can select a buffer in another window by using some other
+commands. These commands all have a prefix key @kbd{C-x 4} 
+@table @kbd
+@kindex C-x 4 b
+@kindex C-x 4 f
+@kindex C-x 4 d
+@kindex C-x 4 m
+@findex switch-to-buffer-other-window
+@findex find-file-other-window
+@findex dired-other-window
+@findex mail-other-window
+@item C-x 4 b @var{bufname} @key{RET}
+This command will select a buffer @var{bufname} in another window.  This
+runs @code{switch-to-buffer-other-window}. It will prompt you for a
+buffername.
+
+@item C-x 4 f @var{filename} @key{RET}
+Visit file @var{filename} and select its buffer in another window.  This
+runs @code{find-file-other-window}.  @xref{Visiting,,,xemacs,XEmacs User's
+Manual}. It will prompt you for a filename.
+
+@item C-x 4 d @var{directory} @key{RET}
+Select a Dired buffer for directory @var{directory} in another window.
+This runs @code{dired-other-window}.  @xref{Dired,,,xemacs,XEmacs User's
+Manual}.
+
+@item C-x 4 m
+Start composing a mail message in another window.  This runs
+@code{mail-other-window}, and its same-window version is @kbd{C-x m}.
+@xref{Sending Mail,,,xemacs,XEmacs User's Manual}, for information on how
+to @b{S}end @b{M}ail using XEmacs. @xref{Reading Mail With
+Rmail,,,xemacs,XEmacs User's Manual}, for information on reading mail using
+@b{Rmail}.
+@end table
+
+  
+  If you click the right button on the mouse on a mode line, you will
+get a menu with following options:
+@cindex windows
+@cindex pull-down-menus
+@cindex menus
+@table @b
+@item Delete Window
+Choosing this menu will remove the window above this modeline from the frame.
+@item Delete Other Windows
+Delete all windows on the frame except for the one above this modeline.
+@item Split Window
+Split the window above the mode line in half, creating another window. 
+@item Split Window Horizontally
+Split the window above the mode line in half horizontally, so that there
+will be two windows side-by-side.
+@item Balance Windows
+Readjust the sizes of all windows on the frame until all windows have
+roughly the same number of lines.
+@end table
+
+
+@comment  node-name,  next,  previous,  up
+@node Pull-down Menus,  , XEmacs Window, Windows and Menus
+@section XEmacs Pull-down Menus
+
+When you run XEmacs under X, each Emacs frame has a menu-bar at the top
+which provides commands for editing, help and other
+options. All these options are also available via key commands, the
+menus just provide convenient short-cuts. The key commands are displayed
+right besides some of the options. The following is a brief
+description of the four default menus on the menu bar:
+
+@menu
+* File menu::                   Items on the File menu
+* Edit menu::                   Items on the Edit menu
+* Options Menu::                Items on the Options Menu
+* Buffers Menu::                Items on the Buffers Menu
+* Help menu::                   The Help Menu at the extreme right on
+                                the frame
+@end menu
+
+@node File menu, Edit menu, Pull-down Menus, Pull-down Menus
+@subsection The File Menu
+@cindex File menu
+@cindex Open in New Frame... menu item
+@cindex Open ... menu item
+@cindex Insert File... menu item
+@cindex Save Buffer menu item
+@cindex Save Buffer As ... menu item
+@cindex Revert Buffer menu item
+@cindex Kill Buffer menu item
+@cindex Print Buffer menu item
+@cindex New Frame menu item
+@cindex Delete Frame menu item
+@cindex Split Frame
+@cindex Un-split (Keep This)
+@cindex Un-split (Keep Others)
+@cindex Exit Emacs menu item
+
+The @b{File} menu bar contains the following items. To choose a
+particular option, press the left mouse button and drag it to the item
+you wish to select. Then release the button.
+
+@table @b
+@item Open...
+This option will prompt you for a file name. You will get a message in
+the echo area:
+
+@example
+Find File: 
+@end example
+@noindent
+After Find File, there might be a directory path also. After you type
+the file name and press @key{RET} the file will be loaded into a new
+buffer.  
+
+@item Open in New Frame...
+It prompts you for a file name and loads that file in a new buffer in
+a new frame. You can open many frames for the same Emacs session. You
+can delete the frame by selecting @b{Delete Frame}. 
+
+@item Insert File...
+Prompts you for a filename and inserts the contents of this filename in
+your current buffer. Position your cursor at the place you wish to
+insert the file and select this option. You will get the following
+message in the echo area:
+
+@example
+Insert file:
+@end example
+@noindent
+Insert the file name and press @key{RET}.
+
+@item Save <Buffername>
+It saves the changes you have made to the buffer. If you have made
+changes which are not saved yet, the option will appear dark, otherwise
+it will be light and unselectable. If you do not wish to save the
+changes, select @b{Revert Buffer}.
+
+@item Save As...
+Prompts you for a filename and saves the current buffer in that file. It
+loads the new file if the filename you specify is different from the one
+you were working with.
+
+@item Print Buffer <buffername>
+Prints a hardcopy of the current or @dfn{selected} buffer.
+
+@item New Frame
+Opens a new frame with @b{*scratch*} as the default buffer. It doesn't
+prompt you for a filename. To open a file you need to go to that frame
+and select @b{Open...}
+
+@item Split Frame
+Splits the current window into two equal-sized windows with the same
+buffer. To get back a single frame, select @b{Un-Split (Keep
+This)}. @xref{XEmacs Window}, for more information about windows. 
+
+@item Un-Split (Keep This)
+If the frame contains multiple windows, it will remove all windows
+except the selected one. 
+
+@item Un-Split (Keep Others)
+If the frame contains multiple windows, it will remove the selected
+window and keep the other one.
+
+@item Revert Buffer <buffername>
+If you do not wish to save the changes you made to the file since you
+opened it, select this option. It will restore the last saved version of
+the file to the current buffer.
+
+@item Kill Buffer <buffername>
+It will kill the current buffer. If will prompt you if there are unsaved
+changes. 
+
+@item Exit Emacs
+It will kill the Emacs @dfn{process} as opposed to simply killing the
+@dfn{buffer}. Before it kills the process, it will prompt you as to
+which unsaved buffers you wish to save by going through the list of the
+buffers. 
+
+@end table
+
+@comment  node-name,  next,  previous,  up
+@menu
+* Edit menu::                   Items on the Edit Menu
+* Options Menu::                Items on the Options Menu
+* Buffers Menu::                Items on the Buffers Menu
+* Help menu::                   The Help Menu at the extreme right on
+                                the frame
+@end menu
+
+@node Edit menu, Options Menu, File menu, Pull-down Menus
+@subsection The Edit Menu
+@cindex Undo menu item
+@cindex Cut menu item
+@cindex Copy menu item
+@cindex Paste menu item
+@cindex Clear menu item
+@cindex Start Macro Recording menu item
+@cindex End Macro Recording menu item
+@cindex Execute Last Macro menu item
+
+Most of the commands in this menu work on a block of text or a selected
+region. The text will be highlighted as you select it.
+@table @b
+@item Undo 
+Undoes the previous command.  If you type something by mistake you can
+use this command. For example, if you select @b{Insert File...} from the
+@b{File} menu and insert a wrong file by mistake, you can select this
+item and it will remove the inserted file. It undoes a batch of text
+which is worth an emacs command.
+
+@item Cut
+Removes the selected text block from the current buffer, makes it the X
+clipboard selection, and places it in the kill ring 
+(@pxref{Moving Text}). Before executing this command, you have to select
+a region using Emacs region selection commands or with the
+mouse. @xref{Selecting Text}. 
+
+@item Copy 
+Makes a selected text block the X clipboard selection, and places it in
+the kill ring.  You can select text using one of the Emacs region
+selection commands or by selecting a text region with the
+mouse. @xref{Selecting Text}, for more information.
+
+@item Paste 
+Inserts the current value of the X clipboard selection in the current
+buffer.  Note that this is not necessarily the same as the Emacs
+@code{yank} command, because the Emacs kill ring and the X clipboard
+selection are not the same thing.  You can paste in text you have placed
+in the clipboard using @b{Copy} or @b{Cut}.  You can also use @b{Paste}
+to insert text that was pasted into the clipboard from other
+applications. @xref{X Clipboard Selection,,,xemacs,XEmacs User's Manual},
+for information on using Clipboard Selection.
+
+@item Clear
+Removes the selected text block from the current buffer but does not
+place it in the kill ring or the X clipboard selection. You will not be
+able to get this text back.
+
+@item Start Macro Recording
+After selecting this, Emacs will remember every keystroke you type until
+@b{End Macro Recording} is selected.  
+
+@item End Macro Recording
+Selecting this tells emacs to stop remembering your keystrokes. 
+
+@item Execute Last Macro
+Selecting this item will cause emacs to re-interpret all of the
+keystrokes which were saved between selections of the @b{Start Macro
+Recording} and @b{End Macro Recording} menu items.  You can now execute
+the most recent keyboard macro. @xref{Keyboard Macros,,,xemacs,XEmacs
+User's Manual}, for further information.
+@end table
+
+@comment  node-name,  next,  previous,  up
+@node Options Menu, Buffers Menu, Edit menu, Pull-down Menus
+@subsection The Options Menu
+@cindex Options menu
+@cindex Read Only menu item
+@cindex Case Sensitive Search menu item
+@cindex Overstrike menu item
+@cindex Auto Delete Selection menu item
+@cindex Teach Extended Commands menu item
+@cindex Syntax Highlighting menu item
+@cindex Paren Highlighting menu item
+@cindex Font menu item
+@cindex Size menu item
+@cindex Weight menu item
+@cindex Buffers Menu Length... menu item
+@cindex Buffers Sub-Menus menu item
+@cindex Save Options
+
+There are sub-menus for some of the menus which you will need to
+select. If sub-menus exist for an item, they will be displayed
+automatically when you drag the mouse on that item. The items in this
+menu provide some fancy editing operations.
+
+@table @b
+@item Read Only
+Selecting this item will cause the buffer to visit the file in a 
+read-only mode. Changes to the file will not be allowed. 
+
+@item Case Sensitive Search
+Selecting this item will cause searches to be case-sensitive. If 
+its not selected then searches will ignore case. This option is 
+local to the buffer. For example, if this item is selected and you are
+searching for @samp{Smile}, then an occurrence of @samp{smile} will not
+be recognized because of the smaller case of @samp{s}.
+
+@item Overstrike
+After selecting this item, when you type letters they will replace 
+existing text on a one-to-one basis, rather than pushing it to the 
+right. At the end of a line, such characters extend the line. Before 
+a tab, such characters insert until the tab is filled in. 
+
+@item Auto Delete Selection
+Selecting this item will cause automatic deletion of the selected 
+region. After you select a region and hit the @key{RET} key, the
+selected text will be deleted. The typed text will replace the selection
+if the selection is active (i.e. if its highlighted). If the option is
+not selected then the typed text is just inserted at the cursor.
+
+@item Teach Extended Commands
+After you  select this item, any time you execute a command with 
+@kbd{M-x} which has a shorter keybinding, you will be shown the 
+alternate binding before the command executes. For example if you type
+@kbd{M-x find-file-other-window} which performs the same function as the
+@b{Open in Other Window...} in @b{File} menu you will see the following
+message:
+
+@example
+M-x find-file-other-window (bound to keys: C-x 4 f, C-x 4 C-f)
+@end example 
+
+@item Syntax Highlighting
+You can customize your @code{init.el} file to include the font-lock mode
+so that when you select this item, the comments will be displayed in one
+face, strings in another, reserved words in another, and so
+on. @xref{Customization,,,xemacs,XEmacs User's Manual}, for more
+information on customizing @code{init.el} file.  After selecting this
+item, you will find your code a lot easier to read. When @b{Fonts} is
+selected, different parts of the program will appear in different
+Fonts. When @b{Colors} is selected, then the program will be displayed
+in different colors. Selecting @b{None} causes the program to appear in
+just one Font and Color. Selecting @b{Less} resets the Fonts and Colors
+to a fast, minimal set of decorations. Selecting @b{More} resets the
+Fonts and Colors to a larger set of decorations. For example, if
+@b{Less} is selected (which is the default setting) then you might have
+all comments in green color. It does not matter what the comments
+contain. Whereas, if @b{More} is selected then a function name in the
+comments themselves might appear in a different Color or Font. Even
+though the comments themselves might appear in green color, a function
+name @dfn{within} the comments might appear in red color.
+
+@item Paren Highlighting
+After selecting @b{Blink} from this item, if you place the cursor 
+on a parenthesis, the matching parenthesis will blink. If you select 
+@b{Highlight} and place the cursor on a parenthesis, the whole 
+expression of the parenthesis under the cursor will be highlighted. 
+Selecting @b{None} will turn off the options (regarding @b{Paren 
+Highlighting}) which you had selected earlier.@refill
+
+@item Font
+You can select any Font for your program by choosing from one of the 
+available Fonts. The whole buffer will be converted to the Font you select.
+
+@item Size
+You can select any size for the text in your buffer (ranging from @b{2} to @b{24}) by selecting the appropriate option.@refill
+
+@item Weight
+You can choose either @b{Bold} or @b{Medium} for the weight of the text
+of your buffer.
+
+@item Buffers Menu Length...
+Prompts you for the number of buffers to display. Then it will display 
+that number of most recently selected buffers.
+
+@item Buffers Sub-Menus
+After selection of this item the Buffers menu will contain several 
+commands, as submenus of each buffer line. If this item is unselected, 
+then there are no submenus for each buffer line, the only command 
+available will be selecting that buffer.
+
+@item Save Options
+Selecting this item will save the current settings of your Options 
+menu to your @code{init.el} file so that the next time you start XEmacs,
+you won't need to select the options again.
+@end table
+
+
+@comment  node-name,  next,  previous,  up
+@node Buffers Menu, Help menu, Options Menu, Pull-down Menus
+@subsection The Buffers Menu
+@cindex Buffers menu
+The @b{Buffers} menu provides a selection of up to ten buffers and the
+item @b{List All Buffers}, which provides a Buffer List. If you select
+@b{Buffers Sub-menus} from the @b{Options} menu, you will get some
+sub-menus for each of the buffer listing.
+
+
+@comment  node-name,  next,  previous,  up
+@node Help menu,  , Buffers Menu, Pull-down Menus
+@subsection The Help Menu
+@cindex Help menu
+
+The Help Menu gives you access to Emacs Info and provides a menu
+equivalent for some of the choices you have when using @kbd{C-h}. 
+@xref{Help}, for more information. 
+
+The @b{Describe variable} and @b{Describe function} will provide
+documentation for the corresponding variable or function. The Help menu
+also gives access to UNIX online manual pages via the @b{UNIX Manual...}
+option.   
+
+
+
+
+
+
+
+
+

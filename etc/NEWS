@@ -1,0 +1,29 @@
+-*- mode:outline -*-
+
+* Introduction
+==============
+
+This file presents the changes in recent SXEmacs versions.  It
+primarily documents user-visible (interface) changes, but also
+includes internal changes of possible interest to the users.  When
+describing new features, we try to also document ways of reverting to
+the old behavior, where applicable.  If you dislike a recent change in
+how SXEmacs behaves, this file might contain a remedy.
+
+Use `C-c C-f' to move to the next equal level of outline, and
+`C-c C-b' to move to previous equal level.  `C-h m' will give more
+info about the Outline mode.  Many commands are also available through
+the menubar.
+
+Users who would like to know which capabilities have been introduced
+in each release should look at the appropriate section of this file.
+
+
+
+* Changes in SXEmacs 22.1.0
+===========================
+
+This is the first release of SXEmacs.  It is a fork of XEmacs
+21.4.16.  The vast majority of the changes between SXEmacs 22.1.0 and
+the code it descended from, XEmacs 21.4.16, are purely renaming
+"XEmacs" to "SXEmacs".

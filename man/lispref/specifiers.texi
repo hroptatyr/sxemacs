@@ -1,0 +1,1600 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1995, 1996 Ben Wing.
+@c Copyright (C) 2002, 2004 Free Software Foundation, Inc.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/specifiers.info
+@node Specifiers, Faces and Window-System Objects, Extents, top
+@chapter Specifiers
+@cindex specifier
+
+A specifier is an object used to keep track of a property whose value
+should vary according to @emph{display context}, a window, a frame, or
+device.  The value of many built-in properties, such as the font,
+foreground, background, and such properties of a face and variables
+such as @code{modeline-shadow-thickness} and
+@code{top-toolbar-height}, is actually a specifier object.  The
+specifier object, in turn, is ``instanced'' in a particular situation
+to yield the real value of the property in the current context.
+
+@defun specifierp object
+This function returns non-@code{nil} if @var{object} is a specifier.
+@end defun
+
+@menu
+* Introduction to Specifiers::  Specifiers provide a clean way for
+                                display and other properties to vary
+                                (under user control) in a wide variety
+                                of contexts.
+* Simple Specifier Usage::      Getting started with specifiers.
+* Specifiers In-Depth::         Gory details about specifier innards.
+* Specifier Instancing::        Instancing means obtaining the ``value'' of
+                                a specifier in a particular context.
+* Specifier Types::             Specifiers come in different flavors.
+* Adding Specifications::       Specifications control a specifier's ``value''
+                                by giving conditions under which a
+                                particular value is valid.
+* Retrieving Specifications::   Querying a specifier's specifications.
+* Specifier Tag Functions::     Working with specifier tags.
+* Specifier Instancing Functions::
+                                Functions to instance a specifier.
+* Specifier Examples::          Making all this stuff clearer.
+* Creating Specifiers::         Creating specifiers for your own use.
+* Specifier Validation Functions::
+                                Validating the components of a specifier.
+* Other Specification Functions::
+                                Other ways of working with specifications.
+@end menu
+
+@node Introduction to Specifiers
+@section Introduction to Specifiers
+
+Perhaps the most useful way to explain specifiers is via an analogy.
+Emacs Lisp programmers are used to @emph{buffer-local variables}
+@ref{Buffer-Local Variables}. For example, the variable
+@code{modeline-format}, which controls the format of the modeline, can
+have different values depending on the particular buffer being edited.
+The variable has a default value which most modes will use, but a
+specialized package such as Calendar might change the variable so as to
+tailor the modeline to its own purposes. Other variables are perhaps
+best thought of as ``mode local,'' such as font-lock keywords, but they
+are implemented as buffer locals.
+
+Other properties (such as those that can be changed by the
+@code{modify-frame-parameters} function, for example the color of the
+text cursor) can have frame-local values, although it might also make
+sense for them to have buffer-local values.  In other cases, you might
+want the property to vary depending on the particular window within the
+frame that applies (e.g. the top or bottom window in a split frame), the
+device type that that frame appears on (X or tty), etc.  Perhaps you can
+envision some more complicated scenario where you want a particular
+value in a specified buffer, another value in all other buffers
+displayed on a particular frame, another value in all other buffers
+displayed in all other frames on any mono (two-color, e.g. black and
+white only) displays, and a default value in all other circumstances.
+
+Specifiers generalize both buffer- and frame-local properties.
+Specifiers vary according to the @emph{display} context.  Font-lock
+keywords in a buffer will be the same no matter which window the
+buffer is displayed in, but windows on TTY devices will simply not be
+capable of the flexibility that windows on modern GUI devices are.
+Specifiers provide a way for the programmer to @emph{declare} that an
+emphasized text should be italic on GUI devices and inverse video on
+TTYs.  They also provide a way for the programmer to declare
+fallbacks, so that a color specified as ``chartreuse'' where possible
+can fall back to ``yellow'' on devices where only ANSI (4-bit) color
+is available.  The complex calculations and device querying are
+transparent to both user and programmer.  You ask for what you want;
+it's up to XEmacs to provide it, or a reasonable approximation.
+
+We call such a declaration a @dfn{specification}.  A @dfn{specification}
+applies in a particular @dfn{locale}, which is a window, buffer, frame,
+device, or the global locale.  The value part of the specification is
+called an @dfn{instantiator}.  The process of determining the value in a
+particular context, or @dfn{domain}, is called @dfn{instantiation} or
+@dfn{instancing}.  A domain is a window, frame, or device.
+
+The difference between @dfn{locale} and @dfn{domain} is somewhat subtle.
+You may think of a locale as a class of domains, which may span
+different devices.  Since the specification is abstract (a Lisp form),
+you can state it without reference to a device.  On the other hand, when
+you instantiate a specification, you must know the type of the device.
+It is useless to specify that ``blue means emphasis'' on a monochrome
+device.  Thus instantiation requires specification of the device on
+which it will be rendered.
+
+Thus a @dfn{specifier} allows a great deal of flexibility in
+controlling exactly what value a property has in which circumstances.
+Specifiers are most commonly used for display properties, such as an image or
+the foreground color of a face.  As a simple example, you can specify
+that the foreground of the default face be
+
+@itemize @bullet
+@item
+blue for a particular buffer
+@item
+green for all other buffers
+@end itemize
+
+As a more complicated example, you could specify that the foreground of
+the default face be
+
+@itemize @bullet
+@item
+forest green for all buffers displayed in a particular Emacs window, or
+green if the X server doesn't recognize the color @samp{forest green}
+@item
+blue for all buffers displayed in a particular frame
+@item
+red for all other buffers displayed on a color device
+@item
+white for all other buffers
+@end itemize
+
+@node Simple Specifier Usage
+@section Simple Specifier Usage
+@cindex specifier examples
+@cindex examples, specifier
+@cindex adding a button to a toolbar
+@cindex toolbar button, adding
+
+A useful specifier application is adding a button to a toolbar.  XEmacs
+provides several toolbars, one along each edge of the frame.  Normally
+only one is used at a time, the default.  The default toolbar is
+actually a specifier object which is the value of
+@code{default-toolbar}.  @xref{Toolbar Intro}.
+
+The specification of a toolbar is simple:  it is a list of buttons.
+Each button is a vector with four elements:  an icon, a command, the
+enabled flag, and a help string.  Let's retrieve the instance of the
+toolbar you see in the selected frame.
+
+@example
+(specifier-instance default-toolbar)
+@end example
+
+The value returned is, as promised, a list of vectors.  Now let's build
+up a button, and add it to the toolbar.  Our button will invoke the last
+defined keyboard macro.  This is an alternative to
+@code{name-last-kbd-macro} for creating a persistent macro, rather than
+an alias for @kbd{C-x e}.
+
+A toolbar button icon can be quite sophisticated, with different images
+for button up, button down, and disabled states, and a similar set with
+captions.  We'll use a very simple icon, but we have to jump through a
+few non-obvious hoops designed to support the sophisticated applications.
+The rest of the button descriptor is straightforward.
+
+@example
+(setq toolbar-my-kbd-macro-button
+  `[ (list (make-glyph "MyKbdMac"))
+     (lambda () (interactive) (execute-kbd-macro ,last-kbd-macro))
+     t
+     "Execute a previously defined keyboard macro." ])
+
+(set-specifier default-toolbar
+               (cons toolbar-my-kbd-macro-button
+                     (specifier-specs default-toolbar 'global))
+               'global)
+@end example
+
+To remove the button, just substitute the function @code{delete} for the
+@code{cons} above.
+
+What is the difference between @code{specifier-instance}, which we used
+in the example of retrieving the toolbar descriptor, and
+@code{specifier-specs}, which was used in the toolbar manipulating code?
+@code{specifier-specs} retrieves a copy of the instantiator, which is
+abstract and does not depend on context.  @code{specifier-instance}, on
+the other hand, actually instantiates the specification, and returns the
+result for the given context.  Another way to express this is:
+@code{specifier-specs} takes a @emph{locale} as an argument, while
+@code{specifier-instance} takes a @emph{domain}.  The reason for
+providing @code{specifier-instance} is that sometimes you wish to see
+the object that XEmacs will actually use.  @code{specifier-specs}, on
+the other hand, shows you what the programmer (or user) requested.  When
+a program manipulates specifications, clearly it's the latter that is
+desirable.
+
+In the case of the toolbar descriptor, it turns out that these are the
+same:  the instancing process is trivial.  However, many specifications
+have non-trivial instancing.  Compare the results of the following forms
+on my system.  (The @samp{(cdr (first ...))} form is due to my use of
+Mule.  On non-Mule XEmacsen, just use @code{specifier-specs}.)
+
+@example
+(cdr (first (specifier-specs (face-font 'default) 'global)))
+=> "-*--14-*jisx0208*-0"
+
+(specifier-instance (face-font 'default))
+#<font-instance "-*--14-*jisx0208*-0" on #<x-device on ":0.0" 0x970> 0xe0028b 0x176b>
+@end example
+
+In this case, @code{specifier-instance} returns an opaque object;
+programs can't work on it, they can only pass it around.  Worse, in some
+environments the instantiation will fail, resulting in a different value
+(when another instantiation succeeds), or worse yet, an error, if all
+attempts to instance the specifier fail.  @code{specifier-instance} is
+context-dependent, even for the exact same specification.
+@code{specifier-specs} is deterministic, and only depends on the
+specifications.
+
+Note that in the toolbar-changing code we operate in the global locale.
+This means that narrower locales, if they have specifications, will
+shadow our changes.  (Specifier instancing does not merge
+specifications.  It selects the "highest-priority successful
+specification" and instances that.)
+
+In fact, in our example, it seems pretty likely that different buffers
+@emph{should} have different buttons.  (The icon can be the same, but
+the keyboard macro you create in a Dired buffer is highly unlikely to be
+useful in a LaTeX buffer!)  Here's one way to implement this:
+
+@example
+(setq toolbar-my-kbd-macro-button
+  `[ (list (make-glyph "MyKbdMac"))
+     (lambda () (interactive) (execute-kbd-macro ,last-kbd-macro))
+     t
+     "Execute a previously defined keyboard macro." ])
+
+(set-specifier default-toolbar
+               (cons toolbar-my-kbd-macro-button
+                     (cond ((specifier-specs default-toolbar
+                                             (current-buffer)))
+                           ((specifier-specs default-toolbar
+                                             'global)))
+               (current-buffer))
+@end example
+
+Finally, a cautionary note: the use of @code{specifier-specs} in the
+code above is for expository purposes.  Don't use it in production code.
+In fact, the @code{set-specifier} form above is likely to fail
+occasionally, because you can add many specifications for the same
+locale.
+
+In these cases, @code{specifier-specs} will return a list.  A further
+refinement is that a specification may be associated with a set of
+@dfn{specifier tags}.  If the list of specifier tags is non-nil, then
+@code{specifier-specs} will return a cons of the tag set and the
+instantiator.  Evidently @code{specifier-specs} is a bit unreliable.
+(For toolbars, the code above should work 99% of the time, because
+toolbars are rarely changed.  Since instantiation is trivial, multiple
+specs are not useful---the first one always succeeds.)
+
+In fact, @code{specifier-specs} is intended to be used to display specs
+to humans with a minimum of clutter. The robust way to access
+specifications is via @code{specifier-spec-list}. @xref{Adding
+Specifications}, for the definition of @dfn{spec-list}. @xref{Retrieving
+Specifications}, for documentation of @code{specifier-specs} and
+@code{specifier-spec-list}. To get the desired effect, replace the form
+@code{(specifier-spec default-toolbar 'global)} with
+
+@example
+(cdr (second (first (specifier-spec-list default-toolbar 'global))))
+@end example
+
+(It should be obvious why the example uses the lazy unreliable method!)
+
+@node Specifiers In-Depth
+@section In-Depth Overview of a Specifier
+@cindex specification (in a specifier)
+@cindex domain (in a specifier)
+@cindex locale (in a specifier)
+@cindex instantiator (in a specifier)
+@cindex instancing (in a specifier)
+@cindex instance (in a specifier)
+@cindex inst-list (in a specifier)
+@cindex inst-pair (in a specifier)
+@cindex tag (in a specifier)
+@cindex tag set (in a specifier)
+@cindex specifier, specification
+@cindex specifier, domain
+@cindex specifier, locale
+@cindex specifier, instantiator
+@cindex specifier, instancing
+@cindex specifier, instance
+@cindex specifier, inst-list
+@cindex specifier, inst-pair
+@cindex specifier, tag
+@cindex specifier, tag set
+
+Having variables vary according the editing context is very useful, and
+the buffer is the natural ``atomic'' unit of editing context.  In a GUI
+environment, it can be similarly useful to have variables whose values
+vary according to display context.  The atomic unit of display context
+is the Emacs window.  Buffers are cleanly grouped by modes, but windows
+are not so easily pigeonholed.  On the one hand, a window displays a
+buffer, and thus one possible hierarchy is window, buffer, mode.  On the
+other, a window is a component of a frame.  This generates the window,
+frame, device hierarchy.  Finally, there are objects such as toolbars
+whose properties are described by specifiers.  These do not fit
+naturally into either hierarchy.  This problem is as yet not cleanly
+solved.
+
+Another potential source of conceptual confusion is the instantiation
+process.  Instantiating a buffer-local variable is simple: at any given
+point in time there is a current buffer, and its local values are used
+and set whenever the variable is accessed, unless the programmer goes to
+some special effort (uses @code{default-value} and @code{set-default}.
+However, a specifier object encapsulates a set of @dfn{specifications},
+each of which says what its value should be if a particular condition
+applies.  Several such conditions might apply simultaneously in a given
+window.
+
+For example, one specification might be ``The value should be
+darkseagreen2 on X devices'' another might be ``The value should be blue
+in the *Help* buffer''.  So what do we do for "the *Help* buffer on an X
+device"?  The answer is simple: give each type of locale a priority and
+check them in priority order, returning the first instantiator that
+successfully instantiates a value.
+
+Given a specifier, a logical question is ``What is its value in a
+particular situation?'' This involves looking through the specifications
+to see which ones apply to this particular situation, and perhaps
+preferring one over another if more than one applies.  In specifier
+terminology, a ``particular situation'' is called a @dfn{domain}, and
+determining its value in a particular domain is called @dfn{instancing}.
+Most of the time, a domain is identified by a particular window.  For
+example, if the redisplay engine is drawing text in the default face in
+a particular window, it retrieves the specifier for the foreground color
+of the default face and @dfn{instances} it in the domain given by that
+window; in other words, it asks the specifier, ``What is your value in
+this window?''.
+
+Note that the redisplay example is in a sense canonical.  That is,
+specifiers are designed to present a uniform and @emph{efficient} API
+to redisplay.  It is the efficiency constraint that motivates the
+introduction of specifier tags, and many restrictions on access (for
+example, a buffer is not a domain, and you cannot instantiate a
+specifier over a buffer).
+
+More specifically, a specifier contains a set of @dfn{specifications},
+each of which associates a @dfn{locale} (a window object, a buffer
+object, a frame object, a device object, or the symbol @code{global})
+with an @dfn{inst-list}, which is a list of one or more
+@dfn{inst-pairs}. (For each possible locale, there can be at most one
+specification containing that locale.) Each inst-pair is a cons of a
+@dfn{tag set} (an unordered list of zero or more symbols, or @dfn{tags})
+and an @dfn{instantiator} (the allowed form of this varies depending on
+the type of specifier).  In a given specification, there may be more
+than one inst-pair with the same tag set; this is unlike for locales.
+
+The tag set is used to restrict the sorts of devices over which the
+instantiator is valid and to uniquely identify instantiators added by a
+particular application, so that different applications can work on the
+same specifier and not interfere with each other.  Each tag can have a
+@dfn{predicate} associated with it, which is a function of one argument
+(a device) that specifies whether the tag matches that particular
+device. (If a tag does not have a predicate, it matches all devices.)
+All tags in a tag set must match a device for the associated inst-pair
+to be instantiable over that device.  (A null tag set is perfectly
+valid, and trivially matches all devices.)
+
+@c #### don't we have more device types now, gtk, ms-windows, mac-carbon?
+The valid device types (normally @code{x}, @code{tty}, and
+@code{stream}) and device classes (normally @code{color},
+@code{grayscale}, and @code{mono}) can always be used as tags, and match
+devices of the associated type or class (@pxref{Consoles and Devices}).
+User-defined tags may be defined, with an optional predicate specified.
+An application can create its own tag, use it to mark all its
+instantiators, and be fairly confident that it will not interfere with
+other applications that modify the same specifier---Functions that add
+a specification to a specifier usually only overwrite existing
+inst-pairs with the same tag set as was given, and a particular tag or
+tag set can be specified when removing instantiators.
+
+When a specifier is instanced in a domain, both the locale and the tag
+set can be viewed as specifying necessary conditions that must apply in
+that domain for an instantiator to be considered as a possible result of
+the instancing.  More specific locales always override more general
+locales (thus, there is no particular ordering of the specifications in
+a specifier); however, the tag sets are simply considered in the order
+that the inst-pairs occur in the specification's inst-list.
+
+Note also that the actual object that results from the instancing
+(called an @dfn{instance object}) may not be the same as the instantiator
+from which it was derived.  For some specifier types (such as integer
+specifiers and boolean specifiers), the instantiator will be returned
+directly as the instance object.  For other types, however, this
+is not the case.  For example, for font specifiers, the instantiator
+is a font-description string and the instance object is a font-instance
+object, which describes how the font is displayed on a particular device.
+A font-instance object encapsulates such things as the actual font name
+used to display the font on that device (a font-description string
+under X is usually a wildcard specification that may resolve to
+different font names, with possibly different foundries, widths, etc.,
+on different devices), the extra properties of that font on that
+device, etc.  Furthermore, this conversion (called @dfn{instantiation})
+might fail---a font or color might not exist on a particular device,
+for example.
+
+@node Specifier Instancing
+@section How a Specifier Is Instanced
+@cindex fallback (in a specifier)
+@cindex specifier, fallback
+
+Instancing of a specifier in a particular window domain proceeds as
+follows:
+
+@itemize @bullet
+@item
+First, XEmacs searches for a specification whose locale is the same as
+the window.  If that fails, the search is repeated, looking for a locale
+that is the same as the window's buffer.  If that fails, the search is
+repeated using the window's frame, then using the device that frame is
+on.  Finally, the specification whose locale is the symbol @code{global}
+(if there is such a specification) is considered.
+@item
+The inst-pairs contained in the specification that was found are
+considered in their order in the inst-list, looking for one whose tag
+set matches the device that is derived from the window domain.  (The
+tag set is an unordered list of zero or more tag symbols.  For all
+tags that have predicates associated with them, the predicate must
+match the device.)
+@item
+If a matching tag set is found, the corresponding instantiator is passed
+to the specifier's instantiation method, which is specific to the type
+of the specifier.  If it succeeds, the resulting instance object is
+returned as the result of the instancing and the instancing is done.
+Otherwise, the operation continues, looking for another matching
+inst-pair in the current specification.
+@item
+When there are no more inst-pairs to be considered in the current
+specification, the search starts over, looking for another specification
+as in the first step above.
+@item
+If all specifications are exhausted and no instance object can be
+derived, the instancing fails. (Actually, this is not completely true.
+Some specifier objects for built-in properties have a @dfn{fallback}
+value, which is either an inst-list or another specifier object, that is
+consulted if the instancing is about to fail.  If it is an inst-list,
+the searching proceeds using the inst-pairs in that list.  If it is a
+specifier, the entire instancing starts over using that specifier
+instead of the given one.  Fallback values are set by the C code and
+cannot be modified, except perhaps indirectly, using any Lisp functions.
+The purpose of them is to supply some values to make sure that
+instancing of built-in properties can't fail and to implement some basic
+specifier inheritance, such as the fact that faces inherit their
+properties from the @code{default} face.)
+@end itemize
+
+It is also possible to instance a specifier over a frame domain or
+device domain instead of over a window domain.  The C code, for example,
+instances the @code{top-toolbar-height} variable over a frame domain in
+order to determine the height of a frame's top toolbar.  Instancing over
+a frame or device is similar to instancing over a window except that
+specifications for locales that cannot be derived from the domain are
+ignored.  Specifically, instancing over a frame looks first for frame
+locales, then device locales, then the @code{global} locale.  Instancing
+over a device domain looks only for device locales and the @code{global}
+locale.
+
+@node Specifier Types
+@section Specifier Types
+
+There are various different types of specifiers.  The type of a
+specifier controls what sorts of instantiators are valid, how an
+instantiator is instantiated, etc.  Here is a list of built-in specifier
+types:
+
+@table @code
+@item boolean
+The valid instantiators are the symbols @code{t} and @code{nil}.
+Instance objects are the same as instantiators so no special
+instantiation function is needed.
+
+@item integer
+The valid instantiators are integers.  Instance objects are the same as
+instantiators so no special instantiation function is needed.
+@code{modeline-shadow-thickness} is an example of an integer specifier
+(negative thicknesses indicate that the shadow is drawn recessed instead
+of raised).
+
+@item natnum
+The valid instantiators are natnums (non-negative integers).  Instance
+objects are the same as instantiators so no special instantiation
+function is needed.  Natnum specifiers are used for dimension variables
+such as @code{top-toolbar-height}.
+
+@item generic
+All Lisp objects are valid instantiators.  Instance objects are the same
+as instantiators so no special instantiation function is needed.
+
+@item font
+The valid instantiators are strings describing fonts or vectors
+indicating inheritance from the font of some face.  Instance objects are
+font-instance objects, which are specific to a particular device.  The
+instantiation method for font specifiers can fail, unlike for integer,
+natnum, boolean, and generic specifiers.
+
+@item color
+The valid instantiators are strings describing colors or vectors
+indicating inheritance from the foreground or background of some face.
+Instance objects are color-instance objects, which are specific to a
+particular device.  The instantiation method for color specifiers can fail,
+as for font specifiers.
+
+@item image
+Images are perhaps the most complicated type of built-in specifier.  The
+valid instantiators are strings (a filename, inline data for a pixmap,
+or text to be displayed in a text glyph) or vectors describing inline
+data of various sorts or indicating inheritance from the
+background-pixmap property of some face.  Instance objects are either
+strings (for text images), image-instance objects (for pixmap images),
+or subwindow objects (for subwindow images).  The instantiation method
+for image specifiers can fail, as for font and color specifiers.
+
+@item face-boolean
+The valid instantiators are the symbols @code{t} and @code{nil} and
+vectors indicating inheritance from a boolean property of some face.
+Specifiers of this sort are used for all of the built-in boolean
+properties of faces.  Instance objects are either the symbol @code{t}
+or the symbol @code{nil}.
+
+@item toolbar
+The valid instantiators are toolbar descriptors, which are lists
+of toolbar-button descriptors (each of which is a vector of two
+or four elements).  @xref{Toolbar}, for more information.
+@end table
+
+Color and font instance objects can also be used in turn as
+instantiators for a new color or font instance object.  Since these
+instance objects are device-specific, the instantiator can be used
+directly as the new instance object, but only if they are of the same
+device.  If the devices differ, the base color or font of the
+instantiating object is effectively used instead as the instantiator.
+
+@xref{Faces and Window-System Objects}, for more information on fonts,
+colors, and face-boolean specifiers.  @xref{Glyphs}, for more information
+about image specifiers.  @xref{Toolbar}, for more information on toolbar
+specifiers.
+
+@defun specifier-type specifier
+This function returns the type of @var{specifier}.  The returned value
+will be a symbol: one of @code{integer}, @code{boolean}, etc., as
+listed in the above table.
+@end defun
+
+Functions are also provided to query whether an object is a particular
+kind of specifier:
+
+@defun boolean-specifier-p object
+This function returns non-@code{nil} if @var{object} is a boolean
+specifier.
+@end defun
+
+@defun integer-specifier-p object
+This function returns non-@code{nil} if @var{object} is an integer
+specifier.
+@end defun
+
+@defun natnum-specifier-p object
+This function returns non-@code{nil} if @var{object} is a natnum
+specifier.
+@end defun
+
+@defun generic-specifier-p object
+This function returns non-@code{nil} if @var{object} is a generic
+specifier.
+@end defun
+
+@defun face-boolean-specifier-p object
+This function returns non-@code{nil} if @var{object} is a face-boolean
+specifier.
+@end defun
+
+@defun toolbar-specifier-p object
+This function returns non-@code{nil} if @var{object} is a toolbar
+specifier.
+@end defun
+
+@defun font-specifier-p object
+This function returns non-@code{nil} if @var{object} is a font
+specifier.
+@end defun
+
+@defun color-specifier-p object
+This function returns non-@code{nil} if @var{object} is a color
+specifier.
+@end defun
+
+@defun image-specifier-p object
+This function returns non-@code{nil} if @var{object} is an image
+specifier.
+@end defun
+
+@node Adding Specifications
+@section Adding specifications to a Specifier
+
+@defun add-spec-to-specifier specifier instantiator &optional locale tag-set how-to-add
+This function adds a specification to @var{specifier}.  The
+specification maps from @var{locale} (which should be a window, buffer,
+frame, device, or the symbol @code{global}, and defaults to
+@code{global}) to @var{instantiator}, whose allowed values depend on the
+type of the specifier.  Optional argument @var{tag-set} limits the
+instantiator to apply only to the specified tag set, which should be a
+list of tags all of which must match the device being instantiated over
+(tags are a device type, a device class, or tags defined with
+@code{define-specifier-tag}).  Specifying a single symbol for
+@var{tag-set} is equivalent to specifying a one-element list containing
+that symbol.  Optional argument @var{how-to-add} specifies what to do if
+there are already specifications in the specifier.  It should be one of
+
+@table @code
+@item prepend
+Put at the beginning of the current list of instantiators for @var{locale}.
+@item append
+Add to the end of the current list of instantiators for @var{locale}.
+@item remove-tag-set-prepend
+This is the default.  Remove any existing instantiators whose tag set is
+the same as @var{tag-set}; then put the new instantiator at the
+beginning of the current list.
+@item remove-tag-set-append
+Remove any existing instantiators whose tag set is the same as
+@var{tag-set}; then put the new instantiator at the end of the current
+list.
+@item remove-locale
+Remove all previous instantiators for this locale before adding the new
+spec.
+@item remove-locale-type
+Remove all specifications for all locales of the same type as
+@var{locale} (this includes @var{locale} itself) before adding the new
+spec.
+@item remove-all
+Remove all specifications from the specifier before adding the new spec.
+@end table
+
+@code{remove-tag-set-prepend} is the default.
+
+You can retrieve the specifications for a particular locale or locale type
+with the function @code{specifier-spec-list} or @code{specifier-specs}.
+@end defun
+
+@defun add-spec-list-to-specifier specifier spec-list &optional how-to-add
+This function adds a @dfn{spec-list} (a list of specifications) to
+@var{specifier}.  The format of a spec-list is
+
+@example
+  @code{((@var{locale} (@var{tag-set} . @var{instantiator}) ...) ...)}
+@end example
+
+where
+
+@itemize @bullet
+@item
+@var{locale} := a window, a buffer, a frame, a device, or @code{global}
+@item
+@var{tag-set} := an unordered list of zero or more @var{tags}, each of
+which is a symbol
+@item
+@var{tag} := a device class (@pxref{Consoles and Devices}), a device type,
+or a tag defined with @code{define-specifier-tag}
+@item
+@var{instantiator} := format determined by the type of specifier
+@end itemize
+
+The pair @code{(@var{tag-set} . @var{instantiator})} is called an
+@dfn{inst-pair}.  A list of inst-pairs is called an @dfn{inst-list}.
+The pair @code{(@var{locale} . @var{inst-list})} is called a
+@dfn{specification}.  A spec-list, then, can be viewed as a list of
+specifications.
+
+@var{how-to-add} specifies how to combine the new specifications with
+the existing ones, and has the same semantics as for
+@code{add-spec-to-specifier}.
+
+The higher-level function @code{set-specifier} is often
+more convenient because it allows abbreviations of spec-lists to be used
+instead of the heavily nested canonical syntax.  However, one should
+take great care in using them with specifiers types which can have lists
+as instantiators, such as toolbar specifiers and generic specifiers.  In
+those cases it's probably best to use @code{add-spec-to-specifier} or
+@code{add-spec-list-to-specifier}.
+@end defun
+
+@defspec let-specifier specifier-list &rest body
+This special form temporarily adds specifications to specifiers,
+evaluates forms in @var{body} and restores the specifiers to their
+previous states.  The specifiers and their temporary specifications are
+listed in @var{specifier-list}.
+
+The format of @var{specifier-list} is
+
+@example
+((@var{specifier} @var{value} &optional @var{locale} @var{tag-set} @var{how-to-add}) ...)
+@end example
+
+@var{specifier} is the specifier to be temporarily modified.
+@var{value} is the instantiator to be temporarily added to specifier in
+@var{locale}.  @var{locale}, @var{tag-set} and @var{how-to-add} have the
+same meaning as in @code{add-spec-to-specifier}.
+
+This special form is implemented as a macro; the code resulting from
+macro expansion will add specifications to specifiers using
+@code{add-spec-to-specifier}.  After forms in @var{body} are evaluated,
+the temporary specifications are removed and old specifier spec-lists
+are restored.
+
+@var{locale}, @var{tag-set} and @var{how-to-add} may be omitted, and
+default to @code{nil}.  The value of the last form in @var{body} is
+returned.
+
+NOTE: If you want the specifier's instance to change in all
+circumstances, use @code{(selected-window)} as the @var{locale}.  If
+@var{locale} is @code{nil} or omitted, it defaults to @code{global}.
+
+The following example removes the 3D modeline effect in the currently
+selected window for the duration of a second:
+
+@example
+(let-specifier ((modeline-shadow-thickness 0 (selected-window)))
+  (sit-for 1))
+@end example
+@end defspec
+
+@defun set-specifier specifier value &optional locale tag-set how-to-add
+This function adds some specifications to @var{specifier}.  @var{value}
+can be a single instantiator or tagged instantiator (added as a global
+specification), a list of tagged and/or untagged instantiators (added as
+a global specification), a cons of a locale and instantiator or locale
+and instantiator list, a list of such conses, or nearly any other
+reasonable form.  More specifically, @var{value} can be anything
+accepted by @code{canonicalize-spec-list} (described below).
+
+@var{locale}, @var{tag-set}, and @var{how-to-add} are the same as in
+@code{add-spec-to-specifier}.
+
+Note that @code{set-specifier} is exactly complementary to
+@code{specifier-specs} except in the case where @var{specifier} has no
+specs at all in it but @code{nil} is a valid instantiator (in that case,
+@code{specifier-specs} will return @code{nil} (meaning no specs) and
+@code{set-specifier} will interpret the @code{nil} as meaning ``I'm
+adding a global instantiator and its value is @code{nil}''), or in
+strange cases where there is an ambiguity between a spec-list and an
+inst-list, etc. (The built-in specifier types are designed in such a way
+as to avoid any such ambiguities.)  For robust code,
+@code{set-specifier} should probably be avoided for specifier types
+which accept lists as instantiators (currently toolbar specifiers and
+generic specifiers).
+
+If you want to work with spec-lists, you should probably not use these
+functions, but should use the lower-level functions
+@code{specifier-spec-list} and @code{add-spec-list-to-specifier}.  These
+functions always work with fully-qualified spec-lists; thus, there is no
+ambiguity.
+@end defun
+
+@defun canonicalize-inst-pair inst-pair specifier-type &optional noerror
+This function canonicalizes the given @var{inst-pair}.
+
+@var{specifier-type} specifies the type of specifier that this
+@var{spec-list} will be used for.
+
+Canonicalizing means converting to the full form for an inst-pair, i.e.
+@code{(@var{tag-set} . @var{instantiator})}.  A single, untagged
+instantiator is given a tag set of @code{nil} (the empty set), and a
+single tag is converted into a tag set consisting only of that tag.
+
+If @var{noerror} is non-@code{nil}, signal an error if the inst-pair is
+invalid; otherwise return @code{t}.
+@end defun
+
+@defun canonicalize-inst-list inst-list specifier-type &optional noerror
+This function canonicalizes the given @var{inst-list} (a list of
+inst-pairs).
+
+@var{specifier-type} specifies the type of specifier that this @var{inst-list}
+will be used for.
+
+Canonicalizing means converting to the full form for an inst-list, i.e.
+@code{((@var{tag-set} . @var{instantiator}) ...)}.  This function
+accepts a single inst-pair or any abbreviation thereof or a list of
+(possibly abbreviated) inst-pairs. (See @code{canonicalize-inst-pair}.)
+
+If @var{noerror} is non-@code{nil}, signal an error if the inst-list is
+invalid; otherwise return @code{t}.
+@end defun
+
+@defun canonicalize-spec spec specifier-type &optional noerror
+This function canonicalizes the given @var{spec} (a specification).
+
+@var{specifier-type} specifies the type of specifier that this
+@var{spec-list} will be used for.
+
+Canonicalizing means converting to the full form for a spec, i.e.
+@code{(@var{locale} (@var{tag-set} . @var{instantiator}) ...)}.  This
+function accepts a possibly abbreviated inst-list or a cons of a locale
+and a possibly abbreviated inst-list. (See
+@code{canonicalize-inst-list}.)
+
+If @var{noerror} is @code{nil}, signal an error if the specification is
+invalid; otherwise return @code{t}.
+@end defun
+
+@defun canonicalize-spec-list spec-list specifier-type &optional noerror
+This function canonicalizes the given @var{spec-list} (a list of
+specifications).
+
+@var{specifier-type} specifies the type of specifier that this
+@var{spec-list} will be used for.
+
+If @var{noerror} is @code{nil}, signal an error if the spec-list is
+invalid; otherwise return @code{t} for an invalid spec-list.  (Note that
+this cannot be confused with a canonical spec-list.)
+
+Canonicalizing means converting to the full form for a spec-list, i.e.
+@code{((@var{locale} (@var{tag-set} . @var{instantiator}) ...) ...)}.
+This function accepts a possibly abbreviated specification or a list of
+such things. (See @code{canonicalize-spec}.) This is the function used
+to convert spec-lists accepted by @code{set-specifier} and such into a
+form suitable for @code{add-spec-list-to-specifier}.
+
+This function tries extremely hard to resolve any ambiguities,
+and the built-in specifier types (font, image, toolbar, etc.) are
+designed so that there won't be any ambiguities.
+
+The canonicalization algorithm is as follows:
+
+@enumerate
+@item
+Attempt to parse @var{spec-list} as a single, possibly abbreviated,
+specification.
+@item
+If that fails, attempt to parse @var{spec-list} as a list of (abbreviated)
+specifications.
+@item
+If that fails, @var{spec-list} is invalid.
+@end enumerate
+
+A possibly abbreviated specification @var{spec} is parsed by
+
+@enumerate
+@item
+Attempt to parse @var{spec} as a possibly abbreviated inst-list.
+@item
+If that fails, attempt to parse @var{spec} as a cons of a locale and an
+(abbreviated) inst-list.
+@item
+If that fails, @var{spec} is invalid.
+@end enumerate
+
+A possibly abbreviated inst-list @var{inst-list} is parsed by
+
+@enumerate
+@item
+Attempt to parse @var{inst-list} as a possibly abbreviated inst-pair.
+@item
+If that fails, attempt to parse @var{inst-list} as a list of (abbreviated)
+inst-pairs.
+@item
+If that fails, @var{inst-list} is invalid.
+@end enumerate
+
+A possibly abbreviated inst-pair @var{inst-pair} is parsed by
+
+@enumerate
+@item
+Check if @var{inst-pair} is @code{valid-instantiator-p}.
+@item
+If not, check if @var{inst-pair} is a cons of something that is a tag, ie,
+@code{valid-specifier-tag-p}, and something that is @code{valid-instantiator-p}.
+@item
+If not, check if @var{inst-pair} is a cons of a list of tags and something that
+is @code{valid-instantiator-p}.
+@item
+Otherwise, @var{inst-pair} is invalid.
+@end enumerate
+
+In summary, this function generally prefers more abbreviated forms.
+@end defun
+
+@node Retrieving Specifications
+@section Retrieving the Specifications from a Specifier
+
+@defun specifier-spec-list specifier &optional locale tag-set exact-p
+This function returns the spec-list of specifications for
+@var{specifier} in @var{locale}.
+
+If @var{locale} is a particular locale (a window, buffer, frame, device,
+or the symbol @code{global}), a spec-list consisting of the
+specification for that locale will be returned.
+
+If @var{locale} is a locale type (i.e. one of the symbols @code{window},
+@code{buffer}, @code{frame}, or @code{device}), a spec-list of the
+specifications for all locales of that type will be returned.
+
+If @var{locale} is @code{nil} or the symbol @code{all}, a spec-list of
+all specifications in @var{specifier} will be returned.
+
+@var{locale} can also be a list of locales, locale types, and/or
+@code{all}; the result is as if @code{specifier-spec-list} were called
+on each element of the list and the results concatenated together.
+
+Only instantiators where @var{tag-set} (a list of zero or more tags) is
+a subset of (or possibly equal to) the instantiator's tag set are
+returned.  (The default value of @code{nil} is a subset of all tag sets,
+so in this case no instantiators will be screened out.) If @var{exact-p}
+is non-@code{nil}, however, @var{tag-set} must be equal to an
+instantiator's tag set for the instantiator to be returned.
+@end defun
+
+@defun specifier-specs specifier &optional locale tag-set exact-p
+This function returns the specification(s) for @var{specifier} in
+@var{locale}.
+
+If @var{locale} is a single locale or is a list of one element
+containing a single locale, then a ``short form'' of the instantiators
+for that locale will be returned.  Otherwise, this function is identical
+to @code{specifier-spec-list}.
+
+The ``short form'' is designed for readability and not for ease of use
+in Lisp programs, and is as follows:
+
+@enumerate
+@item
+If there is only one instantiator, then an inst-pair (i.e. cons of tag
+and instantiator) will be returned; otherwise a list of inst-pairs will
+be returned.
+@item
+For each inst-pair returned, if the instantiator's tag is @code{any},
+the tag will be removed and the instantiator itself will be returned
+instead of the inst-pair.
+@item
+If there is only one instantiator, its value is @code{nil}, and its tag
+is @code{any}, a one-element list containing @code{nil} will be returned
+rather than just @code{nil}, to distinguish this case from there being
+no instantiators at all.
+@end enumerate
+
+@end defun
+
+@defun specifier-fallback specifier
+This function returns the fallback value for @var{specifier}.  Fallback
+values are provided by the C code for certain built-in specifiers to
+make sure that instancing won't fail even if all specs are removed from
+the specifier, or to implement simple inheritance behavior (e.g. this
+method is used to ensure that faces other than @code{default} inherit
+their attributes from @code{default}).  By design, you cannot change the
+fallback value, and specifiers created with @code{make-specifier} will
+never have a fallback (although a similar, Lisp-accessible capability
+may be provided in the future to allow for inheritance).
+
+The fallback value will be an inst-list that is instanced like
+any other inst-list, a specifier of the same type as @var{specifier}
+(results in inheritance), or @code{nil} for no fallback.
+
+When you instance a specifier, you can explicitly request that the
+fallback not be consulted. (The C code does this, for example, when
+merging faces.) See @code{specifier-instance}.
+@end defun
+
+@node Specifier Tag Functions
+@section Working With Specifier Tags
+
+A specifier tag set is an entity that is attached to an instantiator
+and can be used to restrict the scope of that instantiator to a
+particular device class or device type and/or to mark instantiators
+added by a particular package so that they can be later removed.
+
+A specifier tag set consists of a list of zero or more specifier tags,
+each of which is a symbol that is recognized by XEmacs as a tag.  (The
+valid device types and device classes are always tags, as are any tags
+defined by @code{define-specifier-tag}.) It is called a ``tag set'' (as
+opposed to a list) because the order of the tags or the number of times
+a particular tag occurs does not matter.
+
+Each tag has a predicate associated with it, which specifies whether
+that tag applies to a particular device.  The tags which are device
+types and classes match devices of that type or class.  User-defined
+tags can have any predicate, or none (meaning that all devices match).
+When attempting to instance a specifier, a particular instantiator is
+only considered if the device of the domain being instanced over matches
+all tags in the tag set attached to that instantiator.
+
+Most of the time, a tag set is not specified, and the instantiator gets
+a null tag set, which matches all devices.
+
+@defun valid-specifier-tag-p tag
+This function returns non-@code{nil} if @var{tag} is a valid specifier
+tag.
+@end defun
+
+@defun valid-specifier-tag-set-p tag-set
+This function returns non-@code{nil} if @var{tag-set} is a valid
+specifier tag set.
+@end defun
+
+@defun canonicalize-tag-set tag-set
+This function canonicalizes the given tag set.  Two canonicalized tag
+sets can be compared with @code{equal} to see if they represent the same
+tag set. (Specifically, canonicalizing involves sorting by symbol name
+and removing duplicates.)
+@end defun
+
+@defun device-matches-specifier-tag-set-p device tag-set
+This function returns non-@code{nil} if @var{device} matches specifier
+tag set @var{tag-set}.  This means that @var{device} matches each tag in
+the tag set.
+@end defun
+
+@defun define-specifier-tag tag &optional predicate
+This function defines a new specifier tag.  If @var{predicate} is
+specified, it should be a function of one argument (a device) that
+specifies whether the tag matches that particular device.  If
+@var{predicate} is omitted, the tag matches all devices.
+
+You can redefine an existing user-defined specifier tag.  However, you
+cannot redefine the built-in specifier tags (the device types and
+classes) or the symbols @code{nil}, @code{t}, @code{all}, or
+@code{global}.
+@end defun
+
+@defun device-matching-specifier-tag-list &optional device
+This function returns a list of all specifier tags matching
+@var{device}.  @var{device} defaults to the selected device if omitted.
+@end defun
+
+@defun specifier-tag-list
+This function returns a list of all currently-defined specifier tags.
+This includes the built-in ones (the device types and classes).
+@end defun
+
+@defun specifier-tag-predicate tag
+This function returns the predicate for the given specifier tag.
+@end defun
+
+@node Specifier Instancing Functions
+@section Functions for Instancing a Specifier
+
+@defun specifier-instance specifier &optional domain default no-fallback
+This function instantiates @var{specifier} (returns its value) in
+@var{domain}.  If no instance can be generated for this domain, return
+@var{default}.
+
+@var{domain} should be a window, frame, or device.  Other values that
+are legal as a locale (e.g. a buffer) are not valid as a domain because
+they do not provide enough information to identify a particular device
+(see @code{valid-specifier-domain-p}).  @var{domain} defaults to the
+selected window if omitted.
+
+@dfn{Instantiating} a specifier in a particular domain means determining
+the specifier's ``value'' in that domain.  This is accomplished by
+searching through the specifications in the specifier that correspond to
+all locales that can be derived from the given domain, from specific to
+general.  In most cases, the domain is an Emacs window.  In that case
+specifications are searched for as follows:
+
+@enumerate
+@item
+A specification whose locale is the window itself;
+@item
+A specification whose locale is the window's buffer;
+@item
+A specification whose locale is the window's frame;
+@item
+A specification whose locale is the window's frame's device;
+@item
+A specification whose locale is the symbol @code{global}.
+@end enumerate
+
+If all of those fail, then the C-code-provided fallback value for this
+specifier is consulted (see @code{specifier-fallback}).  If it is an
+inst-list, then this function attempts to instantiate that list just as
+when a specification is located in the first five steps above.  If the
+fallback is a specifier, @code{specifier-instance} is called recursively
+on this specifier and the return value used.  Note, however, that if the
+optional argument @var{no-fallback} is non-@code{nil}, the fallback
+value will not be consulted.
+
+Note that there may be more than one specification matching a particular
+locale; all such specifications are considered before looking for any
+specifications for more general locales.  Any particular specification
+that is found may be rejected because it is tagged to a particular
+device class (e.g. @code{color}) or device type (e.g. @code{x}) or both
+and the device for the given domain does not match this, or because the
+specification is not valid for the device of the given domain (e.g.  the
+font or color name does not exist for this particular X server).
+
+The returned value is dependent on the type of specifier.  For example,
+for a font specifier (as returned by the @code{face-font} function), the
+returned value will be a font-instance object.  For images, the returned
+value will be a string, pixmap, or subwindow.
+@end defun
+
+@defun specifier-matching-instance specifier matchspec &optional domain default no-fallback
+This function returns an instance for @var{specifier} in @var{domain}
+that matches @var{matchspec}.  If no instance can be generated for
+@var{domain}, return @var{default}.
+
+This function is identical to @code{specifier-instance} except that a
+specification will only be considered if it matches @var{matchspec}.
+The definition of ``match,'' and allowed values for @var{matchspec}, are
+dependent on the particular type of specifier.  Here are some examples:
+
+@itemize
+@item
+For chartable (e.g. display table) specifiers, @var{matchspec} should be a
+character, and the specification (a chartable) must give a value for
+that character in order to be considered.  This allows you to specify,
+@emph{e.g.}, a buffer-local display table that only gives values for particular
+characters.  All other characters are handled as if the buffer-local
+display table is not there. (Chartable specifiers are not yet
+implemented.)
+@item
+For font specifiers, @var{matchspec} should be a charset,
+and the specification (a font string) must have
+a registry that matches the charset's registry.  (This only makes sense
+with Mule support.)  This makes it easy to choose a font that can
+display a particular character.  (This is what redisplay does, in fact.)
+@end itemize
+@end defun
+
+@defun specifier-instance-from-inst-list specifier domain inst-list &optional default
+This function attempts to convert a particular inst-list into an
+instance.  This attempts to instantiate @var{inst-list} in the given
+@var{domain}, as if @var{inst-list} existed in a specification in
+@var{specifier}.  If the instantiation fails, @var{default} is returned.
+In most circumstances, you should not use this function; use
+@code{specifier-instance} instead.
+@end defun
+
+@node Specifier Examples
+@section Examples of Specifier Usage
+
+Now let us present an example to clarify the theoretical discussions we
+have been through.  In this example, we will use the general specifier
+functions for clarity.  Keep in mind that many types of specifiers, and
+some other types of objects that are associated with specifiers
+(e.g. faces), provide convenience functions making it easier to work
+with objects of that type.
+
+Let us consider the background color of the default face.  A specifier
+is used to specify how that color will appear in different domains.
+First, let's retrieve the specifier:
+
+@example
+(setq sp (face-property 'default 'background))
+    @result{}   #<color-specifier 0x3da>
+@end example
+
+@example
+(specifier-specs sp)
+    @result{}   ((#<buffer "device.c"> (nil . "forest green"))
+                 (#<window on "Makefile" 0x8a2b> (nil . "hot pink"))
+                 (#<x-frame "emacs" 0x4ac> (nil . "puke orange")
+                                           (nil . "moccasin"))
+                 (#<x-frame "VM" 0x4ac> (nil . "magenta"))
+                 (global ((tty) . "cyan") (nil . "white"))
+                )
+@end example
+
+Then, say we want to determine what the background color of the default
+face is for the window currently displaying the buffer @samp{*scratch*}.
+We call
+
+@example
+(get-buffer-window "*scratch*")
+    @result{} #<window on "*scratch*" 0x4ad>
+(window-frame (get-buffer-window "*scratch*"))
+    @result{} #<x-frame "emacs" 0x4ac>
+(specifier-instance sp (get-buffer-window "*scratch*"))
+    @result{} #<color-instance moccasin 47=(FFFF,E4E4,B5B5) 0x6309>
+@end example
+
+Note that we passed a window to @code{specifier-instance}, not a buffer.
+We cannot pass a buffer because a buffer by itself does not provide enough
+information.  The buffer might not be displayed anywhere at all, or
+could be displayed in many different frames on different devices.
+
+The result is arrived at like this:
+
+@enumerate
+@item
+First, we look for a specification matching the buffer displayed in the
+window, i.e. @samp{*scratch*}.  There are none, so we proceed.
+@item
+Then, we look for a specification matching the window itself.  Again, there
+are none.
+@item
+Then, we look for a specification matching the window's frame.  The
+specification @code{(#<x-frame "emacs" 0x4ac> . "puke orange")} is
+found.  We call the instantiation method for colors, passing it the
+locale we were searching over (i.e. the window, in this case) and the
+instantiator (@samp{"puke orange"}).  However, the particular device
+which this window is on (let's say it's an X connection) doesn't
+recognize the color @samp{"puke orange"}, so the specification is
+rejected.
+@item
+So we continue looking for a specification matching the window's frame.
+We find @samp{(#<x-frame "emacs" 0x4ac> . "moccasin")}.  Again, we
+call the instantiation method for colors.  This time, the X server
+our window is on recognizes the color @samp{moccasin}, and so the
+instantiation method succeeds and returns a color instance.
+@end enumerate
+
+Here's another example, which implements something like GNU Emacs's
+``frame-local'' variables.
+
+@example
+;; Implementation
+
+;; There are probably better ways to write this macro
+;; Heaven help you if VAR is a buffer-local; you will become very
+;; confused.  Probably should error on that.
+(defmacro define-frame-local-variable (var)
+  "Make the unbound symbol VAR become a frame-local variable."
+  (let ((val (if (boundp var) (symbol-value var) nil)))
+    `(progn
+      (setq ,var (make-specifier 'generic))
+      (add-spec-to-specifier ,var ',val 'global))))
+
+;; I'm not real happy about this terminology, how can `setq' be a defun?
+;; But `frame-set' would have people writing "(frame-set 'foo value)".
+(defun frame-setq (var value &optional frame)
+  "Set the local value of VAR to VALUE in FRAME.
+
+FRAME defaults to the selected frame."
+  (and frame (not (framep frame))
+       (error 'invalid-argument "FRAME must be a frame", frame))
+  (add-spec-to-specifier var value (or frame (selected-frame))))
+
+(defun frame-value (var &optional frame)
+  "Get the local value of VAR in FRAME.
+
+FRAME defaults to the selected frame."
+  (and frame (not (framep frame))
+       (error 'invalid-argument "FRAME must be a frame", frame))
+  ;; this is not just a map from frames to values; it also falls back
+  ;; to the global value
+  (specifier-instance var (or frame (selected-frame))))
+
+;; for completeness
+(defun frame-set-default (var value)
+  "Set the default value of frame-local variable VAR to VALUE."
+  (add-spec-to-specifier var value 'global))
+
+(defun frame-get-default (var)
+  "Get the default value of frame-local variable VAR."
+  (car (specifier-specs var 'global)))
+@end example
+
+Now you can execute the above definitions (eg, with @code{eval-last-sexp})
+and switch to @file{*scratch*} to play.  Things will work differently if
+you already have a variable named @code{foo}.
+
+@example
+;; Usage
+
+foo
+@error{} Symbol's value as variable is void: foo
+
+(define-frame-local-variable foo)
+@result{} nil
+
+;; the value of foo is a specifier, which is an opaque object;
+;; you must use accessor functions to get values
+
+foo
+@result{} #<generic-specifier global=(nil) 0x4f5cb>
+
+;; since no frame-local value is set, the global value (which is the
+;; constant `nil') is returned
+(frame-value foo)
+@result{} nil
+
+;; get the default explicitly
+(frame-get-default foo)
+@result{} nil
+
+;; get the whole specification list
+(specifier-specs foo 'global)
+@result{} (nil)
+
+;; give foo a frame-local value
+
+(frame-setq foo 'bar)
+@result{} nil
+
+;; access foo in several ways
+
+;; Note that the print function for this kind of specifier only
+;; gives you the global setting.  To get the full list of specs for
+;; debugging or study purposes, you must use specifier-specs or
+;; specifier-spec-list.
+foo
+@result{} #<generic-specifier global=(nil) 0x4f5cb>
+
+;; get the whole specification list
+(specifier-specs foo)
+@result{} ((#<x-frame "Message" 0x1bd66> (nil . bar)) (global (nil)))
+
+;; get the frame-local value
+(frame-value foo)
+@result{} bar
+
+;; get the default explicitly
+(frame-get-default foo)
+@result{} nil
+
+;; Switch to another frame and evaluate:
+;; C-x 5 o M-: (frame-setq foo 'baz) RET M-: (frame-value foo) RET
+@result{} baz
+
+;; Switch back.
+;; C-x 5 o
+(specifier-specs foo)
+@result{} ((#<x-frame "emacs" 0x28ec> (nil . baz))
+    (#<x-frame "Message" 0x1bd66> (nil . bar))
+    (global (nil)))
+
+(frame-value foo)
+@result{} bar
+
+(frame-get-default foo)
+@result{} nil
+@end example
+
+Note that since specifiers generalize both frame-local and buffer-local
+variables in a sensible way, XEmacs is not likely to put a high priority
+on implementing frame-local variables.
+@c Thanks to Jerry James for the following explanation.  He is not
+@c responsible for its use here, Stephen Turnbull is.
+In fact, some developers think that frame-local variables are evil for
+the same reason that buffer-local variables are evil: the declaration is
+both global and invisible.  That is, you cannot tell whether a variable
+is ``normal,'' buffer-local, or frame-local just by looking at it.  So
+if you have namespace management problems, and some other Lisp package
+happens to use a variable name that you already declared frame- or
+buffer-local, weird stuff happens, and it is extremely hard to track
+down.
+
+
+@node Creating Specifiers
+@section Creating New Specifier Objects
+
+@defun make-specifier type
+This function creates a new specifier.
+
+A specifier is an object that can be used to keep track of a property
+whose value can be per-buffer, per-window, per-frame, or per-device,
+and can further be restricted to a particular device-type or device-class.
+Specifiers are used, for example, for the various built-in properties of a
+face; this allows a face to have different values in different frames,
+buffers, etc.  For more information, see @code{specifier-instance},
+@code{specifier-specs}, and @code{add-spec-to-specifier}; or, for a detailed
+description of specifiers, including how they are instantiated over a
+particular domain (i.e. how their value in that domain is determined),
+see the chapter on specifiers in the XEmacs Lisp Reference Manual.
+
+@var{type} specifies the particular type of specifier, and should be one
+of the symbols @code{generic}, @code{integer}, @code{natnum},
+@code{boolean}, @code{color}, @code{font}, @code{image},
+@code{face-boolean}, or @code{toolbar}.
+
+For more information on particular types of specifiers, see the
+functions @code{make-generic-specifier}, @code{make-integer-specifier},
+@code{make-natnum-specifier}, @code{make-boolean-specifier},
+@code{make-color-specifier}, @code{make-font-specifier},
+@code{make-image-specifier}, @code{make-face-boolean-specifier}, and
+@code{make-toolbar-specifier}.
+@end defun
+
+@defun make-specifier-and-init type spec-list &optional dont-canonicalize
+This function creates and initializes a new specifier.
+
+This is a convenience API combining @code{make-specifier} and
+@code{set-specifier} that allows you to create
+a specifier and add specs to it at the same time.  @var{type} specifies
+the specifier type.  Allowed types are as for @code{make-specifier}.
+
+@var{spec-list} supplies the specification(s) to be
+added to the specifier.  Any abbreviation of
+the full spec-list form accepted by @code{canonicalize-spec-list} may
+be used.
+However, if the optional argument @var{dont-canonicalize} is non-@code{nil},
+canonicalization is not performed, and the @var{spec-list} must already
+be in full form.
+@end defun
+
+@defun make-integer-specifier spec-list
+
+Return a new @code{integer} specifier object with the given
+specification list.  @var{spec-list} can be a list of specifications
+(each of which is a cons of a locale and a list of instantiators), a
+single instantiator, or a list of instantiators.
+
+Valid instantiators for integer specifiers are integers.
+@end defun
+
+@defun make-boolean-specifier spec-list
+
+Return a new @code{boolean} specifier object with the given
+specification list.  @var{spec-list} can be a list of specifications
+(each of which is a cons of a locale and a list of instantiators), a
+single instantiator, or a list of instantiators.
+
+Valid instantiators for boolean specifiers are @code{t} and @code{nil}.
+@end defun
+
+@defun make-natnum-specifier spec-list
+
+Return a new @code{natnum} specifier object with the given specification
+list.  @var{spec-list} can be a list of specifications (each of which is
+a cons of a locale and a list of instantiators), a single instantiator,
+or a list of instantiators.
+
+Valid instantiators for natnum specifiers are non-negative integers.
+@end defun
+
+@defun make-generic-specifier spec-list
+
+Return a new @code{generic} specifier object with the given
+specification list.  @var{spec-list} can be a list of specifications
+(each of which is a cons of a locale and a list of instantiators), a
+single instantiator, or a list of instantiators.
+
+Valid instantiators for generic specifiers are all Lisp values.  They
+are returned back unchanged when a specifier is instantiated.
+@end defun
+
+@defun make-display-table-specifier spec-list
+
+Return a new @code{display-table} specifier object with the given spec
+list.  @var{spec-list} can be a list of specifications (each of which is
+a cons of a locale and a list of instantiators), a single instantiator,
+or a list of instantiators.
+
+Valid instantiators for display-table specifiers are described in detail
+in the doc string for @code{current-display-table} (@pxref{Active
+Display Table}).
+@end defun
+
+@node Specifier Validation Functions
+@section Functions for Checking the Validity of Specifier Components
+
+@defun valid-specifier-domain-p domain
+This function returns non-@code{nil} if @var{domain} is a valid
+specifier domain.  A domain is used to instance a specifier
+(i.e. determine the specifier's value in that domain).  Valid domains
+are a window, frame, or device.  (@code{nil} is not valid.)
+@end defun
+
+@defun valid-specifier-locale-p locale
+This function returns non-@code{nil} if @var{locale} is a valid
+specifier locale.  Valid locales are a device, a frame, a window, a
+buffer, and @code{global}.  (@code{nil} is not valid.)
+@end defun
+
+@defun valid-specifier-locale-type-p locale-type
+Given a specifier @var{locale-type}, this function returns non-@code{nil} if it
+is valid.  Valid locale types are the symbols @code{global},
+@code{device}, @code{frame}, @code{window}, and @code{buffer}. (Note,
+however, that in functions that accept either a locale or a locale type,
+@code{global} is considered an individual locale.)
+@end defun
+
+@defun valid-specifier-type-p specifier-type
+Given a @var{specifier-type}, this function returns non-@code{nil} if it
+is valid.  Valid types are @code{generic}, @code{integer},
+@code{boolean}, @code{color}, @code{font}, @code{image},
+@code{face-boolean}, and @code{toolbar}.
+@end defun
+
+@defun valid-specifier-tag-p tag
+This function returns non-@code{nil} if @var{tag} is a valid specifier
+tag.
+@end defun
+
+@defun valid-instantiator-p instantiator specifier-type
+This function returns non-@code{nil} if @var{instantiator} is valid for
+@var{specifier-type}.
+@end defun
+
+@defun valid-inst-list-p inst-list type
+This function returns non-@code{nil} if @var{inst-list} is valid for
+specifier type @var{type}.
+@end defun
+
+@defun valid-spec-list-p spec-list type
+This function returns non-@code{nil} if @var{spec-list} is valid for
+specifier type @var{type}.
+@end defun
+
+@defun check-valid-instantiator instantiator specifier-type
+This function signals an error if @var{instantiator} is invalid for
+@var{specifier-type}.
+@end defun
+
+@defun check-valid-inst-list inst-list type
+This function signals an error if @var{inst-list} is invalid for
+specifier type @var{type}.
+@end defun
+
+@defun check-valid-spec-list spec-list type
+This function signals an error if @var{spec-list} is invalid for
+specifier type @var{type}.
+@end defun
+
+@node Other Specification Functions
+@section Other Functions for Working with Specifications in a Specifier
+
+@defun copy-specifier specifier &optional dest locale tag-set exact-p how-to-add
+This function copies @var{specifier} to @var{dest}, or creates a new one
+if @var{dest} is @code{nil}.
+
+If @var{dest} is @code{nil} or omitted, a new specifier will be created
+and the specifications copied into it.  Otherwise, the specifications
+will be copied into the existing specifier in @var{dest}.
+
+If @var{locale} is @code{nil} or the symbol @code{all}, all
+specifications will be copied.  If @var{locale} is a particular locale,
+the specification for that particular locale will be copied.  If
+@var{locale} is a locale type, the specifications for all locales of
+that type will be copied.  @var{locale} can also be a list of locales,
+locale types, and/or @code{all}; this is equivalent to calling
+@code{copy-specifier} for each of the elements of the list.  See
+@code{specifier-spec-list} for more information about @var{locale}.
+
+Only instantiators where @var{tag-set} (a list of zero or more tags) is
+a subset of (or possibly equal to) the instantiator's tag set are
+copied.  (The default value of @code{nil} is a subset of all tag sets,
+so in this case no instantiators will be screened out.) If @var{exact-p}
+is non-@code{nil}, however, @var{tag-set} must be equal to an
+instantiator's tag set for the instantiator to be copied.
+
+Optional argument @var{how-to-add} specifies what to do with existing
+specifications in @var{dest}.  If @code{nil}, then whichever locales or locale
+types are copied will first be completely erased in @var{dest}.
+Otherwise, it is the same as in @code{add-spec-to-specifier}.
+@end defun
+
+@defun remove-specifier specifier &optional locale tag-set exact-p
+This function removes specification(s) for @var{specifier}.
+
+If @var{locale} is a particular locale (a buffer, window, frame, device,
+or the symbol @code{global}), the specification for that locale will be
+removed.
+
+If instead, @var{locale} is a locale type (i.e. a symbol @code{buffer},
+@code{window}, @code{frame}, or @code{device}), the specifications for
+all locales of that type will be removed.
+
+If @var{locale} is @code{nil} or the symbol @code{all}, all
+specifications will be removed.
+
+@var{locale} can also be a list of locales, locale types, and/or
+@code{all}; this is equivalent to calling @code{remove-specifier} for
+each of the elements in the list.
+
+Only instantiators where @var{tag-set} (a list of zero or more tags) is
+a subset of (or possibly equal to) the instantiator's tag set are
+removed.  (The default value of @code{nil} is a subset of all tag sets,
+so in this case no instantiators will be screened out.) If @var{exact-p}
+is non-@code{nil}, however, @var{tag-set} must be equal to an
+instantiator's tag set for the instantiator to be removed.
+@end defun
+
+@defun map-specifier specifier func &optional locale maparg
+This function applies @var{func} to the specification(s) for
+@var{locale} in @var{specifier}.
+
+If optional @var{locale} is a locale, @var{func} will be called for that
+locale.
+If @var{locale} is a locale type, @var{func} will be mapped over all
+locales of that type.  If @var{locale} is @code{nil} or the symbol
+@code{all}, @var{func} will be mapped over all locales in
+@var{specifier}.
+
+Optional @var{ms-maparg} will be passed to @var{ms-func}.
+
+@var{func} is called with four arguments: the @var{specifier}, the
+locale being mapped over, the inst-list for that locale, and the
+optional @var{maparg}.  If any invocation of @var{func} returns
+non-@code{nil}, the mapping will stop and the returned value becomes the
+value returned from @code{map-specifier}.  Otherwise,
+@code{map-specifier} returns @code{nil}.
+@end defun
+
+@defun specifier-locale-type-from-locale locale
+Given a specifier @var{locale}, this function returns its type.
+@end defun

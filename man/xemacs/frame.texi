@@ -1,0 +1,581 @@
+@node Frame, Keystrokes, Concept Index, Top
+@comment  node-name,  next,  previous,  up
+@chapter The XEmacs Frame
+@cindex frame
+@cindex window
+@cindex buffer
+
+@table @asis
+@item Frame
+In many environments, such as a tty terminal, an XEmacs frame
+literally takes up the whole screen.  If you are
+running XEmacs in a multi-window system like the X Window System, the
+XEmacs frame takes up one X window.  @xref{XEmacs under X}, for more
+information.@refill
+
+@item Window
+No matter what environment you are running in, XEmacs allows you to look
+at several buffers at the same time by having several windows be part of
+the frame.  Often, the whole frame is taken up by just one window, but
+you can split the frame into two or more subwindows.  If you are
+running XEmacs under the X window system, that means you can have several
+@dfn{XEmacs windows} inside the X window that contains the XEmacs frame.
+You can even have multiple frames in different X windows, each with
+their own set of subwindows.
+@refill
+@end table
+
+Each XEmacs frame displays a variety of information:
+@itemize @bullet
+@item
+The biggest area usually displays the text you are editing.  It may
+consist of one window or of two or more windows if you need to look at two
+buffers a the same time.
+@item
+Below each text window's last line is a @dfn{mode line} (@pxref{Mode
+Line}), which describes what is going on in that window.  The mode line
+is in inverse video if the terminal supports that.  If there are several
+XEmacs windows in one frame, each window has its own mode line.
+@item
+At the bottom of each XEmacs frame is the @dfn{echo area} or @dfn{minibuffer
+window}(@pxref{Echo Area}).  It is used by XEmacs to exchange information
+with the user.  There is only one echo area per XEmacs frame.
+@item
+If you are running XEmacs under a graphical windowing system, a
+menu bar at the top of the frame makes shortcuts to several of the
+commands available (@pxref{Pull-down Menus}).
+@item
+Under a graphical windowing system, a
+toolbar at the top of the frame, just under the menu bar if it exists,
+provides ``one-touch'' shortcuts to several commands.  (Not yet
+documented.)
+@item
+Under a graphical windowing system, a
+gutter at the top (under the toolbar) and/or bottom of the frame
+provides advanced GUI facilities like tab controls for rapid switching
+among related windows and progress bars for time-consuming operations
+like downloads across the Internet.  Gutters are an experimental feature
+introduced in XEmacs version 21.2.  (Not yet documented.)
+@end itemize
+
+  You can subdivide the XEmacs frame into multiple text windows, and use
+each window for a different file (@pxref{Windows}).  Multiple XEmacs
+windows are tiled vertically on the XEmacs frame.  The upper XEmacs window
+is separated from the lower window by its mode line.
+
+  When there are multiple, tiled XEmacs windows on a single XEmacs frame,
+the XEmacs window receiving input from the keyboard has the @dfn{keyboard
+focus} and is called the @dfn{selected window}.  The selected window
+contains the cursor, which indicates the insertion point.  If you are
+working in an environment that permits multiple XEmacs frames, and you
+move the focus from one XEmacs frame into another, the
+selected window is the one that was last selected in that frame.
+
+  The same text can be displayed simultaneously in several XEmacs
+windows, which can be in different XEmacs frames.  If you alter the text
+in an XEmacs buffer by editing it in one XEmacs window, the changes are
+visible in all XEmacs windows containing that buffer.
+
+
+@menu
+* Point::	        The place in the text where editing commands operate.
+* Echo Area::           Short messages appear at the bottom of the frame.
+* Mode Line::	        Interpreting the mode line.
+* GUI Components::      Menubar, toolbars, gutters.
+* XEmacs under X::      Some information on using XEmacs under the X
+                        Window System.
+* XEmacs under MS Windows:: Some information on using XEmacs under
+                        Microsoft Windows.
+@end menu
+
+@node Point, Echo Area, Frame, Frame
+@comment  node-name,  next,  previous,  up
+@section Point
+@cindex point
+@cindex cursor
+
+  When XEmacs is running, the cursor shows the location at which editing
+commands will take effect.  This location is called @dfn{point}.  You
+can use keystrokes or the mouse cursor to move point through the text
+and edit the text at different places.
+
+  While the cursor appears to point @var{at} a character, you should
+think of point as @var{between} two characters: it points @var{before}
+the character on which the cursor appears.  The exception is at the
+end of the line, where the cursor appears after the last character of
+the line.  Where the display is capable, the cursor at the end of the
+line will appear differently from a cursor over whitespace at the end
+of the line.  (In an X Windows frame, the end-of-line cursor is half
+the width of a within-line cursor.)  Sometimes people speak of ``the
+cursor'' when they mean ``point,'' or speak of commands that move
+point as ``cursor motion'' commands.
+
+ Each XEmacs frame has only one cursor.  When output is in progress, the cursor
+must appear where the typing is being done.  This does not mean that
+point is moving.  It is only that XEmacs has no way to show you the
+location of point except when the terminal is idle.
+
+  If you are editing several files in XEmacs, each file has its own point
+location.  A file that is not being displayed remembers where point is.
+Point becomes visible at the correct location when you look at the file again.
+
+  When there are multiple text windows, each window has its own point
+location.  The cursor shows the location of point in the selected
+window.  The visible cursor also shows you which window is selected.  If
+the same buffer appears in more than one window, point can be moved in
+each window independently.
+
+  The term `point' comes from the character @samp{.}, which was the
+command in TECO (the language in which the original Emacs was written)
+for accessing the value now called `point'.
+
+@node Echo Area, Mode Line, Point, Frame
+@section The Echo Area
+@cindex echo area
+
+  The line at the bottom of the frame (below the mode line) is the
+@dfn{echo area}.  XEmacs uses this area to communicate with the user:
+
+@itemize @bullet
+@item
+  @dfn{Echoing} means printing out the characters that the user types.  XEmacs
+never echoes single-character commands.  Multi-character commands are
+echoed only if you pause while typing them: As soon as you pause for more
+than one second in the middle of a command, all the characters of the command
+so far are echoed.  This is intended to @dfn{prompt} you for the rest of
+the command.  Once echoing has started, the rest of the command is echoed
+immediately as you type it.  This behavior is designed to give confident
+users fast response, while giving hesitant users maximum feedback.  You
+can change this behavior by setting a variable (@pxref{Display Vars}).
+@item
+  If you issue a command that cannot be executed, XEmacs may print an
+@dfn{error message} in the echo area.  Error messages are accompanied by
+a beep or by flashing the frame.  Any input you have typed ahead is
+thrown away when an error happens.
+@item
+  Some commands print informative messages in the echo area.  These
+messages look similar to error messages, but are not announced with a
+beep and do not throw away input.  Sometimes a message tells you what the
+command has done, when this is not obvious from looking at the text being
+edited.  Sometimes the sole purpose of a command is to print a message
+giving you specific information.  For example, the command @kbd{C-x =} is
+used to print a message describing the character position of point in the
+text and its current column in the window.  Commands that take a long time
+often display messages ending in @samp{...} while they are working, and
+add @samp{done} at the end when they are finished.
+@item
+  The echo area is also used to display the @dfn{minibuffer}, a window
+that is used for reading arguments to commands, such as the name of a
+file to be edited.  When the minibuffer is in use, the echo area displays
+with a prompt string that usually ends with a colon.  The cursor
+appears after the prompt.  You can always get out of the minibuffer by
+typing @kbd{C-g}.  @xref{Minibuffer}.
+@end itemize
+
+@node Mode Line, GUI Components, Echo Area, Frame
+@comment  node-name,  next,  previous,  up
+@section The Mode Line
+@cindex mode line
+@cindex top level
+
+  Each text window's last line is a @dfn{mode line} which describes what is
+going on in that window.  When there is only one text window, the mode line
+appears right above the echo area.  The mode line is in inverse video if
+the terminal supports that, starts and ends with dashes, and contains text
+like @samp{XEmacs:@: @var{something}}.
+
+  If a mode line has something else in place of @samp{XEmacs:@:
+@var{something}}, the window above it is in a special subsystem
+such as Dired.  The mode line then indicates the status of the
+subsystem.
+
+  Normally, the mode line has the following appearance:
+
+@example
+--@var{ch}-XEmacs: @var{buf}      (@var{major} @var{minor})----@var{pos}------
+@end example
+
+@noindent
+This gives information about the buffer being displayed in the window: the
+buffer's name, what major and minor modes are in use, whether the buffer's
+text has been changed, and how far down the buffer you are currently
+looking.
+
+  @var{ch} contains two stars (@samp{**}) if the text in the buffer has been
+edited (the buffer is ``modified''), or two dashes (@samp{--}) if the
+buffer has not been edited.  Exception: for a read-only buffer, it is
+@samp{%%}.
+
+  @var{buf} is the name of the window's chosen @dfn{buffer}.  The chosen
+buffer in the selected window (the window that the cursor is in) is also
+XEmacs's selected buffer, the buffer in which editing takes place.  When
+we speak of what some command does to ``the buffer'', we mean the
+currently selected buffer.  @xref{Buffers}.
+
+  @var{pos} tells you whether there is additional text above the top of
+the screen or below the bottom.  If your file is small and it is
+completely visible on the screen, @var{pos} is @samp{All}.  Otherwise,
+@var{pos} is @samp{Top} if you are looking at the beginning of the file,
+@samp{Bot} if you are looking at the end of the file, or
+@samp{@var{nn}%}, where @var{nn} is the percentage of the file above the
+top of the screen.@refill
+
+  @var{major} is the name of the @dfn{major mode} in effect in the buffer.  At
+any time, each buffer is in one and only one major mode.
+The available major modes include Fundamental mode (the least specialized),
+Text mode, Lisp mode, and C mode.  @xref{Major Modes}, for details
+on how the modes differ and how you select one.@refill
+
+  @var{minor} is a list of some of the @dfn{minor modes} that are turned on
+in the window's chosen buffer.  For example, @samp{Fill} means that Auto
+Fill mode is on.  @code{Abbrev} means that Word Abbrev mode is on.
+@code{Ovwrt} means that Overwrite mode is on.  @xref{Minor Modes}, for more
+information.  @samp{Narrow} means that the buffer being displayed has
+editing restricted to only a portion of its text.  This is not really a
+minor mode, but is like one.  @xref{Narrowing}.  @code{Def} means that a
+keyboard macro is being defined.  @xref{Keyboard Macros}.
+
+  Some buffers display additional information after the minor modes.  For
+example, Rmail buffers display the current message number and the total
+number of messages.  Compilation buffers and Shell mode display the status
+of the subprocess.
+
+  If XEmacs is currently inside a recursive editing level, square
+brackets (@samp{[@dots{}]}) appear around the parentheses that surround
+the modes.  If XEmacs is in one recursive editing level within another,
+double square brackets appear, and so on.  Since information on
+recursive editing applies to XEmacs in general and not to any one buffer,
+the square brackets appear in every mode line on the screen or not in
+any of them.  @xref{Recursive Edit}.@refill
+
+@findex display-time
+  XEmacs can optionally display the time and system load in all mode lines.
+To enable this feature, type @kbd{M-x display-time}.  The information added
+to the mode line usually appears after the file name, before the mode names
+and their parentheses.  It looks like this:
+
+@example
+@var{hh}:@var{mm}pm @var{l.ll} [@var{d}]
+@end example
+
+@noindent
+(Some fields may be missing if your operating system cannot support them.)
+@var{hh} and @var{mm} are the hour and minute, followed always by @samp{am}
+or @samp{pm}.  @var{l.ll} is the average number of running processes in the
+whole system recently.  @var{d} is an approximate index of the ratio of
+disk activity to CPU activity for all users.
+
+The word @samp{Mail} appears after the load level if there is mail for
+you that you have not read yet.
+
+@vindex mode-line-inverse-video
+  Customization note: the variable @code{mode-line-inverse-video}
+controls whether the mode line is displayed in inverse video (assuming
+the terminal supports it); @code{nil} means no inverse video.  The
+default is @code{t}.  For X frames, simply set the foreground and
+background colors appropriately.
+
+@node GUI Components, XEmacs under X, Mode Line, Frame
+@comment  node-name,  next,  previous,  up
+@section GUI Components
+
+When executed in a graphical windowing environment such as the X Window
+System or Microsoft Windows, XEmacs displays several graphical user
+interface components such as scrollbars, menubars, toolbars, and
+gutters.  By default there is a vertical scrollbar at the right of each
+frame, and at the top of the frame there is a menubar, a toolbar, and a
+gutter, in that order.  Gutters can contain any of several widgets, but
+the default configuration puts a set of "notebook tabs" which you can
+use as a shortcut for selecting any of several related buffers in a
+given frame.  Operating the GUI components is "obvious":  click on the
+menubar to pull down a menu, on a button in the toolbar to invoke a
+function, and on a tab in the gutter to switch buffers.
+
+@menu
+* Menubar Basics::      How XEmacs uses the menubar.
+* Scrollbar Basics::    How XEmacs uses scrollbars.
+* Mode Line Basics::    How XEmacs uses modelines.
+* Toolbar Basics::      How XEmacs uses toolbars.
+* Gutter Basics::       How XEmacs uses gutters.
+* Inhibiting::          What if you don't like GUI?
+* Customizing::         Position, orientation, and appearance of GUI objects.
+@end menu
+
+@node Menubar Basics, Scrollbar Basics, , GUI Components
+@comment  node-name,  next,  previous,  up
+@section The XEmacs Menubar
+
+The XEmacs menubar is intended to be conformant to the usual conventions
+for menubars, although conformance is not yet perfect.  The menu at the
+extreme right is the @samp{Help} menu, which should always be
+available.  It provides access to all the XEmacs help facilities
+available through @kbd{C-h}, as well as samples of various configuration
+files like @samp{~/.Xdefaults} and @samp{~/.emacs}.  At the extreme left
+is the @samp{Files} menu, which provides the usual file reading,
+writing, and printing operations, as well as operations like revert
+buffer from most recent save.  The next menu from the left is the
+@samp{Edit} menu, which provides the @samp{Undo} operation as well as
+cutting and pasting, searching, and keyboard macro definition and
+execution.
+
+@c #### w3.el and VM should get cross-references here.
+XEmacs provides a very dynamic environment, and the Lisp language makes
+for highly flexible applications.  The menubar reflects this: many menus
+(eg, the @samp{Buffers} menu, @pxref{Buffers Menu}) contain items
+determined by the current state of XEmacs, and most major modes and many
+minor modes add items to menus and even whole menus to the menubar.  In
+fact, some applications like w3.el and VM provide so many menus that
+they define a whole new menubar and add a button that allows convenient
+switching between the ``XEmacs menubar'' and the ``application
+menubar''.  Such applications normally bind themselves to a particular
+frame, and this switching only takes place on frames where such an
+application is active (ie, the current window of the frame is displaying
+a buffer in the appropriate major mode).
+
+Other menus which are typically available are the @samp{Options},
+@samp{Tools}, @samp{Buffers}, @samp{Apps}, and @samp{Mule} menus.  For
+detailed descriptions of these menus, @ref{Pull-down Menus}.  (In 21.2
+XEmacsen, the @samp{Mule} menu will be moved under @samp{Options}.)
+
+@node Scrollbar Basics, Mode Line Basics, Menubar Basics, GUI Components
+@comment  node-name,  next,  previous,  up
+@section XEmacs Scrollbars
+
+XEmacs scrollbars provide the usual interface.  Arrow buttons at either
+end allow for line by line scrolling, including autorepeat.  Clicking in
+the scrollbar itself provides scrolling by windowsfull, depending on
+which side of the slider is clicked.  The slider itself may be dragged
+for smooth scrolling.
+
+The position of the slider corresponds to the position of the window in
+the buffer.  In particular, the length of the slider is proportional to
+the fraction of the buffer which appears in the window.
+
+The presence of the scrollbars is under control of the application or
+may be customized by the user.  By default a vertical scrollbar is
+present in all windows (except the minibuffer), and there is no
+horizontal scrollbar.
+
+@node Mode Line Basics, Toolbar Basics, Scrollbar Basics, GUI Components
+@comment  node-name,  next,  previous,  up
+@section XEmacs Mode Lines
+
+When used in a windowing system, the XEmacs modelines can be dragged
+vertically. The effect is to resize the windows above and below the
+modeline (this includes the minibuffer window).
+
+Additionally, a modeline can be dragged horizontally, in which case it
+scrolls its own text. This behavior is not enabled by default because it
+could be considered as disturbing when dragging vertically. When this
+behavior is enabled, the modeline's text can be dragged either in the
+same direction as the mouse, or in the opposite sense, making the
+modeline act as a scrollbar for its own text.
+
+You can select the behavior you want from the @samp{Display} submenu of
+the @samp{Options} menu.
+
+@node Toolbar Basics, Gutter Basics, Mode Line Basics, GUI Components
+@comment  node-name,  next,  previous,  up
+@section XEmacs Toolbars
+
+XEmacs has a default toolbar which provides shortcuts for some of the
+commonly used operations (such as opening files) and applications (such
+as the Info manual reader).  Operations which require arguments will pop
+up dialogs to get them.
+
+The position of the default toolbar can be customized.  Also, several
+toolbars may be present simultaneously (in different positions).  VM,
+for example, provides an application toolbar which shortcuts for
+mail-specific operations like sending, saving, and deleting messages.
+
+@node Gutter Basics, Inhibiting, Toolbar Basics, GUI Components
+@comment  node-name,  next,  previous,  up
+@section XEmacs Gutters
+
+Gutters are the most flexible of the GUI components described in this
+section.  In theory, the other GUI components could be implemented by
+customizing a gutter, but in practice the other components were
+introduced earlier and have their own special implementations.  Gutters
+tend to be more transient than the other components.  Buffer tabs, for
+example, change every time the selected buffer in the frame changes.
+And for progress gauges a gutter to contain the gauge is typically
+created on the fly when needed, then destroyed when the operation whose
+staus is being displayed is completed.
+
+Buffer tabs, having somewhat complex behavior, deserve a closer look.
+By default, a row of buffer tabs is displayed at the top of every frame.
+(The tabs could be placed in the bottom gutter, but would be oriented
+the same way and look rather odd.  The horizontal orientation makes
+putting them in a side gutter utterly impractical.)  The buffer
+displayed in the current window of a frame can be changed to a specific
+buffer by clicking [mouse-1] on the corresponding tab in the gutter.
+
+Each tab contains the name of its buffer.  The tab for the current
+buffer in each frame is displayed in raised relief.  The list of buffers
+chosen for display in the buffer tab row is derived by filtering the
+buffer list (like the @code{Buffers} menu).  The list starts out with
+all existing buffers, with more recently selected buffers coming earlier
+in the list.
+
+Then "uninteresting" buffers, like internal XEmacs buffers, the
+@code{*Message Log*} buffer, and so on are deleted from the list.  Next,
+the frame's selected buffer is determined.  Buffers with a different
+major mode from the selected buffer are removed from the list.  Finally,
+if the list is too long, the least recently used buffers are deleted
+from the list.  By default up to 6 most recently used buffers with the
+same mode are displayed on tabs in the gutter.
+
+This behavior can be altered by customizing
+@code{buffers-tab-filter-functions}.  Setting this variable to
+@code{nil} forces display of all buffers, up to
+@code{buffers-tab-max-size} (also customizable).  More complex behavior
+may be available in 3rd party libraries.  These, and some more
+rarely customized options, are in the @code{buffers-tab} Customize group.
+
+@node Inhibiting, Customizing, Gutter Basics, GUI Components
+@comment  node-name,  next,  previous,  up
+@section Inhibiting Display of GUI Components
+
+Use of GUI facilities is a personal thing.  Almost everyone agrees that
+drawing via keyboard-based "turtle graphics" is acceptable to hardly
+anyone if a mouse is available, but conversely emulating a keyboard with
+a screenful of buttons is a painful experience.  But between those
+extremes the complete novice will require a fair amount of time before
+toolbars and menus become dispensable, but many an "Ancien Haquer" sees
+them as a complete waste of precious frame space that could be filled
+with text.
+
+Display of all of the GUI components created by XEmacs can be inhibited
+through the use of Customize.  Customize can be accessed through
+@samp{Options | Customize} in the menu bar, or via @kbd{M-x customize}.
+Then navigate through the Customize tree to @samp{Emacs | Environment}.
+Scrollbar and toolbar visibility is controlled via the @samp{Display}
+group, options @samp{Scrollbars visible} and  @samp{Toolbar visible}
+respectively.  Gutter visibility is controlled by group @samp{Gutter},
+option @samp{Visible}.
+
+Or they can be controlled directly by @kbd{M-x customize-variable}, by
+changing the values of the variables @code{menubar-visible-p},
+@code{scrollbars-visible-p}, @code{toolbar-visible-p}, or
+@code{gutter-buffers-tab-visible-p} respectively.  (The strange form of
+the last variable is due to the fact that gutters are often used to
+display transient widgets like progress gauges, which you probably don't
+want to inhibit.  It is more likely that you want to inhibit the default
+display of the buffers tab widget, which is what that variable controls.
+This interface is subject to change depending on developer experience
+and user feedback.)
+
+Control of frame configuration can controlled automatically according to
+various parameters such as buffer or frame because these are
+@dfn{specifiers} @ref{Specifiers, , , lispref}.  Using these features
+requires programming in Lisp; Customize is not yet that sophisticated.
+Also, components that appear in various positions and orientations can
+have display suppressed according to position.  @kbd{C-h a visible-p}
+gives a list of variables which can be customized.  E.g., to control the
+visibility of specifically the left-side toolbar only, customize
+@code{left-toolbar-visible-p}.
+
+@node Customizing, , Inhibiting, GUI Components
+@comment  node-name,  next,  previous,  up
+@section Changing the Position, Orientation, and Appearance of GUI Components
+
+  #### Not documented yet.
+
+@node XEmacs under X, XEmacs under MS Windows, GUI Components, Frame
+@section Using XEmacs Under the X Window System
+@comment  node-name,  next,  previous,  up
+
+XEmacs can be used with the X Window System and a window manager like
+MWM or TWM.  In that case, the X window manager opens, closes, and
+resizes XEmacs frames.  You use the window manager's mouse gestures to
+perform the operations.  Consult your window manager guide or reference
+manual for information on manipulating X windows.
+
+When you are working under X, each X window (that is, each XEmacs frame)
+has a menu bar for mouse-controlled operations (@pxref{Pull-down Menus}).
+
+@cindex multi-frame XEmacs
+@findex make-frame
+XEmacs under X is also a multi-frame XEmacs.  You can use the @b{New
+Frame} menu item from the @b{File} menu to create a new XEmacs frame in a
+new X window from the same process.  The different frames will share the
+same buffer list, but you can look at different buffers in the different
+frames.
+
+@findex find-file-other-frame
+The function @code{find-file-other-frame} is just like @code{find-file},
+but creates a new frame to display the buffer in first.  This is
+normally bound to @kbd{C-x 5 C-f}, and is what the @b{Open File, New
+Frame} menu item does.
+
+@findex switch-to-buffer-other-frame
+The function @code{switch-to-buffer-other-frame} is just like
+@code{switch-to-buffer}, but creates a new frame to display the buffer
+in first.  This is normally bound to @kbd{C-x 5 b}.
+
+@vindex default-frame-alist
+@vindex default-frame-plist
+You can specify a different default frame size other than the one provided.
+Use the variable @code{default-frame-plist}, which is a plist of default
+values for frame creation other than the first one.  These may be set in
+your init file, like this:
+
+@example
+  (setq default-frame-plist '(width 80 height 55))
+@end example
+
+This variable has replaced @code{default-frame-alist}, which is
+considered obsolete.
+
+@vindex x-frame-defaults
+For values specific to the first XEmacs frame, you must use X resources.
+The variable @code{x-frame-defaults} takes an alist of default frame
+creation parameters for X window frames.  These override what is
+specified in @file{~/.Xdefaults} but are overridden by the arguments to
+the particular call to @code{x-create-frame}.
+
+@vindex create-frame-hook
+When you create a new frame, the variable @code{create-frame-hook}
+is called with one argument, the frame just created.
+
+If you want to close one or more of the X windows you created using
+@b{New Frame}, use the @b{Delete Frame} menu item from the @b{File} menu.
+
+@vindex frame-title-format
+@vindex frame-icon-title-format
+If you are working with multiple frames, some special information
+applies:
+@itemize @bullet
+@item
+Two variables, @code{frame-title-format} and
+@code{frame-icon-title-format} determine the title of the frame and
+the title of the icon that results if you shrink the frame.
+
+@vindex auto-lower-frame
+@vindex auto-raise-frame
+@item
+The variables @code{auto-lower-frame} and @code{auto-raise-frame}
+position a frame. If true, @code{auto-lower-frame} lowers a frame to
+the bottom when it is no longer selected. If true,
+@code{auto-raise-frame} raises a frame to the top when it is
+selected. Under X, most ICCCM-compliant window managers will have
+options to do this for you, but these variables are provided in case you
+are using a broken window manager.
+
+@item
+There is a new frame/modeline format directive, %S, which expands to
+the name of the current frame (a frame's name is distinct from its
+title; the name is used for resource lookup, among other things, and the
+title is simply what appears above the window.)
+@end itemize
+
+@node XEmacs under MS Windows, , XEmacs under X, Frame
+@section Using XEmacs Under Microsoft Windows
+@comment  node-name,  next,  previous,  up
+
+Use of XEmacs under MS Windows is not separately documented here, but
+most operations available under the X Window System are also available
+with MS Windows.
+
+Where possible, native MS Windows GUI components and capabilities are
+used in XEmacs.

@@ -1,0 +1,47 @@
+This is a list of the status of XEmacs on various machines and systems.
+See PROBLEMS for particular problems and possible workarounds.
+
+Much effort has gone into making XEmacs work on as many different
+machines, configurations, and compilers as possible.
+
+Much effort has gone into making XEmacs 64-bit clean.
+
+Much effort has gone into removing system-specific code, and replacing
+such code with autodetection at configure time.
+
+The XEmacs core should build "out of the box" on most Unix-like systems.
+
+XEmacs 21.2 (the development branch that is the base for the 21.4
+release series) was tested and `make check' succeeded on these Unix
+configurations as of 2001-02-10:
+
+alphaev56-dec-osf4.0e (both Compaq C and gcc)
+i386-unknown-freebsd4.2
+i386-unknown-netbsdelf1.5
+i586-sco-sysv5uw7.0.1 (both SCO's cc and gcc)
+i686-pc-linux-gnu
+hppa2.0-hp-hpux10.20 (both HP's ANSI cc and gcc)
+mips-sgi-irix6.5 (both MIPSpro cc and gcc)
+rs6000-ibm-aix4.3.0.0 (both IBM's xlc and gcc)
+sparc-sun-solaris2.6 (both Sun's Forte C and gcc)
+sparc-sun-solaris2.7 (both Sun's Forte C and gcc)
+sparc-sun-sunos4.1.4 (gcc)
+
+Some systems have a dual mode 32-bit/64-bit compiler.  On most of
+these, XEmacs requires the --pdump configure option to build
+correctly with the 64-bit version of the compiler.
+
+mips-sgi-irix6.5, CC="gcc -mabi=64"
+mips-sgi-irix6.5, CC="cc -64"
+rs6000-ibm-aix4.3.0.0, CC="cc -q64"
+
+On most of these systems, XEmacs also builds with a C++ compiler,
+but not "out of the box".  This feature is only for use by the
+maintainers.
+
+XEmacs 21.2 (and therefore 21.4) is known _not_ to work on any
+machines with m680x0 processors.  Sorry, all you sun3 and Unix PC
+nostalgia buffs out there.
+
+VMS has never been supported by XEmacs.  In fact, all the old VMS code
+inherited from Emacs has been removed.  Sorry, all you VMS fans out there.

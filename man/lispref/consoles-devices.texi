@@ -1,0 +1,275 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1995, 1996 Ben Wing.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/consoles-devices.info
+@node Consoles and Devices, Positions, Frames, top
+@chapter Consoles and Devices
+@cindex devices
+@cindex consoles
+
+  A @dfn{console} is an object representing a single input connection
+to XEmacs, such as an X display or a TTY connection.  It is possible
+for XEmacs to have frames on multiple consoles at once (even on
+heterogeneous types---you can simultaneously have a frame on an
+X display and a TTY connection).  Normally, there is only one
+console in existence.
+
+  A @dfn{device} is an object representing a single output device, such
+as a particular screen on an X display. (Usually there is exactly one
+device per X console connection, but there may be more than one if you
+have a multi-headed X display.  For TTY connections, there is always
+exactly one device per console.)
+
+  Each device has one or more @dfn{frames} in which text can be
+displayed.  For X displays and the like, a frame corresponds to the
+normal window-system concept of a window.  Frames can overlap, be
+displayed at various locations within the display, be resized, etc.  For
+TTY, only one frame can be displayed at a time, and it occupies the
+entire TTY display area.
+
+However, you can still define multiple frames and switch between them.
+Their contents are entirely separate from each other.  These sorts of
+frames resemble the ``virtual console'' capability provided under Linux
+or the multiple screens provided by the multiplexing program
+@samp{screen} under Unix.
+
+  When you start up XEmacs, an initial console and device are created to
+receive input and display frames on.  This will either be an X display
+or a TTY connection, depending on what mode you started XEmacs in (this
+is determined by the @samp{DISPLAY} environment variable, the
+@samp{-nw}, @samp{-t} and @samp{-display} command-line options, etc.).
+
+  You can connect to other X displays and TTY connections by creating
+new console objects, and to other X screens on an existing display by
+creating new device objects, as described below.  Many functions (for
+example the frame-creation functions) take an optional device argument
+specifying which device the function pertains to.  If the argument is
+omitted, it defaults to the selected device (see below).
+
+@defun consolep object
+This returns non-@code{nil} if @var{object} is a console.
+@end defun
+
+@defun devicep object
+This returns non-@code{nil} if @var{object} is a device.
+@end defun
+
+@menu
+* Basic Console Functions::     Functions for working with consoles.
+* Basic Device Functions::      Functions for working with devices.
+* Console Types and Device Classes::
+                                I/O and color characteristics.
+* Connecting to a Console or Device::
+* The Selected Console and Device::
+* Console and Device I/O::      Controlling input and output.
+@end menu
+
+@node Basic Console Functions
+@section Basic Console Functions
+
+@defun console-list
+This function returns a list of all existing consoles.
+@end defun
+
+@defun console-device-list &optional console
+This function returns a list of all devices on @var{console}.  If
+@var{console} is @code{nil}, the selected console will be used.
+@end defun
+
+@node Basic Device Functions
+@section Basic Device Functions
+
+@defun device-list
+This function returns a list of all existing devices.
+@end defun
+
+@defun device-or-frame-p object
+This function returns non-@code{nil} if @var{object} is a device or
+frame.  This function is useful because devices and frames are similar
+in many respects and many functions can operate on either one.
+@end defun
+
+@defun device-frame-list &optional device
+This function returns a list of all frames on @var{device}.
+@var{device} defaults to the currently selected device.
+@end defun
+
+@defun frame-device &optional frame
+This function returns the device that @var{frame} is on.
+@var{frame} defaults to the currently selected frame.
+@end defun
+
+@node Console Types and Device Classes
+@section Console Types and Device Classes
+
+Every device is of a particular @dfn{type}, which describes how the
+connection to that device is made and how the device operates, and
+a particular @dfn{class}, which describes other characteristics of
+the device (currently, the color capabilities of the device).
+
+The currently-defined device types are
+
+@table @code
+@item x
+A connection to an X display (such as @samp{willow:0}).
+
+@item tty
+A connection to a tty (such as @samp{/dev/ttyp3}).
+
+@item stream
+A stdio connection.  This describes a device for which input and output
+is only possible in a stream-like fashion, such as when XEmacs in running
+in batch mode.  The very first device created by XEmacs is a terminal
+device and is used to print out messages of various sorts (for example,
+the help message when you use the @samp{-help} command-line option).
+@end table
+
+The currently-defined device classes are
+@table @code
+@item color
+A color device.
+
+@item grayscale
+A grayscale device (a device that can display multiple shades of gray,
+but no color).
+
+@item mono
+A device that can only display two colors (e.g. black and white).
+@end table
+
+@defun device-type &optional device
+This function returns the type of @var{device}.  This is a symbol whose
+name is one of the device types mentioned above.  @var{device} defaults
+to the selected device.
+@end defun
+
+@defun device-or-frame-type device-or-frame
+This function returns the type of @var{device-or-frame}.
+@end defun
+
+@defun device-class &optional device
+This function returns the class (color behavior) of @var{device}.  This
+is a symbol whose name is one of the device classes mentioned above.
+@end defun
+
+@defun valid-device-type-p device-type
+This function returns whether @var{device-type} (which should be a symbol)
+specifies a valid device type.
+@end defun
+
+@defun valid-device-class-p device-class
+This function returns whether @var{device-class} (which should be a symbol)
+specifies a valid device class.
+@end defun
+
+@defvar terminal-device
+This variable holds the initial terminal device object, which
+represents XEmacs's stdout.
+@end defvar
+
+@node Connecting to a Console or Device
+@section Connecting to a Console or Device
+
+@defun make-device type connection &optional props
+This function creates a new device.
+@end defun
+
+The following two functions create devices of specific types and are
+written in terms of @code{make-device}.
+
+@defun make-tty-device &optional tty terminal-type
+This function creates a new tty device on @var{tty}.  This also creates
+the tty's first frame.  @var{tty} should be a string giving the name of
+a tty device file (e.g. @samp{/dev/ttyp3} under SunOS et al.), as
+returned by the @samp{tty} command issued from the Unix shell.  A value
+of @code{nil} means use the stdin and stdout as passed to XEmacs from
+the shell.  If @var{terminal-type} is non-@code{nil}, it should be a
+string specifying the type of the terminal attached to the specified
+tty.  If it is @code{nil}, the terminal type will be inferred from the
+@samp{TERM} environment variable.
+@end defun
+
+@defun make-x-device &optional display argv-list
+This function creates a new device connected to @var{display}.  Optional
+argument @var{argv-list} is a list of strings describing command line
+options.
+@end defun
+
+@defun delete-device device &optional force
+This function deletes @var{device}, permanently eliminating it from use.
+This disconnects XEmacs's connection to the device.
+@end defun
+
+@defvar create-device-hook
+This variable, if non-@code{nil}, should contain a list of functions,
+which are called when a device is created.
+@end defvar
+
+@defvar delete-device-hook
+This variable, if non-@code{nil}, should contain a list of functions,
+which are called when a device is deleted.
+@end defvar
+
+@defun console-live-p object
+This function returns non-@code{nil} if @var{object} is a console that
+has not been deleted.
+@end defun
+
+@defun device-live-p object
+This function returns non-@code{nil} if @var{object} is a device that
+has not been deleted.
+@end defun
+
+@defun device-x-display device
+This function returns the X display which @var{device} is connected to,
+if @var{device} is an X device.
+@end defun
+
+@node The Selected Console and Device
+@section The Selected Console and Device
+
+@defun select-console console
+This function selects the console @var{console}.  Subsequent editing
+commands apply to its selected device, selected frame, and selected
+window.  The selection of @var{console} lasts until the next time the
+user does something to select a different console, or until the next
+time this function is called.
+@end defun
+
+@defun selected-console
+This function returns the console which is currently active.
+@end defun
+
+@defun select-device device
+This function selects the device @var{device}.
+@end defun
+
+@defun selected-device &optional console
+This function returns the device which is currently active.  If optional
+@var{console} is non-@code{nil}, this function returns the device that
+would be currently active if @var{console} were the selected console.
+@end defun
+
+@node Console and Device I/O
+@section Console and Device I/O
+
+@defun console-disable-input console
+This function disables input on console @var{console}.
+@end defun
+
+@defun console-enable-input console
+This function enables input on console @var{console}.
+@end defun
+
+Each device has a @dfn{baud rate} value associated with it.
+On most systems, changing this value will affect the amount of padding
+and other strategic decisions made during redisplay.
+
+@defun device-baud-rate &optional device
+This function returns the output baud rate of @var{device}.
+@end defun
+
+@defun set-device-baud-rate device rate
+This function sets the output baud rate of @var{device} to @var{rate}.
+@end defun

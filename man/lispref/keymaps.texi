@@ -1,0 +1,1588 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+@c Copyright (C) 1996 Ben Wing.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/keymaps.info
+@node Keymaps, Menus, Command Loop, Top
+@chapter Keymaps
+@cindex keymap
+
+@c This section is largely different from the one in FSF Emacs.
+
+  The bindings between input events and commands are recorded in data
+structures called @dfn{keymaps}.  Each binding in a keymap associates
+(or @dfn{binds}) an individual event type either with another keymap or
+with a command.  When an event is bound to a keymap, that keymap is
+used to look up the next input event; this continues until a command
+is found.  The whole process is called @dfn{key lookup}.
+
+@menu
+* Keymap Terminology::       Definitions of terms pertaining to keymaps.
+* Format of Keymaps::        What a keymap looks like as a Lisp object.
+* Creating Keymaps::         Functions to create and copy keymaps.
+* Inheritance and Keymaps::  How one keymap can inherit the bindings
+                                of another keymap.
+* Key Sequences::            How to specify key sequences.
+* Prefix Keys::              Defining a key with a keymap as its definition.
+* Active Keymaps::           Each buffer has a local keymap
+                                to override the standard (global) bindings.
+                                A minor mode can also override them.
+* Key Lookup::               How extracting elements from keymaps works.
+* Functions for Key Lookup:: How to request key lookup.
+* Changing Key Bindings::    Redefining a key in a keymap.
+* Key Binding Commands::     Interactive interfaces for redefining keys.
+* Scanning Keymaps::         Looking through all keymaps, for printing help.
+* Other Keymap Functions::   Miscellaneous keymap functions.
+@end menu
+
+@node Keymap Terminology
+@section Keymap Terminology
+@cindex key
+@cindex keystroke
+@cindex key binding
+@cindex binding of a key
+@cindex complete key
+@cindex undefined key
+
+  A @dfn{keymap} is a table mapping event types to definitions (which
+can be any Lisp objects, though only certain types are meaningful for
+execution by the command loop).  Given an event (or an event type) and a
+keymap, XEmacs can get the event's definition.  Events mapped in keymaps
+include keypresses, button presses, and button releases
+(@pxref{Events}).
+
+  A sequence of input events that form a unit is called a
+@dfn{key sequence}, or @dfn{key} for short.  A sequence of one event
+is always a key sequence, and so are some multi-event sequences.
+
+  A keymap determines a binding or definition for any key sequence.  If
+the key sequence is a single event, its binding is the definition of the
+event in the keymap.  The binding of a key sequence of more than one
+event is found by an iterative process: the binding of the first event
+is found, and must be a keymap; then the second event's binding is found
+in that keymap, and so on until all the events in the key sequence are
+used up.
+
+  If the binding of a key sequence is a keymap, we call the key sequence
+a @dfn{prefix key}.  Otherwise, we call it a @dfn{complete key} (because
+no more events can be added to it).  If the binding is @code{nil},
+we call the key @dfn{undefined}.  Examples of prefix keys are @kbd{C-c},
+@kbd{C-x}, and @kbd{C-x 4}.  Examples of defined complete keys are
+@kbd{X}, @key{RET}, and @kbd{C-x 4 C-f}.  Examples of undefined complete
+keys are @kbd{C-x C-g}, and @kbd{C-c 3}.  @xref{Prefix Keys}, for more
+details.
+
+  The rule for finding the binding of a key sequence assumes that the
+intermediate bindings (found for the events before the last) are all
+keymaps; if this is not so, the sequence of events does not form a
+unit---it is not really a key sequence.  In other words, removing one or
+more events from the end of any valid key must always yield a prefix
+key.  For example, @kbd{C-f C-n} is not a key; @kbd{C-f} is not a prefix
+key, so a longer sequence starting with @kbd{C-f} cannot be a key.
+
+  Note that the set of possible multi-event key sequences depends on the
+bindings for prefix keys; therefore, it can be different for different
+keymaps, and can change when bindings are changed.  However, a one-event
+sequence is always a key sequence, because it does not depend on any
+prefix keys for its well-formedness.
+
+  At any time, several primary keymaps are @dfn{active}---that is, in
+use for finding key bindings.  These are the @dfn{global map}, which is
+shared by all buffers; the @dfn{local keymap}, which is usually
+associated with a specific major mode; and zero or more @dfn{minor mode
+keymaps}, which belong to currently enabled minor modes.  (Not all minor
+modes have keymaps.)  The local keymap bindings shadow (i.e., take
+precedence over) the corresponding global bindings.  The minor mode
+keymaps shadow both local and global keymaps.  @xref{Active Keymaps},
+for details.
+
+@node Format of Keymaps
+@section Format of Keymaps
+@cindex format of keymaps
+@cindex keymap format
+
+  A keymap is a primitive type that associates events with their
+bindings.  Note that this is different from Emacs 18 and FSF Emacs,
+where keymaps are lists.
+
+@defun keymapp object
+This function returns @code{t} if @var{object} is a keymap, @code{nil}
+otherwise.
+@end defun
+
+@node Creating Keymaps
+@section Creating Keymaps
+@cindex creating keymaps
+
+  Here we describe the functions for creating keymaps.
+
+@defun make-keymap &optional name
+This function constructs and returns a new keymap object.  All entries
+in it are @code{nil}, meaning ``command undefined''.
+
+Optional argument @var{name} specifies a name to assign to the keymap,
+as in @code{set-keymap-name}.  This name is only a debugging
+convenience; it is not used except when printing the keymap.
+@end defun
+
+@defun make-sparse-keymap &optional name
+This function constructs and returns a new keymap object.  All entries
+in it are @code{nil}, meaning ``command undefined''.  The only
+difference between this function and @code{make-keymap} is that this
+function returns a ``smaller'' keymap (one that is expected to contain
+fewer entries).  As keymaps dynamically resize, this distinction is not
+great.
+
+Optional argument @var{name} specifies a name to assign to the keymap,
+as in @code{set-keymap-name}.  This name is only a debugging
+convenience; it is not used except when printing the keymap.
+@end defun
+
+@defun set-keymap-name keymap new-name
+This function assigns a ``name'' to a keymap.  The name is only a
+debugging convenience; it is not used except when printing the keymap.
+@end defun
+
+@defun keymap-name keymap
+This function returns the ``name'' of a keymap, as assigned using
+@code{set-keymap-name}.
+@end defun
+
+@defun copy-keymap keymap
+This function returns a copy of @var{keymap}.  Any keymaps that
+appear directly as bindings in @var{keymap} are also copied recursively,
+and so on to any number of levels.  However, recursive copying does not
+take place when the definition of a character is a symbol whose function
+definition is a keymap; the same symbol appears in the new copy.
+
+@example
+@group
+(setq map (copy-keymap (current-local-map)))
+@result{} #<keymap 3 entries 0x21f80>
+@end group
+
+@group
+(eq map (current-local-map))
+    @result{} nil
+@end group
+@ignore @c Doesn't work!
+@group
+(equal map (current-local-map))
+    @result{} t
+@end group
+@end ignore
+@end example
+@end defun
+
+@node Inheritance and Keymaps
+@section Inheritance and Keymaps
+@cindex keymap inheritance
+@cindex inheriting a keymap's bindings
+@cindex keymap parent
+@cindex parent of a keymap
+
+  A keymap can inherit the bindings of other keymaps.  The other
+keymaps are called the keymap's @dfn{parents}, and are set with
+@code{set-keymap-parents}.  When searching for a binding for a key
+sequence in a particular keymap, that keymap itself will first be
+searched; then, if no binding was found in the map and it has parents,
+the first parent keymap will be searched; then that keymap's parent will
+be searched, and so on, until either a binding for the key sequence is
+found, or a keymap without a parent is encountered.  At this point,
+the search will continue with the next parent of the most recently
+encountered keymap that has another parent, etc.  Essentially, a
+depth-first search of all the ancestors of the keymap is conducted.
+
+@code{(current-global-map)} is the default parent of all keymaps.
+
+@defun set-keymap-parents keymap parents
+This function sets the parent keymaps of @var{keymap} to the list
+@var{parents}.
+
+If you change the bindings in one of the keymaps in @var{parents} using
+@code{define-key} or other key-binding functions, these changes are
+visible in @var{keymap} unless shadowed by bindings in that map or in
+earlier-searched ancestors.  The converse is not true: if you use
+@code{define-key} to change @var{keymap}, that affects the bindings in
+that map, but has no effect on any of the keymaps in @var{parents}.
+@end defun
+
+@defun keymap-parents keymap
+This function returns the list of parent keymaps of @var{keymap}, or
+@code{nil} if @var{keymap} has no parents.
+@end defun
+
+  As an alternative to specifying a parent, you can also specify a
+@dfn{default binding} that is used whenever a key is not otherwise bound
+in the keymap.  This is useful for terminal emulators, for example,
+which may want to trap all keystrokes and pass them on in some modified
+format.  Note that if you specify a default binding for a keymap,
+neither the keymap's parents nor the current global map are searched for
+key bindings.
+
+@defun set-keymap-default-binding keymap command
+This function sets the default binding of @var{keymap} to @var{command},
+or @code{nil} if no default is desired.
+@end defun
+
+@defun keymap-default-binding keymap
+This function returns the default binding of @var{keymap}, or @code{nil}
+if it has none.
+@end defun
+
+@node Key Sequences
+@section Key Sequences
+@cindex key sequences
+
+  Contrary to popular belief, the world is not @sc{ascii}.  When running
+under a window manager, XEmacs can tell the difference between, for
+example, the keystrokes @kbd{control-h}, @kbd{control-shift-h}, and
+@kbd{backspace}.  You can, in fact, bind different commands to each of
+these.
+
+  A @dfn{key sequence} is a set of keystrokes.  A @dfn{keystroke} is a
+keysym and some set of modifiers (such as @key{CONTROL} and @key{META}).
+A @dfn{keysym} is what is printed on the keys on your keyboard.
+
+  A keysym may be represented by a symbol, or (if and only if it is
+equivalent to an @sc{ascii} character in the range 32 - 255) by a
+character or its equivalent @sc{ascii} code.  The @kbd{A} key may be
+represented by the symbol @code{A}, the character @code{?A}, or by the
+number 65.  The @kbd{break} key may be represented only by the symbol
+@code{break}.
+
+  A keystroke may be represented by a list: the last element of the list
+is the key (a symbol, character, or number, as above) and the preceding
+elements are the symbolic names of modifier keys (@key{CONTROL},
+@key{META}, @key{SUPER}, @key{HYPER}, @key{ALT}, and @key{SHIFT}).
+Thus, the sequence @kbd{control-b} is represented by the forms
+@code{(control b)}, @code{(control ?b)}, and @code{(control 98)}.  A
+keystroke may also be represented by an event object, as returned by the
+@code{next-command-event} and @code{read-key-sequence} functions.
+
+  Note that in this context, the keystroke @kbd{control-b} is @emph{not}
+represented by the number 2 (the @sc{ascii} code for @samp{^B}) or the
+character @code{?\^B}.  See below.
+
+  The @key{SHIFT} modifier is somewhat of a special case.  You should
+not (and cannot) use @code{(meta shift a)} to mean @code{(meta A)},
+since for characters that have @sc{ascii} equivalents, the state of the
+shift key is implicit in the keysym (@samp{a} vs. @samp{A}).  You also
+cannot say @code{(shift =)} to mean @code{+}, as that sort of thing
+varies from keyboard to keyboard.  The @key{SHIFT} modifier is for use
+only with characters that do not have a second keysym on the same key,
+such as @code{backspace} and @code{tab}.
+
+  A key sequence is a vector of keystrokes.  As a degenerate case,
+elements of this vector may also be keysyms if they have no modifiers.
+That is, the @kbd{A} keystroke is represented by all of these forms:
+
+@example
+        A       ?A      65      (A)     (?A)    (65)
+        [A]     [?A]    [65]    [(A)]   [(?A)]  [(65)]
+@end example
+
+the @kbd{control-a} keystroke is represented by these forms:
+
+@example
+        (control A)     (control ?A)    (control 65)
+        [(control A)]   [(control ?A)]  [(control 65)]
+@end example
+
+the key sequence @kbd{control-c control-a} is represented by these
+forms:
+
+@example
+        [(control c) (control a)]       [(control ?c) (control ?a)]
+        [(control 99) (control 65)]     etc.
+@end example
+
+  Mouse button clicks work just like keypresses: @code{(control
+button1)} means pressing the left mouse button while holding down the
+control key.  @code{[(control c) (shift button3)]} means
+@kbd{control-c}, hold @key{SHIFT}, click right.
+
+  Commands may be bound to the mouse-button up-stroke rather than the
+down-stroke as well.  @code{button1} means the down-stroke, and
+@code{button1up} means the up-stroke.  Different commands may be bound
+to the up and down strokes, though that is probably not what you want,
+so be careful.
+
+  For backward compatibility, a key sequence may also be represented by
+a string.  In this case, it represents the key sequence(s) that would
+produce that sequence of @sc{ascii} characters in a purely @sc{ascii}
+world.  For example, a string containing the @sc{ascii} backspace
+character, @code{"\^H"}, would represent two key sequences:
+@code{(control h)} and @code{backspace}.  Binding a command to this will
+actually bind both of those key sequences.  Likewise for the following
+pairs:
+
+@example
+                control h       backspace
+                control i       tab
+                control m       return
+                control j       linefeed
+                control [       escape
+                control @@      control space
+@end example
+
+  After binding a command to two key sequences with a form like
+
+@example
+        (define-key global-map "\^X\^I" 'command-1)
+@end example
+
+@noindent
+it is possible to redefine only one of those sequences like so:
+
+@example
+        (define-key global-map [(control x) (control i)] 'command-2)
+        (define-key global-map [(control x) tab] 'command-3)
+@end example
+
+  Of course, all of this applies only when running under a window
+system.  If you're talking to XEmacs through a @sc{tty} connection, you
+don't get any of these features.
+
+@defun event-matches-key-specifier-p event key-specifier
+This function returns non-@code{nil} if @var{event} matches
+@var{key-specifier}, which can be any valid form representing a key
+sequence.  This can be useful, e.g., to determine if the user pressed
+@code{help-char} or @code{quit-char}.
+@end defun
+
+@node Prefix Keys
+@section Prefix Keys
+@cindex prefix key
+
+  A @dfn{prefix key} has an associated keymap that defines what to do
+with key sequences that start with the prefix key.  For example,
+@kbd{C-x} is a prefix key, and it uses a keymap that is also stored in
+the variable @code{ctl-x-map}.  Here is a list of the standard prefix
+keys of XEmacs and their keymaps:
+
+@itemize @bullet
+@item
+@cindex @kbd{C-h}
+@code{help-map} is used for events that follow @kbd{C-h}.
+
+@item
+@cindex @kbd{C-c}
+@vindex mode-specific-map
+@code{mode-specific-map} is for events that follow @kbd{C-c}.  This
+map is not actually mode specific; its name was chosen to be informative
+for the user in @kbd{C-h b} (@code{display-bindings}), where it
+describes the main use of the @kbd{C-c} prefix key.
+
+@item
+@cindex @kbd{C-x}
+@vindex ctl-x-map
+@findex Control-X-prefix
+@code{ctl-x-map} is the map used for events that follow @kbd{C-x}.  This
+map is also the function definition of @code{Control-X-prefix}.
+
+@item
+@cindex @kbd{C-x 4}
+@vindex ctl-x-4-map
+@code{ctl-x-4-map} is used for events that follow @kbd{C-x 4}.
+
+@c Emacs 19 feature
+@item
+@cindex @kbd{C-x 5}
+@vindex ctl-x-5-map
+@code{ctl-x-5-map} is used for events that follow @kbd{C-x 5}.
+
+@c Emacs 19 feature
+@item
+@cindex @kbd{C-x n}
+@cindex @kbd{C-x r}
+@cindex @kbd{C-x a}
+The prefix keys @kbd{C-x n}, @kbd{C-x r} and @kbd{C-x a} use keymaps
+that have no special name.
+
+@item
+@vindex esc-map
+@findex ESC-prefix
+@code{esc-map} is an evil hack that is present for compatibility
+purposes with Emacs 18.  Defining a key in @code{esc-map} is equivalent
+to defining the same key in @code{global-map} but with the @key{META}
+prefix added.  You should @emph{not} use this in your code. (This map is
+also the function definition of @code{ESC-prefix}.)
+@end itemize
+
+  The binding of a prefix key is the keymap to use for looking up the
+events that follow the prefix key.  (It may instead be a symbol whose
+function definition is a keymap.  The effect is the same, but the symbol
+serves as a name for the prefix key.)  Thus, the binding of @kbd{C-x} is
+the symbol @code{Control-X-prefix}, whose function definition is the
+keymap for @kbd{C-x} commands.  (The same keymap is also the value of
+@code{ctl-x-map}.)
+
+  Prefix key definitions can appear in any active keymap.  The
+definitions of @kbd{C-c}, @kbd{C-x}, @kbd{C-h} and @key{ESC} as prefix
+keys appear in the global map, so these prefix keys are always
+available.  Major and minor modes can redefine a key as a prefix by
+putting a prefix key definition for it in the local map or the minor
+mode's map.  @xref{Active Keymaps}.
+
+  If a key is defined as a prefix in more than one active map, then its
+various definitions are in effect merged: the commands defined in the
+minor mode keymaps come first, followed by those in the local map's
+prefix definition, and then by those from the global map.
+
+  In the following example, we make @kbd{C-p} a prefix key in the local
+keymap, in such a way that @kbd{C-p} is identical to @kbd{C-x}.  Then
+the binding for @kbd{C-p C-f} is the function @code{find-file}, just
+like @kbd{C-x C-f}.  The key sequence @kbd{C-p 6} is not found in any
+active keymap.
+
+@example
+@group
+(use-local-map (make-sparse-keymap))
+    @result{} nil
+@end group
+@group
+(local-set-key "\C-p" ctl-x-map)
+    @result{} nil
+@end group
+@group
+(key-binding "\C-p\C-f")
+    @result{} find-file
+@end group
+
+@group
+(key-binding "\C-p6")
+    @result{} nil
+@end group
+@end example
+
+@defun define-prefix-command symbol &optional mapvar
+@cindex prefix command
+This function defines @var{symbol} as a prefix command: it creates a
+keymap and stores it as @var{symbol}'s function definition.
+Storing the symbol as the binding of a key makes the key a prefix key
+that has a name.  If optional argument @var{mapvar} is not specified,
+it also sets @var{symbol} as a variable, to have the keymap as its
+value. (If @var{mapvar} is given and is not @code{t}, its value is
+stored as the value of @var{symbol}.) The function returns @var{symbol}.
+
+  In Emacs version 18, only the function definition of @var{symbol} was
+set, not the value as a variable.
+@end defun
+
+@node Active Keymaps
+@section Active Keymaps
+@cindex active keymap
+@cindex global keymap
+@cindex local keymap
+
+  XEmacs normally contains many keymaps; at any given time, just a few of
+them are @dfn{active} in that they participate in the interpretation
+of user input.  These are the global keymap, the current buffer's
+local keymap, and the keymaps of any enabled minor modes.
+
+  The @dfn{global keymap} holds the bindings of keys that are defined
+regardless of the current buffer, such as @kbd{C-f}.  The variable
+@code{global-map} holds this keymap, which is always active.
+
+  Each buffer may have another keymap, its @dfn{local keymap}, which may
+contain new or overriding definitions for keys.  The current buffer's
+local keymap is always active except when @code{overriding-local-map} or
+@code{overriding-terminal-local-map} overrides it.  Extents and text
+properties can specify an alternative local map for certain parts of the
+buffer; see @ref{Extents and Events}.
+
+  Each minor mode may have a keymap; if it does, the keymap is active
+when the minor mode is enabled.
+
+  The variable @code{overriding-local-map} and
+@code{overriding-terminal-local-map}, if non-@code{nil}, specify other
+local keymaps that override the buffer's local map and all the minor
+mode keymaps.
+
+  All the active keymaps are used together to determine what command to
+execute when a key is entered.  XEmacs searches these maps one by one, in
+order of decreasing precedence, until it finds a binding in one of the maps.
+
+  More specifically:
+
+  For key-presses, the order of keymaps searched is:
+
+@itemize @bullet
+@item
+the @code{keymap} property of any extent(s) or text properties at point;
+@item
+any applicable minor-mode maps;
+@item
+the current local map of the current buffer;
+@item
+the current global map.
+@end itemize
+
+  For mouse-clicks, the order of keymaps searched is:
+
+@itemize @bullet
+@item
+the current local map of the @code{mouse-grabbed-buffer} if any;
+@item
+the @code{keymap} property of any extent(s) at the position of the click
+(this includes modeline extents);
+@item
+the @code{modeline-map} of the buffer corresponding to the modeline
+under the mouse (if the click happened over a modeline);
+@item
+the value of @code{toolbar-map} in the current buffer (if the click
+happened over a toolbar);
+@item
+the current local map of the buffer under the mouse (does not
+apply to toolbar clicks);
+@item
+any applicable minor-mode maps;
+@item
+the current global map.
+@end itemize
+
+  Note that if @code{overriding-local-map} or
+@code{overriding-terminal-local-map} is non-@code{nil}, @emph{only}
+those two maps and the current global map are searched.
+
+  The procedure for searching a single keymap is called
+@dfn{key lookup}; see @ref{Key Lookup}.
+
+@cindex major mode keymap
+  Since every buffer that uses the same major mode normally uses the
+same local keymap, you can think of the keymap as local to the mode.  A
+change to the local keymap of a buffer (using @code{local-set-key}, for
+example) is seen also in the other buffers that share that keymap.
+
+  The local keymaps that are used for Lisp mode, C mode, and several
+other major modes exist even if they have not yet been used.  These
+local maps are the values of the variables @code{lisp-mode-map},
+@code{c-mode-map}, and so on.  For most other modes, which are less
+frequently used, the local keymap is constructed only when the mode is
+used for the first time in a session.
+
+  The minibuffer has local keymaps, too; they contain various completion
+and exit commands.  @xref{Intro to Minibuffers}.
+
+  @xref{Standard Keymaps}, for a list of standard keymaps.
+
+@defun current-keymaps &optional event-or-keys
+This function returns a list of the current keymaps that will be
+searched for bindings.  This lists keymaps such as the current local map
+and the minor-mode maps, but does not list the parents of those keymaps.
+@var{event-or-keys} controls which keymaps will be listed.  If
+@var{event-or-keys} is a mouse event (or a vector whose last element is
+a mouse event), the keymaps for that mouse event will be listed.
+Otherwise, the keymaps for key presses will be listed.
+@end defun
+
+@defvar global-map
+This variable contains the default global keymap that maps XEmacs
+keyboard input to commands.  The global keymap is normally this keymap.
+The default global keymap is a full keymap that binds
+@code{self-insert-command} to all of the printing characters.
+
+It is normal practice to change the bindings in the global map, but you
+should not assign this variable any value other than the keymap it starts
+out with.
+@end defvar
+
+@defun current-global-map
+This function returns the current global keymap.  This is the
+same as the value of @code{global-map} unless you change one or the
+other.
+
+@example
+@group
+(current-global-map)
+@result{} #<keymap global-map 639 entries 0x221>
+@end group
+@end example
+@end defun
+
+@defun current-local-map &optional buffer
+This function returns @var{buffer}'s local keymap, or @code{nil}
+if it has none.  @var{buffer} defaults to the current buffer.
+
+In the following example, the keymap for the @samp{*scratch*} buffer
+(using Lisp Interaction mode) has a number of entries, including one
+prefix key, @kbd{C-x}.
+
+@example
+@group
+(current-local-map)
+@result{} #<keymap lisp-interaction-mode-map 5 entries 0x558>
+(describe-bindings-internal (current-local-map))
+@result{}  ; @r{Inserted into the buffer:}
+backspace       backward-delete-char-untabify
+linefeed        eval-print-last-sexp
+delete          delete-char
+C-j             eval-print-last-sexp
+C-x             << Prefix Command >>
+M-tab           lisp-complete-symbol
+M-;             lisp-indent-for-comment
+M-C-i           lisp-complete-symbol
+M-C-q           indent-sexp
+M-C-x           eval-defun
+Alt-backspace   backward-kill-sexp
+Alt-delete      kill-sexp
+@end group
+
+@group
+C-x x           edebug-defun
+@end group
+@end example
+@end defun
+
+@defun current-minor-mode-maps
+This function returns a list of the keymaps of currently enabled minor modes.
+@end defun
+
+@defun use-global-map keymap
+This function makes @var{keymap} the new current global keymap.  It
+returns @code{nil}.
+
+It is very unusual to change the global keymap.
+@end defun
+
+@defun use-local-map keymap &optional buffer
+This function makes @var{keymap} the new local keymap of @var{buffer}.
+@var{buffer} defaults to the current buffer.  If @var{keymap} is
+@code{nil}, then the buffer has no local keymap.  @code{use-local-map}
+returns @code{nil}.  Most major mode commands use this function.
+@end defun
+
+@c Emacs 19 feature
+@defvar minor-mode-map-alist
+This variable is an alist describing keymaps that may or may not be
+active according to the values of certain variables.  Its elements look
+like this:
+
+@example
+(@var{variable} . @var{keymap})
+@end example
+
+The keymap @var{keymap} is active whenever @var{variable} has a
+non-@code{nil} value.  Typically @var{variable} is the variable that
+enables or disables a minor mode.  @xref{Keymaps and Minor Modes}.
+
+Note that elements of @code{minor-mode-map-alist} do not have the same
+structure as elements of @code{minor-mode-alist}.  The map must be the
+@sc{cdr} of the element; a list with the map as the second element will
+not do.
+
+What's more, the keymap itself must appear in the @sc{cdr}.  It does not
+work to store a variable in the @sc{cdr} and make the map the value of
+that variable.
+
+When more than one minor mode keymap is active, their order of priority
+is the order of @code{minor-mode-map-alist}.  But you should design
+minor modes so that they don't interfere with each other.  If you do
+this properly, the order will not matter.
+
+See also @code{minor-mode-key-binding}, above.  See @ref{Keymaps and
+Minor Modes}, for more information about minor modes.
+@end defvar
+
+@defvar modeline-map
+This variable holds the keymap consulted for mouse-clicks on the
+modeline of a window.  This variable may be buffer-local; its value will
+be looked up in the buffer of the window whose modeline was clicked
+upon.
+@end defvar
+
+@defvar toolbar-map
+This variable holds the keymap consulted for mouse-clicks over a
+toolbar.
+@end defvar
+
+@defvar mouse-grabbed-buffer
+If non-@code{nil}, a buffer which should be consulted first for all
+mouse activity.  When a mouse-click is processed, it will first be
+looked up in the local-map of this buffer, and then through the normal
+mechanism if there is no binding for that click.  This buffer's value of
+@code{mode-motion-hook} will be consulted instead of the
+@code{mode-motion-hook} of the buffer of the window under the mouse.
+You should @emph{bind} this, not set it.
+@end defvar
+
+@defvar overriding-local-map
+If non-@code{nil}, this variable holds a keymap to use instead of the
+buffer's local keymap and instead of all the minor mode keymaps.  This
+keymap, if any, overrides all other maps that would have been active,
+except for the current global map.
+@end defvar
+
+@defvar overriding-terminal-local-map
+If non-@code{nil}, this variable holds a keymap to use instead of the
+buffer's local keymap and instead of all the minor mode keymaps, but for
+the selected console only. (In other words, this variable is always
+console-local; putting a keymap here only applies to keystrokes coming
+from the selected console.  @xref{Consoles and Devices}.) This keymap,
+if any, overrides all other maps that would have been active, except for
+the current global map.
+@end defvar
+
+@node Key Lookup
+@section Key Lookup
+@cindex key lookup
+@cindex keymap entry
+
+  @dfn{Key lookup} is the process of finding the binding of a key
+sequence from a given keymap.  Actual execution of the binding is not
+part of key lookup.
+
+  Key lookup uses just the event type of each event in the key
+sequence; the rest of the event is ignored.  In fact, a key sequence
+used for key lookup may designate mouse events with just their types
+(symbols) instead of with entire mouse events (lists).  @xref{Events}.
+Such a pseudo-key-sequence is insufficient for @code{command-execute},
+but it is sufficient for looking up or rebinding a key.
+
+  When the key sequence consists of multiple events, key lookup
+processes the events sequentially: the binding of the first event is
+found, and must be a keymap; then the second event's binding is found in
+that keymap, and so on until all the events in the key sequence are used
+up.  (The binding thus found for the last event may or may not be a
+keymap.)  Thus, the process of key lookup is defined in terms of a
+simpler process for looking up a single event in a keymap.  How that is
+done depends on the type of object associated with the event in that
+keymap.
+
+  Let's use the term @dfn{keymap entry} to describe the value found by
+looking up an event type in a keymap.  (This doesn't include the item
+string and other extra elements in menu key bindings because
+@code{lookup-key} and other key lookup functions don't include them in
+the returned value.)  While any Lisp object may be stored in a keymap as
+a keymap entry, not all make sense for key lookup.  Here is a list of
+the meaningful kinds of keymap entries:
+
+@table @asis
+@item @code{nil}
+@cindex @code{nil} in keymap
+@code{nil} means that the events used so far in the lookup form an
+undefined key.  When a keymap fails to mention an event type at all, and
+has no default binding, that is equivalent to a binding of @code{nil}
+for that event type.
+
+@item @var{keymap}
+@cindex keymap in keymap
+The events used so far in the lookup form a prefix key.  The next
+event of the key sequence is looked up in @var{keymap}.
+
+@item @var{command}
+@cindex command in keymap
+The events used so far in the lookup form a complete key,
+and @var{command} is its binding.  @xref{What Is a Function}.
+
+@item @var{array}
+@cindex string in keymap
+The array (either a string or a vector) is a keyboard macro.  The events
+used so far in the lookup form a complete key, and the array is its
+binding.  See @ref{Keyboard Macros}, for more information. (Note that
+you cannot use a shortened form of a key sequence here, such as
+@code{(control y)}; you must use the full form @code{[(control y)]}.
+@xref{Key Sequences}.)
+
+@item @var{list}
+@cindex list in keymap
+The meaning of a list depends on the types of the elements of the list.
+
+@itemize @bullet
+@item
+@cindex @code{lambda} in keymap
+If the @sc{car} of @var{list} is @code{lambda}, then the list is a
+lambda expression.  This is presumed to be a command, and is treated as
+such (see above).
+
+@item
+If the @sc{car} of @var{list} is a keymap and the @sc{cdr} is an event
+type, then this is an @dfn{indirect entry}:
+
+@example
+(@var{othermap} . @var{othertype})
+@end example
+
+When key lookup encounters an indirect entry, it looks up instead the
+binding of @var{othertype} in @var{othermap} and uses that.
+
+This feature permits you to define one key as an alias for another key.
+For example, an entry whose @sc{car} is the keymap called @code{esc-map}
+and whose @sc{cdr} is 32 (the code for @key{SPC}) means, ``Use the global
+binding of @kbd{Meta-@key{SPC}}, whatever that may be.''
+@end itemize
+
+@item @var{symbol}
+@cindex symbol in keymap
+The function definition of @var{symbol} is used in place of
+@var{symbol}.  If that too is a symbol, then this process is repeated,
+any number of times.  Ultimately this should lead to an object that is
+a keymap, a command or a keyboard macro.  A list is allowed if it is a
+keymap or a command, but indirect entries are not understood when found
+via symbols.
+
+Note that keymaps and keyboard macros (strings and vectors) are not
+valid functions, so a symbol with a keymap, string, or vector as its
+function definition is invalid as a function.  It is, however, valid as
+a key binding.  If the definition is a keyboard macro, then the symbol
+is also valid as an argument to @code{command-execute}
+(@pxref{Interactive Call}).
+
+@cindex @code{undefined} in keymap
+The symbol @code{undefined} is worth special mention: it means to treat
+the key as undefined.  Strictly speaking, the key is defined, and its
+binding is the command @code{undefined}; but that command does the same
+thing that is done automatically for an undefined key: it rings the bell
+(by calling @code{ding}) but does not signal an error.
+
+@cindex preventing prefix key
+@code{undefined} is used in local keymaps to override a global key
+binding and make the key ``undefined'' locally.  A local binding of
+@code{nil} would fail to do this because it would not override the
+global binding.
+
+@item @var{anything else}
+If any other type of object is found, the events used so far in the
+lookup form a complete key, and the object is its binding, but the
+binding is not executable as a command.
+@end table
+
+  In short, a keymap entry may be a keymap, a command, a keyboard macro,
+a symbol that leads to one of them, or an indirection or @code{nil}.
+
+@node Functions for Key Lookup
+@section Functions for Key Lookup
+
+  Here are the functions and variables pertaining to key lookup.
+
+@defun lookup-key keymap key &optional accept-defaults
+This function returns the definition of @var{key} in @var{keymap}.  If
+the string or vector @var{key} is not a valid key sequence according to
+the prefix keys specified in @var{keymap} (which means it is ``too
+long'' and has extra events at the end), then the value is a number, the
+number of events at the front of @var{key} that compose a complete key.
+
+@c Emacs 19 feature
+If @var{accept-defaults} is non-@code{nil}, then @code{lookup-key}
+considers default bindings as well as bindings for the specific events
+in @var{key}.  Otherwise, @code{lookup-key} reports only bindings for
+the specific sequence @var{key}, ignoring default bindings except when
+you explicitly ask about them.
+
+All the other functions described in this chapter that look up keys use
+@code{lookup-key}.
+
+@example
+@group
+(lookup-key (current-global-map) "\C-x\C-f")
+    @result{} find-file
+@end group
+@group
+(lookup-key (current-global-map) "\C-x\C-f12345")
+    @result{} 2
+@end group
+@end example
+
+  If @var{key} begins with the character whose value is contained in
+@code{meta-prefix-char}, that character is implicitly removed and the
+@key{META} modifier added to the key.  Thus, the first example below is
+handled by conversion into the second example.
+
+@example
+@group
+(lookup-key (current-global-map) "\ef")
+    @result{} forward-word
+@end group
+@group
+(lookup-key (current-global-map) "\M-f")
+    @result{} forward-word
+@end group
+@end example
+
+Unlike @code{read-key-sequence}, this function does not modify the
+specified events in ways that discard information (@pxref{Key Sequence
+Input}).  In particular, it does not convert letters to lower case.
+@end defun
+
+@deffn Command undefined
+Used in keymaps to undefine keys.  If a key sequence is defined to this,
+invoking this key sequence causes a ``key undefined'' error, just as if
+the key sequence had no binding.
+@end deffn
+
+@defun key-binding key &optional accept-defaults
+This function returns the binding for @var{key} in the current
+keymaps, trying all the active keymaps.  The result is @code{nil} if
+@var{key} is undefined in the keymaps.
+
+@c Emacs 19 feature
+The argument @var{accept-defaults} controls checking for default
+bindings, as in @code{lookup-key} (above).
+
+@example
+@group
+(key-binding "\C-x\C-f")
+    @result{} find-file
+(key-binding '(control home))
+    @result{} beginning-of-buffer
+(key-binding [escape escape escape])
+    @result{} keyboard-escape-quit
+@end group
+@end example
+@end defun
+
+@defun local-key-binding keys &optional accept-defaults
+This function returns the binding for @var{keys} in the current
+local keymap, or @code{nil} if it is undefined there.
+
+@c Emacs 19 feature
+The argument @var{accept-defaults} controls checking for default bindings,
+as in @code{lookup-key} (above).
+@end defun
+
+@defun global-key-binding keys &optional accept-defaults
+This function returns the binding for command @var{keys} in the
+current global keymap, or @code{nil} if it is undefined there.
+
+@c Emacs 19 feature
+The argument @var{accept-defaults} controls checking for default bindings,
+as in @code{lookup-key} (above).
+@end defun
+
+@c Emacs 19 feature
+@defun minor-mode-key-binding key &optional accept-defaults
+This function returns a list of all the active minor mode bindings of
+@var{key}.  More precisely, it returns an alist of pairs
+@code{(@var{modename} . @var{binding})}, where @var{modename} is the
+variable that enables the minor mode, and @var{binding} is @var{key}'s
+binding in that mode.  If @var{key} has no minor-mode bindings, the
+value is @code{nil}.
+
+If the first binding is not a prefix command, all subsequent bindings
+from other minor modes are omitted, since they would be completely
+shadowed.  Similarly, the list omits non-prefix bindings that follow
+prefix bindings.
+
+The argument @var{accept-defaults} controls checking for default
+bindings, as in @code{lookup-key} (above).
+@end defun
+
+@defvar meta-prefix-char
+@cindex @key{ESC}
+This variable is the meta-prefix character code.  It is used when
+translating a two-character sequence to a meta character so it can be
+looked up in a keymap.  For useful results, the value should be a prefix
+event (@pxref{Prefix Keys}).  The default value is @code{?\^[} (integer
+27), which is the @sc{ascii} character usually produced by the @key{ESC}
+key.
+
+  As long as the value of @code{meta-prefix-char} remains @code{?\^[},
+key lookup translates @kbd{@key{ESC} b} into @kbd{M-b}, which is
+normally defined as the @code{backward-word} command.  However, if you
+set @code{meta-prefix-char} to @code{?\^X} (i.e. the keystroke
+@kbd{C-x}) or its equivalent @sc{ascii} code @code{24}, then XEmacs will
+translate @kbd{C-x b} (whose standard binding is the
+@code{switch-to-buffer} command) into @kbd{M-b}.
+
+@smallexample
+@group
+meta-prefix-char                    ; @r{The default value.}
+     @result{} ?\^[   ; @r{Under XEmacs 20.}
+     @result{} 27     ; @r{Under XEmacs 19.}
+@end group
+@group
+(key-binding "\eb")
+     @result{} backward-word
+@end group
+@group
+?\C-x                               ; @r{The print representation}
+                                           ;   @r{of a character.}
+     @result{} ?\^X   ; @r{Under XEmacs 20.}
+     @result{} 24     ; @r{Under XEmacs 19.}
+@end group
+@group
+(setq meta-prefix-char 24)
+     @result{} 24
+@end group
+@group
+(key-binding "\C-xb")
+     @result{} backward-word            ; @r{Now, typing @kbd{C-x b} is}
+                                    ;   @r{like typing @kbd{M-b}.}
+
+(setq meta-prefix-char ?\e)          ; @r{Avoid confusion!}
+                                     ; @r{Restore the default value!}
+     @result{} ?\^[   ; @r{Under XEmacs 20.}
+     @result{} 27     ; @r{Under XEmacs 19.}
+@end group
+@end smallexample
+@end defvar
+
+@node Changing Key Bindings
+@section Changing Key Bindings
+@cindex changing key bindings
+@cindex rebinding
+
+  The way to rebind a key is to change its entry in a keymap.  If you
+change a binding in the global keymap, the change is effective in all
+buffers (though it has no direct effect in buffers that shadow the
+global binding with a local one).  If you change the current buffer's
+local map, that usually affects all buffers using the same major mode.
+The @code{global-set-key} and @code{local-set-key} functions are
+convenient interfaces for these operations (@pxref{Key Binding
+Commands}).  You can also use @code{define-key}, a more general
+function; then you must specify explicitly the map to change.
+
+  The way to specify the key sequence that you want to rebind is
+described above (@pxref{Key Sequences}).
+
+  For the functions below, an error is signaled if @var{keymap} is not a
+keymap or if @var{key} is not a string or vector representing a key
+sequence.  You can use event types (symbols) as shorthand for events
+that are lists.
+
+@defun define-key keymap key binding
+This function sets the binding for @var{key} in @var{keymap}.  (If
+@var{key} is more than one event long, the change is actually made
+in another keymap reached from @var{keymap}.)  The argument
+@var{binding} can be any Lisp object, but only certain types are
+meaningful.  (For a list of meaningful types, see @ref{Key Lookup}.)
+The value returned by @code{define-key} is @var{binding}.
+
+@cindex invalid prefix key error
+@cindex key sequence error
+Every prefix of @var{key} must be a prefix key (i.e., bound to a
+keymap) or undefined; otherwise an error is signaled.
+
+If some prefix of @var{key} is undefined, then @code{define-key} defines
+it as a prefix key so that the rest of @var{key} may be defined as
+specified.
+@end defun
+
+  Here is an example that creates a sparse keymap and makes a number of
+bindings in it:
+
+@smallexample
+@group
+(setq map (make-sparse-keymap))
+    @result{} #<keymap 0 entries 0xbee>
+@end group
+@group
+(define-key map "\C-f" 'forward-char)
+    @result{} forward-char
+@end group
+@group
+map
+    @result{} #<keymap 1 entry 0xbee>
+(describe-bindings-internal map)
+@result{}   ; @r{(Inserted in buffer)}
+C-f             forward-char
+@end group
+
+@group
+;; @r{Build sparse submap for @kbd{C-x} and bind @kbd{f} in that.}
+(define-key map "\C-xf" 'forward-word)
+    @result{} forward-word
+@end group
+@group
+map
+    @result{} #<keymap 2 entries 0xbee>
+(describe-bindings-internal map)
+@result{}   ; @r{(Inserted in buffer)}
+C-f             forward-char
+C-x             << Prefix Command >>
+
+C-x f           forward-word
+@end group
+
+@group
+;; @r{Bind @kbd{C-p} to the @code{ctl-x-map}.}
+(define-key map "\C-p" ctl-x-map)
+;; @code{ctl-x-map}
+@result{} #<keymap Control-X-prefix 77 entries 0x3bf>
+@end group
+
+@group
+;; @r{Bind @kbd{C-f} to @code{foo} in the @code{ctl-x-map}.}
+(define-key map "\C-p\C-f" 'foo)
+@result{} foo
+@end group
+@group
+map
+    @result{} #<keymap 3 entries 0xbee>
+(describe-bindings-internal map)
+@result{}   ; @r{(Inserted in buffer)}
+C-f             forward-char
+C-p             << Prefix command Control-X-prefix >>
+C-x             << Prefix Command >>
+
+C-p tab         indent-rigidly
+C-p $           set-selective-display
+C-p '           expand-abbrev
+C-p (           start-kbd-macro
+C-p )           end-kbd-macro
+   @dots{}
+C-p C-x         exchange-point-and-mark
+C-p C-z         suspend-or-iconify-emacs
+C-p M-escape    repeat-complex-command
+C-p M-C-[       repeat-complex-command
+
+C-x f           forward-word
+
+C-p 4 .         find-tag-other-window
+   @dots{}
+C-p 4 C-o       display-buffer
+
+C-p 5 0         delete-frame
+   @dots{}
+C-p 5 C-f       find-file-other-frame
+
+   @dots{}
+
+C-p a i g       inverse-add-global-abbrev
+C-p a i l       inverse-add-mode-abbrev
+@end group
+@end smallexample
+
+@noindent
+Note that storing a new binding for @kbd{C-p C-f} actually works by
+changing an entry in @code{ctl-x-map}, and this has the effect of
+changing the bindings of both @kbd{C-p C-f} and @kbd{C-x C-f} in the
+default global map.
+
+@defun substitute-key-definition olddef newdef keymap &optional oldmap prefix
+@cindex replace bindings
+This function replaces @var{olddef} with @var{newdef} for any keys in
+@var{keymap} that were bound to @var{olddef}.  In other words,
+@var{olddef} is replaced with @var{newdef} wherever it appears.  Prefix
+keymaps are checked recursively.
+
+The function returns @code{nil}.
+
+For example, this redefines @kbd{C-x C-f}, if you do it in an XEmacs with
+standard bindings:
+
+@smallexample
+@group
+(substitute-key-definition
+ 'find-file 'find-file-read-only (current-global-map))
+@end group
+@end smallexample
+
+@c Emacs 19 feature
+If @var{oldmap} is non-@code{nil}, then its bindings determine which
+keys to rebind.  The rebindings still happen in @var{keymap}, not in
+@var{oldmap}.  Thus, you can change one map under the control of the
+bindings in another.  For example,
+
+@smallexample
+(substitute-key-definition
+  'delete-backward-char 'my-funny-delete
+  my-map global-map)
+@end smallexample
+
+@noindent
+puts the special deletion command in @code{my-map} for whichever keys
+are globally bound to the standard deletion command.
+
+If argument @var{prefix} is non-@code{nil}, then only those occurrences
+of @var{olddef} found in keymaps accessible through the keymap bound to
+@var{prefix} in @var{keymap} are redefined.  See also
+@code{accessible-keymaps}.
+
+@ignore
+@c Emacs 18 only
+Prefix keymaps that appear within @var{keymap} are not checked
+recursively for keys bound to @var{olddef}; they are not changed at all.
+Perhaps it would be better to check nested keymaps recursively.
+@end ignore
+
+@ignore @c #### fix this up.
+Here is an example showing a keymap before and after substitution:
+
+@smallexample
+@group
+(setq map '(keymap
+            (?1 . olddef-1)
+            (?2 . olddef-2)
+            (?3 . olddef-1)))
+@result{} (keymap (49 . olddef-1) (50 . olddef-2) (51 . olddef-1))
+@end group
+
+@group
+(substitute-key-definition 'olddef-1 'newdef map)
+@result{} nil
+@end group
+@group
+map
+@result{} (keymap (49 . newdef) (50 . olddef-2) (51 . newdef))
+@end group
+@end smallexample
+@end ignore
+@end defun
+
+@defun suppress-keymap keymap &optional nodigits
+@cindex @code{self-insert-command} override
+This function changes the contents of the full keymap @var{keymap} by
+making all the printing characters undefined.  More precisely, it binds
+them to the command @code{undefined}.  This makes ordinary insertion of
+text impossible.  @code{suppress-keymap} returns @code{nil}.
+
+If @var{nodigits} is @code{nil}, then @code{suppress-keymap} defines
+digits to run @code{digit-argument}, and @kbd{-} to run
+@code{negative-argument}.  Otherwise it makes them undefined like the
+rest of the printing characters.
+
+@cindex yank suppression
+@cindex @code{quoted-insert} suppression
+The @code{suppress-keymap} function does not make it impossible to
+modify a buffer, as it does not suppress commands such as @code{yank}
+and @code{quoted-insert}.  To prevent any modification of a buffer, make
+it read-only (@pxref{Read Only Buffers}).
+
+Since this function modifies @var{keymap}, you would normally use it
+on a newly created keymap.  Operating on an existing keymap
+that is used for some other purpose is likely to cause trouble; for
+example, suppressing @code{global-map} would make it impossible to use
+most of XEmacs.
+
+Most often, @code{suppress-keymap} is used to initialize local
+keymaps of modes such as Rmail and Dired where insertion of text is not
+desirable and the buffer is read-only.  Here is an example taken from
+the file @file{emacs/lisp/dired.el}, showing how the local keymap for
+Dired mode is set up:
+
+@smallexample
+@group
+  @dots{}
+  (setq dired-mode-map (make-keymap))
+  (suppress-keymap dired-mode-map)
+  (define-key dired-mode-map "r" 'dired-rename-file)
+  (define-key dired-mode-map "\C-d" 'dired-flag-file-deleted)
+  (define-key dired-mode-map "d" 'dired-flag-file-deleted)
+  (define-key dired-mode-map "v" 'dired-view-file)
+  (define-key dired-mode-map "e" 'dired-find-file)
+  (define-key dired-mode-map "f" 'dired-find-file)
+  @dots{}
+@end group
+@end smallexample
+@end defun
+
+@node Key Binding Commands
+@section Commands for Binding Keys
+
+  This section describes some convenient interactive interfaces for
+changing key bindings.  They work by calling @code{define-key}.
+
+  People often use @code{global-set-key} in their @file{.emacs} file for
+simple customization.  For example,
+
+@smallexample
+(global-set-key "\C-x\C-\\" 'next-line)
+@end smallexample
+
+@noindent
+or
+
+@smallexample
+(global-set-key [(control ?x) (control ?\\)] 'next-line)
+@end smallexample
+
+@noindent
+or
+
+@smallexample
+(global-set-key [?\C-x ?\C-\\] 'next-line)
+@end smallexample
+
+@noindent
+redefines @kbd{C-x C-\} to move down a line.
+
+@smallexample
+(global-set-key [(meta button1)] 'mouse-set-point)
+@end smallexample
+
+@noindent
+redefines the first (leftmost) mouse button, typed with the Meta key, to
+set point where you click.
+
+@deffn Command global-set-key key definition
+This function sets the binding of @var{key} in the current global map
+to @var{definition}.
+
+@smallexample
+@group
+(global-set-key @var{key} @var{definition})
+@equiv{}
+(define-key (current-global-map) @var{key} @var{definition})
+@end group
+@end smallexample
+@end deffn
+
+@deffn Command global-unset-key key
+@cindex unbinding keys
+This function removes the binding of @var{key} from the current
+global map.
+
+One use of this function is in preparation for defining a longer key
+that uses @var{key} as a prefix---which would not be allowed if
+@var{key} has a non-prefix binding.  For example:
+
+@smallexample
+@group
+(global-unset-key "\C-l")
+    @result{} nil
+@end group
+@group
+(global-set-key "\C-l\C-l" 'redraw-display)
+    @result{} nil
+@end group
+@end smallexample
+
+This function is implemented simply using @code{define-key}:
+
+@smallexample
+@group
+(global-unset-key @var{key})
+@equiv{}
+(define-key (current-global-map) @var{key} nil)
+@end group
+@end smallexample
+@end deffn
+
+@deffn Command local-set-key key definition
+This function sets the binding of @var{key} in the current local
+keymap to @var{definition}.
+
+@smallexample
+@group
+(local-set-key @var{key} @var{definition})
+@equiv{}
+(define-key (current-local-map) @var{key} @var{definition})
+@end group
+@end smallexample
+@end deffn
+
+@deffn Command local-unset-key key
+This function removes the binding of @var{key} from the current
+local map.
+
+@smallexample
+@group
+(local-unset-key @var{key})
+@equiv{}
+(define-key (current-local-map) @var{key} nil)
+@end group
+@end smallexample
+@end deffn
+
+@node Scanning Keymaps
+@section Scanning Keymaps
+
+  This section describes functions used to scan all the current keymaps,
+or all keys within a keymap, for the sake of printing help information.
+
+@defun accessible-keymaps keymap &optional prefix
+This function returns a list of all the keymaps that can be accessed
+(via prefix keys) from @var{keymap}.  The value is an association list
+with elements of the form @code{(@var{key} .@: @var{map})}, where
+@var{key} is a prefix key whose definition in @var{keymap} is
+@var{map}.
+
+The elements of the alist are ordered so that the @var{key} increases
+in length.  The first element is always @code{([] .@: @var{keymap})},
+because the specified keymap is accessible from itself with a prefix of
+no events.
+
+If @var{prefix} is given, it should be a prefix key sequence; then
+@code{accessible-keymaps} includes only the submaps whose prefixes start
+with @var{prefix}.  These elements look just as they do in the value of
+@code{(accessible-keymaps)}; the only difference is that some elements
+are omitted.
+
+  In the example below, the returned alist indicates that the key
+@kbd{C-x}, which is displayed as @samp{[(control x)]}, is a prefix key
+whose definition is the keymap @code{#<keymap ((control x) #<keymap
+emacs-lisp-mode-map 8 entries 0x546>) 1 entry 0x8a2>}. (The strange
+notation for the keymap's name indicates that this is an internal submap
+of @code{emacs-lisp-mode-map}.  This is because
+@code{lisp-interaction-mode-map} has set up @code{emacs-lisp-mode-map}
+as its parent, and @code{lisp-interaction-mode-map} defines no key
+sequences beginning with @kbd{C-x}.)
+
+@smallexample
+@group
+(current-local-map)
+@result{} #<keymap lisp-interaction-mode-map 5 entries 0x558>
+(accessible-keymaps (current-local-map))
+@result{}(([] . #<keymap lisp-interaction-mode-map 5 entries 0x558>)
+    ([(control x)] .
+     #<keymap ((control x) #<keymap emacs-lisp-mode-map 8 entries 0x546>)
+              1 entry 0x8a2>))
+@end group
+@end smallexample
+
+  The following example shows the results of calling
+@code{accessible-keymaps} on a large, complex keymap.  Notice how
+some keymaps were given explicit names using @code{set-keymap-name};
+those submaps without explicit names are given descriptive names
+indicating their relationship to their enclosing keymap.
+
+@smallexample
+@group
+(accessible-keymaps (current-global-map))
+@result{} (([] . #<keymap global-map 639 entries 0x221>)
+   ([(control c)] . #<keymap mode-specific-command-prefix 1 entry 0x3cb>)
+   ([(control h)] . #<keymap help-map 33 entries 0x4ec>)
+   ([(control x)] . #<keymap Control-X-prefix 77 entries 0x3bf>)
+   ([(meta escape)] .
+      #<keymap ((meta escape) #<keymap global-map 639 entries 0x221>)
+               3 entries 0x3e0>)
+   ([(meta control \[)] .
+      #<keymap ((meta escape) #<keymap global-map 639 entries 0x221>)
+               3 entries 0x3e0>)
+   ([f1] . #<keymap help-map 33 entries 0x4ec>)
+   ([(control x) \4] . #<keymap ctl-x-4-prefix 9 entries 0x3c5>)
+   ([(control x) \5] . #<keymap ctl-x-5-prefix 8 entries 0x3c8>)
+   ([(control x) \6] . #<keymap 13 entries 0x4d2>)
+   ([(control x) a] .
+      #<keymap (a #<keymap Control-X-prefix 77 entries 0x3bf>)
+               8 entries 0x3ef>)
+   ([(control x) n] . #<keymap narrowing-prefix 3 entries 0x3dd>)
+   ([(control x) r] . #<keymap rectangle-prefix 18 entries 0x3e9>)
+   ([(control x) v] . #<keymap vc-prefix-map 13 entries 0x60e>)
+   ([(control x) a i] .
+     #<keymap (i #<keymap (a #<keymap Control-X-prefix 77 entries 0x3bf>)
+                          8 entries 0x3ef>)
+              2 entries 0x3f5>))
+@end group
+@end smallexample
+@end defun
+
+@defun map-keymap function keymap &optional sort-first
+This function applies @var{function} to each element of @var{keymap}.
+@var{function} will be called with two arguments: a key-description
+list, and the binding.  The order in which the elements of the keymap
+are passed to the function is unspecified.  If the function inserts new
+elements into the keymap, it may or may not be called with them later.
+No element of the keymap will ever be passed to the function more than
+once.
+
+The function will not be called on elements of this keymap's parents
+(@pxref{Inheritance and Keymaps}) or upon keymaps which are contained
+within this keymap (multi-character definitions).  It will be called on
+@key{META} characters since they are not really two-character sequences.
+
+If the optional third argument @var{sort-first} is non-@code{nil}, then
+the elements of the keymap will be passed to the mapper function in a
+canonical order.  Otherwise, they will be passed in hash (that is,
+random) order, which is faster.
+@end defun
+
+@defun keymap-fullness keymap
+This function returns the number of bindings in the keymap.
+@end defun
+
+@defun where-is-internal definition &optional keymaps firstonly noindirect event-or-keys
+This function returns a list of key sequences (of any length) that are
+bound to @var{definition} in a set of keymaps.
+
+The argument @var{definition} can be any object; it is compared with all
+keymap entries using @code{eq}.
+
+@var{keymaps} can be either a keymap (meaning search in that keymap and the
+current global keymap) or a list of keymaps (meaning search in exactly
+those keymaps and no others).  If @var{keymaps} is nil, search in the currently
+applicable maps for @var{event-or-keys}.
+
+If @var{keymaps} is a keymap, then the maps searched are @var{keymaps} and
+the global keymap.  If @var{keymaps} is a list of keymaps, then the maps
+searched are exactly those keymaps, and no others.  If @var{keymaps} is
+@code{nil}, then the maps used are the current active keymaps for
+@var{event-or-keys} (this is equivalent to specifying
+@code{(current-keymaps @var{event-or-keys})} as the argument to
+@var{keymaps}).
+
+If @var{firstonly} is non-@code{nil}, then the value is a single
+vector representing the first key sequence found, rather than a list of
+all possible key sequences.
+@ignore @c #### Should fix where-is to be more like FSF
+If @var{firstonly} is @code{non-ascii}, then the value is a single
+string representing the first key sequence found, rather than a list of
+all possible key sequences.  If @var{firstonly} is @code{t}, then the
+value is the first key sequence, except that key sequences consisting
+entirely of @sc{ascii} characters (or meta variants of @sc{ascii}
+characters) are preferred to all other key sequences.
+@end ignore
+
+If @var{noindirect} is non-@code{nil}, @code{where-is-internal} doesn't
+follow indirect keymap bindings.  This makes it possible to search for
+an indirect definition itself.
+
+This function is used by @code{where-is} (@pxref{Help, , Help, xemacs,
+The XEmacs Lisp Reference Manual}).
+
+@smallexample
+@group
+(where-is-internal 'describe-function)
+    @result{} ([(control h) d] [(control h) f] [f1 d] [f1 f])
+@end group
+@end smallexample
+@end defun
+
+@defun describe-bindings-internal map &optional all shadow prefix mouse-only-p
+This function inserts (into the current buffer) a list of all defined
+keys and their definitions in @var{map}.  Optional second argument
+@var{all} says whether to include even ``uninteresting'' definitions,
+i.e.  symbols with a non-@code{nil} @code{suppress-keymap} property.
+Third argument @var{shadow} is a list of keymaps whose bindings shadow
+those of map; if a binding is present in any shadowing map, it is not
+printed.  Fourth argument @var{prefix}, if non-@code{nil}, should be a
+key sequence; only bindings which start with that key sequence will be
+printed.  Fifth argument @var{mouse-only-p} says to only print bindings
+for mouse clicks.
+@end defun
+
+  @code{describe-bindings-internal} is used to implement the
+help command @code{describe-bindings}.
+
+@deffn Command describe-bindings &optional prefix mouse-only-p
+This function creates a listing of all defined keys and their
+definitions.  It writes the listing in a buffer named @samp{*Help*} and
+displays it in a window.
+
+If optional argument @var{prefix} is non-@code{nil}, it should be a
+prefix key; then the listing includes only keys that start with
+@var{prefix}.
+
+When several characters with consecutive @sc{ascii} codes have the
+same definition, they are shown together, as
+@samp{@var{firstchar}..@var{lastchar}}.  In this instance, you need to
+know the @sc{ascii} codes to understand which characters this means.
+For example, in the default global map, the characters @samp{@key{SPC}
+..@: ~} are described by a single line.  @key{SPC} is @sc{ascii} 32,
+@kbd{~} is @sc{ascii} 126, and the characters between them include all
+the normal printing characters, (e.g., letters, digits, punctuation,
+etc.@:); all these characters are bound to @code{self-insert-command}.
+
+If the second optional argument @var{mouse-only-p} (prefix arg,
+interactively) is non-@code{nil} then only the mouse bindings are
+displayed.
+@end deffn
+
+@node Other Keymap Functions
+@section Other Keymap Functions
+
+@defun set-keymap-prompt keymap new-prompt
+This function sets the ``prompt'' of @var{keymap} to string
+@var{new-prompt}, or @code{nil} if no prompt is desired.  The prompt is
+shown in the echo-area when reading a key-sequence to be looked-up in
+this keymap.
+@end defun
+
+@defun keymap-prompt keymap &optional use-inherited
+This function returns the ``prompt'' of the given keymap.
+If @var{use-inherited} is non-@code{nil}, any parent keymaps
+will also be searched for a prompt.
+@end defun

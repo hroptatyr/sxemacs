@@ -1,0 +1,236 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1996 Ben Wing.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/hash-tables.info
+@node Hash Tables, Range Tables, Display, top
+@chapter Hash Tables
+@cindex hash table
+
+@defun hash-table-p object
+This function returns @code{t} if @var{object} is a hash table, else @code{nil}.
+@end defun
+
+@menu
+* Introduction to Hash Tables::	Hash tables are fast data structures for
+                                implementing simple tables (i.e. finite
+                                mappings from keys to values).
+* Working With Hash Tables::    Hash table functions.
+* Weak Hash Tables::            Hash tables with special garbage-collection
+                                behavior.
+@end menu
+
+@node Introduction to Hash Tables
+@section Introduction to Hash Tables
+
+A @dfn{hash table} is a data structure that provides mappings from
+arbitrary Lisp objects called @dfn{keys} to other arbitrary Lisp objects
+called @dfn{values}.  A key/value pair is sometimes called an
+@dfn{entry} in the hash table.  There are many ways other than hash
+tables of implementing the same sort of mapping, e.g.  association lists
+(@pxref{Association Lists}) and property lists (@pxref{Property Lists}),
+but hash tables provide much faster lookup when there are many entries
+in the mapping.  Hash tables are an implementation of the abstract data
+type @dfn{dictionary}, also known as @dfn{associative array}.
+
+Internally, hash tables are hashed using the @dfn{linear probing} hash
+table implementation method.  This method hashes each key to a
+particular spot in the hash table, and then scans forward sequentially
+until a blank entry is found.  To look up a key, hash to the appropriate
+spot, then search forward for the key until either a key is found or a
+blank entry stops the search.  This method is used in preference to
+double hashing because of changes in recent hardware.  The penalty for
+non-sequential access to memory has been increasing, and this
+compensates for the problem of clustering that linear probing entails.
+
+When hash tables are created, the user may (but is not required to)
+specify initial properties that influence performance.
+
+Use the @code{:size} parameter to specify the number of entries that are
+likely to be stored in the hash table, to avoid the overhead of resizing
+the table.  But if the pre-allocated space for the entries is never
+used, it is simply wasted and makes XEmacs slower.  Excess unused hash
+table entries exact a small continuous performance penalty, since they
+must be scanned at every garbage collection.  If the number of entries
+in the hash table is unknown, simply avoid using the @code{:size}
+keyword.
+
+Use the @code{:rehash-size} and @code{:rehash-threshold} keywords to
+adjust the algorithm for deciding when to rehash the hash table.  For
+temporary hash tables that are going to be very heavily used, use a
+small rehash threshold, for example, 0.4 and a large rehash size, for
+example 2.0.  For permanent hash tables that will be infrequently used,
+specify a large rehash threshold, for example 0.8.
+
+Hash tables can also be created by the lisp reader using structure
+syntax, for example:
+@example
+#s(hash-table size 20 data (foo 1 bar 2))
+@end example
+
+The structure syntax accepts the same keywords as @code{make-hash-table}
+(without the @code{:} character), as well as the additional keyword
+@code{data}, which specifies the initial hash table contents.
+
+@defun make-hash-table &key @code{test} @code{size} @code{rehash-size} @code{rehash-threshold} @code{weakness}
+This function returns a new empty hash table object.
+
+Keyword @code{:test} can be @code{eq}, @code{eql} (default) or @code{equal}.
+Comparison between keys is done using this function.
+If speed is important, consider using @code{eq}.
+When storing strings in the hash table, you will likely need to use @code{equal}.
+
+Keyword @code{:size} specifies the number of keys likely to be inserted.
+This number of entries can be inserted without enlarging the hash table.
+
+Keyword @code{:rehash-size} must be a float greater than 1.0, and specifies
+the factor by which to increase the size of the hash table when enlarging.
+
+Keyword @code{:rehash-threshold} must be a float between 0.0 and 1.0,
+and specifies the load factor of the hash table which triggers enlarging.
+
+Non-standard keyword @code{:weakness} can be @code{nil} (default),
+@code{t}, @code{key-and-value}, @code{key}, @code{value} or
+@code{key-or-value}.  @code{t} is an alias for @code{key-and-value}.
+
+A key-and-value-weak hash table, also known as a fully-weak or simply
+as a weak hash table, is one whose pointers do not count as GC
+referents: for any key-value pair in the hash table, if the only
+remaining pointer to either the key or the value is in a weak hash
+table, then the pair will be removed from the hash table, and the key
+and value collected.  A non-weak hash table (or any other pointer)
+would prevent the object from being collected.
+
+A key-weak hash table is similar to a fully-weak hash table except that
+a key-value pair will be removed only if the key remains unmarked
+outside of weak hash tables.  The pair will remain in the hash table if
+the key is pointed to by something other than a weak hash table, even
+if the value is not.
+
+A value-weak hash table is similar to a fully-weak hash table except
+that a key-value pair will be removed only if the value remains
+unmarked outside of weak hash tables.  The pair will remain in the
+hash table if the value is pointed to by something other than a weak
+hash table, even if the key is not.
+
+A key-or-value-weak hash table is similar to a fully-weak hash table except
+that a key-value pair will be removed only if the value and the key remain
+unmarked outside of weak hash tables.  The pair will remain in the
+hash table if the value or key are pointed to by something other than a weak
+hash table, even if the other is not.
+@end defun
+
+@defun copy-hash-table hash-table
+This function returns a new hash table which contains the same keys and
+values as @var{hash-table}.  The keys and values will not themselves be
+copied.
+@end defun
+
+@defun hash-table-count hash-table
+This function returns the number of entries in @var{hash-table}.
+@end defun
+
+@defun hash-table-test hash-table
+This function returns the test function of @var{hash-table}.
+This can be one of @code{eq}, @code{eql} or @code{equal}.
+@end defun
+
+@defun hash-table-size hash-table
+This function returns the current number of slots in @var{hash-table},
+whether occupied or not.
+@end defun
+
+@defun hash-table-rehash-size hash-table
+This function returns the current rehash size of @var{hash-table}.
+This is a float greater than 1.0; the factor by which @var{hash-table}
+is enlarged when the rehash threshold is exceeded.
+@end defun
+
+@defun hash-table-rehash-threshold hash-table
+This function returns the current rehash threshold of @var{hash-table}.
+This is a float between 0.0 and 1.0; the maximum @dfn{load factor} of
+@var{hash-table}, beyond which the @var{hash-table} is enlarged by rehashing.
+@end defun
+
+@defun hash-table-weakness hash-table
+This function returns the weakness of @var{hash-table}.
+This can be one of @code{nil}, @code{t}, @code{key} or @code{value}.
+@end defun
+
+@node Working With Hash Tables
+@section Working With Hash Tables
+
+@defun puthash key value hash-table
+This function hashes @var{key} to @var{value} in @var{hash-table}.
+@end defun
+
+@defun gethash key hash-table &optional default
+This function finds the hash value for @var{key} in @var{hash-table}.
+If there is no entry for @var{key} in @var{hash-table}, @var{default} is
+returned (which in turn defaults to @code{nil}).
+@end defun
+
+@defun remhash key hash-table
+This function removes the entry for @var{key} from @var{hash-table}.
+Does nothing if there is no entry for @var{key} in @var{hash-table}.
+@end defun
+
+@defun clrhash hash-table
+This function removes all entries from @var{hash-table}, leaving it empty.
+@end defun
+
+@defun maphash function hash-table
+This function maps @var{function} over entries in @var{hash-table},
+calling it with two args, each key and value in the hash table.
+
+@var{function} may not modify @var{hash-table}, with the one exception
+that @var{function} may remhash or puthash the entry currently being
+processed by @var{function}.
+@end defun
+
+
+@node Weak Hash Tables
+@section Weak Hash Tables
+@cindex hash table, weak
+@cindex weak hash table
+
+A @dfn{weak hash table} is a special variety of hash table whose
+elements do not count as GC referents.  For any key-value pair in such a
+hash table, if either the key or value (or in some cases, if one
+particular one of the two) has no references to it outside of weak hash
+tables (and similar structures such as weak lists), the pair will be
+removed from the table, and the key and value collected.  A non-weak
+hash table (or any other pointer) would prevent the objects from being
+collected.
+
+Weak hash tables are useful for keeping track of information in a
+non-obtrusive way, for example to implement caching.  If the cache
+contains objects such as buffers, markers, image instances, etc. that
+will eventually disappear and get garbage-collected, using a weak hash
+table ensures that these objects are collected normally rather than
+remaining around forever, long past their actual period of use.
+(Otherwise, you'd have to explicitly map over the hash table every so
+often and remove unnecessary elements.)
+
+There are four types of weak hash tables:
+
+@table @asis
+@item key-and-value-weak hash tables
+In these hash tables, also known as fully weak or simply as weak hash
+tables, a pair disappears if either the key or the value is unreferenced
+outside of the table.
+@item key-weak hash tables
+In these hash tables, a pair disappears if the key is unreferenced outside
+of the table, regardless of how the value is referenced.
+@item value-weak hash tables
+In these hash tables, a pair disappears if the value is unreferenced outside
+of the table, regardless of how the key is referenced.
+@item key-or-value-weak hash tables
+In these hash tables, a pair disappears if both the key and the value
+are unreferenced outside of the table.
+@end table
+
+Also see @ref{Weak Lists}.
+
+Weak hash tables are created by specifying the @code{:weakness} keyword to
+@code{make-hash-table}.
