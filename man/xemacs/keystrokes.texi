@@ -1,0 +1,516 @@
+
+@node Keystrokes, Pull-down Menus, Frame, Top
+@chapter Keystrokes, Key Sequences, and Key Bindings
+
+@iftex
+  This chapter discusses the character set Emacs uses for input commands
+and inside files.  You have already learned that the more frequently
+used Emacs commands are bound to keys.  For example, @kbd{Control-f} is
+bound to @code{forward-char}.  The following issues are covered:
+
+@itemize @bullet
+@item
+How keystrokes can be represented
+@item
+How you can create key sequences from keystrokes
+@item
+How you can add to the available modifier keys by customizing your
+keyboard: for example, you could have the
+@key{Capslock} key be understood as the @key{Super} key by Emacs. A
+@key{Super} key is used like @key{Control} or @key{Meta} in that you hold
+it while typing another key. 
+@end itemize
+
+ You will also learn how to customize existing key bindings and
+create new ones.
+@end iftex
+
+@menu
+* Intro to Keystrokes::      Keystrokes as building blocks of key sequences.
+* Representing Keystrokes::  Using lists of modifiers and keysyms to
+                             represent keystrokes.
+* Key Sequences::            Combine key strokes into key sequences you can
+                             bind to commands.
+* String Key Sequences::     Available for upward compatibility.
+* Meta Key::                 Using @key{ESC} to represent @key{Meta}
+* Super and Hyper Keys::     Adding modifier keys on certain keyboards.
+* Character Representation:: How characters appear in Emacs buffers.
+* Commands::                 How commands are bound to key sequences.
+@end menu
+ 
+@node Intro to Keystrokes, Representing Keystrokes, Keystrokes, Keystrokes
+@section Keystrokes as Building Blocks of Key Sequences
+@cindex character set
+@cindex ASCII
+@cindex keystroke
+
+      Earlier versions of Emacs used only the ASCII character set,
+which defines 128 different character codes.  Some of these codes are
+assigned graphic symbols like @samp{a} and @samp{=}; the rest are
+control characters, such as @kbd{Control-a} (also called @kbd{C-a}).
+@kbd{C-a} means you hold down the @key{CTRL} key and then press
+@kbd{a}.@refill
+
+   Keybindings in XEmacs are not restricted to the set of
+keystrokes that can be represented in ASCII.  XEmacs can tell the
+difference between, for example, @kbd{Control-h}, @kbd{Control-Shift-h},
+and @kbd{Backspace}.
+  
+@cindex modifier key
+@cindex keysym
+@kindex meta key
+@kindex control key
+@kindex hyper key
+@kindex super key
+@kindex shift key
+@kindex button1 
+@kindex button2
+@kindex button3
+@kindex button1up
+@kindex button2up
+@kindex button3up
+
+  A keystroke is like a piano chord: you get it by simultaneously
+striking several keys.  To be more precise, a keystroke consists
+of a possibly empty set of modifiers followed by a single
+@dfn{keysym}.  The set of modifiers is small; it consists of
+@kbd{Control}, @kbd{Meta}, @kbd{Super}, @kbd{Hyper}, and @kbd{Shift}.
+
+  The rest of the keys on your keyboard, along with the mouse buttons,
+make up the set of keysyms.  A keysym is usually what is printed on the
+keys on your keyboard.  Here is a table of some of the symbolic names
+for keysyms:
+@table @kbd
+@item a,b,c...
+alphabetic keys
+@item f1,f2...
+function keys
+@item button1
+left mouse button
+@item button2
+middle mouse button
+@item button3
+right mouse button
+@item button1up 
+upstroke on the left mouse button
+@item button2up
+upstroke on the middle mouse button
+@item button3up
+upstroke on the right mouse button
+@item return
+Return key
+@end table
+
+@vindex keyboard-translate-table
+Use the variable @code{keyboard-translate-table} only if you are on a
+dumb tty, as it cannot handle input that cannot be represented as ASCII.
+The value of this variable is a string used as a translate table for
+keyboard input or @code{nil}.  Each character is looked up in this
+string and the contents used instead.  If the string is of length
+@code{n}, character codes @code{N} and up are untranslated.  If you are
+running Emacs under X, you should do the translations with the
+@code{xmodmap} program instead.
+
+
+@node Representing Keystrokes, Key Sequences, Intro to Keystrokes, Keystrokes
+@comment  node-name,  next,  previous,  up
+@subsection Representing Keystrokes
+@kindex hyper key
+@kindex super key
+@findex read-key-sequence
+
+  XEmacs represents keystrokes as lists. Each list consists of
+an arbitrary combination of modifiers followed by a single keysym at the
+end of the list.  If the keysym corresponds to an ASCII character, you
+can use its character code.  (A keystroke may also be represented by an
+event object, as returned by the @code{read-key-sequence} function;
+non-programmers need not worry about this.)
+
+The following table gives some examples of how to list representations
+for keystrokes.  Each list consists of sets of modifiers followed by
+keysyms:
+
+@table @kbd
+@item (control a)
+Pressing @key{CTRL} and @kbd{a} simultaneously.
+@item (control ?a)
+Another way of writing the keystroke @kbd{C-a}.
+@item (control 65)
+Yet another way of writing the keystroke @kbd{C-a}.
+@item (break)
+Pressing the @key{BREAK} key.
+@item (control meta button2up)
+Release the middle mouse button, while pressing @key{CTRL} and
+@key{META}. 
+@end table
+@cindex shift modifier
+  Note: As you define keystrokes, you can use the @kbd{shift} key only
+as a modifier with characters that do not have a second keysym on the
+same key, such as @kbd{backspace} and @kbd{tab}.  It is an error to
+define a keystroke using the @key{shift} modifier with keysyms such as
+@kbd{a} and @kbd{=}.  The correct forms are @kbd{A} and @kbd{+}.
+
+@node Key Sequences, String Key Sequences, Representing Keystrokes, Keystrokes
+@subsection Representing Key Sequences
+
+  A @dfn{complete key sequence} is a sequence of keystrokes that Emacs
+understands as a unit.  Key sequences are significant because you can
+bind them to commands.  Note that not all sequences of keystrokes are
+possible key sequences.  In particular, the initial keystrokes in a key
+sequence must make up a @dfn{prefix key sequence}.
+
+  Emacs represents a key sequence as a vector of keystrokes.  Thus, the
+schematic representation of a complete key sequence is as follows:
+
+@example
+  [(modifier .. modifier keysym) ... (modifier .. modifier keysym)]
+@end example
+
+  Here are some examples of complete key sequences:
+
+@table @kbd
+@item [(control c) (control a)]
+Typing @kbd{C-c} followed by @kbd{C-a}
+@item [(control c) (control 65)]
+Typing @kbd{C-c} followed by @kbd{C-a}. (Using the ASCII code
+for the character `a')@refill
+@item [(control c) (break)]
+Typing @kbd{C-c} followed by the @kbd{break} character.@refill
+@end table
+
+@kindex C-c
+@kindex C-x
+@kindex C-h
+@kindex ESC
+@cindex prefix key sequence
+
+  A @dfn{prefix key sequence} is the beginning of a series of longer
+sequences that are valid key sequences; adding any single keystroke to
+the end of a prefix results in a valid key sequence.  For example,
+@kbd{control-x} is standardly defined as a prefix.  Thus there is a
+two-character key sequence starting with @kbd{C-x} for each valid
+keystroke, giving numerous possibilities.  Here are some samples:
+
+@itemize @bullet
+@item
+@kbd{[(control x) (c)]}
+@item
+@kbd{[(control x) (control c)]}
+@end itemize
+
+  Adding one character to a prefix key does not have to form a complete
+key.  It could make another, longer prefix.  For example, @kbd{[(control
+x) (\4)]} is itself a prefix that leads to any number of different
+three-character keys, including @kbd{[(control x) (\4) (f)]},
+@kbd{[(control x) (\4) (b)]} and so on.  It would be possible to define
+one of those three-character sequences as a prefix, creating a series of
+four-character keys, but we did not define any of them this way.@refill
+
+  By contrast, the two-character sequence @kbd{[(control f) (control
+k)]} is not a key, because the @kbd{(control f)} is a complete key
+sequence in itself.  You cannot give @kbd{[(control f (control k)]} an
+independent meaning as a command while @kbd{(control f)} is a complete
+sequence, because Emacs would understand @key{C-f C-k} as two
+commands.@refill
+
+ The predefined prefix key sequences in Emacs are @kbd{(control c)},
+@kbd{(control x)}, @kbd{(control h)}, @kbd{[(control x) (\4)]}, and
+@kbd{escape}.  You can customize Emacs and could make new prefix keys or
+eliminate the default key sequences.  @xref{Key Bindings}.  For example,
+if you redefine @kbd{(control f)} as a prefix, @kbd{[(control f)
+(control k)]} automatically becomes a valid key sequence (complete,
+unless you define it as a prefix as well).  Conversely, if you remove
+the prefix definition of @kbd{[(control x) (\4)]}, @kbd{[(control x)
+(\4) (f)]} (or @kbd{[(control x) (\4) @var{anything}]}) is no longer a
+valid key sequence.
+
+Note that the above paragraphs uses \4 instead of simply 4, because \4
+is the symbol whose name is "4", and plain 4 is the integer 4, which
+would have been interpreted as the ASCII value.  Another way of
+representing the symbol whose name is "4" is to write ?4, which would be
+interpreted as the number 52, which is the ASCII code for the character
+"4".  We could therefore actually have written 52 directly, but that is
+far less clear.
+
+@node String Key Sequences, Meta Key, Key Sequences, Keystrokes
+@comment  node-name,  next,  previous,  up
+@subsection  String Key Sequences
+For backward compatibility, you may also represent a key sequence using
+strings.  For example, we have the following equivalent representations:
+
+@table @kbd
+@item "\C-c\C-c"
+@code{[(control c) (control c)]}
+@item "\e\C-c"
+@code{[(meta control c)]}
+@end table
+
+@kindex LFD
+@kindex TAB
+
+@node Meta Key, Super and Hyper Keys, String Key Sequences, Keystrokes
+@comment  node-name,  next,  previous,  up
+@subsection Assignment of the @key{META} Key
+ 
+@kindex META
+@kindex ESC
+  Not all terminals have the complete set of modifiers.  
+Terminals that have a @key{Meta} key allow you to type Meta characters
+by just holding that key down.  To type @kbd{Meta-a}, hold down
+@key{META} and press @kbd{a}.  On those terminals, the @key{META} key
+works like the @key{SHIFT} key.  Such a key is not always labeled
+@key{META}, however, as this function is often a special option for a
+key with some other primary purpose.@refill
+
+  If there is no @key{META} key, you can still type Meta characters
+using two-character sequences starting with @key{ESC}.  To enter
+@kbd{M-a}, you could type @kbd{@key{ESC} a}.  To enter @kbd{C-M-a}, you
+would type @kbd{ESC C-a}.  @key{ESC} is allowed on terminals with
+Meta keys, too, in case you have formed a habit of using it.@refill
+
+If you are running under X and do not have a @key{META} key, it 
+is possible to reconfigure some other key to be a @key{META} 
+key.  @xref{Super and Hyper Keys}. @refill
+
+@vindex meta-flag
+  Emacs believes the terminal has a @key{META} key if the variable
+@code{meta-flag} is non-@code{nil}.  Normally this is set automatically
+according to the termcap entry for your terminal type.  However, sometimes
+the termcap entry is wrong, and then it is useful to set this variable
+yourself.  @xref{Variables}, for how to do this.
+
+Note: If you are running under the X window system, the setting of
+the @code{meta-flag} variable is irrelevant. 
+
+@node Super and Hyper Keys, Character Representation, Meta Key, Keystrokes
+@comment  node-name,  next,  previous,  up
+@subsection Assignment of the @key{SUPER} and @key{HYPER} Keys
+@kindex hyper key
+@kindex super key
+
+  Most keyboards do not, by default, have @key{SUPER} or @key{HYPER}
+modifier keys.  Under X, you can simulate the @key{SUPER} or
+@key{HYPER} key if you want to bind keys to sequences using @kbd{super}
+and @kbd{hyper}.  You can use the @code{xmodmap} program to do this.
+
+  For example, to turn your @key{CAPS-LOCK} key into a @key{SUPER} key,
+do the following:
+
+  Create a file called @code{~/.xmodmap}.  In this file, place the lines
+
+@example
+        remove Lock = Caps_Lock
+        keysym Caps_Lock = Super_L
+        add Mod2 = Super_L
+@end example
+
+The first line says that the key that is currently called @code{Caps_Lock}
+should no longer behave as a ``lock'' key.  The second line says that
+this should now be called @code{Super_L} instead.  The third line says that 
+the key called @code{Super_L} should be a modifier key, which produces the
+@code{Mod2} modifier.
+
+To create a @key{META} or @key{HYPER} key instead of a @key{SUPER} key,
+replace the word @code{Super} above with @code{Meta} or @code{Hyper}.
+
+Just after you start up X, execute the command @code{xmodmap /.xmodmap}.
+You can add this command to the appropriate initialization file to have
+the command executed automatically.@refill
+
+If you have problems, see the documentation for the @code{xmodmap}
+program.  The X keyboard model is quite complicated, and explaining
+it is beyond the scope of this manual.  However, we reprint the 
+following description from the X Protocol document for your convenience:
+
+@cindex keysyms
+@cindex keycode
+
+ A list of keysyms is associated with each keycode. If that list
+(ignoring trailing @code{NoSymbol} entries) is a single keysym @samp{K},
+then the list is treated as if it were the list 
+@code{``K NoSymbol K NoSymbol''}. If the list (ignoring trailing 
+@code{NoSymbol} entries) is a pair of keysyms @samp{K1 K2}, then the 
+list is treated as if it were the list @code{``K1 K2 K1 K2''}. If the 
+list (ignoring trailing @code{NoSymbol} entries) is a triple of keysyms 
+@samp{K1 K2 K3}, then the list is treated as if it were the list 
+@code{``K1 K2 K3 NoSymbol''}.
+
+ The first four elements of the list are split into two groups of 
+keysyms. Group 1 contains the first and second keysyms; Group 2 contains
+third and fourth keysyms. Within each group, if the second element of
+the group is NoSymbol, then the group should be treated as if the second
+element were the same as the first element, except when the first
+element is an alphabetic keysym @samp{K} for which both lowercase and 
+uppercase forms are defined. In that case, the group should be treated 
+as if the first element were the lowercase form of @samp{K} and the second 
+element were the uppercase form of @samp{K}.
+
+ The standard rules for obtaining a keysym from a KeyPress event make use of 
+only the Group 1 and Group 2 keysyms; no interpretation of other keysyms in 
+the list is given here. (That is, the last four keysyms are unused.)
+
+ Which group to use is determined by modifier state. Switching between
+groups is controlled by the keysym named @code{Mode_switch}. Attach that
+keysym to some keycode and attach that keycode to any one of the
+modifiers Mod1 through Mod5. This modifier is called the @dfn{group
+modifier}. For any keycode, Group 1 is used when the group modifier is
+off, and Group 2 is used when the group modifier is on.
+
+ Within a group, which keysym to use is also determined by modifier
+state. The first keysym is used when the @code{Shift} and @code{Lock} 
+modifiers are off. The second keysym is used when the @code{Shift} 
+modifier is on, or when the @code{Lock} modifier is on and the second 
+keysym is uppercase alphabetic, or when the @code{Lock} modifier is on 
+and is interpreted as @code{ShiftLock}. Otherwise, when the @code{Lock} 
+modifier is on and is interpreted as @code{CapsLock}, the state of the 
+@code{Shift} modifier is applied first to select a keysym, 
+but if that keysym is lower-case alphabetic, then the corresponding 
+upper-case keysym is used instead.
+
+ In addition to the above information on keysyms, we also provide the 
+following description of modifier mapping from the InterClient 
+Communications Conventions Manual:
+
+@cindex modifier mapping
+
+ X11 supports 8 modifier bits, of which 3 are pre-assigned to 
+@code{Shift}, @code{Lock}, and @code{Control}. Each modifier bit is 
+controlled by the state of a set of keys, and these sets are specified 
+in a table accessed by @code{GetModifierMapping()} and 
+@code{SetModifierMapping()}.
+
+ A client needing to use one of the pre-assigned modifiers should assume
+that the modifier table has been set up correctly to control these
+modifiers. The @code{Lock} modifier should be interpreted as @code{Caps
+Lock} or @code{Shift Lock} according to whether the keycodes in its
+controlling set include @code{XK_Caps_Lock} or @code{XK_Shift_Lock}.
+
+ Clients should determine the meaning of a modifier bit from the keysyms 
+being used to control it.
+
+A client needing to use an extra modifier, for example @code{Meta}, should:
+
+@enumerate
+@item
+Scan the existing modifier mappings.
+
+@enumerate
+@item
+If it finds a modifier that contains a keycode whose set of keysyms 
+includes @code{XK_Meta_L} or @code{XK_Meta_R}, it should use that 
+modifier bit.
+
+@item
+If there is no existing modifier controlled by @code{XK_Meta_L} or 
+@code{XK_Meta_R}, it should select an unused modifier bit (one with 
+an empty controlling set) and:
+@end enumerate
+
+@item
+If there is a keycode with @code{XL_Meta_L} in its set of keysyms, 
+add that keycode to the set for the chosen modifier, and then:
+
+@enumerate
+@item
+If there is a keycode with @code{XL_Meta_R} in its set of keysyms, 
+add that keycode to the set for the chosen modifier, and then:
+
+@item
+If the controlling set is still empty, interact with the user to 
+select one or more keys to be @code{Meta}.
+@end enumerate
+
+
+@item
+If there are no unused modifier bits, ask the user to take corrective action.
+@end enumerate
+
+ This means that the @code{Mod1} modifier does not necessarily mean 
+@code{Meta}, although some applications (such as twm and emacs 18) 
+assume that. Any of the five unassigned modifier bits could mean 
+@code{Meta}; what matters is that a modifier bit is generated by a 
+keycode which is bound to the keysym @code{Meta_L} or @code{Meta_R}.
+
+ Therefore, if you want to make a @key{META} key, the right way 
+is to make the keycode in question generate both a @code{Meta} keysym 
+and some previously-unassigned modifier bit.
+
+@node Character Representation, Commands, Super and Hyper Keys, Keystrokes
+@comment  node-name,  next,  previous,  up
+@section Representation of Characters
+
+This section briefly discusses how characters are represented in Emacs
+buffers.  @xref{Key Sequences}, for information on representing key
+sequences to create key bindings. 
+
+  ASCII graphic characters in Emacs buffers are displayed with their
+graphics.  @key{LFD} is the same as a newline character; it is displayed
+by starting a new line.  @key{TAB} is displayed by moving to the next
+tab stop column (usually every 8 spaces).  Other control characters are
+displayed as a caret (@samp{^}) followed by the non-control version of
+the character; thus, @kbd{C-a} is displayed as @samp{^A}.  Non-ASCII
+characters 128 and up are displayed with octal escape sequences; thus,
+character code 243 (octal), also called @kbd{M-#} when used as an input
+character, is displayed as @samp{\243}.
+
+The variable @code{ctl-arrow} may be used to alter this behavior.
+@xref{Display Vars}.
+
+@node Commands, , Character Representation, Keystrokes
+@section Keys and Commands
+
+@cindex binding
+@cindex customization
+@cindex keymap
+@cindex function
+@cindex command
+  This manual is full of passages that tell you what particular keys do.
+But Emacs does not assign meanings to keys directly.  Instead, Emacs
+assigns meanings to @dfn{functions}, and then gives keys their meanings
+by @dfn{binding} them to functions.
+
+ A function is a Lisp object that can be executed as a program.  Usually
+it is a Lisp symbol that has been given a function definition; every
+symbol has a name, usually made of a few English words separated by
+dashes, such as @code{next-line} or @code{forward-word}.  It also has a
+@dfn{definition}, which is a Lisp program.  Only some functions can be the
+bindings of keys; these are functions whose definitions use
+@code{interactive} to specify how to call them interactively.  Such
+functions are called @dfn{commands}, and their names are @dfn{command
+names}.  More information on this subject will appear in the @i{XEmacs
+Lisp Reference Manual}.
+
+  The bindings between keys and functions are recorded in various tables
+called @dfn{keymaps}.  @xref{Key Bindings}, for more information on key
+sequences you can bind commands to.  @xref{Keymaps}, for information on
+creating keymaps.
+
+  When we say  ``@kbd{C-n} moves down vertically one line'' we are
+glossing over a distinction that is irrelevant in ordinary use but is
+vital in understanding how to customize Emacs.  The function
+@code{next-line} is programmed to move down vertically.  @kbd{C-n}
+has this effect @i{because} it is bound to that function.  If you rebind
+@kbd{C-n} to the function @code{forward-word} then @kbd{C-n} will move
+forward by words instead.  Rebinding keys is a common method of
+customization.@refill
+
+   The rest of this manual usually ignores this subtlety to keep
+things simple.  To give the customizer the information needed, we often
+state the name of the command that really does the work in parentheses
+after mentioning the key that runs it.  For example, we will say that
+``The command @kbd{C-n} (@code{next-line}) moves point vertically
+down,'' meaning that @code{next-line} is a command that moves vertically
+down and @kbd{C-n} is a key that is standardly bound to it.
+
+@cindex variables
+  While we are on the subject of information for customization only,
+it's a good time to tell you about @dfn{variables}.  Often the
+description of a command will say, ``To change this, set the variable
+@code{mumble-foo}.''  A variable is a name used to remember a value.
+Most of the variables documented in this manual exist just to facilitate
+customization: some command or other part of Emacs uses the variable
+and behaves differently depending on its setting.  Until you are interested in
+customizing, you can ignore the information about variables.  When you
+are ready to be interested, read the basic information on variables, and 
+then the information on individual variables will make sense.
+@xref{Variables}.

@@ -1,0 +1,92 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1996 Ben Wing.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/databases.info
+@node Databases, Processes, Range Tables, top
+@chapter Databases
+@cindex database
+
+@defun databasep object
+This function returns non-@code{nil} if @var{object} is a database.
+@end defun
+
+@menu
+* Connecting to a Database::
+* Working With a Database::
+* Other Database Functions::
+@end menu
+
+@node Connecting to a Database
+@section Connecting to a Database
+
+@defun open-database file &optional type subtype access mode
+This function opens database @var{file}, using database method
+@var{type} and @var{subtype}, with access rights @var{access} and
+permissions @var{mode}.  @var{access} can be any combination of @code{r}
+@code{w} and @code{+}, for read, write, and creation flags.
+
+@var{type} can have the value @code{'dbm} or @code{'berkeley-db} to
+select the type of database file to use.  (Note:  XEmacs may not
+support both of these types.)
+
+For a @var{type} of @code{'dbm}, there are no subtypes, so
+@var{subtype} should be @code{nil}.
+
+For a @var{type} of @code{'berkeley-db}, the following subtypes are
+available:  @code{'hash}, @code{'btree}, and @code{'recno}.  See the
+manpages for the Berkeley DB functions for more information about these
+types.
+@end defun
+
+@defun close-database database
+This function closes database @var{database}.
+@end defun
+
+@defun database-live-p object
+This function returns @code{t} if @var{object} is an active database, else
+@code{nil}.
+@end defun
+
+@node Working With a Database
+@section Working With a Database
+
+@defun get-database key database &optional default
+This function finds the value for @var{key} in @var{database}.  If there is no
+corresponding value, @var{default} is returned (@code{nil} if @var{default} is
+omitted).
+@end defun
+
+@defun map-database function database
+This function maps @var{function} over entries in @var{database},
+calling it with two args, each key and value in the database.
+@end defun
+
+@defun put-database key value database &optional replace
+This function stores @var{key} and @var{value} in @var{database}.
+If optional fourth arg @var{replace} is non-@code{nil}, replace any
+existing entry in the database.
+@end defun
+
+@defun remove-database key database
+This function removes @var{key} from @var{database}.
+@end defun
+
+@node Other Database Functions
+@section Other Database Functions
+
+@defun database-file-name database
+This function returns the filename associated with @var{database}.
+@end defun
+
+@defun database-last-error &optional database
+This function returns the last error associated with @var{database}.
+@end defun
+
+@defun database-subtype database
+This function returns the subtype of @var{database}, if any.
+@end defun
+
+@defun database-type database
+This function returns the type of @var{database}.
+@end defun

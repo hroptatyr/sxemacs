@@ -1,0 +1,790 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/markers.info
+@node Markers, Text, Positions, Top
+@chapter Markers
+@cindex markers
+
+  A @dfn{marker} is a Lisp object used to specify a position in a buffer
+relative to the surrounding text.  A marker changes its offset from the
+beginning of the buffer automatically whenever text is inserted or
+deleted, so that it stays with the two characters on either side of it.
+
+@menu
+* Overview of Markers::      The components of a marker, and how it relocates.
+* Predicates on Markers::    Testing whether an object is a marker.
+* Creating Markers::         Making empty markers or markers at certain places.
+* Information from Markers:: Finding the marker's buffer or character position.
+* Changing Markers::         Moving the marker to a new buffer or position.
+* The Mark::                 How ``the mark'' is implemented with a marker.
+* The Region::               How to access ``the region''.
+@end menu
+
+@node Overview of Markers
+@section Overview of Markers
+
+  A marker specifies a buffer and a position in that buffer.  The marker
+can be used to represent a position in the functions that require one,
+just as an integer could be used.  @xref{Positions}, for a complete
+description of positions.
+
+  A marker has two attributes: the marker position, and the marker
+buffer.  The marker position is an integer that is equivalent (at a
+given time) to the marker as a position in that buffer.  But the
+marker's position value can change often during the life of the marker.
+Insertion and deletion of text in the buffer relocate the marker.  The
+idea is that a marker positioned between two characters remains between
+those two characters despite insertion and deletion elsewhere in the
+buffer.  Relocation changes the integer equivalent of the marker.
+
+@cindex marker relocation
+  Deleting text around a marker's position leaves the marker between the
+characters immediately before and after the deleted text.  Inserting
+text at the position of a marker normally leaves the marker in front of
+the new text---unless it is inserted with @code{insert-before-markers}
+(@pxref{Insertion}).
+
+@cindex marker garbage collection
+  Insertion and deletion in a buffer must check all the markers and
+relocate them if necessary.  This slows processing in a buffer with a
+large number of markers.  For this reason, it is a good idea to make a
+marker point nowhere if you are sure you don't need it any more.
+Unreferenced markers are garbage collected eventually, but until then
+will continue to use time if they do point somewhere.
+
+@cindex markers as numbers
+  Because it is common to perform arithmetic operations on a marker
+position, most of the arithmetic operations (including @code{+} and
+@code{-}) accept markers as arguments.  In such cases, the marker
+stands for its current position.
+
+@cindex markers vs. extents
+  Note that you can use extents to achieve the same functionality, and
+more, as markers. (Markers were defined before extents, which is why
+they both continue to exist.) A zero-length extent with the
+@code{detachable} property removed is almost identical to a marker.
+(@xref{Extent Endpoints}, for more information on zero-length extents.)
+
+In particular:
+
+@itemize @bullet
+@item
+In order to get marker-like behavior in a zero-length extent, the
+@code{detachable} property must be removed (otherwise, the extent
+will disappear when text near it is deleted) and exactly one
+endpoint must be closed (if both endpoints are closed, the extent
+will expand to contain text inserted where it is located).
+@item
+If a zero-length extent has the @code{end-open} property but not
+the @code{start-open} property (this is the default), text inserted
+at the extent's location causes the extent to move forward, just
+like a marker.
+@item
+If a zero-length extent has the @code{start-open} property but not
+the @code{end-open} property, text inserted at the extent's location
+causes the extent to remain before the text, like what happens to
+markers when @code{insert-before-markers} is used.
+@item
+Markers end up after or before inserted text depending on whether
+@code{insert} or @code{insert-before-markers} was called.  These
+functions do not affect zero-length extents differently; instead,
+the presence or absence of the @code{start-open} and @code{end-open}
+extent properties determines this, as just described.
+@item
+Markers are automatically removed from a buffer when they are no
+longer in use.  Extents remain around until explicitly removed
+from a buffer.
+@item
+Many functions are provided for listing the extents in a buffer or
+in a region of a buffer.  No such functions exist for markers.
+@end itemize
+
+Here are examples of creating markers, setting markers, and moving point
+to markers:
+
+@example
+@group
+;; @r{Make a new marker that initially does not point anywhere:}
+(setq m1 (make-marker))
+     @result{} #<marker in no buffer>
+@end group
+
+@group
+;; @r{Set @code{m1} to point between the 99th and 100th characters}
+;;   @r{in the current buffer:}
+(set-marker m1 100)
+     @result{} #<marker at 100 in markers.texi>
+@end group
+
+@group
+;; @r{Now insert one character at the beginning of the buffer:}
+(goto-char (point-min))
+     @result{} 1
+(insert "Q")
+     @result{} nil
+@end group
+
+@group
+;; @r{@code{m1} is updated appropriately.}
+m1
+     @result{} #<marker at 101 in markers.texi>
+@end group
+
+@group
+;; @r{Two markers that point to the same position}
+;;   @r{are not @code{eq}, but they are @code{equal}.}
+(setq m2 (copy-marker m1))
+     @result{} #<marker at 101 in markers.texi>
+(eq m1 m2)
+     @result{} nil
+(equal m1 m2)
+     @result{} t
+@end group
+
+@group
+;; @r{When you are finished using a marker, make it point nowhere.}
+(set-marker m1 nil)
+     @result{} #<marker in no buffer>
+@end group
+@end example
+
+@node Predicates on Markers
+@section Predicates on Markers
+
+  You can test an object to see whether it is a marker, or whether it is
+either an integer or a marker or either an integer, a character, or a
+marker.  The latter tests are useful in connection with the arithmetic
+functions that work with any of markers, integers, or characters.
+
+@defun markerp object
+This function returns @code{t} if @var{object} is a marker, @code{nil}
+otherwise.  Note that integers are not markers, even though many
+functions will accept either a marker or an integer.
+@end defun
+
+@defun integer-or-marker-p object
+This function returns @code{t} if @var{object} is an integer or a marker,
+@code{nil} otherwise.
+@end defun
+
+@defun integer-char-or-marker-p object
+This function returns @code{t} if @var{object} is an integer, a
+character, or a marker, @code{nil} otherwise.
+@end defun
+
+@defun number-or-marker-p object
+This function returns @code{t} if @var{object} is a number (either kind)
+or a marker, @code{nil} otherwise.
+@end defun
+
+@defun number-char-or-marker-p object
+This function returns @code{t} if @var{object} is a number (either
+kind), a character, or a marker, @code{nil} otherwise.
+@end defun
+
+@node Creating Markers
+@section Functions That Create Markers
+
+  When you create a new marker, you can make it point nowhere, or point
+to the present position of point, or to the beginning or end of the
+accessible portion of the buffer, or to the same place as another given
+marker.
+
+@defun make-marker
+This functions returns a newly created marker that does not point
+anywhere.
+
+@example
+@group
+(make-marker)
+     @result{} #<marker in no buffer>
+@end group
+@end example
+@end defun
+
+@defun point-marker &optional dont-copy-p buffer
+This function returns a marker that points to the present position of
+point in @var{buffer}, which defaults to the current buffer.
+@xref{Point}.  For an example, see @code{copy-marker}, below.
+
+Internally, a marker corresponding to point is always maintained.
+Normally the marker returned by @code{point-marker} is a copy; you
+may modify it with reckless abandon.  However, if optional argument
+@var{dont-copy-p} is non-@code{nil}, then the real point-marker is
+returned; modifying the position of this marker will move point.
+It is illegal to change the buffer of it, or make it point nowhere.
+@end defun
+
+@defun point-min-marker &optional buffer
+This function returns a new marker that points to the beginning of the
+accessible portion of @var{buffer}, which defaults to the current
+buffer.  This will be the beginning of the buffer unless narrowing is in
+effect.  @xref{Narrowing}.
+@end defun
+
+@defun point-max-marker &optional buffer
+@cindex end of buffer marker
+This function returns a new marker that points to the end of the
+accessible portion of @var{buffer}, which defaults to the current
+buffer.  This will be the end of the buffer unless narrowing is in
+effect.  @xref{Narrowing}.
+
+Here are examples of this function and @code{point-min-marker}, shown in
+a buffer containing a version of the source file for the text of this
+chapter.
+
+@example
+@group
+(point-min-marker)
+     @result{} #<marker at 1 in markers.texi>
+(point-max-marker)
+     @result{} #<marker at 15573 in markers.texi>
+@end group
+
+@group
+(narrow-to-region 100 200)
+     @result{} nil
+@end group
+@group
+(point-min-marker)
+     @result{} #<marker at 100 in markers.texi>
+@end group
+@group
+(point-max-marker)
+     @result{} #<marker at 200 in markers.texi>
+@end group
+@end example
+@end defun
+
+@defun copy-marker marker-or-integer &optional marker-type
+If passed a marker as its argument, @code{copy-marker} returns a
+new marker that points to the same place and the same buffer as does
+@var{marker-or-integer}.  If passed an integer as its argument,
+@code{copy-marker} returns a new marker that points to position
+@var{marker-or-integer} in the current buffer.
+
+If passed an integer argument less than 1, @code{copy-marker} returns a
+new marker that points to the beginning of the current buffer.  If
+passed an integer argument greater than the length of the buffer,
+@code{copy-marker} returns a new marker that points to the end of the
+buffer.
+
+An error is signaled if @var{marker-or-integer} is neither a marker nor
+an integer.
+
+Optional second argument @var{marker-type} specifies the insertion type
+of the new marker; see @code{marker-insertion-type}.
+
+@example
+@group
+(setq p (point-marker))
+     @result{} #<marker at 2139 in markers.texi>
+@end group
+
+@group
+(setq q (copy-marker p))
+     @result{} #<marker at 2139 in markers.texi>
+@end group
+
+@group
+(eq p q)
+     @result{} nil
+@end group
+
+@group
+(equal p q)
+     @result{} t
+@end group
+
+@group
+(point)
+     @result{} 2139
+@end group
+
+@group
+(set-marker p 3000)
+     @result{} #<marker at 3000 in markers.texi>
+@end group
+
+@group
+(point)
+     @result{} 2139
+@end group
+
+@group
+(setq p (point-marker t))
+     @result{} #<marker at 2139 in markers.texi>
+@end group
+
+@group
+(set-marker p 3000)
+     @result{} #<marker at 3000 in markers.texi>
+@end group
+
+@group
+(point)
+     @result{} 3000
+@end group
+
+@group
+(copy-marker 0)
+     @result{} #<marker at 1 in markers.texi>
+@end group
+
+@group
+(copy-marker 20000)
+     @result{} #<marker at 7572 in markers.texi>
+@end group
+@end example
+@end defun
+
+@node Information from Markers
+@section Information from Markers
+
+  This section describes the functions for accessing the components of a
+marker object.
+
+@defun marker-position marker
+This function returns the position that @var{marker} points to, or
+@code{nil} if it points nowhere.
+@end defun
+
+@defun marker-buffer marker
+This function returns the buffer that @var{marker} points into, or
+@code{nil} if it points nowhere.
+
+@example
+@group
+(setq m (make-marker))
+     @result{} #<marker in no buffer>
+@end group
+@group
+(marker-position m)
+     @result{} nil
+@end group
+@group
+(marker-buffer m)
+     @result{} nil
+@end group
+
+@group
+(set-marker m 3770 (current-buffer))
+     @result{} #<marker at 3770 in markers.texi>
+@end group
+@group
+(marker-buffer m)
+     @result{} #<buffer markers.texi>
+@end group
+@group
+(marker-position m)
+     @result{} 3770
+@end group
+@end example
+@end defun
+
+  Two distinct markers are considered @code{equal} (even though not
+@code{eq}) to each other if they have the same position and buffer, or
+if they both point nowhere.
+
+@node Changing Markers
+@section Changing Marker Positions
+
+  This section describes how to change the position of an existing
+marker.  When you do this, be sure you know whether the marker is used
+outside of your program, and, if so, what effects will result from
+moving it---otherwise, confusing things may happen in other parts of
+Emacs.
+
+@defun set-marker marker position &optional buffer
+This function moves @var{marker} to @var{position}
+in @var{buffer}.  If @var{buffer} is not provided, it defaults to
+the current buffer.
+
+@var{position} can be a marker, an integer or @code{nil}.  If
+@var{position} is an integer, @code{set-marker} moves @var{marker} to
+point before the @var{position}th character in @var{buffer}.  If
+@var{position} is @code{nil}, @var{marker} is made to point nowhere.
+Then it no longer slows down editing in any buffer.  If @var{position}
+is less than 1, @var{marker} is moved to the beginning of @var{buffer}.
+If @var{position} is greater than the size of @var{buffer}, @var{marker}
+is moved to the end of @var{buffer}.
+
+The value returned is @var{marker}.
+
+@example
+@group
+(setq m (point-marker))
+     @result{} #<marker at 4714 in markers.texi>
+@end group
+@group
+(set-marker m 55)
+     @result{} #<marker at 55 in markers.texi>
+@end group
+@group
+(setq b (get-buffer "foo"))
+     @result{} #<buffer foo>
+@end group
+@group
+(set-marker m 0 b)
+     @result{} #<marker at 1 in foo>
+@end group
+@end example
+@end defun
+
+@defun move-marker marker position &optional buffer
+This is another name for @code{set-marker}.
+@end defun
+
+@node The Mark
+@section The Mark
+@cindex mark, the
+@cindex mark ring
+@cindex global mark ring
+
+  One special marker in each buffer is designated @dfn{the mark}.  It
+records a position for the user for the sake of commands such as
+@kbd{C-w} and @kbd{C-x @key{TAB}}.  Lisp programs should set the mark
+only to values that have a potential use to the user, and never for
+their own internal purposes.  For example, the @code{replace-regexp}
+command sets the mark to the value of point before doing any
+replacements, because this enables the user to move back there
+conveniently after the replace is finished.
+
+  Once the mark ``exists'' in a buffer, it normally never ceases to
+exist.  However, it may become @dfn{inactive}, and usually does so
+after each command (other than simple motion commands and some
+commands that explicitly activate the mark).  When the mark is active,
+the region between point and the mark is called the @dfn{active region}
+and is highlighted specially.
+
+  Many commands are designed so that when called interactively they
+operate on the text between point and the mark.  Such commands work
+only when an active region exists, i.e. when the mark is active.
+(The reason for this is to prevent you from accidentally deleting
+or changing large chunks of your text.) If you are writing such
+a command, don't examine the mark directly; instead, use
+@code{interactive} with the @samp{r} specification.  This provides the
+values of point and the mark as arguments to the command in an
+interactive call, but permits other Lisp programs to specify arguments
+explicitly, and automatically signals an error if the command is called
+interactively when no active region exists.  @xref{Interactive Codes}.
+
+  Each buffer has its own value of the mark that is independent of the
+value of the mark in other buffers. (When a buffer is created, the mark
+exists but does not point anywhere.  We consider this state as ``the
+absence of a mark in that buffer.'') However, only one active region can
+exist at a time.  Activating the mark in one buffer automatically
+deactivates an active mark in any other buffer.  Note that the user can
+explicitly activate a mark at any time by using the command
+@code{activate-region} (normally bound to @kbd{M-C-z}) or by using the
+command @code{exchange-point-and-mark} (normally bound to @kbd{C-x C-x}),
+which has the side effect of activating the mark.
+
+  Some people do not like active regions, so they disable this behavior
+by setting the variable @code{zmacs-regions} to @code{nil}.  This makes
+the mark always active (except when a buffer is just created and the
+mark points nowhere), and turns off the highlighting of the region
+between point and the mark.  Commands that explicitly retrieve the value
+of the mark should make sure that they behave correctly and consistently
+irrespective of the setting of @code{zmacs-regions}; some primitives are
+provided to ensure this behavior.
+
+  In addition to the mark, each buffer has a @dfn{mark ring} which is a
+list of markers containing previous values of the mark.  When editing
+commands change the mark, they should normally save the old value of the
+mark on the mark ring.  The variable @code{mark-ring-max} specifies the
+maximum number of entries in the mark ring; once the list becomes this
+long, adding a new element deletes the last element.
+
+@defun mark &optional force buffer
+@cindex current buffer mark
+This function returns @var{buffer}'s mark position as an integer.
+@var{buffer} defaults to the current buffer if omitted.
+
+If the mark is inactive, @code{mark} normally returns @code{nil}.
+However, if @var{force} is non-@code{nil}, then @code{mark} returns the
+mark position anyway---or @code{nil}, if the mark is not yet set for
+the buffer.
+
+(Remember that if @code{zmacs-regions} is @code{nil}, the mark is
+always active as long as it exists, and the @var{force} argument
+will have no effect.)
+
+If you are using this in an editing command, you are most likely making
+a mistake; see the documentation of @code{set-mark} below.
+@end defun
+
+@defun mark-marker &optional force buffer
+This function returns @var{buffer}'s mark.  @var{buffer} defaults to the
+current buffer if omitted.  This is the very marker that records the
+mark location inside XEmacs, not a copy.  Therefore, changing this
+marker's position will directly affect the position of the mark.  Don't
+do it unless that is the effect you want.
+
+If the mark is inactive, @code{mark-marker} normally returns @code{nil}.
+However, if @var{force} is non-@code{nil}, then @code{mark-marker}
+returns the mark anyway.
+@example
+@group
+(setq m (mark-marker))
+     @result{} #<marker at 3420 in markers.texi>
+@end group
+@group
+(set-marker m 100)
+     @result{} #<marker at 100 in markers.texi>
+@end group
+@group
+(mark-marker)
+     @result{} #<marker at 100 in markers.texi>
+@end group
+@end example
+
+Like any marker, this marker can be set to point at any buffer you like.
+We don't recommend that you make it point at any buffer other than the
+one of which it is the mark.  If you do, it will yield perfectly
+consistent, but rather odd, results.
+@end defun
+
+@ignore
+@deffn Command set-mark-command jump
+If @var{jump} is @code{nil}, this command sets the mark to the value
+of point and pushes the previous value of the mark on the mark ring.  The
+message @samp{Mark set} is also displayed in the echo area.
+
+If @var{jump} is not @code{nil}, this command sets point to the value
+of the mark, and sets the mark to the previous saved mark value, which
+is popped off the mark ring.
+
+This function is @emph{only} intended for interactive use.
+@end deffn
+@end ignore
+
+@defun set-mark position &optional buffer
+This function sets @code{buffer}'s mark to @var{position}, and activates
+the mark.  @var{buffer} defaults to the current buffer if omitted.  The
+old value of the mark is @emph{not} pushed onto the mark ring.
+
+@strong{Please note:} Use this function only if you want the user to
+see that the mark has moved, and you want the previous mark position to
+be lost.  Normally, when a new mark is set, the old one should go on the
+@code{mark-ring}.  For this reason, most applications should use
+@code{push-mark} and @code{pop-mark}, not @code{set-mark}.
+
+Novice XEmacs Lisp programmers often try to use the mark for the wrong
+purposes.  The mark saves a location for the user's convenience.  An
+editing command should not alter the mark unless altering the mark is
+part of the user-level functionality of the command.  (And, in that
+case, this effect should be documented.)  To remember a location for
+internal use in the Lisp program, store it in a Lisp variable.  For
+example:
+
+@example
+@group
+(let ((start (point)))
+  (forward-line 1)
+  (delete-region start (point))).
+@end group
+@end example
+@end defun
+
+@deffn Command exchange-point-and-mark &optional dont-activate-region
+This function exchanges the positions of point and the mark.
+It is intended for interactive use.  The mark is also activated
+unless @var{dont-activate-region} is non-@code{nil}.
+@end deffn
+
+@defun push-mark &optional position nomsg activate buffer
+This function sets @var{buffer}'s mark to @var{position}, and pushes a
+copy of the previous mark onto @code{mark-ring}.  @var{buffer} defaults
+to the current buffer if omitted.  If @var{position} is @code{nil}, then
+the value of point is used.  @code{push-mark} returns @code{nil}.
+
+If the last global mark pushed was not in @var{buffer}, also push
+@var{position} on the global mark ring (see below).
+
+The function @code{push-mark} normally @emph{does not} activate the
+mark.  To do that, specify @code{t} for the argument @var{activate}.
+
+A @samp{Mark set} message is displayed unless @var{nomsg} is
+non-@code{nil}.
+@end defun
+
+@defun pop-mark
+This function pops off the top element of @code{mark-ring} and makes
+that mark become the buffer's actual mark.  This does not move point in
+the buffer, and it does nothing if @code{mark-ring} is empty.  It
+deactivates the mark.
+
+The return value is not meaningful.
+@end defun
+
+@defvar mark-ring
+The value of this buffer-local variable is the list of saved former
+marks of the current buffer, most recent first.
+
+@example
+@group
+mark-ring
+@result{} (#<marker at 11050 in markers.texi>
+    #<marker at 10832 in markers.texi>
+    @dots{})
+@end group
+@end example
+@end defvar
+
+@defopt mark-ring-max
+The value of this variable is the maximum size of @code{mark-ring}.  If
+more marks than this are pushed onto the @code{mark-ring},
+@code{push-mark} discards an old mark when it adds a new one.
+@end defopt
+
+In additional to a per-buffer mark ring, there is a @dfn{global mark
+ring}.  Marks are pushed onto the global mark ring the first time you
+set a mark after switching buffers.
+
+@defvar global-mark-ring
+The value of this variable is the list of saved former global marks,
+most recent first.
+@end defvar
+
+@defopt mark-ring-max
+The value of this variable is the maximum size of
+@code{global-mark-ring}.  If more marks than this are pushed onto the
+@code{global-mark-ring}, @code{push-mark} discards an old mark when it
+adds a new one.
+@end defopt
+
+@deffn Command pop-global-mark
+This function pops a mark off the global mark ring and jumps to that
+location.
+@end deffn
+
+@node The Region
+@section The Region
+@cindex region, the
+
+  The text between point and the mark is known as @dfn{the region}.
+Various functions operate on text delimited by point and the mark, but
+only those functions specifically related to the region itself are
+described here.
+
+  When @code{zmacs-regions} is non-@code{nil} (this is the default), the
+concept of an @dfn{active region} exists.  The region is active when the
+corresponding mark is active.  Note that only one active region at a
+time can exist---i.e. only one buffer's region is active at a time.
+@xref{The Mark}, for more information about active regions.
+
+@defopt zmacs-regions
+If non-@code{nil} (the default), active regions are used.  @xref{The Mark},
+for a detailed explanation of what this means.
+@end defopt
+
+  A number of functions are provided for explicitly determining the
+bounds of the region and whether it is active.  Few programs need to use
+these functions, however.  A command designed to operate on a region
+should normally use @code{interactive} with the @samp{r} specification
+to find the beginning and end of the region.  This lets other Lisp
+programs specify the bounds explicitly as arguments and automatically
+respects the user's setting for @code{zmacs-regions}.
+(@xref{Interactive Codes}.)
+
+@defun region-beginning &optional buffer
+This function returns the position of the beginning of @var{buffer}'s
+region (as an integer).  This is the position of either point or the
+mark, whichever is smaller.  @var{buffer} defaults to the current buffer
+if omitted.
+
+If the mark does not point anywhere, an error is signaled.  Note that
+this function ignores whether the region is active.
+@end defun
+
+@defun region-end &optional buffer
+This function returns the position of the end of @var{buffer}'s region
+(as an integer).  This is the position of either point or the mark,
+whichever is larger.  @var{buffer} defaults to the current buffer if
+omitted.
+
+If the mark does not point anywhere, an error is signaled.  Note that
+this function ignores whether the region is active.
+@end defun
+
+@defun region-exists-p
+This function is non-@code{nil} if the region exists.  If active regions
+are in use (i.e. @code{zmacs-regions} is true), this means that the
+region is active.  Otherwise, this means that the user has pushed a mark
+in this buffer at some point in the past.  If this function returns @code{nil},
+a function that uses the @samp{r} interactive specification will cause
+an error when called interactively.
+@end defun
+
+@defun region-active-p
+If @code{zmacs-regions} is true, this is equivalent to
+@code{region-exists-p}.  Otherwise, this function always returns false.
+This function is used by commands such as @code{fill-paragraph-or-region}
+and @code{capitalize-region-or-word}, which operate either on the active
+region or on something else (e.g. the word or paragraph at point).
+@end defun
+
+@defvar zmacs-region-stays
+If a command sets this variable to true, the currently active region
+will remain activated when the command finishes. (Normally the region is
+deactivated when each command terminates.) If @code{zmacs-regions} is
+false, however, this has no effect.  Under normal circumstances, you do
+not need to set this; use the interactive specification @samp{_}
+instead, if you want the region to remain active.
+@end defvar
+
+@defun zmacs-activate-region
+This function activates the region in the current buffer (this is
+equivalent to activating the current buffer's mark).  This will normally
+also highlight the text in the active region and set
+@code{zmacs-region-stays} to @code{t}. (If @code{zmacs-regions} is
+false, however, this function has no effect.)
+@end defun
+
+@defun zmacs-deactivate-region
+This function deactivates the region in the current buffer (this is
+equivalent to deactivating the current buffer's mark).  This will
+normally also unhighlight the text in the active region and set
+@code{zmacs-region-stays} to @code{nil}. (If @code{zmacs-regions} is
+false, however, this function has no effect.)
+@end defun
+
+@defun zmacs-update-region
+This function updates the active region, if it's currently active.  (If
+there is no active region, this function does nothing.) This has the
+effect of updating the highlighting on the text in the region; but you
+should never need to call this except under rather strange
+circumstances.  The command loop automatically calls it when
+appropriate.  Calling this function will call the hook
+@code{zmacs-update-region-hook}, if the region is active.
+@end defun
+
+@defvar zmacs-activate-region-hook
+This normal hook is called when a region becomes active. (Usually this
+happens as a result of a command that activates the region, such as
+@code{set-mark-command}, @code{activate-region}, or
+@code{exchange-point-and-mark}.) Note that calling
+@file{zmacs-activate-region} will call this hook, even if the region is
+already active.  If @code{zmacs-regions} is false, however, this hook
+will never get called under any circumstances.
+@end defvar
+
+@defvar zmacs-deactivate-region-hook
+This normal hook is called when an active region becomes inactive.
+(Calling @file{zmacs-deactivate-region} when the region is inactive will
+@emph{not} cause this hook to be called.)  If @code{zmacs-regions} is
+false, this hook will never get called.
+@end defvar
+
+@defvar zmacs-update-region-hook
+This normal hook is called when an active region is "updated" by
+@code{zmacs-update-region}.  This normally gets called at the end
+of each command that sets @code{zmacs-region-stays} to @code{t},
+indicating that the region should remain activated.  The motion
+commands do this.
+@end defvar
+
+

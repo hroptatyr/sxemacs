@@ -1,0 +1,3105 @@
+2004-12-05  Vin Shelton <acs@xemacs.org>
+
+	* XEmacs 21.4.16 is released
+
+2003-07-18  Alexey Mahotkin  <alexm@hsys.msk.ru>
+
+	* lispref/windows.texi (Basic Windows): Fix typo.
+
+2004-09-08  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lispref/searching.texi (Syntax of Regexps): Add example of use
+	of shy groups in variable subexpression, correct rumor that there
+	may be substantial performance gain.
+
+2004-08-13  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lispref/positions.texi (Text Lines): makeinfo doesn't like Note:.
+
+2004-03-31  Stephen J. Turnbull  <turnbull@sk.tsukuba.ac.jp>
+
+	* xemacs/help.texi (Misc Help): Info-goto-emacs-key-command-node
+	to function index.  Document Info-goto-emacs-command-node.
+
+2004-06-29  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* internals/internals.texi (Modules for Other Aspects of the Lisp
+	Interpreter and Object System): Add description of Sextword syntax
+	class (now obsolete).
+
+2004-06-20  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* internals/internals.texi (Techniques for XEmacs Developers): Be
+	specific when discussing optimization.
+	(Techniques for XEmacs Developers): Fragments that are meaningless
+	by themselves or contain placeholders should be @samp, not @code.
+	(Modules for Regression Testing): Add tag-tests.el to list.
+
+2004-07-05  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs-faq.texi (Q3.10.2): Mention that `pending-delete' is in
+	the "pc" package.
+
+2004-06-07  Jerry James  <james@xemacs.org>
+
+	* lispref/modes.texi (Major Modes): Document -mode functions, and
+	the use of a nil argument to defined-derived mode.
+	* lispref/modes.texi (Major Mode Conventions): Describe the use of
+	delay-mode-hooks and define-derived-mode.
+	* lispref/modes.texi (Derived Modes): Warn against the use of
+	interactive specs in derived mode definitions.
+	* lispref/modes.texi (Hooks): Document run-mode-hooks,
+	delay-mode-hooks, run-hook-with-args,
+	run-hook-with-args-until-failure, and
+	run-hook-with-args-until-success.
+
+2004-02-02  Vin Shelton <acs@xemacs.org>
+
+	* XEmacs 21.4.15 is released
+
+2004-01-27  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lispref/lispref.texi (Top): Pluralize node name Specifier Examples.
+	* lispref/specifiers.texi: Synch to 21.5 where appropriate.
+
+2003-11-04  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs-faq.texi: Fix Tony Rossini's address.
+
+2004-01-25  Steve Youngs  <youngs@xemacs.org>
+
+	* xemacs-faq.texi (Q2.0.2): Rewrite, mentioning the correct way to
+	remove a package.
+	(Q3.8.2): big-menubar is in the edit-utils package.
+	(Q4.3.2): Add a comment about not needing TM for things like Gnus,
+	MH-E and VM.
+	(Q5.3.3): State correct location of ps-print.el.
+
+	* xemacs/packages.texi (Packages): Remove "Creating Packages" menu
+	entry.
+	(Package Terminology): Whitespace clean up.
+	(Installing Packages): Whitespace clean up and add some @code
+	formatters. 
+	Re-organise the menu so that installation via PUI is first and
+	Sumo is last.
+	(Automatically): mule-base is no longer a requirement for using
+	PUI.
+	Mention optionally requiring mailcrypt.
+	(Note): Removed.
+	(Manually): Move to below the PUI installation method.
+	(Sumo): Move to below the manual installation method.
+	(Which Packages): Add mailcrypt.
+	(Building Packages): Remove duplicated stuff that is in
+	lispref/packaging.texi, xref to it instead.
+	(Local.rules File): xref to the appropriate node in
+	lispref/packaging.texi. 
+	(Available Packages): Update to current reality.
+	(all): Removed.
+	(srckit): Removed.
+	(binkit): Removed.
+	
+	* xemacs/reading.texi (Reading Mail): Mention Gnus and MEW.
+
+	* new-users-guide/custom2.texi (Init File): big-menubar.el is in
+	the edit-utils package.
+
+	* lispref/packaging.texi (Packaging):
+	(The User View):
+	(The Library Maintainer View):
+	(Infrastructure):
+	(Control Files):
+	(Obtaining):
+	(The Package Release Engineer View):
+	(Package Terminology):
+	(Building Packages):
+	(Makefile Targets):
+	(packages): New.
+	(Local.rules File):
+	(XEMACS_PACKAGES): Removed.
+	(XEMACS_INSTALLED_PACKAGES_ROOT): New.
+	(NONMULE_PACKAGES): New.
+	(EXCLUDES): New.
+	(Creating Packages):
+	(BATCH): New.
+	(VERSION): Removed.
+	(AUTHOR_VERSION): Removed.
+	(MAINTAINER): Removed.
+	(PACKAGE): Removed.
+	(PKG_TYPE): Removed.
+	(REQUIRES): Removed.
+	(CATEGORY): Removed.
+	(ELS): Removed.
+	(ELCS): Removed.
+	(all): Removed.
+	(srckit): Removed.
+	(binkit): Removed.
+	(are): New.
+	(STANDARD_DOCS): New.
+	(ELCS_1_DEST): New.
+	(example): New.
+	(PACKAGE_SUPPRESS): New.
+	(EXPLICIT_DOCS): New.
+	(DATA_DEST): New.
+	(Documenting Packages):
+
+	Not quite a total rewrite, but a fairly thorough audit
+	nonetheless.
+
+2003-08-15  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* internals/internals.texi: Update copyright notice.
+	(GCPROing): Add missing period.
+	(Adding Global Lisp Variables): general.c -> general-slots.h.
+	(A Reader's Guide to XEmacs Coding Conventions): New node.
+
+2003-10-22  Ilya N. Golubev  <gin@mo.msk.ru>
+
+	* custom.texi (The Init File):
+	* xemacs-faq.texi (Q2.1.3):
+	(Q2.1.5):
+	* internals/internals.texi (Modules for Internationalization):
+	* lispref/display.texi (Beeping):
+	* lispref/ldap.texi (Encoder/Decoder Functions):
+	* lispref/markers.texi (The Mark):
+	(The Region):
+	* lispref/menus.texi (Menu Accelerator Functions):
+	* lispref/numbers.texi (Math Functions):
+	* lispref/packaging.texi (package-compile.el):
+	(Makefile Targets):
+	(Local.rules File):
+	* lispref/postgresql.texi (libpq Lisp Symbols and DataTypes):
+	(libpq Lisp Variables):
+	(Synchronous Interface Functions):
+	(Other libpq Functions):
+	* new-users-guide/custom2.texi (Init File):
+	(Setting Variables):
+	* new-users-guide/files.texi (File Names):
+	(Saving Files):
+	* new-users-guide/search.texi (Search and Replace):
+	* xemacs/custom.texi (X Resources):
+	Fix up erroneous uses of @var instead of @code for the names of
+	particular variables in programming languages.
+
+2003-10-20  Ilya N. Golubev  <gin@mo.msk.ru>
+
+	* lispref/tips.texi (Style Tips): Note disabling undo in temporary
+	buffers.
+
+2003-10-16  Ilya N. Golubev  <gin@mo.msk.ru>
+
+	* lispref/tips.texi (Comment Tips): Typo fix.
+
+2003-09-22  Adrian Aichner  <adrian@xemacs.org>
+
+	* lispref/backups.texi (Reverting): Fix the PRINTED-MANUAL-TITLE
+	argument for a cross reference to  "The XEmacs User's Manual".
+
+2003-09-03  Vin Shelton <acs@xemacs.org>
+
+	* XEmacs 21.4.14 is released
+
+2003-07-31  René Kyllingstad  <listmailxemacs@kyllingstad.com>
+
+	* lispref/display.texi (Invisible Text):
+          mention line-move-ignore-invisible.
+	* lispref/extents.texi (Extent Properties):
+          end-glyph will still be displayed when invisible is set.
+	* lispref/extents.texi (Extents and Events):
+          only begin-glyph is highlighted.
+
+2003-08-12  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs-faq.texi (Q1.3.8): Fix typo, note errorneous recognition.
+
+2003-08-05  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lispref/packaging.texi (Creating Packages):
+	* xemacs/packages.texi (Creating Packages):
+	Style guideline for package-info.in description.
+
+2003-06-30  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs-faq.texi (Q3.2.2): Fix typo.
+
+2003-06-17  Vin Shelton  <acs@xemacs.org>
+
+	* xemacs-faq.texi: Sync up with latest version from 21.5.
+
+2003-04-28  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs-faq.texi (Q6.4.3): New: auxiliary programs for Windows.
+
+2003-05-25  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.4.13 is released
+
+2003-03-20  Martin Buchholz  <martin@xemacs.org>
+
+	* xemacs-faq.texi: Fix minor typo.
+
+2003-03-19  Vin Shelton  <acs@xemacs.org>
+
+	* widget.texi: Crib Stephen's updates and Ben's fixes en masse
+	from 21.5.
+
+2003-03-18  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/frame.texi (Gutter Basics): Describe common options for
+	buffers tab control.
+
+2003-02-03  Steve Youngs  <youngs@xemacs.org>
+
+	* xemacs/packages.texi (Local.rules File): Update to reflect Ben's
+	recent dabble into the packages.
+
+2003-02-11  Adrian Aichner  <adrian@xemacs.org>
+
+	* lispref/backups.texi (Auto-Saving): Fix auto-save xref to user
+	manual.
+
+2003-01-15  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.12 "Portable Code" is released.
+
+2003-01-03  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.11 "Native Windows TTY Support" is released.
+
+2003-01-02  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* internals/internals.texi (How Lisp Objects Are Represented in	C):
+	Deprecate --use-union-type except for static error checking.
+
+2002-12-27  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* internals/internals.texi (Regression Testing XEmacs): Hints for
+	test design.
+
+2002-10-29  Ville Skyttä  <scop@xemacs.org>
+
+	* xemacs-faq.texi (Top):
+	The canonical location for FAQ on the website is /FAQ/.
+
+2002-11-12  Ilya N. Golubev  <gin@mo.msk.ru>
+
+	* xemacs/custom.texi (Face Customization):
+	(Faces):
+	Document face-frob-from-locale-first variable.
+
+2002-11-02  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.10 "Military Intelligence" is released.
+
+2002-10-29  Stephen J. Turnbull  <steve@tleepslib.sk.tsukuba.ac.jp>
+
+	* lispref/compile.texi (Compilation Options): New node.
+	(Byte Compilation): Add it to menu.
+	(Compilation Functions): Minor mods.
+	(Docs and Compilation):
+	(Dynamic Loading):
+	Document some variable defaults.
+
+2002-10-23  Norbert Koch  <nk@viteno.net>
+
+	* xemacs-faq.texi (Q2.0.16): Fix typo in previous commit.
+
+2002-10-18  Stephen J. Turnbull  <steve@tleepslib.sk.tsukuba.ac.jp>
+
+	* xemacs-faq.texi (Q2.0.16): New FAQ on "no cygXpm-noX" fatal error.
+	(Q6.1.4): Document cygXpm-noX.
+
+2002-08-22  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* internals/internals.texi (Regression Testing XEmacs): Document
+	how to skip and warn about tests that depend on packages.
+
+2002-09-22  Ville Skyttä  <ville.skytta@xemacs.org>
+
+	* xemacs/packages.texi (Available Packages): Add fortran-modes,
+	perl-modes, psgml-dtds, python-modes and ruby-modes.
+	Some consistency tweaks.
+
+2002-09-20  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* internals/internals.texi (Techniques for XEmacs Developers):
+	More performance optimization hints.
+	(Modules for Other Aspects of the Lisp Interpreter and Object System):
+	Describe syntax code internals.
+
+	* lispref/syntax.texi (Syntax Basics): XEmacs "20" -> "20 and later".
+	(Syntax Class Table): Deprecate SPC as whitespace designator.
+	(Syntax Flags): Rewrite for `8-bit' comment syntax flags.
+
+2002-08-23  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.9 "Informed Management" is released.
+
+2002-08-20  Simon Josefsson  <simon@xemacs.org>
+
+	* lispref/building.texi (Pure Storage): Deprecate purecopy.
+
+2002-08-16  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* internals/internals.texi (Regression Testing XEmacs): Fix typo.
+
+2002-08-15  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* internals/internals.texi (GCPROing): Add comment on GCPRO.
+	(Regression Testing XEmacs): New node.
+	(Modules for Regression Testing): New node.
+
+2002-08-14  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/packages.texi (Installing Packages): Revert EFS patch.
+
+2002-07-13  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs/packages.texi (Installing Packages): Fix reference to
+	EFS.
+
+2002-08-09  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* packages.texi:  Replace with rev 1.16 (from 21.5 current).
+	Includes changes by Ville Skyttä, Adrian Aichner, Simon
+	Josefsson, and Steve Youngs.
+	
+2002-07-24  Ville Skyttä  <ville.skytta@xemacs.org>
+
+	* term.texi (Input to the inferior): Fix term line/char mode
+	switch keybindings.  Kudos to Jacob P. Burckhardt.
+	
+	* xemacs/misc.texi (Term Mode): Ditto.
+
+2002-07-06  Adrian Aichner  <adrian@xemacs.org>
+
+	* new-users-guide/custom1.texi (Customizing key Bindings): Fix
+	improper use of indef. art. "a".
+
+2002-07-06  Adrian Aichner  <adrian@xemacs.org>
+
+	* lispref/commands.texi (Peeking and Discarding): Ditto.
+	* lispref/customize.texi (Type Keywords): Ditto.
+	* lispref/dragndrop.texi (Drop Interface): Ditto.
+
+2002-07-06  Adrian Aichner  <adrian@xemacs.org>
+
+	* termcap.texi (Clearing): Ditto.
+	* widget.texi (User Interface): Ditto.
+	* widget.texi (Basic Types): Ditto.
+	* widget.texi (group): Ditto.
+
+2002-07-05  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs/menus.texi (Edit Menu): Typo fixes for incorrect use of
+	indef. art. "an".
+
+2002-07-05  Adrian Aichner  <adrian@xemacs.org>
+
+	* lispref/control.texi (Processing of Errors): Ditto.
+	* lispref/mule.texi (ISO 2022): Ditto.
+	* lispref/packaging.texi (Package Terminology): Ditto.
+	* lispref/text.texi (Transformations): Ditto.
+
+2002-07-05  Adrian Aichner  <adrian@xemacs.org>
+
+	* termcap.texi (Naming): Ditto.
+	* texinfo.texi (itemize): Ditto.
+	* texinfo.texi (Tips): Ditto.
+	* widget.texi (Introduction): Ditto.
+	* widget.texi (group): Ditto.
+
+2002-07-02  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs-faq.texi (Top, Customization, Q3.10.5, Q3.10.6):
+	New "killing is slow" FAQ and link updates..
+
+2002-06-17  Jerry James  <james@xemacs.org>
+
+	* emodules.texi (Loading other Modules): Describe why we do not
+	use RTLD_GLOBAL.
+
+2002-06-11  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs-faq.texi (Q1.3.7): Update broken link to russian.el
+	(found by linklint) with Google's help.
+
+2002-05-25  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs/custom.texi (Syntax Entry): Deprecate ` ' in favor of `-'.
+
+2002-06-11  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/mule.texi (Mule Intro): Better title, explanation.
+
+2002-05-23  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lispref/packaging.texi (package-info.in Fields): Typo fix.
+
+2002-05-20  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/files.texi (Reverting): Mention use of prefix argument
+	and mode recalculation.
+
+2002-05-11  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs-faq.texi (Top): Add Q2.0.15 under "Installation and
+	Trouble Shooting".
+	* xemacs-faq.texi (Installation): Add Q2.0.15 to Installation
+	menu.
+	* xemacs-faq.texi (Q2.0.14): Fix unnumberedsubsec argument.
+	* xemacs-faq.texi (Q2.0.15): New.
+
+2002-05-09  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.8 "Honest Recruiter" is released.
+
+2002-05-04  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.7 "Economic Science" is released.
+
+2002-05-04  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* custom.texi (The Init File): Rewrite completely.
+
+2002-03-19  Adrian Aichner  <adrian@xemacs.org>
+
+	* widget.texi (constants): Typo fix.
+
+2002-02-07  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* external-widget.texi (External Client Widget Internals): New node.
+
+2001-11-15  Darryl Okahata  <darrylo@xemacs.org>
+
+	* lispref/glyphs.texi:
+	lispref/lispref.texi: Add examples of how to insert graphics into a
+	buffer.
+	
+2001-12-17  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/packages.texi (Packages):
+	(Package Terminology):
+	Carefully distinguish libraries and packages.
+	(Package Terminology):
+	More careful definitions of ``category'' and ``distribution.''
+	Use ``generic'' instead of ``normal'' (N.B. package tools use
+	``standard''.)
+	(Installing Packages):
+	Use @var to mark variable version strings, not @t or <>.
+	(Sumo):
+	Add disk space estimate when unpacked.
+
+2002-02-06  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs-faq.texi (Q1.3.8, Q1.3.9): Unicode support via Mule-UCS.
+
+2002-02-01  Steve Youngs  <youngs@xemacs.org>
+
+	* xemacs/packages.texi (Removing Packages): The interactive
+	function is 'package-get-delete-package'.
+
+2001-01-24  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs-faq.texi (Q1.0.6): Update mail-to-news gateway information.
+
+2001-11-27  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs-faq.texi: Hyperlink fixes.
+	
+2002-02-04  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs-faq.texi (Q4.7.7): New FAQ on remote files.
+
+2002-01-24  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs-faq.texi (Q1.0.6): Update mail-to-news gateway information.
+
+2002-02-04  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/files.texi (Files):
+	(File Names):
+	Document remote file editing, refer to EFS and TRAMP.
+
+2001-12-17  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.6 "Common Lisp" is released.
+
+2001-12-15  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lispref/packaging.texi (The User's View):
+	Correct description of man subdirectory.
+
+	(The Package Release Engineer's View):
+	(package-compile.el):
+	Change hazmat to useful documentation.
+
+	(Issues):
+	Hazmat removal.
+
+2001-11-27  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lispref/packaging.texi: New file.
+	* lispref/lispref.texi (Top): Add Packaging & subnodes to menus.
+	Include packaging.texi.
+	* lispref/intro.texi (Introduction): Next -> Packaging.
+	* lispref/objects.texi (Lisp Data Types): Previous -> Packaging.
+	* Makefile (lispref-srcs): Depend on lispref/packaging.texi.
+	
+2001-10-23  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.5 "Civil Service" is released.
+
+2001-10-17  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/text.texi (Outline Visibility):  hide-subtree is bound to
+	C-c C-d, not C-c C-h.  Thanks: Keith Browne <kbrowne@legato.com>.
+
+2001-07-25  Jim Horning  <jim.horning@lmco.com>
+
+	* xemacs/packages.texi (Package Terminology):
+	* xemacs/packages.texi (Automatically):
+	In itemize and enumerate lists @item should be on its own line.
+
+2001-09-16  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs-faq.texi (Q4.0.7): Fix link to VM FAQ thanks to word I
+	got from Gregory Neil Shapiro.
+	* xemacs-faq.texi (Q1.3.7): Update moved link.
+	* xemacs-faq.texi (Q7.0.2): Comment out empty list of bullets to
+	avoid HTML error in texi2html translation.
+
+2001-09-15  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs-faq.texi (Q4.6.1): Infodock is now hosted on SourceForge,
+	infodock.com is no more.
+	* xemacs-faq.texi (Q4.7.1): Take auc out of http://sunsite.auc.dk.
+
+2001-09-09  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs-faq.texi (Q1.0.9): Correct link to snapshots as suggested
+	by Robin S. Socha.
+
+2001-07-28  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.4 "Artificial Intelligence" is released.
+
+2001-06-06  Alexey Mahotkin  <alexm@hsys.msk.ru>
+
+	* xemacs/mule.texi: Typo fixes and describe CCL and fonts.
+	* lispref/mule.texi: Typo fixes and describe set-charset-registry.
+
+2001-05-30  Ben Wing  <ben@xemacs.org>
+
+	* xemacs-faq.texi (Top):
+	* xemacs-faq.texi (MS Windows):
+	* xemacs-faq.texi (Q6.0.1):
+	* xemacs-faq.texi (Q6.0.2):
+	* xemacs-faq.texi (Q6.0.3):
+	* xemacs-faq.texi (Q6.0.4):
+	* xemacs-faq.texi (Q6.1.1):
+	* xemacs-faq.texi (Q6.1.4):
+	* xemacs-faq.texi (Q6.1.5):
+	* xemacs-faq.texi (Q6.1.6):
+	* xemacs-faq.texi (Q6.2.1):
+	* xemacs-faq.texi (Q6.2.2):
+	* xemacs-faq.texi (Q6.3.1):
+	* xemacs-faq.texi (Q6.3.2):
+	* xemacs-faq.texi (Q6.3.3):
+	* xemacs-faq.texi (Q6.4.1):
+	* xemacs-faq.texi (Current Events):
+	Major rewrite.
+	Update all MS Windows info to current.
+	Redo section 6.1 almost completely.
+	Incorporate sections 1 and 2 of Hrvoje's FAQ.
+
+2001-05-16  Ben Wing  <ben@xemacs.org>
+
+	* xemacs-faq.texi (Top):
+	* xemacs-faq.texi (Installation):
+	* xemacs-faq.texi (Q2.1.15):
+	* xemacs-faq.texi (Q2.1.18):
+	* xemacs-faq.texi (Q2.1.19):
+	document how to debug X errors
+	
+2001-06-24  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/programs.texi: Add node name (Top) to Ebrowse xref.
+
+2001-07-02  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs-faq.texi (Q1.0.14): Update information following a
+	request by Tom Mostyn.
+
+2001-07-02  Adrian Aichner  <adrian@xemacs.org>
+
+	* lispref\windows.texi (Window Configurations): Fix typos.
+	* lispref\x-windows.texi (Resources): Ditto.
+	* internals\internals.texi (XEmacs From the Inside): Ditto.
+	* emodules.texi (Initialization Mode): Ditto.
+	* xemacs-faq.texi (Q6.3.2): Ditto.
+
+2001-06-10  Ben Wing  <ben@xemacs.org>
+
+	* xemacs-faq.texi (Q1.0.10):
+	* xemacs-faq.texi (Q1.0.11):
+	* xemacs-faq.texi (Q1.0.12):
+	Update sections on Windows and MacOS availability.
+
+2001-06-08  Ben Wing  <ben@xemacs.org>
+
+	* xemacs-faq.texi (Top):
+	* xemacs-faq.texi (MS Windows):
+	* xemacs-faq.texi (Q6.2.1):
+	* xemacs-faq.texi (Q6.2.2):
+	* xemacs-faq.texi (Q6.2.3):
+	* xemacs-faq.texi (Q6.2.4):
+	* xemacs-faq.texi (Q6.2.5):
+	* xemacs-faq.texi (Q6.3.1):
+	* xemacs-faq.texi (Q6.3.2):
+	* xemacs-faq.texi (Q6.3.3):
+	* xemacs-faq.texi (Q6.3.4):
+	* xemacs-faq.texi (Q6.4.1):
+	* xemacs-faq.texi (Q6.4.2):
+	* xemacs-faq.texi (Current Events):
+	* xemacs-faq.texi (Q7.0.1):
+	* xemacs-faq.texi (Q7.0.2):
+	* xemacs-faq.texi (Q7.0.3):
+	* xemacs-faq.texi (Q7.0.4):
+	* xemacs-faq.texi (Q7.0.5):
+	* xemacs-faq.texi (Q7.0.6):
+	Merge in the rest of Hrvoje's Windows FAQ.  Redo section 7
+	to update current reality and add condensed versions of
+	new changes for 21.1 and 21.4. (Not quite done for 21.4.)
+	Lots more Windows updates.
+
+2001-05-29  Alexey Mahotkin  <alexm@hsys.msk.ru>
+
+	* xemacs/custom.texi: Documented keyboard shortcut.
+	* xemacs/mule.texi: Updated to match reality; tiny fixes.
+
+2001-06-02  Simon Josefsson  <simon@josefsson.org>
+
+	* man/internals.texi (Techniques for XEmacs Developers): Fix
+	typo in ./configure line.
+
+2001-05-17  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.3 "Academic Rigor" is released.
+
+2001-05-15  Steve Youngs  <youngs@xemacs.org>
+
+	* xemacs/packages.texi (Local.rules): Update to reflect new dir tree.
+	(Creating Packages): Ditto.
+	(Available Packages): Ditto.
+
+2001-05-10  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.2 "Developer-Friendly Unix APIs" is released.
+
+2001-05-07  Martin Buchholz  <martin@xemacs.org>
+
+	* make-stds.texi: Support makeinfo 3.12
+
+2001-04-26  John H. Palmieri  <palmieri@math.washington.edu>
+
+	* xemacs/frame.texi (XEmacs under X): Document default-frame-plist
+	rather than default-frame-alist.
+
+2001-04-19  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.1 "Copyleft" is released.
+
+2001-04-16  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.0 "Solid Vapor" is released.
+
+2001-04-14  Gunnar Evermann  <ge204@eng.cam.ac.uk>
+
+        * xemacs/building.texi : Correct documentation of eval-expression.
+        By default it is bound to M-: and not M-ESC.
+
+        * xemacs/custom.texi (Init Examples):
+        * xemacs/search.texi (Query Replace): C-x ESC -> C-x ESC ESC
+
+        * xemacs/text.texi (Paragraphs): M-[ -> M-{  and M-] -> M-}
+        From Klaus Frank <klausf@i3.informatik.rwth-aachen.de>
+
+2001-04-15  Ben Wing  <ben@xemacs.org>
+
+	* xemacs-faq.texi (Q1.0.1):
+	* xemacs-faq.texi (Q1.0.2):
+	Rewrite description of XEmacs to match what's on web page,
+	in about.el.
+
+2001-04-14  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.2.47 "Zephir" is released.
+
+2001-03-30  Ben Wing  <ben@xemacs.org>
+
+	* internals\internals.texi:
+	* internals\internals.texi (Top):
+	* internals\internals.texi (Lucid Emacs):
+	* internals\internals.texi (XEmacs):
+	* internals\internals.texi (XEmacs From the Outside):
+	Bump version to 1.4 and fix this everywhere.  Document all
+	XEmacs releases up through 21.2.46.
+
+2001-03-16  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lispref/postgresql.texi (libpq Lisp Symbols and DataTypes): Save
+	result of INSERT in R in pq-cmd-status example.
+
+2001-03-21  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.46 "Urania" is released.
+
+2001-03-08  Ben Wing  <ben@xemacs.org>
+
+	* internals\internals.texi (Top):
+	* internals\internals.texi (A History of Emacs):
+	* internals\internals.texi (Through Version 18):
+	* internals\internals.texi (Lucid Emacs):
+	* internals\internals.texi (GNU Emacs 19):
+	* internals\internals.texi (GNU Emacs 20):
+	* internals\internals.texi (XEmacs From the Outside):
+	* internals\internals.texi (The Lisp Language):
+	* internals\internals.texi (XEmacs From the Perspective of Building):
+	* internals\internals.texi (XEmacs From the Inside):
+	* internals\internals.texi (The XEmacs Object System (Abstractly Speaking)):
+	* internals\internals.texi (How Lisp Objects Are Represented in C):
+	* internals\internals.texi (Rules When Writing New C Code):
+	* internals\internals.texi (General Coding Rules):
+	* internals\internals.texi (Writing Lisp Primitives):
+	* internals\internals.texi (Writing Good Comments):
+	* internals\internals.texi (Adding Global Lisp Variables):
+	* internals\internals.texi (Proper Use of Unsigned Types):
+	* internals\internals.texi (Coding for Mule):
+	* internals\internals.texi (Character-Related Data Types):
+	* internals\internals.texi (Working With Character and Byte Positions):
+	* internals\internals.texi (Conversion to and from External Data):
+	* internals\internals.texi (General Guidelines for Writing Mule-Aware Code):
+	* internals\internals.texi (An Example of Mule-Aware Code):
+	* internals\internals.texi (Techniques for XEmacs Developers):
+	* internals\internals.texi (A Summary of the Various XEmacs Modules):
+	* internals\internals.texi (Low-Level Modules):
+	* internals\internals.texi (Basic Lisp Modules):
+	* internals\internals.texi (Modules for Standard Editing Operations):
+	* internals\internals.texi (Editor-Level Control Flow Modules):
+	* internals\internals.texi (Modules for the Basic Displayable Lisp Objects):
+	* internals\internals.texi (Modules for other Display-Related Lisp Objects):
+	* internals\internals.texi (Modules for the Redisplay Mechanism):
+	* internals\internals.texi (Modules for Interfacing with the File System):
+	* internals\internals.texi (Modules for Other Aspects of the Lisp Interpreter and Object System):
+	* internals\internals.texi (Modules for Interfacing with the Operating System):
+	* internals\internals.texi (Modules for Interfacing with X Windows):
+	* internals\internals.texi (Allocation of Objects in XEmacs Lisp):
+	* internals\internals.texi (Introduction to Allocation):
+	* internals\internals.texi (Garbage Collection):
+	* internals\internals.texi (GCPROing):
+	* internals\internals.texi (Garbage Collection - Step by Step):
+	* internals\internals.texi (Invocation):
+	* internals\internals.texi (garbage_collect_1):
+	* internals\internals.texi (mark_object):
+	* internals\internals.texi (gc_sweep):
+	* internals\internals.texi (sweep_lcrecords_1):
+	* internals\internals.texi (compact_string_chars):
+	* internals\internals.texi (sweep_strings):
+	* internals\internals.texi (sweep_bit_vectors_1):
+	* internals\internals.texi (Integers and Characters):
+	* internals\internals.texi (Allocation from Frob Blocks):
+	* internals\internals.texi (lrecords):
+	* internals\internals.texi (Low-level allocation):
+	* internals\internals.texi (Cons):
+	* internals\internals.texi (Vector):
+	* internals\internals.texi (Bit Vector):
+	* internals\internals.texi (Symbol):
+	* internals\internals.texi (Marker):
+	* internals\internals.texi (String):
+	* internals\internals.texi (Dumping):
+	* internals\internals.texi (Overview):
+	* internals\internals.texi (Data descriptions):
+	* internals\internals.texi (Dumping phase):
+	* internals\internals.texi (Object inventory):
+	* internals\internals.texi (Address allocation):
+	* internals\internals.texi (The header):
+	* internals\internals.texi (Data dumping):
+	* internals\internals.texi (Pointers dumping):
+	* internals\internals.texi (Reloading phase):
+	* internals\internals.texi (Events and the Event Loop):
+	* internals\internals.texi (Introduction to Events):
+	* internals\internals.texi (Main Loop):
+	* internals\internals.texi (Specifics of the Event Gathering Mechanism):
+	* internals\internals.texi (Specifics About the Emacs Event):
+	* internals\internals.texi (The Event Stream Callback Routines):
+	* internals\internals.texi (Other Event Loop Functions):
+	* internals\internals.texi (Converting Events):
+	* internals\internals.texi (Evaluation; Stack Frames; Bindings):
+	* internals\internals.texi (Evaluation):
+	* internals\internals.texi (Dynamic Binding; The specbinding Stack; Unwind-Protects):
+	* internals\internals.texi (Simple Special Forms):
+	* internals\internals.texi (Symbols and Variables):
+	* internals\internals.texi (Introduction to Symbols):
+	* internals\internals.texi (Obarrays):
+	* internals\internals.texi (Buffers and Textual Representation):
+	* internals\internals.texi (Introduction to Buffers):
+	* internals\internals.texi (The Text in a Buffer):
+	* internals\internals.texi (Buffer Lists):
+	* internals\internals.texi (Markers and Extents):
+	* internals\internals.texi (Bufbytes and Emchars):
+	* internals\internals.texi (MULE Character Sets and Encodings):
+	* internals\internals.texi (Character Sets):
+	* internals\internals.texi (Encodings):
+	* internals\internals.texi (Japanese EUC (Extended Unix Code)):
+	* internals\internals.texi (JIS7):
+	* internals\internals.texi (Internal Mule Encodings):
+	* internals\internals.texi (Internal String Encoding):
+	* internals\internals.texi (Internal Character Encoding):
+	* internals\internals.texi (The Lisp Reader and Compiler):
+	* internals\internals.texi (Lstreams):
+	* internals\internals.texi (Creating an Lstream):
+	* internals\internals.texi (Lstream Types):
+	* internals\internals.texi (Lstream Functions):
+	* internals\internals.texi (Consoles; Devices; Frames; Windows):
+	* internals\internals.texi (Introduction to Consoles; Devices; Frames; Windows):
+	* internals\internals.texi (Point):
+	* internals\internals.texi (Window Hierarchy):
+	* internals\internals.texi (The Redisplay Mechanism):
+	* internals\internals.texi (Critical Redisplay Sections):
+	* internals\internals.texi (Line Start Cache):
+	* internals\internals.texi (Extents):
+	* internals\internals.texi (Introduction to Extents):
+	* internals\internals.texi (Extent Ordering):
+	* internals\internals.texi (Format of the Extent Info):
+	* internals\internals.texi (Zero-Length Extents):
+	* internals\internals.texi (Mathematics of Extent Ordering):
+	* internals\internals.texi (Faces):
+	* internals\internals.texi (Glyphs):
+	* internals\internals.texi (Specifiers):
+	* internals\internals.texi (Menus):
+	* internals\internals.texi (Subprocesses):
+	* internals\internals.texi (Interface to the X Window System):
+	* internals\internals.texi (Lucid Widget Library):
+	* internals\internals.texi (Generic Widget Interface):
+	* internals\internals.texi (Scrollbars):
+	* internals\internals.texi (Menubars):
+	* internals\internals.texi (Checkboxes and Radio Buttons):
+	* internals\internals.texi (Progress Bars):
+	* internals\internals.texi (Tab Controls):
+	Add more index entries.  Add sections on comments and unsigned types.
+
+2001-03-08  Ben Wing  <ben@xemacs.org>
+
+	* make-stds.texi (Makefile Basics):
+	* make-stds.texi (Command Variables):
+	* make-stds.texi (Directory Variables):
+	* make-stds.texi (Standard Targets):
+	* standards.texi:
+	* standards.texi (Top):
+	* standards.texi (Preface):
+	* standards.texi (Legal Issues):
+	* standards.texi (Reading Non-Free Code):
+	* standards.texi (Contributions):
+	* standards.texi (Trademarks):
+	* standards.texi (Design Advice):
+	* standards.texi (Source Language):
+	* standards.texi (Compatibility):
+	* standards.texi (Using Extensions):
+	* standards.texi (Standard C):
+	* standards.texi (Program Behavior):
+	* standards.texi (Semantics):
+	* standards.texi (Libraries):
+	* standards.texi (Errors):
+	* standards.texi (User Interfaces):
+	* standards.texi (Graphical Interfaces):
+	* standards.texi (Command-Line Interfaces):
+	* standards.texi (Option Table):
+	* standards.texi (Memory Usage):
+	* standards.texi (File Usage):
+	* standards.texi (Formatting):
+	* standards.texi (Comments):
+	* standards.texi (Syntactic Conventions):
+	* standards.texi (Names):
+	* standards.texi (System Portability):
+	* standards.texi (CPU Portability):
+	* standards.texi (System Functions):
+	* standards.texi (Internationalization):
+	* standards.texi (Mmap):
+	* standards.texi (Documentation):
+	* standards.texi (GNU Manuals):
+	* standards.texi (Doc Strings and Manuals):
+	* standards.texi (Manual Structure Details):
+	* standards.texi (License for Manuals):
+	* standards.texi (Manual Credits):
+	* standards.texi (Printed Manuals):
+	* standards.texi (NEWS File):
+	* standards.texi (Change Logs):
+	* standards.texi (Style of Change Logs):
+	* standards.texi (Simple Changes):
+	* standards.texi (Conditional Changes):
+	* standards.texi (Indicating the Part Changed):
+	* standards.texi (Managing Releases):
+	* standards.texi (Configuration):
+	* standards.texi (Releases):
+	* standards.texi (References):
+	* standards.texi (Index):
+	Update to latest GNU version.
+	
+	* xemacs-faq.texi (Q6.3.3):
+	* xemacs-faq.texi (Q6.4.1):
+	Improve questions on current Windows activity.
+
+2001-03-07  Sandra Wambold  <wambold@xemacs.org>
+
+	* xemacs-faq.texi: (Q.1.0.7): changed list archive address
+
+2001-02-25  Ben Wing  <ben@xemacs.org>
+
+	* xemacs-faq.texi (Top):
+	* xemacs-faq.texi (Introduction):
+	* xemacs-faq.texi (Q1.0.1):
+	* xemacs-faq.texi (Q1.0.4):
+	* xemacs-faq.texi (Q1.0.6):
+	* xemacs-faq.texi (Q1.0.10):
+	* xemacs-faq.texi (Q1.2.1):
+	* xemacs-faq.texi (Q1.4.1):
+	* xemacs-faq.texi (Q1.4.2):
+	* xemacs-faq.texi (Q2.0.12):
+	* xemacs-faq.texi (Q2.1.1):
+	* xemacs-faq.texi (Q2.1.2):
+	* xemacs-faq.texi (Q2.1.9):
+	* xemacs-faq.texi (Q2.1.15):
+	* xemacs-faq.texi (Q2.1.19):
+	* xemacs-faq.texi (Customization):
+	* xemacs-faq.texi (Q3.0.1):
+	* xemacs-faq.texi (Q3.0.2):
+	* xemacs-faq.texi (Q3.0.3):
+	* xemacs-faq.texi (Q3.0.7):
+	* xemacs-faq.texi (Q3.1.5):
+	* xemacs-faq.texi (Q3.1.6):
+	* xemacs-faq.texi (Q3.2.1):
+	* xemacs-faq.texi (Q3.2.3):
+	* xemacs-faq.texi (Q3.2.4):
+	* xemacs-faq.texi (Q3.3.1):
+	* xemacs-faq.texi (Q3.3.2):
+	* xemacs-faq.texi (Q3.3.3):
+	* xemacs-faq.texi (Q3.3.4):
+	* xemacs-faq.texi (Q3.3.5):
+	* xemacs-faq.texi (Q3.4.1):
+	* xemacs-faq.texi (Q3.4.2):
+	* xemacs-faq.texi (Q3.5.2):
+	* xemacs-faq.texi (Q3.5.4):
+	* xemacs-faq.texi (key-translation-map): New.
+	* xemacs-faq.texi (Q3.5.5):
+	* xemacs-faq.texi (Q3.5.6):
+	* xemacs-faq.texi (Q3.5.7):
+	* xemacs-faq.texi (Q3.5.8):
+	* xemacs-faq.texi (global-map): Removed.
+	* xemacs-faq.texi (Q3.5.9):
+	* xemacs-faq.texi (Q3.6.1):
+	* xemacs-faq.texi (Q3.6.2):
+	* xemacs-faq.texi (Q3.6.3):
+	* xemacs-faq.texi (Q3.7.6):
+	* xemacs-faq.texi (Q3.7.7):
+	* xemacs-faq.texi (Q3.8.1):
+	* xemacs-faq.texi (Q3.8.2):
+	* xemacs-faq.texi (Q3.8.3):
+	* xemacs-faq.texi (Q3.9.1):
+	* xemacs-faq.texi (Q3.9.4):
+	* xemacs-faq.texi (Q3.10.1):
+	* xemacs-faq.texi (Q3.10.2):
+	* xemacs-faq.texi (Q3.10.3):
+	* xemacs-faq.texi (Q4.0.12):
+	* xemacs-faq.texi (Miscellaneous):
+	* xemacs-faq.texi (Q5.0.1):
+	* xemacs-faq.texi (Q5.0.2):
+	* xemacs-faq.texi (Q5.0.3):
+	* xemacs-faq.texi (Q5.0.4):
+	* xemacs-faq.texi (Q5.0.5):
+	* xemacs-faq.texi (Q5.0.8):
+	* xemacs-faq.texi (Q5.0.9):
+	* xemacs-faq.texi (Q5.0.11):
+	* xemacs-faq.texi (Q5.0.12):
+	* xemacs-faq.texi (Q5.0.13):
+	* xemacs-faq.texi (Q5.0.16):
+	* xemacs-faq.texi (Q5.0.17):
+	* xemacs-faq.texi (Q5.1.9):
+	* xemacs-faq.texi (Q5.1.11):
+	* xemacs-faq.texi (Q5.2.1):
+	* xemacs-faq.texi (Q5.2.2):
+	* xemacs-faq.texi (Q5.3.1):
+	* xemacs-faq.texi (Q5.3.2):
+	* xemacs-faq.texi (Q5.3.4):
+	* xemacs-faq.texi (MS Windows):
+	* xemacs-faq.texi (Q6.0.1):
+	* xemacs-faq.texi (Q6.0.2):
+	* xemacs-faq.texi (Q6.0.3):
+	* xemacs-faq.texi (Q6.0.4):
+	* xemacs-faq.texi (Q6.1.5):
+	* xemacs-faq.texi (Q6.2.3):
+	* xemacs-faq.texi (Q6.3.1):
+
+	Remove most references to XEmacs pre-19.15, since they are way out
+	of date and are cluttering up and confusing many answers.  Update
+	references to .emacs to take into account the new init file
+	location.  Update information about the MS Windows port.  Change
+	description of XEmacs at beginning to match the web site.  Update
+	info about current developers.
+	
+
+2001-02-25  Ben Wing  <ben@xemacs.org>
+
+	* lispref\help.texi (Describing Characters):
+	kp- not kp_.
+	
+2001-02-25  Ben Wing  <ben@xemacs.org>
+
+	* new-users-guide\custom1.texi (Customization Basics):
+	* new-users-guide\custom1.texi (Customizing key Bindings):
+	* new-users-guide\custom1.texi (Customizing Menus):
+	* new-users-guide\custom2.texi (Other Customizations):
+	* new-users-guide\custom2.texi (Setting Variables):
+	* new-users-guide\custom2.texi (Init File):
+	* new-users-guide\xmenu.texi (Options Menu):
+	* new-users-guide\modes.texi (Major Modes):
+	* new-users-guide\modes.texi (Minor Modes):
+	* new-users-guide\new-users-guide.texi (Top):
+	Fix up references to .emacs to take into account init.el.
+	
+2001-02-23  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.45 "Thelxepeia" is released.
+
+2001-02-10  Martin Buchholz  <martin@xemacs.org>
+
+	* xemacs/programs.texi (Tag Syntax): Port to makeinfo 3.
+
+2001-02-08  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.44 "Thalia" is released.
+
+2001-02-04  Steve Youngs  <youngs@xemacs.org>
+
+	* xemacs/xemacs.texi: Update to accomodate new and improved
+	packages.texi.
+
+	* xemacs/packages.texi: Basically, apart from a few things,
+	rewritten from scratch.
+
+2001-01-27  Martin Buchholz  <martin@xemacs.org>
+
+	* lispref/variables.texi (max-specpdl-size): Correct default value.
+	* lispref/eval.texi (max-lisp-eval-depth): Correct default value.
+
+2001-01-26  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.43 "Terspichore" is released.
+
+2001-01-20  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.42 "Poseidon" is released.
+
+2001-01-18  Martin Buchholz  <martin@xemacs.org>
+
+	* xemacs-faq.texi (Q1.0.11): Change XEmacs for MacOS URL.
+
+2001-01-17  Andy Piper  <andy@xemacs.org>
+
+	* internals.texi: some glyph documentation.
+
+2001-01-16  Didier Verna  <didier@xemacs.org>
+
+	* frame.texi (Mode Line Basics): new node ...
+	* frame.texi (GUI Components): ... under this one ...
+	* frame.texi (Scrollbar Basics): ... after this one ...
+	* frame.texi (Toolbar Basics): ... before this one.
+
+2001-01-17  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.41 "Polyhymnia" is released.
+
+2001-01-12  Martin Buchholz  <martin@xemacs.org>
+
+	* internals/internals.texi: A little post-pdump-rename fixup.
+
+2001-01-13  Martin Buchholz  <martin@xemacs.org>
+
+	* internals/internals.texi: See `pdump-rename' in src/ChangeLog.
+
+2001-01-10  Martin Buchholz  <martin@xemacs.org>
+
+	* internals/internals.texi: Update for pdump changes.
+
+2001-01-04  Adrian Aichner  <adrian@xemacs.org>
+
+	* texinfo.texi (Using Texinfo): Change reference from GNU Emacs to
+	XEmacs.
+	* texinfo.texi (First Node): Fixing grammar.
+	* texinfo.texi (Multitable Rows): Change reference from GNU Emacs
+	to XEmacs.
+
+2001-01-08  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.40 is released.
+
+2001-01-06  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* emodules.texi (Required Functions): Xref coding rules for dual-use
+	modules (module and statically linked).  Typo fix.
+
+	* texinfo.texi (ref):  Typo fix.
+
+2000-12-31  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.39 is released.
+
+2000-12-05  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* internals/internals.texi (General Coding Rules): further document
+	usage of symsinit.h.  Reorder slightly.
+
+2000-11-29  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/packages.texi (Creating Packages): new node.
+
+2000-12-05  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.38 is released.
+
+2000-12-01  Martin Buchholz  <martin@xemacs.org>
+
+	* lispref/compile.texi:
+	Document differences between compiler and interpreter.
+
+2000-11-29  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* internals/index.texi:
+	internals/internals.texi:
+	Change "X Windows" to "the X Window System" randomly.
+	* internals/internals.texi (Glyphs): fiddling, move lwlib to new node.
+	(Lucid Widget Library): new node, added new text, ASCII art, subnode
+        structure.
+	* xemacs/frame.texi (GUI Components): new node.
+	* xemacs/packages.texi: minor updates.
+
+2000-11-10  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* info.texi (Creating an Info File): Fix typos in xrefs.
+
+2000-11-08  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/cmdargs.texi (Command Switches):  Add documentation of
+	portable dumper switches.  Other minor edits.
+
+2000-11-21  Martin Buchholz  <martin@xemacs.org>
+
+	* lispref/positions.texi (Word Motion):
+	forward-word arg is now optional.
+	backward-word arg is now optional.
+	Remove vile comment advising lisp programmer to use (forward-word -1)
+	instead of (backward-word 1).
+	* lispref/syntax.texi (Parsing Expressions):
+	Similarly for forward-comment.
+	* lispref/text.texi (Deletion):
+	Similarly for delete-char.
+	Similarly for delete-backward-char.
+
+2000-11-09  Martin Buchholz  <martin@xemacs.org>
+
+	* cl.texi (Assertions):
+	Remove claim that elisp doesn't have continuable errors.
+	Document check-type as being continuable.
+
+2000-11-14  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs/calendar.texi (Calendar/Diary): Correct INFO-FILE-NAME
+	from elisp to lispref and from emacs to xemacs in relevant ?xefs.
+	This should also serve as a reminder for future merges with GNU
+	Emacs.
+	Unify PRINTED-MANUAL-TITLE to "XEmacs Lisp Reference Manual" and
+	"XEmacs User's Manual" for lispref and xemacs respectively.
+
+2000-11-14  Adrian Aichner  <adrian@xemacs.org>
+
+	* lispref/abbrevs.texi (Abbrevs): Ditto.
+	* lispref/backups.texi (Auto-Saving): Ditto.
+	* lispref/backups.texi (Reverting): Ditto.
+	* lispref/display.texi (The Echo Area): Ditto.
+	* lispref/help.texi (Documentation Basics): Ditto.
+	* lispref/help.texi (Help Functions): Ditto.
+	* lispref/keymaps.texi (Scanning Keymaps): Ditto.
+	* lispref/locals.texi (Standard Buffer-Local Variables): Ditto.
+	* lispref/modes.texi (Auto Major Mode): Ditto.
+	* lispref/positions.texi (List Motion): Ditto.
+	* lispref/searching.texi (Regexp Search): Ditto.
+	* lispref/symbols.texi (Symbol Components): Ditto.
+	* lispref/tips.texi (Comment Tips): Ditto.
+	* lispref/tips.texi (Library Headers): Ditto.
+
+2000-11-14  Adrian Aichner  <adrian@xemacs.org>
+
+	* internals/internals.texi (The Buffer Object): Ditto.
+
+2000-11-14  Adrian Aichner  <adrian@xemacs.org>
+
+	* cl.texi (Hash Tables): Ditto.
+	* texinfo.texi (Other Info Files): Ditto.
+	* xemacs-faq.texi (Q1.0.14): Ditto.
+
+2000-11-14  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.37 is released.
+
+2000-10-27  Martin Buchholz  <martin@xemacs.org>
+
+	* xemacs/windows.texi (Other Window):
+
+	* new-users-guide/files.texi (Saving Files):
+	* new-users-guide/search.texi (Search and Replace):
+
+	* lispref/abbrevs.texi (Abbrev Tables):
+	* lispref/abbrevs.texi (Defining Abbrevs):
+	* lispref/abbrevs.texi (Abbrev Files):
+	* lispref/annotations.texi (Annotation Primitives):
+	* lispref/backups.texi (Auto-Saving):
+	* lispref/backups.texi (Reverting):
+	* lispref/buffers.texi (Current Buffer):
+	* lispref/buffers.texi (Buffer Names):
+	* lispref/buffers.texi (Buffer Modification):
+	* lispref/buffers.texi (Read Only Buffers):
+	* lispref/buffers.texi (The Buffer List):
+	* lispref/buffers.texi (Killing Buffers):
+	* lispref/buffers.texi (Indirect Buffers):
+	* lispref/building.texi (Building XEmacs):
+	* lispref/building.texi (Garbage Collection):
+	* lispref/commands.texi (Interactive Call):
+	* lispref/commands.texi (Events):
+	* lispref/commands.texi (Event Predicates):
+	* lispref/commands.texi (Working With Events):
+	* lispref/commands.texi (Converting Events):
+	* lispref/commands.texi (Key Sequence Input):
+	* lispref/commands.texi (Reading One Event):
+	* lispref/commands.texi (Waiting):
+	* lispref/commands.texi (Prefix Command Arguments):
+	* lispref/commands.texi (Recursive Editing):
+	* lispref/compile.texi (Compilation Functions):
+	* lispref/compile.texi (Compiled-Function Objects):
+	* lispref/consoles-devices.texi (Basic Device Functions):
+	* lispref/consoles-devices.texi (Console Types and Device Classes):
+	* lispref/consoles-devices.texi (Connecting to a Console or Device):
+	* lispref/control.texi (Signaling Errors):
+	* lispref/customize.texi (Type Keywords):
+	* lispref/databases.texi (Connecting to a Database):
+	* lispref/databases.texi (Working With a Database):
+	* lispref/databases.texi (Other Database Functions):
+	* lispref/debugging.texi (Function Debugging):
+	* lispref/display.texi (Refresh Screen):
+	* lispref/display.texi (The Echo Area):
+	* lispref/display.texi (Blinking):
+	* lispref/edebug-inc.texi (Tracing):
+	* lispref/edebug-inc.texi (Instrumenting Macro Calls):
+	* lispref/edebug-inc.texi (Edebug Options):
+	* lispref/eval.texi (Function Indirection):
+	* lispref/extents.texi (Creating and Modifying Extents):
+	* lispref/extents.texi (Finding Extents):
+	* lispref/extents.texi (Mapping Over Extents):
+	* lispref/extents.texi (Extent Properties):
+	* lispref/faces.texi (Basic Face Functions):
+	* lispref/faces.texi (Face Properties):
+	* lispref/faces.texi (Face Convenience Functions):
+	* lispref/faces.texi (Other Face Display Functions):
+	* lispref/faces.texi (Font Instance Characteristics):
+	* lispref/faces.texi (Color Specifiers):
+	* lispref/files.texi (Visiting Functions):
+	* lispref/files.texi (Reading from Files):
+	* lispref/files.texi (Changing File Attributes):
+	* lispref/files.texi (File Names):
+	* lispref/files.texi (File Name Components):
+	* lispref/files.texi (Directory Names):
+	* lispref/files.texi (Relative File Names):
+	* lispref/files.texi (File Name Expansion):
+	* lispref/files.texi (File Name Completion):
+	* lispref/files.texi (User Name Completion):
+	* lispref/files.texi (Magic File Names):
+	* lispref/files.texi (Creating a Partial File):
+	* lispref/files.texi (Format Conversion):
+	* lispref/frames.texi (Creating Frames):
+	* lispref/frames.texi (Property Access):
+	* lispref/frames.texi (Size and Position):
+	* lispref/frames.texi (Deleting Frames):
+	* lispref/frames.texi (Finding All Frames):
+	* lispref/frames.texi (Frames and Windows):
+	* lispref/frames.texi (Visibility of Frames):
+	* lispref/frames.texi (Frame Configurations):
+	* lispref/functions.texi (Calling Functions):
+	* lispref/functions.texi (Function Cells):
+	* lispref/glyphs.texi (Creating Glyphs):
+	* lispref/glyphs.texi (Image Specifiers):
+	* lispref/glyphs.texi (Image Instance Types):
+	* lispref/glyphs.texi (Image Instance Functions):
+	* lispref/gutter.texi (Creating Gutter):
+	* lispref/gutter.texi (Specifying a Gutter):
+	* lispref/gutter.texi (Other Gutter Variables):
+	* lispref/help.texi (Accessing Documentation):
+	* lispref/help.texi (Help Functions):
+	* lispref/help.texi (Obsoleteness):
+	* lispref/internationalization.texi (Domain Specification):
+	* lispref/intro.texi (Caveats):
+	* lispref/keymaps.texi (Active Keymaps):
+	* lispref/keymaps.texi (Functions for Key Lookup):
+	* lispref/keymaps.texi (Changing Key Bindings):
+	* lispref/keymaps.texi (Scanning Keymaps):
+	* lispref/ldap.texi (The High-Level LDAP API):
+	* lispref/ldap.texi (Low-level Operations on a LDAP Server):
+	* lispref/ldap.texi (Encoder/Decoder Functions):
+	* lispref/lists.texi (Setcar):
+	* lispref/lists.texi (Setcdr):
+	* lispref/lists.texi (Working With Normal Plists):
+	* lispref/lists.texi (Working With Lax Plists):
+	* lispref/loading.texi (Autoload):
+	* lispref/loading.texi (Named Features):
+	* lispref/markers.texi (Creating Markers):
+	* lispref/markers.texi (Changing Markers):
+	* lispref/markers.texi (The Mark):
+	* lispref/menus.texi (Modifying Menus):
+	* lispref/menus.texi (Pop-Up Menus):
+	* lispref/menus.texi (Menu Accelerator Functions):
+	* lispref/minibuf.texi (Text from Minibuffer):
+	* lispref/minibuf.texi (Object from Minibuffer):
+	* lispref/minibuf.texi (Basic Completion):
+	* lispref/minibuf.texi (High-Level Completion):
+	* lispref/minibuf.texi (Reading a Password):
+	* lispref/minibuf.texi (Minibuffer Misc):
+	* lispref/mouse.texi (Mouse Tracking):
+	* lispref/syntax.texi (Syntax Table Functions):
+	* lispref/numbers.texi (Arithmetic Operations):
+	* lispref/numbers.texi (Rounding Operations):
+	* lispref/numbers.texi (Math Functions):
+	* lispref/objects.texi (String Type):
+	* lispref/objects.texi (Equality Predicates):
+	* lispref/os.texi (Killing XEmacs):
+	* lispref/os.texi (Suspending XEmacs):
+	* lispref/os.texi (System Environment):
+	* lispref/os.texi (Time Conversion):
+	* lispref/os.texi (Timers):
+	* lispref/os.texi (Input Modes):
+	* lispref/os.texi (Translating Input):
+	* lispref/os.texi (Terminal Output):
+	* lispref/os.texi (Flow Control):
+	* lispref/positions.texi (Character Motion):
+	* lispref/positions.texi (Word Motion):
+	* lispref/positions.texi (Text Lines):
+	* lispref/positions.texi (Screen Lines):
+	* lispref/positions.texi (List Motion):
+	* lispref/positions.texi (Narrowing):
+	* lispref/postgresql.texi (Asynchronous Interface Functions):
+	* lispref/processes.texi (Subprocess Creation):
+	* lispref/processes.texi (Synchronous Processes):
+	* lispref/processes.texi (Asynchronous Processes):
+	* lispref/processes.texi (Process Information):
+	* lispref/processes.texi (Input to Processes):
+	* lispref/processes.texi (Signals to Processes):
+	* lispref/processes.texi (Process Buffers):
+	* lispref/processes.texi (Filter Functions):
+	* lispref/processes.texi (Network):
+	* lispref/range-tables.texi (Working With Range Tables):
+	* lispref/searching.texi (String Search):
+	* lispref/searching.texi (Regexp Search):
+	* lispref/searching.texi (POSIX Regexps):
+	* lispref/searching.texi (Replacing Match):
+	* lispref/searching.texi (Entire Match Data):
+	* lispref/sequences.texi (Bit Vector Functions):
+	* lispref/specifiers.texi (Adding Specifications):
+	* lispref/specifiers.texi (Creating Specifiers):
+	* lispref/specifiers.texi (Specifier Validation Functions):
+	* lispref/specifiers.texi (Other Specification Functions):
+	* lispref/streams.texi (Output Variables):
+	* lispref/symbols.texi (Other Plists):
+	* lispref/text.texi (Insertion):
+	* lispref/text.texi (Commands for Insertion):
+	* lispref/text.texi (Deletion):
+	* lispref/text.texi (User-Level Deletion):
+	* lispref/text.texi (Kill Functions):
+	* lispref/text.texi (Low-Level Kill Ring):
+	* lispref/text.texi (Undo):
+	* lispref/text.texi (Maintaining Undo):
+	* lispref/text.texi (Margins):
+	* lispref/text.texi (Sorting):
+	* lispref/text.texi (Columns):
+	* lispref/text.texi (Primitive Indent):
+	* lispref/text.texi (Mode-Specific Indent):
+	* lispref/text.texi (Region Indent):
+	* lispref/text.texi (Case Changes):
+	* lispref/text.texi (Examining Properties):
+	* lispref/text.texi (Property Search):
+	* lispref/text.texi (Registers):
+	* lispref/text.texi (Transformations):
+	* lispref/mule.texi (Charset Property Functions):
+	* lispref/mule.texi (MULE Characters):
+	* lispref/mule.texi (Composite Characters):
+	* lispref/mule.texi (Coding System Properties):
+	* lispref/mule.texi (Big5 and Shift-JIS Functions):
+	* lispref/mule.texi (CCL Statements):
+	* lispref/mule.texi (Calling CCL):
+	* lispref/mule.texi (Category Tables):
+	* lispref/toolbar.texi (Specifying the Toolbar):
+	* lispref/toolbar.texi (Other Toolbar Variables):
+	* lispref/tooltalk.texi (Elisp Interface for Sending Messages):
+	* lispref/tooltalk.texi (Elisp Interface for Receiving Messages):
+	* lispref/variables.texi (Creating Buffer-Local):
+	* lispref/variables.texi (Variable Aliases):
+	* lispref/windows.texi (Splitting Windows):
+	* lispref/windows.texi (Deleting Windows):
+	* lispref/windows.texi (Selecting Windows):
+	* lispref/windows.texi (Cyclic Window Ordering):
+	* lispref/windows.texi (Buffers and Windows):
+	* lispref/windows.texi (Displaying Buffers):
+	* lispref/windows.texi (Choosing Window):
+	* lispref/windows.texi (Window Point):
+	* lispref/windows.texi (Window Start):
+	* lispref/windows.texi (Vertical Scrolling):
+	* lispref/windows.texi (Horizontal Scrolling):
+	* lispref/windows.texi (Resizing Windows):
+	* lispref/windows.texi (Window Configurations):
+	* lispref/x-windows.texi (X Selections):
+	* lispref/x-windows.texi (Resources):
+	* lispref/strings.texi (Creating Strings):
+	* lispref/strings.texi (Character Codes):
+	* lispref/strings.texi (Text Comparison):
+	* lispref/strings.texi (String Conversion):
+	* lispref/strings.texi (Formatting Strings):
+	* lispref/strings.texi (Character Case):
+	* lispref/strings.texi (Case Tables):
+	* lispref/strings.texi (Char Table Types):
+	* lispref/strings.texi (Working With Char Tables):
+	Giant docstring parameter/Texinfo fixes.
+
+	Don't use abbreviations for English words, especially when those
+	words have other meanings.  For example, use START, not BEG.
+	Use OBJECT, not OBJ.
+	Use VALUE, not VAL.
+	Use BUFFER, not BUF.
+	Use PROCESS, not PROC.  (Sometimes PROC was used to mean FUNCTION!)
+	Use CHARACTER, not CH or CHR.
+	Use NUMBER, not NUM.
+	Use COLUMN, not COL.
+	Use POSITION, not POS.
+	Use SYMBOL, not SYM.
+	Use STRING, not STR.
+	Use LIMIT, not LIM.
+	Use OTHER-WINDOW-P, not OTHER-P.
+	Use PRIORITY, not PRI.
+
+	Use `non-nil', not `true'.
+
+	Don't call a parameter an ALIST if it can also be a FUNCTION or OBARRAY.
+
+	Use CASE-TABLE, CATEGORY-TABLE, CHAR-TABLE, etc. instead of TABLE.
+
+	Try to find better parameter names than ARG.
+
+	Use consistent parameter names.  For example, s/NO-ERROR/NOERROR/g;
+
+	Use type information in parameter names.  For example, use
+	(make-bit-vector length bit), not (make-bit-vector length init).
+
+	Completion functions should have parameters with names like
+	PARTIAL-FILENAME instead of the misleading FILENAME.
+
+	Type predicates should consistently take an OBJECT parameter,
+	since any object is valid as input.
+
+	Use WHICH-FRAMES and WHICH-DEVICES parameters consistently for
+	functions like next-window and next-frame that walk over window or
+	frame lists.
+
+	Deleted duplicated documentation for:
+	one-window-p, format-insert-file
+
+	Deleted 21 lines of VMS-specific texinfo documentation.
+
+	Fixed up a few places where `_' was used in docstring parameter
+	names instead of `-'.
+
+	Fixed up places that used nil or t without @code.
+
+	Fixed up places that erroneously used @code instead of @var.
+
+	Fixed many typos.
+
+	Fixed many places where the parameters mentioned in the docstring
+	didn't match the actual parameters.
+
+	Fixed 7 places that used `@var{nil}' instead of `@code{nil}'.
+
+	Fixed 40 places where docstrings were missing trailing `.'
+
+	Fixed the texi documentation of 41 functions where the
+	interactiveness of the function in the documentation did not match
+	the implementation.
+
+	Fixed 117 functions where the names of parameters in the texi was
+	different from the names in the implementation.
+
+	Fixed the texi documentation of 137 functions where the parameter
+	list of the function in the texi was semantically different from
+	the implementation.
+
+2000-10-28  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs-faq.texi (Q1.2.1): Use @html instead of @ifhtml to
+	incorporate raw HTML output in the HTML version.
+
+2000-11-02  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/menus.texi:
+	* widget.texi:
+	Typo fixes and tiny clarifications.
+
+2000-10-19  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs-faq.texi: Added Q2.0.13, Q2.0.14 - packages why and how.
+	Added Q2.1.25 - function not found due to package not installed.
+
+	* xemacs/xemacs.texi:
+	* xemacs/abbrevs.texi:
+	* xemacs/basic.texi:
+	* xemacs/building.texi:
+	* xemacs/packages.texi:
+	* xemacs/startup.texi:
+	Moved "Packages" node to "Important General Concepts" section.
+
+	* xemacs/packages.texi: Added package list from etc/PACKAGES.
+
+2000-10-04  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.36 is released.
+
+2000-09-27  Martin Buchholz  <martin@xemacs.org>
+
+	* lispref/processes.texi (Signals to Processes): Many corrections.
+
+2000-09-20  Martin Buchholz  <martin@xemacs.org>
+
+	* xemacs/startup.texi (Startup Paths): Minor fixes.
+
+2000-09-19  Martin Buchholz  <martin@xemacs.org>
+
+	* *: Spelling mega-patch
+
+2000-09-16  Martin Buchholz  <martin@xemacs.org>
+
+	* internals/internals.texi (Low-Level Modules):
+	Correct the list of source files.
+
+2000-08-24  Adrian Aichner  <aichner@ecf.teradyne.com>
+
+	* emodules.texi (Introduction): Trivial typo fix.
+
+2000-08-24  Martin Buchholz  <martin@xemacs.org>
+
+	* emodules.texi (Initialization Mode): Spell-Check.
+
+2000-08-24  Martin Buchholz  <martin@xemacs.org>
+
+	* lispref/databases.texi (Connecting to a Database):
+	s/berkeley_db/berkeley-db/.  Too much C programming.
+
+2000-08-02  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xemacs/custom.texi (Menubar Resources): Document FontSet resource.
+
+2000-07-30  Ben Wing  <ben@xemacs.org>
+
+	* xemacs\search.texi (Regexp Search):
+	* xemacs\search.texi (Regexps):
+	Synch up with updated docs below (describing non-greedy
+	operators and such).
+
+2000-07-30  Ben Wing  <ben@xemacs.org>
+
+	* lispref\searching.texi (Syntax of Regexps):
+	Document ??, which we've supported since 20.4.
+
+2000-07-31  Sandra Wambold  <wambold@cygnus.com>
+
+	* xemacs-faq.texi: Minor updates in first two sections
+
+2000-07-27  Andy Piper  <andy@xemacs.org>
+
+	* lispref/hash-tables.texi: add new hash table type.
+
+2000-07-19  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.35 is released.
+
+2000-07-10  Martin Buchholz  <martin@xemacs.org>
+
+	* Makefile: rm -f ==> $(RM)
+
+2000-07-09  Martin Buchholz  <martin@xemacs.org>
+
+	* lispref/postgresql.texi:
+	- Don't mention ".so" extension.
+	- Make installation instructions more generic.
+	- Mention M-x describe-installation.
+
+2000-07-08  Ben Wing  <ben@xemacs.org>
+
+	* xemacs-faq.texi (Q6.4.1): Update the perennial nonstart under
+	Windows problem with binary locs and latest info.
+
+2000-06-17  Adrian Aichner  <aichner@ecf.teradyne.com>
+
+	* lispref/glyphs.texi: Fix trivial typos.
+	* lispref/gutter.texi: Ditto.
+	* lispref/loading.texi: Ditto.
+	* lispref/postgresql.texi: Ditto.
+
+2000-06-14  Adrian Aichner  <aichner@ecf.teradyne.com>
+
+	* internals/internals.texi (Markers and Extents): Fix trivial typo.
+
+2000-06-11  Adrian Aichner  <aichner@ecf.teradyne.com>
+
+	* make-stds.texi: Fix trivial typos.
+	* xemacs-faq.texi: Ditto.
+	* internals/internals.texi: Ditto.
+	* new-users-guide/edit.texi: Ditto.
+	* new-users-guide/modes.texi: Ditto.
+	* new-users-guide/region.texi: Ditto.
+
+2000-06-10  Ben Wing  <ben@xemacs.org>
+
+	* xemacs-faq.texi (Q6.1.2):
+	* xemacs-faq.texi (Q6.1.5):
+	* xemacs-faq.texi (Q6.1.6):
+	Corrections for Cygwin, MinGW.
+
+2000-06-07  Adrian Aichner  <aichner@ecf.teradyne.com>
+
+	* xemacs/basic.texi: Fix trivial typos.
+	* xemacs/buffers.texi: Fix trivial typos.
+	* xemacs/building.texi: Ditto.
+	* xemacs/glossary.texi: Ditto.
+	* xemacs/gnu.texi: Ditto.
+	* xemacs/help.texi: Ditto.
+	* xemacs/keystrokes.texi: Ditto.
+	* xemacs/programs.texi: Ditto.
+	* xemacs/search.texi: Ditto.
+	* xemacs/sending.texi: Ditto.
+
+2000-05-28  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.34 is released.
+
+2000-05-17  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* xemacs/basic.texi: Document translation of tutorial.
+	* xemacs/startup.texi: Remove lock-directory.
+	* xemacs/enterings.texi: Update.
+
+2000-05-17  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* lispref/display.texi:
+	* lispref/faces.texi:
+	* lispref/glyphs.texi:
+	* lispref/gutter.texi:
+	* lispref/modes.texi:
+	* lispref/specifiers.texi:
+	* lispref/toolbar.texi:
+	Update.  Merge Ben's doc-string update.
+
+2000-05-08  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* xemacs/basic.texi:
+	* xemacs/enterings.texi:
+	* xemacs/mini.texi:
+	Partial sync with FSF Emacs 20.6 and some update.
+
+2000-05-01  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.33 is released.
+
+2000-04-11  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* xemacs-faq.texi (Q2.1.24): Removed wrong header.
+
+2000-04-01  Oscar Figueiredo  <oscar@xemacs.org>
+
+	* lispref/ldap.texi: Documentation of the add/modify/delete and
+	  internationalization APIs
+
+	* lispref/lispref.texi: Updated LDAP-related menus
+
+2000-03-20  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.32 is released.
+
+2000-03-15  SL Baur  <steve@musashimaru.m17n.org>
+
+	* lispref/postgresql.texi (Unimplemented libpq Functions): Update
+	documentation to reflect the latest code.
+
+2000-03-07  SL Baur  <steve@musashimaru.m17n.org>
+
+	* lispref/postgresql.texi (PostgreSQL Support): New File.
+
+	* lispref/ldap.texi: Insert PostgreSQL/libpq chapter.
+	* lispref/lispref.texi (Top): Ditto.
+	* lispref/internationalization.texi: Ditto.
+
+2000-03-07  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* lispref/glyphs.texi (Image Specifiers): Remove parenthesis.
+
+2000-03-06  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* xemacs-faq.texi: Put node before section.
+
+2000-03-05  Jonathan Harris  <jhar@tardis.ed.ac.uk>
+
+	* xemacs-faq.texi (Macintosh port): Made texinfmt-friendly.
+
+2000-03-01  Sandra Wambold  <wambold@xemacs.org>
+
+	* xemacs-faq.texi: Added 6.4.1. XEmacs won't start on Windows
+
+2000-01-25  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* xemacs/xemacs.texi: Detailed menu update.
+
+2000-01-28  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* xemacs/help.texi: Synch with FSF 20.5. Update.
+
+2000-02-21  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* lispref/minibuf.texi: Add default argument documentation.
+
+2000-02-27  Martin Buchholz  <martin@xemacs.org>
+
+	* internals/internals.texi (lrecords): Update docs for new lisp
+	object representation.
+
+2000-02-25  Martin Buchholz  <martin@xemacs.org>
+
+	* internals/internals.texi (Techniques for XEmacs Developers):
+	Document INLINE_HEADER and how to create macros and inline functions.
+	Cleanup entire section.
+
+2000-02-17  Stephen J. Turnbull  <turnbull@sk.tsukuba.ac.jp>
+
+	* man/lispref/gutter.texi: New file describing gutter API.
+
+	* man/lispref/lispref.texi, man/lispref/scrollbars.texi,
+
+	* man/lispref/toolbar.texi: Fixup links to new node Gutter.
+
+2000-02-17  Stephen J. Turnbull  <turnbull@sk.tsukuba.ac.jp>
+
+	* man/lispref/frames.texi, man/xemacs/custom.texi,
+	man/xemacs/frame.texi, man/xemacs/glossary.texi: Mention menubars,
+	toolbars, and gutters as optional components of frames, with
+	pointers to descriptions.
+
+2000-02-17  Stephen J. Turnbull  <turnbull@sk.tsukuba.ac.jp>
+
+	* man/lispref/mule.texi:  Substantial reorganization and
+	revision for style of descriptions of character sets,
+	encodings, and coding systems.  Addition of a complete table
+	of coding systems as of XEmacs 21.2.19.
+
+2000-02-23  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.31 is released.
+
+2000-02-21  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.30 is released.
+
+2000-02-21  Jonathan Harris  <jhar@tardis.ed.ac.uk>
+
+	* internals/internals.texi: Made texinfmt-friendly.
+
+2000-01-20  Mark Thomas  <mthomas@jprc.com>
+
+	* lispref/backups.texi (Numbered Backups):
+	* xemacs/files.texi (Backup Deletion):
+	Change trim-versions-without-asking to delete-old-versions.
+
+2000-02-19  Martin Buchholz  <martin@xemacs.org>
+
+	* internals/internals.texi (Conversion to and from External Data):
+	Document TO_EXTERNAL_FORMAT and friends.
+	Doc bug fixes.
+
+2000-02-16  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.29 is released.
+
+2000-02-16  Martin Buchholz  <martin@xemacs.org>
+
+	* internals/internals.texi: Integrate Olivier's portable dumping docs.
+
+2000-02-09  Martin Buchholz  <martin@xemacs.org>
+
+	* lispref/symbols.texi (Object Plists):
+	Document `object-plist'.
+	Document `remprop'.
+	Rework all plist frobbing docs for accuracy.
+
+2000-02-07  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.28 is released.
+
+2000-02-07  Martin Buchholz  <martin@xemacs.org>
+
+	* cl.texi: Remove (or replace by `get') references to `get*'.
+
+2000-01-25  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* widget.texi:
+	* internals/internals.texi:
+	* lispref/commands.texi:
+	* lispref/consoles-devices.texi:
+	* lispref/customize.texi:
+	* lispref/dialog.texi:
+	* lispref/extents.texi:
+	* lispref/faces.texi:
+	* lispref/glyphs.texi:
+	* lispref/keymaps.texi:
+	* lispref/lists.texi:
+	* lispref/markers.texi:
+	* lispref/menus.texi:
+	* lispref/mule.texi:
+	* lispref/objects.texi:
+	* lispref/specifiers.texi:
+	* lispref/toolbar.texi:
+	* lispref/tooltalk.texi:
+	* lispref/x-windows.texi:
+	* new-users-guide/custom2.texi:
+	* new-users-guide/help.texi:
+	* new-users-guide/modes.texi:
+	* xemacs/abbrevs.texi:
+	* xemacs/buffers.texi:
+	* xemacs/custom.texi:
+	* xemacs/help.texi:
+	* xemacs/keystrokes.texi:
+	* xemacs/mini.texi:
+	* xemacs/new.texi:
+	* xemacs/packages.texi:
+	* xemacs/programs.texi:
+	* xemacs/sending.texi:
+	Change ' -- ' to '---' since Texinfo formats --- to --.
+	Untabify.  TeX doesn't like TAB.
+
+2000-01-27  Sandra Wambold  <wambold@xemacs.org>
+
+	* xemacs-faq.texi (Q6.2.2): updated font instructions to include
+	21.2.*
+
+2000-01-25  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* xemacs-faq.texi: Untabify.
+
+2000-01-22  Martin Buchholz  <martin@xemacs.org>
+
+	* internals/internals.texi (General Coding Rules): Document why we
+	#include <config.h>
+
+2000-01-21  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* xemacs-faq.texi: Change ' -- ' to '---'.
+
+2000-01-19  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* lispref/faces.texi (Face Properties): Document
+	remove-face-property.
+
+2000-01-18  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.27 is released.
+
+2000-01-17  Yoshiki Hayashi  <t90553@mail.ecc.u-tokyo.ac.jp>
+
+	* xemacs/regs.texi: Synch with FSF 20.5.
+
+2000-01-14  Yoshiki Hayashi  <t90553@mail.ecc.u-tokyo.ac.jp>
+
+	* info.texi: Change cross reference from emacs to xemacs.
+
+2000-01-14  Yoshiki Hayashi  <t90553@mail.ecc.u-tokyo.ac.jp>
+
+	* xemacs/mini.texi: Synch with FSF 20.5.  Update.
+
+2000-01-16  Martin Buchholz  <martin@xemacs.org>
+
+	* xemacs-faq.texi (Q2.1.15): Fix up @table formatting.
+
+2000-01-14  Martin Buchholz  <martin@xemacs.org>
+
+	* xemacs-faq.texi (Q2.1.15): Update dbx/gdb debugging info.
+
+2000-01-14  Sandra Wambold  <wambold@xemacs.org>
+
+	* xemacs-faq.texi: removed out-of-date XEmacs 19 questions.
+
+2000-01-14  Sandra Wambold  <wambold@xemacs.org>
+
+	* xemacs-faq.texi: Updated Macintosh information,
+	updated OS/2 info, changed turn-on-pending-delete answer.
+
+2000-01-08  Martin Buchholz  <martin@xemacs.org>
+
+	* xemacs-faq.texi (Q2.1.15): Make debugging info current.
+
+2000-01-08  Hrvoje Niksic  <hniksic@iskon.hr>
+
+	* lispref/control.texi (Signaling Errors): Document that `signal'
+	is continuable.
+	(Signaling Errors): Document `cerror', `signal-error', and
+	`check-argument-type'.
+	(Handling Errors): Mention `debug-on-signal'.
+	(Error Symbols): Document `define-error'.
+	(Processing of Errors): Document `display-error' and
+	`error-message-string'.
+
+2000-01-05  Yoshiki Hayashi  <t90553@mail.ecc.u-tokyo.ac.jp>
+
+	* internals/internals.texi: Remove latin-1 char.
+
+2000-01-05  Didier Verna  <didier@xemacs.org>
+
+	* xemacs/custom.texi (Key bindings using strings): add missing
+	whitespace.
+
+	* xemacs/xemacs.texi (Top):
+	* new-users-guide/new-users-guide.texi (Top): add missing `@top'
+	node.
+
+1999-12-24  Yoshiki Hayashi  <t90553@mail.ecc.u-tokyo.ac.jp>
+
+	* lispref/minibuf.texi (Reading a Password): New section.
+
+1999-12-21  Yoshiki Hayashi  <t90553@mail.ecc.u-tokyo.ac.jp>
+
+	* lispref/minibuf.texi: Remove documentation about
+	minibuffer-local-ns-map, read-no-blanks-input.
+
+1999-12-21  Yoshiki Hayashi  <t90553@mail.ecc.u-tokyo.ac.jp>
+
+	* lispref/minibuf.texi: Partial Synch with FSF manual.
+	Add description about DEFAULT argument of reading functions.
+
+1999-12-31  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.26 is released.
+
+1999-12-26  Karl M. Hegbloom  <karlheg@inetarena.com>
+
+	* internals/internals.texi (garbage_collect_1): Xemacs -> XEmacs
+
+1999-12-24  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.25 is released.
+
+1999-12-21  Martin Buchholz  <martin@xemacs.org>
+
+	* lispref/text.texi (Near Point): Document `char-before'.
+
+1999-12-20  Adrian Aichner  <adrian@xemacs.org>
+
+	* widget.texi: Fix typos and possessive singular errors.  Break
+	long sentences for readability.  Remove some redundant commas.
+
+1999-12-18  Martin Buchholz  <martin@xemacs.org>
+
+	* lispref/functions.texi (Mapping Functions):
+	Warn about mapping functions modifying their sequences.
+
+1999-12-15  Sandra Wambold  <wambold@xemacs.org>
+
+	* xemacs-faq.texi: link to matlab.el added; misc. address changes
+
+1999-12-14  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.24 is released.
+
+1999-12-07  Gunnar Evermann  <ge204@eng.cam.ac.uk>
+
+	* xemacs/startup.texi (Startup Paths): fix typo: EMACSPACKAGEPATH
+	instead of PACKAGEPATH
+	From Marcus Harnisch <harnisch@mikrom.de>
+
+1999-12-07  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.23 is released.
+
+1999-12-06  Sandra Wambold  <wambold@pobox.com>
+
+	* xemacs-faq.texi: Added MS-Windows questions; some other changes
+
+1999-11-29  Martin Buchholz  <martin@xemacs.org>
+
+	* info.texi (Top):
+	Remove @ifnottex, which gives old makeinfos indigestion.
+	* texinfo.texi (Top):
+	Revert to pre-texinfo-4.0 version, plus small changes to make
+	texinfo-3.12, texinfo-3.12f, texinfo-4.0, and TeX happy.
+
+1999-11-30  Sandra Wambold  <wambold@cygnus.com>
+
+	* xemacs-faq.texi: fixed and commented out bad URL links
+
+1999-11-29  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.22 is released
+
+1999-11-28  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.21 is released.
+
+1999-11-26  Martin Buchholz  <martin@xemacs.org>
+
+	* internals.texi (Lstream Functions):
+	* internals.texi (Lstream Methods):
+	Types have changed to size_t and ssize_t.  Document them.
+
+1999-08-12     Gunnar Evermann  <ge204@eng.cam.ac.uk>
+
+	* xemacs-faq.texi (Q4.4.2): added FAQ about Sun Workshop on
+ 	XEmacs 21
+
+1999-11-15  Martin Buchholz  <martin@xemacs.org>
+
+	* xemacs/programs.texi: Upgrade to etags Version 13.32
+
+	* Makefile:
+	- Make sure the default target is `info' instead of cl.info.
+	- Use $(INFODIR) consistently where appropriate.
+	- Remove makeinfo-1.68 warning.  (Usually only maintainer rebuilds info).
+	- Comment out unused macros: EMACS EMACSFLAGS
+	- Replace `-rm -f' with `rm -f', XPG4 guarantees exit code == 0.
+	- Get dependencies up to date.
+
+	* internals/Makefile:
+	* xemacs/Makefile:
+	* lispref/Makefile:
+	* new-users-guide/Makefile:
+	* lispref/index.perm:
+	* lispref/index.unperm:
+	* lispref/permute-index:
+	* internals/index.perm:
+	* internals/index.unperm:
+	Remove these Makefiles.
+	Include all functionality in man/Makefile.
+	Support only non-permuted indexes for simplicity.
+
+	* emodules.texi:
+	- TeX doesn't tolerate `_' in variable names; use `-' instead.
+
+	* lispref/commands.texi:
+	* lispref/display.texi:
+	* lispref/faces.texi:
+	* lispref/functions.texi:
+	* lispref/keymaps.texi:
+	* lispref/lists.texi:
+	* lispref/modes.texi:
+	* lispref/objects.texi:
+	* lispref/os.texi:
+	* lispref/sequences.texi:
+	* lispref/strings.texi:
+	* lispref/text.texi:
+	* new-users-guide/custom1.texi:
+	* xemacs/custom.texi:
+	* xemacs/menus.texi:
+	- Make sources compatible with makeinfo 4.0 *and* 3.12.
+	- Replace @sc{ASCII} with @sc{ascii}, etc...
+	- Replace @var{(foo)} with (@var{foo}), etc...
+
+	* info-stnd.texi: Remove.  Who cares about the standalone info reader?
+
+	* texinfo.tex:
+	* texinfo.texi:
+	* info.texi:
+	* standards.texi:
+	* make-stds.texi:
+	Import FSF-maintained files from texinfo-4.0.
+
+1999-11-10  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.20 is released
+
+1999-08-30  Robert Pluim  <rpluim@bigfoot.com>
+
+	* xemacs/packages.texi (Using Packages): Added description of
+	package-get-package-provider.
+
+1999-07-27  Charles G Waldman  <cgw@fnal.gov>
+
+	* xemacs-faq.texi (Q5.0.6): Describe `shell-multiple-shells'
+
+1999-08-01  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs/programs.texi (Balanced Editing): Remove broken
+	line-break.
+
+	* xemacs-faq.texi (Q1.0.6): Provide correct location in XEmacs
+	menus.
+	(Q1.4.1): ditto.
+	(Q1.4.3): ditto.
+	(Q2.0.5): Hyphenate words.
+
+	* info.texi (Add): Fix one typo.
+
+1999-08-23  Stephane Epardaud  <stephane@lunatech.com>
+
+	* internals/internals.texi (Garbage Collection - Step by Step):
+	just added some dots to shut up compile warnings.
+
+1999-08-19  Matthias Neubauer  <neubauer@informatik.uni-tuebingen.de>
+
+	* internals/internals.texi (Garbage Collection - Step by Step):
+	new section in chapter Allocation of Objects in XEmacs Lisp.
+
+1999-07-28  Andy Piper  <andy@xemacs.org>
+
+	* internals.texi (Glyphs): add some glyph documentation.
+
+1999-07-30  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.19 is released
+
+1999-07-10  Adrian Aichner  <adrian@xemacs.org>
+
+	* emodules.texi: Use @set emacs and @value{emacs} instead of
+	@macro (unsupported by texinfo package).  Remove stray @code.
+	* custom.texi: Add info extension to @setfilename.
+	* texinfo.texi: Ditto.
+	* widget.texi: Ditto.
+	* packages.texi: Reword a sentence, fixing @item Decide where to
+ 	install ...
+
+1999-07-19  Didier Verna  <didier@xemacs.org>
+
+	* custom.texi (Wishlist): removed the Custom Comments wishlist
+	entry. They are implemented.
+
+1999-07-13  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.18 is released
+
+1999-06-22  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.17 is released
+
+1999-06-11  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.16 is released
+
+1999-06-04  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.15 is released
+
+1999-05-30  Albert Chin-A-Young <china@thewrittenword.com>
+
+	* custom.texi, external-widget.texi: Minor
+	fix to get info DIR entry correct.
+
+1999-05-22  Vin Shelton <acs@xemacs.org>
+
+	* xemacs/cmdargs.texi:
+	Document -private.
+
+1999-05-16  Mike McEwan  <mike@lotusland.demon.co.uk>
+
+	* Makefile: Added `emodules.info' to info targets.
+
+1999-05-20  Karl M. Hegbloom  <karlheg@debian.org>
+
+	* internals/internals.texi (The XEmacs Object System
+	  (Abstractly Speaking)): typo.
+
+1999-05-16  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* lispref/text.texi (Substitution): Document improvements in
+ 	`translate-region'.
+
+1999-05-14  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.14 is released
+
+1999-05-11  Albert Chin-A-Young <china@thewrittenword.com>
+
+	* man/internals/internals.texi:
+	* man/lispref/lispref.texi:
+	* man/new-users-guide/new-users-guide.texi:
+	* man/xemacs/xemacs.texi:
+	* man/cl.texi:
+	* man/custom.texi:
+	* man/term.texi:
+	* man/termcap.texi:
+	* man/widget.texi:
+	* man/xemacs-faq.texi:
+	* man/external-widget.texi:
+	Added info dir entries so install-info will add them to
+	the common `dir' file.
+
+1999-04-28  Stephen J. Turnbull  <turnbull@sk.tsukuba.ac.jp>
+
+	* man/lispref/mule.texi: Document CCL
+	- add sections: syntax, statements, expressions, and examples.
+	- fix naming and description errors.
+	- update links in neighboring nodes.
+
+1999-04-24  Gunnar Evermann  <ge204@eng.cam.ac.uk>
+
+	* lispref/eval.texi (Eval): default for max-lisp-eval-depth is 500.
+
+1999-04-23  Gunnar Evermann  <ge204@eng.cam.ac.uk>
+
+	* xemacs-faq.texi (Q3.0.7): refer to correct menu (Option->Frame
+	Appearance)
+
+1999-03-12  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.13 is released
+
+1999-03-05  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.12 is released
+
+1999-03-01  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.11 is released
+
+1999-02-05  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.10 is released
+
+1999-02-02  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.9 is released
+
+1999-01-14  Adrian Aichner  <adrian@xemacs.org>
+
+	* internals\internals.texi (Techniques for XEmacs Developers):
+ 	Fixing documentation.
+	(Basic Lisp Modules): ditto.
+
+1999-01-10  J. Kean Johnston  <jkj@sco.com>
+
+	* emodules.texi: New file to describe XEmacs modules.
+
+1998-12-28  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.8 is released.
+
+1998-12-24  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.7 is released.
+
+1998-12-16  Andy Piper  <andy@xemacs.org>
+
+	* XEmacs 21.2.6 is released
+
+1998-12-05  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.5 is released
+
+1998-11-30  Martin Buchholz  <martin@xemacs.org>
+
+	* xemacs/startup.texi (Startup Paths):
+	* xemacs/custom.texi (Widgets):
+	* xemacs-faq.texi (Q3.0.5):
+	* xemacs-faq.texi (Top):
+
+	* widget.texi (info-link):
+
+	* lispref/objects.texi (Type Predicates):
+	* lispref/objects.texi (Hash Table Type):
+	* lispref/objects.texi (Primitive Types):
+	* lispref/objects.texi (Lisp Data Types):
+	* lispref/macros.texi (Backquote):
+	* lispref/hash-tables.texi (Weak Hash Tables):
+	* lispref/hash-tables.texi:
+	* lispref/errors.texi (Standard Errors):
+	* lispref/compile.texi (Disassembly):
+	* lispref/compile.texi (Compiled-Function Objects):
+	* lispref/compile.texi (Eval During Compile):
+	* lispref/compile.texi (Docs and Compilation):
+	* lispref/compile.texi (Compilation Functions):
+	* lispref/compile.texi (Speed of Byte-Code):
+	* lispref/compile.texi (Byte Compilation):
+	* lispref/building.texi (Garbage Collection):
+
+	* internals/internals.texi (Simple Special Forms):
+	* internals/internals.texi (Evaluation; Stack Frames; Bindings):
+	* internals/internals.texi (Specifics of the Event Gathering Mechanism):
+	* internals/internals.texi (String):
+	* internals/internals.texi (Introduction to Allocation):
+	* internals/internals.texi (Allocation of Objects in XEmacs Lisp):
+	* internals/internals.texi (Modules for Internationalization):
+	* internals/internals.texi (Modules for Interfacing with X Windows):
+	* internals/internals.texi (Modules for Interfacing with the Operating System):
+	* internals/internals.texi (Modules for Other Aspects of the Lisp Interpreter and Object System):
+	* internals/internals.texi (Modules for Interfacing with the File System):
+	* internals/internals.texi (Modules for the Redisplay Mechanism):
+	* internals/internals.texi (Modules for the Basic Displayable Lisp Objects):
+	* internals/internals.texi (Editor-Level Control Flow Modules):
+	* internals/internals.texi (Modules for Standard Editing Operations):
+	* internals/internals.texi (Basic Lisp Modules):
+	* internals/internals.texi (Low-Level Modules):
+	* internals/internals.texi (A Summary of the Various XEmacs Modules):
+	* internals/internals.texi (An Example of Mule-Aware Code):
+	* internals/internals.texi (Working With Character and Byte Positions):
+	* internals/internals.texi (Writing Lisp Primitives):
+	* internals/internals.texi (General Coding Rules):
+	* internals/internals.texi (How Lisp Objects Are Represented in C):
+	* internals/internals.texi (The XEmacs Object System (Abstractly Speaking)):
+	* internals/internals.texi (XEmacs From the Perspective of Building):
+	* internals/internals.texi (The Lisp Language):
+	* internals/internals.texi (Top):
+	* internals/internals.texi:
+	- rewrite Internals manual
+
+	* cl.texi (Porting Common Lisp):
+	* cl.texi (Hash Tables):
+	* cl.texi (Association Lists):
+	* cl.texi (Declarations):
+	* cl.texi (For Clauses):
+	* cl.texi (Basic Setf):
+	* cl.texi (Equality Predicates):
+	- mega patch
+
+1998-11-28  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.2-beta4 is released.
+
+1998-10-15  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.2-beta3 is released.
+
+1998-10-09  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile (MAKEINFO): Undo no-split change.
+
+1998-09-29  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.2-beta2 is released.
+
+1998-09-20  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* lispref/customize.texi: New file.
+
+1998-09-09  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* internals/internals.texi (Coding for Mule): New node and
+	section.
+
+1998-09-03  Darryl Okahata  <darrylo@sr.hp.com>
+
+	* xemacs/packages.texi: Document manually installing binary packages.
+
+1998-09-02  Jeff Miller <jmiller@smart.net>
+
+	* Synch calendar.texi with Emacs 20.3
+
+1998-09-03  Darryl Okahata  <darrylo@sr.hp.com>
+
+	* xemacs/packages.texi: Correct and update package documentation.
+	  Updated the package installation section to mention the visual
+	  package browser/installer.
+
+1998-08-31  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* lispref/buffers.texi (Indirect Buffers): Update with XEmacs
+	specifics.
+
+1998-08-21  Greg Klanderman  <greg@alphatech.com>
+
+	* lispref/files.texi (User Name Completion): new section.
+
+1998-07-23  Adrian Aichner  <adrian@xemacs.org>
+
+	* xemacs/packages.texi (Packages): Changing @itemize @emph to
+	@itemize @bullet (this is what all other files included in
+	xemacs.texi use) to fix error in texi2dvi (GNU Texinfo 3.12) 0.8.
+
+1998-07-20  Michael Sperber [Mr. Preprocessor]  <sperber@informatik.uni-tuebingen.de>
+
+	* xemacs/startup.texi: Small fixes, suggested by Hrvoje.
+
+	* xemacs/xemacs.texi:
+	* xemacs/packages.texi: More packages documentation.
+
+1998-07-19  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.2-beta1 is released.
+
+1998-07-12  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.0-pre5 is released.
+
+1998-07-09  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.0-pre4 is released.
+
+1998-07-09  Oliver Graf <ograf@fga.de>
+
+	* lispref/dragndrop.texi: added warning to OffiX Protocol section
+
+1998-07-09  SL Baur  <steve@altair.xemacs.org>
+
+	* lispref/ldap.texi (Syntax of Search Filters): Fix QP encoding
+	damage in transit.
+
+1998-07-05  Oscar Figueiredo  <Oscar.Figueiredo@di.epfl.ch>
+
+	* lispref/tooltalk.texi: Fixed NEXT to @node LDAP
+
+	* lispref/internationalization.texi: Fixed PREV to @node LDAP
+
+	* lispref/lispref.texi: Added LDAP chapter from ldap.texi
+
+	* lispref/Makefile: Added ldap.texi to srcs
+
+1998-06-29  SL Baur  <steve@altair.xemacs.org>
+
+	* standards.texi (Preface): Revert previous change to @node
+	because it doesn't pass makeinfo.
+
+1998-06-27  Adrian Aichner  <adrian@xemacs.org>
+
+	* cl.texi: See ALL.
+	* info-stnd.texi: Fixed @setfilename.
+	* info.texi: Fixed @setfilename and a typo.
+	* standards.texi: Added NEXT to @node Preface. See ALL.
+	* texinfo.texi: Fixed section names, quoted usage of @TeX{},
+	changed some occurrences of `:' to `colon'.
+	* xemacs-faq.texi: See ALL.
+	* internals/internals.texi: See ALL.
+	* lispref/back.texi: Fixed @setfilename.
+	* lispref/compile.texi: See ALL.
+	* lispref/debugging.texi: See ALL.
+	* lispref/edebug-inc.texi: Added NEXT and UP to @node Edebug.
+	* lispref/eval.texi: See ALL.
+	* lispref/extents.texi: See ALL.
+	* lispref/loading.texi: See ALL.
+	* lispref/searching.texi: Escaped `(' in
+	@cindex @samp{(?:} in regex
+	* lispref/variables.texi: See ALL.
+
+1998-06-28  SL Baur  <steve@altair.xemacs.org>
+
+	* xemacs/calendar.texi: Massive update.
+	From Jeff Miller <jmiller@smart.net>
+
+1998-06-20  Michael Sperber [Mr. Preprocessor]  <sperber@informatik.uni-tuebingen.de>
+
+	* xemacs/abbrevs.texi:
+	* xemacs/basic.texi:
+	* xemacs/buildings.texi:
+	* xemacs/cmdargs.texi:
+	* xemacs/files.texi:
+	* xemacs/adjustments.texi: Adjustments to integrate startup.texi
+	and packages.texi stuff.
+
+	* xemacs/startup.texi:
+	* xemacs/packages.texi: Created.
+
+1998-06-10  Adrian Aichner  <adrian@xemacs.org>
+
+	* texinfo.texi: added ../info/ to @setfilename, broke line after
+	@noindent.  Changed @var{arg-not-used-by-@TeX{}} to
+	@var{arg-not-used-by-@@TeX{}} to make `texinfo-format-buffer'
+	happy.  Fixed refs broken by a previous patch of mine.
+
+1998-06-18  Darryl Okahata  <darrylo@sr.hp.com>
+
+	* lispref/os.texi (os.texi): Document `user-home-directory'.
+
+1998-06-13  Greg Klanderman  <greg@alphatech.com>
+
+	* lispref/windows.texi (Resizing Windows): document third optional
+	WINDOW argument to enlarge-window and shrink-window.
+	(Selecting Windows): document select-window optional norecord
+	argument.
+	(Size of Window): document window-text-area-pixel-height and
+	window-text-area-pixel-width.
+	(Size of Window): document window-displayed-text-pixel-height.
+	(Position of Window): document window-text-area-pixel-edges.
+
+	* lispref/positions.texi (Screen Lines): cleanup docs for
+	vertical-motion and vertical-motion-pixels.
+
+1998-06-10  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* lispref/windows.texi (Resizing Windows): Document
+	`enlarge-window-pixels' and `shrink-window-pixels'.
+
+	* lispref/positions.texi (Screen Lines): Update documentation of
+	`vertical-motion'.
+	(Screen Lines): Document `vertical-motion-pixels'.
+
+	* lispref/frames.texi (Input Focus): Document `focus-frame',
+	`save-selected-frame' and `with-selected-frame'.
+
+1998-06-10  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* lispref/searching.texi (Regexp Search): Document `split-path'.
+
+	* lispref/files.texi (Unique File Names): Update docs for
+	`make-temp-name'; document `temp-directory'.
+
+1998-06-10  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* lispref/os.texi (Recording Input): Update docs for `recent-keys'.
+
+	* lispref/specifiers.texi (Specifier Instancing): Correct
+	instantiation order.
+	(Specifier Instancing Functions): Ditto.
+
+1998-06-11  Oliver Graf <ograf@fga.de>
+
+	* lispref/lispref.texi: references to Drag'n'Drop fixed
+	* lispref/modes.texi: references to Drag'n'Drop fixed
+	* lispref/scrollbars.texi: references to Drag'n'Drop fixed
+	* lispref/dragndrop.texi: naming changed to Drag and Drop
+	added some docu about the drop procedure
+
+1998-06-09  Adrian Aichner  <adrian@xemacs.org>
+
+	* info-stnd.texi: added ../info/ to @setfilename.
+	* info.texi: added ../info/ to @setfilename.
+	* lispref/commands.texi: see ALL.
+	* lispref/frames.texi: see ALL.
+	* lispref/os.texi: see ALL.
+	* lispref/text.texi: see ALL.
+	* new-users-guide/custom1.texi: broke line after enumerated @item.
+	* new-users-guide/custom2.texi: see ALL.
+	* new-users-guide/edit.texi: see ALL.
+	* new-users-guide/enter.texi: see ALL.
+	* new-users-guide/files.texi: see ALL.
+	* new-users-guide/help.texi
+	* new-users-guide/modes.texi: see ALL.
+	* new-users-guide/new-users-guide.texi: see ALL.
+	* new-users-guide/region.texi: see ALL.
+	* new-users-guide/search.texi: see ALL.
+	* new-users-guide/xmenu.texi: see ALL.
+	* standards.texi: added ../info/ to @setfilename.
+	* texinfo.texi: added ../info/ to @setfilename, broke line after
+	@noindent.  Changed @var{arg-not-used-by-@TeX{}} to
+	@var{arg-not-used-by-@@TeX{}} to make `texinfo-format-buffer'
+	happy.
+	* xemacs-faq.texi: added ../info/ to @setfilename.
+	* ALL: corrected INFO-FILE-NAME to lispref and xemacs in relevant
+	p?xefs (most were empty, some elisp and emacs), used
+	PRINTED-MANUAL-TITLE "XEmacs Lisp Reference Manual" and "XEmacs
+	User's Manual" respectively for all these.
+
+1998-06-01  Oliver Graf <ograf@fga.de>
+
+	* lispref/dragndrop.texi: added experimental
+
+1998-05-28  Oliver Graf <ograf@fga.de>
+
+	* lispref/dragndrop.texi: a warning, and a bit more text this time
+
+1998-05-26  Oliver Graf <ograf@fga.de>
+
+	* lispref/dragndrop.texi: only small changes
+
+1998-05-15  Christian Nybø <chr@mediascience.no>
+
+	* xemacs/killing.texi: Properly document `zap-to-char'.
+
+1998-05-13  Greg Klanderman  <greg@alphatech.com>
+
+	* lispref/frames.texi (Input Focus): cleanup select-frame
+	documentation.
+
+1998-05-10  Oliver Graf <ograf@fga.de>
+
+	* lispref/dragndrop.texi: new section for the DnD API
+	* lispref/lispref.texi: added Drag'n'Drop between scrollbars and
+	modes
+	* lispref/modes.texi: changed back-ref to Drag'n'Drop
+	* lispref/scrollbars.texi: changed next-ref to Drag'n'Drop
+
+1998-05-05  Oliver Graf <ograf@fga.de>
+
+	* commands.texi: exchange of dnd-drop with misc-user
+
+1998-05-04  Martin Buchholz  <martin@xemacs.org>
+
+	* internals.texi (Techniques for XEmacs Developers): Add some more
+	comments on adding new files, inspired by Olivier Galibert.
+
+1998-05-02  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* lispref/windows.texi (Vertical Scrolling): Fixup docstring for
+ 	scroll-conservatively.
+
+	* lispref/loading.texi (Named Features): Document advanced args to
+	`feature'.
+
+	* lispref/files.texi (File Name Expansion): Document that
+	expand-file-name does not treat // and ~/ in the middle of file
+	names specially.
+
+	* lispref/positions.texi (Excursions): Document
+	`with-current-buffer' and `with-temp-file'.
+
+	* lispref/strings.texi (Formatting Strings): Document `%*'
+ 	construct.
+
+	* lispref/os.texi (Time Conversion): Document that TIME may be
+	omitted from format-time-string.
+
+	* lispref/strings.texi (String Conversion): Document BASE argument
+	to `string-to-number'.
+
+	* lispref/searching.texi (Syntax of Regexps): Fix up Perl
+	constructs documentation.
+	(Regexp Search): Document `split-string'.
+
+	* xemacs/display.texi (Scrolling): Document scroll-conservatively.
+
+	* xemacs/killing.texi (Active Regions): Document that errors no
+	longer highlight the region.
+
+	* lispref/display.texi (The Echo Area): Document message log
+ 	stuff, including `display-message', `lmessage', `clear-message',
+	(Warnings): Document warning stuff.
+
+	* lispref/commands.texi (Working With Events): Update `make-event'
+	for misc-user events.
+	(Using Interactive): Document `function-interactive'.
+
+	* lispref/os.texi (System Environment): Document USE-FLOATS
+ 	argument to `load-average'.
+	(User Identification): Document the new semantics of
+ 	`user-full-name'.
+
+	* lispref/strings.texi (Creating Strings): Document `string'
+ 	function.
+
+1998-05-02  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* lispref/numbers.texi (Comparison of Numbers): Document multi-arg
+	comparison functions.
+
+1998-04-30  Greg Klanderman  <greg@alphatech.com>
+
+	* lispref/frames.texi (Input Focus): Document behavior of
+	select-frame wrt focus-follows-mouse.
+
+1998-04-30  Martin Buchholz  <martin@xemacs.org>
+
+	* Makefile: Support generic makes by avoiding `%' syntax.
+	It breaks my heart to uglify the Makefile like this, but this is
+	going to be a perpetual FAQ otherwise.
+	General cleanup.
+	Comment out w3 and vm info rules.
+	Use paranoid cd ./$@ syntax to avoid losing with luser's CDPATH.
+
+1998-03-27  Stephen Turnbull  <turnbull@sk.tsukuba.ac.jp>
+
+	* xemacs/frame.texi: Document cursor appearance at end of line.
+
+1998-03-14  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* internals/internals.texi (GCPROing): Explain when it is
+	necessary to GCPRO function parameters.
+
+1998-03-13  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* internals/internals.texi (Writing Lisp Primitives): Updated
+	definition of For().
+
+1998-03-01  Aki Vehtari  <Aki.Vehtari@hut.fi>
+
+	* lispref/menus.texi: Use recommended forms in examples.
+
+1998-02-22  Karl M. Hegbloom  <karlheg@bittersweet.inetarena.com>
+
+	* cl.texi (Creating Symbols): Tell a little bit about the new
+	handling of gensyms.
+
+1998-02-21  Greg Klanderman  <greg@alphatech.com>
+
+	* xemacs/custom.texi (X Resources): update to describe automatic
+	setting of x-emacs-application-class.
+
+	* lispref/x-windows.texi (Resources): update doc for
+	x-emacs-application-class.
+
+1998-02-20  Karl M. Hegbloom  <karlheg@bittersweet.inetarena.com>
+
+	* cl.texi (Equality Predicates): Update to reflect change to
+	`equalp' made in "cl-extra.el" - now compares characters case
+	insensitively.
+
+1998-02-23  Aki Vehtari  <Aki.Vehtari@hut.fi>
+
+	* lispref/menus.texi (Menu Format): Doc fix: suffix can be form.
+
+1998-02-19  Karl M. Hegbloom  <karlheg@bittersweet.inetarena.com>
+
+	* lispref/display.texi (Beeping): Linux has sound too.
+
+1998-02-19  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* cl.texi (Argument Lists): Keywords are handled specially by
+ 	XEmacs.
+	(Porting Common Lisp): XEmacs backquotes are OK.
+
+1998-02-19  Karl M. Hegbloom  <karlheg@bittersweet.inetarena.com>
+
+	* xemacs/custom.texi (Init Syntax): document #b, #o, and #x reader
+ 	syntax for integers.
+	From Adrian Aichner <adrian@xemacs.org>
+	* cl.texi (Porting Common Lisp): ' '
+	* lispref/numbers.texi (Numbers): ' '
+
+1998-02-15  Karl M. Hegbloom  <karlheg@bittersweet.inetarena.com>
+
+	* lispref/searching.texi (Regular Expressions): Document the
+	recent regular expression syntax extensions.
+
+1998-02-10  Olivier Galibert  <galibert@pobox.com>
+
+	* internals/internals.texi: Remove all mocklisp references.
+
+1997-12-17  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile (SUBDIR): skk and gnats are packaged.
+
+	* lispref/intro.texi (Acknowledgements): Update to v3.3.
+
+	* lispref/lispref.texi: Update to 20.5/v3.3.
+
+1997-12-10  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile: Don't stop on errors.
+
+1997-12-06  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile: add skk manual.
+
+1997-11-29  SL Baur  <steve@altair.xemacs.org>
+
+	* internals/internals.texi (XEmacs): Updated history section.
+
+1997-11-28  SL Baur  <steve@altair.xemacs.org>
+
+	* lispref/compile.texi (Compilation Functions): Plug in the real
+	return value.
+	(Speed of Byte-Code): Ditto.
+	(Compilation Functions): Ditto.
+	(Compiled-Function Objects): Ditto.
+	(Speed of Byte-Code): Increase loop counter by factor of 50 (the
+	previous value was embarrassing).
+
+1997-11-21  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile (srcs): vhdl-mode has been packaged.
+
+1997-11-15  SL Baur  <steve@altair.xemacs.org>
+
+	* lispref/windows.texi (scroll-conservatively): Fix typo.
+
+1997-11-12  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* lispref/commands.texi (Working With Events): Document fully.
+
+	* lispref/windows.texi (Vertical Scrolling): Document
+ 	scroll-conservatively.
+
+1997-11-09  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* lispref/extents.texi (Intro to Extents): Minor correction.
+	(Extent Properties): Document `extent-keymap'.
+
+1997-11-03  MORIOKA Tomohiko  <morioka@jaist.ac.jp>
+
+	* xemacs/mule.texi (Mule): Modify description about supported
+	scripts.
+
+1997-11-02  MORIOKA Tomohiko  <morioka@jaist.ac.jp>
+
+	* xemacs/mule.texi: Add description for
+	`universal-coding-system-argument'.
+
+1997-10-31  SL Baur  <steve@altair.xemacs.org>
+
+	* internals/internals.texi: XEmacs 19.16 is released.
+
+1997-10-30  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile (srcs): Mailcrypt, hm--html-menus, vm, psgml and tm have
+	been packaged.
+
+1997-10-22  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* xemacs-faq.texi: Added the detailed menu listing.
+
+	* lispref/extents.texi (Extent Properties): Documented
+	`set-extent-properties'.
+
+	* xemacs/custom.texi (Face Customization): Updated for XEmacs.
+
+1997-10-07  SL Baur  <steve@altair.xemacs.org>
+
+	* xemacs-faq.texi (Q1.3.7): Update Russion URLs.
+	From Rebecca Ore <rebecca.ore@op.net>
+
+	* lispref/databases.texi (Connecting to a Database): Describe
+	valid types of `type' and `subtype'.
+	From Raymond Toy <toy@rtp.ericsson.se>
+
+1997-10-01  Karl M. Hegbloom  <karlheg@inetarena.com>
+
+	* lispref/commands.texi (Keyboard Macros): fixed typo.  Changed
+	reference to (emacs) into a reference to (xemacs).
+
+1997-10-01  Karl M. Hegbloom  <karlheg@inetarena.com>
+
+	* lispref/keymaps.texi (Keymaps): untabified and reformatted menu
+	to prevent line wrap.
+
+1997-09-27  SL Baur  <steve@altair.xemacs.org>
+
+	* gnats/flowchart.eps: New file.
+
+1997-09-23  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* xemacs/custom.texi (Easy Customization): Ditto.
+
+	* xemacs/xemacs.texi (Top): Added pointer to easy customization.
+
+1997-09-18  SL Baur  <steve@altair.xemacs.org>
+
+	* internals/Makefile (../../info/$(NAME).info): Warn and clean up
+	if someone hasn't upgraded makeinfo.
+
+	* Makefile (EMACS): Refer to xemacs binary in source tree.
+	* tm/Makefile (EMACS): Ditto.
+
+1997-08-15  Karl M. Hegbloom <karlheg@inetarena.com>
+
+	* cl.texi (Type Predicates): Update for corrected handling of
+	`string-char' and `character'.
+
+Tue Aug  5 21:56:02 1997  Barry A. Warsaw  <cc-mode-help@python.org>
+
+	* cc-mode.texi:
+	In FAQ section, document use of c-mode-base-map instead of c-mode-map.
+
+Fri Aug  1 22:44:49 1997  Barry A. Warsaw  <cc-mode-help@python.org>
+
+	* cc-mode.texi: Removed the description of c-enable-//-in-c-mode.
+
+Wed Jul 30 00:01:45 1997  Barry A. Warsaw  <cc-mode-help@python.org>
+
+	* cc-mode.texi:
+	Added description of template-args-cont syntactic symbol
+
+1997-07-25  Barry A. Warsaw  <cc-mode-help@python.org>
+
+	* cc-mode.texi: Describe support for idl-mode
+
+	* cc-mode.texi:
+	Document c-initialization-hook.  Also rewrite the "Getting Connected"
+	section on byte compiling the source.
+
+1997-07-21  Karl M. Hegbloom  <karlheg@inetarena.com>
+
+	* lispref/streams.texi: "Output Streams", change `last-output'
+	result list from integers to characters.
+
+	* lispref/minibuf.texi: "Object from Minibuffer", correction.
+
+	* lispref/minibuf.texi: "Minibuffer History", add
+ 	`Info-minibuffer-history', `Manual-page-minibuffer-history', and
+ 	short paragraph refering to `M-x apropos'.
+
+1997-07-17  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile: makeinfo-1.68 is verified to work.
+
+	* tm/Makefile (../../info/%-ja.info): Die if not running
+	XEmacs/Mule.
+	(../../info/%-en.info): Inherit setting of MAKEINFO.
+
+Tue Jul 15 04:18:38 1997  Barry A. Warsaw  <cc-mode-help@python.org>
+
+	* cc-mode.texi:
+	Describe the variable c-indent-comments-syntactically-p.
+
+1997-07-15  Steven L Baur  <steve@altair.xemacs.org>
+
+	* internals/internals.texi (Top): Convert Buffer@'s node name to
+	`Buffer's' because the former confuses makeinfo.
+
+Thu Jul  3 22:54:03 1997  Barry A. Warsaw  <cc-mode-help@python.org>
+
+	* cc-mode.texi: Fixed spelling of Texinfo
+
+Tue May  6 21:33:06 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* lispref/files.texi (Writing to Files): Correct docstring of
+	write-region.
+
+Sun May  4 14:28:32 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* lispref/annotations.texi (Annotation Primitives):
+	`delete-annotation' does not return the deleted annotation.
+
+Wed Apr 30 18:13:16 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* lispref/lispref.texi: Correct release dates.
+
+Sat Apr 19 20:48:00 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* lispref/files.texi (File Name Expansion): Update documentation
+	of file-relative-name.
+
+Mon Apr  7 21:02:39 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* lispref/lispref.texi: Update version numbers (with patches from
+	Hrvoje Niksic).
+
+	* lispref/building.texi (Building XEmacs): Update version numbers
+	and build identification.
+
+	* lispref/intro.texi (Introduction): Update version number.
+
+Sun Mar 23 15:47:05 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile (srcs): Add efs.texi.
+
+Sat Mar 22 16:39:16 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile (srcs): Add hm--html-mode.texi.
+
+Sun Mar 16 18:48:14 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* gnats/Makefile (gnats_srcs): New manuals for GNATS.
+
+Wed Mar 12 14:39:43 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* lispref/strings.texi (Text Comparison): Correct example for
+	`char-equal'.  Add new function `char='.
+
+Thu Mar  6 13:33:54 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile: Update for new texinfo manual.
+
+Tue Mar  4 11:37:42 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile (../info/w3.info): Use special version of makeinfo
+	since this manual is not backwards compatible.
+	Clean up error handling so we only have to type make once to
+	rebuild the info tree.
+	(../info/vm.info): Make sure to continue in the event of error.
+
+Tue Feb 25 20:17:53 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* auctex/Makefile: Added `mostlyclean' and `distclean' target.
+
+Wed Feb 19 17:57:27 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile (auctex): New subdirectory target.
+
+Wed Feb 12 12:30:27 1997  Yotam Medini  <yotam_medini@tmai.com>
+
+	* mule/languages.texi: Correct typo.
+
+Mon Feb 10 08:17:22 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile (srcs): Add custom and widget to srcs.
+
+	* lispref/extents.texi (Intro to Extents): Removed erroneous
+	reference to `start-glyph' property.
+
+Sun Feb  9 00:27:22 1997  Per Abrahamsen  <abraham@dina.kvl.dk>
+
+	* widget.texi: New file.
+
+	* custom.texi: New file.
+
+Thu Feb  6 22:57:09 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* lispref/extents.texi (Duplicable Extents): replicable extents
+	are history.
+
+Wed Jan 29 19:59:41 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* xemacs-faq.texi (Q1.1.1): Correct typos.
+
+Mon Jan 27 22:28:48 1997  Bob Weiner <weiner@infodock.com>
+
+	* xemacs-faq.texi (Q1.0.14): infodock.com has hardcopies of the
+	XEmacs manual available.
+	(Q4.6.1): Updated Infodock Information.
+
+Sat Dec 28 11:08:07 1996  Martin Buchholz  <mrb@Eng.Sun.COM>
+
+	* vhdl-mode.texi: Correct typo in email address.
+
+Mon Dec 23 09:47:24 1996  Martin Buchholz  <mrb@Eng.Sun.COM>
+
+	* Makefile (srcs): Add vhdl-mode.
+
+Wed Dec 18 20:21:06 1996  Martin Buchholz  <mrb@eng.sun.com>
+
+	* Makefile (realclean): Don't delete itself `make distclean'
+
+	* lispref/numbers.texi (Predicates on Numbers): wholenump->natnump.
+
+	* Makefile: New File.
+
+Tue Dec 10 18:35:21 1996  Rod Whitby  <rwhitby@asc.sps.mot.com>
+
+	* vhdl-mode.texi: New file.
+
+Thu Jan 24 12:41:33 1991  Richard Stallman  (rms at mole.ai.mit.edu)
+
+	* texinfo.tex: Delete spurious character at beginning.
+
+Tue Aug 16 13:09:12 1988  Robert J. Chassell (bob at frosted-flakes.ai.mit.edu)
+
+	* emacs.tex:  Corrected two typos.  No other changes before
+	Version 19 will be made.
+
+	* vip.texinfo: Removed menu entry Adding Lisp Code in node
+	Customization since the menu entry did not point to anything.
+	Also added an @finalout command to remove overfull hboxes from the
+	printed output.
+
+	* cl.texinfo:  Added @bye, \input line and @settitle to file.
+	This file is clearly intended to be a chapter of some other work,
+	but the other work does not yet exist.
+
+Mon Jul 25 17:47:38 1988  Robert J. Chassell (bob at frosted-flakes.ai.mit.edu)
+
+	* texinfo.texinfo: Three typos corrected.
+
+Mon Jul 11 18:02:29 1988  Chris Hanson  (cph at kleph)
+
+	* texindex.c (indexify): when comparing to initial strings to
+	decide whether to change the header, must use `strncmp' to avoid
+	comparing entire strings of which initials are a substring.
+
+Sun Jun 26 18:46:16 1988  Richard Stallman  (rms at sugar-bombs.ai.mit.edu)
+
+	* texindex.c (sort_in_core, sort_offline, parsefile):
+	Give up on input file if any line doesn't start with backslash.
+
+Mon May 23 10:41:35 1988  Robert J. Chassell (bob at frosted-flakes.ai.mit.edu)
+
+	* emacs.tex: Update information for obtaining TeX distribution from the
+	University of Washington.

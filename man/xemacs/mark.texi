@@ -1,0 +1,240 @@
+
+@node Mark, Mouse Selection, Help, Top
+@chapter Selecting Text
+@cindex mark
+@cindex region
+
+  Many Emacs commands operate on an arbitrary contiguous
+part of the current buffer. You can select text in two ways:
+
+@itemize @bullet
+@item
+You use special keys to select text by defining a region between point
+and the mark. 
+@item
+If you are running XEmacs under X, you can also select text
+with the mouse. 
+@end itemize
+
+@section The Mark and the Region
+ To specify the text for a command to operate on, set @dfn{the
+mark} at one end of it, and move point to the other end.  The text
+between point and the mark is called @dfn{the region}.  You can move
+point or the mark to adjust the boundaries of the region.  It doesn't
+matter which one is set first chronologically, or which one comes
+earlier in the text.
+  
+  Once the mark has been set, it remains until it is set again at
+another place.  The mark remains fixed with respect to the preceding
+character if text is inserted or deleted in a buffer.  Each Emacs
+buffer has its own mark; when you return to a buffer that had been
+selected previously, it has the same mark it had before.
+
+  Many commands that insert text, such as @kbd{C-y} (@code{yank}) and
+@kbd{M-x insert-buffer}, position the mark at one end of the inserted
+text---the opposite end from where point is positioned, so that the region
+contains the text just inserted.
+
+  Aside from delimiting the region, the mark is useful for marking
+a spot that you may want to go back to.  To make this feature more useful,
+Emacs remembers 16 previous locations of the mark in the @code{mark ring}.
+
+@menu
+* Setting Mark::	Commands to set the mark.
+* Using Region::	Summary of ways to operate on contents of the region.
+* Marking Objects::	Commands to put region around textual units.
+* Mark Ring::   	Previous mark positions saved so you can go back there.
+@end menu
+
+@node Setting Mark, Using Region, Mark, Mark
+@subsection Setting the Mark
+
+  Here are some commands for setting the mark:
+
+@c WideCommands
+@table @kbd
+@item C-@key{SPC}
+Set the mark where point is (@code{set-mark-command}).
+@item C-@@
+The same.
+@item C-x C-x
+Interchange mark and point (@code{exchange-point-and-mark}).
+@item C-<
+Pushes a mark at the beginning of the buffer.
+@item C->
+Pushes a mark at the end of the buffer.
+@end table
+
+  For example, to convert part of the buffer to all
+upper-case, you can use the @kbd{C-x C-u} (@code{upcase-region})
+command, which operates on the text in the region.  First go to the
+beginning of the text you want to capitalize and type @kbd{C-@key{SPC}} to
+put the mark there, then move to the end, and then type @kbd{C-x C-u} to
+capitalize the selected region.  You can also set the mark at the end of the
+text, move to the beginning, and then type @kbd{C-x C-u}.  Most commands
+that operate on the text in the region have the word @code{region} in
+their names.
+
+@kindex C-SPC
+@findex set-mark-command
+  The most common way to set the mark is with the @kbd{C-@key{SPC}}
+command (@code{set-mark-command}).  This command sets the mark where
+point is. You can then move point away, leaving the mark behind.  It is
+actually incorrect to speak of the character @kbd{C-@key{SPC}}; there is
+no such character.  When you type @key{SPC} while holding down
+@key{CTRL}, you get the character @kbd{C-@@} on most terminals. This
+character is actually bound to @code{set-mark-command}.  But unless you are
+unlucky enough to have a terminal where typing @kbd{C-@key{SPC}} does
+not produce @kbd{C-@@}, you should think of this character as
+@kbd{C-@key{SPC}}.
+
+@kindex C-x C-x
+@findex exchange-point-and-mark
+  Since terminals have only one cursor, Emacs cannot show you where the
+mark is located. Most people use the mark soon after they set it, before
+they forget where it is. But you can see where the mark is with the
+command @kbd{C-x C-x} (@code{exchange-point-and-mark}) which puts the
+mark where point was and point where the mark was.  The extent of the
+region is unchanged, but the cursor and point are now at the previous
+location of the mark. 
+
+@kindex C-<
+@kindex C->
+@findex mark-beginning-of-buffer
+@findex mark-end-of-buffer
+ Another way to set the mark is to push the mark to the beginning of a
+buffer while leaving point at its original location. If you supply an
+argument to @kbd{C-<} (@code{mark-beginning-of-buffer}), the mark is pushed
+@var{n}/10 of the way from the true beginning of the buffer. You can
+also set the mark at the end of a buffer with @kbd{C->}
+(@code{mark-end-of-buffer}). It pushes the mark to the end of the buffer, 
+leaving point alone. Supplying an argument to the command pushes the mark
+@var{n}/10 of the way from the true end of the buffer.
+
+If you are using XEmacs under the X window system, you can set
+the variable @code{zmacs-regions} to @code{t}. This makes the current
+region (defined by point and mark) highlight and makes it available as
+the X clipboard selection, which means you can use the menu bar items on
+it.  @xref{Active Regions}, for more information.
+ 
+  @kbd{C-x C-x} is also useful when you are satisfied with the location of
+point but want to move the mark; do @kbd{C-x C-x} to put point there and
+then you can move it.  A second use of @kbd{C-x C-x}, if necessary, puts
+the mark at the new location with point back at its original location.
+
+@node Using Region, Marking Objects, Setting Mark, Mark
+@subsection Operating on the Region
+
+  Once you have created an active region, you can do many things to
+the text in it:
+@itemize @bullet
+@item
+Kill it with @kbd{C-w} (@pxref{Killing}).
+@item
+Save it in a register with @kbd{C-x r s} (@pxref{Registers}).
+@item
+Save it in a buffer or a file (@pxref{Accumulating Text}).
+@item
+Convert case with @kbd{C-x C-l} or @kbd{C-x C-u} @*(@pxref{Case}).
+@item
+Evaluate it as Lisp code with @kbd{M-x eval-region} (@pxref{Lisp Eval}).
+@item
+Fill it as text with @kbd{M-q} (@pxref{Filling}).
+@item
+Print hardcopy with @kbd{M-x print-region} (@pxref{Hardcopy}).
+@item
+Indent it with @kbd{C-x @key{TAB}} or @kbd{C-M-\} (@pxref{Indentation}).
+@end itemize
+
+@node Marking Objects, Mark Ring, Using Region, Mark
+@subsection Commands to Mark Textual Objects
+
+  There are commands for placing point and the mark around a textual
+object such as a word, list, paragraph or page.
+ 
+@table @kbd
+@item M-@@
+Set mark after end of next word (@code{mark-word}).  This command and
+the following one do not move point.
+@item C-M-@@
+Set mark after end of next Lisp expression (@code{mark-sexp}).
+@item M-h
+Put region around current paragraph (@code{mark-paragraph}).
+@item C-M-h
+Put region around current Lisp defun (@code{mark-defun}).
+@item C-x h
+Put region around entire buffer (@code{mark-whole-buffer}).
+@item C-x C-p
+Put region around current page (@code{mark-page}).
+@end table
+
+@kindex M-@@
+@kindex C-M-@@
+@findex mark-word
+@findex mark-sexp
+@kbd{M-@@} (@code{mark-word}) puts the mark at the end of the next word,
+while @kbd{C-M-@@} (@code{mark-sexp}) puts it at the end of the next Lisp
+expression. These characters sometimes save you some typing.
+
+@kindex M-h
+@kindex C-M-h
+@kindex C-x C-p
+@kindex C-x h
+@findex mark-paragraph
+@findex mark-defun
+@findex mark-page
+@findex mark-whole-buffer
+   A number of commands are available that set both point and mark and
+thus delimit an object in the buffer.  @kbd{M-h} (@code{mark-paragraph})
+moves point to the beginning of the paragraph that surrounds or follows
+point, and puts the mark at the end of that paragraph
+(@pxref{Paragraphs}).  You can then indent, case-convert, or kill the
+whole paragraph.  In the same fashion, @kbd{C-M-h} (@code{mark-defun})
+puts point before and the mark after the current or following defun
+(@pxref{Defuns}).  @kbd{C-x C-p} (@code{mark-page}) puts point before
+the current page (or the next or previous, depending on the argument),
+and mark at the end (@pxref{Pages}).  The mark goes after the
+terminating page delimiter (to include it), while point goes after the
+preceding page delimiter (to exclude it).  Finally, @kbd{C-x h}
+(@code{mark-whole-buffer}) sets up the entire buffer as the region by
+putting point at the beginning and the mark at the end.
+
+@node Mark Ring,, Marking Objects, Mark
+@subsection The Mark Ring
+
+@kindex C-u C-SPC
+@cindex mark ring
+@kindex C-u C-@@
+  Aside from delimiting the region, the mark is also useful for marking
+a spot that you may want to go back to.  To make this feature more
+useful, Emacs remembers 16 previous locations of the mark in the
+@dfn{mark ring}.  Most commands that set the mark push the old mark onto
+this ring.  To return to a marked location, use @kbd{C-u C-@key{SPC}}
+(or @kbd{C-u C-@@}); this is the command @code{set-mark-command} given a
+numeric argument.  The command moves point to where the mark was, and
+restores the mark from the ring of former marks. Repeated use of this
+command moves point to all the old marks on the ring, one by one.
+The marks you have seen go to the end of the ring, so no marks are lost.
+
+  Each buffer has its own mark ring.  All editing commands use the current
+buffer's mark ring.  In particular, @kbd{C-u C-@key{SPC}} always stays in
+the same buffer.
+
+  Many commands that can move long distances, such as @kbd{M-<}
+(@code{beginning-of-buffer}), start by setting the mark and saving the
+old mark on the mark ring.  This makes it easier for you to move back
+later.  Searches set the mark, unless they do not actually move point.
+When a command sets the mark, @samp{Mark Set} is printed in the
+echo area.
+
+@vindex mark-ring-max
+  The variable @code{mark-ring-max} is the maximum number of entries to
+keep in the mark ring.  If that many entries exist and another entry is
+added, the last entry in the list is discarded.  Repeating @kbd{C-u
+C-@key{SPC}} circulates through the entries that are currently in the
+ring.
+
+@vindex mark-ring
+  The variable @code{mark-ring} holds the mark ring itself, as a list of
+marker objects in the order most recent first.  This variable is local
+in every buffer.

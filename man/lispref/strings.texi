@@ -1,0 +1,1259 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/strings.info
+@node Strings and Characters, Lists, Numbers, Top
+@chapter Strings and Characters
+@cindex strings
+@cindex character arrays
+@cindex characters
+@cindex bytes
+
+  A string in XEmacs Lisp is an array that contains an ordered sequence
+of characters.  Strings are used as names of symbols, buffers, and
+files, to send messages to users, to hold text being copied between
+buffers, and for many other purposes.  Because strings are so important,
+XEmacs Lisp has many functions expressly for manipulating them.  XEmacs
+Lisp programs use strings more often than individual characters.
+
+@menu
+* String Basics::             Basic properties of strings and characters.
+* Predicates for Strings::    Testing whether an object is a string or char.
+* Creating Strings::          Functions to allocate new strings.
+* Predicates for Characters:: Testing whether an object is a character.
+* Character Codes::           Each character has an equivalent integer.
+* Text Comparison::           Comparing characters or strings.
+* String Conversion::         Converting characters or strings and vice versa.
+* Modifying Strings::	      Changing characters in a string.
+* String Properties::	      Additional information attached to strings.
+* Formatting Strings::        @code{format}: XEmacs's analog of @code{printf}.
+* Character Case::            Case conversion functions.
+* Case Tables::		      Customizing case conversion.
+* Char Tables::               Mapping from characters to Lisp objects.
+@end menu
+
+@node String Basics
+@section String and Character Basics
+
+  Strings in XEmacs Lisp are arrays that contain an ordered sequence of
+characters.  Characters are their own primitive object type in XEmacs
+20.  However, in XEmacs 19, characters are represented in XEmacs Lisp as
+integers; whether an integer was intended as a character or not is
+determined only by how it is used.  @xref{Character Type}.
+
+  The length of a string (like any array) is fixed and independent of
+the string contents, and cannot be altered.  Strings in Lisp are
+@emph{not} terminated by a distinguished character code.  (By contrast,
+strings in C are terminated by a character with @sc{ascii} code 0.)
+This means that any character, including the null character (@sc{ascii}
+code 0), is a valid element of a string.@refill
+
+  Since strings are considered arrays, you can operate on them with the
+general array functions.  (@xref{Sequences Arrays Vectors}.)  For
+example, you can access or change individual characters in a string
+using the functions @code{aref} and @code{aset} (@pxref{Array
+Functions}).
+
+  Strings use an efficient representation for storing the characters
+in them, and thus take up much less memory than a vector of the same
+length.
+
+  Sometimes you will see strings used to hold key sequences.  This
+exists for backward compatibility with Emacs 18, but should @emph{not}
+be used in new code, since many key chords can't be represented at
+all and others (in particular meta key chords) are confused with
+accented characters.
+
+@ignore @c Not accurate any more
+  Each character in a string is stored in a single byte.  Therefore,
+numbers not in the range 0 to 255 are truncated when stored into a
+string.  This means that a string takes up much less memory than a
+vector of the same length.
+
+  Sometimes key sequences are represented as strings.  When a string is
+a key sequence, string elements in the range 128 to 255 represent meta
+characters (which are extremely large integers) rather than keyboard
+events in the range 128 to 255.
+
+  Strings cannot hold characters that have the hyper, super or alt
+modifiers; they can hold @sc{ASCII} control characters, but no other
+control characters.  They do not distinguish case in @sc{ASCII} control
+characters.  @xref{Character Type}, for more information about
+representation of meta and other modifiers for keyboard input
+characters.
+@end ignore
+
+  Strings are useful for holding regular expressions.  You can also
+match regular expressions against strings (@pxref{Regexp Search}).  The
+functions @code{match-string} (@pxref{Simple Match Data}) and
+@code{replace-match} (@pxref{Replacing Match}) are useful for
+decomposing and modifying strings based on regular expression matching.
+
+  Like a buffer, a string can contain extents in it.  These extents are
+created when a function such as @code{buffer-substring} is called on a
+region with duplicable extents in it.  When the string is inserted into
+a buffer, the extents are inserted along with it.  @xref{Duplicable
+Extents}.
+
+  @xref{Text}, for information about functions that display strings or
+copy them into buffers.  @xref{Character Type}, and @ref{String Type},
+for information about the syntax of characters and strings.
+
+@node Predicates for Strings
+@section The Predicates for Strings
+
+For more information about general sequence and array predicates,
+see @ref{Sequences Arrays Vectors}, and @ref{Arrays}.
+
+@defun stringp object
+  This function returns @code{t} if @var{object} is a string, @code{nil}
+otherwise.
+@end defun
+
+@defun char-or-string-p object
+  This function returns @code{t} if @var{object} is a string or a
+character, @code{nil} otherwise.
+
+In XEmacs addition, this function also returns @code{t} if @var{object}
+is an integer that can be represented as a character.  This is because
+of compatibility with previous XEmacs and should not be depended on.
+@end defun
+
+@node Creating Strings
+@section Creating Strings
+
+  The following functions create strings, either from scratch, or by
+putting strings together, or by taking them apart.
+
+@defun string &rest characters
+  This function returns a new string made up of @var{characters}.
+
+@example
+(string ?X ?E ?m ?a ?c ?s)
+     @result{} "XEmacs"
+(string)
+     @result{} ""
+@end example
+
+Analogous functions operating on other data types include @code{list},
+@code{cons} (@pxref{Building Lists}), @code{vector} (@pxref{Vectors})
+and @code{bit-vector} (@pxref{Bit Vectors}).  This function has not been
+available in XEmacs prior to 21.0 and FSF Emacs prior to 20.3.
+@end defun
+
+@defun make-string length character
+This function returns a new string consisting entirely of @var{length}
+successive copies of @var{character}.  @var{length} must be a
+non-negative integer.
+
+@example
+(make-string 5 ?x)
+     @result{} "xxxxx"
+(make-string 0 ?x)
+     @result{} ""
+@end example
+
+  Other functions to compare with this one include @code{char-to-string}
+(@pxref{String Conversion}), @code{make-vector} (@pxref{Vectors}), and
+@code{make-list} (@pxref{Building Lists}).
+@end defun
+
+@defun substring string start &optional end
+This function returns a new string which consists of those characters
+from @var{string} in the range from (and including) the character at the
+index @var{start} up to (but excluding) the character at the index
+@var{end}.  The first character is at index zero.
+
+@example
+@group
+(substring "abcdefg" 0 3)
+     @result{} "abc"
+@end group
+@end example
+
+@noindent
+Here the index for @samp{a} is 0, the index for @samp{b} is 1, and the
+index for @samp{c} is 2.  Thus, three letters, @samp{abc}, are copied
+from the string @code{"abcdefg"}.  The index 3 marks the character
+position up to which the substring is copied.  The character whose index
+is 3 is actually the fourth character in the string.
+
+A negative number counts from the end of the string, so that @minus{}1
+signifies the index of the last character of the string.  For example:
+
+@example
+@group
+(substring "abcdefg" -3 -1)
+     @result{} "ef"
+@end group
+@end example
+
+@noindent
+In this example, the index for @samp{e} is @minus{}3, the index for
+@samp{f} is @minus{}2, and the index for @samp{g} is @minus{}1.
+Therefore, @samp{e} and @samp{f} are included, and @samp{g} is excluded.
+
+When @code{nil} is used as an index, it stands for the length of the
+string.  Thus,
+
+@example
+@group
+(substring "abcdefg" -3 nil)
+     @result{} "efg"
+@end group
+@end example
+
+Omitting the argument @var{end} is equivalent to specifying @code{nil}.
+It follows that @code{(substring @var{string} 0)} returns a copy of all
+of @var{string}.
+
+@example
+@group
+(substring "abcdefg" 0)
+     @result{} "abcdefg"
+@end group
+@end example
+
+@noindent
+But we recommend @code{copy-sequence} for this purpose (@pxref{Sequence
+Functions}).
+
+If the characters copied from @var{string} have duplicable extents or
+text properties, those are copied into the new string also.
+@xref{Duplicable Extents}.
+
+A @code{wrong-type-argument} error is signaled if either @var{start} or
+@var{end} is not an integer or @code{nil}.  An @code{args-out-of-range}
+error is signaled if @var{start} indicates a character following
+@var{end}, or if either integer is out of range for @var{string}.
+
+Contrast this function with @code{buffer-substring} (@pxref{Buffer
+Contents}), which returns a string containing a portion of the text in
+the current buffer.  The beginning of a string is at index 0, but the
+beginning of a buffer is at index 1.
+@end defun
+
+@defun concat &rest sequences
+@cindex copying strings
+@cindex concatenating strings
+This function returns a new string consisting of the characters in the
+arguments passed to it (along with their text properties, if any).  The
+arguments may be strings, lists of numbers, or vectors of numbers; they
+are not themselves changed.  If @code{concat} receives no arguments, it
+returns an empty string.
+
+@example
+(concat "abc" "-def")
+     @result{} "abc-def"
+(concat "abc" (list 120 (+ 256 121)) [122])
+     @result{} "abcxyz"
+;; @r{@code{nil} is an empty sequence.}
+(concat "abc" nil "-def")
+     @result{} "abc-def"
+(concat "The " "quick brown " "fox.")
+     @result{} "The quick brown fox."
+(concat)
+     @result{} ""
+@end example
+
+@noindent
+The second example above shows how characters stored in strings are
+taken modulo 256.  In other words, each character in the string is
+stored in one byte.
+
+The @code{concat} function always constructs a new string that is
+not @code{eq} to any existing string.
+
+When an argument is an integer (not a sequence of integers), it is
+converted to a string of digits making up the decimal printed
+representation of the integer.  @strong{Don't use this feature; we plan
+to eliminate it.  If you already use this feature, change your programs
+now!}  The proper way to convert an integer to a decimal number in this
+way is with @code{format} (@pxref{Formatting Strings}) or
+@code{number-to-string} (@pxref{String Conversion}).
+
+@example
+@group
+(concat 137)
+     @result{} "137"
+(concat 54 321)
+     @result{} "54321"
+@end group
+@end example
+
+For information about other concatenation functions, see the description
+of @code{mapconcat} in @ref{Mapping Functions}, @code{vconcat} in
+@ref{Vectors}, @code{bvconcat} in @ref{Bit Vectors}, and @code{append}
+in @ref{Building Lists}.
+@end defun
+
+@node Predicates for Characters
+@section The Predicates for Characters
+
+@defun characterp object
+This function returns @code{t} if @var{object} is a character.
+
+Some functions that work on integers (e.g. the comparison functions
+<, <=, =, /=, etc. and the arithmetic functions +, -, *, etc.)
+accept characters and implicitly convert them into integers.  In
+general, functions that work on characters also accept char-ints and
+implicitly convert them into characters.  WARNING: Neither of these
+behaviors is very desirable, and they are maintained for backward
+compatibility with old E-Lisp programs that confounded characters and
+integers willy-nilly.  These behaviors may change in the future; therefore,
+do not rely on them.  Instead, convert the characters explicitly
+using @code{char-int}.
+@end defun
+
+@defun integer-or-char-p object
+This function returns @code{t} if @var{object} is an integer or character.
+@end defun
+
+@node Character Codes
+@section Character Codes
+
+@defun char-int character
+This function converts a character into an equivalent integer.
+The resulting integer will always be non-negative.  The integers in
+the range 0 - 255 map to characters as follows:
+
+@table @asis
+@item 0 - 31
+Control set 0
+@item 32 - 127
+@sc{ascii}
+@item 128 - 159
+Control set 1
+@item 160 - 255
+Right half of ISO-8859-1
+@end table
+
+If support for @sc{mule} does not exist, these are the only valid
+character values.  When @sc{mule} support exists, the values assigned to
+other characters may vary depending on the particular version of XEmacs,
+the order in which character sets were loaded, etc., and you should not
+depend on them.
+@end defun
+
+@defun int-char integer
+This function converts an integer into the equivalent character.  Not
+all integers correspond to valid characters; use @code{char-int-p} to
+determine whether this is the case.  If the integer cannot be converted,
+@code{nil} is returned.
+@end defun
+
+@defun char-int-p object
+This function returns @code{t} if @var{object} is an integer that can be
+converted into a character.
+@end defun
+
+@defun char-or-char-int-p object
+This function returns @code{t} if @var{object} is a character or an
+integer that can be converted into one.
+@end defun
+
+@need 2000
+@node Text Comparison
+@section Comparison of Characters and Strings
+@cindex string equality
+
+@defun char-equal character1 character2 &optional buffer
+This function returns @code{t} if the arguments represent the same
+character, @code{nil} otherwise.  This function ignores differences
+in case if the value of @code{case-fold-search} is non-@code{nil} in
+@var{buffer}, which defaults to the current buffer.
+
+@example
+(char-equal ?x ?x)
+     @result{} t
+(let ((case-fold-search t))
+  (char-equal ?x ?X))
+     @result{} t
+(let ((case-fold-search nil))
+  (char-equal ?x ?X))
+     @result{} nil
+@end example
+@end defun
+
+@defun char= character1 character2
+This function returns @code{t} if the arguments represent the same
+character, @code{nil} otherwise.  Case is significant.
+
+@example
+(char= ?x ?x)
+     @result{} t
+(char= ?x ?X)
+     @result{} nil
+(let ((case-fold-search t))
+  (char-equal ?x ?X))
+     @result{} nil
+(let ((case-fold-search nil))
+  (char-equal ?x ?X))
+     @result{} nil
+@end example
+@end defun
+
+@defun string= string1 string2
+This function returns @code{t} if the characters of the two strings
+match exactly; case is significant.
+
+@example
+(string= "abc" "abc")
+     @result{} t
+(string= "abc" "ABC")
+     @result{} nil
+(string= "ab" "ABC")
+     @result{} nil
+@end example
+
+@ignore @c `equal' in XEmacs does not compare text properties
+The function @code{string=} ignores the text properties of the
+two strings.  To compare strings in a way that compares their text
+properties also, use @code{equal} (@pxref{Equality Predicates}).
+@end ignore
+@end defun
+
+@defun string-equal string1 string2
+@code{string-equal} is another name for @code{string=}.
+@end defun
+
+@cindex lexical comparison
+@defun string< string1 string2
+@c (findex string< causes problems for permuted index!!)
+This function compares two strings a character at a time.  First it
+scans both the strings at once to find the first pair of corresponding
+characters that do not match.  If the lesser character of those two is
+the character from @var{string1}, then @var{string1} is less, and this
+function returns @code{t}.  If the lesser character is the one from
+@var{string2}, then @var{string1} is greater, and this function returns
+@code{nil}.  If the two strings match entirely, the value is @code{nil}.
+
+Pairs of characters are compared by their @sc{ascii} codes.  Keep in
+mind that lower case letters have higher numeric values in the
+@sc{ascii} character set than their upper case counterparts; numbers and
+many punctuation characters have a lower numeric value than upper case
+letters.
+
+@example
+@group
+(string< "abc" "abd")
+     @result{} t
+(string< "abd" "abc")
+     @result{} nil
+(string< "123" "abc")
+     @result{} t
+@end group
+@end example
+
+When the strings have different lengths, and they match up to the
+length of @var{string1}, then the result is @code{t}.  If they match up
+to the length of @var{string2}, the result is @code{nil}.  A string of
+no characters is less than any other string.
+
+@example
+@group
+(string< "" "abc")
+     @result{} t
+(string< "ab" "abc")
+     @result{} t
+(string< "abc" "")
+     @result{} nil
+(string< "abc" "ab")
+     @result{} nil
+(string< "" "")
+     @result{} nil
+@end group
+@end example
+@end defun
+
+@defun string-lessp string1 string2
+@code{string-lessp} is another name for @code{string<}.
+@end defun
+
+  See also @code{compare-buffer-substrings} in @ref{Comparing Text}, for
+a way to compare text in buffers.  The function @code{string-match},
+which matches a regular expression against a string, can be used
+for a kind of string comparison; see @ref{Regexp Search}.
+
+@node String Conversion
+@section Conversion of Characters and Strings
+@cindex conversion of strings
+
+  This section describes functions for conversions between characters,
+strings and integers.  @code{format} and @code{prin1-to-string}
+(@pxref{Output Functions}) can also convert Lisp objects into strings.
+@code{read-from-string} (@pxref{Input Functions}) can ``convert'' a
+string representation of a Lisp object into an object.
+
+  @xref{Documentation}, for functions that produce textual descriptions
+of text characters and general input events
+(@code{single-key-description} and @code{text-char-description}).  These
+functions are used primarily for making help messages.
+
+@defun char-to-string character
+@cindex character to string
+  This function returns a new string with a length of one character.
+The value of @var{character}, modulo 256, is used to initialize the
+element of the string.
+
+This function is similar to @code{make-string} with an integer argument
+of 1.  (@xref{Creating Strings}.)  This conversion can also be done with
+@code{format} using the @samp{%c} format specification.
+(@xref{Formatting Strings}.)
+
+@example
+(char-to-string ?x)
+     @result{} "x"
+(char-to-string (+ 256 ?x))
+     @result{} "x"
+(make-string 1 ?x)
+     @result{} "x"
+@end example
+@end defun
+
+@defun string-to-char string
+@cindex string to character
+  This function returns the first character in @var{string}.  If the
+string is empty, the function returns 0. (Under XEmacs 19, the value is
+also 0 when the first character of @var{string} is the null character,
+@sc{ascii} code 0.)
+
+@example
+(string-to-char "ABC")
+     @result{} ?A   ;; @r{Under XEmacs 20.}
+     @result{} 65   ;; @r{Under XEmacs 19.}
+(string-to-char "xyz")
+     @result{} ?x   ;; @r{Under XEmacs 20.}
+     @result{} 120  ;; @r{Under XEmacs 19.}
+(string-to-char "")
+     @result{} 0
+(string-to-char "\000")
+     @result{} ?\^@ ;; @r{Under XEmacs 20.}
+     @result{} 0    ;; @r{Under XEmacs 20.}
+@end example
+
+This function may be eliminated in the future if it does not seem useful
+enough to retain.
+@end defun
+
+@defun number-to-string number
+@cindex integer to string
+@cindex integer to decimal
+This function returns a string consisting of the printed
+representation of @var{number}, which may be an integer or a floating
+point number.  The value starts with a sign if the argument is
+negative.
+
+@example
+(number-to-string 256)
+     @result{} "256"
+(number-to-string -23)
+     @result{} "-23"
+(number-to-string -23.5)
+     @result{} "-23.5"
+@end example
+
+@cindex int-to-string
+@code{int-to-string} is a semi-obsolete alias for this function.
+
+See also the function @code{format} in @ref{Formatting Strings}.
+@end defun
+
+@defun string-to-number string &optional base
+@cindex string to number
+This function returns the numeric value represented by @var{string},
+read in @var{base}.  It skips spaces and tabs at the beginning of
+@var{string}, then reads as much of @var{string} as it can interpret as
+a number.  (On some systems it ignores other whitespace at the
+beginning, not just spaces and tabs.)  If the first character after the
+ignored whitespace is not a digit or a minus sign, this function returns
+0.
+
+If @var{base} is not specified, it defaults to ten.  With @var{base}
+other than ten, only integers can be read.
+
+@example
+(string-to-number "256")
+     @result{} 256
+(string-to-number "25 is a perfect square.")
+     @result{} 25
+(string-to-number "X256")
+     @result{} 0
+(string-to-number "-4.5")
+     @result{} -4.5
+(string-to-number "ffff" 16)
+     @result{} 65535
+@end example
+
+@findex string-to-int
+@code{string-to-int} is an obsolete alias for this function.
+@end defun
+
+@node Modifying Strings
+@section Modifying Strings
+@cindex strings, modifying
+
+You can modify a string using the general array-modifying primitives.
+@xref{Arrays}.  The function @code{aset} modifies a single character;
+the function @code{fillarray} sets all characters in the string to
+a specified character.
+
+Each string has a tick counter that starts out at zero (when the string
+is created) and is incremented each time a change is made to that
+string.
+
+@defun string-modified-tick string
+This function returns the tick counter for @samp{string}.
+@end defun
+
+@node String Properties
+@section String Properties
+@cindex string properties
+@cindex properties of strings
+
+Just as with symbols, extents, faces, and glyphs, you can attach
+additional information to strings in the form of @dfn{string
+properties}.  These differ from text properties, which are logically
+attached to particular characters in the string.
+
+To attach a property to a string, use @code{put}.  To retrieve a property
+from a string, use @code{get}.  You can also use @code{remprop} to remove
+a property from a string and @code{object-plist} to retrieve a list of
+all the properties in a string.
+
+@node Formatting Strings
+@section Formatting Strings
+@cindex formatting strings
+@cindex strings, formatting them
+
+  @dfn{Formatting} means constructing a string by substitution of
+computed values at various places in a constant string.  This string
+controls how the other values are printed as well as where they appear;
+it is called a @dfn{format string}.
+
+  Formatting is often useful for computing messages to be displayed.  In
+fact, the functions @code{message} and @code{error} provide the same
+formatting feature described here; they differ from @code{format} only
+in how they use the result of formatting.
+
+@defun format string &rest objects
+  This function returns a new string that is made by copying
+@var{string} and then replacing any format specification
+in the copy with encodings of the corresponding @var{objects}.  The
+arguments @var{objects} are the computed values to be formatted.
+@end defun
+
+@cindex @samp{%} in format
+@cindex format specification
+  A format specification is a sequence of characters beginning with a
+@samp{%}.  Thus, if there is a @samp{%d} in @var{string}, the
+@code{format} function replaces it with the printed representation of
+one of the values to be formatted (one of the arguments @var{objects}).
+For example:
+
+@example
+@group
+(format "The value of fill-column is %d." fill-column)
+     @result{} "The value of fill-column is 72."
+@end group
+@end example
+
+  If @var{string} contains more than one format specification, the
+format specifications correspond with successive values from
+@var{objects}.  Thus, the first format specification in @var{string}
+uses the first such value, the second format specification uses the
+second such value, and so on.  Any extra format specifications (those
+for which there are no corresponding values) cause unpredictable
+behavior.  Any extra values to be formatted are ignored.
+
+  Certain format specifications require values of particular types.
+However, no error is signaled if the value actually supplied fails to
+have the expected type.  Instead, the output is likely to be
+meaningless.
+
+  Here is a table of valid format specifications:
+
+@table @samp
+@item %s
+Replace the specification with the printed representation of the object,
+made without quoting.  Thus, strings are represented by their contents
+alone, with no @samp{"} characters, and symbols appear without @samp{\}
+characters.  This is equivalent to printing the object with @code{princ}.
+
+If there is no corresponding object, the empty string is used.
+
+@item %S
+Replace the specification with the printed representation of the object,
+made with quoting.  Thus, strings are enclosed in @samp{"} characters,
+and @samp{\} characters appear where necessary before special characters.
+This is equivalent to printing the object with @code{prin1}.
+
+If there is no corresponding object, the empty string is used.
+
+@item %o
+@cindex integer to octal
+Replace the specification with the base-eight representation of an
+integer.
+
+@item %d
+@itemx %i
+Replace the specification with the base-ten representation of an
+integer.
+
+@item %x
+@cindex integer to hexadecimal
+Replace the specification with the base-sixteen representation of an
+integer, using lowercase letters.
+
+@item %X
+@cindex integer to hexadecimal
+Replace the specification with the base-sixteen representation of an
+integer, using uppercase letters.
+
+@item %c
+Replace the specification with the character which is the value given.
+
+@item %e
+Replace the specification with the exponential notation for a floating
+point number (e.g. @samp{7.85200e+03}).
+
+@item %f
+Replace the specification with the decimal-point notation for a floating
+point number.
+
+@item %g
+Replace the specification with notation for a floating point number,
+using a ``pretty format''.  Either exponential notation or decimal-point
+notation will be used (usually whichever is shorter), and trailing
+zeroes are removed from the fractional part.
+
+@item %%
+A single @samp{%} is placed in the string.  This format specification is
+unusual in that it does not use a value.  For example, @code{(format "%%
+%d" 30)} returns @code{"% 30"}.
+@end table
+
+  Any other format character results in an @samp{Invalid format
+operation} error.
+
+  Here are several examples:
+
+@example
+@group
+(format "The name of this buffer is %s." (buffer-name))
+     @result{} "The name of this buffer is strings.texi."
+
+(format "The buffer object prints as %s." (current-buffer))
+     @result{} "The buffer object prints as #<buffer strings.texi>."
+
+(format "The octal value of %d is %o,
+         and the hex value is %x." 18 18 18)
+     @result{} "The octal value of 18 is 22,
+         and the hex value is 12."
+@end group
+@end example
+
+  There are many additional flags and specifications that can occur
+between the @samp{%} and the format character, in the following order:
+
+@enumerate
+@item
+An optional repositioning specification, which is a positive
+integer followed by a @samp{$}.
+
+@item
+Zero or more of the optional flag characters @samp{-}, @samp{+},
+@samp{ }, @samp{0}, and @samp{#}.
+
+@item
+An asterisk (@samp{*}, meaning that the field width is now assumed to
+have been specified as an argument.
+
+@item
+An optional minimum field width.
+
+@item
+An optional precision, preceded by a @samp{.} character.
+@end enumerate
+
+@cindex repositioning format arguments
+@cindex multilingual string formatting
+  A @dfn{repositioning} specification changes which argument to
+@code{format} is used by the current and all following format
+specifications.  Normally the first specification uses the first
+argument, the second specification uses the second argument, etc.  Using
+a repositioning specification, you can change this.  By placing a number
+@var{n} followed by a @samp{$} between the @samp{%} and the format
+character, you cause the specification to use the @var{n}th argument.
+The next specification will use the @var{n}+1'th argument, etc.
+
+For example:
+
+@example
+@group
+(format "Can't find file `%s' in directory `%s'."
+        "ignatius.c" "loyola/")
+     @result{} "Can't find file `ignatius.c' in directory `loyola/'."
+
+(format "In directory `%2$s', the file `%1$s' was not found."
+        "ignatius.c" "loyola/")
+     @result{} "In directory `loyola/', the file `ignatius.c' was not found."
+
+(format
+    "The numbers %d and %d are %1$x and %x in hex and %1$o and %o in octal."
+    37 12)
+@result{} "The numbers 37 and 12 are 25 and c in hex and 45 and 14 in octal."
+@end group
+@end example
+
+As you can see, this lets you reprocess arguments more than once or
+reword a format specification (thereby moving the arguments around)
+without having to actually reorder the arguments.  This is especially
+useful in translating messages from one language to another: Different
+languages use different word orders, and this sometimes entails changing
+the order of the arguments.  By using repositioning specifications,
+this can be accomplished without having to embed knowledge of particular
+languages into the location in the program's code where the message is
+displayed.
+
+@cindex numeric prefix
+@cindex field width
+@cindex padding
+  All the specification characters allow an optional numeric prefix
+between the @samp{%} and the character, and following any repositioning
+specification or flag.  The optional numeric prefix defines the minimum
+width for the object.  If the printed representation of the object
+contains fewer characters than this, then it is padded.  The padding is
+normally on the left, but will be on the right if the @samp{-} flag
+character is given.  The padding character is normally a space, but if
+the @samp{0} flag character is given, zeros are used for padding.
+
+@example
+(format "%06d is padded on the left with zeros" 123)
+     @result{} "000123 is padded on the left with zeros"
+
+(format "%-6d is padded on the right" 123)
+     @result{} "123    is padded on the right"
+@end example
+
+  @code{format} never truncates an object's printed representation, no
+matter what width you specify.  Thus, you can use a numeric prefix to
+specify a minimum spacing between columns with no risk of losing
+information.
+
+  In the following three examples, @samp{%7s} specifies a minimum width
+of 7.  In the first case, the string inserted in place of @samp{%7s} has
+only 3 letters, so 4 blank spaces are inserted for padding.  In the
+second case, the string @code{"specification"} is 13 letters wide but is
+not truncated.  In the third case, the padding is on the right.
+
+@smallexample
+@group
+(format "The word `%7s' actually has %d letters in it."
+        "foo" (length "foo"))
+     @result{} "The word `    foo' actually has 3 letters in it."
+@end group
+
+@group
+(format "The word `%7s' actually has %d letters in it."
+        "specification" (length "specification"))
+     @result{} "The word `specification' actually has 13 letters in it."
+@end group
+
+@group
+(format "The word `%-7s' actually has %d letters in it."
+        "foo" (length "foo"))
+     @result{} "The word `foo    ' actually has 3 letters in it."
+@end group
+@end smallexample
+
+@cindex format precision
+@cindex precision of formatted numbers
+  After any minimum field width, a precision may be specified by
+preceding it with a @samp{.} character.  The precision specifies the
+minimum number of digits to appear in @samp{%d}, @samp{%i}, @samp{%o},
+@samp{%x}, and @samp{%X} conversions (the number is padded on the left
+with zeroes as necessary); the number of digits printed after the
+decimal point for @samp{%f}, @samp{%e}, and @samp{%E} conversions; the
+number of significant digits printed in @samp{%g} and @samp{%G}
+conversions; and the maximum number of non-padding characters printed in
+@samp{%s} and @samp{%S} conversions.  The default precision for
+floating-point conversions is six.
+
+The other flag characters have the following meanings:
+
+@itemize @bullet
+@item
+The @samp{ } flag means prefix non-negative numbers with a space.
+
+@item
+The @samp{+} flag means prefix non-negative numbers with a plus sign.
+
+@item
+The @samp{#} flag means print numbers in an alternate, more verbose
+format: octal numbers begin with zero; hex numbers begin with a
+@samp{0x} or @samp{0X}; a decimal point is printed in @samp{%f},
+@samp{%e}, and @samp{%E} conversions even if no numbers are printed
+after it; and trailing zeroes are not omitted in @samp{%g} and @samp{%G}
+conversions.
+@end itemize
+
+@node Character Case
+@section Character Case
+@cindex upper case
+@cindex lower case
+@cindex character case
+
+  The character case functions change the case of single characters or
+of the contents of strings.  The functions convert only alphabetic
+characters (the letters @samp{A} through @samp{Z} and @samp{a} through
+@samp{z}); other characters are not altered.  The functions do not
+modify the strings that are passed to them as arguments.
+
+  The examples below use the characters @samp{X} and @samp{x} which have
+@sc{ascii} codes 88 and 120 respectively.
+
+@defun downcase string-or-char &optional buffer
+This function converts a character or a string to lower case.
+
+When the argument to @code{downcase} is a string, the function creates
+and returns a new string in which each letter in the argument that is
+upper case is converted to lower case.  When the argument to
+@code{downcase} is a character, @code{downcase} returns the
+corresponding lower case character. (This value is actually an integer
+under XEmacs 19.) If the original character is lower case, or is not a
+letter, then the value equals the original character.
+
+Optional second arg @var{buffer} specifies which buffer's case tables to
+use, and defaults to the current buffer.
+
+@example
+(downcase "The cat in the hat")
+     @result{} "the cat in the hat"
+
+(downcase ?X)
+     @result{} ?x   ;; @r{Under XEmacs 20.}
+     @result{} 120  ;; @r{Under XEmacs 19.}
+
+@end example
+@end defun
+
+@defun upcase string-or-char &optional buffer
+This function converts a character or a string to upper case.
+
+When the argument to @code{upcase} is a string, the function creates
+and returns a new string in which each letter in the argument that is
+lower case is converted to upper case.
+
+When the argument to @code{upcase} is a character, @code{upcase} returns
+the corresponding upper case character. (This value is actually an
+integer under XEmacs 19.)  If the original character is upper case, or
+is not a letter, then the value equals the original character.
+
+Optional second arg @var{buffer} specifies which buffer's case tables to
+use, and defaults to the current buffer.
+
+@example
+(upcase "The cat in the hat")
+     @result{} "THE CAT IN THE HAT"
+
+(upcase ?x)
+     @result{} ?X   ;; @r{Under XEmacs 20.}
+     @result{} 88   ;; @r{Under XEmacs 19.}
+@end example
+@end defun
+
+@defun capitalize string-or-char &optional buffer
+@cindex capitalization
+This function capitalizes strings or characters.  If
+@var{string-or-char} is a string, the function creates and returns a new
+string, whose contents are a copy of @var{string-or-char} in which each
+word has been capitalized.  This means that the first character of each
+word is converted to upper case, and the rest are converted to lower
+case.
+
+The definition of a word is any sequence of consecutive characters that
+are assigned to the word constituent syntax class in the current syntax
+table (@pxref{Syntax Class Table}).
+
+When the argument to @code{capitalize} is a character, @code{capitalize}
+has the same result as @code{upcase}.
+
+Optional second arg @var{buffer} specifies which buffer's case tables to
+use, and defaults to the current buffer.
+
+@example
+(capitalize "The cat in the hat")
+     @result{} "The Cat In The Hat"
+
+(capitalize "THE 77TH-HATTED CAT")
+     @result{} "The 77th-Hatted Cat"
+
+@group
+(capitalize ?x)
+     @result{} ?X   ;; @r{Under XEmacs 20.}
+     @result{} 88   ;; @r{Under XEmacs 19.}
+@end group
+@end example
+@end defun
+
+@node Case Tables
+@section The Case Table
+
+  You can customize case conversion by installing a special @dfn{case
+table}.  A case table specifies the mapping between upper case and lower
+case letters.  It affects both the string and character case conversion
+functions (see the previous section) and those that apply to text in the
+buffer (@pxref{Case Changes}).  You need a case table if you are using a
+language which has letters other than the standard @sc{ascii} letters.
+
+  A case table is a list of this form:
+
+@example
+(@var{downcase} @var{upcase} @var{canonicalize} @var{equivalences})
+@end example
+
+@noindent
+where each element is either @code{nil} or a string of length 256.  The
+element @var{downcase} says how to map each character to its lower-case
+equivalent.  The element @var{upcase} maps each character to its
+upper-case equivalent.  If lower and upper case characters are in
+one-to-one correspondence, use @code{nil} for @var{upcase}; then XEmacs
+deduces the upcase table from @var{downcase}.
+
+  For some languages, upper and lower case letters are not in one-to-one
+correspondence.  There may be two different lower case letters with the
+same upper case equivalent.  In these cases, you need to specify the
+maps for both directions.
+
+  The element @var{canonicalize} maps each character to a canonical
+equivalent; any two characters that are related by case-conversion have
+the same canonical equivalent character.
+
+  The element @var{equivalences} is a map that cyclicly permutes each
+equivalence class (of characters with the same canonical equivalent).
+(For ordinary @sc{ascii}, this would map @samp{a} into @samp{A} and
+@samp{A} into @samp{a}, and likewise for each set of equivalent
+characters.)
+
+  When you construct a case table, you can provide @code{nil} for
+@var{canonicalize}; then Emacs fills in this string from @var{upcase}
+and @var{downcase}.  You can also provide @code{nil} for
+@var{equivalences}; then Emacs fills in this string from
+@var{canonicalize}.  In a case table that is actually in use, those
+components are non-@code{nil}.  Do not try to specify @var{equivalences}
+without also specifying @var{canonicalize}.
+
+  Each buffer has a case table.  XEmacs also has a @dfn{standard case
+table} which is copied into each buffer when you create the buffer.
+Changing the standard case table doesn't affect any existing buffers.
+
+  Here are the functions for working with case tables:
+
+@defun case-table-p object
+This predicate returns non-@code{nil} if @var{object} is a valid case
+table.
+@end defun
+
+@defun set-standard-case-table case-table
+This function makes @var{case-table} the standard case table, so that it
+will apply to any buffers created subsequently.
+@end defun
+
+@defun standard-case-table
+This returns the standard case table.
+@end defun
+
+@defun current-case-table &optional buffer
+This function returns the case table of @var{buffer}, which defaults to
+the current buffer.
+@end defun
+
+@defun set-case-table case-table
+This sets the current buffer's case table to @var{case-table}.
+@end defun
+
+  The following three functions are convenient subroutines for packages
+that define non-@sc{ascii} character sets.  They modify a string
+@var{downcase-table} provided as an argument; this should be a string to
+be used as the @var{downcase} part of a case table.  They also modify
+the standard syntax table.  @xref{Syntax Tables}.
+
+@defun set-case-syntax-pair uc lc downcase-table
+This function specifies a pair of corresponding letters, one upper case
+and one lower case.
+@end defun
+
+@defun set-case-syntax-delims l r downcase-table
+This function makes characters @var{l} and @var{r} a matching pair of
+case-invariant delimiters.
+@end defun
+
+@defun set-case-syntax char syntax downcase-table
+This function makes @var{char} case-invariant, with syntax
+@var{syntax}.
+@end defun
+
+@deffn Command describe-buffer-case-table
+This command displays a description of the contents of the current
+buffer's case table.
+@end deffn
+
+@cindex ISO Latin 1
+@pindex iso-syntax
+You can load the library @file{iso-syntax} to set up the standard syntax
+table and define a case table for the 8-bit ISO Latin 1 character set.
+
+@node Char Tables
+@section The Char Table
+
+A char table is a table that maps characters (or ranges of characters)
+to values.  Char tables are specialized for characters, only allowing
+particular sorts of ranges to be assigned values.  Although this
+loses in generality, it makes for extremely fast (constant-time)
+lookups, and thus is feasible for applications that do an extremely
+large number of lookups (e.g. scanning a buffer for a character in
+a particular syntax, where a lookup in the syntax table must occur
+once per character).
+
+Note that char tables as a primitive type, and all of the functions in
+this section, exist only in XEmacs 20.  In XEmacs 19, char tables are
+generally implemented using a vector of 256 elements.
+
+When @sc{mule} support exists, the types of ranges that can be assigned
+values are
+
+@itemize @bullet
+@item
+all characters
+@item
+an entire charset
+@item
+a single row in a two-octet charset
+@item
+a single character
+@end itemize
+
+When @sc{mule} support is not present, the types of ranges that can be
+assigned values are
+
+@itemize @bullet
+@item
+all characters
+@item
+a single character
+@end itemize
+
+@defun char-table-p object
+This function returns non-@code{nil} if @var{object} is a char table.
+@end defun
+
+@menu
+* Char Table Types::            Char tables have different uses.
+* Working With Char Tables::    Creating and working with char tables.
+@end menu
+
+@node Char Table Types
+@subsection Char Table Types
+
+Each char table type is used for a different purpose and allows different
+sorts of values.  The different char table types are
+
+@table @code
+@item category
+Used for category tables, which specify the regexp categories
+that a character is in.  The valid values are @code{nil} or a
+bit vector of 95 elements.  Higher-level Lisp functions are
+provided for working with category tables.  Currently categories
+and category tables only exist when @sc{mule} support is present.
+@item char
+A generalized char table, for mapping from one character to
+another.  Used for case tables, syntax matching tables,
+@code{keyboard-translate-table}, etc.  The valid values are characters.
+@item generic
+An even more generalized char table, for mapping from a
+character to anything.
+@item display
+Used for display tables, which specify how a particular character
+is to appear when displayed.  #### Not yet implemented.
+@item syntax
+Used for syntax tables, which specify the syntax of a particular
+character.  Higher-level Lisp functions are provided for
+working with syntax tables.  The valid values are integers.
+@end table
+
+@defun char-table-type char-table
+This function returns the type of char table @var{char-table}.
+@end defun
+
+@defun char-table-type-list
+This function returns a list of the recognized char table types.
+@end defun
+
+@defun valid-char-table-type-p type
+This function returns @code{t} if @var{type} if a recognized char table type.
+@end defun
+
+@node Working With Char Tables
+@subsection Working With Char Tables
+
+@defun make-char-table type
+This function makes a new, empty char table of type @var{type}.
+@var{type} should be a symbol, one of @code{char}, @code{category},
+@code{display}, @code{generic}, or @code{syntax}.
+@end defun
+
+@defun put-char-table range value char-table
+This function sets the value for chars in @var{range} to be @var{value} in
+@var{char-table}.
+
+@var{range} specifies one or more characters to be affected and should be
+one of the following:
+
+@itemize @bullet
+@item
+@code{t} (all characters are affected)
+@item
+A charset (only allowed when @sc{mule} support is present)
+@item
+A vector of two elements: a two-octet charset and a row number
+(only allowed when @sc{mule} support is present)
+@item
+A single character
+@end itemize
+
+@var{value} must be a value appropriate for the type of @var{char-table}.
+@end defun
+
+@defun get-char-table character char-table
+This function finds the value for @var{character} in @var{char-table}.
+@end defun
+
+@defun get-range-char-table range char-table &optional multi
+This function finds the value for a range in @var{char-table}.  If there is
+more than one value, @var{multi} is returned (defaults to @code{nil}).
+@end defun
+
+@defun reset-char-table char-table
+This function resets @var{char-table} to its default state.
+@end defun
+
+@defun map-char-table function char-table &optional range
+This function maps @var{function} over entries in @var{char-table}, calling
+it with two args, each key and value in the table.
+
+@var{range} specifies a subrange to map over and is in the same format
+as the @var{range} argument to @code{put-range-table}.  If omitted or
+@code{t}, it defaults to the entire table.
+@end defun
+
+@defun valid-char-table-value-p value char-table-type
+This function returns non-@code{nil} if @var{value} is a valid value for
+@var{char-table-type}.
+@end defun
+
+@defun check-valid-char-table-value value char-table-type
+This function signals an error if @var{value} is not a valid value for
+@var{char-table-type}.
+@end defun

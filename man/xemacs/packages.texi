@@ -1,0 +1,834 @@
+@c This is part of the XEmacs manual.
+@c Copyright (C) 1985, 86, 87, 93, 94, 95, 1997 Free Software Foundation, Inc.
+@c See file xemacs.texi for copying conditions.
+@node Packages, Basic, Startup Paths, Top
+@comment  node-name,  next,  previous,  up
+
+@section Packages
+@cindex packages
+
+The XEmacs 21 distribution comes only with a very basic set of
+built-in modes and packages.  Most of the packages that were part of
+the distribution of earlier versions of XEmacs are now available
+separately.  The installer as well as the user can choose which
+packages to install; the actual installation process is easy.
+This gives an installer the ability to tailor an XEmacs installation for
+local needs with safe removal of unnecessary code.
+
+@menu
+* Package Terminology:: Understanding different kinds of packages.
+* Installing Packages:: How to install packages.
+* Building Packages::   Building packages from CVS sources.
+* Local.rules File::    This is an important file that you must create.
+* Available Packages::  A brief directory of packaged LISP.
+@end menu
+
+@node Package Terminology, Installing Packages, , Packages
+@comment  node-name,  next,  previous,  up
+@heading Package Terminology:
+@subsection Package Flavors
+
+There are two main flavors of packages.
+
+@itemize @bullet
+@item 
+Regular Packages
+@cindex regular packages
+A regular package is one in which multiple files are involved and one
+may not in general safely remove any of them.
+
+@item 
+Single-File Packages
+@cindex single-file packages
+A single-file package is an aggregate collection of thematically
+related but otherwise independent lisp files.  These files are bundled 
+together for download convenience and individual files may be deleted at
+will without any loss of functionality.  However, we would recommend
+that you follow this rule of thumb: "When in doubt, don't delete".
+@end itemize
+
+@subsection Package Distributions
+@cindex package distributions
+XEmacs Lisp packages are distributed in two ways, depending on the
+intended use.  Binary Packages are for installers and end-users that can
+be installed directly into an XEmacs package directory.  Source Packages
+are for developers and include all files necessary for rebuilding
+bytecompiled lisp and creating tarballs for distribution.
+
+@subsection Binary Packages
+@cindex binary packages
+Binary packages may be installed directly into an XEmacs package
+hierarchy.
+
+@subsection Source Packages
+@cindex source packages
+Source packages contain all of the Package author's (where appropriate
+in regular packages) source code plus all of the files necessary to
+build distribution tarballs (Unix Tar format files, gzipped for space
+savings).
+
+Currently, source packages are only available via CVS.  See
+@url{http://cvs.xemacs.org/} for details.
+
+@node Installing Packages, Building Packages, Package Terminology, Packages
+@comment  node-name,  next,  previous,  up
+@cindex installing packages
+@cindex install
+@heading Installing Packages:
+@subsection Getting Started
+
+When you first download XEmacs 21, you will usually first grab the
+@dfn{core distribution},
+@cindex core distribution
+a file called
+@file{xemacs-21.x.x.tar.gz}. (Replace the @t{21.x.x} by the current version
+number.)  The core distribution contains the sources of XEmacs and a
+minimal set of Emacs Lisp files, which are in the subdirectory named
+@file{lisp}.  This subdirectory used to contain all Emacs Lisp files
+distributed with XEmacs.  Now, to conserve disk space, most
+non-essential packages were made optional.
+
+@subsection Choosing the Packages You Need
+@cindex choosing packages
+The @ref{Available Packages} can currently be found in the same ftp directory
+where you grabbed the core distribution from, and are located in the
+subdirectory @file{packages}.  Package file names follow
+the naming convention @file{<package-name>-<version>-pkg.tar.gz}.
+
+If you have EFS @ref{(EFS)}, packages can be installed over the network.
+Alternatively, if you have copies of the packages locally, you can
+install packages from a local disk or CDROM.
+
+The file @file{etc/PACKAGES} in the core distribution contains a list of
+the @ref{Available Packages} at the time of the XEmacs release.
+
+You can also get a list of available packages, and whether or not they
+are installed, using the visual package browser and installer.  You can
+access it via the menus:
+
+@example
+Tools -> Packages -> List and Install
+@end example
+
+Or, you can get to it via the keyboard:
+
+@example
+@code{M-x pui-list-packages}
+@end example
+
+Hint to system administrators of multi-user systems: it might be a good
+idea to install all packages and not interfere with the wishes of your
+users.
+
+If you can't find which package provides the feature you require, try
+using the @code{package-get-package-provider} function. Eg., if you know 
+that you need @code{thingatpt}, type:
+
+@example
+@code{M-x package-get-package-provider RET thingatpt}
+@end example
+
+which will return something like @samp{(fsf-compat "1.08")}. You can the use
+one of the methods above for installing the package you want.
+
+@subsection XEmacs and Installing Packages
+
+There are three main ways to install packages:
+
+@menu
+* Automatically::     Using the package tools from XEmacs.
+* Manually::          Using individual package tarballs.
+* Sumo::              All at once, using the 'Sumo Tarball'.
+* Which Packages::    Which packages to install.
+* Removing Packages:: Removing packages.
+@end menu
+
+But regardless of the method you use to install packages, they can only
+be used by XEmacs after a restart unless the package in question has not
+been previously installed.
+
+@node Automatically, Manually, ,Installing Packages
+@comment  node-name,  next,  previous,  up
+@cindex automatic package install
+@cindex package tools
+@heading Automatic Package Installation:
+XEmacs comes with some tools to make the periodic updating and
+installing easier. It will notice if new packages or versions are
+available and will fetch them from the FTP site.
+
+Unfortunately this requires that a few packages are already in place.
+You will have to install them by hand as above or use a SUMO tarball.
+This requirement will hopefully go away in the future. The packages
+you need are:
+
+@example
+   efs          - To fetch the files from the FTP site or mirrors.
+   xemacs-base  - Needed by efs.
+
+and optionally:
+
+   mailcrypt    - To do PGP verification of the @file{package-index}
+                  file. 
+@end example
+
+After installing these by hand, fire up XEmacs and follow these
+steps.
+
+@enumerate 1
+@item 
+Choose a download site.
+via menu: Tools -> Packages -> Set Download Site 
+via keyb: @code{M-x customize-variable RET package-get-remote RET}
+(put in the details of remote host and directory)
+
+If the package tarballs _AND_ the package-index file are in a
+local directory, you can: @code{M-x pui-set-local-package-get-directory RET}
+
+@item 
+Obtain a list of packages and display the list in a buffer named
+@file{*Packages*}.
+menu: Tools -> Packages -> List & Install
+keyb: @code{M-x pui-list-packages RET}
+
+XEmacs will now connect to the remote site and download the
+latest package-index file.
+
+The visual package browser will then display a list of all packages.
+Help information will be displayed at the very bottom of the buffer; you
+may have to scroll down to see it.  You can also press @kbd{?} to get
+the same help.  From this buffer, you can tell the package status by the
+character in the first column:
+
+@table @kbd
+@item -
+The package has not been installed.
+@item *
+The package has been installed, but a newer version is available.  The
+current version is out-of-date.
+@item +
+The package has been marked for installation/update.
+@end table
+
+If there is no character in the first column, the package has been
+installed and is up to date.
+
+From here, you can select or unselect packages for installation using
+the @key{RET} key, the @kbd{Mouse-2} button or selecting "Select" from
+the Popup @kbd{Mouse-3} Menu.
+Once you've finished selecting the packages, you can
+press the @kbd{x} key (or use the menu) to actually install the
+packages. Note that you will have to restart XEmacs for XEmacs to
+recognize any new packages.
+
+Key summary:
+
+@table @kbd
+@item ?
+Display simple help.
+@item @key{RET}
+@itemx @key{Mouse-2}
+Toggle between selecting and unselecting a package for installation.
+@item x
+Install selected packages.
+@item @key{SPC}
+View, in the minibuffer, additional information about the package, such
+as the package date (not the build date) and the package author.  Moving 
+the mouse over a package name will also do the same thing.
+@item v
+Toggle between verbose and non-verbose package display.
+@item g
+Refresh the package display.
+@item q
+Kill the package buffer.
+@end table
+
+Moving the mouse over a package will also cause additional information
+about the package to be displayed in the minibuffer.  If you have
+balloon-help enabled a balloon-help frame will pop up and display
+additional package information also.
+
+
+@item 
+Choose the packages you wish to install.
+mouse: Click button 2 on the package name.
+ keyb: @kbd{RET} on the package name
+
+@item 
+Make sure you have everything you need.
+menu: Packages -> Add Required
+keyb: @kbd{r}
+
+XEmacs will now search for packages that are required by the
+ones that you have chosen to install and offer to select
+those packages also.
+
+For novices and gurus alike, this step can save your bacon.
+It's easy to forget to install a critical package.
+
+@item 
+Download and install the packages.
+menu: Packages -> Install/Remove Selected
+keyb: @kbd{x}
+@end enumerate
+
+You can also install packages using a semi-manual interface:
+
+@example
+M-x package-get-all <return>
+@end example
+
+Enter the name of the package (e.g., @code{prog-modes}), and XEmacs
+will search for the latest version and install it and any packages that
+it depends upon.
+
+@heading Keeping Packages Up To Date:
+Once you have the packages you want installed (using any of the above
+methods) you'll want to keep them up to date.  You can do this easily
+from the menubar:
+
+@example
+Tools -> Packages -> Set Download Site
+Tools -> Packages -> Update Installed Packages
+@end example
+
+
+@node Manually, Sumo, Automatically, Installing Packages
+@comment  node-name,  next,  previous,  up
+@cindex manual package install
+@heading Manual Package Installation:
+Fetch the packages from the FTP site, CD-ROM whatever. The filenames
+have the form @file{name-<version>-pkg.tar.gz} and are gzipped tar files. For
+a fresh install it is sufficient to untar the file at the top of the
+package hierarchy. 
+
+Note: If you are upgrading packages already installed, it's best to
+remove the old package first @ref{Removing Packages}.
+
+For example if we are installing the @file{xemacs-base}
+package (version 1.48):
+
+@example
+   mkdir $prefix/lib/xemacs/xemacs-packages RET # if it does not exist yet
+   cd $prefix/lib/xemacs/xemacs-packages RET
+   gunzip -c /path/to/xemacs-base-1.48-pkg.tar.gz | tar xvf - RET
+
+Or if you have GNU tar, the last step can be:
+
+   tar zxvf /path/to/xemacs-base-1.48-pkg.tar.gz RET
+@end example
+
+For MULE related packages, it is best to untar into the mule-packages
+hierarchy, i.e. for the @file{mule-base} package, version 1.37:
+
+@example
+   mkdir $prefix/lib/xemacs/mule-packages RET # if it does not exist yet
+   cd $prefix/lib/xemacs/mule-packages RET
+   gunzip -c /path/to/mule-base-1.37-pkg.tar.gz | tar xvf - RET
+
+Or if you have GNU tar, the last step can be:
+
+   tar zxvf /path/to/mule-base-1.37-pkg.tar.gz RET
+@end example
+
+@node Sumo, Which Packages, Manually, Installing Packages
+@comment  node-name,  next,  previous,  up
+@cindex sumo package install
+@heading Installing the Sumo Packages:
+Those with little time, cheap connections and plenty of disk space can
+install all the packages at once using the sumo tarballs.
+Download the file: @file{xemacs-sumo.tar.gz}
+
+For an XEmacs compiled with Mule you also need: @file{xemacs-mule-sumo.tar.gz}
+
+N.B. They are called 'Sumo Tarballs' for good reason. They are
+currently about 19MB and 4.5MB (gzipped) respectively.
+
+Install them by:
+
+@code{cd $prefix/lib/xemacs ; gunzip -c <tarballname> | tar xvf - RET}
+
+Or, if you have GNU tar:
+
+@code{cd $prefix/lib/xemacs ; tar zxvf /path/to/<tarballname> RET}
+
+As the Sumo tarballs are not regenerated as often as the individual
+packages, it is recommended that you use the automatic package tools
+afterwards to pick up any recent updates.
+
+@node Which Packages, Removing Packages, Sumo, Installing Packages
+@comment  node-name,  next,  previous,  up
+@cindex which packages
+@cindex choosing packages
+@heading Which Packages to Install:
+This is difficult to say. When in doubt install a package. If you
+administrate a big site it might be a good idea to just install
+everything. A good minimal set of packages for XEmacs-latin1 would be
+
+xemacs-base, xemacs-devel, c-support, cc-mode, debug, dired, efs,
+edit-utils, fsf-compat, mail-lib, net-utils, os-utils, prog-modes,
+text-modes, time, mailcrypt
+
+If you are using the XEmacs package tools, don't forget to do:
+
+	Packages -> Add Required
+
+To make sure you have everything that the packages you have chosen to
+install need.
+
+See also @ref{Available Packages} for further descriptions of the individual
+packages.
+
+@node Removing Packages, ,Which Packages, Installing Packages
+@comment  node-name,  next,  previous,  up
+@cindex removing packages
+@cindex deleting packages
+@heading Removing Packages:
+Because the exact files and their locations contained in a package may
+change it is recommended to remove a package first before installing a
+new version. In order to facilitate removal each package contains an
+@file{pgkinfo/MANIFEST.pkgname} file which list all the files belonging
+to the package. 
+
+No need to panic, you don't have to go through the
+@file{pkinfo/MANIFEST.pkgname} and manually delete the files.  Instead, use
+@code{M-x package-get-delete-package RET}.
+
+Note that the interactive package tools included with XEmacs already do
+this for you.
+
+@node Building Packages, Local.rules File, Installing Packages, Packages
+@comment  node-name,  next,  previous,  up
+@cindex building packages
+@cindex package building
+@heading Building Packages:
+Currently, source packages are only available via anonymous CVS.  See
+@url{http://cvs.xemacs.org/} for details of checking out the
+@file{xemacs-packages} module.
+
+@subsection Prerequisites for Building Source Packages
+
+@table @code
+@item GNU cp
+@item GNU install 
+(or a BSD compatible install program).
+@item GNU make 
+(3.75 or later preferred).
+@item makeinfo 
+(4.2 from GNU texinfo 4.2 or later required).
+@item GNU tar
+(or equivalent).
+@item GNU gzip
+(or equivalent).
+@item A properly configured @file{Local.rules} file.
+@ref{Local.rules File}.
+@end table
+And of course, XEmacs 21.0 or higher.
+
+@subsection What You Can Do With Source Packages
+
+The packages CVS sources are most useful for creating XEmacs package
+tarballs for installation into your own XEmacs installations or for
+distributing to others.
+
+For a list and description of the different @file{Makefile} targets,
+@xref{Makefile Targets,,,lispref}.
+
+@node Local.rules File, Available Packages, Building Packages, Packages
+@comment  node-name,  next,  previous,  up
+@cindex local.rules
+@heading The Local.rules File:
+This file is used when building and installing packages from source.  In
+the top level of the CVS module, @file{packages}, contains the
+file, @file{Local.rules.template}.  Simply copy that to
+@file{Local.rules} and edit it to suit your needs.
+
+For a complete discussion of the @file{Local.rules} file,
+@xref{Local.rules File,,,lispref}.
+
+@node Available Packages,  , Local.rules File, Packages
+@comment  node-name,  next,  previous,  up
+@cindex available packages
+@cindex packages
+@heading Available Packages:
+This section lists the Lisp packages that are currently available from
+xemacs.org and it's mirrors.  If a particular package that you are
+looking for isn't here, please send a message to the
+@email{xemacs-beta@@xemacs.org, XEmacs Beta list}.
+
+This data is up to date as of June 27, 2003.
+
+@subsection Normal Packages
+A very broad selection of elisp packages.
+
+@table @file
+@item Sun
+Support for Sparcworks.
+
+@item ada
+Ada language support.
+
+@item apel
+A Portable Emacs Library.  Used by XEmacs MIME support.
+
+@item auctex
+Basic TeX/LaTeX support.
+
+@item bbdb
+The Big Brother Data Base: a rolodex-like database program.
+
+@item build
+Build XEmacs using custom widgets.
+
+@item c-support
+Basic single-file add-ons for editing C code.
+
+@item calc
+Emacs calculator.
+
+@item calendar
+Calendar and diary support.
+
+@item cc-mode
+C, C++ and Java language support.
+
+@item clearcase
+Support for the Clearcase version control system.
+
+@item cookie
+"Fortune cookie"-style messages. Includes Spook (suspicious phrases) 
+and Yow (Zippy quotes).
+
+@item crisp
+Crisp/Brief emulation.
+
+@item debug
+GUD, gdb, dbx debugging support.
+
+@item dictionary
+Interface to RFC2229 dictionary servers.
+
+@item dired
+The DIRectory EDitor is for manipulating, and running commands on
+files in a directory.
+
+@item docbookide
+DocBook editing support.
+
+@item ecrypto
+Crypto functionality in Emacs Lisp.
+
+@item edebug
+A Lisp debugger.
+
+@item ediff
+Interface over patch.
+
+@item edit-utils
+Single file lisp packages for various XEmacs goodies.  Load this and
+weed out the junk you don't want.
+
+@item edt
+DEC EDIT/EDT emulation.
+
+@item efs
+Treat files on remote systems the same as local files.
+
+@item eieio
+Enhanced Implementation of Emacs Interpreted Objects.
+
+@item elib
+Portable Emacs Lisp utilities library.
+
+@item emerge
+Another interface over patch.
+
+@item eshell
+Command shell implemented entirely in Emacs Lisp.
+
+@item ess
+ESS: Emacs Speaks Statistics.
+
+@item eterm
+Terminal emulator.
+
+@item eudc
+Emacs Unified Directory Client (LDAP, PH).
+
+@item footnote
+Footnoting in mail message editing modes.
+
+@item forms
+Forms editing support (obsolete, use the built-in Widget instead).
+
+@item fortran-modes
+Fortran language support.
+
+@item frame-icon
+Provide a WM icon based on major mode.
+
+@item fsf-compat
+GNU Emacs compatibility files.
+
+@item games
+Tetris, Sokoban, and Snake.
+
+@item general-docs
+General documentation.  Presently, empty.
+
+@item gnats
+XEmacs bug reports.
+
+@item gnus
+The Gnus Newsreader and Mailreader.
+
+@item haskell-mode
+Haskell language support.
+
+@item hm--html-menus
+HTML editing.
+
+@item ibuffer
+Advanced replacement for buffer-menu.
+
+@item idlwave
+Editing and Shell mode for the Interactive Data Language.
+
+@item igrep
+Enhanced front-end for Grep.
+
+@item ilisp
+Front-end for interacting with Inferior Lisp (external lisps).
+
+@item ispell
+Spell-checking with ispell.
+
+@item jde
+Java language and development support.
+
+@item liece
+IRC (Internet Relay Chat) client for Emacs.
+
+@item mail-lib
+Fundamental lisp files for providing email support.
+
+@item mailcrypt
+Support for messaging encryption with PGP.
+
+@item mew
+Messaging in an Emacs World; a MIME-based email program.
+
+@item mh-e
+Front end support for MH.
+
+@item mine
+Elisp implementation of the game 'Minehunt'.
+
+@item misc-games
+Other amusements and diversions.
+
+@item mmm-mode
+Support for Multiple Major Modes within a single buffer.
+
+@item net-utils
+Miscellaneous Networking Utilities.  This is a single-file package and 
+files may be deleted at will.
+
+@item ocaml
+Objective Caml editing support.
+
+@item os-utils
+Miscellaneous single-file O/S utilities, for printing, archiving,
+compression, remote shells, etc.
+
+@item pc
+PC style interface emulation.
+
+@item pcl-cvs
+CVS frontend.
+
+@item pcomplete
+Provides programmatic completion.
+
+@item perl-modes
+Perl language support.
+
+@item pgg
+Emacs interface to various PGP implementations.
+
+@item prog-modes
+Miscellaneous single-file lisp files for various programming languages.
+
+@item ps-print
+Print buffers to PostScript printers.
+
+@item psgml
+Validated HTML/SGML editing.
+
+@item psgml-dtds
+A collection of DTDs for psgml.  Note that this package is deprecated
+and will be removed in the future, most likely Q2/2003.  Instead of using
+this, you should install needed DTDs yourself.
+
+@item python-modes
+Python language support.
+
+@item reftex
+Emacs support for LaTeX cross-references, citations.
+
+@item rmail
+An obsolete Emacs mailer.  If you do not already use it don't start.
+
+@item ruby-modes
+Ruby language support.
+
+@item sasl
+Simple Authentication and Security Layer (SASL) library.
+
+@item scheme
+Front-end support for Inferior Scheme.
+
+@item semantic
+Semantic bovinator.
+
+@item sgml
+SGML/Linuxdoc-SGML editing.
+
+@item sh-script
+Support for editing shell scripts.
+
+@item sieve
+Manage Sieve email filtering scripts.
+
+@item slider
+User interface tool.
+
+@item sml-mode
+Standard ML editing support.
+
+@item sounds-au
+XEmacs Sun sound files.
+
+@item sounds-wav
+XEmacs Microsoft sound files.
+
+@item speedbar
+Provides a separate frame with convenient references.
+
+@item strokes
+Mouse enhancement utility.
+
+@item supercite
+An Emacs citation tool.  Useful with all Emacs Mailers and Newsreaders.
+
+@item texinfo
+XEmacs TeXinfo support.
+
+@item text-modes
+Various single file lisp packages for editing text files.
+
+@item textools
+Single-file TeX support.
+
+@item time
+Display time & date on the modeline.
+
+@item tm
+Emacs MIME support. Not needed for Gnus >= 5.8.0
+
+@item tooltalk
+Support for building with Tooltalk.
+
+@item tpu
+DEC EDIT/TPU support.
+
+@item tramp
+Remote shell-based file editing.  This is similar to EFS or Ange-FTP,
+but works with rsh/ssh and rcp/scp.
+
+@item vc
+Version Control for Free systems.
+
+@item vc-cc
+Version Control for ClearCase.  This package will shortly be
+replaced with clearcase.el
+
+@item vhdl
+Support for VHDL.
+
+@item view-process
+A Unix process browsing tool.
+
+@item viper
+VI emulation support.
+
+@item vm
+An Emacs mailer.
+
+@item w3
+A Web browser.
+
+@item x-symbol
+Semi WYSIWYG for LaTeX, HTML, etc, using additional fonts.
+
+@item xemacs-base
+Fundamental XEmacs support.  Install this unless you wish a totally
+naked XEmacs.
+
+@item xemacs-devel
+XEmacs Lisp developer support.  This package contains utilities for
+supporting Lisp development.  It is a single-file package so it may be 
+tailored.
+
+@item xslide
+XSL editing support.
+
+@item xslt-process
+A minor mode for (X)Emacs which allows running an XSLT processor on a
+buffer.
+
+@item zenirc
+ZENIRC IRC Client.
+@end table
+
+@subsection Mule Support (mule)
+
+MULti-lingual Enhancement.  Support for world scripts such as
+Latin, Arabic, Cyrillic, Chinese, Japanese, Greek, Hebrew etc.
+To use these packages your XEmacs must be compiled with Mule
+support.
+
+@table @file
+@item edict
+Lisp Interface to EDICT, Kanji Dictionary.
+
+@item egg-its
+Wnn (4.2 and 6) support.  SJ3 support.  Must be installed prior to
+XEmacs build.
+
+@item latin-unity
+Unify character sets in a buffer. When characters belong to disjoint
+character sets, this attempts to translate the characters so
+that they belong to one character set. If the buffer coding system is
+not sufficient, this suggests different coding systems.
+
+@item leim
+Quail.  Used for everything other than English and Japanese.
+
+@item locale
+Used for localized menubars (French and Japanese) and localized splash
+screens (Japanese).
+
+@item lookup
+Dictionary support. (This isn't an English dictionary program)
+
+@item mule-base
+Basic Mule support.  Must be installed prior to building with Mule.
+
+@item mule-ucs
+Extended coding systems (including Unicode) for XEmacs.
+
+@item skk
+Another Japanese Language Input Method.  Can be used without a
+separate process running as a dictionary server.
+@end table
+

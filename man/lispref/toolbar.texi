@@ -1,0 +1,386 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1995, 1996 Ben Wing.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/toolbar.info
+@node Toolbar, Gutter, Dialog Boxes, top
+@chapter Toolbar
+@cindex toolbar
+
+@menu
+* Toolbar Intro::		An introduction.
+* Creating Toolbar::            How to create a toolbar.
+* Toolbar Descriptor Format::	Accessing and modifying a toolbar's
+                                  properties.
+* Specifying the Toolbar::	Setting a toolbar's contents.
+* Other Toolbar Variables::	Controlling the size of toolbars.
+@end menu
+
+@node Toolbar Intro
+@section Toolbar Intro
+
+A @dfn{toolbar} is a bar of icons displayed along one edge of a frame.
+You can view a toolbar as a series of menu shortcuts---the most
+common menu options can be accessed with a single click rather than
+a series of clicks and/or drags to select the option from a menu.
+Consistent with this, a help string (called the @dfn{help-echo})
+describing what an icon in the toolbar (called a @dfn{toolbar button})
+does, is displayed in the minibuffer when the mouse is over the
+button.
+
+In XEmacs, a toolbar can be displayed along any of the four edges
+of the frame, and two or more different edges can be displaying
+toolbars simultaneously.  The contents, thickness, and visibility of
+the toolbars can be controlled separately, and the values can
+be per-buffer, per-frame, etc., using specifiers (@pxref{Specifiers}).
+
+Normally, there is one toolbar displayed in a frame.  Usually, this is
+the standard toolbar, but certain modes will override this and
+substitute their own toolbar.  In some cases (e.g. the VM package), a
+package will supply its own toolbar along a different edge from the
+standard toolbar, so that both can be visible at once.  This standard
+toolbar is usually positioned along the top of the frame, but this can
+be changed using @code{set-default-toolbar-position}.
+
+Note that, for each of the toolbar properties (contents, thickness,
+and visibility), there is a separate specifier for each of the four
+toolbar positions (top, bottom, left, and right), and an additional
+specifier for the ``default'' toolbar, i.e. the toolbar whose
+position is controlled by @code{set-default-toolbar-position}.  The
+way this works is that @code{set-default-toolbar-position} arranges
+things so that the appropriate position-specific specifiers for the
+default position inherit from the corresponding default specifiers.
+That way, if the position-specific specifier does not give a value
+(which it usually doesn't), then the value from the default
+specifier applies.  If you want to control the default toolbar, you
+just change the default specifiers, and everything works.  A package
+such as VM that wants to put its own toolbar in a different location
+from the default just sets the position-specific specifiers, and if
+the user sets the default toolbar to the same position, it will just
+not be visible.
+
+@node Creating Toolbar
+@section Creating Toolbar
+
+@defun make-toolbar-specifier spec-list
+
+Return a new @code{toolbar} specifier object with the given
+specification list.  @var{spec-list} can be a list of specifications
+(each of which is a cons of a locale and a list of instantiators), a
+single instantiator, or a list of instantiators.  @xref{Specifiers}, for
+more information about specifiers.
+
+Toolbar specifiers are used to specify the format of a toolbar.  The
+values of the variables @code{default-toolbar}, @code{top-toolbar},
+@code{left-toolbar}, @code{right-toolbar}, and @code{bottom-toolbar} are
+always toolbar specifiers.
+
+Valid toolbar instantiators are called "toolbar descriptors"
+and are lists of vectors.  See @code{default-toolbar} for a description
+of the exact format.
+@end defun
+
+@node Toolbar Descriptor Format
+@section Toolbar Descriptor Format
+
+The contents of a toolbar are specified using a @dfn{toolbar descriptor}.
+The format of a toolbar descriptor is a list of @dfn{toolbar button
+descriptors}.  Each toolbar button descriptor is a vector in one of the
+following formats:
+
+@itemize @bullet
+@item
+@code{[@var{glyph-list} @var{function} @var{enabled-p} @var{help}]}
+@item
+@code{[:style @var{2d-or-3d}]}
+@item
+@code{[:style @var{2d-or-3d} :size @var{width-or-height}]}
+@item
+@code{[:size @var{width-or-height} :style @var{2d-or-3d}]}
+@end itemize
+
+Optionally, one of the toolbar button descriptors may be @code{nil}
+instead of a vector; this signifies the division between the toolbar
+buttons that are to be displayed flush-left, and the buttons to be
+displayed flush-right.
+
+The first vector format above specifies a normal toolbar button;
+the others specify blank areas in the toolbar.
+
+For the first vector format:
+
+@itemize @bullet
+@item
+@var{glyph-list} should be a list of one to six glyphs (as created by
+@code{make-glyph}) or a symbol whose value is such a list.  The first
+glyph, which must be provided, is the glyph used to display the toolbar
+button when it is in the ``up'' (not pressed) state.  The optional
+second glyph is for displaying the button when it is in the ``down''
+(pressed) state.  The optional third glyph is for when the button is
+disabled.  The last three glyphs are for displaying the button in the
+``up'', ``down'', and ``disabled'' states, respectively, but are used
+when the user has called for captioned toolbar buttons (using
+@code{toolbar-buttons-captioned-p}).  The function
+@code{toolbar-make-button-list} is useful in creating these glyph lists.
+
+@item
+Even if you do not provide separate down-state and disabled-state
+glyphs, the user will still get visual feedback to indicate which
+state the button is in.  Buttons in the up-state are displayed
+with a shadowed border that gives a raised appearance to the
+button.  Buttons in the down-state are displayed with shadows that
+give a recessed appearance.  Buttons in the disabled state are
+displayed with no shadows, giving a 2-d effect.
+
+@item
+If some of the toolbar glyphs are not provided, they inherit as follows:
+
+@example
+     UP:                up
+     DOWN:              down -> up
+     DISABLED:          disabled -> up
+     CAP-UP:            cap-up -> up
+     CAP-DOWN:          cap-down -> cap-up -> down -> up
+     CAP-DISABLED:      cap-disabled -> cap-up -> disabled -> up
+@end example
+
+@item
+The second element @var{function} is a function to be called when the
+toolbar button is activated (i.e. when the mouse is released over the
+toolbar button, if the press occurred in the toolbar).  It can be any
+form accepted by @code{call-interactively}, since this is how it is
+invoked.
+
+@item
+The third element @var{enabled-p} specifies whether the toolbar button
+is enabled (disabled buttons do nothing when they are activated, and are
+displayed differently; see above).  It should be either a boolean or a
+form that evaluates to a boolean.
+
+@item
+The fourth element @var{help}, if non-@code{nil}, should be a string.
+This string is displayed in the echo area when the mouse passes over the
+toolbar button.
+@end itemize
+
+For the other vector formats (specifying blank areas of the toolbar):
+
+@itemize @bullet
+@item
+@var{2d-or-3d} should be one of the symbols @code{2d} or @code{3d},
+indicating whether the area is displayed with shadows (giving it a
+raised, 3-d appearance) or without shadows (giving it a flat
+appearance).
+
+@item
+@var{width-or-height} specifies the length, in pixels, of the blank
+area.  If omitted, it defaults to a device-specific value (8 pixels for
+X devices).
+@end itemize
+
+@defun toolbar-make-button-list up &optional down disabled cap-up cap-down cap-disabled
+This function calls @code{make-glyph} on each arg and returns a list of
+the results.  This is useful for setting the first argument of a toolbar
+button descriptor (typically, the result of this function is assigned
+to a symbol, which is specified as the first argument of the toolbar
+button descriptor).
+@end defun
+
+@defun check-toolbar-button-syntax button &optional noerror
+Verify the syntax of entry @var{button} in a toolbar description list.
+If you want to verify the syntax of a toolbar description list as a
+whole, use @code{check-valid-instantiator} with a specifier type of
+@code{toolbar}.
+@end defun
+
+@node Specifying the Toolbar
+@section Specifying the Toolbar
+
+In order to specify the contents of a toolbar, set one of the specifier
+variables @code{default-toolbar}, @code{top-toolbar},
+@code{bottom-toolbar}, @code{left-toolbar}, or @code{right-toolbar}.
+These are specifiers, which means you set them with @code{set-specifier}
+and query them with @code{specifier-specs} or @code{specifier-instance}.
+You will get an error if you try to set them using @code{setq}.  The
+valid instantiators for these specifiers are toolbar descriptors, as
+described above.  @xref{Specifiers}, for more information.
+
+Most of the time, you will set @code{default-toolbar}, which allows
+the user to choose where the toolbar should go.
+
+@defvr Specifier default-toolbar
+The position of this toolbar is specified in the function
+@code{default-toolbar-position}.  If the corresponding
+position-specific toolbar (e.g. @code{top-toolbar} if
+@code{default-toolbar-position} is @code{top}) does not specify a
+toolbar in a particular domain, then the value of @code{default-toolbar}
+in that domain, of any, will be used instead.
+@end defvr
+
+Note that the toolbar at any particular position will not be displayed
+unless its thickness (width or height, depending on orientation) is
+non-zero and its visibility status is true.  The thickness is controlled
+by the specifiers @code{top-toolbar-height},
+@code{bottom-toolbar-height}, @code{left-toolbar-width}, and
+@code{right-toolbar-width}, and the visibility status is controlled by
+the specifiers @code{top-toolbar-visible-p},
+@code{bottom-toolbar-visible-p}, @code{left-toolbar-visible-p}, and
+@code{right-toolbar-visible-p} (@pxref{Other Toolbar Variables}).
+
+@defun set-default-toolbar-position position
+This function sets the position that the @code{default-toolbar} will be
+displayed at.  Valid positions are the symbols @code{top},
+@code{bottom}, @code{left} and @code{right}.  What this actually does is
+set the fallback specifier for the position-specific specifier
+corresponding to the given position to @code{default-toolbar}, and set
+the fallbacks for the other position-specific specifiers to @code{nil}.
+It also does the same thing for the position-specific thickness and
+visibility specifiers, which inherit from one of
+@code{default-toolbar-height} or @code{default-toolbar-width}, and from
+@code{default-toolbar-visible-p}, respectively (@pxref{Other Toolbar
+Variables}).
+@end defun
+
+@defun default-toolbar-position
+This function returns the position that the @code{default-toolbar} will
+be displayed at.
+@end defun
+
+You can also explicitly set a toolbar at a particular position.  When
+redisplay determines what to display at a particular position in a
+particular domain (i.e. window), it first consults the position-specific
+toolbar.  If that does not yield a toolbar descriptor, the
+@code{default-toolbar} is consulted if @code{default-toolbar-position}
+indicates this position.
+
+@defvr Specifier top-toolbar
+Specifier for the toolbar at the top of the frame.
+@end defvr
+
+@defvr Specifier bottom-toolbar
+Specifier for the toolbar at the bottom of the frame.
+@end defvr
+
+@defvr Specifier left-toolbar
+Specifier for the toolbar at the left edge of the frame.
+@end defvr
+
+@defvr Specifier right-toolbar
+Specifier for the toolbar at the right edge of the frame.
+@end defvr
+
+@defun toolbar-specifier-p object
+This function returns non-@code{nil} if @var{object} is a toolbar specifier.
+Toolbar specifiers are the actual objects contained in the toolbar
+variables described above, and their valid instantiators are
+toolbar descriptors (@pxref{Toolbar Descriptor Format}).
+@end defun
+
+@node Other Toolbar Variables
+@section Other Toolbar Variables
+
+The variables to control the toolbar thickness, visibility status, and
+captioned status are all specifiers.  @xref{Specifiers}.
+
+@defvr Specifier default-toolbar-height
+This specifies the height of the default toolbar, if it's oriented
+horizontally.  The position of the default toolbar is specified by the
+function @code{set-default-toolbar-position}.  If the corresponding
+position-specific toolbar thickness specifier
+(e.g. @code{top-toolbar-height} if @code{default-toolbar-position} is
+@code{top}) does not specify a thickness in a particular domain (a
+window or a frame), then the value of @code{default-toolbar-height} or
+@code{default-toolbar-width} (depending on the toolbar orientation) in
+that domain, if any, will be used instead.
+@end defvr
+
+@defvr Specifier default-toolbar-width
+This specifies the width of the default toolbar, if it's oriented
+vertically.  This behaves like @code{default-toolbar-height}.
+@end defvr
+
+Note that @code{default-toolbar-height} is only used when
+@code{default-toolbar-position} is @code{top} or @code{bottom}, and
+@code{default-toolbar-width} is only used when
+@code{default-toolbar-position} is @code{left} or @code{right}.
+
+@defvr Specifier top-toolbar-height
+This specifies the height of the top toolbar.
+@end defvr
+
+@defvr Specifier bottom-toolbar-height
+This specifies the height of the bottom toolbar.
+@end defvr
+
+@defvr Specifier left-toolbar-width
+This specifies the width of the left toolbar.
+@end defvr
+
+@defvr Specifier right-toolbar-width
+This specifies the width of the right toolbar.
+@end defvr
+
+Note that all of the position-specific toolbar thickness specifiers
+have a fallback value of zero when they do not correspond to the
+default toolbar.  Therefore, you will have to set a non-zero thickness
+value if you want a position-specific toolbar to be displayed.
+
+@defvr Specifier default-toolbar-visible-p
+This specifies whether the default toolbar is visible.  The position of
+the default toolbar is specified by the function
+@code{set-default-toolbar-position}.  If the corresponding position-specific
+toolbar visibility specifier (e.g. @code{top-toolbar-visible-p} if
+@code{default-toolbar-position} is @code{top}) does not specify a
+visible-p value in a particular domain (a window or a frame), then the
+value of @code{default-toolbar-visible-p} in that domain, if any, will
+be used instead.
+@end defvr
+
+@defvr Specifier top-toolbar-visible-p
+This specifies whether the top toolbar is visible.
+@end defvr
+
+@defvr Specifier bottom-toolbar-visible-p
+This specifies whether the bottom toolbar is visible.
+@end defvr
+
+@defvr Specifier left-toolbar-visible-p
+This specifies whether the left toolbar is visible.
+@end defvr
+
+@defvr Specifier right-toolbar-visible-p
+This specifies whether the right toolbar is visible.
+@end defvr
+
+@code{default-toolbar-visible-p} and all of the position-specific
+toolbar visibility specifiers have a fallback value of true.
+
+Internally, toolbar thickness and visibility specifiers are instantiated
+in both window and frame domains, for different purposes.  The value in
+the domain of a frame's selected window specifies the actual toolbar
+thickness or visibility that you will see in that frame.  The value in
+the domain of a frame itself specifies the toolbar thickness or
+visibility that is used in frame geometry calculations.
+
+Thus, for example, if you set the frame width to 80 characters and the
+left toolbar width for that frame to 68 pixels, then the frame will be
+sized to fit 80 characters plus a 68-pixel left toolbar.  If you then
+set the left toolbar width to 0 for a particular buffer (or if that
+buffer does not specify a left toolbar or has a @code{nil} value specified for
+@code{left-toolbar-visible-p}), you will find that, when that buffer is
+displayed in the selected window, the window will have a width of 86 or
+87 characters---the frame is sized for a 68-pixel left toolbar but the
+selected window specifies that the left toolbar is not visible, so it is
+expanded to take up the slack.
+
+@defvr Specifier toolbar-buttons-captioned-p
+Whether toolbar buttons are captioned.  This affects which glyphs from a
+toolbar button descriptor are chosen.  @xref{Toolbar Descriptor Format}.
+@end defvr
+
+You can also reset the toolbar to what it was when XEmacs started up.
+
+@defvr Constant initial-toolbar-spec
+The toolbar descriptor used to initialize @code{default-toolbar} at
+startup.
+@end defvr

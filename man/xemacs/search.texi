@@ -1,0 +1,1028 @@
+
+@node Search, Fixit, Display, Top
+@chapter Searching and Replacement
+@cindex searching
+
+  Like other editors, Emacs has commands for searching for occurrences of
+a string.  The principal search command is unusual in that it is
+@dfn{incremental}: it begins to search before you have finished typing the
+search string.  There are also non-incremental search commands more like
+those of other editors.
+
+  Besides the usual @code{replace-string} command that finds all
+occurrences of one string and replaces them with another, Emacs has a fancy
+replacement command called @code{query-replace} which asks interactively
+which occurrences to replace.
+
+@menu
+* Incremental Search::     Search happens as you type the string.
+* Non-Incremental Search:: Specify entire string and then search.
+* Word Search::            Search for sequence of words.
+* Regexp Search::          Search for match for a regexp.
+* Regexps::                Syntax of regular expressions.
+* Search Case::            To ignore case while searching, or not.
+* Replace::                Search, and replace some or all matches.
+* Other Repeating Search:: Operating on all matches for some regexp.
+@end menu
+
+@node Incremental Search, Non-Incremental Search, Search, Search
+@section Incremental Search
+
+  An incremental search begins searching as soon as you type the first
+character of the search string.  As you type in the search string, Emacs
+shows you where the string (as you have typed it so far) is found.
+When you have typed enough characters to identify the place you want, you
+can stop.  Depending on what you do next, you may or may not need to
+terminate the search explicitly with a @key{RET}.
+
+@c WideCommands
+@table @kbd
+@item C-s
+Incremental search forward (@code{isearch-forward}).
+@item C-r
+Incremental search backward (@code{isearch-backward}).
+@end table
+
+@kindex C-s
+@kindex C-r
+@findex isearch-forward
+@findex isearch-backward
+  @kbd{C-s} starts an incremental search.  @kbd{C-s} reads characters from
+the keyboard and positions the cursor at the first occurrence of the
+characters that you have typed.  If you type @kbd{C-s} and then @kbd{F},
+the cursor moves right after the first @samp{F}.  Type an @kbd{O}, and see
+the cursor move to after the first @samp{FO}.  After another @kbd{O}, the
+cursor is after the first @samp{FOO} after the place where you started the
+search.  Meanwhile, the search string @samp{FOO} has been echoed in the
+echo area.@refill
+
+  The echo area display ends with three dots when actual searching is going
+on.  When search is waiting for more input, the three dots are removed.
+(On slow terminals, the three dots are not displayed.)
+
+  If you make a mistake in typing the search string, you can erase
+characters with @key{DEL}.  Each @key{DEL} cancels the last character of the
+search string.  This does not happen until Emacs is ready to read another
+input character; first it must either find, or fail to find, the character
+you want to erase.  If you do not want to wait for this to happen, use
+@kbd{C-g} as described below.@refill
+
+  When you are satisfied with the place you have reached, you can type
+@key{RET} (or @key{C-m}), which stops searching, leaving the cursor where 
+the search brought it.  Any command not specially meaningful in searches also
+stops the search and is then executed.  Thus, typing @kbd{C-a} exits the
+search and then moves to the beginning of the line.  @key{RET} is necessary
+only if the next command you want to type is a printing character,
+@key{DEL}, @key{ESC}, or another control character that is special
+within searches (@kbd{C-q}, @kbd{C-w}, @kbd{C-r}, @kbd{C-s}, or @kbd{C-y}).
+
+  Sometimes you search for @samp{FOO} and find it, but were actually
+looking for a different occurrence of it.  To move to the next occurrence
+of the search string, type another @kbd{C-s}.  Do this as often as
+necessary.  If you overshoot, you can cancel some @kbd{C-s}
+characters with @key{DEL}.
+
+  After you exit a search, you can search for the same string again by
+typing just @kbd{C-s C-s}: the first @kbd{C-s} is the key that invokes
+incremental search, and the second @kbd{C-s} means ``search again''.
+
+  If the specified string is not found at all, the echo area displays
+the text @samp{Failing I-Search}.  The cursor is after the place where
+Emacs found as much of your string as it could.  Thus, if you search for
+@samp{FOOT}, and there is no @samp{FOOT}, the cursor may be after the
+@samp{FOO} in @samp{FOOL}.  At this point there are several things you
+can do.  If you mistyped the search string, correct it.  If you like the
+place you have found, you can type @key{RET} or some other Emacs command
+to ``accept what the search offered''.  Or you can type @kbd{C-g}, which
+removes from the search string the characters that could not be found
+(the @samp{T} in @samp{FOOT}), leaving those that were found (the
+@samp{FOO} in @samp{FOOT}).  A second @kbd{C-g} at that point cancels
+the search entirely, returning point to where it was when the search
+started.
+
+  If a search is failing and you ask to repeat it by typing another
+@kbd{C-s}, it starts again from the beginning of the buffer.  Repeating
+a failing backward search with @kbd{C-r} starts again from the end.  This
+is called @dfn{wrapping around}.  @samp{Wrapped} appears in the search
+prompt once this has happened.
+
+@cindex quitting (in search)
+  The @kbd{C-g} ``quit'' character does special things during searches;
+just what it does depends on the status of the search.  If the search has
+found what you specified and is waiting for input, @kbd{C-g} cancels the
+entire search.  The cursor moves back to where you started the search.  If
+@kbd{C-g} is typed when there are characters in the search string that have
+not been found---because Emacs is still searching for them, or because it
+has failed to find them---then the search string characters which have not
+been found are discarded from the search string.  The
+search is now successful and waiting for more input, so a second @kbd{C-g}
+cancels the entire search.
+
+  To search for a control character such as @kbd{C-s} or @key{DEL} or
+@key{ESC}, you must quote it by typing @kbd{C-q} first.  This function
+of @kbd{C-q} is analogous to its meaning as an Emacs command: it causes
+the following character to be treated the way a graphic character would
+normally be treated in the same context.
+
+ To search backwards, you can use @kbd{C-r} instead of @kbd{C-s} to
+start the search; @kbd{C-r} is the key that runs the command
+(@code{isearch-backward}) to search backward.  You can also use
+@kbd{C-r} to change from searching forward to searching backwards.  Do
+this if a search fails because the place you started was too far down in the
+file.  Repeated @kbd{C-r} keeps looking for more occurrences backwards.
+@kbd{C-s} starts going forward again.  You can cancel @kbd{C-r} in a
+search with @key{DEL}.
+
+  The characters @kbd{C-y} and @kbd{C-w} can be used in incremental search
+to grab text from the buffer into the search string.  This makes it
+convenient to search for another occurrence of text at point.  @kbd{C-w}
+copies the word after point as part of the search string, advancing
+point over that word.  Another @kbd{C-s} to repeat the search will then
+search for a string including that word.  @kbd{C-y} is similar to @kbd{C-w}
+but copies the rest of the current line into the search string.
+
+  The characters @kbd{M-p} and @kbd{M-n} can be used in an incremental
+search to recall things which you have searched for in the past.  A
+list of the last 16 things you have searched for is retained, and 
+@kbd{M-p} and @kbd{M-n} let you cycle through that ring.
+
+The character @kbd{M-@key{TAB}} does completion on the elements in 
+the search history ring.  For example, if you know that you have
+recently searched for the string @code{POTATOE}, you could type
+@kbd{C-s P O M-@key{TAB}}.  If you had searched for other strings
+beginning with @code{PO} then you would be shown a list of them, and
+would need to type more to select one. 
+
+  You can change any of the special characters in incremental search via
+the normal keybinding mechanism: simply add a binding to the 
+@code{isearch-mode-map}.  For example, to make the character
+@kbd{C-b} mean ``search backwards'' while in isearch-mode, do this:
+
+@example
+(define-key isearch-mode-map "\C-b" 'isearch-repeat-backward)
+@end example
+
+These are the default bindings of isearch-mode:
+
+@findex isearch-delete-char
+@findex isearch-exit
+@findex isearch-quote-char
+@findex isearch-repeat-forward
+@findex isearch-repeat-backward
+@findex isearch-yank-line
+@findex isearch-yank-word
+@findex isearch-abort
+@findex isearch-ring-retreat
+@findex isearch-ring-advance
+@findex isearch-complete
+
+@kindex DEL (isearch-mode)
+@kindex RET (isearch-mode)
+@kindex C-q (isearch-mode)
+@kindex C-s (isearch-mode)
+@kindex C-r (isearch-mode)
+@kindex C-y (isearch-mode)
+@kindex C-w (isearch-mode)
+@kindex C-g (isearch-mode)
+@kindex M-p (isearch-mode)
+@kindex M-n (isearch-mode)
+@kindex M-TAB (isearch-mode)
+
+@table @kbd
+@item DEL
+Delete a character from the incremental search string (@code{isearch-delete-char}).
+@item RET
+Exit incremental search (@code{isearch-exit}).
+@item C-q
+Quote special characters for incremental search (@code{isearch-quote-char}).
+@item C-s
+Repeat incremental search forward (@code{isearch-repeat-forward}).
+@item C-r
+Repeat incremental search backward (@code{isearch-repeat-backward}).
+@item C-y
+Pull rest of line from buffer into search string (@code{isearch-yank-line}).
+@item C-w
+Pull next word from buffer into search string (@code{isearch-yank-word}).
+@item C-g
+Cancels input back to what has been found successfully, or aborts the 
+isearch (@code{isearch-abort}).
+@item M-p
+Recall the previous element in the isearch history ring 
+(@code{isearch-ring-retreat}).
+@item M-n
+Recall the next element in the isearch history ring 
+(@code{isearch-ring-advance}).
+@item M-@key{TAB}
+Do completion on the elements in the isearch history ring 
+(@code{isearch-complete}).
+
+@end table
+
+Any other character which is normally inserted into a buffer when typed
+is automatically added to the search string in isearch-mode.
+
+@subsection Slow Terminal Incremental Search
+
+  Incremental search on a slow terminal uses a modified style of display
+that is designed to take less time.  Instead of redisplaying the buffer at
+each place the search gets to, it creates a new single-line window and uses
+that to display the line the search has found.  The single-line window
+appears as soon as point gets outside of the text that is already
+on the screen.
+
+  When the search is terminated, the single-line window is removed.  Only
+at this time the window in which the search was done is redisplayed to show
+its new value of point.
+
+  The three dots at the end of the search string, normally used to indicate
+that searching is going on, are not displayed in slow style display.
+
+@vindex search-slow-speed
+  The slow terminal style of display is used when the terminal baud rate is
+less than or equal to the value of the variable @code{search-slow-speed},
+initially 1200.
+
+@vindex search-slow-window-lines
+  The number of lines to use in slow terminal search display is controlled
+by the variable @code{search-slow-window-lines}.  Its normal value is 1.
+
+@node Non-Incremental Search, Word Search, Incremental Search, Search
+@section Non-Incremental Search
+@cindex non-incremental search
+
+  Emacs also has conventional non-incremental search commands, which require
+you type the entire search string before searching begins.
+
+@table @kbd
+@item C-s @key{RET} @var{string} @key{RET}
+Search for @var{string}.
+@item C-r @key{RET} @var{string} @key{RET}
+Search backward for @var{string}.
+@end table
+
+  To do a non-incremental search, first type @kbd{C-s @key{RET}}
+(or @kbd{C-s C-m}).  This enters the minibuffer to read the search string.
+Terminate the string with @key{RET} to start the search.  If the string
+is not found, the search command gets an error.
+
+ By default, @kbd{C-s} invokes incremental search, but if you give it an
+empty argument, which would otherwise be useless, it invokes non-incremental
+search.  Therefore, @kbd{C-s @key{RET}} invokes non-incremental search. 
+@kbd{C-r @key{RET}} also works this way.
+
+@findex search-forward
+@findex search-backward
+  Forward and backward non-incremental searches are implemented by the
+commands @code{search-forward} and @code{search-backward}.  You can bind
+these commands to keys.  The reason that incremental
+search is programmed to invoke them as well is that @kbd{C-s @key{RET}}
+is the traditional sequence of characters used in Emacs to invoke
+non-incremental search.
+
+ Non-incremental searches performed using @kbd{C-s @key{RET}} do
+not call @code{search-forward} right away.  They first check
+if the next character is @kbd{C-w}, which requests a word search.
+@ifinfo
+@xref{Word Search}.
+@end ifinfo
+
+@node Word Search, Regexp Search, Non-Incremental Search, Search
+@section Word Search
+@cindex word search
+
+  Word search looks for a sequence of words without regard to how the
+words are separated.  More precisely, you type a string of many words,
+using single spaces to separate them, and the string is found even if
+there are multiple spaces, newlines or other punctuation between the words.
+
+  Word search is useful in editing documents formatted by text formatters.
+If you edit while looking at the printed, formatted version, you can't tell
+where the line breaks are in the source file.  Word search, allows you
+to search  without having to know the line breaks.
+
+@table @kbd
+@item C-s @key{RET} C-w @var{words} @key{RET}
+Search for @var{words}, ignoring differences in punctuation.
+@item C-r @key{RET} C-w @var{words} @key{RET}
+Search backward for @var{words}, ignoring differences in punctuation.
+@end table
+
+  Word search is a special case of non-incremental search.  It is invoked
+with @kbd{C-s @key{RET} C-w} followed by the search string, which
+must always be terminated with another @key{RET}.  Being non-incremental, this
+search does not start until the argument is terminated.  It works by
+constructing a regular expression and searching for that.  @xref{Regexp
+Search}.
+
+ You can do a backward word search with @kbd{C-r @key{RET} C-w}.
+
+@findex word-search-forward
+@findex word-search-backward
+  Forward and backward word searches are implemented by the commands
+@code{word-search-forward} and @code{word-search-backward}.  You can
+bind these commands to keys.  The reason that incremental
+search is programmed to invoke them as well is that @kbd{C-s @key{RET} C-w}
+is the traditional Emacs sequence of keys for word search.
+
+@node Regexp Search, Regexps, Word Search, Search
+@section Regular Expression Search
+@cindex regular expression
+@cindex regexp
+
+  A @dfn{regular expression} (@dfn{regexp}, for short) is a pattern that
+denotes a (possibly infinite) set of strings.  Searching for matches
+for a regexp is a powerful operation that editors on Unix systems have
+traditionally offered.
+
+ To gain a thorough understanding of regular expressions and how to use
+them to best advantage, we recommend that you study @cite{Mastering
+Regular Expressions, by Jeffrey E.F. Friedl, O'Reilly and Associates,
+1997}. (It's known as the "Hip Owls" book, because of the picture on its
+cover.)  You might also read the manuals to @ref{(gawk)Top},
+@ref{(ed)Top}, @cite{sed}, @cite{grep}, @ref{(perl)Top},
+@ref{(regex)Top}, @ref{(rx)Top}, @cite{pcre}, and @ref{(flex)Top}, which
+also make good use of regular expressions.
+
+ The XEmacs regular expression syntax most closely resembles that of
+@cite{ed}, or @cite{grep}, the GNU versions of which all utilize the GNU
+@cite{regex} library.  XEmacs' version of @cite{regex} has recently been
+extended with some Perl--like capabilities, described in the next
+section.
+
+ In XEmacs, you can search for the next match for a regexp either
+incrementally or not.
+
+@kindex M-C-s
+@kindex M-C-r
+@findex isearch-forward-regexp
+@findex isearch-backward-regexp
+  Incremental search for a regexp is done by typing @kbd{M-C-s}
+(@code{isearch-forward-regexp}).  This command reads a search string
+incrementally just like @kbd{C-s}, but it treats the search string as a
+regexp rather than looking for an exact match against the text in the
+buffer.  Each time you add text to the search string, you make the regexp
+longer, and the new regexp is searched for.  A reverse regexp search command
+@code{isearch-backward-regexp} also exists, bound to @kbd{M-C-r}.
+
+  All of the control characters that do special things within an ordinary
+incremental search have the same functionality in incremental regexp search.
+Typing @kbd{C-s} or @kbd{C-r} immediately after starting a search
+retrieves the last incremental search regexp used:
+incremental regexp and non-regexp searches have independent defaults.
+
+@findex re-search-forward
+@findex re-search-backward
+  Non-incremental search for a regexp is done by the functions
+@code{re-search-forward} and @code{re-search-backward}.  You can invoke
+them with @kbd{M-x} or bind them to keys.  You can also call
+@code{re-search-forward} by way of incremental regexp search with
+@kbd{M-C-s @key{RET}}; similarly for @code{re-search-backward} with
+@kbd{M-C-r @key{RET}}.
+
+@node Regexps, Search Case, Regexp Search, Search
+@section Syntax of Regular Expressions
+
+  Regular expressions have a syntax in which a few characters are
+special constructs and the rest are @dfn{ordinary}.  An ordinary
+character is a simple regular expression that matches that character and
+nothing else.  The special characters are @samp{.}, @samp{*}, @samp{+},
+@samp{?}, @samp{[}, @samp{]}, @samp{^}, @samp{$}, and @samp{\}; no new
+special characters will be defined in the future.  Any other character
+appearing in a regular expression is ordinary, unless a @samp{\}
+precedes it.
+
+For example, @samp{f} is not a special character, so it is ordinary, and
+therefore @samp{f} is a regular expression that matches the string
+@samp{f} and no other string.  (It does @emph{not} match the string
+@samp{ff}.)  Likewise, @samp{o} is a regular expression that matches
+only @samp{o}.@refill
+
+Any two regular expressions @var{a} and @var{b} can be concatenated.  The
+result is a regular expression that matches a string if @var{a} matches
+some amount of the beginning of that string and @var{b} matches the rest of
+the string.@refill
+
+As a simple example, we can concatenate the regular expressions @samp{f}
+and @samp{o} to get the regular expression @samp{fo}, which matches only
+the string @samp{fo}.  Still trivial.  To do something more powerful, you
+need to use one of the special characters.  Here is a list of them:
+
+@need 1200
+@table @kbd
+@item .@: @r{(Period)}
+@cindex @samp{.} in regexp
+is a special character that matches any single character except a newline.
+Using concatenation, we can make regular expressions like @samp{a.b}, which
+matches any three-character string that begins with @samp{a} and ends with
+@samp{b}.@refill
+
+@item *
+@cindex @samp{*} in regexp
+is not a construct by itself; it is a quantifying suffix operator that
+means to repeat the preceding regular expression as many times as
+possible.  In @samp{fo*}, the @samp{*} applies to the @samp{o}, so
+@samp{fo*} matches one @samp{f} followed by any number of @samp{o}s.
+The case of zero @samp{o}s is allowed: @samp{fo*} does match
+@samp{f}.@refill
+
+@samp{*} always applies to the @emph{smallest} possible preceding
+expression.  Thus, @samp{fo*} has a repeating @samp{o}, not a
+repeating @samp{fo}.@refill
+
+The matcher processes a @samp{*} construct by matching, immediately, as
+many repetitions as can be found; it is "greedy".  Then it continues
+with the rest of the pattern.  If that fails, backtracking occurs,
+discarding some of the matches of the @samp{*}-modified construct in
+case that makes it possible to match the rest of the pattern.  For
+example, in matching @samp{ca*ar} against the string @samp{caaar}, the
+@samp{a*} first tries to match all three @samp{a}s; but the rest of the
+pattern is @samp{ar} and there is only @samp{r} left to match, so this
+try fails.  The next alternative is for @samp{a*} to match only two
+@samp{a}s.  With this choice, the rest of the regexp matches
+successfully.@refill
+
+Nested repetition operators can be extremely slow if they specify
+backtracking loops.  For example, it could take hours for the regular
+expression @samp{\(x+y*\)*a} to match the sequence
+@samp{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxz}.  The slowness is because
+Emacs must try each imaginable way of grouping the 35 @samp{x}'s before
+concluding that none of them can work.  To make sure your regular
+expressions run fast, check nested repetitions carefully.
+
+@item +
+@cindex @samp{+} in regexp
+is a quantifying suffix operator similar to @samp{*} except that the
+preceding expression must match at least once.  It is also "greedy".
+So, for example, @samp{ca+r} matches the strings @samp{car} and
+@samp{caaaar} but not the string @samp{cr}, whereas @samp{ca*r} matches
+all three strings.
+
+@item ?
+@cindex @samp{?} in regexp
+is a quantifying suffix operator similar to @samp{*}, except that the
+preceding expression can match either once or not at all.  For example,
+@samp{ca?r} matches @samp{car} or @samp{cr}, but does not match anything
+else.
+
+@item *?
+@cindex @samp{*?} in regexp
+works just like @samp{*}, except that rather than matching the longest
+match, it matches the shortest match.  @samp{*?} is known as a
+@dfn{non-greedy} quantifier, a regexp construct borrowed from Perl.
+@c Did perl get this from somewhere?  What's the real history of *? ?
+
+This construct is very useful for when you want to match the text inside
+a pair of delimiters.  For instance, @samp{/\*.*?\*/} will match C
+comments in a string.  This could not easily be achieved without the use
+of a non-greedy quantifier.
+
+This construct has not been available prior to XEmacs 20.4.  It is not
+available in FSF Emacs.
+
+@item +?
+@cindex @samp{+?} in regexp
+is the non-greedy version of @samp{+}.
+
+@item ??
+@cindex @samp{??} in regexp
+is the non-greedy version of @samp{?}.
+
+@item \@{n,m\@}
+@c Note the spacing after the close brace is deliberate.
+@cindex @samp{\@{n,m\@} }in regexp
+serves as an interval quantifier, analogous to @samp{*} or @samp{+}, but
+specifies that the expression must match at least @var{n} times, but no
+more than @var{m} times.  This syntax is supported by most Unix regexp
+utilities, and has been introduced to XEmacs for the version 20.3.
+
+Unfortunately, the non-greedy version of this quantifier does not exist
+currently, although it does in Perl.
+
+@item [ @dots{} ]
+@cindex character set (in regexp)
+@cindex @samp{[} in regexp
+@cindex @samp{]} in regexp
+@samp{[} begins a @dfn{character set}, which is terminated by a
+@samp{]}.  In the simplest case, the characters between the two brackets
+form the set.  Thus, @samp{[ad]} matches either one @samp{a} or one
+@samp{d}, and @samp{[ad]*} matches any string composed of just @samp{a}s
+and @samp{d}s (including the empty string), from which it follows that
+@samp{c[ad]*r} matches @samp{cr}, @samp{car}, @samp{cdr},
+@samp{caddaar}, etc.@refill
+
+The usual regular expression special characters are not special inside a
+character set.  A completely different set of special characters exists
+inside character sets: @samp{]}, @samp{-} and @samp{^}.@refill
+
+@samp{-} is used for ranges of characters.  To write a range, write two
+characters with a @samp{-} between them.  Thus, @samp{[a-z]} matches any
+lower case letter.  Ranges may be intermixed freely with individual
+characters, as in @samp{[a-z$%.]}, which matches any lower case letter
+or @samp{$}, @samp{%}, or a period.@refill
+
+To include a @samp{]} in a character set, make it the first character.
+For example, @samp{[]a]} matches @samp{]} or @samp{a}.  To include a
+@samp{-}, write @samp{-} as the first character in the set, or put it
+immediately after a range.  (You can replace one individual character
+@var{c} with the range @samp{@var{c}-@var{c}} to make a place to put the
+@samp{-}.)  There is no way to write a set containing just @samp{-} and
+@samp{]}.
+
+To include @samp{^} in a set, put it anywhere but at the beginning of
+the set.
+
+@item [^ @dots{} ]
+@cindex @samp{^} in regexp
+@samp{[^} begins a @dfn{complement character set}, which matches any
+character except the ones specified.  Thus, @samp{[^a-z0-9A-Z]}
+matches all characters @emph{except} letters and digits.@refill
+
+@samp{^} is not special in a character set unless it is the first
+character.  The character following the @samp{^} is treated as if it
+were first (thus, @samp{-} and @samp{]} are not special there).
+
+Note that a complement character set can match a newline, unless
+newline is mentioned as one of the characters not to match.
+
+@item ^
+@cindex @samp{^} in regexp
+@cindex beginning of line in regexp
+is a special character that matches the empty string, but only at the
+beginning of a line in the text being matched.  Otherwise it fails to
+match anything.  Thus, @samp{^foo} matches a @samp{foo} that occurs at
+the beginning of a line.
+
+When matching a string instead of a buffer, @samp{^} matches at the
+beginning of the string or after a newline character @samp{\n}.
+
+@item $
+@cindex @samp{$} in regexp
+is similar to @samp{^} but matches only at the end of a line.  Thus,
+@samp{x+$} matches a string of one @samp{x} or more at the end of a line.
+
+When matching a string instead of a buffer, @samp{$} matches at the end
+of the string or before a newline character @samp{\n}.
+
+@item \
+@cindex @samp{\} in regexp
+has two functions: it quotes the special characters (including
+@samp{\}), and it introduces additional special constructs.
+
+Because @samp{\} quotes special characters, @samp{\$} is a regular
+expression that matches only @samp{$}, and @samp{\[} is a regular
+expression that matches only @samp{[}, and so on.
+
+@c Removed a paragraph here in lispref about doubling backslashes inside
+@c of Lisp strings.
+
+@end table
+
+@strong{Please note:} For historical compatibility, special characters
+are treated as ordinary ones if they are in contexts where their special
+meanings make no sense.  For example, @samp{*foo} treats @samp{*} as
+ordinary since there is no preceding expression on which the @samp{*}
+can act.  It is poor practice to depend on this behavior; quote the
+special character anyway, regardless of where it appears.@refill
+
+For the most part, @samp{\} followed by any character matches only
+that character.  However, there are several exceptions: characters
+that, when preceded by @samp{\}, are special constructs.  Such
+characters are always ordinary when encountered on their own.  Here
+is a table of @samp{\} constructs:
+
+@table @kbd
+@item \|
+@cindex @samp{|} in regexp
+@cindex regexp alternative
+specifies an alternative.
+Two regular expressions @var{a} and @var{b} with @samp{\|} in
+between form an expression that matches anything that either @var{a} or
+@var{b} matches.@refill
+
+Thus, @samp{foo\|bar} matches either @samp{foo} or @samp{bar}
+but no other string.@refill
+
+@samp{\|} applies to the largest possible surrounding expressions.  Only a
+surrounding @samp{\( @dots{} \)} grouping can limit the grouping power of
+@samp{\|}.@refill
+
+Full backtracking capability exists to handle multiple uses of @samp{\|}.
+
+@item \( @dots{} \)
+@cindex @samp{(} in regexp
+@cindex @samp{)} in regexp
+@cindex regexp grouping
+is a grouping construct that serves three purposes:
+
+@enumerate
+@item
+To enclose a set of @samp{\|} alternatives for other operations.
+Thus, @samp{\(foo\|bar\)x} matches either @samp{foox} or @samp{barx}.
+
+@item
+To enclose an expression for a suffix operator such as @samp{*} to act
+on.  Thus, @samp{ba\(na\)*} matches @samp{bananana}, etc., with any
+(zero or more) number of @samp{na} strings.@refill
+
+@item
+To record a matched substring for future reference.
+@end enumerate
+
+This last application is not a consequence of the idea of a
+parenthetical grouping; it is a separate feature that happens to be
+assigned as a second meaning to the same @samp{\( @dots{} \)} construct
+because there is no conflict in practice between the two meanings.
+Here is an explanation of this feature:
+
+@item \@var{digit}
+matches the same text that matched the @var{digit}th occurrence of a
+@samp{\( @dots{} \)} construct.
+
+In other words, after the end of a @samp{\( @dots{} \)} construct.  the
+matcher remembers the beginning and end of the text matched by that
+construct.  Then, later on in the regular expression, you can use
+@samp{\} followed by @var{digit} to match that same text, whatever it
+may have been.
+
+The strings matching the first nine @samp{\( @dots{} \)} constructs
+appearing in a regular expression are assigned numbers 1 through 9 in
+the order that the open parentheses appear in the regular expression.
+So you can use @samp{\1} through @samp{\9} to refer to the text matched
+by the corresponding @samp{\( @dots{} \)} constructs.
+
+For example, @samp{\(.*\)\1} matches any newline-free string that is
+composed of two identical halves.  The @samp{\(.*\)} matches the first
+half, which may be anything, but the @samp{\1} that follows must match
+the same exact text.
+
+@item \(?: @dots{} \)
+@cindex @samp{\(?:} in regexp
+@cindex regexp grouping
+is called a @dfn{shy} grouping operator, and it is used just like
+@samp{\( @dots{} \)}, except that it does not cause the matched
+substring to be recorded for future reference.
+
+This is useful when you need a lot of grouping @samp{\( @dots{} \)}
+constructs, but only want to remember one or two -- or if you have
+more than nine groupings and need to use backreferences to refer to
+the groupings at the end.
+
+Using @samp{\(?: @dots{} \)} rather than @samp{\( @dots{} \)} when you
+don't need the captured substrings ought to speed up your programs some,
+since it shortens the code path followed by the regular expression
+engine, as well as the amount of memory allocation and string copying it
+must do.  The actual performance gain to be observed has not been
+measured or quantified as of this writing.
+@c This is used to good advantage by the font-locking code, and by
+@c `regexp-opt.el'.
+
+The shy grouping operator has been borrowed from Perl, and has not been
+available prior to XEmacs 20.3, nor is it available in FSF Emacs.
+
+@item \w
+@cindex @samp{\w} in regexp
+matches any word-constituent character.  The editor syntax table
+determines which characters these are.  @xref{Syntax}.
+
+@item \W
+@cindex @samp{\W} in regexp
+matches any character that is not a word constituent.
+
+@item \s@var{code}
+@cindex @samp{\s} in regexp
+matches any character whose syntax is @var{code}.  Here @var{code} is a
+character that represents a syntax code: thus, @samp{w} for word
+constituent, @samp{-} for whitespace, @samp{(} for open parenthesis,
+etc.  @xref{Syntax}, for a list of syntax codes and the characters that
+stand for them.
+
+@item \S@var{code}
+@cindex @samp{\S} in regexp
+matches any character whose syntax is not @var{code}.
+@end table
+
+  The following regular expression constructs match the empty string---that is,
+they don't use up any characters---but whether they match depends on the
+context.
+
+@table @kbd
+@item \`
+@cindex @samp{\`} in regexp
+matches the empty string, but only at the beginning
+of the buffer or string being matched against.
+
+@item \'
+@cindex @samp{\'} in regexp
+matches the empty string, but only at the end of
+the buffer or string being matched against.
+
+@item \=
+@cindex @samp{\=} in regexp
+matches the empty string, but only at point.
+(This construct is not defined when matching against a string.)
+
+@item \b
+@cindex @samp{\b} in regexp
+matches the empty string, but only at the beginning or
+end of a word.  Thus, @samp{\bfoo\b} matches any occurrence of
+@samp{foo} as a separate word.  @samp{\bballs?\b} matches
+@samp{ball} or @samp{balls} as a separate word.@refill
+
+@item \B
+@cindex @samp{\B} in regexp
+matches the empty string, but @emph{not} at the beginning or
+end of a word.
+
+@item \<
+@cindex @samp{\<} in regexp
+matches the empty string, but only at the beginning of a word.
+
+@item \>
+@cindex @samp{\>} in regexp
+matches the empty string, but only at the end of a word.
+@end table
+
+  Here is a complicated regexp used by Emacs to recognize the end of a
+sentence together with any whitespace that follows.  It is given in Lisp
+syntax to enable you to distinguish the spaces from the tab characters.  In
+Lisp syntax, the string constant begins and ends with a double-quote.
+@samp{\"} stands for a double-quote as part of the regexp, @samp{\\} for a
+backslash as part of the regexp, @samp{\t} for a tab and @samp{\n} for a
+newline.
+
+@example
+"[.?!][]\"')]*\\($\\|\t\\|  \\)[ \t\n]*"
+@end example
+
+@noindent
+This regexp contains four parts: a character set matching
+period, @samp{?} or @samp{!}; a character set matching close-brackets,
+quotes or parentheses, repeated any number of times; an alternative in
+backslash-parentheses that matches end-of-line, a tab or two spaces; and
+a character set matching whitespace characters, repeated any number of
+times.
+
+@node Search Case, Replace, Regexps, Search
+@section Searching and Case
+
+@vindex case-fold-search
+  All searches in Emacs normally ignore the case of the text they
+are searching through; if you specify searching for @samp{FOO},
+@samp{Foo} and @samp{foo} are also considered a match.  Regexps, and in
+particular character sets, are included: @samp{[aB]} matches @samp{a}
+or @samp{A} or @samp{b} or @samp{B}.@refill
+
+  If you want a case-sensitive search, set the variable
+@code{case-fold-search} to @code{nil}.  Then all letters must match
+exactly, including case. @code{case-fold-search} is a per-buffer
+variable; altering it affects only the current buffer, but
+there is a default value which you can change as well.  @xref{Locals}. 
+You can also use @b{Case Sensitive Search} from the @b{Options} menu 
+on your screen.
+
+@node Replace, Other Repeating Search, Search Case, Search
+@section Replacement Commands
+@cindex replacement
+@cindex string substitution
+@cindex global substitution
+
+  Global search-and-replace operations are not needed as often in Emacs as
+they are in other editors, but they are available.  In addition to the
+simple @code{replace-string} command which is like that found in most
+editors, there is a @code{query-replace} command which asks you, for each
+occurrence of a pattern, whether to replace it.
+
+  The replace commands all replace one string (or regexp) with one
+replacement string.  It is possible to perform several replacements in
+parallel using the command @code{expand-region-abbrevs}.  @xref{Expanding
+Abbrevs}.
+
+@menu
+* Unconditional Replace::  Replacing all matches for a string.
+* Regexp Replace::         Replacing all matches for a regexp.
+* Replacement and Case::   How replacements preserve case of letters.
+* Query Replace::          How to use querying.
+@end menu
+
+@node Unconditional Replace, Regexp Replace, Replace, Replace
+@subsection Unconditional Replacement
+@findex replace-string
+@findex replace-regexp
+
+@table @kbd
+@item M-x replace-string @key{RET} @var{string} @key{RET} @var{newstring} @key{RET}
+Replace every occurrence of @var{string} with @var{newstring}.
+@item M-x replace-regexp @key{RET} @var{regexp} @key{RET} @var{newstring} @key{RET}
+Replace every match for @var{regexp} with @var{newstring}.
+@end table
+
+  To replace every instance of @samp{foo} after point with @samp{bar},
+use the command @kbd{M-x replace-string} with the two arguments
+@samp{foo} and @samp{bar}.  Replacement occurs only after point: if you
+want to cover the whole buffer you must go to the beginning first.  By
+default, all occurrences up to the end of the buffer are replaced.  To
+limit replacement to part of the buffer, narrow to that part of the
+buffer before doing the replacement (@pxref{Narrowing}).
+
+  When @code{replace-string} exits, point is left at the last occurrence
+replaced.  The value of point when the @code{replace-string} command was
+issued is remembered on the mark ring; @kbd{C-u C-@key{SPC}} moves back
+there.
+
+  A numeric argument restricts replacement to matches that are surrounded
+by word boundaries.
+
+@node Regexp Replace, Replacement and Case, Unconditional Replace, Replace
+@subsection Regexp Replacement
+
+  @code{replace-string} replaces exact matches for a single string.  The
+similar command @code{replace-regexp} replaces any match for a specified
+pattern.
+
+  In @code{replace-regexp}, the @var{newstring} need not be constant.  It
+can refer to all or part of what is matched by the @var{regexp}.  @samp{\&}
+in @var{newstring} stands for the entire text being replaced.
+@samp{\@var{d}} in @var{newstring}, where @var{d} is a digit, stands for
+whatever matched the @var{d}'th parenthesized grouping in @var{regexp}.
+For example,@refill
+
+@example
+M-x replace-regexp @key{RET} c[ad]+r @key{RET} \&-safe @key{RET}
+@end example
+
+@noindent
+would replace (for example) @samp{cadr} with @samp{cadr-safe} and @samp{cddr}
+with @samp{cddr-safe}.
+
+@example
+M-x replace-regexp @key{RET} \(c[ad]+r\)-safe @key{RET} \1 @key{RET}
+@end example
+
+@noindent
+would perform exactly the opposite replacements.  To include a @samp{\}
+in the text to replace with, you must give @samp{\\}.
+
+@node Replacement and Case, Query Replace, Regexp Replace, Replace
+@subsection Replace Commands and Case
+
+@vindex case-replace
+@vindex case-fold-search
+  If the arguments to a replace command are in lower case, the command
+preserves case when it makes a replacement.  Thus, the following command:
+
+@example
+M-x replace-string @key{RET} foo @key{RET} bar @key{RET}
+@end example
+
+@noindent
+replaces a lower-case @samp{foo} with a lower case @samp{bar}, @samp{FOO}
+with @samp{BAR}, and @samp{Foo} with @samp{Bar}.  If upper-case letters are
+used in the second argument, they remain upper-case every time that
+argument is inserted.  If upper-case letters are used in the first
+argument, the second argument is always substituted exactly as given, with
+no case conversion.  Likewise, if the variable @code{case-replace} is set
+to @code{nil}, replacement is done without case conversion.  If
+@code{case-fold-search} is set to @code{nil}, case is significant in
+matching occurrences of @samp{foo} to replace; also, case conversion of the
+replacement string is not done.
+
+@node Query Replace,, Replacement and Case, Replace
+@subsection Query Replace
+@cindex query replace
+
+@table @kbd
+@item M-% @var{string} @key{RET} @var{newstring} @key{RET}
+@itemx M-x query-replace @key{RET} @var{string} @key{RET} @var{newstring} @key{RET}
+Replace some occurrences of @var{string} with @var{newstring}.
+@item M-x query-replace-regexp @key{RET} @var{regexp} @key{RET} @var{newstring} @key{RET}
+Replace some matches for @var{regexp} with @var{newstring}.
+@end table
+
+@kindex M-%
+@findex query-replace
+  If you want to change only some of the occurrences of @samp{foo} to
+@samp{bar}, not all of them, you can use @code{query-replace} instead of
+@kbd{M-%}.  This command finds occurrences of @samp{foo} one by one,
+displays each occurrence, and asks you whether to replace it.  A numeric
+argument to @code{query-replace} tells it to consider only occurrences
+that are bounded by word-delimiter characters.@refill
+
+@findex query-replace-regexp
+  Aside from querying, @code{query-replace} works just like
+@code{replace-string}, and @code{query-replace-regexp} works
+just like @code{replace-regexp}.@refill
+
+  The things you can type when you are shown an occurrence of @var{string}
+or a match for @var{regexp} are:
+
+@kindex SPC (query-replace)
+@kindex DEL (query-replace)
+@kindex , (query-replace)
+@kindex ESC (query-replace)
+@kindex . (query-replace)
+@kindex ! (query-replace)
+@kindex ^ (query-replace)
+@kindex C-r (query-replace)
+@kindex C-w (query-replace)
+@kindex C-l (query-replace)
+
+@c WideCommands
+@table @kbd
+@item @key{SPC}
+to replace the occurrence with @var{newstring}.  This preserves case, just
+like @code{replace-string}, provided @code{case-replace} is non-@code{nil},
+as it normally is.@refill
+
+@item @key{DEL}
+to skip to the next occurrence without replacing this one.
+
+@item , @r{(Comma)}
+to replace this occurrence and display the result.  You are then
+prompted for another input character.  However, since the replacement has
+already been made, @key{DEL} and @key{SPC} are equivalent.  At this
+point, you can type @kbd{C-r} (see below) to alter the replaced text.  To
+undo the replacement, you can type @kbd{C-x u}. 
+This exits the @code{query-replace}.  If you want to do further
+replacement you must use @kbd{C-x @key{ESC} @key{ESC}} to restart (@pxref{Repetition}).
+
+@item @key{ESC}
+to exit without doing any more replacements.
+
+@item .@: @r{(Period)}
+to replace this occurrence and then exit.
+
+@item !
+to replace all remaining occurrences without asking again.
+
+@item ^
+to go back to the location of the previous occurrence (or what used to
+be an occurrence), in case you changed it by mistake.  This works by
+popping the mark ring.  Only one @kbd{^} in a row is allowed, because
+only one previous replacement location is kept during @code{query-replace}.
+
+@item C-r
+to enter a recursive editing level, in case the occurrence needs to be
+edited rather than just replaced with @var{newstring}.  When you are
+done, exit the recursive editing level with @kbd{C-M-c} and the next
+occurrence will be displayed.  @xref{Recursive Edit}.
+
+@item C-w
+to delete the occurrence, and then enter a recursive editing level as
+in @kbd{C-r}.  Use the recursive edit to insert text to replace the
+deleted occurrence of @var{string}.  When done, exit the recursive
+editing level with @kbd{C-M-c} and the next occurrence will be
+displayed.
+
+@item C-l
+to redisplay the screen and then give another answer.
+
+@item C-h
+to display a message summarizing these options, then give another
+answer.
+@end table
+
+  If you type any other character, Emacs exits the @code{query-replace}, and
+executes the character as a command.  To restart the @code{query-replace},
+use @kbd{C-x @key{ESC} @key{ESC}}, which repeats the @code{query-replace} because it
+used the minibuffer to read its arguments.  @xref{Repetition, C-x ESC ESC}.
+
+@node Other Repeating Search,, Replace, Search
+@section Other Search-and-Loop Commands
+
+  Here are some other commands that find matches for a regular expression.
+They all operate from point to the end of the buffer.
+
+@findex list-matching-lines
+@findex occur
+@findex count-matches
+@findex delete-non-matching-lines
+@findex delete-matching-lines
+@c grosscommands
+@table @kbd
+@item M-x occur
+Print each line that follows point and contains a match for the
+specified regexp.  A numeric argument specifies the number of context
+lines to print before and after each matching line; the default is
+none.
+
+@kindex C-c C-c (Occur mode)
+The buffer @samp{*Occur*} containing the output serves as a menu for
+finding occurrences in their original context.  Find an occurrence
+as listed in @samp{*Occur*}, position point there, and type @kbd{C-c
+C-c}; this switches to the buffer that was searched and moves point to
+the original of the same occurrence.
+
+@item M-x list-matching-lines
+Synonym for @kbd{M-x occur}.
+
+@item M-x count-matches
+Print the number of matches following point for the specified regexp.
+
+@item M-x delete-non-matching-lines
+Delete each line that follows point and does not contain a match for
+the specified regexp.
+
+@item M-x delete-matching-lines
+Delete each line that follows point and contains a match for the
+specified regexp.
+@end table

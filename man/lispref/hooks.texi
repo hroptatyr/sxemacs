@@ -1,0 +1,281 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993 Free Software Foundation, Inc.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/hooks.info
+@node Standard Hooks, Index, Standard Keymaps, Top
+@appendix Standard Hooks
+
+The following is a list of hook variables that let you provide
+functions to be called from within Emacs on suitable occasions.
+
+Most of these variables have names ending with @samp{-hook}.  They are
+@dfn{normal hooks}, run by means of @code{run-hooks}.  The value of such
+a hook is a list of functions.  The recommended way to put a new
+function on such a hook is to call @code{add-hook}.  @xref{Hooks}, for
+more information about using hooks.
+
+The variables whose names end in @samp{-function} have single functions
+as their values.  Usually there is a specific reason why the variable is
+not a normal hook, such as the need to pass arguments to the function.
+(In older Emacs versions, some of these variables had names ending in
+@samp{-hook} even though they were not normal hooks.)
+
+The variables whose names end in @samp{-hooks} or @samp{-functions} have
+lists of functions as their values, but these functions are called in a
+special way (they are passed arguments, or else their values are used).
+
+@c !!! need  xref  to where each hook is documented or else document it
+@c by specifying what is expected, and when it is called relative to
+@c mode initialization.)
+
+@table @code
+@item activate-menubar-hook
+@item activate-popup-menu-hook
+@item ad-definition-hooks
+@item adaptive-fill-function
+@item add-log-current-defun-function
+@item after-change-functions
+@item after-delete-annotation-hook
+@item after-init-hook
+@item after-insert-file-functions
+@item after-revert-hook
+@item after-save-hook
+@item after-set-visited-file-name-hooks
+@item after-write-file-hooks
+@item auto-fill-function
+@item auto-save-hook
+@item before-change-functions
+@item before-delete-annotation-hook
+@item before-init-hook
+@item before-revert-hook
+@item blink-paren-function
+@item buffers-menu-switch-to-buffer-function
+@item c++-mode-hook
+@item c-delete-function
+@item c-mode-common-hook
+@item c-mode-hook
+@item c-special-indent-hook
+@item calendar-load-hook
+@item change-major-mode-hook
+@item command-history-hook
+@item comment-indent-function
+@item compilation-buffer-name-function
+@item compilation-exit-message-function
+@item compilation-finish-function
+@item compilation-parse-errors-function
+@item compilation-mode-hook
+@item create-console-hook
+@item create-device-hook
+@item create-frame-hook
+@item dabbrev-friend-buffer-function
+@item dabbrev-select-buffers-function
+@item delete-console-hook
+@item delete-device-hook
+@item delete-frame-hook
+@item deselect-frame-hook
+@item diary-display-hook
+@item diary-hook
+@item dired-after-readin-hook
+@item dired-before-readin-hook
+@item dired-load-hook
+@item dired-mode-hook
+@item disabled-command-hook
+@item display-buffer-function
+@item ediff-after-setup-control-frame-hook
+@item ediff-after-setup-windows-hook
+@item ediff-before-setup-control-frame-hook
+@item ediff-before-setup-windows-hook
+@item ediff-brief-help-message-function
+@item ediff-cleanup-hook
+@item ediff-control-frame-position-function
+@item ediff-display-help-hook
+@item ediff-focus-on-regexp-matches-function
+@item ediff-forward-word-function
+@item ediff-hide-regexp-matches-function
+@item ediff-keymap-setup-hook
+@item ediff-load-hook
+@item ediff-long-help-message-function
+@item ediff-make-wide-display-function
+@item ediff-merge-split-window-function
+@item ediff-meta-action-function
+@item ediff-meta-redraw-function
+@item ediff-mode-hook
+@item ediff-prepare-buffer-hook
+@item ediff-quit-hook
+@item ediff-registry-setup-hook
+@item ediff-select-hook
+@item ediff-session-action-function
+@item ediff-session-group-setup-hook
+@item ediff-setup-diff-regions-function
+@item ediff-show-registry-hook
+@item ediff-show-session-group-hook
+@item ediff-skip-diff-region-function
+@item ediff-split-window-function
+@item ediff-startup-hook
+@item ediff-suspend-hook
+@item ediff-toggle-read-only-function
+@item ediff-unselect-hook
+@item ediff-window-setup-function
+@item edit-picture-hook
+@item electric-buffer-menu-mode-hook
+@item electric-command-history-hook
+@item electric-help-mode-hook
+@item emacs-lisp-mode-hook
+@item fill-paragraph-function
+@item find-file-hooks
+@item find-file-not-found-hooks
+@item first-change-hook
+@item font-lock-after-fontify-buffer-hook
+@item font-lock-beginning-of-syntax-function
+@item font-lock-mode-hook
+@item fume-found-function-hook
+@item fume-list-mode-hook
+@item fume-rescan-buffer-hook
+@item fume-sort-function
+@item gnus-startup-hook
+@item hack-local-variables-hook
+@item highlight-headers-follow-url-function
+@item hyper-apropos-mode-hook
+@item indent-line-function
+@item indent-mim-hook
+@item indent-region-function
+@item initial-calendar-window-hook
+@item isearch-mode-end-hook
+@item isearch-mode-hook
+@item java-mode-hook
+@item kill-buffer-hook
+@item kill-buffer-query-functions
+@item kill-emacs-hook
+@item kill-emacs-query-functions
+@item kill-hooks
+@item LaTeX-mode-hook
+@item latex-mode-hook
+@item ledit-mode-hook
+@item lisp-indent-function
+@item lisp-interaction-mode-hook
+@item lisp-mode-hook
+@item list-diary-entries-hook
+@item load-read-function
+@item log-message-filter-function
+@item m2-mode-hook
+@item mail-citation-hook
+@item mail-mode-hook
+@item mail-setup-hook
+@item make-annotation-hook
+@item makefile-mode-hook
+@item map-frame-hook
+@item mark-diary-entries-hook
+@item medit-mode-hook
+@item menu-no-selection-hook
+@item mh-compose-letter-hook
+@item mh-folder-mode-hook
+@item mh-letter-mode-hook
+@item mim-mode-hook
+@item minibuffer-exit-hook
+@item minibuffer-setup-hook
+@item mode-motion-hook
+@item mouse-enter-frame-hook
+@item mouse-leave-frame-hook
+@item mouse-track-cleanup-hook
+@item mouse-track-click-hook
+@item mouse-track-down-hook
+@item mouse-track-drag-hook
+@item mouse-track-drag-up-hook
+@item mouse-track-up-hook
+@item mouse-yank-function
+@item news-mode-hook
+@item news-reply-mode-hook
+@item news-setup-hook
+@item nongregorian-diary-listing-hook
+@item nongregorian-diary-marking-hook
+@item nroff-mode-hook
+@item objc-mode-hook
+@item outline-mode-hook
+@item perl-mode-hook
+@item plain-TeX-mode-hook
+@item post-command-hook
+@item post-gc-hook
+@item pre-abbrev-expand-hook
+@item pre-command-hook
+@item pre-display-buffer-function
+@item pre-gc-hook
+@item pre-idle-hook
+@item print-diary-entries-hook
+@item prolog-mode-hook
+@item protect-innocence-hook
+@item remove-message-hook
+@item revert-buffer-function
+@item revert-buffer-insert-contents-function
+@item rmail-edit-mode-hook
+@item rmail-mode-hook
+@item rmail-retry-setup-hook
+@item rmail-summary-mode-hook
+@item scheme-indent-hook
+@item scheme-mode-hook
+@item scribe-mode-hook
+@item select-frame-hook
+@item send-mail-function
+@item shell-mode-hook
+@item shell-set-directory-error-hook
+@item special-display-function
+@item suspend-hook
+@item suspend-resume-hook
+@item temp-buffer-show-function
+@item term-setup-hook
+@item terminal-mode-hook
+@item terminal-mode-break-hook
+@item TeX-mode-hook
+@item tex-mode-hook
+@item text-mode-hook
+@item today-visible-calendar-hook
+@item today-invisible-calendar-hook
+@item tooltalk-message-handler-hook
+@item tooltalk-pattern-handler-hook
+@item tooltalk-unprocessed-message-hook
+@item unmap-frame-hook
+@item vc-checkin-hook
+@item vc-checkout-writable-buffer-hook
+@item vc-log-after-operation-hook
+@item vc-make-buffer-writable-hook
+@item view-hook
+@item vm-arrived-message-hook
+@item vm-arrived-messages-hook
+@item vm-chop-full-name-function
+@item vm-display-buffer-hook
+@item vm-edit-message-hook
+@item vm-forward-message-hook
+@item vm-iconify-frame-hook
+@item vm-inhibit-write-file-hook
+@item vm-key-functions
+@item vm-mail-hook
+@item vm-mail-mode-hook
+@item vm-menu-setup-hook
+@item vm-mode-hook
+@item vm-quit-hook
+@item vm-rename-current-buffer-function
+@item vm-reply-hook
+@item vm-resend-bounced-message-hook
+@item vm-resend-message-hook
+@item vm-retrieved-spooled-mail-hook
+@item vm-select-message-hook
+@item vm-select-new-message-hook
+@item vm-select-unread-message-hook
+@item vm-send-digest-hook
+@item vm-summary-mode-hook
+@item vm-summary-pointer-update-hook
+@item vm-summary-redo-hook
+@item vm-summary-update-hook
+@item vm-undisplay-buffer-hook
+@item vm-visit-folder-hook
+@item window-setup-hook
+@item write-contents-hooks
+@item write-file-data-hooks
+@item write-file-hooks
+@item write-region-annotate-functions
+@item x-lost-selection-hooks
+@item x-sent-selection-hooks
+@item zmacs-activate-region-hook
+@item zmacs-deactivate-region-hook
+@item zmacs-update-region-hook
+@end table

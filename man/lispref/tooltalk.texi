@@ -1,0 +1,370 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993 Free Software Foundation, Inc.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/tooltalk.info
+@node ToolTalk Support, LDAP Support, X-Windows, top
+@chapter ToolTalk Support
+@cindex ToolTalk
+
+@menu
+* XEmacs ToolTalk API Summary::
+* Sending Messages::
+* Receiving Messages::
+@end menu
+
+@node XEmacs ToolTalk API Summary
+@section XEmacs ToolTalk API Summary
+
+The XEmacs Lisp interface to ToolTalk is similar, at least in spirit,
+to the standard C ToolTalk API.  Only the message and pattern parts
+of the API are supported at present; more of the API could be added
+if needed.  The Lisp interface departs from the C API in a few ways:
+
+@itemize @bullet
+@item
+ToolTalk is initialized automatically at XEmacs startup-time.  Messages
+can only be sent other ToolTalk applications connected to the same X11
+server that XEmacs is running on.
+
+@item
+There are fewer entry points; polymorphic functions with keyword
+arguments are used instead.
+
+@item
+The callback interface is simpler and marginally less functional.
+A single callback may be associated with a message or a pattern;
+the callback is specified with a Lisp symbol (the symbol should
+have a function binding).
+
+@item
+The session attribute for messages and patterns is always
+initialized to the default session.
+
+@item
+Anywhere a ToolTalk enum constant, e.g. @samp{TT_SESSION}, is valid, one
+can substitute the corresponding symbol, e.g. @code{'TT_SESSION}.  This
+simplifies building lists that represent messages and patterns.
+@end itemize
+
+@node Sending Messages
+@section Sending Messages
+@cindex sending ToolTalk messages
+@cindex ToolTalk message
+
+@menu
+* Example of Sending Messages::
+* Elisp Interface for Sending Messages::
+@end menu
+
+@node Example of Sending Messages
+@subsection Example of Sending Messages
+
+Here's a simple example that sends a query to another application
+and then displays its reply.  Both the query and the reply are
+stored in the first argument of the message.
+
+@example
+(defun tooltalk-random-query-handler (msg)
+  (let ((state (get-tooltalk-message-attribute msg 'state)))
+    (cond
+      ((eq state 'TT_HANDLED)
+       (message (get-tooltalk-message-attribute msg arg_val 0)))
+      ((memq state '(TT_FAILED TT_REJECTED))
+       (message "Random query turns up nothing")))))
+
+(defvar random-query-message
+  '(   class TT_REQUEST
+       scope TT_SESSION
+     address TT_PROCEDURE
+          op "random-query"
+        args '((TT_INOUT "?" "string"))
+    callback tooltalk-random-query-handler))
+
+(let ((m (make-tooltalk-message random-query-message)))
+  (send-tooltalk-message m))
+@end example
+
+@node Elisp Interface for Sending Messages
+@subsection Elisp Interface for Sending Messages
+
+@defun make-tooltalk-message attributes
+Create a ToolTalk message and initialize its attributes.
+The value of @var{attributes} must be a list of alternating keyword/values,
+where keywords are symbols that name valid message attributes.
+For example:
+
+@example
+  (make-tooltalk-message
+    '(class TT_NOTICE
+      scope TT_SESSION
+      address TT_PROCEDURE
+      op "do-something"
+      args ("arg1" 12345 (TT_INOUT "arg3" "string"))))
+@end example
+
+Values must always be strings, integers, or symbols that represent
+ToolTalk constants.  Attribute names are the same as those supported by
+@code{set-tooltalk-message-attribute}, plus @code{args}.
+
+The value of @code{args} should be a list of message arguments where
+each message argument has the following form:
+
+@quotation
+   @samp{(mode [value [type]])} or just @samp{value}
+@end quotation
+
+Where @var{mode} is one of @code{TT_IN}, @code{TT_OUT}, or
+@code{TT_INOUT} and @var{type} is a string.  If @var{type} isn't
+specified then @code{int} is used if @var{value} is a number; otherwise
+@code{string} is used.  If @var{type} is @code{string} then @var{value}
+is converted to a string (if it isn't a string already) with
+@code{prin1-to-string}.  If only a value is specified then @var{mode}
+defaults to @code{TT_IN}.  If @var{mode} is @code{TT_OUT} then
+@var{value} and @var{type} don't need to be specified.  You can find out
+more about the semantics and uses of ToolTalk message arguments in
+chapter 4 of the @cite{ToolTalk Programmer's Guide}.
+@refill
+@end defun
+
+@defun send-tooltalk-message msg
+Send the message on its way.  Once the message has been sent it's almost
+always a good idea to get rid of it with
+@code{destroy-tooltalk-message}.
+@refill
+@end defun
+
+@defun return-tooltalk-message msg &optional mode
+Send a reply to this message.  The second argument can be @code{reply},
+@code{reject} or @code{fail}; the default is @code{reply}.  Before
+sending a reply, all message arguments whose mode is @code{TT_INOUT} or
+@code{TT_OUT} should have been filled in---see
+@code{set-tooltalk-message-attribute}.
+@refill
+@end defun
+
+@defun get-tooltalk-message-attribute msg attribute &optional argn
+Returns the indicated ToolTalk message attribute.  Attributes are
+identified by symbols with the same name (underscores and all) as the
+suffix of the ToolTalk @samp{tt_message_<attribute>} function that
+extracts the value.  String attribute values are copied and enumerated
+type values (except disposition) are converted to symbols;
+e.g. @samp{TT_HANDLER} is @code{'TT_HANDLER}, @samp{uid} and @samp{gid}
+are represented by fixnums (small integers), @samp{opnum} is converted
+to a string, and @samp{disposition} is converted to a fixnum.  We
+convert @samp{opnum} (a C int) to a string (e.g. @code{123} @result{}
+@code{"123"}) because there's no guarantee that opnums will fit within
+the range of XEmacs Lisp integers.
+@refill
+
+[TBD] Use the @code{plist} attribute instead of C API @code{user}
+attribute for user-defined message data.  To retrieve the value of a
+message property, specify the indicator for @var{argn}.  For example, to
+get the value of a property called @code{rflag}, use
+
+@example
+   (get-tooltalk-message-attribute msg 'plist 'rflag)
+@end example
+
+To get the value of a message argument use one of the @code{arg_val}
+(strings), @code{arg_ival} (integers), or @code{arg_bval} (strings with
+embedded nulls), attributes.  For example, to get the integer value of
+the third argument:
+
+@example
+   (get-tooltalk-message-attribute msg 'arg_ival 2)
+@end example
+
+As you can see, argument numbers are zero-based.  The type of each
+arguments can be retrieved with the @code{arg_type} attribute; however
+ToolTalk doesn't define any semantics for the string value of
+@code{arg_type}.  Conventionally @code{string} is used for strings and
+@code{int} for 32 bit integers.  Note that XEmacs Lisp stores the lengths
+of strings explicitly (unlike C) so treating the value returned by
+@code{arg_bval} like a string is fine.
+@refill
+@end defun
+
+@defun set-tooltalk-message-attribute value msg attribute &optional argn
+Initialize one ToolTalk message attribute.
+
+Attribute names and values are the same as for
+@code{get-tooltalk-message-attribute}.  A property list is provided for
+user data (instead of the @code{user} message attribute); see
+@code{get-tooltalk-message-attribute}.
+@refill
+
+Callbacks are handled slightly differently than in the C ToolTalk API.
+The value of @var{callback} should be the name of a function of one
+argument.  It will be called each time the state of the message changes.
+This is usually used to notice when the message's state has changed to
+@code{TT_HANDLED} (or @code{TT_FAILED}), so that reply argument values
+can be used.
+@refill
+
+If one of the argument attributes is specified as @code{arg_val},
+@code{arg_ival}, or @code{arg_bval}, then @var{argn} must be the
+number of an already created argument.  Arguments can be added to a
+message with @code{add-tooltalk-message-arg}.
+@refill
+@end defun
+
+@defun add-tooltalk-message-arg msg mode type &optional value
+Append one new argument to the message.  @var{mode} must be one of
+@code{TT_IN}, @code{TT_INOUT}, or @code{TT_OUT}, @var{type} must be a
+string, and @var{value} can be a string or an integer.  ToolTalk doesn't
+define any semantics for @var{type}, so only the participants in the
+protocol you're using need to agree what types mean (if anything).
+Conventionally @code{string} is used for strings and @code{int} for 32
+bit integers.  Arguments can initialized by providing a value or with
+@code{set-tooltalk-message-attribute}; the latter is necessary if you
+want to initialize the argument with a string that can contain embedded
+nulls (use @code{arg_bval}).
+@refill
+@end defun
+
+@defun create-tooltalk-message &optional no-callback
+Create a new ToolTalk message.  The message's session attribute is
+initialized to the default session.  Other attributes can be initialized
+with @code{set-tooltalk-message-attribute}.
+@code{make-tooltalk-message} is the preferred way to create and
+initialize a message.
+
+Optional arg @var{no-callback} says don't add a C-level callback at all.
+Normally don't do that; just don't specify the Lisp callback when
+calling @code{make-tooltalk-message}.
+@refill
+@end defun
+
+@defun destroy-tooltalk-message msg
+Apply @samp{tt_message_destroy} to the message.  It's not necessary to
+destroy messages after they've been processed by a message or pattern
+callback, the Lisp/ToolTalk callback machinery does this for you.
+@end defun
+
+@node Receiving Messages
+@section Receiving Messages
+@cindex ToolTalk pattern
+@cindex receiving ToolTalk messages
+
+@menu
+* Example of Receiving Messages::
+* Elisp Interface for Receiving Messages::
+@end menu
+
+@node Example of Receiving Messages
+@subsection Example of Receiving Messages
+
+Here's a simple example of a handler for a message that tells XEmacs to
+display a string in the mini-buffer area.  The message operation is
+called @samp{emacs-display-string}.  Its first (0th) argument is the
+string to display.
+
+@example
+(defun tooltalk-display-string-handler (msg)
+  (message (get-tooltalk-message-attribute msg 'arg_val 0)))
+
+(defvar display-string-pattern
+  '(category TT_HANDLE
+       scope TT_SESSION
+          op "emacs-display-string"
+    callback tooltalk-display-string-handler))
+
+(let ((p (make-tooltalk-pattern display-string-pattern)))
+  (register-tooltalk-pattern p))
+@end example
+
+@node Elisp Interface for Receiving Messages
+@subsection Elisp Interface for Receiving Messages
+
+@defun make-tooltalk-pattern attributes
+Create a ToolTalk pattern and initialize its attributes.
+The value of attributes must be a list of alternating keyword/values,
+where keywords are symbols that name valid pattern attributes
+or lists of valid attributes.  For example:
+
+@example
+  (make-tooltalk-pattern
+    '(category TT_OBSERVE
+         scope TT_SESSION
+            op ("operation1" "operation2")
+          args ("arg1" 12345 (TT_INOUT "arg3" "string"))))
+@end example
+
+Attribute names are the same as those supported by
+@code{add-tooltalk-pattern-attribute}, plus @code{'args}.
+
+Values must always be strings, integers, or symbols that represent
+ToolTalk constants or lists of same.  When a list of values is provided
+all of the list elements are added to the attribute.  In the example
+above, messages whose @samp{op} attribute is @samp{"operation1"} or
+@samp{"operation2"} would match the pattern.
+
+The value of @var{args} should be a list of pattern arguments where each
+pattern argument has the following form:
+
+@quotation
+   @samp{(mode [value [type]])} or just @samp{value}
+@end quotation
+
+Where @var{mode} is one of @code{TT_IN}, @code{TT_OUT}, or
+@code{TT_INOUT} and @var{type} is a string.  If @var{type} isn't
+specified then @code{int} is used if @var{value} is a number; otherwise
+@code{string} is used.  If @var{type} is @code{string} then @var{value}
+is converted to a string (if it isn't a string already) with
+@code{prin1-to-string}.  If only a value is specified then @var{mode}
+defaults to @code{TT_IN}.  If @var{mode} is @code{TT_OUT} then
+@var{value} and @var{type} don't need to be specified.  You can find out
+more about the semantics and uses of ToolTalk pattern arguments in
+chapter 3 of the @cite{ToolTalk Programmer's Guide}.
+@refill
+@end defun
+
+@defun register-tooltalk-pattern pattern
+XEmacs will begin receiving messages that match this pattern.
+@end defun
+
+@defun unregister-tooltalk-pattern pattern
+XEmacs will stop receiving messages that match this pattern.
+@end defun
+
+@defun add-tooltalk-pattern-attribute value pattern indicator
+Add one value to the indicated pattern attribute. The names of
+attributes are the same as the ToolTalk accessors used to set them less
+the @samp{tooltalk_pattern_} prefix and the @samp{_add} suffix.  For
+example, the name of the attribute for the
+@samp{tt_pattern_disposition_add} attribute is @code{disposition}.  The
+@code{category} attribute is handled specially, since a pattern can only
+be a member of one category (@code{TT_OBSERVE} or @code{TT_HANDLE}).
+@refill
+
+Callbacks are handled slightly differently than in the C ToolTalk API.
+The value of @var{callback} should be the name of a function of one
+argument.  It will be called each time the pattern matches an incoming
+message.
+@end defun
+
+@defun add-tooltalk-pattern-arg pattern mode vtype &optional value
+Add one fully-specified argument to a ToolTalk pattern.  @var{mode} must
+be one of @code{TT_IN}, @code{TT_INOUT}, or @code{TT_OUT}.  @var{vtype}
+must be a string.  @var{value} can be an integer, string or @code{nil}.
+If @var{value} is an integer then an integer argument
+(@samp{tt_pattern_iarg_add}) is added; otherwise a string argument is
+added.  At present there's no way to add a binary data argument.
+@refill
+@end defun
+
+@defun create-tooltalk-pattern
+Create a new ToolTalk pattern and initialize its session attribute to
+be the default session.
+@end defun
+
+@defun destroy-tooltalk-pattern pattern
+Apply @samp{tt_pattern_destroy} to the pattern.  This effectively
+unregisters the pattern.
+@end defun
+
+@defun describe-tooltalk-message msg &optional stream
+Print the message's attributes and arguments to @var{stream}.  This is
+often useful for debugging.
+@end defun

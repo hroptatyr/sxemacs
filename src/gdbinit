@@ -1,0 +1,510 @@
+# -*- ksh -*-
+# Copyright (C) 1998 Free Software Foundation, Inc.
+
+# This file is part of XEmacs.
+
+# XEmacs is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2, or (at your option) any
+# later version.
+
+# XEmacs is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with XEmacs; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+# Author: Martin Buchholz
+
+# Some useful commands for debugging emacs with gdb 4.16 or better.
+#
+# Since this file is called `.gdbinit', it will be read by gdb
+# automatically when gdb is run in the build directory, which is where
+# developers usually debug their xemacs.  You can also source this
+# file from your ~/.gdbinit, if you like.
+#
+# Configure xemacs with --debug, and compile with -g.
+#
+# See also the question of the XEmacs FAQ, titled
+# "How to Debug an XEmacs problem with a debugger".
+#
+# This can be used to debug XEmacs no matter how the following are
+# specified:
+
+# USE_UNION_TYPE
+
+# (the above all have configure equivalents)
+
+# Some functions defined here require a running process, but most
+# don't.  Considerable effort has been expended to this end.
+
+# See the dbg_ C support code in src/alloc.c that allows the functions
+# defined in this file to work correctly.
+
+set print union off
+set print pretty off
+
+set $Lisp_Type_Int = -2
+
+define decode_object
+  set $obj = (unsigned long) $arg0
+  if $obj & 1
+  # It's an int
+    set $val = $obj >> 1
+    set $type = $Lisp_Type_Int
+  else
+    set $type = $obj & dbg_typemask
+    if $type == Lisp_Type_Char
+      set $val = ($obj & dbg_valmask) >> dbg_gctypebits
+    else
+      # It's a record pointer
+      set $val = $obj
+    end
+  end
+
+  if $type == Lisp_Type_Record
+    set $lheader = ((struct lrecord_header *) $val)
+    set $lrecord_type = ($lheader->type)
+    set $imp = ((struct lrecord_implementation *) lrecord_implementations_table[(int) $lrecord_type])
+  else
+    set $lrecord_type = -1
+    set $lheader = -1
+    set $imp = -1
+  end
+end
+
+document decode_object
+Usage: decode_object lisp_object
+Extract implementation information from a Lisp Object.
+Defines variables $val, $type and $imp.
+end
+
+define xint
+decode_object $arg0
+print ((long) $val)
+end
+
+define xtype
+  decode_object $arg0
+  if $type == $Lisp_Type_Int
+    echo int\n
+  else
+  if $type == Lisp_Type_Char
+    echo char\n
+  else
+    printf "record type: %s\n", $imp->name
+  end
+  end
+end
+
+document xtype
+Usage: xtype lisp_object
+Print the Lisp type of a lisp object.
+end
+
+define lisp-shadows
+  run -batch -vanilla -f list-load-path-shadows
+end
+
+document lisp-shadows
+Usage: lisp-shadows
+Run xemacs to check for lisp shadows
+end
+
+define environment-to-run-temacs
+  unset env EMACSLOADPATH
+  set env EMACSBOOTSTRAPLOADPATH=../lisp/:..
+  set env EMACSBOOTSTRAPMODULEPATH=../modules/:..
+end
+
+define run-temacs
+  environment-to-run-temacs
+  run -nd -batch -l ../lisp/loadup.el run-temacs -q
+end
+
+document run-temacs
+Usage: run-temacs
+Run temacs interactively, like xemacs.
+Use this with debugging tools (like purify) that cannot deal with dumping,
+or when temacs builds successfully, but xemacs does not.
+end
+
+define check-xemacs
+  run -batch -l ../tests/automated/test-harness.el -f batch-test-emacs ../tests/automated
+end
+
+document check-xemacs
+Usage: check-xemacs
+Run the test suite.  Equivalent to 'make check'.
+end
+
+define check-temacs
+  environment-to-run-temacs
+  run -nd -batch -l ../lisp/loadup.el run-temacs -q -batch -l ../tests/automated/test-harness.el -f batch-test-emacs ../tests/automated
+end
+
+document check-temacs
+Usage: check-temacs
+Run the test suite on temacs.  Equivalent to 'make check-temacs'.
+Use this with debugging tools (like purify) that cannot deal with dumping,
+or when temacs builds successfully, but xemacs does not.
+end
+
+define update-elc
+  environment-to-run-temacs
+  run -nd -batch -l ../lisp/update-elc.el
+end
+
+document update-elc
+Usage: update-elc
+Run the core lisp byte compilation part of the build procedure.
+Use when debugging temacs, not xemacs!
+Use this when temacs builds successfully, but xemacs does not.
+end
+
+define dmp
+  environment-to-run-temacs
+  run -nd -batch -l ../lisp/loadup.el dump
+end
+
+document dmp
+Usage: dmp
+Run the dumping part of the build procedure.
+Use when debugging temacs, not xemacs!
+Use this when temacs builds successfully, but xemacs does not.
+end
+
+define ldp
+  printf "%s", "Lisp => "
+  call debug_print($arg0)
+end
+
+document ldp
+Usage: ldp lisp_object
+Print a Lisp Object value using the Lisp printer.
+Requires a running xemacs process.
+end
+
+define lbt
+call debug_backtrace()
+end
+
+document lbt
+Usage: lbt
+Print the current Lisp stack trace.
+Requires a running xemacs process.
+end
+
+
+define leval
+ldp Feval(Fcar(Fread_from_string(build_string($arg0),Qnil,Qnil)))
+end
+
+document leval
+Usage: leval "SEXP"
+Eval a lisp expression.
+Requires a running xemacs process.
+
+Example:
+(gdb) leval "(+ 1 2)"
+Lisp ==> 3
+end
+
+
+define wtype
+print $arg0->core.widget_class->core_class.class_name
+end
+
+define xtname
+print XrmQuarkToString(((Object)($arg0))->object.xrm_name)
+end
+
+# GDB's command language makes you want to ...
+
+define ptype
+  set $type_ptr = ($arg0 *) $val
+  print $type_ptr
+  print *$type_ptr
+end
+
+define pstructtype
+  set $type_ptr = (struct $arg0 *) $val
+  print $type_ptr
+  print *$type_ptr
+end
+
+define pobj
+  decode_object $arg0
+  if $type == $Lisp_Type_Int
+    printf "Integer: %d\n", $val
+  else
+  if $type == Lisp_Type_Char
+    if $val > 32 && $val < 128
+      printf "Char: %c\n", $val
+    else
+      printf "Char: %d\n", $val
+    end
+  else
+  if $lrecord_type == lrecord_type_string
+    ptype Lisp_String
+  else
+  if $lrecord_type == lrecord_type_cons
+    ptype Lisp_Cons
+  else
+  if $lrecord_type == lrecord_type_symbol
+    ptype Lisp_Symbol
+    printf "Symbol name: %s\n", $type_ptr->name->data
+  else
+  if $lrecord_type == lrecord_type_vector
+    ptype Lisp_Vector
+    printf "Vector of length %d\n", $type_ptr->size
+    #print *($type_ptr->data) @ $type_ptr->size
+  else
+  if $lrecord_type == lrecord_type_bit_vector
+    ptype Lisp_Bit_Vector
+  else
+  if $lrecord_type == lrecord_type_buffer
+    pstructtype buffer
+  else
+  if $lrecord_type == lrecord_type_char_table
+    ptype Lisp_Char_Table
+  else
+  if $lrecord_type == lrecord_type_char_table_entry
+    ptype Lisp_Char_Table_Entry
+  else
+  if $lrecord_type == lrecord_type_charset
+    ptype Lisp_Charset
+  else
+  if $lrecord_type == lrecord_type_coding_system
+    ptype Lisp_Coding_System
+  else
+  if $lrecord_type == lrecord_type_color_instance
+    ptype Lisp_Color_Instance
+  else
+  if $lrecord_type == lrecord_type_command_builder
+    ptype command_builder
+  else
+  if $lrecord_type == lrecord_type_compiled_function
+    ptype Lisp_Compiled_Function
+  else
+  if $lrecord_type == lrecord_type_console
+    pstructtype console
+  else
+  if $lrecord_type == lrecord_type_database
+    ptype Lisp_Database
+  else
+  if $lrecord_type == lrecord_type_device
+    pstructtype device
+  else
+  if $lrecord_type == lrecord_type_event
+    ptype Lisp_Event
+  else
+  if $lrecord_type == lrecord_type_extent
+    pstructtype extent
+  else
+  if $lrecord_type == lrecord_type_extent_auxiliary
+    pstructtype extent_auxiliary
+  else
+  if $lrecord_type == lrecord_type_extent_info
+    pstructtype extent_info
+  else
+  if $lrecord_type == lrecord_type_face
+    ptype Lisp_Face
+  else
+  if $lrecord_type == lrecord_type_float
+    ptype Lisp_Float
+  else
+  if $lrecord_type == lrecord_type_font_instance
+    ptype Lisp_Font_Instance
+  else
+  if $lrecord_type == lrecord_type_frame
+    pstructtype frame
+  else
+  if $lrecord_type == lrecord_type_glyph
+    ptype Lisp_Glyph
+  else
+  if $lrecord_type == lrecord_type_gui_item
+    ptype Lisp_Gui_Item
+  else
+  if $lrecord_type == lrecord_type_hash_table
+    ptype Lisp_Hash_Table
+  else
+  if $lrecord_type == lrecord_type_image_instance
+    ptype Lisp_Image_Instance
+  else
+  if $lrecord_type == lrecord_type_keymap
+    ptype Lisp_Keymap
+  else
+  if $lrecord_type == lrecord_type_lcrecord_list
+    pstructtype lcrecord_list
+  else
+  if $lrecord_type == lrecord_type_ldap
+    ptype Lisp_LDAP
+  else
+  if $lrecord_type == lrecord_type_lstream
+    pstructtype lstream
+  else
+  if $lrecord_type == lrecord_type_marker
+    ptype Lisp_Marker
+  else
+  if $lrecord_type == lrecord_type_opaque
+    ptype Lisp_Opaque
+  else
+  if $lrecord_type == lrecord_type_opaque_ptr
+    ptype Lisp_Opaque_Ptr
+  else
+  if $lrecord_type == lrecord_type_popup_data
+    ptype popup_data
+  else
+  if $lrecord_type == lrecord_type_process
+    ptype Lisp_Process
+  else
+  if $lrecord_type == lrecord_type_range_table
+    ptype Lisp_Range_Table
+  else
+  if $lrecord_type == lrecord_type_specifier
+    ptype Lisp_Specifier
+  else
+  if $lrecord_type == lrecord_type_subr
+    ptype Lisp_Subr
+  else
+  if $lrecord_type == lrecord_type_symbol_value_buffer_local
+    pstructtype symbol_value_buffer_local
+  else
+  if $lrecord_type == lrecord_type_symbol_value_forward
+    pstructtype symbol_value_forward
+  else
+  if $lrecord_type == lrecord_type_symbol_value_lisp_magic
+    pstructtype symbol_value_lisp_magic
+  else
+  if $lrecord_type == lrecord_type_symbol_value_varalias
+    pstructtype symbol_value_varalias
+  else
+  if $lrecord_type == lrecord_type_timeout
+    ptype Lisp_Timeout
+  else
+  if $lrecord_type == lrecord_type_toolbar_button
+    pstructtype toolbar_button
+  else
+  if $lrecord_type == lrecord_type_tooltalk_message
+    ptype Lisp_Tooltalk_Message
+  else
+  if $lrecord_type == lrecord_type_tooltalk_pattern
+    ptype Lisp_Tooltalk_Pattern
+  else
+  if $lrecord_type == lrecord_type_weak_list
+    pstructtype weak_list
+  else
+  if $lrecord_type == lrecord_type_window
+    pstructtype window
+  else
+  if $lrecord_type == lrecord_type_window_configuration
+    pstructtype window_config
+  else
+    echo Unknown Lisp Object type\n
+    print $arg0
+  # Barf, gag, retch
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  # Repeat after me... gdb sux, gdb sux, gdb sux...
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  # Are we having fun yet??
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+  end
+end
+
+document pobj
+Usage: pobj lisp_object
+Print the internal C representation of a Lisp Object.
+end
+
+# -------------------------------------------------------------
+# functions to test the debugging support itself.
+# If you change this file, make sure the following still work...
+# -------------------------------------------------------------
+define test_xtype
+  printf "Vemacs_major_version: "
+  xtype Vemacs_major_version
+  printf "Vhelp_char: "
+  xtype Vhelp_char
+  printf "Qnil: "
+  xtype Qnil
+  printf "Qunbound: "
+  xtype Qunbound
+  printf "Vobarray: "
+  xtype Vobarray
+  printf "Vall_weak_lists: "
+  xtype Vall_weak_lists
+  printf "Vxemacs_codename: "
+  xtype Vxemacs_codename
+end
+
+define test_pobj
+  printf "Vemacs_major_version: "
+  pobj Vemacs_major_version
+  printf "Vhelp_char: "
+  pobj Vhelp_char
+  printf "Qnil: "
+  pobj Qnil
+  printf "Qunbound: "
+  pobj Qunbound
+  printf "Vobarray: "
+  pobj Vobarray
+  printf "Vall_weak_lists: "
+  pobj Vall_weak_lists
+  printf "Vxemacs_codename: "
+  pobj Vxemacs_codename
+end
+

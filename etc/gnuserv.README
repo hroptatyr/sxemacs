@@ -1,0 +1,103 @@
+This file is not meant to be proper documentation. See the file gnuserv.1 for
+more information.
+
+****
+NOTE: This version of gnuserv has some enhancements over the original version 
+  distributed by Andy Norman. See the end of this file for more details. 
+****
+
+To install, copy gnuserv.el into a directory on your GNU Emacs
+load-path. Edit Makefile and change INCLUDES to point to the src
+directory underneath your emacs source tree (or make yourself a
+config.h file in this directory by hand, starting with config.h.proto
+as a first cut) and type:
+
+     make
+
+This should compile the server and the two clients. Now put gnuserv,
+gnuclient and gnudoit in a directory that users have in their executable
+search paths.
+
+File                    : Description
+----------------------------------------------------------------
+Makefile		: Makefile to build gnuserv
+LICENSE			: GNU General License
+README			: this file
+gnuclient.c		: editor client C code
+gnudoit.c		: eval client C code
+gnuserv.1		: gnuserv man page
+gnuserv.c		: server C code
+gnuserv.el		: server LISP code for GNU Emacs V18,V19, 
+                          XEmacs/Lucid Emacs and Epoch V4
+gnuserv.h		: server/client C header file
+gnuslib.c		: server/client C common code
+src.x11fns.diff		: diffs to src/x11fns to raise window (for emacs18)
+
+config.h.proto          : Use this file as the starting point for constructing
+                          a config.h if you don't have access to the
+                          one that was used when compiling your emacs. 
+
+If you find *any* problems at all with gnuserv, or you can think of better
+ways of doing things (especially remote file access), please e-mail me at one
+of the addresses below.
+
+ange@hplb.hpl.hp.com
+ange@hpl.hp.co.uk
+...!hplabs!hplb!ange
+...!ukc!hplb!ange
+
+
+
+This version of gnuserv has been enhanced by a number of people, including
+Bob Weiner <weiner@mot.com>, Darrell Kindred <dkindred@cmu.edu>,
+Arup Mukherjee <arup@cmu.edu>, and Ben Wing <ben@xemacs.org>. The
+modifications are basically as follows:
+
+Bob Weiner: 
+
+     Integrated support for several versions of emacs. New requests
+     from gnuclient cause the creation of new frames. Removed the
+     restriction on the length of the string passed to gnudoit. Later
+     added a server-done-function variable to control what happens to
+     a buffer after the user is done with it. Mods to each of the .c
+     files as well as gnuserv.el.
+
+Darrell Kindred:
+
+     Removed the restriction on the length of the string returned from
+     a gnudoit request, for the purposes of unix/internet sockets.
+     Allow the gnudoit request to be read from stdin if it's not
+     specified on the command line. Internet sockets are not opened
+     unless the GNU_SECURE variable is specified. Unix sockets are
+     created in a protected ancestral directory, since many Unix
+     variants don't enforce socket permissions properly. An internet
+     socket accepting local connections is not opened by default
+     because this would make it possibly to override all security on
+     the unix socket. See the man page for details. Unless told to do
+     otherwise by a command-line argument, gnuclient and gnudoit now
+     try to open a unix socket by default if support for them was
+     compiled in.  Mods to each of the .c files and to gnuserv.el.
+
+Arup Mukherjee:
+     Removed the restriction on the length of the string returned from
+     a gnudoit request, for the purposes of sysv ipc. Added support
+     for the "gnuserv-frame" variable allowing you to specify control
+     whether or not new screens are created in response to each
+     gnuclient request. Made a number of other bugfixes and changes to
+     the lisp part of the code, allowing gnuserv to work properly with
+     newer emacs versions. All the changes are listed in the changelog
+     at the beginning of gnuserv.el. Also fixed up the man page to
+     reflect the new gnuserv features. On HPs, stopped the "-r"
+     parameter (in gnuclient) from defaulting to /net/<remotehost>.
+     Not all installations want this, and it's much harder to debug
+     when things stop working. Changed the man page to reflect this.
+     Mods to each of the .c files, gnuserv.el and gnuserv.1
+
+     More recently - added Xauth(1X11)-style authentication to gnuserv (as 
+     of version 2.1). Although the code is completely new, credit is
+     due to Richard Caley <rjc@cogsci.edinburgh.ac.uk> ... he wrote a
+     prototype implementation from which I borrowed the basic
+     mechanism for hooking Xauth into gnuserv. 
+
+Ben Wing:
+     Added gnuattach.

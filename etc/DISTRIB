@@ -1,0 +1,30 @@
+								-*- text -*-
+
+	   SXEmacs availability information.  Last Modified: 29-Dec-04.
+
+SXEmacs is available primarily via the GNU/arch repositories.  The
+main repository is:
+
+     steve@sxemacs.org--2004 http://arch.sxemacs.org/2004/
+
+The following tla (Tom Lord's Arch) commands will "check out" the
+lastest SXEmacs sources from the above repository:
+
+(assumes that you have already installed and configured tla)
+
+	$ tla register-archive steve@sxemacs.org--2004 \
+	    http://arch.sxemacs.org/2004/
+
+	$ tla get -A steve@sxemacs.org--2004 \
+	    sxemacs--main--22.1.0 sxemacs-main
+
+That will "check out" the lastest SXEmacs sources and place them into
+$PWD/sxemacs-main/ 
+
+After that you can keep your working directory up to date with `tla
+update'.
+
+In the future we will be making source tarballs available for download
+via anonymous FTP (and possibly via HTTP as well).  When that happens
+these notes will be updated.
+

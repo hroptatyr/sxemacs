@@ -1,0 +1,45 @@
+
+	SXEmacs Electronic Mailing Lists.  Last Modified: 2004-12-29
+
+SXEmacs has its own mailing lists which are distinct from the XEmacs and
+the FSF GNU Emacs mailing lists and newsgroups.  The mailing lists are: 
+
+sxemacs-devel@sxemacs.org
+
+  sxemacs-devel is an open list for bug reports and general
+  communication about development versions of SXEmacs.
+
+sxemacs-patches@sxemacs.org
+
+  sxemacs-patches is an open list for submission of patches to the
+  SXEmacs distribution.
+
+Subscriptions:
+
+Subscription to all the lists is accomplished by sending an email
+message to LISTNAME-request@sxemacs.org with `subscribe' (without the
+quotes) as the BODY of the message.
+
+To unsubscribe, send an email to LISTNAME-request@sxemacs.org with
+`unsubscribe' (without the quotes) as the BODY of the message.
+
+List Archives:
+
+A browsable archive of these lists is available at
+http://www.sxemacs.org/pipermail/LISTNAME/
+
+Problems:
+
+Any comments, questions, or complaints about the lists should be
+brought to the attention of the SXEmacs Mailing List Owner
+<LISTNAME-owner@sxemacs.org>.
+
+-----------------------------------------------------------------------
+
+The SXEmacs project is separate from and not managed by the XEmacs project
+or the GNU project.
+
+Please do NOT send messages about problems with SXEmacs to either the
+FSF GNU Emacs newsgroups and mailing lists or the XEmacs lists and
+newsgroups.
+

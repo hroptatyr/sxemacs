@@ -1,0 +1,438 @@
+\input texinfo.tex
+
+@c %**start of header
+@setfilename ../info/custom.info
+@settitle The Customization Library
+@iftex
+@afourpaper
+@headings double
+@end iftex
+@c %**end of header
+
+@ifinfo
+@dircategory XEmacs Editor
+@direntry
+* Customizations: (custom).	Customization Library.
+@end direntry
+@end ifinfo
+
+@node Top, Declaring Groups, (dir), (dir)
+@comment  node-name,  next,  previous,  up
+@top The Customization Library
+
+This manual describes how to declare customization groups, variables,
+and faces.  It doesn't contain any examples, but please look at the file
+@file{cus-edit.el} which contains many declarations you can learn from.
+
+@menu
+* Declaring Groups::
+* Declaring Variables::
+* Declaring Faces::
+* Usage for Package Authors::
+* Utilities::
+* The Init File::
+* Wishlist::
+@end menu
+
+All the customization declarations can be changes by keyword arguments.
+Groups, variables, and faces all share these common keywords:
+
+@table @code
+@item :group
+@var{value} should be a customization group.
+Add @var{symbol} to that group.
+@item :link
+@var{value} should be a widget type.
+Add @var{value} to the external links for this customization option.
+Useful widget types include @code{custom-manual}, @code{info-link}, and
+@code{url-link}.
+@item :load
+Add @var{value} to the files that should be loaded before displaying
+this customization option.  The value should be either a string, which
+should be a string which will be loaded with @code{load-library} unless
+present in @code{load-history}, or a symbol which will be loaded with
+@code{require}.
+@item :tag
+@var{Value} should be a short string used for identifying the option in
+customization menus and buffers.  By default the tag will be
+automatically created from the options name.
+@end table
+
+@node Declaring Groups, Declaring Variables, Top, Top
+@comment  node-name,  next,  previous,  up
+@section Declaring Groups
+
+Use @code{defgroup} to declare new customization groups.
+
+@defun defgroup symbol members doc [keyword value]...
+Declare @var{symbol} as a customization group containing @var{members}.
+@var{symbol} does not need to be quoted.
+
+@var{doc} is the group documentation.
+
+@var{members} should be an alist of the form ((@var{name}
+@var{widget})...) where @var{name} is a symbol and @var{widget} is a
+widget for editing that symbol.  Useful widgets are
+@code{custom-variable} for editing variables, @code{custom-face} for
+editing faces, and @code{custom-group} for editing groups.@refill
+
+Internally, custom uses the symbol property @code{custom-group} to keep
+track of the group members, and @code{group-documentation} for the
+documentation string.
+
+The following additional @var{keyword}'s are defined:
+
+@table @code
+@item :prefix
+@var{value} should be a string.  If the string is a prefix for the name
+of a member of the group, that prefix will be ignored when creating a
+tag for that member.
+@end table
+@end defun
+
+@node Declaring Variables, Declaring Faces, Declaring Groups, Top
+@comment  node-name,  next,  previous,  up
+@section Declaring Variables
+
+Use @code{defcustom} to declare user editable variables.
+
+@defun defcustom symbol value doc [keyword value]...
+Declare @var{symbol} as a customizable variable that defaults to @var{value}.
+Neither @var{symbol} nor @var{value} needs to be quoted.
+If @var{symbol} is not already bound, initialize it to @var{value}.
+
+@var{doc} is the variable documentation.
+
+The following additional @var{keyword}'s are defined:
+
+@table @code
+@item :type
+@var{value} should be a widget type.
+
+@item :options
+@var{value} should be a list of possible members of the specified type.
+For hooks, this is a list of function names.
+
+@item :initialize
+@var{value} should be a function used to initialize the variable.  It
+takes two arguments, the symbol and value given in the @code{defcustom} call.
+Some predefined functions are:
+
+@table @code
+@item custom-initialize-set
+Use the @code{:set} method to initialize the variable.  Do not
+initialize it if already bound.  This is the default @code{:initialize}
+method.
+
+@item custom-initialize-default
+Always use @code{set-default} to initialize the variable, even if a
+@code{:set} method has been specified.
+
+@item custom-initialize-reset
+If the variable is already bound, reset it by calling the @code{:set}
+method with the value returned by the @code{:get} method.
+
+@item custom-initialize-changed
+Like @code{custom-initialize-reset}, but use @code{set-default} to
+initialize the variable if it is not bound and has not been set
+already.
+@end table
+
+@item :set
+@var{value} should be a function to set the value of the symbol.  It
+takes two arguments, the symbol to set and the value to give it.  The
+default is @code{set-default}.
+
+@item :get
+@var{value} should be a function to extract the value of symbol.  The
+function takes one argument, a symbol, and should return the current
+value for that symbol.  The default is @code{default-value}.
+
+@item :require
+@var{value} should be a feature symbol.  Each feature will be required
+when the `defcustom' is evaluated, or when Emacs is started if the user
+has saved this option.
+
+@end table
+
+@xref{Sexp Types,,,widget,The Widget Library}, for information about
+widgets to use together with the @code{:type} keyword.
+@end defun
+
+Internally, custom uses the symbol property @code{custom-type} to keep
+track of the variables type, @code{standard-value} for the program
+specified default value, @code{saved-value} for a value saved by the
+user, and @code{variable-documentation} for the documentation string.
+
+Use @code{custom-add-option} to specify that a specific function is
+useful as an member of a hook.
+
+@defun custom-add-option symbol option
+To the variable @var{symbol} add @var{option}.
+
+If @var{symbol} is a hook variable, @var{option} should be a hook
+member.  For other types variables, the effect is undefined."
+@end defun
+
+@node Declaring Faces, Usage for Package Authors, Declaring Variables, Top
+@comment  node-name,  next,  previous,  up
+@section Declaring Faces
+
+Faces are declared with @code{defface}.
+
+@defun defface face spec doc [keyword value]...
+
+Declare @var{face} as a customizable face that defaults to @var{spec}.
+@var{face} does not need to be quoted.
+
+If @var{face} has been set with `custom-set-face', set the face attributes
+as specified by that function, otherwise set the face attributes
+according to @var{spec}.
+
+@var{doc} is the face documentation.
+
+@var{spec} should be an alist of the form @samp{((@var{display} @var{atts})...)}.
+
+@var{atts} is a list of face attributes and their values.  The possible
+attributes are defined in the variable `custom-face-attributes'.
+
+The @var{atts} of the first entry in @var{spec} where the @var{display}
+matches the frame should take effect in that frame.  @var{display} can
+either be the symbol `t', which will match all frames, or an alist of
+the form @samp{((@var{req} @var{item}...)...)}@refill
+
+For the @var{display} to match a FRAME, the @var{req} property of the
+frame must match one of the @var{item}.  The following @var{req} are
+defined:@refill
+
+@table @code
+@item type
+(the value of (window-system))@*
+Should be one of @code{x} or @code{tty}.
+
+@item class
+(the frame's color support)@*
+Should be one of @code{color}, @code{grayscale}, or @code{mono}.
+
+@item background
+(what color is used for the background text)@*
+Should be one of @code{light} or @code{dark}.
+@end table
+
+Internally, custom uses the symbol property @code{face-defface-spec} for
+the program specified default face properties, @code{saved-face} for
+properties saved by the user, and @code{face-documentation} for the
+documentation string.@refill
+
+@end defun
+
+@node Usage for Package Authors, Utilities, Declaring Faces, Top
+@comment  node-name,  next,  previous,  up
+@section Usage for Package Authors
+
+The recommended usage for the author of a typical emacs lisp package is
+to create one group identifying the package, and make all user options
+and faces members of that group.  If the package has more than around 20
+such options, they should be divided into a number of subgroups, with
+each subgroup being member of the top level group.
+
+The top level group for the package should itself be member of one or
+more of the standard customization groups.  There exists a group for
+each @emph{finder} keyword.  Press @kbd{C-h p} to see a list of finder
+keywords, and add you group to each of them, using the @code{:group}
+keyword.
+
+@node  Utilities, The Init File, Usage for Package Authors, Top
+@comment  node-name,  next,  previous,  up
+@section Utilities
+
+These utilities can come in handy when adding customization support.
+
+@deffn Widget custom-manual
+Widget type for specifying the info manual entry for a customization
+option.  It takes one argument, an info address.
+@end deffn
+
+@defun custom-add-to-group group member widget
+To existing @var{group} add a new @var{member} of type @var{widget},
+If there already is an entry for that member, overwrite it.
+@end defun
+
+@defun custom-add-link symbol widget
+To the custom option @var{symbol} add the link @var{widget}.
+@end defun
+
+@defun custom-add-load symbol load
+To the custom option @var{symbol} add the dependency @var{load}.
+@var{load} should be either a library file name, or a feature name.
+@end defun
+
+@defun customize-menu-create symbol &optional name
+Create menu for customization group @var{symbol}.
+If optional @var{name} is given, use that as the name of the menu.
+Otherwise the menu will be named `Customize'.
+The menu is in a format applicable to @code{easy-menu-define}.
+@end defun
+
+@node The Init File, Wishlist, Utilities, Top
+@comment  node-name,  next,  previous,  up
+@section The Init File
+
+Customizations are saved to the file specified by @code{custom-file}, as
+calls to @code{custom-set-variables} and @code{custom-set-faces}.
+
+When you save customizations, the current implementation removes the
+calls to @code{custom-set-variables} and @code{custom-set-faces}, and
+replaces them with code generated on the basis of the current
+customization state in Emacs.
+
+By default @code{custom-file} is your @file{.emacs} file (for GNU Emacs
+and older XEmacs) and is @file{custom.el} in the same directory as
+@file{init.el} (in XEmacs 21.4 and later).  If you use another file, you
+must explicitly load it yourself.
+
+As of XEmacs 21.4.7, when @code{custom-file} is present, it is loaded
+@emph{after} @file{init.el}.  This is likely to change in the future,
+because (1) actions in @file{init.el} often would like to depend on
+customizations for consistent appearance and (2) Custom is quite brutal
+about enforcing its idea of the correct values at initialization.
+
+@node Wishlist,  , The Init File, Top
+@comment  node-name,  next,  previous,  up
+@section Wishlist
+
+@itemize @bullet
+@item
+Better support for keyboard operations in the customize buffer.
+
+@item
+Integrate with @file{w3} so you can get customization buffers with much
+better formatting.  I'm thinking about adding a <custom>name</custom>
+tag.  The latest w3 have some support for this, so come up with a
+convincing example.
+
+@item
+Add an `examples' section, with explained examples of custom type
+definitions.
+
+@item
+Support selectable color themes.  I.e., change many faces by setting one
+variable.
+
+@item
+Support undo using lmi's @file{gnus-undo.el}.
+
+
+@item
+Make it possible to append to `choice', `radio', and `set' options.
+
+@item
+Ask whether set or modified variables should be saved in
+@code{kill-buffer-hook}.
+
+Ditto for @code{kill-emacs-query-functions}.
+
+@item
+Command to check if there are any customization options that
+does not belong to an existing group.
+
+@item
+Optionally disable the point-cursor and instead highlight the selected
+item in XEmacs.  This is like the *Completions* buffer in XEmacs.
+Suggested by Jens Lautenbacher
+@samp{<jens@@lemming0.lem.uni-karlsruhe.de>}.@refill
+
+@item
+Explain why it is necessary that all choices have different default
+values.
+
+@item
+Add some direct support for meta variables, i.e. make it possible to
+specify that this variable should be reset when that variable is
+changed.
+
+@item
+Add tutorial.
+
+@item
+Describe the @code{:type} syntax in this manual.
+
+@item
+Find a place is this manual for the following text:
+
+@strong{Radio vs. Buttons}
+
+Use a radio if you can't find a good way to describe the item in the
+choice menu text.  I.e. it is better to use a radio if you expect the
+user would otherwise manually select each item from the choice menu in
+turn to see what it expands too.
+
+Avoid radios if some of the items expands to complex structures.
+
+I mostly use radios when most of the items are of type
+@code{function-item} or @code{variable-item}.
+
+@item
+Update customize buffers when @code{custom-set-variable} or
+@code{custom-save-customized} is called.
+
+@item
+Better handling of saved but uninitialized items.
+
+@item
+Detect when faces have been changed outside customize.
+
+@item
+Enable mouse help in Emacs by default.
+
+@item
+Add an easy way to display the standard settings when an item is modified.
+
+@item
+See if it is feasible to scan files for customization information
+instead of loading them,
+
+@item
+Add hint message when user push a non-pushable tag.
+
+Suggest that the user unhide if hidden, and edit the value directly
+otherwise.
+
+@item
+Use checkboxes and radio buttons in the state menus.
+
+@item
+Add option to hide @samp{[hide]} for short options.  Default, on.
+
+@item
+Add option to hide @samp{[state]} for options with their standard
+settings.
+
+@item
+There should be a way to specify site defaults for user options.
+
+@item
+There should be more buffer styles.  The default `nested style, the old
+`outline' style, a `numeric' style with numbers instead of stars, an
+`empty' style with just the group name, and `compact' with only one line
+per item.
+
+@item
+Newline and tab should be displayed as @samp{^J} and @samp{^I} in the
+@code{regexp} and @code{file} widgets.  I think this can be done in
+XEmacs by adding a display table to the face.
+
+@item
+Use glyphs to draw the @code{customize-browse} tree.
+
+Add echo and balloon help.  You should be able to read the documentation
+simply by moving the mouse pointer above the name.
+
+Add parent links.
+
+Add colors.
+
+@end itemize
+
+@contents
+@bye

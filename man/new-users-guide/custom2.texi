@@ -1,0 +1,441 @@
+@comment  node-name,  next,  previous,  up
+@node Other Customizations, Select and Move, Files, Top
+@chapter Other Customizations
+@cindex customize
+@cindex hook
+@cindex font-lock-mode
+
+You can modify the behavior of Emacs in minor ways permanently by
+putting your changes in your @file{init.el} file. This file contains Lisp
+function call expressions. Each of these expressions will consist of a
+function name followed by arguments, all surrounded by parentheses. For
+example, to turn on the auto-fill-mode (i.e. break lines automatically
+when they become too long) , put the following  line in your
+@file{init.el} file: 
+
+@example
+(add-hook 'text-mode-hook 
+        '(lambda() (auto-fill-mode 1)))
+@end example
+
+@noindent
+Emacs has a function named "turn-on-auto-fill" which is defined as
+"(lambda() (auto-fill-mode 1))". Therefore you can also write the above
+as: 
+
+@example
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+@end example
+
+@noindent
+Emacs provides a number of hooks for the sake of customization. The hook
+variables contain list of functions to be called with no arguments. To
+turn on the auto-fill-mode, add the appropriate hook as shown in the
+example above.
+
+Similarly, to enable the "font-lock mode" which displays your program in
+different fonts and colors(@pxref{Modes}), put the following in your
+@file{init.el} file. The comments above the statement explain what the
+statements do.
+
+@example
+;;; enables the font-lock-mode in Lisp Mode
+(add-hook 'lisp-mode-hook    'turn-on-font-lock)
+
+;;; enables the font-lock-mode in Texinfo Mode
+(add-hook 'texinfo-mode-hook    'turn-on-font-lock)
+
+;;; enables the font-lock mode in C Mode
+(add-hook 'c-mode-hook          'turn-on-font-lock)
+@end example
+
+To turn on the font-lock mode in other Major Modes like emacs-lisp, just
+put the name of the mode with "-hook" appended to it as the middle
+parameter in the above examples. You can also select the color that the
+functions, comments or other keywords  should be displayed in :
+
+@example
+;;; the function names will now be displayed in blue color
+(set-face-foreground 'font-lock-function-name-face "blue")
+
+;;; the comments will be displayed in forest green 
+ (set-face-foreground 'font-lock-comment-face "forest green")
+@end example
+
+@noindent
+For other customizations regarding the font-lock face, look at the file
+@file{/usr/local/lib/xemacs-VERSION/etc/sample.init.el}. 
+
+
+
+@comment  node-name,  next,  previous,  up
+@menu
+* Setting Variables::           Customizing Emacs variables
+* Init File::                   Some examples of Lisp expressions in
+                                init.el file
+@end menu
+
+@node Setting Variables, Init File, Other Customizations, Other Customizations
+@section Other Customizations
+@cindex setting variables
+@findex describe-variable
+
+In XEmacs, @dfn{variables} are used for internal record-keeping and
+customizations. There are some variables called "options" which you can
+use for customizations. To examine a variable use:
+
+@example
+;;; print the value and documentation of the variable, use either of the
+;;; following commands
+C-h v
+M-x describe variable
+@end example
+
+After you type any of the above commands, you will be prompted for a
+variable name in the @dfn{echo area}. Type in the name of the variable,
+for example, type  @code{case-fold-search} @key{RET}
+Your window will split into two and you will see the following message
+in that window:
+
+@example
+case-fold-search's value is t
+This value is specific to the current buffer.
+
+Documentation:
+*Non-nil if searches should ignore case.
+Automatically becomes buffer-local when set in any fashion.
+
+@end example
+
+@noindent
+Since this variable's value is 't' searches will ignore case. If you
+want case-sensitive-search (i.e. if you are searching for "Foo" and you do
+not want "foo" to be included in the search, you need to set this
+variable to "nil". In order to do that, use:
+
+@findex set-variable
+@example
+M-x set-variable
+@end example
+
+@noindent
+Emacs will prompt you for the variable which you wish to set. Type in
+"case-fold-search" and hit @key{RET}. You will see the following
+message:
+
+@example
+Set case-fold-search to value:
+@end example
+
+@noindent
+Type "nil" and hit @key{RET}.  Now if you again use @kbd{M-x describe
+variable} , you will see that the new value of case-fold-search will be
+"nil" and your searches will be case-sensitive. This will be effective
+only for that Emacs session. If you want to change the value of a
+variable permanently put the following statement in your @file{init.el}
+file :
+
+@example
+(setq case-fold-search nil)
+@end example
+
+@noindent
+This statement will make searches case-sensitive only in the current
+buffer which is the @file{init.el} file. This will not be very useful. To
+make searches case-sensitive globally in all buffers, use:
+
+@example
+(setq-default case-fold-search nil)
+@end example
+
+If you want to change the value of any other variable, use :
+
+@example
+(setq <variable-name> <new value>)
+@end example
+
+@noindent
+"setq" will assign the "new value" to the "variable-name" .  
+
+
+If you want a list of the "options" i.e. the variables available for
+customization type:
+
+@findex list-options
+@findex edit-options
+@example
+
+;;; displays a buffer listing names, values and documentation of options
+M-x list-options
+
+;;; displays options and allows you to edit those list of options
+M-x edit-options
+
+@end example
+
+@noindent
+Try these options. If you are using edit-options to edit a variable,
+just point at the variable you wish to edit and use one of the following
+commands:
+
+@table @b
+@item 1
+Set the value of the variable to t (non-nil).
+@item 0
+Set the value of the variable to nil.
+@item n
+Move to the next variable.
+@item p
+Move to the previous variable.
+@end table
+
+
+There are some other options available to make the value of a variable
+local to a buffer and then to switch to its global value. You can also
+have a @dfn{local variables list} in a file which specifies the values
+to use for certain Emacs variables when you edit that
+file. @xref{Variables,,,xemacs,XEmacs User's Manual}, for information on
+these options.
+
+
+@comment  node-name,  next,  previous,  up
+@node Init File,  , Setting Variables, Other Customizations
+@section Init File Examples
+@cindex init file examples
+
+   For customizing Emacs, you need to put Lisp expressions in your
+@file{init.el} file. The following are some useful Lisp expressions. If
+you find any of them useful, just type them in your @file{init.el} file:
+
+@itemize @bullet
+@item 
+The following expression will make @key{TAB} in C mode insert a real tab
+character if the cursor or point is in the middle of the line. Now
+hitting the @key{TAB} key will indent a line only if the cursor is at
+the left margin or in the line's indentation:
+
+@example
+(setq c-tab-always-indent nil)
+@end example
+
+@noindent
+The value of the variable @code{c-tab-always-indent} is usually @samp{t}
+for @samp{true}. When this variable is true, then hitting the @key{TAB}
+key always indents the current line.
+
+@item
+This expression will turn on the @var{auto-fill-mode} when you are in
+text mode:
+
+@example
+(setq text-mode-hook 'turn-on-auto-fill)
+@end example
+
+This mode will automatically break lines when you type a space so that
+the lines don't become too long. The length of the lines is controlled
+by the variable @code{fill-column}. You can set this variable to a value
+you wish. Look at the documentation for this variable to see its default
+value. To change the value to 75 for example, use:
+
+@vindex fill-column
+@example
+(setq-default fill-column 75)
+@end example
+
+@noindent
+This will change the value of this variable globally. 
+
+@item
+@findex eval-expression
+The following expression will enable the use of @var{eval-expression}
+without confirmation:
+
+@example
+(put 'eval-expression 'disabled nil)
+@end example
+
+@noindent
+Now when you use @var{eval-expression}, it will print the value of the
+expression you specify in the @dfn{echo area} without confirming with
+you. 
+
+@item
+This expression will remove the binding of @kbd{C-x C-c}, because its
+easy to hit this key by mistake and you will exit Emacs
+unintentionally. You can use the @b{Exit Emacs} option from the @b{File}
+menu to exit Emacs.
+
+@example
+(global-set-key "\C-x\C-c" nil)
+@end example
+
+@noindent
+Now if you type @kbd{C-x C-c}, you won't exit Emacs.
+
+@item
+The following expression will make the @key{BACKSPACE} and the @key{DEL}
+key work in the same manner:
+
+@example
+(global-set-key 'backspace [delete])
+@end example
+
+@item
+This expression will make searches case sensitive:
+
+@example
+(setq-default case-fold-search nil)
+@end example
+
+@noindent
+If we use "setq" instead of "setq-default" then searches will be
+case-sensitive only in the current buffer's local value. In this case the
+buffer would be the @file{init.el} file. Since this would not be too
+helpful and we want to have case-sensitive searches in all buffers, we
+have to use "setq-default".
+
+@item
+This expression will enable the font-lock mode when you are using
+texinfo mode:
+
+@example
+(add-hook 'texinfo-mode-hook 'turn-on-font-lock)
+@end example
+
+@noindent
+@xref{Minor Modes}, for information on font-lock mode. 
+
+@item 
+Rebinds the key @kbd{C-x l} to run the function
+@code{make-symbolic-link}:
+
+@example
+(global-set-key "\C-xl" 'make-symbolic-link)
+@end example
+
+@noindent
+We use the single quote before "make-symbolic-link" because its a
+function name. You can also use the following expression which does the
+same thing:
+
+@example
+(define-key global-map "C-xl" 'make-symbolic-link)
+@end example
+
+@item
+The following expression will bind @kbd{C-x l} to run the function
+@code{make-symbolic-link} in C mode only:
+
+@example
+(define-key c-mode-map "C-xl" 'make-symbolic-link)
+@end example
+
+@noindent
+Instead of binding @kbd{C-xl} to run @code{make-symbolic-link}, you can
+bind the @key{F1} key to run this function:
+
+@example
+(define-key c-mode-map 'f1 'make-symbolic-link)
+@end example
+
+@noindent
+Here, you have to use lower case for naming function keys like @key{F1}.
+
+@item
+You can bind the function @code{undo} i.e. @kbd{C-x u} to any key, for
+example to @key{F2}:
+
+@example
+(global-set-key 'f2 'undo)
+@end example
+
+@item 
+The following statement will display the current time in the modeline of
+the buffer:
+
+@vindex display-time
+@cindex displaying time
+@example
+(display-time)
+@end example
+
+@item 
+This displays the current line number on which the cursor is present in
+the modeline:
+
+@example
+(setq line-number-mode t)
+@end example
+
+@item
+If you don't want the text to be highlighted when you use commands for
+marking regions so as to use the @dfn{kill} and @dfn{yank} commands
+later, you can use the following expression in your @file{init.el} file:
+
+@vindex zmacs-regions
+@example
+(setq zmacs-regions nil)
+@end example
+
+@noindent
+Now if you use a command like @kbd{C-x C-p} (@code{mark-page}), the text
+will not be highlighted.
+
+@item 
+To control the number of buffers listed when you select the @b{Buffers}
+menu, you need to set the variable @code{buffers-menu-max-size} to
+whatever value you wish. For example, if you want 20 buffers to be listed
+when you select @b{Buffers} use:
+
+@vindex buffers-menu-max-size
+@example
+(setq buffers-menu-max-size 20)
+@end example
+
+@item
+If you want the window title area to display the full directory/name of
+the current buffer's file, and not just the name, use:
+
+@vindex frame-title-format
+@example
+(setq frame-title-format "%S: %f")
+@end example
+
+@item
+To get rid of the menu, use :
+
+@example
+(set-menubar nil)
+@end example
+
+@item
+If you want an extensive menu-bar use the following expression in your
+@file{init.el} file.
+
+@example
+(load "big-menubar")
+@end example
+
+@noindent
+If you want to write your own menus, you can look at some of the
+examples in
+@file{/usr/local/lib/xemacs/xemacs-packages/lisp/edit-utils/big-menubar.el} file.
+
+@end itemize
+
+   For more information on initializing your @file{init.el} file,
+@xref{Init File,,,xemacs,XEmacs User's Manual}. You should also look at
+@file{/usr/local/lib/xemacs-VERSION/etc/sample.init.el}, which is a sample
+@file{init.el} file. It contains some of the commonly desired
+customizations in Emacs. 
+
+
+
+
+
+
+
+
+
+
+

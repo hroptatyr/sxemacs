@@ -1,0 +1,788 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1995 Ben Wing.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/faces.info
+@node Faces and Window-System Objects, Glyphs, Specifiers, top
+@chapter Faces and Window-System Objects
+@cindex faces
+@cindex window-system objects
+
+@menu
+* Faces::		Controlling the way text looks.
+* Fonts::		Controlling the typeface of text.
+* Colors::		Controlling the color of text and pixmaps.
+@end menu
+
+@node Faces
+@section Faces
+
+A @dfn{face} is a named collection of graphical properties: font,
+foreground color, background color, background pixmap, optional
+underlining, and (on TTY devices) whether the text is to be highlighted,
+dimmed, blinking, or displayed in reverse video.  Faces control the
+display of text on the screen.  Every face has a name, which is a symbol
+such as @code{default} or @code{modeline}.
+
+Each built-in property of a face is controlled using a specifier,
+which allows it to have separate values in particular buffers, frames,
+windows, and devices and to further vary according to device type
+(X or TTY) and device class (color, mono, or grayscale).
+@xref{Specifiers}, for more information.
+
+The face named @code{default} is used for ordinary text.  The face named
+@code{modeline} is used for displaying the modeline.  The face named
+@code{highlight} is used for highlighted extents (@pxref{Extents}).  The
+faces named @code{left-margin} and @code{right-margin} are used for the
+left and right margin areas, respectively (@pxref{Annotations}).  The
+face named @code{zmacs-region} is used for the highlighted region
+between point and mark.
+
+
+@menu
+* Merging Faces::		How XEmacs decides which face to use
+				  for a character.
+* Basic Face Functions::	How to define and examine faces.
+* Face Properties::		How to access and modify a face's properties.
+* Face Convenience Functions::	Convenience functions for accessing
+				  particular properties of a face.
+* Other Face Display Functions:: Other functions pertaining to how a
+				  a face appears.
+@end menu
+
+@node Merging Faces
+@subsection Merging Faces for Display
+
+  Here are all the ways to specify which face to use for display of text:
+
+@itemize @bullet
+@item
+With defaults.  Each frame has a @dfn{default face}, which is used for
+all text that doesn't somehow specify another face.  The face named
+@code{default} applies to the text area, while the faces
+@code{left-margin} and @code{right-margin} apply to the left and right
+margin areas.
+
+@item
+With text properties.  A character may have a @code{face} property; if so,
+it's displayed with that face. (Text properties are actually implemented
+in terms of extents.) @xref{Text Properties}.
+
+@item
+With extents.  An extent may have a @code{face} property, which applies
+to all the text covered by the extent; in addition, if the
+@code{highlight} property is set, the @code{highlight} property applies
+when the mouse moves over the extent or if the extent is explicitly
+highlighted.  @xref{Extents}.
+
+@item
+With annotations.  Annotations that are inserted into a buffer can specify
+their own face. (Annotations are actually implemented in terms of extents.)
+@xref{Annotations}.
+@end itemize
+
+  If these various sources together specify more than one face for a
+particular character, XEmacs merges the properties of the various faces
+specified.  Extents, text properties, and annotations all use the same
+underlying representation (as extents).  When multiple extents cover one
+character, an extent with higher priority overrides those with lower
+priority.  @xref{Extents}.  If no extent covers a particular character,
+the @code{default} face is used.
+
+@cindex background pixmap
+  If a background pixmap is specified, it determines what will be
+displayed in the background of text characters.  If the background
+pixmap is actually a pixmap, with its colors specified, those colors are
+used; if it is a bitmap, the face's foreground and background colors are
+used to color it.
+
+@node Basic Face Functions
+@subsection Basic Functions for Working with Faces
+
+  The properties a face can specify include the font, the foreground
+color, the background color, the background pixmap, the underlining,
+the display table, and (for TTY devices) whether the text is to be
+highlighted, dimmed, blinking, or displayed in reverse video.
+The face can also leave these unspecified, causing them to assume the
+value of the corresponding property of the @code{default} face.
+
+  Here are the basic primitives for working with faces.
+
+@defun make-face name &optional doc-string temporary
+This function defines and returns a new face named @var{name}, initially
+with all properties unspecified.  It does nothing if there is already a
+face named @var{name}.  Optional argument @var{doc-string} specifies
+an explanatory string used for descriptive purposes.  If optional
+argument @var{temporary} is non-@code{nil}, the face will automatically
+disappear when there are no more references to it anywhere in text or
+Lisp code (otherwise, the face will continue to exist indefinitely
+even if it is not used).
+@end defun
+
+@defun face-list &optional temporary
+This function returns a list of the names of all defined faces.  If
+@var{temporary} is @code{nil}, only the permanent faces are included.
+If it is @code{t}, only the temporary faces are included.  If it is any
+other non-@code{nil} value both permanent and temporary are included.
+@end defun
+
+@defun facep object
+This function returns @code{t} if @var{object} is a face, else @code{nil}.
+@end defun
+
+@defun copy-face old-face new-name &optional locale tag-set exact-p how-to-add
+This function defines a new face named @var{new-name} which is a copy of
+the existing face named @var{old-face}.  If there is already a face
+named @var{new-name}, then it alters the face to have the same
+properties as @var{old-face}.
+
+@var{locale}, @var{tag-set}, @var{exact-p} and @var{how-to-add} let you
+copy just parts of the old face rather than the whole face, and are as
+in @code{copy-specifier} (@pxref{Specifiers}).
+@end defun
+
+@node Face Properties
+@subsection Face Properties
+
+  You can examine and modify the properties of an existing face with the
+following functions.
+
+The following symbols have predefined meanings:
+
+@table @code
+@item foreground
+The foreground color of the face.
+
+@item background
+The background color of the face.
+
+@item font
+The font used to display text covered by this face.
+
+@item display-table
+The display table of the face.
+
+@item background-pixmap
+The pixmap displayed in the background of the face.  Only used by faces
+on X devices.
+
+@item underline
+Underline all text covered by this face.
+
+@item highlight
+Highlight all text covered by this face.  Only used by faces on TTY
+devices.
+
+@item dim
+Dim all text covered by this face.  Only used by faces on TTY devices.
+
+@item blinking
+Blink all text covered by this face.  Only used by faces on TTY devices.
+
+@item reverse
+Reverse the foreground and background colors.  Only used by faces on TTY
+devices.
+
+@item doc-string
+Description of what the face's normal use is.  NOTE: This is not a
+specifier, unlike all the other built-in properties, and cannot contain
+locale-specific values.
+@end table
+
+@defun set-face-property face property value &optional locale tag-set how-to-add
+This function changes a property of a @var{face}.
+
+For built-in properties, the actual value of the property is a specifier
+and you cannot change this; but you can change the specifications within
+the specifier, and that is what this function will do.  For user-defined
+properties, you can use this function to either change the actual value
+of the property or, if this value is a specifier, change the
+specifications within it.
+
+If @var{property} is a built-in property, the specifications to be added
+to this property can be supplied in many different ways:
+
+@itemize @bullet
+If @var{value} is a simple instantiator (e.g. a string naming a font or
+color) or a list of instantiators, then the instantiator(s) will be
+added as a specification of the property for the given @var{locale}
+(which defaults to @code{global} if omitted).
+
+If @var{value} is a list of specifications (each of which is a cons of a
+locale and a list of instantiators), then @var{locale} must be
+@code{nil} (it does not make sense to explicitly specify a locale in
+this case), and specifications will be added as given.
+
+If @var{value} is a specifier (as would be returned by
+@code{face-property} if no @var{locale} argument is given), then some or
+all of the specifications in the specifier will be added to the
+property.  In this case, the function is really equivalent to
+@code{copy-specifier} and @var{locale} has the same semantics (if it is
+a particular locale, the specification for the locale will be copied; if
+a locale type, specifications for all locales of that type will be
+copied; if @code{nil} or @code{all}, then all specifications will be
+copied).
+@end itemize
+
+@var{how-to-add} should be either @code{nil} or one of the symbols
+@code{prepend}, @code{append}, @code{remove-tag-set-prepend},
+@code{remove-tag-set-append}, @code{remove-locale},
+@code{remove-locale-type}, or @code{remove-all}.  See
+@code{copy-specifier} and @code{add-spec-to-specifier} for a description
+of what each of these means.  Most of the time, you do not need to worry
+about this argument; the default behavior usually is fine.
+
+In general, it is OK to pass an instance object (e.g. as returned by
+@code{face-property-instance}) as an instantiator in place of an actual
+instantiator.  In such a case, the instantiator used to create that
+instance object will be used (for example, if you set a font-instance
+object as the value of the @code{font} property, then the font name used
+to create that object will be used instead).  If some cases, however,
+doing this conversion does not make sense, and this will be noted in the
+documentation for particular types of instance objects.
+
+If @var{property} is not a built-in property, then this function will
+simply set its value if @var{locale} is @code{nil}.  However, if
+@var{locale} is given, then this function will attempt to add
+@var{value} as the instantiator for the given @var{locale}, using
+@code{add-spec-to-specifier}.  If the value of the property is not a
+specifier, it will automatically be converted into a @code{generic}
+specifier.
+@end defun
+
+@defun remove-face-property face property &optional locale tag-set exact-p
+This function removes a property of a @var{face}.
+
+For built-in properties, this is analogous to @code{remove-specifier}.
+For more information, @xref{Other Specification Functions}.
+
+When @var{property} is not a built-in property, this function will just
+remove its value if @var{locale} is @code{nil} or @code{all}.  However,
+if @var{locale} is other than that, this function will attempt to remove
+@var{value} as the instantiator for the given @var{locale} with
+@code{remove-specifier}.  If the value of the property is not a
+specifier, it will be converted into a @code{generic} specifier
+automatically.
+@end defun
+
+@defun face-property face property &optional locale tag-set exact-p
+This function returns @var{face}'s value of the given @var{property}.
+
+If @var{locale} is omitted, the @var{face}'s actual value for
+@var{property} will be returned.  For built-in properties, this will be
+a specifier object of a type appropriate to the property (e.g. a font or
+color specifier).  For other properties, this could be anything.
+
+If @var{locale} is supplied, then instead of returning the actual value,
+the specification(s) for the given locale or locale type will be
+returned.  This will only work if the actual value of @var{property} is
+a specifier (this will always be the case for built-in properties, but
+not or not may apply to user-defined properties).  If the actual value
+of @var{property} is not a specifier, this value will simply be returned
+regardless of @var{locale}.
+
+The return value will be a list of instantiators (e.g. strings
+specifying a font or color name), or a list of specifications, each of
+which is a cons of a locale and a list of instantiators.  Specifically,
+if @var{locale} is a particular locale (a buffer, window, frame, device,
+or @code{global}), a list of instantiators for that locale will be
+returned.  Otherwise, if @var{locale} is a locale type (one of the
+symbols @code{buffer}, @code{window}, @code{frame}, or @code{device}),
+the specifications for all locales of that type will be returned.
+Finally, if @var{locale} is @code{all}, the specifications for all
+locales of all types will be returned.
+
+The specifications in a specifier determine what the value of
+@var{property} will be in a particular @dfn{domain} or set of
+circumstances, which is typically a particular Emacs window along with
+the buffer it contains and the frame and device it lies within.  The
+value is derived from the instantiator associated with the most specific
+locale (in the order buffer, window, frame, device, and @code{global})
+that matches the domain in question.  In other words, given a domain
+(i.e. an Emacs window, usually), the specifier for @var{property} will
+first be searched for a specification whose locale is the buffer
+contained within that window; then for a specification whose locale is
+the window itself; then for a specification whose locale is the frame
+that the window is contained within; etc.  The first instantiator that
+is valid for the domain (usually this means that the instantiator is
+recognized by the device [i.e. the X server or TTY device] that the
+domain is on).  The function @code{face-property-instance} actually does
+all this, and is used to determine how to display the face.
+@end defun
+
+@defun face-property-instance face property &optional domain default no-fallback
+This function returns the instance of @var{face}'s @var{property} in the
+specified @var{domain}.
+
+Under most circumstances, @var{domain} will be a particular window, and
+the returned instance describes how the specified property actually is
+displayed for that window and the particular buffer in it.  Note that
+this may not be the same as how the property appears when the buffer is
+displayed in a different window or frame, or how the property appears in
+the same window if you switch to another buffer in that window; and in
+those cases, the returned instance would be different.
+
+The returned instance will typically be a color-instance, font-instance,
+or pixmap-instance object, and you can query it using the appropriate
+object-specific functions.  For example, you could use
+@code{color-instance-rgb-components} to find out the RGB (red, green,
+and blue) components of how the @code{background} property of the
+@code{highlight} face is displayed in a particular window.  The results
+might be different from the results you would get for another window
+(perhaps the user specified a different color for the frame that window
+is on; or perhaps the same color was specified but the window is on a
+different X server, and that X server has different RGB values for the
+color from this one).
+
+@var{domain} defaults to the selected window if omitted.
+
+@var{domain} can be a frame or device, instead of a window.  The value
+returned for a such a domain is used in special circumstances when a
+more specific domain does not apply; for example, a frame value might be
+used for coloring a toolbar, which is conceptually attached to a frame
+rather than a particular window.  The value is also useful in
+determining what the value would be for a particular window within the
+frame or device, if it is not overridden by a more specific
+specification.
+
+If @var{property} does not name a built-in property, its value will
+simply be returned unless it is a specifier object, in which case it
+will be instanced using @code{specifier-instance}.
+
+Optional arguments @var{default} and @var{no-fallback} are the same as
+in @code{specifier-instance}.  @xref{Specifiers}.
+@end defun
+
+@node Face Convenience Functions
+@subsection Face Convenience Functions
+
+@deffn Command set-face-foreground face color &optional locale tag-set how-to-add
+@deffnx Command set-face-background face color &optional locale tag-set how-to-add
+These functions set the foreground (respectively, background) color of
+face @var{face} to @var{color}.  The argument @var{color} should be a
+string (the name of a color) or a color object as returned by
+@code{make-color} (@pxref{Colors}).
+@end deffn
+
+@deffn Command set-face-background-pixmap face pixmap &optional locale tag-set how-to-add
+This function sets the background pixmap of face @var{face} to
+@var{pixmap}.  The argument @var{pixmap} should be a string (the name of
+a bitmap or pixmap file; the directories listed in the variable
+@code{x-bitmap-file-path} will be searched) or a glyph object as
+returned by @code{make-glyph} (@pxref{Glyphs}).  The argument may also
+be a list of the form @code{(@var{width} @var{height} @var{data})} where
+@var{width} and @var{height} are the size in pixels, and @var{data} is a
+string, containing the raw bits of the bitmap.
+@end deffn
+
+@deffn Command set-face-font face font &optional locale tag-set how-to-add
+This function sets the font of face @var{face}.  The argument @var{font}
+should be a string or a font object as returned by @code{make-font}
+(@pxref{Fonts}).
+@end deffn
+
+@deffn Command set-face-underline-p face underline-p &optional locale tag-set how-to-add
+This function sets the underline property of face @var{face}.
+@end deffn
+
+@defun face-foreground face &optional locale tag-set exact-p
+@defunx face-background face &optional locale tag-set exact-p
+These functions return the foreground (respectively, background) color
+specifier of face @var{face}.
+@xref{Colors}.
+@end defun
+
+@defun face-background-pixmap face &optional locale tag-set exact-p
+This function return the background-pixmap glyph object of face
+@var{face}.
+@end defun
+
+@defun face-font face &optional locale tag-set exact-p
+This function returns the font specifier of face @var{face}.  (Note:
+This is not the same as the function @code{face-font} in FSF Emacs.)
+
+@xref{Fonts}.
+@end defun
+
+@defun face-font-name face &optional domain
+This function returns the name of the font of face @var{face}, or
+@code{nil} if it is unspecified.  This is basically equivalent to
+@code{(font-name (face-font @var{face}) @var{domain})} except that
+it does not cause an error if @var{face}'s font is @code{nil}. (This
+function is named @code{face-font} in FSF Emacs.)
+@end defun
+
+@defun face-underline-p face &optional locale
+This function returns the underline property of face @var{face}.
+@end defun
+
+@defun face-foreground-instance face &optional domain
+@defunx face-background-instance face &optional domain
+These functions return the foreground (respectively, background) color
+specifier of face @var{face}.
+@xref{Colors}.
+@end defun
+
+@defun face-background-pixmap-instance face &optional domain
+This function return the background-pixmap glyph object of face
+@var{face}.
+@end defun
+
+@defun face-font-instance face &optional domain
+This function returns the font specifier of face @var{face}.
+@xref{Fonts}.
+@end defun
+
+@node Other Face Display Functions
+@subsection Other Face Display Functions
+
+@deffn Command invert-face face &optional locale
+Swap the foreground and background colors of face @var{face}.  If the
+face doesn't specify both foreground and background, then its foreground
+and background are set to the default background and foreground.
+@end deffn
+
+@defun face-equal face1 face2 &optional domain
+This returns @code{t} if the faces @var{face1} and @var{face2} will
+display in the same way.  @var{domain} is as in
+@code{face-property-instance}.
+@end defun
+
+@defun face-differs-from-default-p face &optional domain
+This returns @code{t} if the face @var{face} displays differently from
+the default face.  @var{domain} is as in @code{face-property-instance}.
+@end defun
+
+@node Fonts
+@section Fonts
+@cindex fonts
+
+  This section describes how to work with font specifier and
+font instance objects, which encapsulate fonts in the window system.
+
+@menu
+* Font Specifiers::		Specifying how a font will appear.
+* Font Instances::		What a font specifier gets instanced as.
+* Font Instance Names::		The name of a font instance.
+* Font Instance Size::		The size of a font instance.
+* Font Instance Characteristics:: Display characteristics of font instances.
+* Font Convenience Functions::	Convenience functions that automatically
+				  instance and retrieve the properties
+				  of a font specifier.
+@end menu
+
+@node Font Specifiers
+@subsection Font Specifiers
+
+@defun font-specifier-p object
+This predicate returns @code{t} if @var{object} is a font specifier, and
+@code{nil} otherwise.
+@end defun
+
+@defun make-font-specifier spec-list
+
+Return a new @code{font} specifier object with the given specification
+list.  @var{spec-list} can be a list of specifications (each of which is
+a cons of a locale and a list of instantiators), a single instantiator,
+or a list of instantiators.  @xref{Specifiers}, for more information
+about specifiers.
+
+Valid instantiators for font specifiers are:
+
+@itemize @bullet
+
+@item
+A string naming a font (e.g. under X this might be
+"-*-courier-medium-r-*-*-*-140-*-*-*-*-iso8859-*" for a 14-point
+upright medium-weight Courier font).
+@item
+A font instance (use that instance directly if the device matches,
+or use the string that generated it).
+@item
+A vector of no elements (only on TTY's; this means to set no font
+at all, thus using the "natural" font of the terminal's text).
+@item
+A vector of one element (a face to inherit from).
+@end itemize
+@end defun
+
+@node Font Instances
+@subsection Font Instances
+
+@defun font-instance-p object
+This predicate returns @code{t} if @var{object} is a font instance, and
+@code{nil} otherwise.
+@end defun
+
+@defun make-font-instance name &optional device noerror
+This function creates a new font-instance object of the specified name.
+@var{device} specifies the device this object applies to and defaults to
+the selected device.  An error is signalled if the font is unknown or
+cannot be allocated; however, if @var{noerror} is non-@code{nil},
+@code{nil} is simply returned in this case.
+
+The returned object is a normal, first-class lisp object.  The way you
+``deallocate'' the font is the way you deallocate any other lisp object:
+you drop all pointers to it and allow it to be garbage collected.  When
+these objects are GCed, the underlying X data is deallocated as well.
+@end defun
+
+@node Font Instance Names
+@subsection Font Instance Names
+@cindex font instance name
+@cindex available fonts
+@cindex fonts available
+
+@defun list-fonts pattern &optional device
+This function returns a list of font names matching the given pattern.
+@var{device} specifies which device to search for names, and defaults to
+the currently selected device.
+@end defun
+
+@defun font-instance-name font-instance
+This function returns the name used to allocate @var{font-instance}.
+@end defun
+
+@defun font-instance-truename font-instance
+This function returns the canonical name of the given font instance.
+Font names are patterns which may match any number of fonts, of which
+the first found is used.  This returns an unambiguous name for that font
+(but not necessarily its only unambiguous name).
+@end defun
+
+@node Font Instance Size
+@subsection Font Instance Size
+@cindex font instance size
+
+@defun x-font-size font
+This function returns the nominal size of the given font.  This is done
+by parsing its name, so it's likely to lose.  X fonts can be specified
+(by the user) in either pixels or 10ths of points, and this returns the
+first one it finds, so you have to decide which units the returned value
+is measured in yourself ...
+@end defun
+
+@defun x-find-larger-font font &optional device
+This function loads a new, slightly larger version of the given font (or
+font name).  Returns the font if it succeeds, @code{nil} otherwise.  If
+scalable fonts are available, this returns a font which is 1 point
+larger.  Otherwise, it returns the next larger version of this font that
+is defined.
+@end defun
+
+@defun x-find-smaller-font font &optional device
+This function loads a new, slightly smaller version of the given font
+(or font name).  Returns the font if it succeeds, @code{nil} otherwise.
+If scalable fonts are available, this returns a font which is 1 point
+smaller.  Otherwise, it returns the next smaller version of this font
+that is defined.
+@end defun
+
+@node Font Instance Characteristics
+@subsection Font Instance Characteristics
+@cindex font instance characteristics
+@cindex characteristics of font instances
+@cindex bold
+@cindex demibold
+@cindex italic
+@cindex oblique
+
+@defun font-instance-properties font-instance
+This function returns the properties (an alist or @code{nil}) of
+@var{font-instance}.
+@end defun
+
+@defun x-make-font-bold font &optional device
+Given an X font specification, this attempts to make a ``bold'' font.
+If it fails, it returns @code{nil}.
+@end defun
+
+@defun x-make-font-unbold font &optional device
+Given an X font specification, this attempts to make a non-bold font.
+If it fails, it returns @code{nil}.
+@end defun
+
+@defun x-make-font-italic font &optional device
+Given an X font specification, this attempts to make an ``italic'' font.
+If it fails, it returns @code{nil}.
+@end defun
+
+@defun x-make-font-unitalic font &optional device
+Given an X font specification, this attempts to make a non-italic font.
+If it fails, it returns @code{nil}.
+@end defun
+
+@defun x-make-font-bold-italic font &optional device
+Given an X font specification, this attempts to make a ``bold-italic''
+font.  If it fails, it returns @code{nil}.
+@end defun
+
+@node Font Convenience Functions
+@subsection Font Convenience Functions
+
+@defun font-name font &optional domain
+This function returns the name of the @var{font} in the specified
+@var{domain}, if any.  @var{font} should be a font specifier object and
+@var{domain} is normally a window and defaults to the selected window if
+omitted.  This is equivalent to using @code{specifier-instance} and
+applying @code{font-instance-name} to the result.
+@end defun
+
+@defun font-truename font &optional domain
+This function returns the truename of the @var{font} in the specified
+@var{domain}, if any.  @var{font} should be a font specifier object and
+@var{domain} is normally a window and defaults to the selected window if
+omitted.  This is equivalent to using @code{specifier-instance} and
+applying @code{font-instance-truename} to the result.
+@end defun
+
+@defun font-properties font &optional domain
+This function returns the properties of the @var{font} in the specified
+@var{domain}, if any.  @var{font} should be a font specifier object and
+@var{domain} is normally a window and defaults to the selected window if
+omitted.  This is equivalent to using @code{specifier-instance} and
+applying @code{font-instance-properties} to the result.
+@end defun
+
+@node Colors
+@section Colors
+@cindex colors
+
+@menu
+* Color Specifiers::		Specifying how a color will appear.
+* Color Instances::		What a color specifier gets instanced as.
+* Color Instance Properties::	Properties of color instances.
+* Color Convenience Functions::	Convenience functions that automatically
+				  instance and retrieve the properties
+				  of a color specifier.
+@end menu
+
+@node Color Specifiers
+@subsection Color Specifiers
+
+@defun color-specifier-p object
+This function returns non-@code{nil} if @var{object} is a color specifier.
+@end defun
+
+@defun make-color-specifier spec-list
+
+Return a new @code{color} specifier object with the given specification
+list.  @var{spec-list} can be a list of specifications (each of which is
+a cons of a locale and a list of instantiators), a single instantiator,
+or a list of instantiators.  @xref{Specifiers}, for a detailed
+description of how specifiers work.
+
+Valid instantiators for color specifiers are:
+
+@itemize @bullet
+@item
+A string naming a color (e.g. under X this might be "lightseagreen2" or
+"#F534B2").
+
+@item
+A color instance (use that instance directly if the device matches,
+or use the string that generated it).
+
+@item
+A vector of no elements (only on TTY's; this means to set no color at
+all, thus using the "natural" color of the terminal's text).
+
+@item
+A vector of one or two elements: a face to inherit from, and optionally
+a symbol naming which property of that face to inherit, either
+@code{foreground} or @code{background} (if omitted, defaults to the same
+property that this color specifier is used for; if this specifier is not
+part of a face, the instantiator would not be valid).
+@end itemize
+@end defun
+
+@defun make-face-boolean-specifier spec-list
+
+Return a new @code{face-boolean} specifier object with the given spec
+list.  @var{spec-list} can be a list of specifications (each of which is
+a cons of a locale and a list of instantiators), a single instantiator,
+or a list of instantiators.  @xref{Specifiers}, for a detailed
+description of how specifiers work.
+
+Valid instantiators for face-boolean specifiers are
+
+@itemize @bullet
+@item
+t or nil.
+@item
+A vector of two or three elements: a face to inherit from, optionally a
+symbol naming the property of that face to inherit from (if omitted,
+defaults to the same property that this face-boolean specifier is used
+for; if this specifier is not part of a face, the instantiator would not
+be valid), and optionally a value which, if non-@code{nil}, means to invert the
+sense of the inherited property.
+@end itemize
+
+@end defun
+
+
+@node Color Instances
+@subsection Color Instances
+@cindex color instances
+
+A @dfn{color-instance object} is an object describing the way a color
+specifier is instanced in a particular domain.  Functions such as
+@code{face-background-instance} return a color-instance object.  For
+example,
+
+@example
+(face-background-instance 'default (next-window))
+    @result{} #<color-instance moccasin 47=(FFFF,E4E4,B5B5) 0x678d>
+@end example
+
+The color-instance object returned describes the way the background
+color of the @code{default} face is displayed in the next window after
+the selected one.
+
+@defun color-instance-p object
+This function returns non-@code{nil} if @var{object} is a color-instance.
+@end defun
+
+@node Color Instance Properties
+@subsection Color Instance Properties
+
+@defun color-instance-name color-instance
+This function returns the name used to allocate @var{color-instance}.
+@end defun
+
+@defun color-instance-rgb-components color-instance
+This function returns a three element list containing the red, green,
+and blue color components of @var{color-instance}.
+
+@example
+(color-instance-rgb-components
+  (face-background-instance 'default (next-window)))
+    @result{} (65535 58596 46517)
+@end example
+@end defun
+
+@node Color Convenience Functions
+@subsection Color Convenience Functions
+
+@defun color-name color &optional domain
+This function returns the name of the @var{color} in the specified
+@var{domain}, if any.  @var{color} should be a color specifier object
+and @var{domain} is normally a window and defaults to the selected
+window if omitted.  This is equivalent to using
+@code{specifier-instance} and applying @code{color-instance-name} to the
+result.
+@end defun
+
+@defun color-rgb-components color &optional domain
+This function returns the @sc{rgb} components of the @var{color} in the
+specified @var{domain}, if any.  @var{color} should be a color specifier
+object and @var{domain} is normally a window and defaults to the
+selected window if omitted.  This is equivalent to using
+@code{specifier-instance} and applying
+@code{color-instance-rgb-components} to the result.
+
+@example
+(color-rgb-components (face-background 'default (next-window)))
+    @result{} (65535 58596 46517)
+@end example
+@end defun

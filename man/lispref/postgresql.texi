@@ -1,0 +1,1258 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 2000 Electrotechnical Laboratory, JAPAN
+@c Licensed to the Free Software Foundation
+@c See the file lispref.texi for copying conditions.
+@c Thank you Oscar Figueiredo!  This file was shamelessly cloned from
+@c  ldap.texi.
+@setfilename ../../info/postgresql.info
+@node PostgreSQL Support, Internationalization, LDAP Support, top
+@chapter PostgreSQL Support
+@cindex PostgreSQL
+
+XEmacs can be linked with PostgreSQL libpq run-time support to provide
+relational database access from Emacs Lisp code.
+
+@menu
+* Building XEmacs with PostgreSQL support::
+* XEmacs PostgreSQL libpq API::
+* XEmacs PostgreSQL libpq Examples::
+@end menu
+
+@node Building XEmacs with PostgreSQL support, XEmacs PostgreSQL libpq API,  ,PostgreSQL Support
+@comment  node-name,  next,  previous,  up
+@section Building XEmacs with PostgreSQL support
+
+XEmacs PostgreSQL support requires linking to the PostgreSQL libpq
+library.  Describing how to build and install PostgreSQL is beyond the
+scope of this document.  See the PostgreSQL manual for details.
+
+If you have installed XEmacs from one of the binary kits on
+(@url{ftp://ftp.xemacs.org/}), or are using an XEmacs binary from a CD
+ROM, you may have XEmacs PostgreSQL support by default.  @code{M-x
+describe-installation} will tell you if you do.
+
+If you are building XEmacs from source, you need to install PostgreSQL
+first.  On some systems, PostgreSQL will come pre-installed in /usr.  In
+this case, it should be autodetected when you run configure.  If
+PostgreSQL is installed into its default location,
+@file{/usr/local/pgsql}, you must specify
+@code{--site-prefixes=/usr/local/pgsql} when you run configure.  If
+PostgreSQL is installed into another location, use that instead of
+@file{/usr/local/pgsql} when specifying @code{--site-prefixes}.
+
+As of XEmacs 21.2, PostgreSQL versions 6.5.3 and 7.0 are supported.
+XEmacs Lisp support for V7.0 is somewhat more extensive than support for
+V6.5.  In particular, asynchronous queries are supported.
+
+@node XEmacs PostgreSQL libpq API, XEmacs PostgreSQL libpq Examples, Building XEmacs with PostgreSQL support, PostgreSQL Support
+@comment  node-name,  next,  previous,  up
+@section XEmacs PostgreSQL libpq API
+
+The XEmacs PostgreSQL API is intended to be a policy-free, low-level
+binding to libpq.  The intent is to provide all the basic functionality
+and then let high level Lisp code decide its own policies.
+
+This documentation assumes that the reader has knowledge of SQL, but
+requires no prior knowledge of libpq.
+
+There are many examples in this manual and some setup will be required.
+In order to run most of the following examples, the following code needs
+to be executed.  In addition to the data is in this table, nearly all of
+the examples will assume that the free variable @code{P} refers to this
+database connection.  The examples in the original edition of this
+manual were run against Postgres 7.0beta1.
+
+@example
+(progn
+  (setq P (pq-connectdb ""))
+  ;; id is the primary key, shikona is a Japanese word that
+  ;; means `the professional name of a Sumo wrestler', and
+  ;; rank is the Sumo rank name.
+  (pq-exec P (concat "CREATE TABLE xemacs_test"
+                     " (id int, shikona text, rank text);"))
+  (pq-exec P "COPY xemacs_test FROM stdin;")
+  (pq-put-line P "1\tMusashimaru\tYokuzuna\n")
+  (pq-put-line P "2\tDejima\tOozeki\n")
+  (pq-put-line P "3\tMusoyama\tSekiwake\n")
+  (pq-put-line P "4\tMiyabiyama\tSekiwake\n")
+  (pq-put-line P "5\tWakanoyama\tMaegashira\n")
+  (pq-put-line P "\\.\n")
+  (pq-end-copy P))
+     @result{} nil
+@end example
+
+@menu
+* libpq Lisp Variables::
+* libpq Lisp Symbols and DataTypes::
+* Synchronous Interface Functions::
+* Asynchronous Interface Functions::
+* Large Object Support::
+* Other libpq Functions::
+* Unimplemented libpq Functions::
+@end menu
+
+@node libpq Lisp Variables, libpq Lisp Symbols and DataTypes, XEmacs PostgreSQL libpq API, XEmacs PostgreSQL libpq API
+@comment  node-name,  next,  previous,  up
+@subsection libpq Lisp Variables
+
+Various Unix environment variables are used by libpq to provide defaults
+to the many different parameters.  In the XEmacs Lisp API, these
+environment variables are bound to Lisp variables to provide more
+convenient access to Lisp Code.  These variables are passed to the
+backend database server during the establishment of a database
+connection and when the @code{pq-setenv} call is made.
+
+@defvar pg:host
+Initialized from the @code{PGHOST} environment variable.  The default
+host to connect to.
+@end defvar
+
+@defvar pg:user
+Initialized from the @code{PGUSER} environment variable.  The default
+database user name.
+@end defvar
+
+@defvar pg:options
+Initialized from the @code{PGOPTIONS} environment variable.  Default
+additional server options.
+@end defvar
+
+@defvar pg:port
+Initialized from the @code{PGPORT} environment variable.  The default
+TCP port to connect to.
+@end defvar
+
+@defvar pg:tty
+Initialized from the @code{PGTTY} environment variable.  The default
+debugging TTY.
+
+Compatibility note:  Debugging TTYs are turned off in the XEmacs Lisp
+binding.
+@end defvar
+
+@defvar pg:database
+Initialized from the @code{PGDATABASE} environment variable.  The
+default database to connect to.
+@end defvar
+
+@defvar pg:realm
+Initialized from the @code{PGREALM} environment variable.  The default
+Kerberos realm.
+@end defvar
+
+@defvar pg:client-encoding
+Initialized from the @code{PGCLIENTENCODING} environment variable.  The
+default client encoding.
+
+Compatibility note:  This variable is not present in non-Mule XEmacsen.
+This variable is not present in versions of libpq prior to 7.0.
+In the current implementation, client encoding is equivalent to the
+@code{file-name-coding-system} format.
+@end defvar
+
+@c unused
+@defvar pg:authtype
+Initialized from the @code{PGAUTHTYPE} environment variable.  The
+default authentication scheme used.
+
+Compatibility note:  This variable is unused in versions of libpq after
+6.5.  It is not implemented at all in the XEmacs Lisp binding.
+@end defvar
+
+@defvar pg:geqo
+Initialized from the @code{PGGEQO} environment variable.  Genetic
+optimizer options.
+@end defvar
+
+@defvar pg:cost-index
+Initialized from the @code{PGCOSTINDEX} environment variable.  Cost
+index options.
+@end defvar
+
+@defvar pg:cost-heap
+Initialized from the @code{PGCOSTHEAP} environment variable.  Cost heap
+options.
+@end defvar
+
+@defvar pg:tz
+Initialized from the @code{PGTZ} environment variable.  Default
+timezone.
+@end defvar
+
+@defvar pg:date-style
+Initialized from the @code{PGDATESTYLE} environment variable.  Default
+date style in returned date objects.
+@end defvar
+
+@defvar pg-coding-system
+This is a variable controlling which coding system is used to encode
+non-ASCII strings sent to the database.
+
+Compatibility Note: This variable is not present in InfoDock.
+@end defvar
+
+@node libpq Lisp Symbols and DataTypes, Synchronous Interface Functions, libpq Lisp Variables, XEmacs PostgreSQL libpq API
+@comment  node-name,  next,  previous,  up
+@subsection libpq Lisp Symbols and Datatypes
+
+The following set of symbols are used to represent the intermediate
+states involved in the asynchronous interface.
+
+@defvr {Symbol} pgres::polling-failed
+Undocumented.  A fatal error has occurred during processing of an
+asynchronous operation.
+@end defvr
+
+@defvr {Symbol} pgres::polling-reading
+An intermediate status return during an asynchronous operation.  It
+indicates that one may use @code{select} before polling again.
+@end defvr
+
+@defvr {Symbol} pgres::polling-writing
+An intermediate status return during an asynchronous operation.  It
+indicates that one may use @code{select} before polling again.
+@end defvr
+
+@defvr {Symbol} pgres::polling-ok
+An asynchronous operation has successfully completed.
+@end defvr
+
+@defvr {Symbol} pgres::polling-active
+An intermediate status return during an asynchronous operation.  One can
+call the poll function again immediately.
+@end defvr
+
+@defun pq-pgconn conn field
+@var{conn} A database connection object.
+@var{field} A symbol indicating which field of PGconn to fetch.  Possible
+values are shown in the following table.
+@table @code
+@item pq::db
+Database name
+@item pq::user
+Database user name
+@item pq::pass
+Database user's password
+@item pq::host
+Hostname database server is running on
+@item pq::port
+TCP port number used in the connection
+@item pq::tty
+Debugging TTY
+
+Compatibility note:  Debugging TTYs are not used in the XEmacs Lisp API.
+@item pq::options
+Additional server options
+@item pq::status
+Connection status.  Possible return values are shown in the following
+table.
+@table @code
+@item pg::connection-ok
+The normal, connected status.
+@item pg::connection-bad
+The connection is not open and the PGconn object needs to be deleted by
+@code{pq-finish}.
+@item pg::connection-started
+An asynchronous connection has been started, but is not yet complete.
+@item pg::connection-made
+An asynchronous connect has been made, and there is data waiting to be sent.
+@item pg::connection-awaiting-response
+Awaiting data from the backend during an asynchronous connection.
+@item pg::connection-auth-ok
+Received authentication, waiting for the backend to start up.
+@item pg::connection-setenv
+Negotiating environment during an asynchronous connection.
+@end table
+@item pq::error-message
+The last error message that was delivered to this connection.
+@item pq::backend-pid
+The process ID of the backend database server.
+@end table
+@end defun
+
+The @code{PGresult} object is used by libpq to encapsulate the results
+of queries.  The printed representation takes on four forms.  When the
+PGresult object contains tuples from an SQL @code{SELECT} it will look
+like:
+
+@example
+(setq R (pq-exec P "SELECT * FROM xemacs_test;"))
+     @result{} #<PGresult PGRES_TUPLES_OK[5] - SELECT>
+@end example
+
+The number in brackets indicates how many rows of data are available.
+When the PGresult object is the result of a command query that doesn't
+return anything, it will look like:
+
+@example
+(pq-exec P "CREATE TABLE a_new_table (i int);")
+     @result{} #<PGresult PGRES_COMMAND_OK - CREATE>
+@end example
+
+When either the query is a command-type query that can affect a number
+of different rows, but doesn't return any of them it will look like:
+
+@example
+(progn
+  (pq-exec P "INSERT INTO a_new_table VALUES (1);")
+  (pq-exec P "INSERT INTO a_new_table VALUES (2);")
+  (pq-exec P "INSERT INTO a_new_table VALUES (3);")
+  (setq R (pq-exec P "DELETE FROM a_new_table;")))
+     @result{} #<PGresult PGRES_COMMAND_OK[3] - DELETE 3>
+@end example
+
+Lastly, when the underlying PGresult object has been deallocated
+directly by @code{pq-clear} the printed representation will look like:
+
+@example
+(progn
+  (setq R (pq-exec P "SELECT * FROM xemacs_test;"))
+  (pq-clear R)
+  R)
+     @result{} #<PGresult DEAD>
+@end example
+
+The following set of functions are accessors to various data in the PGresult
+object.
+
+@defun pq-result-status result
+Return status of a query result.
+@var{result} is a PGresult object.  The return value is one of the
+symbols in the following table.
+@table @code
+@item pgres::empty-query
+A query contained no text.  This is usually the result of a recoverable
+error, or a minor programming error.
+@item pgres::command-ok
+A query command that doesn't return anything was executed properly by
+the backend.
+@item pgres::tuples-ok
+A query command that returns tuples was executed properly by the
+backend.
+@item pgres::copy-out
+Copy Out data transfer is in progress.
+@item pgres::copy-in
+Copy In data transfer is in progress.
+@item pgres::bad-response
+An unexpected response was received from the backend.
+@item pgres::nonfatal-error
+Undocumented.  This value is returned when the libpq function
+@code{PQresultStatus} is called with a @code{NULL} pointer.
+@item pgres::fatal-error
+Undocumented.  An error has occurred in processing the query and the
+operation was not completed.
+@end table
+@end defun
+
+@defun pq-res-status result
+Return the query result status as a string, not a symbol.
+@var{result} is a PGresult object.
+
+@example
+(setq R (pq-exec P "SELECT * FROM xemacs_test;"))
+     @result{} #<PGresult PGRES_TUPLES_OK[5] - SELECT>
+(pq-res-status R)
+     @result{} "PGRES_TUPLES_OK"
+@end example
+@end defun
+
+@defun pq-result-error-message result
+Return an error message generated by the query, if any.
+@var{result} is a PGresult object.
+
+@example
+(setq R (pq-exec P "SELECT * FROM xemacs-test;"))
+     @result{} <A fatal error is signaled in the echo area>
+(pq-result-error-message R)
+     @result{} "ERROR:  parser: parse error at or near \"-\"
+"
+@end example
+@end defun
+
+@defun pq-ntuples result
+Return the number of tuples in the query result.
+@var{result} is a PGresult object.
+
+@example
+(setq R (pq-exec P "SELECT * FROM xemacs_test;"))
+     @result{} #<PGresult PGRES_TUPLES_OK[5] - SELECT>
+(pq-ntuples R)
+     @result{} 5
+@end example
+@end defun
+
+@defun pq-nfields result
+Return the number of fields in each tuple of the query result.
+@var{result} is a PGresult object.
+
+@example
+(setq R (pq-exec P "SELECT * FROM xemacs_test;"))
+     @result{} #<PGresult PGRES_TUPLES_OK[5] - SELECT>
+(pq-nfields R)
+     @result{} 3
+@end example
+@end defun
+
+@defun pq-binary-tuples result
+Returns t if binary tuples are present in the results, nil otherwise.
+@var{result} is a PGresult object.
+
+@example
+(setq R (pq-exec P "SELECT * FROM xemacs_test;"))
+     @result{} #<PGresult PGRES_TUPLES_OK[5] - SELECT>
+(pq-binary-tuples R)
+     @result{} nil
+@end example
+@end defun
+
+@defun pq-fname result field-index
+Returns the name of a specific field.
+@var{result} is a PGresult object.
+@var{field-index} is the number of the column to select from.  The first
+column is number zero.
+
+@example
+(let (i l)
+  (setq R (pq-exec P "SELECT * FROM xemacs_test;"))
+  (setq i (pq-nfields R))
+  (while (>= (decf i) 0)
+    (push (pq-fname R i) l))
+  l)
+     @result{} ("id" "shikona" "rank")
+@end example
+@end defun
+
+@defun pq-fnumber result field-name
+Return the field number corresponding to the given field name.
+-1 is returned on a bad field name.
+@var{result} is a PGresult object.
+@var{field-name} is a string representing the field name to find.
+@example
+(setq R (pq-exec P "SELECT * FROM xemacs_test;"))
+     @result{} #<PGresult PGRES_TUPLES_OK[5] - SELECT>
+(pq-fnumber R "id")
+     @result{} 0
+(pq-fnumber R "Not a field")
+     @result{} -1
+@end example
+@end defun
+
+@defun pq-ftype result field-num
+Return an integer code representing the data type of the specified column.
+@var{result} is a PGresult object.
+@var{field-num} is the field number.
+
+The return value of this function is the Object ID (Oid) in the database
+of the type.  Further queries need to be made to various system tables
+in order to convert this value into something useful.
+@end defun
+
+@defun pq-fmod result field-num
+Return the type modifier code associated with a field.  Field numbers
+start at zero.
+@var{result} is a PGresult object.
+@var{field-index} selects which field to use.
+@end defun
+
+@defun pq-fsize result field-index
+Return size of the given field.
+@var{result} is a PGresult object.
+@var{field-index} selects which field to use.
+
+@example
+(let (i l)
+  (setq R (pq-exec P "SELECT * FROM xemacs_test;"))
+  (setq i (pq-nfields R))
+  (while (>= (decf i) 0)
+    (push (list (pq-ftype R i) (pq-fsize R i)) l))
+  l)
+     @result{} ((23 23) (25 25) (25 25))
+@end example
+@end defun
+
+@defun pq-get-value result tup-num field-num
+Retrieve a return value.
+@var{result} is a PGresult object.
+@var{tup-num} selects which tuple to fetch from.
+@var{field-num} selects which field to fetch from.
+
+Both tuples and fields are numbered from zero.
+
+@example
+(setq R (pq-exec P "SELECT * FROM xemacs_test;"))
+     @result{} #<PGresult PGRES_TUPLES_OK[5] - SELECT>
+(pq-get-value R 0 1)
+     @result{} "Musashimaru"
+(pq-get-value R 1 1)
+     @result{} "Dejima"
+(pq-get-value R 2 1)
+     @result{} "Musoyama"
+@end example
+@end defun
+
+@defun pq-get-length result tup-num field-num
+Return the length of a specific value.
+@var{result} is a PGresult object.
+@var{tup-num} selects which tuple to fetch from.
+@var{field-num} selects which field to fetch from.
+
+@example
+(setq R (pq-exec P "SELECT * FROM xemacs_test;"))
+     @result{} #<PGresult PGRES_TUPLES_OK[5] - SELECT>
+(pq-get-length R 0 1)
+     @result{} 11
+(pq-get-length R 1 1)
+     @result{} 6
+(pq-get-length R 2 1)
+     @result{} 8
+@end example
+@end defun
+
+@defun pq-get-is-null result tup-num field-num
+Return t if the specific value is the SQL @code{NULL}.
+@var{result} is a PGresult object.
+@var{tup-num} selects which tuple to fetch from.
+@var{field-num} selects which field to fetch from.
+@end defun
+
+@defun pq-cmd-status result
+Return a summary string from the query.
+@var{result} is a PGresult object.
+@example
+@comment This example was written on day 3 of the 2000 Haru Basho.
+(setq R (pq-exec P "INSERT INTO xemacs_test
+                   VALUES (6, 'Wakanohana', 'Yokozuna');"))
+     @result{} #<PGresult PGRES_COMMAND_OK[1] - INSERT 542086 1>
+(pq-cmd-status R)
+     @result{} "INSERT 542086 1"
+(setq R (pq-exec P "UPDATE xemacs_test SET rank='retired'
+                    WHERE shikona='Wakanohana';"))
+     @result{} #<PGresult PGRES_COMMAND_OK[1] - UPDATE 1>
+(pq-cmd-status R)
+     @result{} "UPDATE 1"
+@end example
+
+Note that the first number returned from an insertion, like in the
+example, is an object ID number and will almost certainly vary from
+system to system since object ID numbers in Postgres must be unique
+across all databases.
+@end defun
+
+@defun pq-cmd-tuples result
+Return the number of tuples if the last command was an INSERT/UPDATE/DELETE.
+If the last command was something else, the empty string is returned.
+@var{result} is a PGresult object.
+
+@example
+(setq R (pq-exec P "INSERT INTO xemacs_test VALUES
+                    (7, 'Takanohana', 'Yokuzuna');"))
+     @result{} #<PGresult PGRES_COMMAND_OK[1] - INSERT 38688 1>
+(pq-cmd-tuples R)
+     @result{} "1"
+(setq R (pq-exec P "SELECT * from xemacs_test;"))
+     @result{} #<PGresult PGRES_TUPLES_OK[7] - SELECT>
+(pq-cmd-tuples R)
+     @result{} ""
+(setq R (pq-exec P "DELETE FROM xemacs_test
+                    WHERE shikona LIKE '%hana';"))
+     @result{} #<PGresult PGRES_COMMAND_OK[2] - DELETE 2>
+(pq-cmd-tuples R)
+     @result{} "2"
+@end example
+@end defun
+
+@defun pq-oid-value result
+Return the object id of the insertion if the last command was an INSERT.
+0 is returned if the last command was not an insertion.
+@var{result} is a PGresult object.
+
+In the first example, the numbers you will see on your local system will
+almost certainly be different, however the second number from the right
+in the unprintable PGresult object and the number returned by
+@code{pq-oid-value} should match.
+@example
+(setq R (pq-exec P "INSERT INTO xemacs_test VALUES
+                    (8, 'Terao', 'Maegashira');"))
+     @result{} #<PGresult PGRES_COMMAND_OK[1] - INSERT 542089 1>
+(pq-oid-value R)
+     @result{} 542089
+(setq R (pq-exec P "SELECT shikona FROM xemacs_test
+                    WHERE rank='Maegashira';"))
+     @result{} #<PGresult PGRES_TUPLES_OK[2] - SELECT>
+(pq-oid-value R)
+     @result{} 0
+@end example
+@end defun
+
+@defun pq-make-empty-pgresult conn status
+Create an empty pgresult with the given status.
+@var{conn} a database connection object
+@var{status} a value that can be returned by @code{pq-result-status}.
+
+The caller is responsible for making sure the return value gets properly
+freed.
+@end defun
+
+@node Synchronous Interface Functions, Asynchronous Interface Functions, libpq Lisp Symbols and DataTypes, XEmacs PostgreSQL libpq API
+@comment  node-name,  next,  previous,  up
+@subsection Synchronous Interface Functions
+
+@defun pq-connectdb conninfo
+Establish a (synchronous) database connection.
+@var{conninfo} A string of blank separated options.  Options are of the
+form ``@var{option} = @var{value}''.  If @var{value} contains blanks, it
+must be single quoted.  Blanks around the equal sign are optional.
+Multiple option assignments are blank separated.
+@example
+(pq-connectdb "dbname=japanese port = 25432")
+     @result{} #<PGconn localhost:25432 steve/japanese>
+@end example
+The printed representation of a database connection object has four
+fields.  The first field is the hostname where the database server is
+running (in this case localhost), the second field is the port number,
+the third field is the database user name, and the fourth field is the
+name of the database.
+
+Database connection objects which have been disconnected and will
+generate an immediate error if they are used look like:
+@example
+  #<PGconn BAD>
+@end example
+Bad connections can be reestablished with @code{pq-reset}, or deleted
+entirely with @code{pq-finish}.
+
+A database connection object that has been deleted looks like:
+@example
+(let ((P1 (pq-connectdb "")))
+  (pq-finish P1)
+  P1)
+     @result{} #<PGconn DEAD>
+@end example
+
+Note that database connection objects are the most heavy weight objects
+in XEmacs Lisp at this writing, usually representing as much as several
+megabytes of virtual memory on the machine the database server is
+running on.  It is wisest to explicitly delete them when you are
+finished with them, rather than letting garbage collection do it.  An
+example idiom is:
+
+@example
+(let ((P (pq-connectiondb "")))
+  (unwind-protect
+      (progn
+	(...)) ; access database here
+    (pq-finish P)))
+@end example
+
+The following options are available in the options string:
+@table @code
+@item authtype
+Authentication type.  Same as @code{PGAUTHTYPE}.  This is no longer used.
+@item user
+Database user name.  Same as @code{PGUSER}.
+@item password
+Database password.
+@item dbname
+Database name.  Same as @code{PGDATABASE}
+@item host
+Symbolic hostname.  Same as @code{PGHOST}.
+@item hostaddr
+Host address as four octets (eg. like 192.168.1.1).
+@item port
+TCP port to connect to.  Same as @code{PGPORT}.
+@item tty
+Debugging TTY.  Same as @code{PGTTY}.  This value is suppressed in the
+XEmacs Lisp API.
+@item options
+Extra backend database options.  Same as @code{PGOPTIONS}.
+@end table
+A database connection object is returned regardless of whether a
+connection was established or not.
+@end defun
+
+@defun pq-reset conn
+Reestablish database connection.
+@var{conn} A database connection object.
+
+This function reestablishes a database connection using the original
+connection parameters.  This is useful if something has happened to the
+TCP link and it has become broken.
+@end defun
+
+@defun pq-exec conn query
+Make a synchronous database query.
+@var{conn} A database connection object.
+@var{query} A string containing an SQL query.
+A PGresult object is returned, which in turn may be queried by its many
+accessor functions to retrieve state out of it.  If the query string
+contains multiple SQL commands, only results from the final command are
+returned.
+
+@example
+(setq R (pq-exec P "SELECT * FROM xemacs_test;
+DELETE FROM xemacs_test WHERE id=8;"))
+     @result{} #<PGresult PGRES_COMMAND_OK[1] - DELETE 1>
+@end example
+@end defun
+
+@defun pq-notifies conn
+Return the latest async notification that has not yet been handled.
+@var{conn} A database connection object.
+If there has been a notification, then a list of two elements will be returned.
+The first element contains the relation name being notified, the second
+element contains the backend process ID number.  nil is returned if there
+aren't any notifications to process.
+@end defun
+
+@defun PQsetenv conn
+Synchronous transfer of environment variables to a backend
+@var{conn} A database connection object.
+
+Environment variable transfer is done as a normal part of database
+connection.
+
+Compatibility note: This function was present but not documented in versions
+of libpq prior to 7.0.
+@end defun
+
+@node Asynchronous Interface Functions, Large Object Support, Synchronous Interface Functions, XEmacs PostgreSQL libpq API
+@comment  node-name,  next,  previous,  up
+@subsection Asynchronous Interface Functions
+
+Making command by command examples is too complex with the asynchronous
+interface functions.  See the examples section for complete calling
+sequences.
+
+@defun pq-connect-start conninfo
+Begin establishing an asynchronous database connection.
+@var{conninfo} A string containing the connection options.  See the
+documentation of @code{pq-connectdb} for a listing of all the available
+flags.
+@end defun
+
+@defun pq-connect-poll conn
+An intermediate function to be called during an asynchronous database
+connection.
+@var{conn} A database connection object.
+The result codes are documented in a previous section.
+@end defun
+
+@defun pq-is-busy conn
+Returns t if @code{pq-get-result} would block waiting for input.
+@var{conn} A database connection object.
+@end defun
+
+@defun pq-consume-input conn
+Consume any available input from the backend.
+@var{conn} A database connection object.
+
+Nil is returned if anything bad happens.
+@end defun
+
+@defun pq-reset-start conn
+Reset connection to the backend asynchronously.
+@var{conn} A database connection object.
+@end defun
+
+@defun pq-reset-poll conn
+Poll an asynchronous reset for completion
+@var{conn} A database connection object.
+@end defun
+
+@defun pq-reset-cancel conn
+Attempt to request cancellation of the current operation.
+@var{conn} A database connection object.
+
+The return value is t if the cancel request was successfully
+dispatched, nil if not (in which case conn->errorMessage is set).
+Note: successful dispatch is no guarantee that there will be any effect at
+the backend.  The application must read the operation result as usual.
+@end defun
+
+@defun pq-send-query conn query
+Submit a query to Postgres and don't wait for the result.
+@var{conn} A database connection object.
+Returns: t if successfully submitted
+         nil if error (conn->errorMessage is set)
+@end defun
+
+@defun pq-get-result conn
+Retrieve an asynchronous result from a query.
+@var{conn} A database connection object.
+
+@code{nil} is returned when no more query work remains.
+@end defun
+
+@defun pq-set-nonblocking conn arg
+Sets the PGconn's database connection non-blocking if the arg is TRUE
+or makes it non-blocking if the arg is FALSE, this will not protect
+you from PQexec(), you'll only be safe when using the non-blocking API.
+@var{conn} A database connection object.
+@end defun
+
+@defun pq-is-nonblocking conn
+Return the blocking status of the database connection
+@var{conn} A database connection object.
+@end defun
+
+@defun pq-flush conn
+Force the write buffer to be written (or at least try)
+@var{conn} A database connection object.
+@end defun
+
+@defun PQsetenvStart conn
+Start asynchronously passing environment variables to a backend.
+@var{conn} A database connection object.
+
+Compatibility note: this function is only available with libpq-7.0.
+@end defun
+
+@defun PQsetenvPoll conn
+Check an asynchronous environment variables transfer for completion.
+@var{conn} A database connection object.
+
+Compatibility note: this function is only available with libpq-7.0.
+@end defun
+
+@defun PQsetenvAbort conn
+Attempt to terminate an asynchronous environment variables transfer.
+@var{conn} A database connection object.
+
+Compatibility note: this function is only available with libpq-7.0.
+@end defun
+
+@node Large Object Support, Other libpq Functions, Asynchronous Interface Functions, XEmacs PostgreSQL libpq API
+@comment  node-name,  next,  previous,  up
+@subsection Large Object Support
+
+@defun pq-lo-import conn filename
+Import a file as a large object into the database.
+@var{conn} a database connection object
+@var{filename} filename to import
+
+On success, the object id is returned.
+@end defun
+
+@defun pq-lo-export conn oid filename
+Copy a large object in the database into a file.
+@var{conn} a database connection object.
+@var{oid} object id number of a large object.
+@var{filename} filename to export to.
+@end defun
+
+@node Other libpq Functions, Unimplemented libpq Functions, Large Object Support, XEmacs PostgreSQL libpq API
+@comment  node-name,  next,  previous,  up
+@subsection Other libpq Functions
+
+@defun pq-finish conn
+Destroy a database connection object by calling free on it.
+@var{conn} a database connection object
+
+It is possible to not call this routine because the usual XEmacs garbage
+collection mechanism will call the underlying libpq routine whenever it
+is releasing stale @code{PGconn} objects.  However, this routine is
+useful in @code{unwind-protect} clauses to make connections go away
+quickly when unrecoverable errors have occurred.
+
+After calling this routine, the printed representation of the XEmacs
+wrapper object will contain the string ``DEAD''.
+@end defun
+
+@defun pq-client-encoding conn
+Return the client encoding as an integer code.
+@var{conn} a database connection object
+
+@example
+(pq-client-encoding P)
+     @result{} 1
+@end example
+
+Compatibility note: This function did not exist prior to libpq-7.0 and
+does not exist in a non-Mule XEmacs.
+@end defun
+
+@defun pq-set-client-encoding conn encoding
+Set client coding system.
+@var{conn} a database connection object
+@var{encoding} a string representing the desired coding system
+
+@example
+(pq-set-client-encoding P "EUC_JP")
+     @result{} 0
+@end example
+
+The current idiom for ensuring proper coding system conversion is the
+following (illustrated for EUC Japanese encoding):
+@example
+(setq P (pq-connectdb "..."))
+(let ((file-name-coding-system 'euc-jp)
+      (pg-coding-system 'euc-jp))
+  (pq-set-client-encoding "EUC_JP")
+  ...)
+(pq-finish P)
+@end example
+Compatibility note: This function did not exist prior to libpq-7.0 and
+does not exist in a non-Mule XEmacs.
+@end defun
+
+@defun pq-env-2-encoding
+Return the integer code representing the coding system in
+@code{PGCLIENTENCODING}.
+
+@example
+(pq-env-2-encoding)
+     @result{} 0
+@end example
+Compatibility note: This function did not exist prior to libpq-7.0 and
+does not exist in a non-Mule XEmacs.
+@end defun
+
+@defun pq-clear res
+Destroy a query result object by calling free() on it.
+@var{res} a query result object
+
+Note:  The memory allocation systems of libpq and XEmacs are different.
+The XEmacs representation of a query result object will have both the
+XEmacs version and the libpq version freed at the next garbage collection
+when the object is no longer being referenced.  Calling this function does
+not release the XEmacs object, it is still subject to the usual rules for
+Lisp objects.  The printed representation of the XEmacs object will contain
+the string ``DEAD'' after this routine is called indicating that it is no
+longer useful for anything.
+@end defun
+
+@defun pq-conn-defaults
+Return a data structure that represents the connection defaults.
+The data is returned as a list of lists, where each sublist contains
+info regarding a single option.
+@end defun
+
+@node Unimplemented libpq Functions, , Other libpq Functions, XEmacs PostgreSQL libpq API
+@comment  node-name,  next,  previous,  up
+@subsection Unimplemented libpq Functions
+
+@deftypefn {Unimplemented Function} PGconn *PQsetdbLogin (char *pghost, char *pgport, char *pgoptions, char *pgtty, char *dbName, char *login, char *pwd)
+Synchronous database connection.
+@var{pghost} is the hostname of the PostgreSQL backend to connect to.
+@var{pgport} is the TCP port number to use.
+@var{pgoptions} specifies other backend options.
+@var{pgtty} specifies the debugging tty to use.
+@var{dbName} specifies the database name to use.
+@var{login} specifies the database user name.
+@var{pwd} specifies the database user's password.
+
+This routine is deprecated as of libpq-7.0, and its functionality can be
+replaced by external Lisp code if needed.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} PGconn *PQsetdb (char *pghost, char *pgport, char *pgoptions, char *pgtty, char *dbName)
+Synchronous database connection.
+@var{pghost} is the hostname of the PostgreSQL backend to connect to.
+@var{pgport} is the TCP port number to use.
+@var{pgoptions} specifies other backend options.
+@var{pgtty} specifies the debugging tty to use.
+@var{dbName} specifies the database name to use.
+
+This routine was deprecated in libpq-6.5.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} int PQsocket (PGconn *conn)
+Return socket file descriptor to a backend database process.
+@var{conn} database connection object.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} void PQprint (FILE *fout, PGresult *res, PGprintOpt *ps)
+Print out the results of a query to a designated C stream.
+@var{fout} C stream to print to
+@var{res} the query result object to print
+@var{ps} the print options structure.
+
+This routine is deprecated as of libpq-7.0 and cannot be sensibly exported
+to XEmacs Lisp.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} void PQdisplayTuples (PGresult *res, FILE *fp, int fillAlign, char *fieldSep, int printHeader, int quiet)
+@var{res} query result object to print
+@var{fp} C stream to print to
+@var{fillAlign} pad the fields with spaces
+@var{fieldSep} field separator
+@var{printHeader} display headers?
+@var{quiet}
+
+This routine was deprecated in libpq-6.5.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} void PQprintTuples (PGresult *res, FILE *fout, int printAttName, int terseOutput, int width)
+@var{res} query result object to print
+@var{fout} C stream to print to
+@var{printAttName} print attribute names
+@var{terseOutput} delimiter bars
+@var{width} width of column, if 0, use variable width
+
+This routine was deprecated in libpq-6.5.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} int PQmblen (char *s, int encoding)
+Determine length of a multibyte encoded char at @code{*s}.
+@var{s} encoded string
+@var{encoding} type of encoding
+
+Compatibility note:  This function was introduced in libpq-7.0.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} void PQtrace (PGconn *conn, FILE *debug_port)
+Enable tracing on @code{debug_port}.
+@var{conn} database connection object.
+@var{debug_port} C output stream to use.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} void PQuntrace (PGconn *conn)
+Disable tracing.
+@var{conn} database connection object.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} char *PQoidStatus (PGconn *conn)
+Return the object id as a string of the last tuple inserted.
+@var{conn} database connection object.
+
+Compatibility note: This function is deprecated in libpq-7.0, however it
+is used internally by the XEmacs binding code when linked against versions
+prior to 7.0.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} PGresult *PQfn (PGconn *conn, int fnid, int *result_buf, int *result_len, int result_is_int, PQArgBlock *args, int nargs)
+``Fast path'' interface --- not really recommended for application use
+@var{conn} A database connection object.
+@var{fnid}
+@var{result_buf}
+@var{result_len}
+@var{result_is_int}
+@var{args}
+@var{nargs}
+@end deftypefn
+
+The following set of very low level large object functions aren't
+appropriate to be exported to Lisp.
+
+@deftypefn {Unimplemented Function} int pq-lo-open (PGconn *conn, int lobjid, int mode)
+@var{conn} a database connection object.
+@var{lobjid} a large object ID.
+@var{mode} opening modes.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} int pq-lo-close (PGconn *conn, int fd)
+@var{conn} a database connection object.
+@var{fd} a large object file descriptor
+@end deftypefn
+
+@deftypefn {Unimplemented Function} int pq-lo-read (PGconn *conn, int fd, char *buf, int len)
+@var{conn} a database connection object.
+@var{fd} a large object file descriptor.
+@var{buf} buffer to read into.
+@var{len} size of buffer.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} int pq-lo-write (PGconn *conn, int fd, char *buf, size_t len)
+@var{conn} a database connection object.
+@var{fd} a large object file descriptor.
+@var{buf} buffer to write from.
+@var{len} size of buffer.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} int pq-lo-lseek (PGconn *conn, int fd, int offset, int whence)
+@var{conn} a database connection object.
+@var{fd} a large object file descriptor.
+@var{offset}
+@var{whence}
+@end deftypefn
+
+@deftypefn {Unimplemented Function} int pq-lo-creat (PGconn *conn, int mode)
+@var{conn} a database connection object.
+@var{mode} opening modes.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} int pq-lo-tell (PGconn *conn, int fd)
+@var{conn} a database connection object.
+@var{fd} a large object file descriptor.
+@end deftypefn
+
+@deftypefn {Unimplemented Function} int pq-lo-unlink (PGconn *conn, int lobjid)
+@var{conn} a database connection object.
+@var{lbojid} a large object ID.
+@end deftypefn
+
+@node XEmacs PostgreSQL libpq Examples,  , XEmacs PostgreSQL libpq API, PostgreSQL Support
+@comment  node-name,  next,  previous,  up
+@section XEmacs PostgreSQL libpq Examples
+
+This is an example of one method of establishing an asynchronous
+connection.
+
+@example
+(defun database-poller (P)
+  (message "%S before poll" (pq-pgconn P 'pq::status))
+  (pq-connect-poll P)
+  (message "%S after poll" (pq-pgconn P 'pq::status))
+  (if (eq (pq-pgconn P 'pq::status) 'pg::connection-ok)
+      (message "Done!")
+    (add-timeout .1 'database-poller P)))
+     @result{} database-poller
+(progn
+  (setq P (pq-connect-start ""))
+  (add-timeout .1 'database-poller P))
+     @result{} pg::connection-started before poll
+     @result{} pg::connection-made after poll
+     @result{} pg::connection-made before poll
+     @result{} pg::connection-awaiting-response after poll
+     @result{} pg::connection-awaiting-response before poll
+     @result{} pg::connection-auth-ok after poll
+     @result{} pg::connection-auth-ok before poll
+     @result{} pg::connection-setenv after poll
+     @result{} pg::connection-setenv before poll
+     @result{} pg::connection-ok after poll
+     @result{} Done!
+P
+     @result{} #<PGconn localhost:25432 steve/steve>
+@end example
+
+Here is an example of one method of doing an asynchronous reset.
+
+@example
+(defun database-poller (P)
+  (let (PS)
+    (message "%S before poll" (pq-pgconn P 'pq::status))
+    (setq PS (pq-reset-poll P))
+    (message "%S after poll [%S]" (pq-pgconn P 'pq::status) PS)
+    (if (eq (pq-pgconn P 'pq::status) 'pg::connection-ok)
+	(message "Done!")
+      (add-timeout .1 'database-poller P))))
+     @result{} database-poller
+(progn
+  (pq-reset-start P)
+  (add-timeout .1 'database-poller P))
+     @result{} pg::connection-started before poll
+     @result{} pg::connection-made after poll [pgres::polling-writing]
+     @result{} pg::connection-made before poll
+     @result{} pg::connection-awaiting-response after poll [pgres::polling-reading]
+     @result{} pg::connection-awaiting-response before poll
+     @result{} pg::connection-setenv after poll [pgres::polling-reading]
+     @result{} pg::connection-setenv before poll
+     @result{} pg::connection-ok after poll [pgres::polling-ok]
+     @result{} Done!
+P
+     @result{} #<PGconn localhost:25432 steve/steve>
+@end example
+
+And finally, an asynchronous query.
+
+@example
+(defun database-poller (P)
+  (let (R)
+    (pq-consume-input P)
+    (if (pq-is-busy P)
+	(add-timeout .1 'database-poller P)
+      (setq R (pq-get-result P))
+      (if R
+	  (progn
+	    (push R result-list)
+	    (add-timeout .1 'database-poller P))))))
+     @result{} database-poller
+(when (pq-send-query P "SELECT * FROM xemacs_test;")
+  (setq result-list nil)
+  (add-timeout .1 'database-poller P))
+     @result{} 885
+;; wait a moment
+result-list
+     @result{} (#<PGresult PGRES_TUPLES_OK - SELECT>)
+@end example
+
+Here is an example showing how multiple SQL statements in a single query
+can have all their results collected.
+@example
+;; Using the same @code{database-poller} function from the previous example
+(when (pq-send-query P "SELECT * FROM xemacs_test;
+SELECT * FROM pg_database;
+SELECT * FROM pg_user;")
+  (setq result-list nil)
+  (add-timeout .1 'database-poller P))
+     @result{} 1782
+;; wait a moment
+result-list
+     @result{} (#<PGresult PGRES_TUPLES_OK - SELECT> #<PGresult PGRES_TUPLES_OK - SELECT> #<PGresult PGRES_TUPLES_OK - SELECT>)
+@end example
+
+Here is an example which illustrates collecting all data from a query,
+including the field names.
+
+@example
+(defun pg-util-query-results (results)
+  "Retrieve results of last SQL query into a list structure."
+  (let ((i (1- (pq-ntuples R)))
+	j l1 l2)
+    (while (>= i 0)
+      (setq j (1- (pq-nfields R)))
+      (setq l2 nil)
+      (while (>= j 0)
+	(push (pq-get-value R i j) l2)
+	(decf j))
+      (push l2 l1)
+      (decf i))
+    (setq j (1- (pq-nfields R)))
+    (setq l2 nil)
+    (while (>= j 0)
+      (push (pq-fname R j) l2)
+      (decf j))
+    (push l2 l1)
+    l1))
+     @result{} pg-util-query-results
+(setq R (pq-exec P "SELECT * FROM xemacs_test ORDER BY field2 DESC;"))
+     @result{} #<PGresult PGRES_TUPLES_OK - SELECT>
+(pg-util-query-results R)
+     @result{} (("f1" "field2") ("a" "97") ("b" "97") ("stuff" "42") ("a string" "12") ("foo" "10") ("string" "2") ("text" "1"))
+@end example
+
+Here is an example of a query that uses a database cursor.
+
+@example
+(let (data R)
+  (setq R (pq-exec P "BEGIN;"))
+  (setq R (pq-exec P "DECLARE k_cursor CURSOR FOR SELECT * FROM xemacs_test ORDER BY f1 DESC;"))
+
+  (setq R (pq-exec P "FETCH k_cursor;"))
+  (while (eq (pq-ntuples R) 1)
+    (push (list (pq-get-value R 0 0) (pq-get-value R 0 1)) data)
+    (setq R (pq-exec P "FETCH k_cursor;")))
+  (setq R (pq-exec P "END;"))
+  data)
+     @result{} (("a" "97") ("a string" "12") ("b" "97") ("foo" "10") ("string" "2") ("stuff" "42") ("text" "1"))
+@end example
+
+Here's another example of cursors, this time with a Lisp macro to
+implement a mapping function over a table.
+
+@example
+(defmacro map-db (P table condition callout)
+  `(let (R)
+     (pq-exec ,P "BEGIN;")
+     (pq-exec ,P (concat "DECLARE k_cursor CURSOR FOR SELECT * FROM "
+			 ,table
+			 " "
+			 ,condition
+			 " ORDER BY f1 DESC;"))
+     (setq R (pq-exec P "FETCH k_cursor;"))
+     (while (eq (pq-ntuples R) 1)
+       (,callout (pq-get-value R 0 0) (pq-get-value R 0 1))
+       (setq R (pq-exec P "FETCH k_cursor;")))
+     (pq-exec P "END;")))
+     @result{} map-db
+(defun callback (arg1 arg2)
+  (message "arg1 = %s, arg2 = %s" arg1 arg2))
+     @result{} callback
+(map-db P "xemacs_test" "WHERE field2 > 10" callback)
+     @result{} arg1 = stuff, arg2 = 42
+     @result{} arg1 = b, arg2 = 97
+     @result{} arg1 = a string, arg2 = 12
+     @result{} arg1 = a, arg2 = 97
+     @result{} #<PGresult PGRES_COMMAND_OK - COMMIT>
+@end example

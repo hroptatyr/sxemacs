@@ -1,0 +1,460 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1994, 1995 Ben Wing.
+@c Copyright (C) 1999 Andy Piper.
+@c Copyright (C) 1999 Stephen J. Turnbull.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/gutter.info
+@node Gutter, Scrollbars, Toolbar, top
+@chapter Gutter
+@cindex gutter
+
+  A gutter is a rectangle displayed along one edge of a frame.  It
+can contain arbitrary text or graphics.
+
+@menu
+* Gutter Intro::		An introduction.
+* Creating Gutter::             How to create a gutter.
+* Gutter Descriptor Format::	Accessing and modifying a gutter's
+                                  properties.
+* Specifying a Gutter::		Setting a gutter's contents.
+* Other Gutter Variables::	Controlling the size of gutters.
+* Common Gutter Widgets::       Things to put in gutters.
+@end menu
+
+@node Gutter Intro, Creating Gutter, Gutter, Gutter
+@section Gutter Intro
+
+  A @dfn{gutter} is a rectangle displayed along one edge of a frame.  It
+can contain arbitrary text or graphics.  It could be considered a
+generalization of a toolbar, although toolbars are not currently
+implemented using gutters.
+
+  In XEmacs, a gutter can be displayed along any of the four edges
+of the frame, and two or more different edges can be displaying
+gutters simultaneously.  The contents, thickness, and visibility of
+the gutters can be controlled separately, and the values can
+be per-buffer, per-frame, etc., using specifiers (@pxref{Specifiers}).
+
+  Normally, there is one gutter displayed in a frame.  Usually, this is
+the default gutter, containing buffer tabs, but modes cab override this
+and substitute their own gutter.  This default gutter is usually
+positioned along the top of the frame, but this can be changed using
+@code{set-default-gutter-position}.
+
+  Note that, for each of the gutter properties (contents, thickness,
+and visibility), there is a separate specifier for each of the four
+gutter positions (top, bottom, left, and right), and an additional
+specifier for the ``default'' gutter, i.e. the gutter whose
+position is controlled by @code{set-default-gutter-position}.  The
+way this works is that @code{set-default-gutter-position} arranges
+things so that the appropriate position-specific specifiers for the
+default position inherit from the corresponding default specifiers.
+That way, if the position-specific specifier does not give a value
+(which it usually doesn't), then the value from the default
+specifier applies.  If you want to control the default gutter, you
+just change the default specifiers, and everything works.  A package
+such as VM that wants to put its own gutter in a different location
+from the default just sets the position-specific specifiers, and if
+the user sets the default gutter to the same position, it will just
+not be visible.
+
+@node Creating Gutter, Gutter Descriptor Format, Gutter Intro, Gutter
+@section Creating Gutter
+
+@defun make-gutter-specifier spec-list
+
+Return a new @code{gutter} specifier object with the given specification
+list.  @var{spec-list} can be a list of specifications (each of which is
+a cons of a locale and a list of instantiators), a single instantiator,
+or a list of instantiators.  @xref{Specifiers}, for more information
+about specifiers.
+
+Gutter specifiers are used to specify the format of a gutter.  The
+values of the variables @code{default-gutter}, @code{top-gutter},
+@code{left-gutter}, @code{right-gutter}, and @code{bottom-gutter} are
+always gutter specifiers.
+
+Valid gutter instantiators are called "gutter descriptors" and are
+either strings or property-lists of strings.  See @code{default-gutter}
+for a description of the exact format.
+@end defun
+
+@defun make-gutter-size-specifier spec-list
+
+Return a new @code{gutter-size} specifier object with the given spec
+list.  @var{spec-list} can be a list of specifications (each of which is
+a cons of a locale and a list of instantiators), a single instantiator,
+or a list of instantiators.  @xref{Specifiers}, for more information
+about specifiers.
+
+Gutter-size specifiers are used to specify the size of a gutter.  The
+values of the variables @code{default-gutter-size},
+@code{top-gutter-size}, @code{left-gutter-size},
+@code{right-gutter-size}, and @code{bottom-gutter-size} are always
+gutter-size specifiers.
+
+Valid gutter-size instantiators are either integers or the special
+symbol @code{autodetect}. If a gutter-size is set to @code{autodetect}
+them the size of the gutter will be adjusted to just accommodate the
+gutters contents. @code{autodetect} only works for top and bottom
+gutters.
+@end defun
+
+@defun make-gutter-visible-specifier spec-list
+
+Return a new @code{gutter-visible} specifier object with the given spec
+list.  @var{spec-list} can be a list of specifications (each of which is
+a cons of a locale and a list of instantiators), a single instantiator,
+or a list of instantiators.  @xref{Specifiers}, for more information
+about specifiers.
+
+Gutter-visible specifiers are used to specify the visibility of a
+gutter.  The values of the variables @code{default-gutter-visible-p},
+@code{top-gutter-visible-p}, @code{left-gutter-visible-p},
+@code{right-gutter-visible-p}, and @code{bottom-gutter-visible-p} are
+always gutter-visible specifiers.
+
+Valid gutter-visible instantiators are @code{t}, @code{nil} or a list of
+symbols.  If a gutter-visible instantiator is set to a list of symbols,
+and the corresponding gutter specification is a property-list strings,
+then elements of the gutter specification will only be visible if the
+corresponding symbol occurs in the gutter-visible instantiator.
+@end defun
+
+@node Gutter Descriptor Format, Specifying a Gutter, Creating Gutter, Gutter
+@section Gutter Descriptor Format
+
+  The contents of a gutter are specified using a @dfn{gutter descriptor}.
+The format of a gutter descriptor is a list of @dfn{gutter button
+descriptors}.  Each gutter button descriptor is a vector in one of the
+following formats:
+
+@itemize @bullet
+@item
+@code{[@var{glyph-list} @var{function} @var{enabled-p} @var{help}]}
+@item
+@code{[:style @var{2d-or-3d}]}
+@item
+@code{[:style @var{2d-or-3d} :size @var{width-or-height}]}
+@item
+@code{[:size @var{width-or-height} :style @var{2d-or-3d}]}
+@end itemize
+
+  Optionally, one of the gutter button descriptors may be @code{nil}
+instead of a vector; this signifies the division between the gutter
+buttons that are to be displayed flush-left, and the buttons to be
+displayed flush-right.
+
+  The first vector format above specifies a normal gutter button;
+the others specify blank areas in the gutter.
+
+  For the first vector format:
+
+@itemize @bullet
+@item
+@var{glyph-list} should be a list of one to six glyphs (as created by
+@code{make-glyph}) or a symbol whose value is such a list.  The first
+glyph, which must be provided, is the glyph used to display the gutter
+button when it is in the ``up'' (not pressed) state.  The optional
+second glyph is for displaying the button when it is in the ``down''
+(pressed) state.  The optional third glyph is for when the button is
+disabled.  The last three glyphs are for displaying the button in the
+``up'', ``down'', and ``disabled'' states, respectively, but are used
+when the user has called for captioned gutter buttons (using
+@code{gutter-buttons-captioned-p}).  The function
+@code{gutter-make-button-list} is useful in creating these glyph lists.
+
+@item
+Even if you do not provide separate down-state and disabled-state
+glyphs, the user will still get visual feedback to indicate which
+state the button is in.  Buttons in the up-state are displayed
+with a shadowed border that gives a raised appearance to the
+button.  Buttons in the down-state are displayed with shadows that
+give a recessed appearance.  Buttons in the disabled state are
+displayed with no shadows, giving a 2-d effect.
+
+@item
+If some of the gutter glyphs are not provided, they inherit as follows:
+
+@example
+     UP:                up
+     DOWN:              down -> up
+     DISABLED:          disabled -> up
+     CAP-UP:            cap-up -> up
+     CAP-DOWN:          cap-down -> cap-up -> down -> up
+     CAP-DISABLED:      cap-disabled -> cap-up -> disabled -> up
+@end example
+
+@item
+The second element @var{function} is a function to be called when the
+gutter button is activated (i.e. when the mouse is released over the
+gutter button, if the press occurred in the gutter).  It can be any
+form accepted by @code{call-interactively}, since this is how it is
+invoked.
+
+@item
+The third element @var{enabled-p} specifies whether the gutter button
+is enabled (disabled buttons do nothing when they are activated, and are
+displayed differently; see above).  It should be either a boolean or a
+form that evaluates to a boolean.
+
+@item
+The fourth element @var{help}, if non-@code{nil}, should be a string.
+This string is displayed in the echo area when the mouse passes over the
+gutter button.
+@end itemize
+
+  For the other vector formats (specifying blank areas of the gutter):
+
+@itemize @bullet
+@item
+@var{2d-or-3d} should be one of the symbols @code{2d} or @code{3d},
+indicating whether the area is displayed with shadows (giving it a
+raised, 3-d appearance) or without shadows (giving it a flat
+appearance).
+
+@item
+@var{width-or-height} specifies the length, in pixels, of the blank
+area.  If omitted, it defaults to a device-specific value (8 pixels for
+X devices).
+@end itemize
+
+@defun gutter-make-button-list up &optional down disabled cap-up cap-down cap-disabled
+This function calls @code{make-glyph} on each arg and returns a list of
+the results.  This is useful for setting the first argument of a gutter
+button descriptor (typically, the result of this function is assigned
+to a symbol, which is specified as the first argument of the gutter
+button descriptor).
+@end defun
+
+@defun check-gutter-button-syntax button &optional noerror
+Verify the syntax of entry @var{button} in a gutter description list.
+If you want to verify the syntax of a gutter description list as a
+whole, use @code{check-valid-instantiator} with a specifier type of
+@code{gutter}.
+@end defun
+
+@node Specifying a Gutter, Other Gutter Variables, Gutter Descriptor Format, Gutter
+@section Specifying a Gutter
+
+  In order to specify the contents of a gutter, set one of the specifier
+variables @code{default-gutter}, @code{top-gutter},
+@code{bottom-gutter}, @code{left-gutter}, or @code{right-gutter}.
+These are specifiers, which means you set them with @code{set-specifier}
+and query them with @code{specifier-specs} or @code{specifier-instance}.
+You will get an error if you try to set them using @code{setq}.  The
+valid instantiators for these specifiers are gutter descriptors, as
+described above.  @xref{Specifiers}, for more information.
+
+  Most of the time, you will set @code{default-gutter}, which allows
+the user to choose where the gutter should go.
+
+@defvr Specifier default-gutter
+The position of this gutter is specified in the function
+@code{default-gutter-position}.  If the corresponding
+position-specific gutter (e.g. @code{top-gutter} if
+@code{default-gutter-position} is @code{top}) does not specify a
+gutter in a particular domain, then the value of @code{default-gutter}
+in that domain, of any, will be used instead.
+@end defvr
+
+  Note that the gutter at any particular position will not be displayed
+unless its thickness (width or height, depending on orientation) is
+non-zero and its visibility status is true.  The thickness is controlled
+by the specifiers @code{top-gutter-height},
+@code{bottom-gutter-height}, @code{left-gutter-width}, and
+@code{right-gutter-width}, and the visibility status is controlled by
+the specifiers @code{top-gutter-visible-p},
+@code{bottom-gutter-visible-p}, @code{left-gutter-visible-p}, and
+@code{right-gutter-visible-p} (@pxref{Other Gutter Variables}).
+
+@defun set-default-gutter-position position
+This function sets the position that the @code{default-gutter} will be
+displayed at.  Valid positions are the symbols @code{top},
+@code{bottom}, @code{left} and @code{right}.  What this actually does is
+set the fallback specifier for the position-specific specifier
+corresponding to the given position to @code{default-gutter}, and set
+the fallbacks for the other position-specific specifiers to @code{nil}.
+It also does the same thing for the position-specific thickness and
+visibility specifiers, which inherit from one of
+@code{default-gutter-height} or @code{default-gutter-width}, and from
+@code{default-gutter-visible-p}, respectively (@pxref{Other Gutter
+Variables}).
+@end defun
+
+@defun default-gutter-position
+This function returns the position that the @code{default-gutter} will
+be displayed at.
+@end defun
+
+  You can also explicitly set a gutter at a particular position.  When
+redisplay determines what to display at a particular position in a
+particular domain (i.e. window), it first consults the position-specific
+gutter.  If that does not yield a gutter descriptor, the
+@code{default-gutter} is consulted if @code{default-gutter-position}
+indicates this position.
+
+@defvr Specifier top-gutter
+Specifier for the gutter at the top of the frame.
+@end defvr
+
+@defvr Specifier bottom-gutter
+Specifier for the gutter at the bottom of the frame.
+@end defvr
+
+@defvr Specifier left-gutter
+Specifier for the gutter at the left edge of the frame.
+@end defvr
+
+@defvr Specifier right-gutter
+Specifier for the gutter at the right edge of the frame.
+@end defvr
+
+@defun gutter-specifier-p object
+This function returns non-@code{nil} if @var{object} is a gutter specifier.
+Gutter specifiers are the actual objects contained in the gutter
+variables described above, and their valid instantiators are
+gutter descriptors (@pxref{Gutter Descriptor Format}).
+@end defun
+
+@node Other Gutter Variables, Common Gutter Widgets, Specifying a Gutter, Gutter
+@section Other Gutter Variables
+
+  The variables to control the gutter thickness, visibility status, and
+captioned status are all specifiers.  @xref{Specifiers}.
+
+@defvr Specifier default-gutter-height
+This specifies the height of the default gutter, if it's oriented
+horizontally.  The position of the default gutter is specified by the
+function @code{set-default-gutter-position}.  If the corresponding
+position-specific gutter thickness specifier
+(e.g. @code{top-gutter-height} if @code{default-gutter-position} is
+@code{top}) does not specify a thickness in a particular domain (a
+window or a frame), then the value of @code{default-gutter-height} or
+@code{default-gutter-width} (depending on the gutter orientation) in
+that domain, if any, will be used instead.
+@end defvr
+
+@defvr Specifier default-gutter-width
+This specifies the width of the default gutter, if it's oriented
+vertically.  This behaves like @code{default-gutter-height}.
+@end defvr
+
+  Note that @code{default-gutter-height} is only used when
+@code{default-gutter-position} is @code{top} or @code{bottom}, and
+@code{default-gutter-width} is only used when
+@code{default-gutter-position} is @code{left} or @code{right}.
+
+@defvr Specifier top-gutter-height
+This specifies the height of the top gutter.
+@end defvr
+
+@defvr Specifier bottom-gutter-height
+This specifies the height of the bottom gutter.
+@end defvr
+
+@defvr Specifier left-gutter-width
+This specifies the width of the left gutter.
+@end defvr
+
+@defvr Specifier right-gutter-width
+This specifies the width of the right gutter.
+@end defvr
+
+  Note that all of the position-specific gutter thickness specifiers
+have a fallback value of zero when they do not correspond to the
+default gutter.  Therefore, you will have to set a non-zero thickness
+value if you want a position-specific gutter to be displayed.
+
+@defvr Specifier default-gutter-visible-p
+This specifies whether the default gutter is visible.  The position of
+the default gutter is specified by the function
+@code{set-default-gutter-position}.  If the corresponding position-specific
+gutter visibility specifier (e.g. @code{top-gutter-visible-p} if
+@code{default-gutter-position} is @code{top}) does not specify a
+visible-p value in a particular domain (a window or a frame), then the
+value of @code{default-gutter-visible-p} in that domain, if any, will
+be used instead.
+@end defvr
+
+@defvr Specifier top-gutter-visible-p
+This specifies whether the top gutter is visible.
+@end defvr
+
+@defvr Specifier bottom-gutter-visible-p
+This specifies whether the bottom gutter is visible.
+@end defvr
+
+@defvr Specifier left-gutter-visible-p
+This specifies whether the left gutter is visible.
+@end defvr
+
+@defvr Specifier right-gutter-visible-p
+This specifies whether the right gutter is visible.
+@end defvr
+
+@code{default-gutter-visible-p} and all of the position-specific
+gutter visibility specifiers have a fallback value of true.
+
+  Internally, gutter thickness and visibility specifiers are instantiated
+in both window and frame domains, for different purposes.  The value in
+the domain of a frame's selected window specifies the actual gutter
+thickness or visibility that you will see in that frame.  The value in
+the domain of a frame itself specifies the gutter thickness or
+visibility that is used in frame geometry calculations.
+
+  Thus, for example, if you set the frame width to 80 characters and the
+left gutter width for that frame to 68 pixels, then the frame will be
+sized to fit 80 characters plus a 68-pixel left gutter.  If you then
+set the left gutter width to 0 for a particular buffer (or if that
+buffer does not specify a left gutter or has a @code{nil} value specified for
+@code{left-gutter-visible-p}), you will find that, when that buffer is
+displayed in the selected window, the window will have a width of 86 or
+87 characters -- the frame is sized for a 68-pixel left gutter but the
+selected window specifies that the left gutter is not visible, so it is
+expanded to take up the slack.
+
+@defvr Specifier gutter-buttons-captioned-p
+Whether gutter buttons are captioned.  This affects which glyphs from a
+gutter button descriptor are chosen.  @xref{Gutter Descriptor Format}.
+@end defvr
+
+  You can also reset the gutter to what it was when XEmacs started up.
+
+@defvr Constant initial-gutter-spec
+The gutter descriptor used to initialize @code{default-gutter} at
+startup.
+@end defvr
+
+@node Common Gutter Widgets, , Other Gutter Variables, Gutter
+@section Common Gutter Widgets
+
+  A gutter can contain arbitrary text.  So, for example, in an Info
+buffer you could put the title of the current node in the top gutter,
+and it would not scroll out of view in a long node.  (This is an
+artificial example, since usually the node name is sufficiently
+descriptive, and Info puts that in the mode line.)
+
+  A more common use for the gutter is to hold some kind of active
+widget.  The buffer-tab facility, available in all XEmacs frames,
+creates an array of file-folder-like tabs, which the user can click with
+the mouse to switch buffers.  W3 uses a progress-bar widget in the
+bottom gutter to give a visual indication of the progress of
+time-consuming operations like downloading.
+
+@menu
+* Buffer Tabs::         Tabbed divider index metaphor for switching buffers.
+* Progress Bars::       Visual indication of operation progress.
+@end menu
+
+@node Buffer Tabs, Progress Bars, ,Common Gutter Widgets
+@subsection Buffer Tabs
+
+  Not documented yet.
+
+@node Progress Bars,  , Buffer Tabs, Common Gutter Widgets
+@subsection Progress Bars
+
+  Not documented yet.
+

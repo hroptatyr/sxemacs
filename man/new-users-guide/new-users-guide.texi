@@ -1,0 +1,288 @@
+\input texinfo  @c -*-texinfo-*-
+@setfilename ../../info/new-users-guide.info
+@comment  node-name,  next,  previous,  up
+
+
+@ifinfo
+@dircategory XEmacs Editor
+@direntry
+* Intro: (new-users-guide).	Introduction to the XEmacs Editor.
+@end direntry
+
+This manual serves as an introduction to the XEmacs editor.
+
+Copyright (C) 1985, 1986, 1988 Richard M. Stallman.
+Copyright @copyright{} 1991, 1992, 1993, 1994 Lucid, Inc.
+Copyright @copyright{} 1993, 1994 Sun Microsystems, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+@end ifinfo
+@c
+@setchapternewpage odd
+@settitle Getting Started With XEmacs
+@c
+@titlepage
+@sp 6
+@center @titlefont{Getting Started With XEmacs}
+@sp 4
+@sp 1
+@sp 1
+@center July 1994
+@center (General Public License upgraded, January 1991)
+@sp 5
+@center Richard Stallman
+@sp 1
+@center and
+@sp 1
+@center Rashmi Goyal
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1985, 1986, 1988 Richard M. Stallman.
+
+Copyright @copyright{} 1991, 1992, 1993, 1994 Lucid, Inc.
+
+Copyright @copyright{} 1993, 1994 Sun Microsystems, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+@end titlepage
+@page
+@ifinfo
+@node Top, Intro, (dir), (dir)
+@top The Emacs Editor
+
+
+Emacs is the extensible, customizable, self-documenting real-time
+display editor.  This Info file will help you get started on using 
+XEmacs.  It corresponds to XEmacs version 19.13.
+
+@end ifinfo
+
+@iftex
+@unnumbered Preface
+
+  This guide is intended to help you get started on using the
+Emacs editor. It will show you some examples of simple customizations.
+
+  For detailed information on any topic, refer to the @b{XEmacs
+User's Manual}. This document will also refer the reader to the
+@b{XEmacs User's Manual} for more information on corresponding
+topics. You can also use the on-line, learn-by-doing tutorial, which you
+get by running Emacs and typing @kbd{C-h t} OR you can choose the
+@b{Emacs Tutorial} from the @b{Help} menu on the menu bar (which is
+located on the extreme right of the frame). With it, you learn Emacs by
+using Emacs on a specially designed file which describes commands, tells
+you when to try them, and then explains the results you see.
+
+  The first few chapters will introduce you to some basic Emacs commands. 
+Later on, some examples of simple customizations will be shown. 
+
+  To find the documentation on a particular command, look in the index.
+Keys (character commands) and command names have separate indexes.  There
+is also a glossary, with a cross reference for each term.
+
+  This manual comes in two forms: the published form and the Info form.
+The Info form is for on-line perusal with the INFO program; it is
+distributed along with XEmacs.  Both forms contain substantially the
+same text and are generated from a common source file, which is also
+distributed along with XEmacs.
+
+@end iftex
+
+
+@c node
+
+@menu
+* Intro::                       Introduction to XEmacs editor
+
+Indices, nodes containing large menus
+* Key Index::                   An item for each standard Emacs key sequence.
+* Command Index::               An item for each command and function name
+* Variable Index::              An item for each variable in User-Guide
+* Concept Index::               An item for the concepts introduced
+
+Entering, Exiting and Editing Emacs
+* Entering::                    Starting Emacs from the shell and Exiting
+* Windows and Menus::           Description of Pull-down menus
+* Edit::                        Basic Editing commands
+
+Other Features of XEmacs
+* Customization Basics::        Customize Emacs menus and keybindings
+* Help::                        Help menu and other help commands
+* Modes::                       Major and Minor modes in XEmacs
+* Files::                       Visiting, Saving and Listing Files
+* Other Customizations::        Customizing Variables, Modes, etc
+* Select and Move::             Selecting text and moving text 
+* Search and Replace::          Searching and Replacing text
+
+
+
+ --- The Detailed Node Listing ---
+
+Entering and Exiting Emacs
+
+* Enter::                       Entering Emacs from the shell
+* Frame::                       Basic information about the XEmacs Frame
+* Exiting::                     Exiting Emacs
+* Mode Line::                   Interpreting the mode line.
+* Echo Area::                   Bottom of the frame where you interact
+                                with Emacs.
+
+XEmacs Windows and Menus
+
+* XEmacs Window::               Manipulating XEmacs Windows
+* Pull-down Menus::             Description of XEmacs Pull-down Menus
+
+Pull-down menus
+
+* File menu::                   Items on the File Menu
+* Edit menu::                   Items on the Edit Menu
+* Options Menu::                Items on the Options Menu
+* Buffers Menu::                Items on the Buffers Menu
+* Help menu::                   The Help Menu at the extreme right on
+                                the frame
+
+Basic Editing Commands
+
+* Insert::                      Insert text in Emacs by simply typing at
+                                the cursor position.
+* Cursor Position::             Moving Around the cursor in the buffer,
+* Erase::                       Different commands for erasing text 
+* Numeric Argument::            Giving Numeric Arguments to commands
+* Undo::                        Undoing Changes made by mistake
+
+Customize key bindings and menus 
+
+* Customizing key Bindings::    Changing Key Bindings
+* Customizing Menus::           Adding, Deleting, Enabling and Disabling Menus
+
+Help
+
+* The Help Menu::               Items on the Help Menu                
+
+Major and Minor Modes
+
+* Major Modes::                 Choosing Major Modes
+* Minor Modes::                 Auto-Fill, Abbrev and other minor modes
+
+Emacs Files
+
+* File Names::                  How to type and edit file name arguments.
+* Visiting::                    Visiting a file prepares Emacs to edit the file.
+* Saving Files::                How to save Emacs files.
+
+Other Customizations
+
+* Setting Variables::           Customizing Emacs variables
+* Init File::                   Some examples of Lisp expressions in
+                                init.el file
+
+Selecting and Moving Text
+
+* Selecting Text::              Select a region of text by setting the Mark
+* Mouse::                       Selecting Text with Mouse
+* Region Operation::            Various ways to operate on a selected text
+* Moving Text::                 Moving Text 
+* Accumulating text::           Accumulating Text from several buffers
+
+No sub menu for the node search and replace
+@end menu
+
+@node Intro,Key Index  ,Top , Top
+@unnumbered Introduction
+
+  You are reading about XEmacs which is a self-documenting, customizable, extensible real-time display editor.
+
+  XEmacs is a @dfn{display} editor because normally the text
+being edited is visible on the screen and is updated automatically as you
+type.  @xref{Frame,Display,,xemacs,XEmacs User's Manual}.
+
+  It is a @dfn{real-time} editor because the display is updated very
+frequently, usually after each character or pair of characters you type.
+This minimizes the amount of information you must keep in your head as
+you edit.  @xref{Basic,Real-time,Basic Editing,xemacs,XEmacs User's
+Manual}.
+
+  It is advanced because it provides facilities that go beyond
+simple insertion and deletion: filling of text; automatic indentation of
+programs; viewing two or more files at once; and dealing in terms of
+characters, words, lines, sentences, paragraphs, and pages, as well as
+expressions and comments in several different programming languages.  It is
+much easier to type one command meaning ``go to the end of the paragraph''
+than to find that spot with simple cursor keys.
+
+  @dfn{Self-documenting} means that at any time you can type a special
+character, @kbd{Control-h}, to find out what your options are.  You can
+also use @kbd{C-h} to find out what a command does, or to find all the
+commands relevant to a topic.  @xref{Help,,,xemacs,XEmacs User's Manual}.
+
+  @dfn{Customizable} means you can change the definitions of Emacs
+commands.  For example, if you use a programming language in which
+comments start with @samp{<**} and end with @samp{**>}, you can tell the
+Emacs comment manipulation commands to use those strings
+(@pxref{Comments,,,xemacs,XEmacs User's Manual}).  Another sort of
+customization is rearrangement of the command set.  For example, you can
+set up the four basic cursor motion commands (up, down, left and right)
+on keys in a diamond pattern on the keyboard if you prefer.
+@xref{Customization,,,xemacs,XEmacs User's Manual}.
+
+  @dfn{Extensible} means you can go beyond simple customization and
+write entirely new commands, programs in the Lisp language to be run by
+Emacs's own Lisp interpreter.  Emacs is an ``on-line extensible''
+system: it is divided into many functions that call each other.  You can
+redefine any function in the middle of an editing session and replace
+any part of Emacs without making a separate copy of all of Emacs.  Most
+of the editing commands of Emacs are written in Lisp; the few
+exceptions could have been written in Lisp but are written in C for
+efficiency.  Only a programmer can write an extension to Emacs, but anybody
+can use it afterward.
+
+@include enter.texi
+@include xmenu.texi
+@include edit.texi
+@include custom1.texi
+@include help.texi
+@include modes.texi
+@include files.texi
+@include custom2.texi
+@include region.texi
+@include search.texi
+
+@node Key Index, Command Index, Intro, Top
+@unnumbered Key (Character) Index
+@printindex ky
+
+@node Command Index, Variable Index, Key Index, Top
+@unnumbered Command and Function Index
+@printindex fn
+
+@node Variable Index, Concept Index, Command Index, Top
+@unnumbered Variable Index
+@printindex vr
+
+@node Concept Index, Entering, Variable Index, Top
+@unnumbered Concept Index
+@printindex cp
+
+@summarycontents
+@contents
+@bye
+
+@c Remember to delete these lines before creating the info file.
+@iftex
+@lucidbook
+@bindingoffset = 0.5in
+@parindent = 0pt
+@end iftex
+

@@ -1,0 +1,38 @@
+
+@node Reading Mail, Calendar/Diary, Sending Mail, Top
+@chapter Reading Mail
+@cindex mail
+@cindex message
+
+XEmacs provides several mail-reading packages.  Each one comes with
+its own manual, which is included in each package.
+
+The recommended mail-reading package for new users is VM.  VM works
+with standard Unix-mail-format folders and was designed as a replacement
+for the older Rmail.
+
+XEmacs also provides a sophisticated and comfortable front-end to the
+MH mail-processing system, called @samp{MH-E}.  Unlike in other
+mail programs, folders in MH are stored as file-system directories,
+with each message occupying one (numbered) file.  This facilitates
+working with mail using shell commands, and many other features of
+MH are also designed to integrate well with the shell and with
+shell scripts.  Keep in mind, however, that in order to use MH-E
+you must have the MH mail-processing system installed on your
+computer.
+
+The @dfn{Everything including the kitchen sink} package @samp{Gnus} is
+also available as an XEmacs package.  Gnus also handles Usenet articles
+as well as mail.
+
+@samp{MEW} (Messaging in the Emacs World) is another mail-reading
+package available for XEmacs.
+
+Finally, XEmacs provides the Rmail package.  Rmail is (currently)
+the only mail reading package distributed with FSF GNU Emacs, and is
+powerful in its own right.  However, it stores mail folders in a
+special format called @samp{Babyl}, that is incompatible with all
+other frequently-used mail programs.  A utility program is provided
+for converting Babyl folders to standard Unix-mail format; however,
+unless you already have mail in Babyl-format folders, you should
+consider using Gnus, VM, or MH-E instead.

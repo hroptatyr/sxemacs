@@ -1,0 +1,66 @@
+
+@node Undo, Minibuffer, Basic, Top
+@chapter Undoing Changes
+@cindex undo
+@cindex mistakes, correcting
+
+  Emacs allows you to undo all changes you make to the text of a buffer,
+up to a certain amount of change (8000 characters).  Each buffer records
+changes individually, and the undo command always applies to the
+current buffer.  Usually each editing command makes a separate entry
+in the undo records, but some commands such as @code{query-replace}
+make many entries, and very simple commands such as self-inserting
+characters are often grouped to make undoing less tedious.
+
+@table @kbd
+@item C-x u
+Undo one batch of changes (usually, one command's worth) (@code{undo}).
+@item C-_
+The same.
+@end table
+
+@kindex C-x u
+@kindex C-_
+@findex undo
+  The command @kbd{C-x u} or @kbd{C-_} allows you to undo changes.  The
+first time you give this command, it undoes the last change.  Point
+moves to the text affected by the undo, so you can see what was undone.
+
+  Consecutive repetitions of the @kbd{C-_} or @kbd{C-x u} commands undo
+earlier and earlier changes, back to the limit of what has been
+recorded.  If all recorded changes have already been undone, the undo
+command prints an error message and does nothing.
+
+  Any command other than an undo command breaks the sequence of undo
+commands.  Starting at this moment, the previous undo commands are
+considered ordinary changes that can themselves be undone.  Thus, you can
+redo changes you have undone by typing @kbd{C-f} or any other command
+that have no important effect, and then using more undo commands.
+
+  If you notice that a buffer has been modified accidentally, the
+easiest way to recover is to type @kbd{C-_} repeatedly until the stars
+disappear from the front of the mode line.  When that happens, all the
+modifications you made have been canceled.  If you do not remember
+whether you changed the buffer deliberately, type @kbd{C-_} once. When
+you see Emacs undo the last change you made, you probably remember why you
+made it.  If the change was an accident, leave it undone.  If it was
+deliberate, redo the change as described in the preceding paragraph.
+
+  Whenever an undo command makes the stars disappear from the mode line,
+the buffer contents is the same as it was when the file was last read in
+or saved.
+
+  Not all buffers record undo information.  Buffers whose names start with
+spaces don't; these buffers are used internally by Emacs and its extensions
+to hold text that users don't normally look at or edit.  Minibuffers,
+help buffers, and documentation buffers also don't record undo information.
+
+  Emacs can remember at most 8000 or so characters of deleted or
+modified text in any one buffer for reinsertion by the undo command.
+There is also a limit on the number of individual insert, delete, or
+change actions that Emacs can remember.
+
+  There are two keys to run the @code{undo} command, @kbd{C-x u} and
+@kbd{C-_}, because on some keyboards, it is not obvious how to type
+@kbd{C-_}. @kbd{C-x u} is an alternative you can type in the same
+fashion on any terminal.
