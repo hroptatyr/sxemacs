@@ -1,0 +1,382 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993 Free Software Foundation, Inc.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/x-windows.texinfo
+@node X-Windows, ToolTalk Support, System Interface, Top
+@chapter Functions Specific to the X Window System
+@cindex X
+@cindex X-Windows
+
+@c This section is largely different from the one in FSF Emacs.
+
+XEmacs provides the concept of @dfn{devices}, which generalizes
+connections to an X server, a TTY device, etc.  Most information about
+an X server that XEmacs is connected to can be determined through
+general console and device functions.  @xref{Consoles and Devices}.
+However, there are some features of the X Window System that do not
+generalize well, and they are covered specially here.
+
+@menu
+* X Selections::                Transferring text to and from other X clients.
+* X Server::                    Information about the X server connected to
+                                  a particular device.
+* X Miscellaneous::             Other X-specific functions and variables.
+@end menu
+
+@node X Selections
+@section X Selections
+@cindex selection (for X windows)
+
+The X server records a set of @dfn{selections} which permit transfer of
+data between application programs.  The various selections are
+distinguished by @dfn{selection types}, represented in XEmacs by
+symbols.  X clients including XEmacs can read or set the selection for
+any given type.
+
+@defun x-own-selection data &optional type
+This function sets a ``selection'' in the X server.  It takes two
+arguments: a value, @var{data}, and the selection type @var{type} to
+assign it to.  @var{data} may be a string, a cons of two markers, or an
+extent.  In the latter cases, the selection is considered to be the text
+between the markers, or between the extent's endpoints.
+
+Each possible @var{type} has its own selection value, which changes
+independently.  The usual values of @var{type} are @code{PRIMARY} and
+@code{SECONDARY}; these are symbols with upper-case names, in accord
+with X Windows conventions.  The default is @code{PRIMARY}.
+
+(In FSF Emacs, this function is called @code{x-set-selection} and
+takes different arguments.)
+@end defun
+
+@defun x-get-selection
+This function accesses selections set up by XEmacs or by other X
+clients.  It returns the value of the current primary selection.
+@end defun
+
+@defun x-disown-selection &optional secondary-p
+Assuming we own the selection, this function disowns it.  If
+@var{secondary-p} is non-@code{nil}, the secondary selection instead of
+the primary selection is discarded.
+@end defun
+
+@cindex cut buffer
+The X server also has a set of numbered @dfn{cut buffers} which can
+store text or other data being moved between applications.  Cut buffers
+are considered obsolete, but XEmacs supports them for the sake of X
+clients that still use them.
+
+@defun x-get-cutbuffer &optional n
+This function returns the contents of cut buffer number @var{n}. (This
+function is called @code{x-get-cut-buffer} in FSF Emacs.)
+@end defun
+
+@defun x-store-cutbuffer string &optional push
+This function stores @var{string} into the first cut buffer (cut buffer
+0).
+
+Normally, the contents of the first cut buffer are simply replaced by
+@var{string}.  However, if optional argument @var{push} is
+non-@code{nil}, the cut buffers are rotated.  This means that the
+previous value of the first cut buffer moves to the second cut buffer,
+and the second to the third, and so on, moving the other values down
+through the series of cut buffers, kill-ring-style.  There are 8 cut
+buffers altogether.
+
+Cut buffers are considered obsolete; you should use selections instead.
+
+This function has no effect if support for cut buffers was not compiled in.
+
+This function is called @code{x-set-cut-buffer} in FSF Emacs.
+@end defun
+
+@node X Server
+@section X Server
+
+This section describes how to access and change the overall status of
+the X server XEmacs is using.
+
+@menu
+* Resources::                   Getting resource values from the server.
+* Server Data::                 Getting info about the X server.
+* Grabs::                       Restricting access to the server by other apps.
+@end menu
+
+@node Resources
+@subsection Resources
+
+@defun default-x-device
+This function return the default X device for resourcing.  This is the
+first-created X device that still exists.
+@end defun
+
+@defun x-get-resource name class type &optional locale device noerror
+This function retrieves a resource value from the X resource manager.
+
+@itemize @bullet
+@item
+The first arg is the name of the resource to retrieve, such as
+@samp{"font"}.
+
+@item
+The second arg is the class of the resource to retrieve, like
+@samp{"Font"}.
+
+@item
+The third arg should be one of the symbols @code{string},
+@code{integer}, @code{natnum}, or @code{boolean}, specifying the type of
+object that the database is searched for.
+
+@item
+The fourth arg is the locale to search for the resources on, and can
+currently be a buffer, a frame, a device, or the symbol @code{global}.
+If omitted, it defaults to @code{global}.
+
+@item
+The fifth arg is the device to search for the resources on. (The
+resource database for a particular device is constructed by combining
+non-device- specific resources such any command-line resources specified
+and any app-defaults files found [or the fallback resources supplied by
+XEmacs, if no app-defaults file is found] with device-specific resources
+such as those supplied using @samp{xrdb}.) If omitted, it defaults to
+the device of @var{locale}, if a device can be derived (i.e. if
+@var{locale} is a frame or device), and otherwise defaults to the value
+of @code{default-x-device}.
+
+@item
+The sixth arg @var{noerror}, if non-@code{nil}, means do not signal an
+error if a bogus resource specification was retrieved (e.g. if a
+non-integer was given when an integer was requested).  In this case, a
+warning is issued instead.
+@end itemize
+
+The resource names passed to this function are looked up relative to the
+locale.
+
+If you want to search for a subresource, you just need to specify the
+resource levels in @var{name} and @var{class}.  For example, @var{name}
+could be @samp{"modeline.attributeFont"}, and @var{class}
+@samp{"Face.AttributeFont"}.
+
+Specifically,
+
+@enumerate
+@item
+If @var{locale} is a buffer, a call
+
+@example
+    @code{(x-get-resource "foreground" "Foreground" 'string @var{some-buffer})}
+@end example
+
+is an interface to a C call something like
+
+@example
+    @code{XrmGetResource (db, "xemacs.buffer.@var{buffer-name}.foreground",
+                        "Emacs.EmacsLocaleType.EmacsBuffer.Foreground",
+                        "String");}
+@end example
+
+@item
+If @var{locale} is a frame, a call
+
+@example
+    @code{(x-get-resource "foreground" "Foreground" 'string @var{some-frame})}
+@end example
+
+is an interface to a C call something like
+@example
+
+    @code{XrmGetResource (db, "xemacs.frame.@var{frame-name}.foreground",
+                        "Emacs.EmacsLocaleType.EmacsFrame.Foreground",
+                        "String");}
+@end example
+
+@item
+If @var{locale} is a device, a call
+
+@example
+    @code{(x-get-resource "foreground" "Foreground" 'string @var{some-device})}
+@end example
+
+is an interface to a C call something like
+
+@example
+    @code{XrmGetResource (db, "xemacs.device.@var{device-name}.foreground",
+                        "Emacs.EmacsLocaleType.EmacsDevice.Foreground",
+                        "String");}
+@end example
+
+@item
+If @var{locale} is the symbol @code{global}, a call
+
+@example
+    @code{(x-get-resource "foreground" "Foreground" 'string 'global)}
+@end example
+
+is an interface to a C call something like
+
+@example
+    @code{XrmGetResource (db, "xemacs.foreground",
+                        "Emacs.Foreground",
+                        "String");}
+@end example
+@end enumerate
+
+Note that for @code{global}, no prefix is added other than that of the
+application itself; thus, you can use this locale to retrieve arbitrary
+application resources, if you really want to.
+
+The returned value of this function is @code{nil} if the queried
+resource is not found.  If @var{type} is @code{string}, a string is
+returned, and if it is @code{integer}, an integer is returned.  If
+@var{type} is @code{boolean}, then the returned value is the list
+@code{(t)} for true, @code{(nil)} for false, and is @code{nil} to mean
+``unspecified''.
+@end defun
+
+@defun x-put-resource resource-line &optional device
+This function adds a resource to the resource database for @var{device}.
+@var{resource-line} specifies the resource to add and should be a
+standard resource specification.
+@end defun
+
+@defvar x-emacs-application-class
+This variable holds The X application class of the XEmacs process.  This
+controls, among other things, the name of the ``app-defaults'' file that
+XEmacs will use.  For changes to this variable to take effect, they must
+be made before the connection to the X server is initialized, that is,
+this variable may only be changed before XEmacs is dumped, or by setting
+it in the file @file{lisp/term/x-win.el}.
+
+By default, this variable is @code{nil} at startup.  When the connection
+to the X server is first initialized, the X resource database will
+be consulted and the value will be set according to whether any
+resources are found for the application class ``XEmacs''.
+@end defvar
+
+@node Server Data
+@subsection Data about the X Server
+
+  This section describes functions and a variable that you can use to
+get information about the capabilities and origin of the X server
+corresponding to a particular device.  The device argument is generally
+optional and defaults to the selected device.
+
+@defun x-server-version &optional device
+This function returns the list of version numbers of the X server
+@var{device} is on.  The returned value is a list of three integers: the
+major and minor version numbers of the X protocol in use, and the
+vendor-specific release number.
+@end defun
+
+@defun x-server-vendor &optional device
+This function returns the vendor supporting the X server @var{device} is
+on.
+@end defun
+
+@defun x-display-visual-class &optional device
+This function returns the visual class of the display @var{device} is
+on.  The value is one of the symbols @code{static-gray},
+@code{gray-scale}, @code{static-color}, @code{pseudo-color},
+@code{true-color}, and @code{direct-color}. (Note that this is different
+from previous versions of XEmacs, which returned @code{StaticGray},
+@code{GrayScale}, etc.)
+@end defun
+
+@node Grabs
+@subsection Restricting Access to the Server by Other Apps
+
+@defun x-grab-keyboard &optional device
+This function grabs the keyboard on the given device (defaulting to the
+selected one).  So long as the keyboard is grabbed, all keyboard events
+will be delivered to XEmacs---it is not possible for other X clients to
+eavesdrop on them.  Ungrab the keyboard with @code{x-ungrab-keyboard}
+(use an @code{unwind-protect}).  Returns @code{t} if the grab was
+successful; @code{nil} otherwise.
+@end defun
+
+@defun x-ungrab-keyboard &optional device
+This function releases a keyboard grab made with @code{x-grab-keyboard}.
+@end defun
+
+@defun x-grab-pointer &optional device cursor ignore-keyboard
+This function grabs the pointer and restricts it to its current window.
+If optional @var{device} argument is @code{nil}, the selected device
+will be used.  If optional @var{cursor} argument is non-@code{nil},
+change the pointer shape to that until @code{x-ungrab-pointer} is called
+(it should be an object returned by the @code{make-cursor} function).
+If the second optional argument @var{ignore-keyboard} is non-@code{nil},
+ignore all keyboard events during the grab.  Returns @code{t} if the
+grab is successful, @code{nil} otherwise.
+@end defun
+
+@defun x-ungrab-pointer &optional device
+This function releases a pointer grab made with @code{x-grab-pointer}.
+If optional first arg @var{device} is @code{nil} the selected device is
+used.  If it is @code{t} the pointer will be released on all X devices.
+@end defun
+
+@node X Miscellaneous
+@section Miscellaneous X Functions and Variables
+
+@defvar x-bitmap-file-path
+This variable holds a list of the directories in which X bitmap files
+may be found.  If @code{nil}, this is initialized from the
+@samp{"*bitmapFilePath"} resource.  This is used by the
+@code{make-image-instance} function (however, note that if the
+environment variable @samp{XBMLANGPATH} is set, it is consulted first).
+@end defvar
+
+@defvar x-library-search-path
+This variable holds the search path used by @code{read-color} to find
+@file{rgb.txt}.
+@end defvar
+
+@defun x-valid-keysym-name-p keysym
+This function returns true if @var{keysym} names a keysym that the X
+library knows about.  Valid keysyms are listed in the files
+@file{/usr/include/X11/keysymdef.h} and in
+@file{/usr/lib/X11/XKeysymDB}, or whatever the equivalents are on your
+system.
+@end defun
+
+@defun x-window-id &optional frame
+This function returns the ID of the X11 window.  This gives us a chance
+to manipulate the Emacs window from within a different program.  Since
+the ID is an unsigned long, we return it as a string.
+@end defun
+
+@defvar x-allow-sendevents
+If non-@code{nil}, synthetic events are allowed.  @code{nil} means
+they are ignored.  Beware: allowing XEmacs to process SendEvents opens a
+big security hole.
+@end defvar
+
+@defun x-debug-mode arg &optional device
+With a true arg, make the connection to the X server synchronous.  With
+false, make it asynchronous.  Synchronous connections are much slower,
+but are useful for debugging. (If you get X errors, make the connection
+synchronous, and use a debugger to set a breakpoint on
+@code{x_error_handler}.  Your backtrace of the C stack will now be
+useful.  In asynchronous mode, the stack above @code{x_error_handler}
+isn't helpful because of buffering.)  If @var{device} is not specified,
+the selected device is assumed.
+
+Calling this function is the same as calling the C function
+@code{XSynchronize}, or starting the program with the @samp{-sync}
+command line argument.
+@end defun
+
+@defvar x-debug-events
+If non-zero, debug information about events that XEmacs sees is
+displayed.  Information is displayed on stderr.  Currently defined
+values are:
+
+@itemize @bullet
+@item
+1 == non-verbose output
+@item
+2 == verbose output
+@end itemize
+@end defvar

@@ -1,0 +1,1051 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+@c Copyright (C) 1995, 1996 Ben Wing.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/frames.info
+@node Frames, Consoles and Devices, Windows, Top
+@chapter Frames
+@cindex frame
+
+  A @var{frame} is a rectangle on the screen that contains one or more
+XEmacs windows (@pxref{Windows}).  A frame initially contains a single
+main window (plus perhaps an echo area), which you can subdivide
+vertically or horizontally into smaller windows.  Each window is
+associated with a modeline (@pxref{Modeline Format}), and optionally two
+scrollbars (@pxref{Scrollbars}).  By default the vertical scrollbar is
+on, the horizontal scrollbar is off.
+
+  The frame may also contain menubars (@pxref{Menubar}), toolbars
+(@pxref{Toolbar Intro}), and gutters (@pxref{Gutter Intro}).  By default
+there is one of each at the top of the frame, with menubar topmost,
+toolbar next, and gutter lowest, immediately above the windows.
+(Warning: the gutter is a new, experimental, and unstable feature of
+XEmacs version 21.2.)
+
+@cindex terminal frame
+@cindex X window frame
+  When XEmacs runs on a text-only terminal, it starts with one
+@dfn{TTY frame}.  If you create additional ones, XEmacs displays
+one and only one at any given time---on the terminal screen, of course.
+
+  When XEmacs communicates directly with an X server, it does not have a
+TTY frame; instead, it starts with a single @dfn{X window frame}.
+It can display multiple X window frames at the same time, each in its
+own X window.
+
+@defun framep object
+This predicate returns @code{t} if @var{object} is a frame, and
+@code{nil} otherwise.
+@end defun
+
+@menu
+* Creating Frames::		Creating additional frames.
+* Frame Properties::		Controlling frame size, position, font, etc.
+* Frame Titles::                Automatic updating of frame titles.
+* Deleting Frames::		Frames last until explicitly deleted.
+* Finding All Frames::		How to examine all existing frames.
+* Frames and Windows::		A frame contains windows;
+				  display of text always works through windows.
+* Minibuffers and Frames::	How a frame finds the minibuffer to use.
+* Input Focus::			Specifying the selected frame.
+* Visibility of Frames::	Frames may be visible or invisible, or icons.
+* Raising and Lowering::	Raising a frame makes it hide other X windows;
+				  lowering it makes the others hide them.
+* Frame Configurations::	Saving the state of all frames.
+* Frame Hooks::                 Hooks for customizing frame behavior.
+@end menu
+
+  @xref{Display}, for related information.
+
+@node Creating Frames
+@section Creating Frames
+
+To create a new frame, call the function @code{make-frame}.
+
+@deffn Command make-frame &optional props device
+This function creates a new frame on @var{device}, if @var{device}
+permits creation of frames.  (An X server does; an ordinary terminal
+does not (yet).)  @var{device} defaults to the selected device if omitted.
+@xref{Consoles and Devices}.
+
+The argument @var{props} is a property list (a list of alternating
+keyword-value specifications) of properties for the new frame. (An alist
+is accepted for backward compatibility but should not be passed in.) Any
+properties not mentioned in @var{props} default according to the value
+of the variable @code{default-frame-plist}.  For X devices, properties
+not specified in @code{default-frame-plist} default in turn from
+@code{default-x-frame-plist} and, if not specified there, from the X
+resources.  For TTY devices, @code{default-tty-frame-plist} is consulted
+as well as @code{default-frame-plist}.
+
+The set of possible properties depends in principle on what kind of
+window system XEmacs uses to display its frames.  @xref{X Frame
+Properties}, for documentation of individual properties you can specify
+when creating an X window frame.
+@end deffn
+
+@node Frame Properties
+@section Frame Properties
+
+A frame has many properties that control its appearance and behavior.
+Just what properties a frame has depends on which display mechanism it
+uses.
+
+Frame properties exist for the sake of window systems.  A terminal frame
+has few properties, mostly for compatibility's sake; only the height,
+width and @code{buffer-predicate} properties really do something.
+
+@menu
+* Property Access::	How to change a frame's properties.
+* Initial Properties::	Specifying frame properties when you make a frame.
+* X Frame Properties::	List of frame properties.
+* Size and Position::	Changing the size and position of a frame.
+* Frame Name::		The name of a frame (as opposed to its title).
+@end menu
+
+@node Property Access
+@subsection Access to Frame Properties
+
+These functions let you read and change the properties of a frame.
+
+@defun frame-properties &optional frame
+This function returns a plist listing all the properties of @var{frame}
+and their values.
+@end defun
+
+@defun frame-property frame property &optional default
+This function returns @var{frame}'s value for the property
+@var{property}, or @var{default} if there is no such property.
+@end defun
+
+@defun set-frame-properties frame plist
+This function alters the properties of frame @var{frame} based on the
+elements of property list @var{plist}.  If you don't mention a property
+in @var{plist}, its value doesn't change.
+@end defun
+
+@defun set-frame-property frame property value
+This function sets the property @var{property} of frame @var{frame} to the
+value @var{value}.
+@end defun
+
+@node Initial Properties
+@subsection Initial Frame Properties
+
+You can specify the properties for the initial startup frame by setting
+@code{initial-frame-plist} in your @file{.emacs} file.
+
+@defvar initial-frame-plist
+This variable's value is a plist of alternating property-value pairs
+used when creating the initial X window frame.
+
+XEmacs creates the initial frame before it reads your @file{~/.emacs}
+file.  After reading that file, XEmacs checks @code{initial-frame-plist},
+and applies the property settings in the altered value to the already
+created initial frame.
+
+If these settings affect the frame geometry and appearance, you'll see
+the frame appear with the wrong ones and then change to the specified
+ones.  If that bothers you, you can specify the same geometry and
+appearance with X resources; those do take affect before the frame is
+created.  @xref{Resources X,, X Resources, xemacs, The XEmacs User's Manual}.
+
+X resource settings typically apply to all frames.  If you want to
+specify some X resources solely for the sake of the initial frame, and
+you don't want them to apply to subsequent frames, here's how to achieve
+this: specify properties in @code{default-frame-plist} to override the X
+resources for subsequent frames; then, to prevent these from affecting
+the initial frame, specify the same properties in
+@code{initial-frame-plist} with values that match the X resources.
+@end defvar
+
+If these properties specify a separate minibuffer-only frame via a
+@code{minibuffer} property of @code{nil}, and you have not yet created
+one, XEmacs creates one for you.
+
+@defvar minibuffer-frame-plist
+This variable's value is a plist of properties used when creating an
+initial minibuffer-only frame---if such a frame is needed, according to
+the properties for the main initial frame.
+@end defvar
+
+@defvar default-frame-plist
+This is a plist specifying default values of frame properties for
+subsequent XEmacs frames (not the initial ones).
+@end defvar
+
+See also @code{special-display-frame-plist}, in @ref{Choosing Window}.
+
+If you use options that specify window appearance when you invoke XEmacs,
+they take effect by adding elements to @code{default-frame-plist}.  One
+exception is @samp{-geometry}, which adds the specified position to
+@code{initial-frame-plist} instead.  @xref{Command Arguments,,, xemacs,
+The XEmacs User's Manual}.
+
+@node X Frame Properties
+@subsection X Window Frame Properties
+
+Just what properties a frame has depends on what display mechanism it
+uses.  Here is a table of the properties of an X window frame; of these,
+@code{name}, @code{height}, @code{width}, and @code{buffer-predicate}
+provide meaningful information in non-X frames.
+
+@table @code
+@item name
+The name of the frame.  Most window managers display the frame's name in
+the frame's border, at the top of the frame.  If you don't specify a
+name, and you have more than one frame, XEmacs sets the frame name based
+on the buffer displayed in the frame's selected window.
+
+If you specify the frame name explicitly when you create the frame, the
+name is also used (instead of the name of the XEmacs executable) when
+looking up X resources for the frame.
+
+@item display
+The display on which to open this frame.  It should be a string of the
+form @code{"@var{host}:@var{dpy}.@var{screen}"}, just like the
+@code{DISPLAY} environment variable.
+
+@item left
+The screen position of the left edge, in pixels, with respect to the
+left edge of the screen.  The value may be a positive number @var{pos},
+or a list of the form @code{(+ @var{pos})} which permits specifying a
+negative @var{pos} value.
+
+A negative number @minus{}@var{pos}, or a list of the form @code{(-
+@var{pos})}, actually specifies the position of the right edge of the
+window with respect to the right edge of the screen.  A positive value
+of @var{pos} counts toward the left.  If the property is a negative
+integer @minus{}@var{pos} then @var{pos} is positive!
+
+@item top
+The screen position of the top edge, in pixels, with respect to the
+top edge of the screen.  The value may be a positive number @var{pos},
+or a list of the form @code{(+ @var{pos})} which permits specifying a
+negative @var{pos} value.
+
+A negative number @minus{}@var{pos}, or a list of the form @code{(-
+@var{pos})}, actually specifies the position of the bottom edge of the
+window with respect to the bottom edge of the screen.  A positive value
+of @var{pos} counts toward the top.  If the property is a negative
+integer @minus{}@var{pos} then @var{pos} is positive!
+
+@item icon-left
+The screen position of the left edge @emph{of the frame's icon}, in
+pixels, counting from the left edge of the screen.  This takes effect if
+and when the frame is iconified.
+
+@item icon-top
+The screen position of the top edge @emph{of the frame's icon}, in
+pixels, counting from the top edge of the screen.  This takes effect if
+and when the frame is iconified.
+
+@item user-position
+Non-@code{nil} if the screen position of the frame was explicitly
+requested by the user (for example, with the @samp{-geometry} option).
+Nothing automatically makes this property non-@code{nil}; it is up to
+Lisp programs that call @code{make-frame} to specify this property as
+well as specifying the @code{left} and @code{top} properties.
+
+@item height
+The height of the frame contents, in characters.  (To get the height in
+pixels, call @code{frame-pixel-height}; see @ref{Size and Position}.)
+
+@item width
+The width of the frame contents, in characters.  (To get the height in
+pixels, call @code{frame-pixel-width}; see @ref{Size and Position}.)
+
+@item window-id
+The number of the X window for the frame.
+
+@item minibuffer
+Whether this frame has its own minibuffer.  The value @code{t} means
+yes, @code{nil} means no, @code{only} means this frame is just a
+minibuffer.  If the value is a minibuffer window (in some other frame),
+the new frame uses that minibuffer. (Minibuffer-only and minibuffer-less
+frames are not yet implemented in XEmacs.)
+
+@item buffer-predicate
+The buffer-predicate function for this frame.  The function
+@code{other-buffer} uses this predicate (from the selected frame) to
+decide which buffers it should consider, if the predicate is not
+@code{nil}.  It calls the predicate with one arg, a buffer, once for
+each buffer; if the predicate returns a non-@code{nil} value, it
+considers that buffer.
+
+@item scroll-bar-width
+The width of the vertical scroll bar, in pixels.
+
+@ignore Not in XEmacs
+@item icon-type
+The type of icon to use for this frame when it is iconified.  If the
+value is a string, that specifies a file containing a bitmap to use.
+Any other non-@code{nil} value specifies the default bitmap icon (a
+picture of a gnu); @code{nil} specifies a text icon.
+
+@item icon-name
+The name to use in the icon for this frame, when and if the icon
+appears.  If this is @code{nil}, the frame's title is used.
+@end ignore
+
+@item cursor-color
+The color for the cursor that shows point.
+
+@item border-color
+The color for the border of the frame.
+
+@ignore Not in XEmacs
+@item cursor-type
+The way to display the cursor.  The legitimate values are @code{bar},
+@code{box}, and @code{(bar . @var{width})}.  The symbol @code{box}
+specifies an ordinary black box overlaying the character after point;
+that is the default.  The symbol @code{bar} specifies a vertical bar
+between characters as the cursor.  @code{(bar . @var{width})} specifies
+a bar @var{width} pixels wide.
+@end ignore
+
+@item border-width
+The width in pixels of the window border.
+
+@item internal-border-width
+The distance in pixels between text and border.
+
+@item unsplittable
+If non-@code{nil}, this frame's window is never split automatically.
+
+@item inter-line-space
+The space in pixels between adjacent lines of text. (Not currently
+implemented.)
+
+@item modeline
+Whether the frame has a modeline.
+@end table
+
+@node Size and Position
+@subsection Frame Size And Position
+@cindex size of frame
+@cindex frame size
+@cindex display lines
+@cindex display columns
+@cindex resize redisplay
+@cindex frame position
+@cindex position of frame
+
+  You can read or change the size and position of a frame using the
+frame properties @code{left}, @code{top}, @code{height}, and
+@code{width}.  Whatever geometry properties you don't specify are chosen
+by the window manager in its usual fashion.
+
+  Here are some special features for working with sizes and positions:
+
+@defun set-frame-position frame left top
+This function sets the position of the top left corner of @var{frame} to
+@var{left} and @var{top}.  These arguments are measured in pixels, and
+count from the top left corner of the screen.  Negative property values
+count up or rightward from the top left corner of the screen.
+@end defun
+
+@defun frame-height &optional frame
+@defunx frame-width &optional frame
+These functions return the height and width of @var{frame}, measured in
+lines and columns.  If you don't supply @var{frame}, they use the selected
+frame.
+@end defun
+
+@defun frame-pixel-height &optional frame
+@defunx frame-pixel-width &optional frame
+These functions return the height and width of @var{frame}, measured in
+pixels.  If you don't supply @var{frame}, they use the selected frame.
+@end defun
+
+@defun set-frame-size frame cols rows &optional pretend
+This function sets the size of @var{frame}, measured in characters;
+@var{cols} and @var{rows} specify the new width and height.  (If
+@var{pretend} is non-@code{nil}, it means that redisplay should act as if
+the frame's size is @var{cols} by @var{rows}, but the actual size
+of the frame should not be changed.  You should not normally use
+this option.)
+@end defun
+
+  You can also use the functions @code{set-frame-height} and
+@code{set-frame-width} to set the height and width individually.
+The frame is the first argument and the size (in rows or columns)
+is the second. (There is an optional third argument, @var{pretend},
+which has the same purpose as the corresponding argument in
+@code{set-frame-size}.)
+
+@ignore  @c Not in XEmacs
+@defun x-parse-geometry geom
+@cindex geometry specification
+The function @code{x-parse-geometry} converts a standard X windows
+geometry string to a plist that you can use as part of the argument to
+@code{make-frame}.
+
+The plist describes which properties were specified in @var{geom}, and
+gives the values specified for them.  Each element looks like
+@code{(@var{property} . @var{value})}.  The possible @var{property}
+values are @code{left}, @code{top}, @code{width}, and @code{height}.
+
+For the size properties, the value must be an integer.  The position
+property names @code{left} and @code{top} are not totally accurate,
+because some values indicate the position of the right or bottom edges
+instead.  These are the @var{value} possibilities for the position
+properties:
+
+@table @asis
+@item an integer
+A positive integer relates the left edge or top edge of the window to
+the left or top edge of the screen.  A negative integer relates the
+right or bottom edge of the window to the right or bottom edge of the
+screen.
+
+@item @code{(+ @var{position})}
+This specifies the position of the left or top edge of the window
+relative to the left or top edge of the screen.  The integer
+@var{position} may be positive or negative; a negative value specifies a
+position outside the screen.
+
+@item @code{(- @var{position})}
+This specifies the position of the right or bottom edge of the window
+relative to the right or bottom edge of the screen.  The integer
+@var{position} may be positive or negative; a negative value specifies a
+position outside the screen.
+@end table
+
+Here is an example:
+
+@example
+(x-parse-geometry "35x70+0-0")
+     @result{} ((width . 35) (height . 70)
+         (left . 0) (top - 0))
+@end example
+@end defun
+@end ignore
+
+@node Frame Name
+@subsection The Name of a Frame (As Opposed to Its Title)
+@cindex frame name
+
+Under X, every frame has a name, which is not the same as the title of
+the frame.  A frame's name is used to look up its resources and does
+not normally change over the lifetime of a frame.  It is perfectly
+allowable, and quite common, for multiple frames to have the same
+name.
+
+@defun frame-name &optional frame
+This function returns the name of @var{frame}, which defaults to the
+selected frame if not specified.  The name of a frame can also be
+obtained from the frame's properties.  @xref{Frame Properties}.
+@end defun
+
+@defvar default-frame-name
+This variable holds the default name to assign to newly-created frames.
+This can be overridden by arguments to @code{make-frame}.  This
+must be a string.
+@end defvar
+
+@node Frame Titles
+@section Frame Titles
+
+Every frame has a title; most window managers display the frame title at
+the top of the frame.  You can specify an explicit title with the
+@code{name} frame property.  But normally you don't specify this
+explicitly, and XEmacs computes the title automatically.
+
+XEmacs computes the frame title based on a template stored in the
+variable @code{frame-title-format}.
+
+@defvar frame-title-format
+This variable specifies how to compute a title for a frame
+when you have not explicitly specified one.
+
+The variable's value is actually a modeline construct, just like
+@code{modeline-format}.  @xref{Modeline Data}.
+@end defvar
+
+@defvar frame-icon-title-format
+This variable specifies how to compute the title for an iconified frame,
+when you have not explicitly specified the frame title.  This title
+appears in the icon itself.
+@end defvar
+
+@defun x-set-frame-icon-pixmap frame pixmap &optional mask
+This function sets the icon of the given frame to the given image
+instance, which should be an image instance object (as returned by
+@code{make-image-instance}), a glyph object (as returned by
+@code{make-glyph}), or @code{nil}.  If a glyph object is given, the
+glyph will be instantiated on the frame to produce an image instance
+object.
+
+If the given image instance has a mask, that will be used as the icon mask;
+however, not all window managers support this.
+
+The window manager is also not required to support color pixmaps,
+only bitmaps (one plane deep).
+
+If the image instance does not have a mask, then the optional
+third argument may be the image instance to use as the mask (it must be
+one plane deep).
+@xref{Glyphs}.
+@end defun
+
+@node Deleting Frames
+@section Deleting Frames
+@cindex deletion of frames
+
+Frames remain potentially visible until you explicitly @dfn{delete}
+them.  A deleted frame cannot appear on the screen, but continues to
+exist as a Lisp object until there are no references to it.
+
+@deffn Command delete-frame &optional frame force
+This function deletes the frame @var{frame}.  By default, @var{frame} is
+the selected frame.
+
+A frame may not be deleted if its minibuffer is used by other frames.
+Normally, you cannot delete the last non-minibuffer-only frame (you must
+use @code{save-buffers-kill-emacs} or @code{kill-emacs}).  However, if
+optional second argument @var{force} is non-@code{nil}, you can delete
+the last frame. (This will automatically call
+@code{save-buffers-kill-emacs}.)
+@end deffn
+
+@defun frame-live-p frame
+The function @code{frame-live-p} returns non-@code{nil} if the frame
+@var{frame} has not been deleted.
+@end defun
+
+@ignore Not in XEmacs currently
+  Some window managers provide a command to delete a window.  These work
+by sending a special message to the program that operates the window.
+When XEmacs gets one of these commands, it generates a
+@code{delete-frame} event, whose normal definition is a command that
+calls the function @code{delete-frame}.  @xref{Misc Events}.
+@end ignore
+
+@node Finding All Frames
+@section Finding All Frames
+
+@defun frame-list
+The function @code{frame-list} returns a list of all the frames that
+have not been deleted.  It is analogous to @code{buffer-list} for
+buffers.  The list that you get is newly created, so modifying the list
+doesn't have any effect on the internals of XEmacs.
+@end defun
+
+@defun device-frame-list &optional device
+This function returns a list of all frames on @var{device}.  If
+@var{device} is @code{nil}, the selected device will be used.
+@end defun
+
+@defun visible-frame-list &optional device
+This function returns a list of just the currently visible frames.
+If @var{device} is specified only frames on that device will be returned.
+@xref{Visibility of Frames}.  (TTY frames always count as
+``visible'', even though only the selected one is actually displayed.)
+@end defun
+
+@defun next-frame &optional frame which-frames which-devices
+The function @code{next-frame} lets you cycle conveniently through all
+the frames from an arbitrary starting point.  It returns the ``next''
+frame after @var{frame} in the cycle.  If @var{frame} defaults to the
+selected frame.
+
+The second argument, @var{which-frames}, says which frames to consider:
+
+@table @asis
+@item @code{visible}
+Consider only frames that are visible.
+
+@item @code{iconic}
+Consider only frames that are iconic.
+
+@item @code{invisible}
+Consider only frames that are invisible (this is different from iconic).
+
+@item @code{visible-iconic}
+Consider frames that are visible or iconic.
+
+@item @code{invisible-iconic}
+Consider frames that are invisible or iconic.
+
+@item @code{nomini}
+Consider all frames except minibuffer-only ones.
+
+@item @code{visible-nomini}
+Like @code{visible} but omits minibuffer-only frames.
+
+@item @code{iconic-nomini}
+Like @code{iconic} but omits minibuffer-only frames.
+
+@item @code{invisible-nomini}
+Like @code{invisible} but omits minibuffer-only frames.
+
+@item @code{visible-iconic-nomini}
+Like @code{visible-iconic} but omits minibuffer-only frames.
+
+@item @code{invisible-iconic-nomini}
+Like @code{invisible-iconic} but omits minibuffer-only frames.
+
+@item @code{nil}
+Identical to @code{nomini}.
+
+@item @var{window}
+Consider only the window @var{window}'s frame and any frame now using
+@var{window} as the minibuffer.
+
+@item any other value
+Consider all frames.
+@end table
+
+The optional argument @var{which-devices} further clarifies on which
+devices to search for frames as specified by @var{which-frames}.
+
+@table @asis
+@item @code{nil}
+Consider all devices on the selected console.
+
+@item @var{device}
+Consider only the one device @var{device}.
+
+@item @var{console}
+Consider all devices on @var{console}.
+
+@item @var{device-type}
+Consider all devices with device type @var{device-type}.
+
+@item @code{window-system}
+Consider all devices on window system consoles.
+
+@item anything else
+Consider all devices without restriction.
+@end table
+@end defun
+
+@defun previous-frame &optional frame which-frames which-devices
+Like @code{next-frame}, but cycles through all frames in the opposite
+direction.
+@end defun
+
+  See also @code{next-window} and @code{previous-window}, in @ref{Cyclic
+Window Ordering}.
+
+@node Frames and Windows
+@section Frames and Windows
+
+  Each window is part of one and only one frame; you can get the frame
+with @code{window-frame}.
+
+@defun frame-root-window &optional frame
+This returns the root window of frame @var{frame}.  @var{frame}
+defaults to the selected frame if not specified.
+@end defun
+
+@defun window-frame &optional window
+This function returns the frame that @var{window} is on.  @var{window}
+defaults to the selected window if omitted.
+@end defun
+
+  All the non-minibuffer windows in a frame are arranged in a cyclic
+order.  The order runs from the frame's top window, which is at the
+upper left corner, down and to the right, until it reaches the window at
+the lower right corner (always the minibuffer window, if the frame has
+one), and then it moves back to the top.
+
+@defun frame-highest-window &optional frame position
+This function returns the topmost, leftmost window of frame @var{frame}
+at position @var{position}.
+
+If omitted, @var{frame} defaults to the currently selected frame.
+
+@var{position} is used to distinguish between multiple windows that abut
+the top of the frame: 0 means the leftmost window abutting the top of
+the frame, 1 the next-leftmost, etc.  @var{position} can also be less
+than zero: -1 means the rightmost window abutting the top of the frame,
+-2 the next-rightmost, etc.  If omitted, @var{position} defaults to 0,
+i.e. the leftmost highest window.  If there is no window at the given
+@var{position}, @code{nil} is returned.
+@end defun
+
+The following three functions work similarly.
+
+@defun frame-lowest-window &optional frame position
+This function returns the lowest window on @var{frame} which is at
+@var{position}.
+@end defun
+
+@defun frame-leftmost-window &optional frame position
+This function returns the leftmost window on @var{frame} which is at
+@var{position}.
+@end defun
+
+@defun frame-rightmost-window &optional frame position
+This function returns the rightmost window on @var{frame} which is at
+@var{position}.
+@end defun
+
+
+At any time, exactly one window on any frame is @dfn{selected within the
+frame}.  The significance of this designation is that selecting the
+frame also selects this window.  You can get the frame's current
+selected window with @code{frame-selected-window}.
+
+@defun frame-selected-window &optional frame
+This function returns the window on @var{frame} that is selected within
+@var{frame}.  @var{frame} defaults to the selected frame if not
+specified.
+@end defun
+
+Conversely, selecting a window for XEmacs with @code{select-window} also
+makes that window selected within its frame.  @xref{Selecting Windows}.
+
+Another function that (usually) returns one of the windows in a frame is
+@code{minibuffer-window}.  @xref{Minibuffer Misc}.
+
+@node Minibuffers and Frames
+@section Minibuffers and Frames
+
+Normally, each frame has its own minibuffer window at the bottom, which
+is used whenever that frame is selected.  If the frame has a minibuffer,
+you can get it with @code{minibuffer-window} (@pxref{Minibuffer Misc}).
+
+However, you can also create a frame with no minibuffer.  Such a frame
+must use the minibuffer window of some other frame.  When you create the
+frame, you can specify explicitly the minibuffer window to use (in some
+other frame).  If you don't, then the minibuffer is found in the frame
+which is the value of the variable @code{default-minibuffer-frame}.  Its
+value should be a frame which does have a minibuffer.
+
+@ignore Not yet in XEmacs
+If you use a minibuffer-only frame, you might want that frame to raise
+when you enter the minibuffer.  If so, set the variable
+@code{minibuffer-auto-raise} to @code{t}.  @xref{Raising and Lowering}.
+@end ignore
+
+@defvar default-minibuffer-frame
+This variable specifies the frame to use for the minibuffer window, by
+default.
+@end defvar
+
+@node Input Focus
+@section Input Focus
+@cindex input focus
+@cindex selected frame
+
+At any time, one frame in XEmacs is the @dfn{selected frame}.  The selected
+window always resides on the selected frame.  As the focus moves from
+device to device, the selected frame on each device is remembered and
+restored when the focus moves back to that device.
+
+@defun selected-frame &optional device
+This function returns the selected frame on @var{device}.  If
+@var{device} is not specified, the selected device will be used.  If no
+frames exist on the device, @code{nil} is returned.
+@end defun
+
+The X server normally directs keyboard input to the X window that the
+mouse is in.  Some window managers use mouse clicks or keyboard events
+to @dfn{shift the focus} to various X windows, overriding the normal
+behavior of the server.
+
+Lisp programs can switch frames ``temporarily'' by calling
+the function @code{select-frame}.  This does not override the window
+manager; rather, it escapes from the window manager's control until
+that control is somehow reasserted.
+
+When using a text-only terminal, there is no window manager; therefore,
+@code{select-frame} is the only way to switch frames, and the effect
+lasts until overridden by a subsequent call to @code{select-frame}.
+Only the selected terminal frame is actually displayed on the terminal.
+Each terminal screen except for the initial one has a number, and the
+number of the selected frame appears in the mode line after the word
+@samp{XEmacs} (@pxref{Modeline Variables}).
+
+@defun select-frame frame
+This function selects frame @var{frame}, temporarily disregarding the
+focus of the X server if any.  The selection of @var{frame} lasts until
+the next time the user does something to select a different frame, or
+until the next time this function is called.
+
+Note that @code{select-frame} does not actually cause the window-system
+focus to be set to this frame, or the @code{select-frame-hook} or
+@code{deselect-frame-hook} to be run, until the next time that XEmacs is
+waiting for an event.
+
+Also note that when the variable @code{focus-follows-mouse} is
+non-@code{nil}, the frame selection is temporary and is reverted when
+the current command terminates, much like the buffer selected by
+@code{set-buffer}.  In order to effect a permanent focus change use
+@code{focus-frame}.
+@end defun
+
+@defun focus-frame frame
+This function selects @var{frame} and gives it the window system focus.
+The operation of @code{focus-frame} is not affected by the value of
+@code{focus-follows-mouse}.
+@end defun
+
+@defspec save-selected-frame forms@dots{}
+This special form records the selected frame, executes @var{forms} in
+sequence, then restores the earlier selected frame.  The value returned
+is the value of the last form.
+@end defspec
+
+@defspec with-selected-frame frame forms@dots{}
+This special form records the selected frame, then selects @var{frame}
+and executes @var{forms} in sequence.  After the last form is finished,
+the earlier selected frame is restored.  The value returned is the value
+of the last form.
+@end defspec
+
+@ignore (FSF Emacs, continued from defun select-frame)
+XEmacs cooperates with the X server and the window managers by arranging
+to select frames according to what the server and window manager ask
+for.  It does so by generating a special kind of input event, called a
+@dfn{focus} event.  The command loop handles a focus event by calling
+@code{handle-select-frame}.  @xref{Focus Events}.
+
+@deffn Command handle-switch-frame frame
+This function handles a focus event by selecting frame @var{frame}.
+
+Focus events normally do their job by invoking this command.
+Don't call it for any other reason.
+@end deffn
+
+@defun redirect-frame-focus frame focus-frame
+This function redirects focus from @var{frame} to @var{focus-frame}.
+This means that @var{focus-frame} will receive subsequent keystrokes
+intended for @var{frame}.  After such an event, the value of
+@code{last-event-frame} will be @var{focus-frame}.  Also, switch-frame
+events specifying @var{frame} will instead select @var{focus-frame}.
+
+If @var{focus-frame} is @code{nil}, that cancels any existing
+redirection for @var{frame}, which therefore once again receives its own
+events.
+
+One use of focus redirection is for frames that don't have minibuffers.
+These frames use minibuffers on other frames.  Activating a minibuffer
+on another frame redirects focus to that frame.  This puts the focus on
+the minibuffer's frame, where it belongs, even though the mouse remains
+in the frame that activated the minibuffer.
+
+Selecting a frame can also change focus redirections.  Selecting frame
+@code{bar}, when @code{foo} had been selected, changes any redirections
+pointing to @code{foo} so that they point to @code{bar} instead.  This
+allows focus redirection to work properly when the user switches from
+one frame to another using @code{select-window}.
+
+This means that a frame whose focus is redirected to itself is treated
+differently from a frame whose focus is not redirected.
+@code{select-frame} affects the former but not the latter.
+
+The redirection lasts until @code{redirect-frame-focus} is called to
+change it.
+@end defun
+@end ignore
+
+@node Visibility of Frames
+@section Visibility of Frames
+@cindex visible frame
+@cindex invisible frame
+@cindex iconified frame
+@cindex frame visibility
+
+An frame on a window system may be @dfn{visible}, @dfn{invisible}, or
+@dfn{iconified}.  If it is visible, you can see its contents.  If it is
+iconified, the frame's contents do not appear on the screen, but an icon
+does.  If the frame is invisible, it doesn't show on the screen, not
+even as an icon.
+
+Visibility is meaningless for TTY frames, since only the selected
+one is actually displayed in any case.
+
+@defun make-frame-visible &optional frame
+This function makes frame @var{frame} visible.  If you omit @var{frame},
+it makes the selected frame visible.
+@end defun
+
+@defun make-frame-invisible &optional frame force
+This function makes frame @var{frame} invisible.
+@end defun
+
+@deffn Command iconify-frame &optional frame
+This function iconifies frame @var{frame}.
+@end deffn
+
+@defun Command deiconify-frame &optional frame
+This function de-iconifies frame @var{frame}.  Under a window system,
+this is equivalent to @code{make-frame-visible}.
+@end defun
+
+@defun frame-visible-p &optional frame
+This returns whether @var{frame} is currently ``visible'' (actually in
+use for display).  A frame that is not visible is not updated, and, if
+it works through a window system, may not show at all.
+@end defun
+
+@defun frame-iconified-p &optional frame
+This returns whether @var{frame} is iconified.  Not all window managers
+use icons; some merely unmap the window, so this function is not the
+inverse of @code{frame-visible-p}.  It is possible for a frame to not
+be visible and not be iconified either.  However, if the frame is
+iconified, it will not be visible.  (Under FSF Emacs, the functionality
+of this function is obtained through @code{frame-visible-p}.)
+@end defun
+
+@defun frame-totally-visible-p &optional frame
+This returns whether @var{frame} is not obscured by any other X
+windows.  On TTY frames, this is the same as @code{frame-visible-p}.
+@end defun
+
+@ignore  @c Not in XEmacs.
+  The visibility status of a frame is also available as a frame
+property.  You can read or change it as such.  @xref{X Frame
+Properties}.
+
+The user can iconify and deiconify frames with the window manager.  This
+happens below the level at which XEmacs can exert any control, but XEmacs
+does provide events that you can use to keep track of such changes.
+@xref{Misc Events}.
+@end ignore
+
+@node Raising and Lowering
+@section Raising and Lowering Frames
+
+The X Window System uses a desktop metaphor.  Part of this metaphor is
+the idea that windows are stacked in a notional third dimension
+perpendicular to the screen surface, and thus ordered from ``highest''
+to ``lowest''.  Where two windows overlap, the one higher up covers the
+one underneath.  Even a window at the bottom of the stack can be seen if
+no other window overlaps it.
+
+@cindex raising a frame
+@cindex lowering a frame
+A window's place in this ordering is not fixed; in fact, users tend to
+change the order frequently.  @dfn{Raising} a window means moving it
+``up'', to the top of the stack.  @dfn{Lowering} a window means moving
+it to the bottom of the stack.  This motion is in the notional third
+dimension only, and does not change the position of the window on the
+screen.
+
+You can raise and lower XEmacs's X windows with these functions:
+
+@deffn Command raise-frame &optional frame
+This function raises frame @var{frame}.
+@end deffn
+
+@deffn Command lower-frame &optional frame
+This function lowers frame @var{frame}.
+@end deffn
+
+You can also specify auto-raise (raising automatically when a frame is
+selected) or auto-lower (lowering automatically when it is deselected).
+Under X, most ICCCM-compliant window managers will have an option to do
+this for you, but the following variables are provided in case you're
+using a broken WM.  (Under FSF Emacs, the same functionality is
+provided through the @code{auto-raise} and @code{auto-lower}
+frame properties.)
+
+@defvar auto-raise-frame
+This variable's value is @code{t} if frames will be raised to the top
+when selected.
+@end defvar
+
+@ignore Not in XEmacs
+@defopt minibuffer-auto-raise
+If this is non-@code{nil}, activation of the minibuffer raises the frame
+that the minibuffer window is in.
+@end defopt
+@end ignore
+
+@defvar auto-lower-frame
+This variable's value is @code{t} if frames will be lowered to the bottom
+when no longer selected.
+@end defvar
+
+Auto-raising and auto-lowering is implemented through functions attached
+to @code{select-frame-hook} and @code{deselect-frame-hook}
+(@pxref{Frame Hooks}).  Under normal circumstances, you should not call
+these functions directly.
+
+@defun default-select-frame-hook
+This hook function implements the @code{auto-raise-frame} variable; it is
+for use as the value of @code{select-frame-hook}.
+@end defun
+
+@defun default-deselect-frame-hook
+This hook function implements the @code{auto-lower-frame} variable; it is
+for use as the value of @code{deselect-frame-hook}.
+@end defun
+
+@node Frame Configurations
+@section Frame Configurations
+@cindex frame configuration
+
+  A @dfn{frame configuration} records the current arrangement of frames,
+all their properties, and the window configuration of each one.
+
+@defun current-frame-configuration
+This function returns a frame configuration list that describes
+the current arrangement of frames and their contents.
+@end defun
+
+@defun set-frame-configuration configuration &optional nodelete
+This function restores the state of frames described by
+@var{configuration}, which should be the return value from a previous
+call to @code{current-frame-configuration}.
+
+Each frame listed in @var{configuration} has its position, size, window
+configuration, and other properties set as specified in
+@var{configuration}.
+
+Ordinarily, this function deletes all existing frames not listed in
+@var{configuration}.  But if optional second argument @var{nodelete} is
+non-@code{nil}, the unwanted frames are iconified instead.
+@end defun
+
+@node Frame Hooks
+@section Hooks for Customizing Frame Behavior
+@cindex frame hooks
+
+XEmacs provides many hooks that are called at various times during a
+frame's lifetime.  @xref{Hooks}.
+
+@defvar create-frame-hook
+This hook is called each time a frame is created.  The functions are called
+with one argument, the newly-created frame.
+@end defvar
+
+@defvar delete-frame-hook
+This hook is called each time a frame is deleted.  The functions are called
+with one argument, the about-to-be-deleted frame.
+@end defvar
+
+@defvar select-frame-hook
+This is a normal hook that is run just after a frame is selected.  The
+function @code{default-select-frame-hook}, which implements auto-raising
+(@pxref{Raising and Lowering}), is normally attached to this hook.
+
+Note that calling @code{select-frame} does not necessarily set the
+focus: The actual window-system focus will not be changed until the next
+time that XEmacs is waiting for an event, and even then, the window
+manager may refuse the focus-change request.
+@end defvar
+
+@defvar deselect-frame-hook
+This is a normal hook that is run just before a frame is deselected
+(and another frame is selected).  The function
+@code{default-deselect-frame-hook}, which implements auto-lowering
+(@pxref{Raising and Lowering}), is normally attached to this hook.
+@end defvar
+
+@defvar map-frame-hook
+This hook is called each time a frame is mapped (i.e. made visible).
+The functions are called with one argument, the newly mapped frame.
+@end defvar
+
+@defvar unmap-frame-hook
+This hook is called each time a frame is unmapped (i.e. made invisible
+or iconified).  The functions are called with one argument, the
+newly unmapped frame.
+@end defvar

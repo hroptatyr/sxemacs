@@ -1,0 +1,7 @@
+precious ^(configure)$
+precious ^(config\.status)$
+precious ^(config\.log)$
+precious ^(Makefile\.in)$
+precious ^(Makefile)$
+precious ^(Installation)$
+precious ^(GNUmakefile)$

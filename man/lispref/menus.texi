@@ -1,0 +1,764 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993, 1997 Free Software Foundation, Inc.
+@c Copyright (C) 1995 Sun Microsystems.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/menu.info
+@node Menus, Dialog Boxes, Keymaps, Top
+@chapter Menus
+@cindex menu
+
+@menu
+* Menu Format::         Format of a menu description.
+* Menubar Format::      How to specify a menubar.
+* Menubar::             Functions for controlling the menubar.
+* Modifying Menus::     Modifying a menu description.
+* Pop-Up Menus::        Functions for specifying pop-up menus.
+* Menu Filters::        Filter functions for the default menubar.
+* Menu Accelerators::   Using and controlling menu accelerator keys
+* Buffers Menu::        The menu that displays the list of buffers.
+@end menu
+
+@node Menu Format
+@section Format of Menus
+@cindex menu format
+@cindex format of menus
+
+A menu is described using a @dfn{menu description}, which is a list of
+menu items, keyword-value pairs, strings, and submenus.  The menu
+description specifies which items are present in the menu, what function
+each item invokes, and whether the item is selectable or not.  Pop-up
+menus are directly described with a menu description, while menubars are
+described slightly differently (see below).
+
+The first element of a menu must be a string, which is the name of the
+menu.  This is the string that will be displayed in the parent menu or
+menubar, if any.  This string is not displayed in the menu itself,
+except in the case of the top level pop-up menu, where there is no
+parent.  In this case, the string will be displayed at the top of the
+menu if @code{popup-menu-titles} is non-@code{nil}.
+
+Immediately following the first element there may optionally be up
+to four keyword-value pairs, as follows:
+
+@table @code
+@item :included @var{form}
+This can be used to control the visibility of a menu.  The form is
+evaluated and the menu will be omitted if the result is @code{nil}.
+
+@item :config @var{symbol}
+This is an efficient shorthand for @code{:included (memq @var{symbol}
+menubar-configuration)}.  See the variable @code{menubar-configuration}.
+
+@item :filter @var{function}
+A menu filter is used to sensitize or incrementally create a submenu
+only when it is selected by the user and not every time the menubar is
+activated.  The filter function is passed the list of menu items in the
+submenu and must return a list of menu items to be used for the menu.
+It is called only when the menu is about to be displayed, so other menus
+may already be displayed.  Vile and terrible things will happen if a
+menu filter function changes the current buffer, window, or frame.  It
+also should not raise, lower, or iconify any frames.  Basically, the
+filter function should have no side-effects.
+
+@item :accelerator @var{key}
+A menu accelerator is a keystroke which can be pressed while the menu is
+visible which will immediately activate the item.  @var{key} must be a char
+or the symbol name of a key.  @xref{Menu Accelerators}.
+@end table
+
+The rest of the menu consists of elements as follows:
+
+@itemize @bullet
+@item
+A @dfn{menu item}, which is a vector in the following form:
+
+@example
+@code{[ @var{name} @var{callback} @var{:keyword} @var{value} @var{:keyword} @var{value} ... ]}
+@end example
+
+@var{name} is a string, the name of the menu item; it is the string to
+display on the menu.  It is filtered through the resource database, so
+it is possible for resources to override what string is actually
+displayed.
+
+@var{callback} is a form that will be invoked when the menu item is
+selected.  If the callback of a menu item is a symbol, then it must name
+a command.  It will be invoked with @code{call-interactively}.  If it is
+a list, then it is evaluated with @code{eval}.
+
+The valid keywords and their meanings are described below.
+
+Note that for compatibility purposes, the form
+
+@example
+@code{[ @var{name} @var{callback} @var{active-p} ]}
+@end example
+
+is also accepted and is equivalent to
+
+@example
+@code{[ @var{name} @var{callback} :active @var{active-p} ]}
+@end example
+
+and the form
+
+@example
+@code{[ @var{name} @var{callback} @var{active-p} @var{suffix}]}
+@end example
+
+is accepted and is equivalent to
+
+@example
+@code{[ @var{name} @var{callback} :active @var{active-p} :suffix @var{suffix}]}
+@end example
+
+However, these older forms are deprecated and should generally not be used.
+
+@item
+If an element of a menu is a string, then that string will be presented
+in the menu as unselectable text.
+
+@item
+If an element of a menu is a string consisting solely of hyphens, then
+that item will be presented as a solid horizontal line.
+
+@item
+If an element of a menu is a string beginning with @samp{--:}, then
+a particular sort of horizontal line will be displayed, as follows:
+
+@table @samp
+@item "--:singleLine"
+A solid horizontal line.  This is equivalent to a string consisting
+solely of hyphens.
+@item "--:doubleLine"
+A solid double horizontal line.
+@item "--:singleDashedLine"
+A dashed horizontal line.
+@item "--:doubleDashedLine"
+A dashed double horizontal line.
+@item "--:noLine"
+No line (but a small space is left).
+@item "--:shadowEtchedIn"
+A solid horizontal line with a 3-d recessed appearance.
+@item "--:shadowEtchedOut"
+A solid horizontal line with a 3-d pushed-out appearance.
+@item "--:shadowDoubleEtchedIn"
+A solid double horizontal line with a 3-d recessed appearance.
+@item "--:shadowDoubleEtchedOut"
+A solid double horizontal line with a 3-d pushed-out appearance.
+@item "--:shadowEtchedInDash"
+A dashed horizontal line with a 3-d recessed appearance.
+@item "--:shadowEtchedOutDash"
+A dashed horizontal line with a 3-d pushed-out appearance.
+@item "--:shadowDoubleEtchedInDash"
+A dashed double horizontal line with a 3-d recessed appearance.
+@item "--:shadowDoubleEtchedOutDash"
+A dashed double horizontal line with a 3-d pushed-out appearance.
+@end table
+
+@item
+If an element of a menu is a list, it is treated as a submenu.  The name
+of that submenu (the first element in the list) will be used as the name
+of the item representing this menu on the parent.
+@end itemize
+
+The possible keywords are as follows:
+
+@table @asis
+@item :active @var{form}
+@var{form} will be evaluated when the menu that this item is a part of
+is about to be displayed, and the item will be selectable only if the
+result is non-@code{nil}.  If the item is unselectable, it will
+usually be displayed grayed-out to indicate this.
+
+@item :suffix @var{form}
+@var{form} will be evaluated when the menu that this item is a part of
+is about to be displayed, and the resulting string is appended to the
+displayed name.  This provides a convenient way of adding the name of a
+command's ``argument'' to the menu, like @samp{Kill Buffer NAME}.
+
+@item :keys @var{string}
+Normally, the keyboard equivalents of commands in menus are displayed
+when the ``callback'' is a symbol.  This can be used to specify keys for
+more complex menu items.  It is passed through
+@code{substitute-command-keys} first.
+
+@item :style @var{style}
+Specifies what kind of object this menu item is.  @var{style} be one
+of the symbols
+
+@table @code
+@item nil
+A normal menu item.
+@item toggle
+A toggle button.
+@item radio
+A radio button.
+@item button
+A menubar button.
+@end table
+
+The only difference between toggle and radio buttons is how they are
+displayed.  But for consistency, a toggle button should be used when
+there is one option whose value can be turned on or off, and radio
+buttons should be used when there is a set of mutually exclusive options.
+When using a group of radio buttons, you should arrange for no more than
+one to be marked as selected at a time.
+
+@item :selected @var{form}
+Meaningful only when @var{style} is @code{toggle}, @code{radio} or
+@code{button}.  This specifies whether the button will be in the
+selected or unselected state.  @var{form} is evaluated, as for
+@code{:active}.
+
+@item :included @var{form}
+This can be used to control the visibility of a menu item.  The form is
+evaluated and the menu item is only displayed if the result is
+non-@code{nil}.  Note that this is different from @code{:active}: If
+@code{:active} evaluates to @code{nil}, the item will be displayed
+grayed out, while if @code{:included} evaluates to @code{nil}, the item
+will be omitted entirely.
+
+@item :config @var{symbol}
+This is an efficient shorthand for @code{:included (memq @var{symbol}
+menubar-configuration)}.  See the variable @code{menubar-configuration}.
+
+@item :accelerator @var{key}
+A menu accelerator is a keystroke which can be pressed while the menu is
+visible which will immediately activate the item.  @var{key} must be a char
+or the symbol name of a key.  @xref{Menu Accelerators}.
+@end table
+
+@defvar menubar-configuration
+This variable holds a list of symbols, against which the value of the
+@code{:config} tag for each menubar item will be compared.  If a menubar
+item has a @code{:config} tag, then it is omitted from the menubar if
+that tag is not a member of the @code{menubar-configuration} list.
+@end defvar
+
+For example:
+
+@example
+ ("File"
+  :filter file-menu-filter      ; file-menu-filter is a function that takes
+                                ; one argument (a list of menu items) and
+                                ; returns a list of menu items
+  [ "Save As..."    write-file]
+  [ "Revert Buffer" revert-buffer :active (buffer-modified-p) ]
+  [ "Read Only"     toggle-read-only :style toggle :selected buffer-read-only ]
+  )
+@end example
+
+@node Menubar Format
+@section Format of the Menubar
+@cindex menubar format
+@cindex format of the menubar
+
+A menubar is a list of menus, menu items, and strings.  The format is
+similar to that of a menu, except:
+
+@itemize @bullet
+@item
+The first item need not be a string, and is not treated specially.
+
+@item
+A string consisting solely of hyphens is not treated specially.
+
+@item
+If an element of a menubar is @code{nil}, then it is used to represent
+the division between the set of menubar items which are flush-left and
+those which are flush-right.  (Note: this isn't completely implemented
+yet.)
+@end itemize
+
+@node Menubar
+@section Menubar
+@cindex menubar
+
+@defvar current-menubar
+This variable holds the description of the current menubar.  This may be
+buffer-local.  When the menubar is changed, the function
+@code{set-menubar-dirty-flag} has to be called in order for the menubar
+to be updated on the screen.
+@end defvar
+
+@defvr Constant default-menubar
+This variable holds the menubar description of the menubar that is
+visible at startup.  This is the value that @code{current-menubar}
+has at startup.
+@end defvr
+
+@defun set-menubar-dirty-flag
+This function tells XEmacs that the menubar widget has to be updated.
+Changes to the menubar will generally not be visible until this function
+is called.
+@end defun
+
+The following convenience functions are provided for setting the
+menubar.  They are equivalent to doing the appropriate action to change
+@code{current-menubar}, and then calling @code{set-menubar-dirty-flag}.
+Note that these functions copy their argument using
+@code{copy-sequence}.
+
+@defun set-menubar menubar
+This function sets the default menubar to be @var{menubar} (@pxref{Menu
+Format}).  This is the menubar that will be visible in buffers that
+have not defined their own, buffer-local menubar.
+@end defun
+
+@defun set-buffer-menubar menubar
+This function sets the buffer-local menubar to be @var{menubar}.  This
+does not change the menubar in any buffers other than the current one.
+@end defun
+
+Miscellaneous:
+
+@defvar menubar-show-keybindings
+If true, the menubar will display keyboard equivalents.  If false, only
+the command names will be displayed.
+@end defvar
+
+@defvar activate-menubar-hook
+Function or functions called before a menubar menu is pulled down.
+These functions are called with no arguments, and should interrogate and
+modify the value of @code{current-menubar} as desired.
+
+The functions on this hook are invoked after the mouse goes down, but
+before the menu is mapped, and may be used to activate, deactivate, add,
+or delete items from the menus.  However, using a filter (with the
+@code{:filter} keyword in a menu description) is generally a more
+efficient way of accomplishing the same thing, because the filter is
+invoked only when the actual menu goes down.  With a complex menu,
+there can be a quite noticeable and sometimes aggravating delay if
+all menu modification is implemented using the @code{activate-menubar-hook}.
+See above.
+
+These functions may return the symbol @code{t} to assert that they have
+made no changes to the menubar.  If any other value is returned, the
+menubar is recomputed.  If @code{t} is returned but the menubar has been
+changed, then the changes may not show up right away.  Returning
+@code{nil} when the menubar has not changed is not so bad; more
+computation will be done, but redisplay of the menubar will still be
+performed optimally.
+@end defvar
+
+@defvar menu-no-selection-hook
+Function or functions to call when a menu or dialog box is dismissed
+without a selection having been made.
+@end defvar
+
+@node Modifying Menus
+@section Modifying Menus
+
+The following functions are provided to modify the menubar of one of its
+submenus.  Note that these functions modify the menu in-place, rather
+than copying it and making a new menu.
+
+Some of these functions take a @dfn{menu path}, which is a list of
+strings identifying the menu to be modified.  For example,
+@code{("File")} names the top-level ``File'' menu.  @code{("File"
+"Foo")} names a hypothetical submenu of ``File''.
+
+Others take a @dfn{menu item path}, which is similar to a menu path but
+also specifies a particular item to be modified.  For example,
+@code{("File" "Save")} means the menu item called ``Save'' under the
+top-level ``File'' menu.  @code{("Menu" "Foo" "Item")} means the menu
+item called ``Item'' under the ``Foo'' submenu of ``Menu''.
+
+@defun add-submenu menu-path submenu &optional before in-menu
+This function adds a menu to the menubar or one of its submenus.  If the
+named menu exists already, it is changed.
+
+@var{menu-path} identifies the menu under which the new menu should be
+inserted.  If @var{menu-path} is @code{nil}, then the menu will be added
+to the menubar itself.
+
+@var{submenu} is the new menu to add (@pxref{Menu Format}).
+
+@var{before}, if provided, is the name of a menu before which this menu
+should be added, if this menu is not on its parent already.  If the menu
+is already present, it will not be moved.
+
+If @var{in-menu} is present use that instead of @code{current-menubar}
+as the menu to change.
+@end defun
+
+@defun add-menu-button menu-path menu-leaf &optional before in-menu
+This function adds a menu item to some menu, creating the menu first if
+necessary.  If the named item exists already, it is changed.
+
+@var{menu-path} identifies the menu under which the new menu item should
+be inserted.
+
+@var{menu-leaf} is a menubar leaf node (@pxref{Menu Format}).
+
+@var{before}, if provided, is the name of a menu before which this item
+should be added, if this item is not on the menu already.  If the item
+is already present, it will not be moved.
+
+If @var{in-menu} is present use that instead of @code{current-menubar}
+as the menu to change.
+@end defun
+
+@defun delete-menu-item menu-item-path &optional from-menu
+This function removes the menu item specified by @var{menu-item-path}
+from the menu hierarchy.
+
+If @var{from-menu} is present use that instead of @code{current-menubar}
+as the menu to change.
+@end defun
+
+@defun enable-menu-item menu-item-path
+This function makes the menu item specified by @var{menu-item-path} be
+selectable.
+@end defun
+
+@defun disable-menu-item menu-item-path
+This function makes the menu item specified by @var{menu-item-path} be
+unselectable.
+@end defun
+
+@defun relabel-menu-item menu-item-path new-name
+This function changes the string of the menu item specified by
+@var{menu-item-path}.  @var{new-name} is the string that the menu item
+will be printed as from now on.
+@end defun
+
+The following function can be used to search for a particular item in
+a menubar specification, given a path to the item.
+
+@defun find-menu-item menubar menu-item-path &optional parent
+This function searches @var{menubar} for the item given by
+@var{menu-item-path} starting from @var{parent} (@code{nil} means start
+at the top of @var{menubar}).  This function returns @code{(@var{item}
+. @var{parent})}, where @var{parent} is the immediate parent of the item
+found (a menu description), and @var{item} is either a vector, list, or
+string, depending on the nature of the menu item.
+
+This function signals an error if the item is not found.
+@end defun
+
+The following deprecated functions are also documented, so that
+existing code can be understood.  You should not use these functions
+in new code.
+
+@defun add-menu menu-path menu-name menu-items &optional before
+This function adds a menu to the menubar or one of its submenus.  If the
+named menu exists already, it is changed.  This is obsolete; use
+@code{add-submenu} instead.
+
+@var{menu-path} identifies the menu under which the new menu should be
+inserted.  If @var{menu-path} is @code{nil}, then the menu will be added
+to the menubar itself.
+
+@var{menu-name} is the string naming the menu to be added;
+@var{menu-items} is a list of menu items, strings, and submenus.  These
+two arguments are the same as the first and following elements of a menu
+description (@pxref{Menu Format}).
+
+@var{before}, if provided, is the name of a menu before which this
+menu should be added, if this menu is not on its parent already.  If the
+menu is already present, it will not be moved.
+@end defun
+
+@defun add-menu-item menu-path item-name function enabled-p &optional before
+This function adds a menu item to some menu, creating the menu first if
+necessary.  If the named item exists already, it is changed.  This is
+obsolete; use @code{add-menu-button} instead.
+
+@var{menu-path} identifies the menu under which the new menu item should
+be inserted. @var{item-name}, @var{function}, and @var{enabled-p} are
+the first, second, and third elements of a menu item vector (@pxref{Menu
+Format}).
+
+@var{before}, if provided, is the name of a menu item before which this
+item should be added, if this item is not on the menu already.  If the
+item is already present, it will not be moved.
+@end defun
+
+@node Menu Filters
+@section Menu Filters
+@cindex menu filters
+
+The following filter functions are provided for use in
+@code{default-menubar}.  You may want to use them in your own menubar
+description.
+
+@defun file-menu-filter menu-items
+This function changes the arguments and sensitivity of these File menu items:
+
+@table @samp
+@item Delete Buffer
+Has the name of the current buffer appended to it.
+@item Print Buffer
+Has the name of the current buffer appended to it.
+@item Pretty-Print Buffer
+Has the name of the current buffer appended to it.
+@item Save Buffer
+Has the name of the current buffer appended to it, and is sensitive only
+when the current buffer is modified.
+@item Revert Buffer
+Has the name of the current buffer appended to it, and is sensitive only
+when the current buffer has a file.
+@item Delete Frame
+Sensitive only when there is more than one visible frame.
+@end table
+@end defun
+
+@defun edit-menu-filter menu-items
+This function changes the arguments and sensitivity of these Edit menu items:
+
+@table @samp
+@item Cut
+Sensitive only when XEmacs owns the primary X Selection (if
+@code{zmacs-regions} is @code{t}, this is equivalent to saying that
+there is a region selected).
+@item Copy
+Sensitive only when XEmacs owns the primary X Selection.
+@item Clear
+Sensitive only when XEmacs owns the primary X Selection.
+@item Paste
+Sensitive only when there is an owner for the X Clipboard Selection.
+@item Undo
+Sensitive only when there is undo information.  While in the midst of an
+undo, this is changed to @samp{Undo More}.
+@end table
+@end defun
+
+@defun buffers-menu-filter menu-items
+This function sets up the Buffers menu.  @xref{Buffers Menu}, for
+more information.
+@end defun
+
+@node Pop-Up Menus
+@section Pop-Up Menus
+@cindex pop-up menu
+
+@defun popup-menu menu-description &optional event
+This function pops up a menu specified by @var{menu-description}, which
+is a menu description (@pxref{Menu Format}).  The menu is displayed at
+the current mouse position.
+@end defun
+
+@defun popup-menu-up-p
+This function returns @code{t} if a pop-up menu is up, @code{nil}
+otherwise.
+@end defun
+
+@defvar popup-menu-titles
+If true (the default), pop-up menus will have title bars at the top.
+@end defvar
+
+Some machinery is provided that attempts to provide a higher-level
+mechanism onto pop-up menus.  This only works if you do not redefine
+the binding for button3.
+
+@deffn Command popup-mode-menu
+This function pops up a menu of global and mode-specific commands.  The
+menu is computed by combining @code{global-popup-menu} and
+@code{mode-popup-menu}.  This is the default binding for button3.
+You should generally not change this binding.
+@end deffn
+
+@defvar global-popup-menu
+This holds the global popup menu.  This is present in all modes.
+(This is @code{nil} by default.)
+@end defvar
+
+@defvar mode-popup-menu
+The mode-specific popup menu.  Automatically buffer local.
+This is appended to the default items in @code{global-popup-menu}.
+@end defvar
+
+@defvr Constant default-popup-menu
+This holds the default value of @code{mode-popup-menu}.
+@end defvr
+
+@defvar activate-popup-menu-hook
+Function or functions run before a mode-specific popup menu is made
+visible.  These functions are called with no arguments, and should
+interrogate and modify the value of @code{global-popup-menu} or
+@code{mode-popup-menu} as desired.  Note: this hook is only run if you
+use @code{popup-mode-menu} for activating the global and mode-specific
+commands; if you have your own binding for button3, this hook won't be
+run.
+@end defvar
+
+The following convenience functions are provided for displaying
+pop-up menus.
+
+@deffn Command popup-buffer-menu event
+This function pops up a copy of the @samp{Buffers} menu (from the menubar)
+where the mouse is clicked.  It should be bound to a mouse button event.
+@end deffn
+
+@deffn Command popup-menubar-menu event
+This function pops up a copy of menu that also appears in the menubar.
+It should be bound to a mouse button event.
+@end deffn
+
+@node Menu Accelerators
+@section Menu Accelerators
+@cindex menu accelerators
+@cindex keyboard menu accelerators
+
+Menu accelerators are keyboard shortcuts for accessing the menubar.
+Accelerator keys can be specified for menus as well as for menu items.  An
+accelerator key for a menu is used to activate that menu when it appears as a
+submenu of another menu.  An accelerator key for a menu item is used to
+activate that item.
+
+@menu
+* Creating Menu Accelerators::  How to add accelerator keys to a menu.
+* Keyboard Menu Traversal::     How to use and modify the keys which are used
+                                to traverse the menu structure.
+* Menu Accelerator Functions::  Functions for working with menu accelerators.
+@end menu
+
+@node Creating Menu Accelerators
+@subsection Creating Menu Accelerators
+
+Menu accelerators are specified as part of the menubar format using the
+:accelerator tag to specify a key or by placing "%_" in the menu or menu item
+name prior to the letter which is to be used as the accelerator key.  The
+advantage of the second method is that the menu rendering code then knows to
+draw an underline under that character, which is the canonical way of
+indicating an accelerator key to a user.
+
+For example, the command
+
+@example
+(add-submenu nil '("%_Test"
+                   ["One" (insert "1") :accelerator ?1 :active t]
+                   ["%_Two" (insert "2")]
+                   ["%_3" (insert "3")]))
+@end example
+
+will add a new menu to the top level menubar.  The new menu can be reached
+by pressing "t" while the top level menubar is active.  When the menu is
+active, pressing "1" will activate the first item and insert the character
+"1" into the buffer.  Pressing "2" will activate the second item and insert
+the character "2" into the buffer.  Pressing "3" will activate the third item
+and insert the character "3" into the buffer.
+
+It is possible to activate the top level menubar itself using accelerator keys.
+@xref{Menu Accelerator Functions}.
+
+@node Keyboard Menu Traversal
+@subsection Keyboard Menu Traversal
+
+In addition to immediately activating a menu or menu item, the keyboard can
+be used to traverse the menus without activating items.  The keyboard arrow
+keys, the return key and the escape key are defined to traverse the menus in a
+way that should be familiar to users of any of a certain family of popular PC
+operating systems.
+
+This behavior can be changed by modifying the bindings in
+menu-accelerator-map.  At this point, the online help is your best bet
+for more information about how to modify the menu traversal keys.
+
+@node Menu Accelerator Functions
+@subsection Menu Accelerator Functions
+
+@deffn Command accelerate-menu
+Make the menubar immediately active and place the cursor on the left most entry
+in the top level menu.  Menu items can be selected as usual.
+@end deffn
+
+@defvar menu-accelerator-enabled
+Whether menu accelerator keys can cause the menubar to become active.
+
+If @code{menu-force} or @code{menu-fallback}, then menu accelerator keys can
+be used to activate the top level menu.  Once the menubar becomes active, the
+accelerator keys can be used regardless of the value of this variable.
+
+@code{menu-force} is used to indicate that the menu accelerator key takes
+precedence over bindings in the current keymap(s).  @code{menu-fallback} means
+that bindings in the current keymap take precedence over menu accelerator keys.
+Thus a top level menu with an accelerator of "T" would be activated on a
+keypress of Meta-t if @code{menu-accelerator-enabled} is @code{menu-force}.
+However, if @code{menu-accelerator-enabled} is @code{menu-fallback}, then
+Meta-t will not activate the menubar and will instead run the function
+transpose-words, to which it is normally bound.
+
+The default value is @code{nil}.
+
+See also @code{menu-accelerator-modifiers} and @code{menu-accelerator-prefix}.
+@end defvar
+
+@defvar menu-accelerator-map
+Keymap consulted to determine the commands to run in response to keypresses
+occurring while the menubar is active.  @xref{Keyboard Menu Traversal}.
+@end defvar
+
+@defvar menu-accelerator-modifiers
+A list of modifier keys which must be pressed in addition to a valid menu
+accelerator in order for the top level menu to be activated in response to
+a keystroke.  The default value of @code{(meta)} mirrors the usage of the alt key
+as a menu accelerator in popular PC operating systems.
+
+The modifier keys in @code{menu-accelerator-modifiers} must match exactly the
+modifiers present in the keypress.  The only exception is that the shift
+modifier is accepted in conjunction with alphabetic keys even if it is not a
+menu accelerator modifier.
+
+See also @code{menu-accelerator-enabled} and @code{menu-accelerator-prefix}.
+@end defvar
+
+@defvar menu-accelerator-prefix
+Prefix key(s) that must be typed before menu accelerators will be activated.
+Must be a valid key descriptor.
+
+The default value is @code{nil}.
+@end defvar
+
+@example
+(setq menu-accelerator-prefix ?\C-x)
+(setq menu-accelerator-modifiers '(meta control))
+(setq menu-accelerator-enabled 'menu-force)
+(add-submenu nil '("%_Test"
+                   ["One" (insert "1") :accelerator ?1 :active t]
+                   ["%_Two" (insert "2")]
+                   ["%_3" (insert "3")]))
+@end example
+
+will add the menu "Test" to the top level menubar.  Pressing C-x followed by
+C-M-T will activate the menubar and display the "Test" menu.  Pressing
+C-M-T by itself will not activate the menubar.  Neither will pressing C-x
+followed by anything else.
+
+@node Buffers Menu
+@section Buffers Menu
+@cindex buffers menu
+
+The following options control how the @samp{Buffers} menu is displayed.
+This is a list of all (or a subset of) the buffers currently in existence,
+and is updated dynamically.
+
+@defopt buffers-menu-max-size
+This user option holds the maximum number of entries which may appear on
+the @samp{Buffers} menu.  If this is 10, then only the ten
+most-recently-selected buffers will be shown.  If this is @code{nil},
+then all buffers will be shown.  Setting this to a large number or
+@code{nil} will slow down menu responsiveness.
+@end defopt
+
+@defun format-buffers-menu-line buffer
+This function returns a string to represent @var{buffer} in the
+@samp{Buffers} menu.  @code{nil} means the buffer shouldn't be listed.
+You can redefine this.
+@end defun
+
+@defopt complex-buffers-menu-p
+If true, the @samp{Buffers} menu will contain several commands, as submenus
+of each buffer line.  If this is false, then there will be only one command:
+select that buffer.
+@end defopt
+
+@defopt buffers-menu-switch-to-buffer-function
+This user option holds the function to call to select a buffer from the
+@samp{Buffers} menu.  @code{switch-to-buffer} is a good choice, as is
+@code{pop-to-buffer}.
+@end defopt
+

@@ -1,0 +1,193 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993 Free Software Foundation, Inc.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/internationalization.info
+@node Internationalization, MULE, PostgreSQL Support, top
+@chapter Internationalization
+
+@menu
+* I18N Levels 1 and 2:: Support for different time, date, and currency formats.
+* I18N Level 3::        Support for localized messages.
+* I18N Level 4::        Support for Asian languages.
+@end menu
+
+
+@node I18N Levels 1 and 2
+@section I18N Levels 1 and 2
+
+XEmacs is now compliant with I18N levels 1 and 2.  Specifically, this means
+that it is 8-bit clean and correctly handles time and date functions.  XEmacs
+will correctly display the entire ISO-Latin 1 character set.
+
+The compose key may now be used to create any character in the ISO-Latin 1
+character set not directly available via the keyboard..  In order for the
+compose key to work it is necessary to load the file @file{x-compose.el}.
+At any time while composing a character, @code{C-h} will display all valid
+completions and the character which would be produced.
+
+
+@node I18N Level 3
+@section I18N Level 3
+
+@menu
+* Level 3 Basics::
+* Level 3 Primitives::
+* Dynamic Messaging::
+* Domain Specification::
+* Documentation String Extraction::
+@end menu
+
+@node Level 3 Basics
+@subsection Level 3 Basics
+
+XEmacs now provides alpha-level functionality for I18N Level 3.  This means
+that everything necessary for full messaging is available, but not every
+file has been converted.
+
+The two message files which have been created are @file{src/emacs.po} and
+@file{lisp/packages/mh-e.po}.  Both files need to be converted using
+@code{msgfmt}, and the resulting @file{.mo} files placed in some locale's
+@code{LC_MESSAGES} directory.  The test ``translations'' in these files are
+the original messages prefixed by @code{TRNSLT_}.
+
+The domain for a variable is stored on the variable's property list under
+the property name @var{variable-domain}.  The function
+@code{documentation-property} uses this information when translating a
+variable's documentation.
+
+
+@node Level 3 Primitives
+@subsection Level 3 Primitives
+
+@defun gettext string
+This function looks up @var{string} in the default message domain and
+returns its translation.  If @code{I18N3} was not enabled when XEmacs was
+compiled, it just returns @var{string}.
+@end defun
+
+@defun dgettext domain string
+This function looks up @var{string} in the specified message domain and
+returns its translation.  If @code{I18N3} was not enabled when XEmacs was
+compiled, it just returns @var{string}.
+@end defun
+
+@defun bind-text-domain domain pathname
+This function associates a pathname with a message domain.
+Here's how the path to message file is constructed under SunOS 5.x:
+
+@example
+@code{@{pathname@}/@{LANG@}/LC_MESSAGES/@{domain@}.mo}
+@end example
+
+If @code{I18N3} was not enabled when XEmacs was compiled, this function does
+nothing.
+@end defun
+
+@defspec domain string
+This function specifies the text domain used for translating documentation
+strings and interactive prompts of a function.  For example, write:
+
+@example
+(defun foo (arg) "Doc string" (domain "emacs-foo") @dots{})
+@end example
+
+to specify @code{emacs-foo} as the text domain of the function @code{foo}.
+The ``call'' to @code{domain} is actually a declaration rather than a
+function; when actually called, @code{domain} just returns @code{nil}.
+@end defspec
+
+@defun domain-of function
+This function returns the text domain of @var{function}; it returns
+@code{nil} if it is the default domain.  If @code{I18N3} was not enabled
+when XEmacs was compiled, it always returns @code{nil}.
+@end defun
+
+
+@node Dynamic Messaging
+@subsection Dynamic Messaging
+
+The @code{format} function has been extended to permit you to change the
+order of parameter insertion.  For example, the conversion format
+@code{%1$s} inserts parameter one as a string, while @code{%2$s} inserts
+parameter two.  This is useful when creating translations which require you
+to change the word order.
+
+
+@node Domain Specification
+@subsection Domain Specification
+
+The default message domain of XEmacs is `emacs'.  For add-on packages, it is
+best to use a different domain.  For example, let us say we want to convert
+the ``gorilla'' package to use the domain `emacs-gorilla'.
+To translate the message ``What gorilla?'', use @code{dgettext} as follows:
+
+@example
+(dgettext "emacs-gorilla" "What gorilla?")
+@end example
+
+A function (or macro) which has a documentation string or an interactive
+prompt needs to be associated with the domain in order for the documentation
+or prompt to be translated.  This is done with the @code{domain} special
+form as follows:
+
+@page
+@example
+(defun scratch (location)
+  "Scratch the specified location."
+  (domain "emacs-gorilla")
+  (interactive "sScratch: ")
+  @dots{} )
+@end example
+
+It is most efficient to specify the domain in the first line of the
+function body, before the @code{interactive} form.
+
+For variables and constants which have documentation strings, specify the
+domain after the documentation.
+
+@defspec defvar symbol [value [doc-string [domain]]]
+Example:
+@example
+(defvar weight 250 "Weight of gorilla, in pounds." "emacs-gorilla")
+@end example
+@end defspec
+
+@defspec defconst symbol [value [doc-string [domain]]]
+Example:
+@example
+(defconst limbs 4 "Number of limbs" "emacs-gorilla")
+@end example
+@end defspec
+
+@defun autoload function filename &optional docstring interactive type
+This function defines @var{function} to autoload from @var{filename}
+Example:
+@example
+(autoload 'explore "jungle" "Explore the jungle." nil nil "emacs-gorilla")
+@end example
+@end defun
+
+
+@node Documentation String Extraction
+@subsection Documentation String Extraction
+
+The utility @file{etc/make-po} scans the file @code{DOC} to extract
+documentation strings and creates a message file @code{doc.po}.  This file
+may then be inserted within @code{emacs.po}.
+
+Currently, @code{make-po} is hard-coded to read from @code{DOC} and write
+to @code{doc.po}.  In order to extract documentation strings from an add-on
+package, first run @code{make-docfile} on the package to produce the
+@code{DOC} file.  Then run @code{make-po -p} with the @code{-p} argument to
+indicate that we are extracting documentation for an add-on package.
+
+(The @code{-p} argument is a kludge to make up for a subtle difference
+between pre-loaded documentation and add-on documentation:  For add-on
+packages, the final carriage returns in the strings produced by
+@code{make-docfile} must be ignored.)
+
+@node I18N Level 4
+@section I18N Level 4
+
+The Asian-language support in XEmacs is called ``MULE''.  @xref{MULE}.

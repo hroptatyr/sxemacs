@@ -1,0 +1,46 @@
+/* Lwlib site configuration template file.  -*- C -*-
+   Copyright (C) 1997 Sun Microsystems, Inc.
+
+This file is part of XEmacs.
+
+XEmacs is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2, or (at your option) any
+later version.
+
+XEmacs is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with XEmacs; see the file COPYING.  If not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
+
+/* Not in FSF. */
+
+#ifndef _LWLIB_CONFIG_H_
+#define _LWLIB_CONFIG_H_
+
+#include "../src/config.h"
+
+#undef NEED_MOTIF
+#undef NEED_ATHENA
+#undef NEED_LUCID
+
+/* The exact path to the Athena header files depends on which `flavor'
+   of Athena is being used - hence configure defines them for us. */
+
+#undef ATHENA_Scrollbar_h_
+#undef ATHENA_Dialog_h_
+#undef ATHENA_Form_h_
+#undef ATHENA_Command_h_
+#undef ATHENA_Label_h_
+#undef ATHENA_LabelP_h_
+#undef ATHENA_Toggle_h_
+#undef ATHENA_ToggleP_h_
+#undef ATHENA_AsciiText_h_
+#undef ATHENA_XawInit_h_
+
+#endif /* _LWLIB_CONFIG_H_ */

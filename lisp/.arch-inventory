@@ -1,0 +1,2 @@
+precious ^(finder-inf\.el)$
+precious ^(.*\.elc)$

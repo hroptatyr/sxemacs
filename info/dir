@@ -1,0 +1,58 @@
+-*- Text -*-
+
+This is the file .../info/dir, which contains the topmost node of the Info
+hierarchy.  The first time you invoke Info you start off looking at that node,
+which is (dir)Top.
+
+Rather than adding new nodes to this directory (and this file) it is a better
+idea to put them in a site-local directory, and then configure info to search
+in that directory as well.  That way, you won't have to re-edit this file when
+a new release of the editor comes out.
+
+For example, you could add this code to .../lisp/site-start.el, which is
+loaded before ~/.emacs each time the editor starts up:
+
+  ;; find local info nodes
+  (setq Info-directory-list
+        (append Info-directory-list '("/private/info/")))
+
+Then, when you enter info, a dir file like this one will be automatically
+created and saved (provided you have write access to the directory).  The
+contents of that file "/private/info/dir" will be appended to the contents of
+this file.
+
+
+File: dir	Node: Top	This is the top of the INFO tree
+
+  This is Info, the online documentation browsing system.
+  This page (the Directory node) gives a menu of major topics.
+
+  button2 on a highlighted word follows that cross-reference.
+  button3 anywhere brings up a menu of commands.
+  ? lists additional keyboard commands.
+  h invokes the Info tutorial.
+
+* Menu:
+
+XEmacs 21.4
+===========
+* XEmacs::           XEmacs User's Manual.
+* Lispref::          XEmacs Lisp Reference Manual.
+* New-Users-Guide::  Getting Started with XEmacs.
+* XEmacs-FAQ::       XEmacs Frequently Asked Questions for 21.4.
+* Info::             Guide to Info, the XEmacs online documentation system.
+* Internals::        Guide to the internals of XEmacs.
+
+Other Documentation:
+
+* CL::              A Common Lisp compatibility package for Emacs-Lisp.
+* Custom::          Customization Library for Emacs.
+* Emodules::        XEmacs dynamic loadable module support.
+* External-Widget:: Use XEmacs as a text widget inside of another program.
+* Standards::       GNU coding standards.
+* Term::            A mode to control inferior processes (a comint replacement)
+* Termcap::         The termcap library, which enables application programs
+                    to handle all types of character-display terminals.
+* Texinfo::         The GNU documentation format.
+* Widget::          An Emacs Lisp widget library.
+

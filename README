@@ -1,0 +1,63 @@
+This directory tree holds version 21.4 of XEmacs, the extensible,
+customizable, self-documenting real-time display editor.  This version
+of XEmacs also runs on various Microsoft Windows platforms including
+MS Windows '95 and MS Windows NT and Cygwin.
+
+See the file `etc/NEWS' for information on new features and other
+user-visible changes since the last version of XEmacs.
+
+The file `INSTALL' in this directory says how to bring up XEmacs on
+Unix and Cygwin, once you have loaded the entire subtree of this
+directory.
+
+The file `PROBLEMS' contains information on many common problems that
+occur in building, installing and running XEmacs.
+
+See the file `nt/README' for instructions on building XEmacs for
+Microsoft Windows.
+
+The file 'README.packages' will guide you in the installation of
+(essential) add on packages.
+
+Reports of bugs in XEmacs should be posted to the newsgroup
+comp.emacs.xemacs or sent to the mailing list xemacs@xemacs.org.  See
+the "Bugs" section of the XEmacs manual for more information on how to
+report bugs.  (The file `BUGS' in this directory explains how you can
+find and read that section using the Info files that come with
+XEmacs.)  See `etc/MAILINGLISTS' for more information on mailing lists
+relating to XEmacs and other GNU products.
+
+The file `configure' is a shell script to acclimate XEmacs to the
+oddities of your processor and operating system.  It will create a
+file named `Makefile' (a script for the `make' program), which helps
+automate the process of building and installing emacs.  See INSTALL
+for more detailed information.
+
+The file `configure.in' is the input used by the autoconf program to
+construct the `configure' script.  Since XEmacs has configuration
+requirements that autoconf can't meet, `configure.in' uses an unholy
+marriage of custom-baked configuration code and autoconf macros; it
+may be wise to avoid rebuilding `configure' from `configure.in' when
+possible.
+
+The file `Makefile.in' is a template used by `configure' to create
+`Makefile'.
+
+There are several subdirectories:
+
+`src' holds the C code for Emacs (the XEmacs Lisp interpreter and its
+    primitives, the redisplay code, and some basic editing functions).
+`lisp' holds the Emacs Lisp code for XEmacs (most everything else).
+`lib-src' holds the source code for some utility programs for use by
+    or with XEmacs, like movemail and etags.
+`etc' holds miscellaneous architecture-independent data files
+    XEmacs uses, like the tutorial text and the Zippy the Pinhead quote
+    database.  The contents of the `lisp', `info' and `man'
+    subdirectories are architecture-independent too.
+`lwlib' holds the C code for the toolkit objects used by XEmacs.
+
+`info' holds the Info documentation tree for XEmacs.
+`man' holds the source code for the XEmacs info documentation tree.
+
+`nt' holds configuration files for compiling XEmacs under Microsoft Windows
+    NT.  The support for NT is very tentative right now.

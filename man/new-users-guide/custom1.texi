@@ -1,0 +1,330 @@
+@comment  node-name,  next,  previous,  up
+@node Customization Basics, Help, Edit, Top
+@chapter Customize key bindings and menus 
+@cindex init.el
+@cindex customize
+@findex eval-region
+
+When you start Emacs, it reads the file @file{~/.xemacs/init.el} in the
+@file{.xemacs/} subdirectory of your home directory. You can use this
+file to initialize and customize Emacs to your liking. This file should
+contain lisp-code. You can customize your @file{init.el} file to create
+new menus, disable menus, change key bindings, enable a minor mode,
+etc. Any kind of customization affects only a particular Emacs job that
+you do them in. If you want to save your customizations `permanently'
+i.e. for future use also, you have to put it in your @samp{init.el}
+file. After you make changes to your @file{init.el} file and save it, the
+changes will be effective only after you start Emacs again i.e. for a
+new Emacs process. To try out some of the examples in this section,
+highlight that region and evaluate the region by giving the command
+@kbd{M-x eval-region}. You will be able to see the results of your
+customizations in that Emacs session only (@pxref{Lisp
+Eval,,,xemacs,XEmacs User's Manual}).
+
+@comment  node-name,  next,  previous,  up
+@menu
+* Customizing key Bindings::    Changing Key Bindings
+* Customizing Menus::           Adding, Deleting, Enabling and Disabling Menus
+@end menu
+
+@node Customizing key Bindings, Customizing Menus, Customization Basics, Customization Basics
+@section Customize key bindings 
+@cindex key bindings
+@cindex keystrokes
+
+  Most of Emacs commands use key
+sequences. @xref{Keystrokes,,,xemacs,XEmacs User's Manual}, for more
+information about Keys and Commands. In Emacs, the keys themselves carry
+no meaning unless they are bound to a function. For example, @kbd{C-n}
+moves the cursor to the next line because its bound to the function
+@b{next-line}. Similarly, @kbd{C-p} moves to the previous line because
+its bound to the function @b{previous-line}. The functions themselves
+define a particular behavior. You can customize the key @kbd{C-n} to
+move to the previous line by binding it to @b{previous-line} and
+@kbd{C-p} to move to the next line by binding it to @b{next-line}. To
+bind keys to globally run commands you need to use the following syntax
+in your @b{init.el} file:
+
+@cindex binding keys
+@example
+@code{(global-set-key @var{keys} @var{cmd})}
+@end example
+@noindent
+  Here, @code{global-set-key} is a function which will bind the
+@dfn{keys} to the specified @dfn{cmd}. For example, if you type the
+following in your @b{init.el} file:
+
+@example
+(global-set-key "\C-p" 'next-line)
+(global-set-key "\C-n" 'previous-line)
+@end example
+
+@noindent
+then @kbd{C-p} will move to the next line and @kbd{C-n} to the previous
+line. 
+
+You can also disable a key binding, by using @samp{nil} as the @var{cmd}
+in the syntax stated above. Here, @samp{nil} stands for @samp{false}
+which means disable a command or turn off a feature. If you want to
+enable a command or turn on a particular feature use @samp{t}
+which stands for @samp{true}.  For example, if you do not wish @kbd{C-x
+C-c} to @samp{Exit Emacs} you can type the following expression in your
+@file{init.el} file:
+
+@example
+(global-set-key "\C-x\C-c" nil)
+@end example
+
+@noindent
+You might want to have this statement in your @file{init.el} file because
+its easy to hit this command by mistake and it could be annoying to exit
+Emacs unintentionally. There is an @b{Exit Emacs} option in the @b{File
+menu} which you might want to use instead. To make a particular key
+undefined you can also use:
+
+@example
+(global-unset-key "\C-x\C-c")
+@end example
+
+@noindent
+Now if you use the command @kbd{C-x C-c}, you will get an error saying
+that the command is undefined.
+
+  Some other customizations you could try are:
+@itemize @bullet
+
+@item
+@example
+(global-set-key 'button3 'beginning-of-buffer)
+@end example
+
+@noindent
+Now when you press the third button of your mouse, the cursor will be
+placed at the @code{beginning-of-buffer}.
+
+@item
+@example
+(global-set-key 'f1 'goto-line)
+@end example
+
+@noindent
+If you press the @key{F1} key, you will be prompted for a line
+number. After you type the line number and hit @key{RET}, the cursor
+will be placed on that line number.
+
+@item
+@example
+(global-set-key 'f2 'undo)
+@end example
+
+Pressing @key{F2} will undo the last command. If you have a @key{undo}
+key on your keyboard, try binding that key to the undo command.
+@end itemize
+
+
+  Another syntax for customizing key bindings is:
+@code{(define-key @var{keymap} @var{keys} @var{def})}
+It defines @var{keys} to run @var{def} in the keymap @var{keymap}.
+
+@var{keymap} is a keymap object which records the bindings of keys to
+the commands that they run.
+
+@var{keys} is the sequence of keystrokes to bind.
+
+@var{def} is anything that can be a key's definition:
+
+Look at the following two examples:
+
+@example
+(define-key global-map "\C-xl" 'make-symbolic-link)
+(define-key c-mode-map "\C-xl" 'make-symbolic-link)
+@end example
+
+@findex make-symbolic-link
+@noindent
+Both the examples bind the key @kbd{C-xl} to run the function
+@code{make-symbolic-link} (@pxref{Misc File Ops,,,xemacs,XEmacs User's
+Manual}). However, the second example will bind the key only for C
+mode. @xref{Major Modes,,,xemacs,XEmacs User's Manual}, for more
+information on Major Modes in XEmacs.
+
+
+
+@comment  node-name,  next,  previous,  up
+@node Customizing Menus,  , Customizing key Bindings, Customization Basics
+@section Customizing Menus
+@cindex customize menus
+@cindex delete menus
+@cindex disable menus
+@findex add-menu-item
+@cindex add menus
+
+You can customize any of the  XEmacs Pull-down-Menus. You can create your
+own menu, delete an existing one, enable a menu or disable a menu. For
+more information on the default menus available to you, @xref{Pull-down
+Menus}. 
+
+  Some of the functions which are available to you for customization are:
+@enumerate
+
+@item
+add-menu-item: (@var{menu-name} @var{item-name} @var{function} @var{enabled-p}
+&optional @var{before})
+
+This function will add a menu item to a menu, creating the menu first if
+necessary. If the named item already exists, the menu will remain
+unchanged. For example, if you add the following example to your
+@file{init.el} file or evaluate it (@pxref{Customization Basics}),
+
+@example
+(add-menu-item '("Edit") "Replace String" replace-string t "Clear")
+@end example
+
+@noindent
+a sub-menu @b{Replace String} will be created under @b{Edit} menu before the
+sub-menu @b{Clear}. The @b{Edit} menu will now look like:
+
+@example
+Undo                    C-x u
+Cut                     cut
+Copy                    copy
+Paste                   paste
+Replace String
+Clear
+Start Macro Recording   C-x(
+End Macro Recording     C-x)
+Execute Last Macro      C-xe
+@end example
+
+@noindent
+@b{Replace String} will now execute the function 
+@code{replace-string}. Select this menu item. Emacs will prompt you for
+a string name to be replaced. Type a 
+string and hit @key{RET}. Now type a new string to replace the old
+string and hit @key{RET}. All occurrences of the old string will be
+replaced by the new string. In this example,
+
+@samp{Edit} is the @var{menu-name} which identifies the menu into which
+the new menu item should be inserted. 
+
+@samp{Replace String} is the @var{item-name} which names the menu item
+to be added. 
+
+@samp{replace-string} is the @var{function} i.e. the command to be
+invoked when the menu item "Replace String" is selected. 
+
+@samp{t} is the @var{enabled-p} parameter which controls whether the
+menu item is selectable or not. This parameter can be either @code{t} (selectable), @code{nil} (not selectable), or a
+form to evaluate. This form is evaluated just before the menu is
+displayed, and the menu item will be selectable if the form returns
+non-@code{nil}. 
+
+@samp{Clear} is the @var{&optional before} parameter which is the name
+of the menu before which the new menu or sub-menu should be added. The
+@var{&optional} string means that this parameter is optional. You do not
+need to specify this parameter. If you do not specify this parameter in
+the example above, the @b{Replace String} menu item will be added at the
+end of the list of sub-menus in the @b{Edit} menu i.e. after @b{Execute
+Last Macro}.
+
+  If you wish to add a new menu to the menubar, try:
+
+@example
+(add-menu-item nil "Bot" 'end-of-buffer t)
+@end example
+
+@noindent
+This will create a new menu @b{Bot} on the menu bar. Selecting this menu
+will take you to the end of the buffer. Using @code{nil} for the
+parameter @var{menu-name} will create a new menu. Your menu-bar
+will now look like: 
+
+@example
+File Edit Options Buffers Bot                         Help
+@end example
+
+  The following example will illustrate how you can add sub-menus to the
+submenus themselves:
+
+@example
+(add-menu-item '("File" "Management") "Copy File" 'copy-file t)
+(add-menu-item '("File" "Management") "Delete File" 'delete-file t)
+(add-menu-item '("File" "Management") "Rename File" 'rename-file t)
+@end example
+@noindent
+
+This will create a sub-menu @b{Management} under the @b{File}
+menu. When you select the submenu @b{Management}, it will contain three
+submenus: @b{Copy File}, @b{Delete File} and @b{Rename File}. 
+
+@findex delete-menu-item
+@cindex deleting menu items
+@item
+delete-menu-item: (@var{menu-path})
+This function will remove the menu item defined by @var{menu-name} from
+the menu hierarchy. Look at the following examples and the comments just
+above them which specify what the examples do.
+
+@example
+;; deletes the "Replace String" menu item created earlier
+(delete-menu-item '("Edit" "Replace String")) 
+
+;; deletes the "Bot" menu created earlier
+(delete-menu-item '("Bot"))
+
+;; deletes the sub-menu "Copy File" created earlier
+(delete-menu-item '("File" "File Management" "Copy File"))
+
+;; deletes the sub-menu "Delete File" created earlier
+(delete-menu-item '("File" "Management" "Delete File")) 
+
+;; deletes the sub-menu "Rename File" created earlier
+(delete-menu-item '("File" "Management" "Rename File"))
+@end example
+
+
+@findex disable-menu-item
+@cindex disabling menu items
+@item
+disable-menu-item: (@var{menu-name})
+Disables the specified menu item. The following example 
+
+@example
+(disable-menu-item '("File" "Management" "Copy File"))
+@end example
+
+@noindent
+will make the @b{Copy File} item unselectable. This menu-item would
+still be there but it will appear faded which would mean that it cannot
+be selected.
+
+@findex enable-menu-item
+@cindex enabling menu items
+@item
+enable-menu-item: (@var{menu-name})
+Enables the specified previously disabled menu item. 
+
+@example
+(enable-menu-item '("File" "Management" "Copy File"))
+@end example
+
+@noindent
+This will enable the sub-menu @b{Copy File}, which was disabled by the
+earlier command.
+
+@findex relabel-menu-items
+@cindex relabelling menu items
+@item
+relabel-menu-item: (@var{menu-name} @var{new-name})
+Change the string of the menu item specified by @var{menu-name} to
+@var{new-name}. 
+
+@example
+(relabel-menu-item '("File" "Open...") "Open File")
+@end example
+
+This example will rename the @b{Open...} menu item from the @b{File}
+menu to @b{Open File}. 
+
+@end enumerate
+

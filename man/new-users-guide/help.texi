@@ -1,0 +1,187 @@
+@comment  node-name,  next,  previous,  up
+@node Help, Modes, Customization Basics, Top
+@chapter Help
+@cindex help
+
+
+XEmacs provides a comprehensive Help facility. On the extreme right of
+the menu-bar there is a @b{Help} menu. There are several help commands
+provided by this menu. You can also use @kbd{C-h} for invoking the Help
+facility. Type "?" for a list of keys you can type after typing
+@kbd{C-h}. If you want more information on what your options are and
+what kind of help you can get type "?" again. You will get a listing of
+all the keys you can type and what they will do. Initially if you want
+help, type @kbd{C-h} three times.
+
+@comment  node-name,  next,  previous,  up
+@menu
+* The Help Menu::                   Items on the Help menu
+@end menu
+
+@node The Help Menu,  , Help, Help
+@section Help menu 
+@cindex help
+
+When you click on the Help menu with any of the mouse buttons you will
+get the following menu items:
+
+@table @b
+@item Info
+Selecting this item will take you to the Info page which is the online
+documentation browsing system. You can simply click on the highlighted
+items and "Info" will take you to the document providing information
+about that topic. 
+
+@item Describe Mode
+After you select this item, you will get a documentation on the major
+and minor modes which are enabled in the buffer you are working
+with. @xref{Modes}, for information on Modes.
+
+@item Hyper Apropos...
+After you select this item, you will see the following message in the
+echo area:
+
+@example
+List symbols matching regexp:
+@end example
+
+@noindent
+If you type "mode" and hit @key{RET}, you will get a list of all the
+symbols (like functions and commands). You can now get documentation on
+any of the given symbols by "clicking" on any of the symbols (i.e. drag
+your mouse on the appropriate symbol and release the button). For
+example, if you "click" on the 'auto-fill-mode' you will get the
+following message in the window at the bottom:
+
+@example
+auto-fill-mode
+
+Function, Command:
+
+  Toggle auto-fill mode.
+  With arg, turn auto-fill mode on if and only if arg is positive.
+  In auto-fill mode, inserting a space at a column beyond `fill-column'
+  automatically breaks the line at a previous space.
+
+Variable:
+
+  value = nil
+
+  variable not documented
+@end example
+
+@item Command Apropos...
+Selecting this item will prompt you for a string just like when you
+select @b{Hyper Apropos...}. After you give a string name, you will get
+a listing of all the functions and commands containing that string name
+with a very short description about what that command does.
+
+@item Full Apropos...
+After you select this item, you will be prompted for a string name in
+the echo area:
+
+@example
+Apropos (regexp):
+@end example
+
+@noindent
+Now you can give any string name, for example "mode" and hit
+@key{RET}. You will get a listing of all the variables and commands
+containing that string i.e "mode" with a short description of its
+function. 
+
+@item List Keybindings
+Select this item and you will get a listing of all the keys and the
+commands that they execute. Depending on which Major mode your buffer is
+in, you will get a listing of the special keybindings for that
+particular buffer also. For example, if you are in "Texinfo" mode, part
+of your list will contain:
+
+@example
+C-c C-c n       texinfo-insert-@@node
+C-c C-c o       texinfo-insert-@@noindent
+C-c C-c s       texinfo-insert-@@samp
+C-c C-c t       texinfo-insert-@@table
+C-c C-c v       texinfo-insert-@@var
+C-c C-c x       texinfo-insert-@@example
+C-c C-c @{      texinfo-insert-braces
+@end example
+@noindent
+These keybindings apply only to "Texinfo" mode. @xref{Modes}, for more
+information on various modes. 
+
+@item Describe Key...
+After you select this item, you will be see the following message in the
+echo area:
+
+@example
+Describe Key:
+@end example
+After you type a command key sequence, full documentation of that
+command will be displayed. For example if you type @kbd{C-g}, you will
+see the following documentation for @kbd{C-g}:
+
+@kindex C-g
+@example
+keyboard-quit:
+Signal a `quit' condition.
+@end example
+This means that @kbd{C-g} will quit whatever command you gave earlier.
+
+@kindex C-h d
+@item Describe Function...
+This menu item provides documentation for a function. After you select
+this item, it will prompt you for a function name in the echo area:
+
+@example
+Describe function (default <some function name>):
+@end example
+@noindent
+If you hit @key{RET} without giving a function name, you will get
+documentation for that default function name, otherwise if you type a
+function name and hit @key{RET}, you will get documentation for the
+given function. 
+
+@kindex C-h k
+@item Describe Variable...
+You can get documentation on any variable by selecting this menu
+item. It is similar to @b{Describe Function} and will prompt you for a
+variable name. 
+
+@item Unix Manual...
+After you select this item you will be prompted for a Unix command for
+which you wish to see the man page. You will see the following message
+in the echo area:
+
+@example
+Manual entry: (default <some name>)
+@end example
+@noindent
+Now you can type any command, for example type @samp{who} and press
+@key{RET}. You will get the man page for the Unix command @samp{who} which
+lists who is on the system.
+
+@item Emacs Tutorial
+Select this item and you will get a tutorial on Emacs. It is good for new
+users. 
+
+@item Emacs News
+Select this item and you will get a lot of historical and current news
+on Emacs ! 
+
+@end table
+
+For more information on the Help facility, @xref{Help,,,xemacs,XEmacs
+User's Manual}.
+
+
+
+
+
+
+
+
+
+
+
+

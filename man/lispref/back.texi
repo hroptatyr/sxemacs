@@ -1,0 +1,33 @@
+\input /home/gd/gnu/doc/texinfo.tex  @c -*-texinfo-*-
+@c %**start of header
+@setfilename ../../info/back-cover
+@settitle XEmacs Lisp Reference Manual
+@c %**end of header
+.
+@sp 7
+@center @titlefont {XEmacs Lisp}
+@sp 1
+
+@quotation
+  Most of the XEmacs text editor is written in the programming
+language called XEmacs Lisp.  You can write new code in XEmacs Lisp and
+install it as an extension to the editor.  However, XEmacs Lisp is more
+than a mere ``extension language''; it is a full computer programming
+language in its own right.  You can use it as you would any other
+programming language.
+
+  Because XEmacs Lisp is designed for use in an editor, it has special
+features for scanning and parsing text as well as features for handling
+files, buffers, displays, subprocesses, and so on.  XEmacs Lisp is
+closely integrated with the editing facilities; thus, editing commands
+are functions that can also conveniently be called from Lisp programs,
+and parameters for customization are ordinary Lisp variables.
+
+  This manual describes XEmacs Lisp.  Generally speaking, the earlier
+chapters describe features of XEmacs Lisp that have counterparts in
+many programming languages, and later chapters describe features that
+are peculiar to XEmacs Lisp or relate specifically to editing.
+@end quotation
+
+@hfil
+@bye

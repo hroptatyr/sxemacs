@@ -1,0 +1,81 @@
+			XEMACS CODING STANDARDS
+				   
+				  by
+
+			       Ben Wing
+
+
+Copyright (c) 1996 Ben Wing.
+
+
+This file documents the coding standards used in the XEmacs source
+code.  Note that XEmacs follows the GNU coding standards, which are
+documented separately in ../man/standards.texi.  This file only
+documents standards that are not included in that document; typically
+this consists of standards that are specifically relevant to the
+XEmacs code itself.
+
+First, a recap of the GNU standards:
+
+-- Put a space after every comma.
+-- Put a space before the parenthesis that begins a function call,
+   macro call, function declaration or definition, or control
+   statement (if, while, switch, for). (DO NOT do this for macro
+   definitions; this is invalid preprocessor syntax.)
+-- The brace that begins a control statement (if, while, for, switch,
+   do) or a function definition should go on a line by itself.
+-- In function definitions, put the return type and all other
+   qualifiers on a line before the function name.  Thus, the function
+   name is always at the beginning of a line.
+-- Indentation level is two spaces.  (However, the first and following
+   statements of a while/for/if/etc. block are indented four spaces
+   from the while/for/if keyword.  The opening and closing braces are
+   indented two spaces.)
+-- Variable and function names should be all lowercase, with underscores
+   separating words, except for a prefixing tag, which may be in
+   uppercase.  Do not use the mixed-case convention (e.g.
+   SetVariableToValue ()) and *especially* do not use Microsoft
+   Hungarian notation (char **rgszRedundantTag).
+-- preprocessor and enum constants should be all uppercase, and should
+   be prefixed with a tag that groups related constants together.
+
+
+Now, the XEmacs coding standards:
+
+**** Specially-prefixed functions/variables:
+
+-- All global C variables whose value is constant and is a symbol begin
+   with a capital Q, e.g. Qkey_press_event. (The type will always be
+   Lisp_Object.)
+-- All other global C variables whose value is a Lisp_Object (this
+   includes variables that forward into Lisp variables plus others like
+   Vselected_console) begin with a capital V.
+-- No C variables whose value is other than a Lisp_Object should begin
+   with a capital V. (This includes C variables that forward into
+   integer or boolean Lisp variables.)
+-- All global C variables whose value is a struct Lisp_Subr begin with a
+   capital S. (This only occurs in connection with DEFUN ()).
+-- All C functions that are Lisp primitives begin with a capital F,
+   and no others should begin this way.
+
+**** Functions for manipulating Lisp types:
+
+-- Any function that creates an empty or mostly empty Lisp object
+   should begin allocate_(). (*Not* make_().) (Except, of course,
+   for Lisp primitives, which usually begin Fmake_()).
+-- Any function that converts a pointer into an equivalent Lisp_Object
+   should begin make_().
+-- Any function that converts a Lisp_Object into its equivalent pointer
+   and checks the type and validity of the object (e.g. making sure
+   it's not dead) should begin decode_().
+-- Any function that looks up a Lisp object (e.g. buffer, face) given
+   a symbol or string should begin get_(). (Except, of course, for
+   Lisp primitives, which usually begin Fget_()).
+
+**** Other:
+
+-- Any header-file declarations of the sort
+
+   struct foobar;
+
+   go into the "types" section of lisp.h.

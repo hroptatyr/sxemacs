@@ -1,0 +1,371 @@
+
+@iftex
+@unnumbered XEmacs Features
+
+This section describes the difference between Emacs Version 18 and 
+XEmacs.
+
+@unnumberedsec General Changes
+
+@itemize @bullet
+@ignore
+@item 
+XEmacs has a new vi emulation mode called evi mode.  To
+start evi mode in Emacs, type the command @kbd{M-x evi}.  If you want
+Emacs to automatically put you in evi-mode all the time, include this
+line in your init file:
+@example
+(setq term-setup-hook 'evi)
+@end example
+@xref{evi Mode} for a brief discussion.
+@xref{Init File}.
+@end ignore
+
+@item 
+XEmacs has a new vi emulation mode called ``viper'' mode.  To start
+viper mode in XEmacs, type the command @kbd{M-x viper-mode}.  If you
+want XEmacs to automatically put you in viper-mode all the time, include
+this line in your init file:
+@example
+(viper-mode)
+@end example
+@xref{Init File}.
+
+@item
+Earlier versions of Emacs only allowed keybindings to ASCII character
+sequences.  XEmacs has greatly expanded this by allowing you to
+use a vector of key sequences which are in turn composed of a modifier
+and a keysym. @xref{Keystrokes} for more information.
+
+@item
+The keymap data structure has been reimplemented to allow the use of a
+character set larger than ASCII. Keymaps are no longer alists and/or
+vectors; they are a new primary data type.  Consequently, code which
+manipulated keymaps with list or array manipulation functions will no
+longer work.  It must use the functions @code{define-key} or
+@code{map-keymap} and @code{set-keymap-parent} (the new keymap
+functions).  @xref{Key Bindings} for more information.
+
+@item
+Input and display of all ISO-8859-1 characters is supported.
+
+@item
+Multiple fonts, including variable-width fonts, and fonts of differing
+heights, are supported.
+
+@item
+There is a new @file{tags} package and a new UNIX manual browsing
+package. They are similar to earlier versions; for more information look
+at the source code. 
+
+@item
+There is a new implementation of Dired, with many new features. The
+online info for Dired, @i{not} the Dired node of Emacs info, provides
+more detail. 
+
+@item
+GNUS (a network news reader), VM (an alternative mail reader), ILISP (a
+package for interacting with inferior Lisp processes), ANGE-FTP (a package
+for making FTP-accessible files appear just like files on the local disk,
+even to Dired), Calendar (an Emacs-based calendar and appointment-
+management tool), and W3 (an interface to the World Wide Web) are a part
+of the XEmacs Lisp library.  See the related documentation in the
+online info browser.
+
+@item
+Emacs now supports floating-point numbers.
+
+@item
+When you send mail, mail aliases are now expanded in the buffer. In
+earlier versions, they were expanded after the mail-sending command was
+executed.
+
+@item
+The initial value of @code{load-path} is computed when Emacs starts up,
+instead of being hardcoded in when Emacs is compiled. As a result, you
+can now move the Emacs executable and Lisp library to a
+different location in the file system without having to recompile.
+
+@item
+Any existing subdirectories of the Emacs Lisp directory are now added to the
+@code{load-path} by default.
+
+@item
+On some machines, you can change the audible bell using the
+@code{sound-alist} variable. @xref{Audible Bell} for more information. 
+
+@item
+You can use multiple X windows to display multiple Emacs frames. 
+
+@item
+You can use the X selection mechanism to copy material from other
+applications and into other applications.  You can also use all Emacs
+region commands on a region selected with the mouse. @xref{Mouse
+Selection} for more information.
+
+@item
+By default, the variable @code{zmacs-regions} is set to highlight the region
+between point and the mark.  This unifies X selection and Emacs selection
+behavior.  
+
+@item
+XEmacs has a menu bar for mouse-controlled operations in addition to
+keystrokes.  @xref{Pull-down Menus}.
+
+@item
+You can look in the file @file{/usr/local/lib/xemacs-19.11/etc/Emacs.ad} for 
+a list of Emacs X resources.  You can set these resources in your X 
+environment to set your preferences for color, fonts, location, and the size 
+of XEmacs frames.  Refer to your X documentation for more information 
+about resources.
+
+@unnumberedsec New Commands and Variables
+
+There are many new functions in XEmacs, and many existing functions
+whose semantics have been expanded.  Most of these are only of interest
+to the Emacs-Lisp programmer; see the NEWS file @kbd{C-h n} for a complete
+list.  What follows is a partial list of the new interactive commands:
+
+@findex byte-compile-and-load-file
+@findex byte-compile-buffer
+@item
+@code{byte-compile-and-load-file} and @code{byte-compile-buffer}
+byte-compile the contents of a file or buffer.
+
+@findex conx
+The new @code{conx} function lets you generate random sentences for your
+amusement.
+
+@findex compile-defun
+@item
+@code{compile-defun} compiles and evaluates the current top-level
+form.
+
+@findex find-this-file
+@findex find-this-file-other-window
+@item
+@code{find-this-file} and @code{find-this-file-other-window} can be used
+interactively with a prefix argument to switch to the filename at point
+in the buffer.  @code{find-this-file-other-window} displays the file in
+another window.
+
+@findex invert-face
+@findex make-face-bold
+@findex make-face-bold-italic
+@findex make-face-italic
+@findex make-face-unbold
+@findex make-face-unitalic
+@findex set-face-background
+@findex set-face-background-pixmap
+@findex set-face-font
+@findex set-face-foreground
+@findex set-face-underline-p
+@item
+Several new functions have been added that allow you to customize the
+color and font attributes of a region of text: @code{invert-face},
+@code{make-face-bold}, @code{make-face-bold-italic},
+@code{make-face-italic}, @code{make-face-unbold},
+@code{make-face-unitalic}, @code{set-face-background},
+@code{set-face-background-pixmap}, @code{set-face-font},
+@code{set-face-foreground}, and @code{set-face-underline-p}.
+
+@findex load-default-sounds
+@findex load-sound-file
+@findex play-sound
+@item
+@code{load-default-sounds} and @code{load-sound-file} allow you to
+customize the audible bell sound.  @code{load-default-sounds} loads and
+installs sound files.  @code{load-sound-file} reads in audio files and
+adds them to the sound alist. @code{play-sound} plays the specified
+sound type.
+
+@findex locate-library
+@item
+@code{locate-library} finds the file that the function
+@code{load-library} loads, and it displays the file's full pathname.
+
+@findex make-directory
+@findex remove-directory
+@item
+@code{make-directory} creates a directory, while @code{remove-directory}
+removes a directory.
+
+@findex mark-beginning-of-buffer
+@findex mark-end-of-buffer
+@item
+@code{mark-beginning-of-buffer} and @code{mark-end-of-buffer} push the
+mark to the beginning or end of a buffer, respectively.
+
+@findex mouse-del-char
+@findex mouse-delete-window
+@findex mouse-keep-one-window
+@findex mouse-kill-line
+@findex mouse-line-length
+@findex mouse-scroll
+@findex mouse-select
+@findex mouse-select-and-split
+@findex mouse-set-mark
+@findex mouse-set-point
+@findex mouse-track
+@findex mouse-track-adjust
+@findex mouse-track-and-copy-to-cutbuffer
+@findex mouse-track-delete-and-insert
+@findex mouse-track-insert
+@findex mouse-window-to-region
+Several functions have been added that allow you to perform various
+editing, region, and window operations using the mouse:
+@code{mouse-del-char}, @code{mouse-delete-window},
+@code{mouse-keep-one-window}, @code{mouse-kill-line},
+@code{mouse-line-length}, @code{mouse-scroll}, @code{mouse-select},
+@code{mouse-select-and-split}, @code{mouse-set-mark},
+@code{mouse-set-point}, @code{mouse-track}, @code{mouse-track-adjust},
+@code{mouse-track-and-copy-to-cutbuffer},
+@code{mouse-track-delete-and-insert}, @code{mouse-track-insert}, and
+@code{mouse-window-to-region}.
+
+@findex compare-windows 
+@item
+@code{compare-windows} takes an argument @var{ignore-whitespace}.
+The argument means ignore changes in whitespace.
+
+@end itemize
+
+You can conditionalize your @file{.emacs} file as follows so that XEmacs 
+commands are invoked only when you are in XEmacs:
+
+@cindex version number
+@example
+(cond ((string-match "Lucid" emacs-version)
+       ;;
+       ;; Code for any version of Lucid Emacs or XEmacs goes here
+       ;;
+       ))
+
+(cond ((and (string-match "XEmacs" emacs-version)
+            (or (> emacs-major-version 19)
+                (>= emacs-minor-version 12)))
+       ;;
+       ;; Code which requires XEmacs version 19.12 or newer goes here
+       ;;
+       ))
+
+(cond ((>= emacs-major-version 19)
+       ;;
+       ;; Code for any vintage-19 emacs goes here
+       ;;
+       ))
+
+(cond ((and (not (string-match "Lucid" emacs-version))
+            (= emacs-major-version 19))
+       ;;
+       ;; Code specific to FSF Emacs 19 (not XEmacs) goes here
+       ;;
+       ))
+
+(cond ((< emacs-major-version 19)
+       ;;
+       ;; Code specific to emacs 18 goes here
+       ;;
+       ))
+@end example
+
+Alternatively, use @file{.xemacs/init.el} for an init file.  @xref{Init File}.
+
+Of particular interest for use in  files are:
+
+@itemize @bullet
+@findex add-menu
+@findex add-menu-item
+@findex delete-menu-item
+@findex disable-menu-item
+@findex enable-menu-item
+@findex relabel-menu-item
+@item
+@code{add-menu} lets you add a new menu to the menubar or a submenu to a
+pull-down menu.  @code{add-menu-item}, @code{disable-menu-item},
+@code{delete-menu-item}, @code{enable-menu-item}, and
+@code{relabel-menu-item} allow you to customize the XEmacs
+pull-down menus.
+
+@findex make-frame
+@item
+@code{make-frame} creates a new Emacs frame (X window).
+
+@end itemize
+
+These new variables are only present in XEmacs:
+
+@itemize @bullet
+
+@vindex minibuffer-confirm-incomplete
+@item
+@code{minibuffer-confirm-incomplete} prompts for confirmation in 
+contexts where @code{completing-read} allows answers that are not valid
+completions.
+
+@vindex x-mode-pointer-shape
+@vindex x-nontext-pointer-shape
+@vindex x-pointer-background-color
+@vindex x-pointer-foreground-color
+@vindex x-pointer-shape
+@item
+Several variables have been added that allow you to customize the color
+and shape of the mouse pointer: @code{x-pointer-background-color},
+@code{x-pointer-foreground-color}, @code{x-mode-pointer-shape},
+@code{x-pointer-shape}, and @* @code{x-nontext-pointer-shape}.
+
+@vindex zmacs-regions
+@item
+@code{zmacs-regions} determines whether LISPM-style active regions
+should be used.
+@end itemize
+
+@unnumberedsec Changes in Key Bindings
+
+XEmacs has the following new default function keybindings:
+
+@table @kbd
+@item @key{HELP}
+Same as @kbd{C-h}.
+
+@item @key{UNDO}
+Same as @kbd{M-x undo}.
+
+@item @key{CUT}
+Same as the Cut menu item; that is, it copies the selected text to
+the X Clipboard selection.
+
+@item @key{COPY}
+Same as the Copy menu item.
+
+@item @key{PASTE}
+Same as the Paste menu item.
+
+@item @key{PGUP}
+Same as @kbd{M-v}.
+
+@item @key{PGDN}
+Same as @kbd{C-v}.
+
+@item @key{HOME}
+Same as @kbd{M-<}.
+
+@item @key{END}
+Same as @kbd{M->}.
+
+@item @key{LEFT-ARROW}
+Same as the function @code{backward-char}.
+
+@item @key{RIGHT-ARROW}
+Same as the function @code{forward-char}.
+
+@item @key{UP-ARROW}
+Same as the function @code{previous-line}.
+
+@item @key{DOWN-ARROW}
+Same as the function @code{next-line}.
+
+@end table
+
+
+@end iftex

@@ -1,0 +1,671 @@
+## DIST: This is the distribution Makefile for XEmacs.  configure can
+## DIST: make most of the changes to this file you might want, so try
+## DIST: that first.
+
+## This file is part of XEmacs.
+
+## XEmacs is free software; you can redistribute it and/or modify it
+## under the terms of the GNU General Public License as published by the
+## Free Software Foundation; either version 2, or (at your option) any
+## later version.
+
+## XEmacs is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+## FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+## for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with XEmacs; see the file COPYING.  If not, write to
+## the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+## Boston, MA 02111-1307, USA.
+
+## make all	to compile and build XEmacs.
+## make install	to build and install it.
+## make install-only	to install after a previous complete build
+## make TAGS	to update tags tables.
+
+## make clean  or  make mostlyclean
+##      Delete all files from the current directory that are normally
+##      created by building the program.	 Don't delete the files that
+##      record the configuration.  Also preserve files that could be made
+##      by building, but normally aren't because the distribution comes
+##      with them.
+
+##      Delete `.dvi' files here if they are not part of the distribution.
+
+## make distclean
+##      Delete all files from the current directory that are created by
+##      configuring or building the program.  If you have unpacked the
+##      source and built the program without creating any other files,
+##      `make distclean' should leave only the files that were in the
+##      distribution.
+
+## make realclean
+##      Delete everything from the current directory that can be
+##      reconstructed with this Makefile.  This typically includes
+##      everything deleted by distclean, plus more: C source files
+##      produced by Bison, tags tables, info files, and so on.
+
+## make extraclean
+##      Still more severe - delete backup and autosave files, too.
+
+#define NOT_C_CODE
+#include "src/config.h"
+
+#ifdef USE_GNU_MAKE
+RECURSIVE_MAKE=$(MAKE)
+#else
+@SET_MAKE@
+RECURSIVE_MAKE=@RECURSIVE_MAKE@
+#endif
+
+SHELL = /bin/sh
+LANG = C
+LC_ALL = C
+RM = rm -f
+MAKEPATH=./lib-src/make-path
+pwd = /bin/pwd
+TAR = tar
+
+## ==================== Things `configure' Might Edit ====================
+
+CC=@CC@
+CPP=@CPP@
+LN_S=@LN_S@
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@
+LDFLAGS=@LDFLAGS@
+
+## These help us choose version- and architecture-specific directories
+## to install files in.
+
+## This should be the number of the XEmacs version we're building,
+## like `19.12' or `19.13'.
+version=@version@
+
+## This should be the name of the configuration we're building XEmacs
+## for, like `mips-dec-ultrix' or `sparc-sun-sunos'.
+configuration=@configuration@
+
+## This will be the name of the generated binary and is set automatically
+## by configure.
+PROGNAME=@PROGNAME@
+
+## ==================== Where To Install Things ====================
+
+## The default location for installation.  Everything is placed in
+## subdirectories of this directory.  The default values for many of
+## the variables below are expressed in terms of this one, so you may
+## not need to change them.  This defaults to /usr/local.
+prefix=@prefix@
+
+## Variable data (as per each program update) goes here
+## The default is ${PROGNAME}
+inststaticdir=@inststaticdir@
+
+## Static data (constant across program updates) goes here
+## The default is ${PROGNAME}-${version}
+instvardir=@instvardir@
+
+## Like `prefix', but used for architecture-specific files.
+exec_prefix=@exec_prefix@
+
+## Where to install XEmacs and other binaries that people will want to
+## run directly (like etags).
+bindir=@bindir@
+
+## Where to install architecture-independent data files.
+## ${lispdir} and ${etcdir} are subdirectories of this.
+datadir=@datadir@
+
+## Where to find XEmacs packages.
+pkgdir=@pkgdir@
+
+## Where to install and expect the files that XEmacs modifies as it runs.
+## These files are all architecture-independent. Right now, the
+## only such data is the locking directory;
+statedir=@statedir@
+
+## Where to install and expect executable files to be run by XEmacs
+## rather than directly by users, and other architecture-dependent data
+## ${archlibdir} is a subdirectory of this.
+libdir=@libdir@
+
+## Where to install XEmacs's man pages, and what extension they should have.
+mandir=@mandir@
+manext=.1
+
+## Where to install and expect the info files describing XEmacs.  In the
+## past, this defaulted to a subdirectory of ${prefix}/lib/xemacs, but
+## since there are now many packages documented with the texinfo
+## system, it is inappropriate to imply that it is part of XEmacs.
+infodir=@infodir@
+
+## Document me.
+## See callproc.c for code which references this.
+infopath=@infopath@
+
+## Where to find the source code.  The source code for XEmacs's C kernel is
+## expected to be in ${srcdir}/src, and the source code for XEmacs's
+## utility programs is expected to be in ${srcdir}/lib-src.  This is
+## set by the configure script's `--srcdir' option.
+srcdir=@srcdir@
+
+## Where the build is done.
+blddir=@blddir@
+
+## ==================== XEmacs-specific directories ====================
+
+## These variables hold the values XEmacs will actually use.  They are
+## based on the values of the standard Make variables above.
+
+## Where to install the lisp files distributed with
+## XEmacs.  This includes the XEmacs version, so that the
+## lisp files for different versions of XEmacs will install
+## themselves in separate directories.
+lispdir=@lispdir@
+
+## Where to install the module files distributed with
+## XEmacs.  This includes the XEmacs version, so that the
+## module files for different versions of XEmacs will install
+## themselves in separate directories.
+moduledir=@moduledir@
+
+## Directory XEmacs should search for lisp files specific
+## to this site (i.e. customizations), before consulting
+## ${lispdir}.
+sitelispdir=@sitelispdir@
+
+## Directory XEmacs should search for module files specific
+## to this site (i.e. customizations), before consulting
+## ${moduledir}.
+sitemoduledir=@sitemoduledir@
+
+## Where XEmacs will search for its lisp files while
+## building.  This is only used during the process of
+## compiling XEmacs, to help XEmacs find its lisp files
+## before they've been installed in their final location.
+## It's usually identical to lispdir, except that the
+## entry for the directory containing the installed lisp
+## files has been replaced with ../lisp.  This should be a
+## colon-separated list of directories.
+buildlispdir=${srcdir}/lisp
+
+## Where to install the other architecture-independent
+## data files distributed with XEmacs (like the tutorial,
+## the cookie recipes and the Zippy database). This path
+## usually contains the XEmacs version number, so the data
+## files for multiple versions of XEmacs may be installed
+## at once.
+etcdir=@etcdir@
+
+## Where to put the DOC file.
+docdir=@docdir@
+
+## Where to put executables to be run by XEmacs rather than
+## the user.  This path usually includes the XEmacs version
+## and configuration name, so that multiple configurations
+## for multiple versions of XEmacs may be installed at
+## once.
+archlibdir=@archlibdir@
+
+## ==================== Utility Programs for the Build ====================
+
+## Allow the user to specify the install program.
+INSTALL = @install_pp@ @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+
+## ============================= Targets ==============================
+
+## Subdirectories to make recursively.  `lisp' is not included
+## because the compiled lisp files are part of the distribution
+## and you cannot remake them without installing XEmacs first.
+MAKE_SUBDIR = @MAKE_SUBDIR@
+
+## Subdirectories that can be made recursively.
+SUBDIR = ${MAKE_SUBDIR} man  
+
+## Subdirectories that must be cleaned on distclean
+SUBDIR_DISTCLEAN = ${SUBDIR} modules/sample modules/ldap modules/zlib modules/base64
+
+## The makefiles of the directories in ${MAKE_SUBDIR}.
+SUBDIR_MAKEFILES = @SUBDIR_MAKEFILES@
+
+## Subdirectories to `make install-arch-dep' recursively
+INSTALL_ARCH_DEP_SUBDIR = @INSTALL_ARCH_DEP_SUBDIR@
+
+## Subdirectories to install, and where they'll go.
+## lib-src's makefile knows how to install it, so we don't do that here.
+## When installing the info files, we need to do special things to
+## avoid nuking an existing dir file, so we don't do that here;
+## instead, we have written out explicit code in the `install' targets.
+COPYDIR = ${srcdir}/etc ${srcdir}/lisp
+COPYDESTS = ${etcdir} ${lispdir}
+GENERATED_HEADERS = src/paths.h src/Emacs.ad.h src/config.h lwlib/config.h src/sheap-adjust.h
+GENERATED_LISP = lisp/finder-inf.el
+
+all: ${PROGNAME} all-elc info
+
+${PROGNAME}:	${GENERATED_HEADERS} ${MAKE_SUBDIR} ${GENERATED_LISP}
+
+## For performance and consistency, no built-in rules
+.SUFFIXES:
+
+.NO_PARALLEL:	${GENERATED_HEADERS} ${MAKE_SUBDIR} dump-elcs
+.PHONY: ${SUBDIR} all beta all-elc all-elcs dump-elc dump-elcs autoloads finder
+
+## Convenience target for XEmacs beta testers
+beta: clean all-elc finder info
+
+## Convenience target for XEmacs maintainers
+## This would run `make-xemacsdist' if I were really confident that everything
+## was turnkey.
+dist: all-elc info
+
+## Convenience target for XEmacs maintainers
+## Updates some rarely generated files:
+## - configure from configure.in
+## - config.values.in from configure
+## - src/depend from src/*.[ch]
+.PHONY: config configure depend
+config: configure depend
+configure: ${srcdir}/configure ${srcdir}/lib-src/config.values.in
+
+${srcdir}/configure : ${srcdir}/configure.in
+	cd ${srcdir} && autoconf
+
+${srcdir}/lib-src/config.values.in : ${srcdir}/configure
+	cd ${srcdir} && $(SHELL) lib-src/config.values.sh
+
+depend ${srcdir}/src/depend:
+	cd ./src && $(RECURSIVE_MAKE) depend
+
+## Build XEmacs and recompile out-of-date and missing .elc files along
+## the way.
+all-elc all-elcs: autoloads dump-elcs
+	${blddir}/src/${PROGNAME} -batch -vanilla \
+		-l update-elc-2.el -f batch-update-elc-2 lisp
+
+## Sub-target for all-elc.
+dump-elc dump-elcs: ${GENERATED_HEADERS} FRC.dump-elcs
+	cd ./src && $(RECURSIVE_MAKE) dump-elcs
+
+autoloads: lib-src lwlib src lisp/auto-autoloads.el lisp/custom-load.el
+
+FRC.lisp.auto.autoloads.el:
+lisp/auto-autoloads.el:	FRC.lisp.auto.autoloads.el
+	$(RM) lisp/auto-autoloads.el
+	${blddir}/src/${PROGNAME} -batch -no-autoloads \
+		-l autoload -f batch-update-directory lisp
+	${blddir}/src/${PROGNAME} -batch -vanilla \
+		-f batch-byte-compile lisp/auto-autoloads.el
+	@$(RM) lisp/auto-autoloads.el~
+
+FRC.lisp.custom.load.el:
+lisp/custom-load.el: FRC.lisp.custom.load.el lisp/auto-autoloads.el
+	${blddir}/src/${PROGNAME} -batch -vanilla -l cus-dep \
+		-f Custom-make-dependencies lisp
+
+finder: src
+	@echo "Building finder database ..."
+	@(cd ./lisp; \
+		${blddir}/src/${PROGNAME} -batch -vanilla \
+		-eval '(setq finder-compile-keywords-quiet t)' \
+		-l finder -f finder-compile-keywords )
+	@echo "Building finder database ...(done)"
+
+lisp/finder-inf.el:
+	@echo "Building finder database ..."
+	@(cd ./lisp; \
+		${blddir}/src/${PROGNAME} -batch -vanilla \
+		-eval '(setq finder-compile-keywords-quiet t)' \
+		-l finder -f finder-compile-keywords )
+	@echo "Building finder database ...(done)"
+
+## We have to force the building of Emacs.ad.h as well in order to get it
+## updated correctly when VPATH is being used.  Since we use move-if-change,
+## it will only actually change if the user modified ${etcdir}/Emacs.ad.
+src/Emacs.ad.h: ${srcdir}/etc/Emacs.ad
+	@echo "Producing \`src/Emacs.ad.h' from \`etc/Emacs.ad'."
+	@$(RM) src/Emacs.ad.h
+	@(echo "/*	Do not edit this file!" ; \
+	  echo "  	Automatically generated from ${srcdir}/etc/Emacs.ad" ; \
+	  echo " */" ; \
+	  $(SHELL) ${srcdir}/lib-src/ad2c ${srcdir}/etc/Emacs.ad ) > \
+	  src/Emacs.ad.h
+
+src/sheap-adjust.h:
+	@echo "Resetting \`src/sheap-adjust.h'."; \
+	(echo "/*	Do not edit this file!" ; \
+	 echo "  	Automatically generated by XEmacs */" ; \
+	 echo "#define SHEAP_ADJUSTMENT 0") > $@
+
+src: @SRC_SUBDIR_DEPS@ FRC.src
+pkg-src/tree-x: pkg-src/FRC.tree-x
+lib-src: FRC.lib-src
+lwlib:	FRC.lwlib
+dynodump: FRC.dynodump
+FRC.src FRC.lib-src FRC.lwlib FRC.dynodump pkg-src/FRC.tree-x:
+FRC.lisp.finder-inf.el:
+
+${SUBDIR}: ${SUBDIR_MAKEFILES} ${GENERATED_HEADERS} FRC
+	cd ./$@ && $(RECURSIVE_MAKE) all
+
+Makefile: ${srcdir}/Makefile.in config.status
+	./config.status
+
+src/Makefile: ${srcdir}/src/Makefile.in.in ${srcdir}/src/depend config.status
+	./config.status
+
+lib-src/Makefile: ${srcdir}/lib-src/Makefile.in.in config.status
+	./config.status
+
+lwlib/Makefile: ${srcdir}/lwlib/Makefile.in.in config.status
+	./config.status
+
+pkg-src/tree-x/Makefile: ${srcdir}/pkg-src/tree-x/Makefile.in.in config.status
+	./config.status
+
+src/config.h: ${srcdir}/src/config.h.in
+	./config.status && touch $@
+
+src/paths.h: ${srcdir}/src/paths.h.in
+	./config.status && touch $@
+
+lwlib/config.h: ${srcdir}/lwlib/config.h.in
+	./config.status && touch $@
+
+## ==================== Installation ====================
+
+## If we let lib-src do its own installation, that means we
+## don't have to duplicate the list of utilities to install in
+## this Makefile as well.
+
+## On AIX, use tar xBf.
+## On Xenix, use tar xpf.
+
+.PHONY: install-only install install-arch-dep install-arch-indep gzip.el mkdir
+.PHONY: check-features
+
+## We delete each directory in ${COPYDESTS} before we copy into it;
+## that way, we can reinstall over directories that have been put in
+## place with their files read-only (perhaps because they are checked
+## into RCS).  In order to make this safe, we make sure that the
+## source exists and is distinct from the destination.
+
+## FSF doesn't depend on `all', but rather on ${MAKE_SUBDIR}, so that
+## they "won't ever modify src/paths.h".  But that means you can't do
+## 'make install' right off the bat because src/paths.h won't exist.
+## And, in XEmacs case, src/Emacs.ad.h won't exist either.  I also
+## don't see the point in avoiding modifying paths.h.  It creates an
+## inconsistency in the build process.  So we go ahead and depend on
+## all.  --cet
+
+check-features: all
+	${blddir}/src/${PROGNAME} -batch -l check-features.el
+
+install-only: ${MAKE_SUBDIR} check-features install-arch-dep install-arch-indep
+
+install: all check-features install-arch-dep install-arch-indep
+
+install-arch-dep: mkdir
+	for subdir in ${INSTALL_ARCH_DEP_SUBDIR}; do \
+	(cd ./$${subdir} && $(RECURSIVE_MAKE) install prefix=${prefix} \
+	    exec_prefix=${exec_prefix} bindir=${bindir} libdir=${libdir} \
+	    archlibdir=${archlibdir}) ; done
+	if test "`(cd ${archlibdir} && $(pwd))`" != \
+		"`(cd ./lib-src && $(pwd))`"; then \
+	   if test -f ../Installation; then \
+		${INSTALL_DATA} ../Installation ${archlibdir}/Installation; \
+	   fi; \
+	   ${INSTALL_DATA} lib-src/config.values ${docdir}/config.values; \
+	   ${INSTALL_DATA} lib-src/DOC ${docdir}/DOC; \
+	   for subdir in `find ${archlibdir} -type d ! -name RCS ! -name SCCS ! -name CVS -print` ; \
+	     do (cd $${subdir} && $(RM) -r RCS CVS SCCS \#* *~) ; done ; \
+	else true; fi
+#ifdef PDUMP
+	${INSTALL_DATA} src/${PROGNAME}.dmp ${bindir}/${PROGNAME}-${version}-`src/${PROGNAME} -sd`.dmp
+#endif
+#ifdef WIN32_NATIVE
+	${INSTALL_PROGRAM} src/${PROGNAME} ${bindir}/${PROGNAME}
+	-chmod 0755 ${bindir}/${PROGNAME}
+#else
+	${INSTALL_PROGRAM} src/${PROGNAME} ${bindir}/${PROGNAME}-${version}
+	-chmod 0755 ${bindir}/${PROGNAME}-${version}
+# ifdef CYGWIN
+	cd ${bindir} && $(RM) ./${PROGNAME} && ${LN_S} ${PROGNAME}-${version}.exe ./${PROGNAME}
+# else
+	cd ${bindir} && $(RM) ./${PROGNAME} && ${LN_S} ${PROGNAME}-${version} ./${PROGNAME}
+# endif /* CYGWIN */
+#endif /* WIN32_NATIVE */
+	if test "${prefix}" != "${exec_prefix}"; then \
+	  $(MAKEPATH) ${exec_prefix}/lib/${instvardir}; \
+	  for dir in \
+		lib/${inststaticdir} \
+	 	lib/${instvardir}/etc \
+		lib/${instvardir}/info \
+		lib/${instvardir}/lisp; do \
+	    if test ! -d ${exec_prefix}/$${dir}; then \
+	      $(LN_S) ${prefix}/$${dir} ${exec_prefix}/$${dir}; fi; \
+	  done; \
+	fi
+
+install-arch-indep: mkdir info
+	-@set ${COPYDESTS} ; \
+	 for dir in ${COPYDIR} ; do \
+	   if test "`(cd $$1 && $(pwd))`" != \
+		   "`(cd $${dir} && $(pwd))`"; then \
+	     : do nothing - echo "rm -rf $$1" ; \
+	   fi ; \
+	   shift ; \
+	 done
+	-set ${COPYDESTS} ; \
+	 for dir in ${COPYDESTS} ; do \
+	   if test ! -d $${dir} ; then mkdir $${dir} ; fi ; \
+	 done ; \
+	 for dir in ${COPYDIR} ; do \
+	   dest=$$1 ; shift ; \
+	   test -d $${dir} \
+	     -a "`(cd $${dir} && $(pwd))`" != \
+		"`(cd $${dest} && $(pwd))`" \
+	   && (echo "Copying $${dir}..." ; \
+	       (cd $${dir} && $(TAR) -cf - . ) | \
+		(cd $${dest} && umask 022 && $(TAR) -xf - );\
+	       chmod 0755 $${dest}; \
+	       for subdir in `find $${dest} -type d ! -name RCS ! -name SCCS ! -name CVS -print` ; do \
+		 (cd $${subdir} && $(RM) -r RCS CVS SCCS \#* *~) ; \
+	       done) ; \
+	 done
+	if test "`(cd ${srcdir}/info && $(pwd))`" != \
+		"`(cd ${infodir} && $(pwd))`" && cd ${srcdir}/info; then \
+	  if test ! -f ${infodir}/dir -a -f dir ; then \
+	    ${INSTALL_DATA} ${srcdir}/info/dir ${infodir}/dir ; \
+	  fi ; \
+	  for file in *.info* ; do \
+	    ${INSTALL_DATA} $${file} ${infodir}/$${file} ; \
+	    chmod 0644 ${infodir}/$${file}; \
+	  done ; \
+	fi
+	cd ${srcdir}/etc && \
+	  for page in xemacs etags ctags gnuserv gnuclient gnuattach gnudoit; do \
+	    ${INSTALL_DATA} ${srcdir}/etc/$${page}.1 ${mandir}/$${page}${manext} ; \
+	    chmod 0644 ${mandir}/$${page}${manext} ; \
+	  done
+	@echo "If you would like to save approximately 2M of disk space, do"
+	@echo "make gzip-el"
+	@echo "or you may run "
+	@echo ${srcdir}/lib-src/gzip-el.sh lispdir " from the command line."
+	@echo "Where lispdir is where the lisp files were installed, i.e.,"
+	@echo "${lispdir}"
+
+gzip-el:
+	$(SHELL) ${srcdir}/lib-src/gzip-el.sh ${lispdir}
+
+## Build all the directories to install XEmacs in.
+## Since we may be creating several layers of directories,
+## (e.g. /usr/local/lib/${PROGNAME}-20.5/sparc-sun-solaris2.6), we use
+## make-path instead of mkdir.  Not all mkdirs have the `-p' flag.
+mkdir: FRC.mkdir
+	${MAKEPATH} ${COPYDESTS} ${docdir} ${infodir} ${archlibdir} \
+	  ${mandir} ${bindir} ${datadir} ${libdir} ${pkgdir} \
+	  ${sitelispdir} ${moduledir} ${sitemoduledir}
+
+## Delete all the installed files that the `install' target would
+## create (but not the noninstalled files such as `make all' would
+## create).
+
+#### Don't delete the lisp and etc directories if they're in the source tree.
+#### This target has not been updated in sometime and until it is it
+#### would be extremely dangerous for anyone to use it.
+##uninstall:
+##	(cd ./lib-src; 					\
+##	 $(RECURSIVE_MAKE) uninstall			\
+##	    prefix=${prefix} exec_prefix=${exec_prefix}	\
+##	    bindir=${bindir} libdir=${libdir} archlibdir=${archlibdir})
+##	for dir in ${lispdir} ${etcdir} ; do 		\
+##	  case `(cd $${dir} ; $(pwd))` in			\
+##	    `(cd ${srcdir} ; $(pwd))`* ) ;;		\
+##	    * ) $(RM) $${dir} ;;			\
+##	  esac ;					\
+##	  case $${dir} in				\
+##	    ${datadir}/${PROGNAME}/${version}/* )		\
+##	      $(RM) -r ${datadir}/${PROGNAME}/${version}	\
+##	    ;;						\
+##	  esac ;					\
+##	done
+##	cd ${infodir} && $(RM) cl* ${PROGNAME}* forms* info* vip*
+##	cd ${mandir} && $(RM) xemacs.1 etags.1 ctags.1 gnuserv.1
+##	cd ${bindir} && $(RM) ${PROGNAME}-${version} ${PROGNAME}
+
+
+## Some makes seem to remember that they've built something called FRC,
+## so you can only use a given FRC once per makefile.
+FRC FRC.src.paths.h FRC.mkdir FRC.dump-elcs FRC.info:
+FRC.mostlyclean FRC.clean FRC.distclean FRC.realclean FRC.tags:
+
+## ==================== Cleaning up and miscellanea ====================
+
+.PHONY: mostlyclean clean distclean realclean extraclean
+
+## `mostlyclean'
+##      Like `clean', but may refrain from deleting a few files that people
+##      normally don't want to recompile.  For example, the `mostlyclean'
+##      target for GCC does not delete `libgcc.a', because recompiling it
+##      is rarely necessary and takes a lot of time.
+mostlyclean: FRC.mostlyclean
+	for d in $(SUBDIR); do (cd ./$$d && $(RECURSIVE_MAKE) $@); done
+
+## `clean'
+##      Delete all files from the current directory that are normally
+##      created by building the program.  Don't delete the files that
+##      record the configuration.  Also preserve files that could be made
+##      by building, but normally aren't because the distribution comes
+##      with them.
+
+##      Delete `.dvi' files here if they are not part of the distribution.
+clean: FRC.clean
+	for d in $(SUBDIR); do (cd ./$$d && $(RECURSIVE_MAKE) $@); done
+	$(RM) core
+
+## `distclean'
+##      Delete all files from the current directory that are created by
+##      configuring or building the program.  If you have unpacked the
+##      source and built the program without creating any other files,
+##      `make distclean' should leave only the files that were in the
+##      distribution.
+top_distclean=\
+	$(RM) config.status config.log confdefs.h config-tmp-* build-install Installation ; \
+	$(RM) core .sbinit lock/* GNUmakefile Makefile Makefile.in ; \
+	$(RM) lisp/finder-inf.el* Installation.el Installation.elc ; \
+	$(RM) -r site-packages xemacs-packages mule-packages site-lisp
+
+distclean: FRC.distclean
+	for d in $(SUBDIR_DISTCLEAN); do (cd ./$$d && $(RECURSIVE_MAKE) $@); done
+	-${top_distclean}
+
+## `realclean'
+##      Delete everything from the current directory that can be
+##      reconstructed with this Makefile.  This typically includes
+##      everything deleted by distclean, plus more: C source files
+##      produced by Bison, tags tables, info files, and so on.
+
+##      One exception, however: `make realclean' should not delete
+##      `configure' even if `configure' can be remade using a rule in the
+##      Makefile.  More generally, `make realclean' should not delete
+##      anything that needs to exist in order to run `configure' and then
+##      begin to build the program.
+realclean: FRC.realclean
+	for d in $(SUBDIR); do (cd ./$$d && $(RECURSIVE_MAKE) $@); done
+	-${top_distclean}
+	$(RM) TAGS
+
+## This doesn't actually appear in the coding standards, but Karl
+## says GCC supports it, and that's where the configuration part of
+## the coding standards seem to come from.  It's like distclean, but
+## it deletes backup and autosave files too.
+extraclean:
+	for d in $(SUBDIR); do (cd ./$$d && $(RECURSIVE_MAKE) $@); done
+	$(RM) *~ \#*
+	-${top_distclean}
+
+## Unlocking and relocking.  The idea of these productions is to reduce
+## hassles when installing an incremental tar of XEmacs.  Do `make unlock'
+## before unlocking the file to take the write locks off all sources so
+## that tar xvof will overwrite them without fuss.  Then do `make relock'
+## afterward so that VC mode will know which files should be checked in
+## if you want to mung them.
+
+## Note: it's no disaster if these productions miss a file or two; tar
+## and VC will swiftly let you know if this happens, and it is easily
+## corrected.
+SOURCES = ChangeLog GETTING.GNU.SOFTWARE INSTALL Makefile.in PROBLEMS \
+	README build-install.in configure make-dist move-if-change
+
+.PHONY: unlock relock TAGS tags check dist info dvi mcs
+
+unlock:
+	chmod u+w $(SOURCES) cpp/*
+	-cd ./elisp && chmod u+w Makefile README *.texi
+	for d in src etc lib-src lisp; do (cd ./$$d && $(RECURSIVE_MAKE) $@); done
+	cd ./lisp/term && chmod u+w README *.el
+	cd ./man && chmod u+w *texi* ChangeLog split-man
+	cd ./lwlib && chmod u+w *.[ch] Makefile.in.in
+
+relock:
+	chmod u-w $(SOURCES) cpp/*
+	-cd ./elisp && chmod u-w Makefile README *.texi
+	for d in src etc lib-src lisp; do (cd ./$$d && $(RECURSIVE_MAKE) $@); done
+	cd ./lisp/term && chmod u+w README *.el
+	cd ./man && chmod u+w *texi* ChangeLog split-man
+	cd ./lwlib && chmod u+w *.[ch] Makefile.in.in
+
+PRUNE_VC = -name SCCS -prune -o -name RCS -prune -o -name CVS -prune -o
+tagslisp = lisp
+TAGS tags: FRC.tags
+	@echo "If you don't have a copy of etags around, then do 'make lib-src' first."
+	$(RM) ${srcdir}/TAGS
+	@PATH=`$(pwd)`/lib-src:$$PATH HOME=/-=-; export PATH HOME; \
+	  echo "Using etags from `which etags`."
+	PATH=`$(pwd)`/lib-src:$$PATH ; export PATH; cd ${srcdir} && \
+	find src lwlib lib-src ${PRUNE_VC} -name '*.[ch]' -print | \
+	  xargs etags -a -r '/[ 	]*DEF\(VAR\|INE\)_[A-Z_]+[ 	]*([ 	]*"\([^"]+\)"/\2/'; \
+	find ${tagslisp} ${PRUNE_VC} -name '*.el' ! -name 'auto-autoloads.el' -print | \
+	  xargs etags -a -l none -r "/^(def\\(var\\|un\\|alias\\|const\\|macro\\|subst\\|struct\\|face\\|group\\|custom\\|ine-\\(function\\|compiler-macro\\|[a-z-]+alias\\)\\)[ 	]+'?\\([^ 	]+\\)/\\3/"
+
+check:
+	cd ./src && $(RECURSIVE_MAKE) $@
+
+info: FRC.info
+	cd ${srcdir}/man && $(RECURSIVE_MAKE) $@
+
+dvi:
+	cd ${srcdir}/man && $(RECURSIVE_MAKE) $@
+
+## Fix up version information in executables (Solaris-only)
+mcs:
+	date=`LANG=C LC_ALL=C date -u '+%e %b %Y'`; \
+	ident="@(#)RELEASE VERSION XEmacs ${version} $${date}"; \
+	for f in `file lib-src/* src/${PROGNAME} | grep ELF | sed -e 's/:.*//'`; do \
+	  mcs -da "$${ident} `echo $${f} | sed 's/.*\///'`" $${f}; \
+	done

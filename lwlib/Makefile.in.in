@@ -1,0 +1,112 @@
+##   Makefile for Lucid Widget Library
+##   Copyright (C) 1994 Lucid, Inc.
+##   Copyright (C) 1995 Tinker Systems and INS Engineering Corp.
+##   Copyright (C) 1994, 1995 Board of Trustees, University of Illinois
+##   Copyright (C) 1996, 1997 Sun Microsystems, Inc.
+
+## This file is part of the Lucid Widget Library.
+
+## The Lucid Widget Library is free software; you can redistribute it and/or
+## modify it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+
+## The Lucid Widget Library is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with XEmacs; see the file COPYING.  If not, write to
+## the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+## Boston, MA 02111-1307, USA.
+
+## For performance and consistency, no built-in rules
+.SUFFIXES:
+.SUFFIXES: .c .h .o .i .s
+
+srcdir=@srcdir@
+
+@SET_MAKE@
+SHELL=/bin/sh
+RM = rm -f
+AR = ar cq
+
+CC=@XEMACS_CC@
+CPP=@CPP@
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@
+RANLIB=@RANLIB@
+
+#define NOT_C_CODE
+#include "../src/config.h"
+
+#ifdef USE_GNU_MAKE
+vpath %.c @srcdir@
+vpath %.h @srcdir@
+#else
+VPATH=@srcdir@
+#endif
+
+objs = lwlib.o lwlib-utils.o lwlib-config.o @lwlib_objs@
+
+all: liblw.a
+
+c_switch_all=@c_switch_all@
+
+cppflags = $(CPPFLAGS) -I. $(c_switch_all)
+cflags = $(CFLAGS) $(cppflags)
+
+#ifdef SOLARIS2
+%.o : %.c
+#else
+.c.o:
+#endif
+	$(CC) -c $(cflags) $<
+
+## Create preprocessor output (debugging purposes only)
+.c.i:
+#ifdef __GNUC__
+	$(CC) -E $(cppflags) -o $@ $<
+#else /* works on Solaris; what about other systems? */
+	$(CC) -P $(cppflags) $<
+#endif /* compiler */
+
+## Create assembler output (debugging purposes only)
+.c.s:
+	$(CC) -S -c $(cflags) $<
+
+liblw.a: $(objs)
+	$(RM) $@
+	$(AR) $@ $(objs)
+	@-test -n "$(RANLIB)" && $(RANLIB) $@
+
+.PHONY: mostlyclean clean distclean realclean extraclean
+mostlyclean:
+	$(RM) liblw.a liblw_pure_*.a *.o *.i core
+clean: mostlyclean
+distclean: clean
+	$(RM) GNUmakefile Makefile Makefile.in config.h TAGS
+realclean: distclean
+extraclean: distclean
+	$(RM) *~ \#*
+
+CONFIG_H = ../src/config.h config.h
+
+## Following correct as of 19980312
+
+lwlib-Xaw.o:	$(CONFIG_H) lwlib-Xaw.h lwlib-internal.h lwlib.h xlwmenu.h xlwradio.h \
+xlwgauge.h xlwcheckbox.h
+lwlib-Xlw.o:	$(CONFIG_H) lwlib-Xlw.h lwlib-internal.h lwlib.h xlwmenu.h xlwscrollbar.h \
+xlwtabs.h xlwgcs.h
+lwlib-Xm.o:	$(CONFIG_H) lwlib-Xm.h lwlib-internal.h lwlib-utils.h lwlib.h xlwmenu.h
+lwlib-config.o:	$(CONFIG_H) lwlib.h xlwmenu.h
+lwlib-utils.o:	$(CONFIG_H) lwlib-utils.h
+lwlib.o:	$(CONFIG_H) lwlib-Xaw.h lwlib-Xlw.h lwlib-Xm.h lwlib-internal.h lwlib-utils.h lwlib.h xlwmenu.h
+xlwmenu.o:	$(CONFIG_H) lwlib.h xlwmenu.h xlwmenuP.h
+xlwscrollbar.o:	$(CONFIG_H) xlwscrollbar.h xlwscrollbarP.h
+xlwtabs.o:	$(CONFIG_H) xlwtabs.h xlwtabsP.h
+xlwradio.o:	$(CONFIG_H) xlwradio.h xlwradioP.h
+xlwcheckbox.o:	$(CONFIG_H) xlwcheckbox.h xlwcheckboxP.h
+xlwgauge.o:	$(CONFIG_H) xlwgauge.h xlwgaugeP.h
+xlwgcs.o:	$(CONFIG_H) xlwgcs.h

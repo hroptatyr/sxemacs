@@ -1,0 +1,250 @@
+@comment  node-name,  next,  previous,  up
+@node Modes, Files, Help, Top
+@chapter Major and Minor Modes
+@cindex modes
+
+XEmacs is @dfn{language sensitive}. It has several @dfn{major} and
+@dfn{minor} modes.  The major modes customize Emacs to edit text of a
+particular sort. There are major modes for C, Lisp, Emacs Lisp, LaTeX,
+English etc. Within each major mode, certain functions and keys are
+redefined to "suit" that particular sort of text. The minor modes
+provide certain features which can be turned off or on at any
+time. Emacs can only be in one major mode at any time, but it can turn
+on several minor modes at the same time. After you have selected any
+major or minor mode, you can select @b{Describe Mode} from the @b{Help}
+menu and you will get documentation about those modes. 
+
+@comment  node-name,  next,  previous,  up
+@menu
+* Major Modes::                 Choosing Major Modes
+* Minor Modes::                 Auto-Fill, Abbrev and other minor modes
+@end menu
+
+@node Major Modes, Minor Modes, Modes, Modes
+@section Major Modes
+@cindex major modes
+
+Emacs has several major modes which customize Emacs to edit text of
+various sorts. You can have only one major mode at any time. Within each
+major mode, Emacs redefines certain functions (like cursor movement,
+indentation and text killing) to suit the needs of the text being
+edited. When you are editing a specific type of text you should switch
+to the appropriate mode. If you are working with C code, you should
+switch to C mode; if you are working with Lisp code, then switch to lisp
+mode and if you are working with English text switch to Text mode.
+
+        When you open a file to work on, Emacs usually selects the
+appropriate mode. For example, if you open a file called @file{guide.c}
+then Emacs will select the C mode because of the ".c" extension of the
+file. To explicitly select a mode type the following command:
+
+@example
+;;; selects lisp mode
+M-x lisp-mode
+
+;;; selects C mode
+M-x c-mode
+@end example
+
+@noindent
+To select any other mode, just add the major mode name before the
+'-mode'. The current mode in which you are in will be displayed in
+parenthesis in the mode-line at the bottom of the frame. All major
+modes have some special keybindings and you can get a listing of those
+keybindings by selecting @b{List Keybindings} from the @b{Help} menu on
+the menu bar.
+
+        Some of the available modes in XEmacs are :
+
+@table @b
+@item fundamental-mode 
+@cindex fundamental-mode
+When you start XEmacs, usually you start with the default "Fundamental"
+mode. This mode has no special definitions or settings.   
+
+@item nroff-mode
+@cindex nroff-mode
+Use this mode when you have to format a text with nroff before it can be
+available in readable form. It redefines some indentation
+commands. @xref{Nroff Mode,,,xemacs,XEmacs User's Manual}, for information
+on this mode.
+
+@item tex-mode
+@cindex tex-mode
+Use this mode if you are using the LaTeX text-formatter. It provides
+commands for insertion of quotes, braces and other characters. It also
+allows you to format the buffer for printing. @xref{TeX
+Mode,,,xemacs,XEmacs User's Manual}, for information on this mode.
+
+@item texinfo-mode
+@cindex texinfo-mode
+Texinfo is a documentation system that uses a single source file to
+produce both printed output and on-line documentation. When you use this
+mode, there will be some special keybindings for inserting some
+characters and executing some commands.
+
+@ifinfo
+This info file which you are reading right now is produced by 'Texinfo'
+@end ifinfo
+@iftex
+This manual itself is produced by 'Texinfo'
+@end iftex
+
+@item outline-mode
+@cindex outline-mode
+Use this mode for editing outlines. When you enable this mode, you can
+make part of the text temporarily invisible so that you can see the
+overall structure of the outline. @xref{Outline Mode,,,xemacs,XEmacs User's
+Manual}, for information on this mode.
+
+@item c-mode
+@cindex c-mode
+Use this mode for C programs. It will redefine some indentation
+commands. @xref{C Indent,,,xemacs,XEmacs User's Manual}.
+
+@item lisp-mode
+@cindex lisp-mode
+Use this mode for Lisp programs. Look at the XEmacs User's Manual for
+more information.
+
+@item fortran-mode
+@cindex fortran-mode
+Use this mode for Fortran programs. This mode provides special commands
+to move around and some other indentation commands.  For more
+information on this mode, @xref{Fortran,,,xemacs,XEmacs User's Manual}.
+
+@item edit-picture
+@cindex edit-picture
+This is the picture mode which you can use to create a picture out of
+text characters. @xref{Picture,,,xemacs,XEmacs User's Manual}, for more
+information.
+
+@item asm-mode
+@cindex asm-mode
+Use asm-mode for editing files of assembler code. Look at the file 
+@file{ /usr/local/lib/xemacs-VERSION/lisp/modes/asm.el} for more
+information. 
+
+@end table
+
+There are some other modes and commands for working with other kinds of
+text or programs. Emacs also provides commands for reading and sending
+Mail. For more information on these features look at the XEmacs
+Manual. Emacs also provides the functions of a desk calendar, with a
+diary of past or planned events. For more information on the calendar
+mode look at the manual for Calendar Mode and Diary.
+
+@comment  node-name,  next,  previous,  up
+@node Minor Modes,  , Major Modes, Modes
+@section Minor Modes
+@cindex minor modes
+
+The minor modes in Emacs provide some optional features which you can
+turn on or off. Any number of minor modes can be active at the same time
+with any major mode. You can enable a minor mode in one buffer and
+disable it in other mode. To enable a minor mode, for example the
+font-lock mode type the following command: 
+
+@example
+M-x font-lock-mode
+@end example
+@noindent
+To enable the other minor modes, replace the "font-lock" with the
+name of the minor mode. To disable the mode type the command again. A
+positive argument will always turn the mode on. Whenever you type this
+command, it will turn the mode on if it was off, OR it will turn it off
+if it was on i.e. it toggles. Look at the mode-line at the bottom of the
+frame. If it says FLock in parentheses, then it means that this
+mode is on, otherwise it is off. 
+
+The following are some of the minor modes available in XEmacs. To enable
+any one of them type "M-x" in front of them.
+
+@table @b
+@item font-lock-mode
+@cindex font-lock-mode
+
+You can also choose this mode by selecting the @b{Syntax Highlighting}
+menu item from the @b{Options} menu on the menu-bar at the
+top. If you wish to have this mode enabled permanently, choose 
+@b{Save Options} from the @b{Options} menu. @xref{Options Menu}, for
+more information on the Options menu.  You can also add statements in
+your @file{init.el} file. For each major mode in which you wish to
+enable this minor mode, you need a statement in your @file{init.el}
+file. The following example shows how to enable the font-lock mode when
+the major mode is c-mode. 
+
+@example
+(add-hook 'c-mode-hook          'turn-on-font-lock)
+@end example
+
+@noindent
+@xref{Other Customizations}.
+
+When you enable this mode, the text will be displayed in
+different colors and fonts depending on the type of the text. This makes
+the text very easy to read and understand. For example, comments might
+be displayed in red, variables in black, functions in blue and other
+keywords in different colors and fonts. When you select @b{More} from
+the @b{Syntax Highlighting} option, you get very detailed display of
+colors and fonts; function names within comments themselves might appear
+in a different font and color.  
+
+@item auto-fill-mode
+@findex auto-fill-mode
+Enabling this mode will provide automatic word-wrapping. The @key{SPC}
+key will break lines i.e. insert newlines as you type to prevent lines
+from becoming too long. 
+
+@item overwrite-mode
+@cindex overwrite-mode
+When you enable this mode, the text that you type will replace the
+existing text rather than moving it to the right (the default case). You
+can enable this mode by selecting @b{Overstrike} menu-item from the
+@b{Options} menu from the menu-bar. 
+
+@item abbrev-mode
+@cindex abbrev-mode
+After you enable this mode, you can define words which will expand into
+some different text i.e. you can define abbreviations. For example, you
+might define "expand" to "expand will eventually expand to this
+text". After this definition you will be able to get "expand will
+eventually expand to this text" simply by typing 
+
+@example
+expand @key{SPC} 
+@end example
+
+@noindent
+ @xref{Abbrevs,,,xemacs,XEmacs User's Manual}, for more information on this
+mode and on defining abbreviations.
+
+@item auto-save-mode
+@cindex auto-save-mode
+After you enable this mode in a buffer, the contents of that buffer will
+be saved periodically. This will reduce the amount you might lose in
+case of a system crash.
+
+@item line-number-mode
+@cindex line-number-mode
+After you enable this mode, the line number at which your cursor is
+present will be displayed continuously in the mode line. 
+
+@item blink-paren
+@cindex blink-paren
+To enable this command, just type 
+@example
+M-x blink-paren
+@end example
+
+@noindent
+Do not add the "-mode" to it.  You can also select the @b{Paren
+Highlighting} option from the @b{Options} menu. After you enable this
+command, put your cursor on one of the left parenthesis. The other
+matching parenthesis will start blinking. @xref{Options Menu}, for more
+information on the @b{Paren Highlighting} option.
+@end table
+
+For information on some other modes, look at the XEmacs User's Manual
+and the associated files.
+

@@ -1,0 +1,195 @@
+
+	   XEmacs availability information.  Last Modified: 2001-02-01
+
+XEmacs is available via anonymous FTP at ftp://ftp.xemacs.org/pub/xemacs/
+and also via HTTP at http://ftp.xemacs.org/.
+
+ftp.xemacs.org is the primary distribution point, but you may find
+copies of it at other sites as well.  Some sites to try include:
+
+* Africa
+
+     o South Africa
+
+          + ftp.za.xemacs.org (FTP)
+          + ftp.za.xemacs.org (HTTP)
+
+* America
+
+     o North America
+
+          + Canada
+               + ftp.ca.xemacs.org (FTP)
+               + ftp.ca.xemacs.org (HTTP)
+
+                      Secondary Mirrors
+                    + ftp://ftp.crc.ca/pub/packages/editors/xemacs/
+
+          + United States
+
+               + ftp.us.xemacs.org (FTP)
+               + ftp.us.xemacs.org (HTTP)
+
+                      Secondary Mirrors
+                    + ftp://ftp.twoguys.org/pub/xemacs/
+                    + ftp://ftp.stealth.net/pub/mirrors/ftp.xemacs.org/pub/xemacs/
+                    + ftp://metalab.unc.edu/pub/packages/editors/xemacs/
+                    + http://metalab.unc.edu/pub/packages/editors/xemacs/
+
+     o South America
+
+          + Brazil
+
+               + ftp.br.xemacs.org (FTP)
+
+* Asia
+
+     o Japan
+
+          + ftp.jp.xemacs.org (FTP)
+
+                 Secondary Mirrors
+               + ftp://ftp.jaist.ac.jp/pub/GNU/xemacs/
+               + ftp://ring.aist.go.jp/pub/text/xemacs/
+               + ftp://ring.asahi-net.or.jp/pub/text/xemacs/
+               + ftp://sunsite.sut.ac.jp/pub/archives/packages/xemacs/
+               + ftp://ftp.dti.ad.jp/pub/unix/editor/xemacs/
+               + ftp://mirror.nucba.ac.jp/mirror/xemacs/
+
+     o Korea
+
+          + ftp.kr.xemacs.org (FTP)
+
+     o Taiwan
+
+          + ftp.tw.xemacs.org (FTP)
+          + ftp.tw.xemacs.org (HTTP)
+
+* Australia
+
+     o Queensland
+
+          + ftp.au.xemacs.org (FTP)
+          + ftp.au.xemacs.org (HTTP)
+
+                 Secondary Mirrors
+               + ftp://mirror.aarnet.edu.au/pub/xemacs/
+               + http://mirror.aarnet.edu.au/pub/xemacs/
+
+* Europe
+
+     o Austria
+
+          + ftp.at.xemacs.org (FTP)
+          + ftp.at.xemacs.org (HTTP)
+
+     o Belgium
+
+          + ftp.be.xemacs.org (FTP)
+          + ftp.be.xemacs.org (HTTP)
+
+     o Denmark
+
+          + ftp.dk.xemacs.org (FTP)
+          + ftp.dk.xemacs.org (HTTP)
+
+     o Finland
+
+          + ftp.fi.xemacs.org (FTP)
+          + ftp.fi.xemacs.org (HTTP)
+
+     o France
+
+          + ftp.fr.xemacs.org (FTP)
+          + ftp.fr.xemacs.org (HTTP)
+
+                 Secondary Mirrors
+               + ftp://ftp.pasteur.fr/pub/computing/xemacs/
+
+     o Germany
+
+          + ftp.de.xemacs.org (FTP)
+          + ftp.de.xemacs.org (HTTP)
+
+                 Secondary Mirrors
+               + ftp://ftp.tu-darmstadt.de/pub/editors/xemacs/
+
+     o Hungary
+
+          + ftp.hu.xemacs.org (FTP)
+          + ftp.hu.xemacs.org (HTTP)
+
+     o Ireland
+
+          + ftp.ie.xemacs.org (FTP)
+          + ftp.ie.xemacs.org (HTTP)
+
+     o Italy
+
+          + ftp.it.xemacs.org (FTP)
+          + ftp.it.xemacs.org (HTTP)
+
+     o Norway
+
+          + ftp.no.xemacs.org (FTP)
+          + ftp.no.xemacs.org (HTTP)
+
+     o Poland
+
+          + ftp.pl.xemacs.org (FTP)
+          + ftp.pl.xemacs.org (HTTP)
+
+     o Russia
+
+          + ftp.ru.xemacs.org (FTP)
+          + ftp.ru.xemacs.org (HTTP)
+
+     o Slovakia
+
+          + ftp.sk.xemacs.org (FTP)
+          + ftp.sk.xemacs.org (HTTP)
+
+     o Sweden
+
+          + ftp.se.xemacs.org (FTP)
+          + ftp.se.xemacs.org (HTTP)
+
+     o Switzerland
+
+          + ftp.ch.xemacs.org (FTP)
+          + ftp.ch.xemacs.org (HTTP)
+
+     o United Kingdom
+
+          + ftp.uk.xemacs.org (FTP)
+          + ftp.uk.xemacs.org (HTTP)
+
+                 Secondary Mirrors
+               + ftp://sunsite.doc.ic.ac.uk/packages/xemacs/
+               + http://sunsite.doc.ic.ac.uk/packages/xemacs/
+
+* Middle East
+
+     o Saudi Arabia
+
+          + ftp.sa.xemacs.org (FTP)
+          + ftp.sa.xemacs.org (HTTP)
+
+
+The most up-to-date list of distribution sites can always be found on
+the XEmacs WWW page at http://www.xemacs.org/Download/.  Try to pick a
+site that is networkologically close to you.  If you know of other
+mirrors of the XEmacs archives, please send e-mail to
+<webmaster@xemacs.org> and we will list them here as well.
+
+There are mailing lists and newsgroups specifically for discussing and
+reporting bugs in XEmacs; see the file MAILINGLISTS in this directory.
+
+-----------------------------------------------------------------------
+
+	How to get GNU Software by Internet FTP or by UUCP: 
+
+The XEmacs project is separate from and not managed by the GNU
+project.  The latest GNU project FTP and UUCP availability information
+can be found at ftp://ftp.gnu.org/gnu/GNUinfo/FTP
+

@@ -1,0 +1,112 @@
+
+	   XEmacs Electronic Mailing Lists.  Last Modified: 1999-11-08
+
+XEmacs has its own mailing lists and newsgroup which are distinct from
+the FSF GNU Emacs mailing lists and newsgroups.  The mailing lists are: 
+
+xemacs@xemacs.org		comp.emacs.xemacs bi-directional gateway.
+  
+  xemacs is an open list for discussion and bug reporting for
+  XEmacs. This mailing list is bi-directionally gatewayed with the
+  USENET newsgroup comp.emacs.xemacs.
+
+xemacs-announce@xemacs.org	XEmacs Announcements.
+
+  xemacs-announce is a read-only, low volume list for announcements
+  concerning the XEmacs project and new releases of the XEmacs
+  software.
+
+xemacs-beta@xemacs.org		XEmacs Beta Testers.
+
+  xemacs-beta is an open list for bug reports and general
+  communication about beta versions of XEmacs.
+
+xemacs-build-reports@xemacs.org	XEmacs Build Report Submissions.
+	
+  xemacs-build-reports is an open list for submission of build-reports
+  on beta versions of XEmacs. For information on what the
+  build-reports should contain, please see the `etc/BETA' file which
+  is included in each beta distribution.
+
+xemacs-cvs@xemacs.org		XEmacs CVS Commit Notices.
+
+  xemacs-cvs is a read-only list for notices and information on what
+  has been committed to the XEmacs CVS trees, by whom, and for
+  what. (For more information on the XEmacs CVS Archive:
+  http://cvs.xemacs.org/.)
+
+xemacs-mule@xemacs.org		XEmacs International Extensions.
+
+  xemacs-mule is an open mailing list for discussion of International
+  extensions to XEmacs including Mule, XIM, I18n issues, etc, and is
+  not confined to developmental issues.  This list is not restricted
+  to English, postings in all languages are welcome.
+
+xemacs-nt@xemacs.org		XEmacs on Windows NT/98/95.
+
+  xemacs-nt is a developer's only mailing list and is intended for
+  people who wish to work actively on the porting of XEmacs to
+  Microsoft Windows NT and Microsoft Windows 98/95.
+
+xemacs-patches@xemacs.org	XEmacs Patch Submissions.
+
+  xemacs-patches is an open, moderated list for submission of patches
+  to the XEmacs distribution and its packages. Anyone may subscribe or
+  submit to xemacs-patches, but all submissions are reviewed by the
+  list moderator before they are distributed to the list.  Discussion
+  is not appropriate on xemacs-patches.
+
+xemacs-users-ja@xemacs.org	XEmacs (Japanese).
+
+  xemacs-users-ja is an open list for discussion and bug reporting for
+  XEmacs. Japanese is the preferred language of discussion. It is not
+  gated to comp.emacs.xemacs or the xemacs list.  For fastest
+  response, bugs not specifically related to Japanese or Mule features
+  should be reported on xemacs (in English).
+
+xemacs-beta-ja@xemacs.org	XEmacs Beta (Japanese).
+
+  xemacs-beta-ja is an open list for bug reports and general
+  communication about beta versions of XEmacs, especially features
+  related to Mule and Japanese-handling. Japanese is the preferred
+  language of discussion. Bugs not specifically related to Japanese or
+  Mule features should be reported on xemacs-beta (in English). Please
+  consider sending bug reports on Mule to xemacs-mule, in English.
+
+The most up to date information on the mailing lists can always be
+found at http://www.xemacs.org/.
+
+Subscriptions:
+
+Subscription to all the lists is accomplished by sending an e-mail
+message to LISTNAME-request@xemacs.org with `subscribe' (without the
+quotes) as the BODY of the message.
+
+To unsubscribe, send an e-mail to LISTNAME-request@xemacs.org with
+`unsubscribe' (without the quotes) as the BODY of the message.
+
+List Archives:
+
+A browsable and searchable archive of these lists is available at
+http://www.xemacs.org/list-archives/.
+
+Problems:
+
+Any comments, questions, or complaints about the lists should be
+brought to the attention of the XEmacs Mailing List Manager
+<list-manager@xemacs.org>.
+
+-----------------------------------------------------------------------
+
+	GNU Project Electronic Mailing Lists and gnUSENET Newsgroups:
+
+The XEmacs project is separate from and not managed by the GNU
+project.  The latest information about the GNU project mailing lists
+can be found at ftp://ftp.gnu.org/gnu/GNUinfo/MAILINGLISTS
+
+Please do NOT send messages about problems with XEmacs to the FSF GNU
+Emacs newsgroups and mailing lists unless you are sure that the
+problem you are reporting is a problem with both versions of GNU
+Emacs.  People who aren't subscribed to the XEmacs mailing list most
+likely are not interested in hearing about problems with it.
+

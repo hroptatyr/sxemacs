@@ -1,0 +1,258 @@
+@comment  node-name,  next,  previous,  up
+@node Select and Move, Search and Replace, Other Customizations, Top
+@chapter Selecting and Moving Text
+@cindex region
+@cindex mark
+
+  Many Emacs commands operate on an arbitrary contiguous
+part of the current buffer. You can select some part of the buffer and
+edit only that part of the buffer. This selected buffer is called a
+@dfn{region}. You can select text in two ways:
+
+@itemize @bullet
+@item
+You use special keys to select text by defining a region between the
+cursor and @dfn{the mark} (which you set). 
+@item
+If you are running XEmacs under X, you can also select text
+with the mouse. 
+@end itemize
+
+@comment  node-name,  next,  previous,  up
+@menu
+* Selecting Text::              Select a region of text by setting the Mark
+* Mouse::                       Selecting Text with Mouse
+* Region Operation::            Various ways to operate on a selected text
+* Moving Text::                 Moving Text 
+* Accumulating text::           Accumulating Text from several buffers
+@end menu
+
+@node Selecting Text, Mouse, Select and Move, Select and Move
+@section Setting the Mark
+@kindex C-SPC
+@kindex C-x C-x
+@kindex C-<
+@kindex C->
+@findex set-mark-command
+@findex mark-beginning-of-buffer
+@findex mark-end-of-buffer
+@findex exchange-point-and-mark
+  To define a region you need to set @dfn{the mark} at one end of it and 
+move the cursor to the other end. Once you set the mark, it remains
+there until you set it again to some other place. Each buffer has its
+own @dfn{mark ring} (a place where Emacs remembers 16 previous
+locations of the mark). To set @dfn{the mark}, you can use the
+following commands:
+
+@table @kbd
+@item C-@key{SPC}
+This command will set @dfn{the mark} at the position of your cursor
+(@code{set-mark-command}).  You can move your cursor around and @dfn{the
+mark} will stay there. 
+@item C-x C-x
+Interchange mark and point (@code{exchange-point-and-mark}). Since Emacs
+will have only one cursor, after you move the cursor it will be unable
+to show you where you set the @dfn{the mark}. In order to see @dfn{the
+mark} you can type the command @kbd{C-x C-x} which will put your cursor
+on the position of your mark and your mark on the position of your
+cursor. Use the command again to reset the positions of your cursor and
+mark. 
+@item C-<
+This command will push the mark at the beginning of the buffer without
+changing the position of your cursor.
+@item C->
+This command will push the mark at the end of the buffer without
+changing the position of your cursor.
+@end table
+@noindent
+You can also give arguments to @kbd{C-<} or @kbd{C->}. @xref{The Mark
+and the Region,,,xemacs,XEmacs User's Manual}, for more information.
+
+@comment  node-name,  next,  previous,  up
+@node Mouse, Region Operation, Selecting Text, Select and Move
+@section Selecting Text with Mouse
+@cindex mouse selection
+@cindex clipboard selection
+@cindex primary selection
+@cindex cursor shapes
+  If you are using XEmacs under X, you can use the mouse to select
+text. The selected text will always be highlighted, so just by looking
+at the text you know what you have selected so far. To select a word
+just double-click with the left-mouse-button on the word. To select a
+whole line triple-click anywhere on the line with the
+left-mouse-button. You can also use the @b{Copy} item from the @b{Edit}
+menu on the menu-bar to select text. This kind of selection is called
+@b{Clipboard} selection, @xref{X Clipboard Selection,,,xemacs,XEmacs User's
+Manual}, for more information. To select an arbitrary region, follow
+these steps:
+
+@enumerate
+@item
+Move the mouse cursor over the character at the beginning of the region of
+text you want to select.
+@item
+Press and hold the left mouse button. 
+@item
+While holding the left mouse button down, drag the cursor to the
+character at the end of the region of text you want to select.
+@item
+Release the left mouse button.
+@end enumerate
+The selected region of text is highlighted.
+
+  @xref{Selecting Text with the Mouse,,,xemacs,XEmacs User's Manual}, for
+more information regarding the Mouse and additional mouse operations.
+
+@comment  node-name,  next,  previous,  up
+@node Region Operation, Moving Text, Mouse, Select and Move
+@section Operating on the Region
+  Once you have selected a region you can do a lot of things to the text
+in the region:
+@kindex C-w
+@kindex C-x C-u
+@kindex C-x C-l
+@kindex C-SPC
+@kindex C-x TAB
+@kindex C-M-\
+@findex print-region
+@itemize @bullet
+@item
+Kill the text with @kbd{C-w}. For example if you want to kill a
+paragraph, position the cursor to the beginning of the paragraph and
+type @kbd{C-SPC}. Then go to the end of the paragraph and type
+@kbd{C-w}. The entire paragraph will be deleted. You can also select the
+text with a mouse and type @kbd{C-w} to kill the entire
+region. @xref{Killing,,,xemacs,XEmacs User's Manual}, for more information.
+
+@item
+Save the text in a buffer or a file (@pxref{Accumulating
+Text,,,xemacs,XEmacs User's Manual}).
+@item
+You can convert the case of the text with @kbd{C-x C-l} or @kbd{C-x C-u}
+If you type @kbd{C-x C-u} the selected text will become all
+upper-case. If you type @kbd{C-x C-l} the selected text will become all
+lower-case. 
+@item
+Print hardcopy with @kbd{M-x
+print-region}. @xref{Hardcopy,,,xemacs,XEmacs User's Manual}, for more
+information. This command will print a hardcopy of only the selected
+text.
+@item
+Indent it with @kbd{C-x @key{TAB}} or @kbd{C-M-\}
+@xref{Indentation,,,xemacs,XEmacs User's Manual}, for more information.
+@end itemize
+
+
+@comment  node-name,  next,  previous,  up
+@node Moving Text, Accumulating text, Region Operation, Select and Move
+@section Moving Text
+@cindex yanking
+@cindex pasting
+@findex yank
+@cindex killing
+@cindex kill ring
+@cindex moving text
+@kindex C-y
+  The most common way to move or copy text in Emacs is through
+@dfn{killing} or @samp{cutting} it and then @dfn{yanking} or
+@samp{pasting} it. You can also use the @b{Cut} or @b{Copy} option from
+the @b{Edit} menu for killing and copying respectively. @xref{Edit menu}, 
+for reviewing the commands for killing text. All the killed text
+in Emacs is recorded in the @dfn{kill ring}. Since there is only one
+kill ring in Emacs, you can kill text in one buffer and yank it in
+another buffer. To @samp{paste} or 
+@samp{yank} the killed text you can use the following commands:
+@table @kbd
+@item C-y
+This command will yank or paste the last killed text (@code{yank}).
+@item M-w
+Save region as last killed text without actually killing it
+(@code{copy-region-as-kill}). You can use this command to copy a
+selected region and then yank (or paste) it without actually removing it
+from the buffer.
+@item C-M-w
+Append next kill to last batch of killed text
+(@code{append-next-kill}). This command will append whatever you killed
+last to what you kill now. Then later you will be able to yank the
+entire appended text from the @dfn{kill ring}. 
+@end table
+
+@comment  node-name,  next,  previous,  up
+@node Accumulating text,  , Moving Text, Select and Move
+@section Accumulating Text
+@findex append-to-buffer
+@findex prepend-to-buffer
+@findex copy-to-buffer
+@findex append-to-file
+@cindex copying text
+@cindex accumulating text
+@cindex rectangle commands
+@cindex registers
+@cindex temporary storage
+
+  The following commands can be used for accumulating text from
+different buffers into one place or for copying one region of text into
+many buffers: 
+
+@table @kbd
+@item M-x append-to-buffer
+Append region to contents of specified buffer
+(@code{append-to-buffer}). After you type in this command and press
+@key{RET}, Emacs will prompt you for a buffer name. You will see a
+message in the echo area:
+@example
+Append to buffer: (default <buffer name>) 
+@end example
+@noindent
+After you type in a buffer name, a copy of the region will be inserted
+at the location of the cursor into that buffer. If there is no buffer
+with the name given by you, Emacs will create a new buffer with that
+name. By default the cursor's position in the <buffer name> is at the end.
+@item M-x prepend-to-buffer
+Prepend region to contents of specified buffer. This command is similar
+to the above command except that the cursor in the buffer (by default)
+is at the beginning rather than at the end.
+@item M-x copy-to-buffer
+Copy region into specified buffer, deleting that buffer's old
+contents. This command will also prompt you for a buffer name.
+@item M-x insert-buffer
+Insert contents of specified buffer into current buffer at point. This
+command will prompt you for a buffer name which you want to be copied
+into the current buffer at the location of the cursor.
+@item M-x append-to-file
+This command will prompt you for a filename and append the region to
+the end of the contents of the specified file.
+@end table
+
+@noindent
+@xref{Accumulating Text,,,xemacs,XEmacs User's Manual}, for more
+information regarding this topic.
+  
+  You can also use @dfn{rectangle commands} for operating on rectangular
+areas of text. @xref{Rectangles,,,xemacs,XEmacs User's Manual}, for more
+information regarding rectangle commands.
+
+  Emacs also provides @dfn{registers} which serve as temporary storage for
+text or positions. Each register has a one character name and they can
+store @dfn{regions}, a @dfn{rectangle}, or a @dfn{mark} i.e. a cursor
+position. Whatever you store in register stays there until you store
+something else in that register. To find out about commands which
+manipulate registers @xref{Registers,,,xemacs,XEmacs User's Manual}. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,51 @@
+The theme of the gamma series of 21.4 releases is "oxymoron", that is,
+contradiction in terms.  Each patchlevel will be assigned a unique
+codename from the list below.  The rationale for the first should be
+obvious.
+
+The second and third are my tributes to Richard Stallman and the early
+developers of Lucid Emacs/XEmacs (primarily Jamie Zawinski, but it
+also fits Ben Wing which is appropriate to the Mule theme), in
+chronological order.  I cannot list all the debts this release owes
+for individual contributions, but I must credit the fundamental
+excellence of the design of [X]Emacs for inspiring the audacious
+proposal to add both GTK and Windows/MULE to XEmacs over a period of
+two months, and for the success of the GTK merge.  Without the
+prospect of such a big win, I could not have justified trying to
+coordinate a release myself.
+
+The rest of the codenames are in alphabetical order.
+
+N.B. I expect that the Stable Release Maintainer will choose a new
+theme for the releases following the promotion of 21.4 from "gamma" to
+"stable".  So 15 or so should be enough....
+
+21.4.0: Solid Vapor
+21.4.1: Copyleft
+21.4.2: Developer-Friendly Unix APIs
+21.4.3: Academic Rigor
+21.4.4: Artificial Intelligence
+21.4.5: Civil Service
+21.4.6: Common Lisp
+21.4.7: Economic Science
+21.4.8: Honest Recruiter
+21.4.9: Informed Management
+21.4.10: Military Intelligence
+21.4.11: Native Windows TTY Support
+21.4.12: Portable Code
+21.4.13: Rational FORTRAN
+21.4.14: Reasonable Discussion
+21.4.15: Security Through Obscurity
+21.4.16: Corporate Culture
+21.4.17: Jumbo Shrimp
+21.4.18: Social Property
+21.4.19: Stable Release Maintainer
+21.4.20: Standard C
+21.4.21: Successful IPO
+21.4.22: Sufficiently Smart Compiler
+21.4.23: The Gift Economy
+21.4.24: Too Much Mozart
+21.4.25: UTF-8 BOM
+
+N.B.  Only incredibly redeeming suggestions can be accepted now.
+

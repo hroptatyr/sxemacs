@@ -1,0 +1,10 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1995 Ben Wing.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/glyphs.info
+@node Scrollbars, Drag and Drop, Gutter, top
+@chapter Scrollbars
+@cindex scrollbars
+
+Not yet documented.

@@ -1,0 +1,73 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 1996 Ben Wing.
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/range-tables.info
+@node Range Tables, Databases, Hash Tables, top
+@chapter Range Tables
+@cindex Range Tables
+
+A range table is a table that efficiently associated values with
+ranges of integers.
+
+Note that range tables have a read syntax, like this:
+
+@example
+#s(range-table data ((-3 2) foo (5 20) bar))
+@end example
+
+This maps integers in the range (-3, 2) to @code{foo} and integers
+in the range (5, 20) to @code{bar}.
+
+@defun range-table-p object
+Return non-@code{nil} if @var{object} is a range table.
+@end defun
+
+@menu
+* Introduction to Range Tables:: Range tables efficiently map ranges of
+                                 integers to values.
+* Working With Range Tables::    Range table functions.
+@end menu
+
+@node Introduction to Range Tables
+@section Introduction to Range Tables
+
+@defun make-range-table
+Make a new, empty range table.
+@end defun
+
+@defun copy-range-table range-table
+This function returns a new range table which contains the same values
+for the same ranges as @var{range-table}.  The values will not
+themselves be copied.
+@end defun
+
+@node Working With Range Tables
+@section Working With Range Tables
+
+@defun get-range-table pos range-table &optional default
+This function finds value for position @var{pos} in @var{range-table}.
+If there is no corresponding value, return @var{default} (defaults to
+@code{nil}).
+@end defun
+
+@defun put-range-table start end value range-table
+This function sets the value for range (@var{start}, @var{end}) to be
+@var{value} in @var{range-table}.
+@end defun
+
+@defun remove-range-table start end range-table
+This function removes the value for range (@var{start}, @var{end}) in
+@var{range-table}.
+@end defun
+
+@defun clear-range-table range-table
+This function flushes @var{range-table}.
+@end defun
+
+@defun map-range-table function range-table
+This function maps @var{function} over entries in @var{range-table},
+calling it with three args, the beginning and end of the range and the
+corresponding value.
+@end defun
+
