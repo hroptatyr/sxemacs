@@ -1,0 +1,394 @@
+                                                            -*- Outline -*-
+This file is in Outline mode.  It is best viewed under XEmacs.
+
+Press C-c C-o (Ctrl+c Ctrl+o) now to see a list of headings.
+  To expand a heading:  Put the cursor on the heading and press C-c C-s
+To collapse a heading:  Press C-c C-d
+
+For general XEmacs navigation tips: Press C-h t
+
+Description of available packages
+=================================
+Up-to-date as of Jul 31, 2003.
+
+** Normal Packages
+==================
+A very broad collection of elisp packages.
+
+*** Sun
+Support for Sparcworks.
+
+*** ada
+Ada language support.
+
+*** apel
+A Portable Emacs Library.  Used by XEmacs MIME support.
+
+*** auctex
+Basic TeX/LaTeX support.
+
+*** bbdb
+The Big Brother Data Base.
+
+*** build
+Build XEmacs from within (UNIX, Windows).
+
+*** c-support
+Basic single-file add-ons for editing C code.
+
+*** calc
+Emacs calculator.
+
+*** calendar
+Calendar and diary support.
+
+*** cc-mode
+C, C++, Objective-C, Java, CORBA IDL, Pike and AWK language support.
+
+*** clearcase
+New Clearcase Version Control for XEmacs (UNIX, Windows).
+
+*** cookie
+Spook and Yow (Zippy quotes).
+
+*** crisp
+Crisp/Brief emulation.
+
+*** debug
+GUD, gdb, dbx debugging support.
+
+*** dictionary
+Interface to RFC2229 dictionary servers.
+
+*** dired
+The DIRectory EDitor is for manipulating, and running commands on
+files in a directory.
+
+*** docbookide
+DocBook editing support.
+
+*** ecb
+Emacs source code browser.
+
+*** ecrypto
+Crypto functionality in Emacs Lisp.
+
+*** edebug
+An Emacs Lisp debugger.
+
+*** ediff
+Interface over GNU patch.
+
+*** edit-utils
+Miscellaneous editor extensions, you probably need this.
+
+*** edt
+DEC EDIT/EDT emulation.
+
+*** efs
+Treat files on remote systems the same as local files.
+
+*** eieio
+Enhanced Implementation of Emacs Interpreted Objects.
+
+*** elib
+Portable Emacs Lisp utilities library.
+
+*** emerge
+Another interface over GNU patch.
+
+*** erc
+ERC is an Emacs InternetRelayChat client.
+
+*** escreen
+Multiple editing sessions withing a single frame (like screen).
+
+*** eshell
+Command shell implemented entirely in Emacs Lisp.
+
+*** ess
+ESS: Emacs Speaks Statistics.
+
+*** eterm
+Terminal emulation.
+
+*** eudc
+Emacs Unified Directory Client (LDAP, PH).
+
+*** footnote
+Footnoting in mail message editing modes.
+
+*** forms
+Forms editing support (obsolete, use Widget instead).
+
+*** fortran-modes
+Fortran support.
+
+*** frame-icon
+Set up mode-specific icons for each frame under XEmacs.
+
+*** fsf-compat
+FSF Emacs compatibility files.
+
+*** games
+Tetris, Sokoban, and Snake.
+
+*** gnats
+XEmacs bug reports.
+
+*** gnus
+The Gnus Newsreader and Mailreader.
+
+*** haskell-mode
+Haskell editing support.
+
+*** hm--html-menus
+HTML editing.
+
+*** hyperbole
+Hyperbole: The Everyday Info Manager.
+
+*** ibuffer
+Advanced replacement for buffer-menu.
+
+*** idlwave
+Editing and Shell mode for the Interactive Data Language.
+
+*** igrep
+Enhanced front-end for Grep.
+
+*** ilisp
+Front-end for Inferior Lisp.
+
+*** ispell
+Spell-checking with GNU ispell.
+
+*** jde
+Integrated Development Environment for Java.
+
+*** liece
+IRC (Internet Relay Chat) client for Emacs.  Note, this package is
+deprecated and will be removed, use riece instead.
+
+*** mail-lib
+Fundamental lisp files for providing email support.
+
+*** mailcrypt
+Support for messaging encryption with PGP.
+
+*** mew
+Messaging in an Emacs World.
+
+*** mh-e
+The XEmacs Interface to the MH Mail System.
+
+*** mine
+Minehunt Game.
+
+*** misc-games
+Other amusements and diversions.
+
+*** mmm-mode
+Multiple major modes in a single buffer.
+
+*** net-utils
+Miscellaneous Networking Utilities.
+
+*** ocaml
+Objective Caml editing support.
+
+*** oo-browser
+OO-Browser: The Multi-Language Object-Oriented Code Browser.
+
+*** os-utils
+Miscellaneous single-file O/S utilities, for printing, archiving,
+compression, remote shells, etc.
+
+*** pc
+PC style interface emulation.
+
+*** pcl-cvs
+CVS frontend.
+
+*** pcomplete
+Provides programmatic completion.
+
+*** perl-modes
+Perl support.
+
+*** pgg
+Emacs interface to various PGP implementations.
+
+*** prog-modes
+Support for various programming languages.
+
+*** ps-print
+Printing functions and utilities.
+
+*** psgml
+Validated HTML/SGML editing.
+
+*** psgml-dtds
+Deprecated collection of DTDs for psgml.
+
+*** python-modes
+Python support.
+
+*** reftex
+Emacs support for LaTeX cross-references, citations.
+
+*** riece
+IRC (Internet Relay Chat) client for Emacs.
+
+*** rmail
+An obsolete Emacs mailer.  If you do not already use it don't start.
+
+*** ruby-modes
+Ruby support.
+
+*** sasl
+Simple Authentication and Security Layer (SASL) library.
+
+*** scheme
+Front-end support for Inferior Scheme.
+
+*** semantic
+Semantic bovinator (Yacc/Lex for XEmacs). Includes Senator.
+
+*** sgml
+SGML/Linuxdoc-SGML editing.
+
+*** sh-script
+Support for editing shell scripts.
+
+*** sieve
+Manage Sieve email filtering scripts.
+
+*** slider
+User interface tool.
+
+*** sml-mode
+SML editing support.
+
+*** sounds-au
+XEmacs Sun sound files.
+
+*** sounds-wav
+XEmacs Microsoft sound files.
+
+*** speedbar
+Provides a separate frame with convenient references.
+
+*** strokes
+Mouse enhancement utility.
+
+*** supercite
+An Emacs citation tool for News & Mail messages.
+
+*** texinfo
+XEmacs TeXinfo support.
+
+*** text-modes
+Miscellaneous support for editing text files.
+
+*** textools
+Miscellaneous TeX support.
+
+*** time
+Display time & date on the modeline.
+
+*** tm
+Emacs MIME support. Not needed for gnus >= 5.8.0.
+
+*** tooltalk
+Support for building with Tooltalk.
+
+*** tpu
+DEC EDIT/TPU support.
+
+*** tramp
+Remote shell-based file editing.
+
+*** vc
+Version Control for Free systems.
+
+*** vc-cc
+Version Control for ClearCase (UnFree) systems.
+
+*** vhdl
+Support for VHDL.
+
+*** view-process
+A Unix process browsing tool.
+
+*** viper
+VI emulation support.
+
+*** vm
+An Emacs mailer.
+
+*** w3
+A Web browser.
+
+*** x-symbol
+Semi WYSIWYG for LaTeX, HTML, etc, using additional fonts.
+
+*** xemacs-base
+Fundamental XEmacs support, you almost certainly need this.
+
+*** xemacs-devel
+XEmacs Lisp developer support.  This package contains utilities for
+supporting Lisp development.  It is a single-file package so it may be 
+tailored.
+
+*** xlib
+Emacs interface to X server.
+
+*** xslide
+XSL editing support.
+
+*** xslt-process
+A minor mode for (X)Emacs which allows running an XSLT processor on a
+buffer.
+
+*** xwem
+X Emacs Window Manager.
+
+*** zenirc
+ZENIRC IRC Client.
+
+** Mule Support (mule)
+======================
+MULti-lingual Enhancement.  Support for world scripts such as
+Latin, Arabic, Cyrillic, Chinese, Japanese, Greek, Hebrew etc.
+To use these packages your XEmacs must be compiled with Mule
+support.
+
+*** edict
+MULE: Lisp Interface to EDICT, Kanji Dictionary.
+
+*** egg-its
+MULE: Wnn (4.2 and 6) support.  SJ3 support.
+
+*** latin-unity
+MULE: find single ISO 8859 character set to encode a buffer.
+
+*** leim
+MULE: Quail.  All non-English and non-Japanese language support.
+
+*** locale
+MULE: Localized menubars and localized splash screens.
+
+*** lookup
+MULE: Dictionary support.
+
+*** mule-base
+MULE: Basic Mule support, required for building with Mule.
+
+*** mule-ucs
+MULE: Extended coding systems (including Unicode) for XEmacs.
+
+*** skk
+MULE: Another Japanese Language Input Method.  Can be used
+without a separate process running as a dictionary server.
+

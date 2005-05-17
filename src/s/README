@@ -1,0 +1,82 @@
+This directory contains C header files containing
+operating-system-specific definitions.  Each file describes a
+particular operating system.  The emacs configuration script edits
+../config.h to include the appropriate one of these files, and then
+each emacs source file includes config.h.
+
+template.h is a generic template for system descriptions; it describes
+the parameters a system file can specify.
+
+General XEmacs Changes
+---------------------------
+The following is a list of those changes made globally across all
+files.  They are not marked individually in each header file.  All
+other changes should be preceded by a comment /* XEmacs change */.
+
+
+1. Removed all #defines of [read|write|open|close].  This is now
+   handled automatically by checking the INTERRUPTIBLE_IO etc. flags.
+
+2. Removed all instances of #undef SIGIO and replaced them with
+   #define BROKEN_SIGIO.  Jamie says:
+
+   /* use BROKEN_SIGIO instead of this kludge -- jwz */
+
+3. All instances of HAVE_GETWD, HAVE_DUP2, HAVE_UNISTD_H, NEED_UNISTD_H,
+   HAVE_GETTIMEOFDAY and NEED_REALPATH removed.  We detect these
+   automatically with configure.
+
+4. All instances of HAVE_X11 replaced with HAVE_X_WINDOWS.  We don't
+   support X10 or earlier so the HAVE_X11 define was purged.
+
+5. Most of the signal crap (e.g. redefining sigsetmask, defining
+   POSIX_SIGNALS) has been removed.  There are four possible
+   signal paradigms that all systems fall into, and we auto-detect
+   them in configure and handle them in syssignal.h.
+
+6. Removed references to INTERRUPT_INPUT.  XEmacs does not use
+   this bizarre way of reading input.
+
+7. Removed references to BROKEN_FIONREAD.  FIONREAD is used only
+   in INTERRUPT_INPUT and in the select() emulator, neither of
+   which are supported in XEmacs.
+
+8. Removed references to NOMULTIPLEJOBS.  This is unused in XEmacs
+   and in FSF Emacs.
+
+9. Removed references to HAVE_WAIT_HEADER and WAIT_USE_INT.
+   They are unnecessary with the cleaned up syswait.h in XEmacs.
+   (We autodetect sys/wait.h).  Instead, #define or #undef
+   HAVE_UNION_WAIT.
+
+10. Removed BSTRING.  Not used anywhere. (If the header file
+    says there are bugs in bcopy() or the like, however, a
+    #define BROKEN_BCOPY is added for reference.)
+
+11. Removed #defines of bcopy, bzero, bcmp, index, rindex.
+    XEmacs makes consistent use of the ANSI-equivalent
+    functions memcpy, memset, memcmp, strchr, strrchr.
+
+12. '#define subprocesses' removed.  Use '#define NO_SUBPROCESSES'
+    if they don't exist.
+
+13. References to HAVE_VFORK removed.  configure detects this.
+
+14. Removed references to SYSV_SYSTEM_DIR, NONSYSTEM_DIR_LIBRARY,
+    HAVE_SOCKETS, HAVE_SYSVIPC.  configure detects these.
+
+15. Removed defines of HAVE_TERMIOS, HAVE_TERMIO, and
+    HAVE_TCATTR (when HAVE_TERMIOS was also defined).
+    configure detects these and systty.h automatically defines
+    HAVE_TCATTR when HAVE_TERMIOS is defined.
+
+16. Removed SETPGRP_RELEASES_CTTY.  Not necessary any more, with
+    fixed definitions of EMACS_SEPARATE_PROCESS_GROUP et al.
+
+17. Removed defines of NLIST_STRUCT.  configure detects this.
+
+18. Removed defines of _setjmp and _longjmp.  configure detects this.
+
+19. Removed all '#define static' business.  Defines NO_REMAP instead.
+
+20. Removed defines of HAVE_MACH_MACH_H.  configure detects this.

@@ -1,0 +1,166 @@
+
+@node Mouse Selection, Additional Mouse Operations, Mark, Top
+@comment  node-name,  next,  previous,  up
+@section Selecting Text with the Mouse
+@cindex mouse selection
+
+@cindex pointer shapes
+  If you are using XEmacs under X, you can use the mouse pointer
+to select text. (The normal mouse pointer is an I-beam, the same
+pointer that @code{xterm} uses.)
+
+@vindex modeline-pointer-glyph
+@vindex nontext-pointer-glyph
+@vindex text-pointer-glyph
+The glyph variable @code{text-pointer-glyph} controls the shape of
+the mouse pointer when over text.  You can also control the shape
+of the mouse pointer when over nontext using @code{nontext-pointer-glyph},
+and the shape of the mouse pointer when over the modeline using
+@code{modeline-pointer-glyph}. (Remember, you should use
+@code{set-glyph-image}, not @code{setq}, to set one of these
+variables.)
+
+@cindex pointer face
+If you want to get fancy, you can set the foreground and background
+colors of the mouse pointer by setting the @code{pointer} face.
+
+There are two ways to select a region of text with the mouse:
+
+  To select a word in text, double-click with the left mouse button
+while the mouse cursor is over the word.  The word is highlighted when
+selected. On monochrome monitors, a stippled background indicates that a
+region of text has been highlighted. On color monitors, a color
+background indicates highlighted text. You can triple-click to select
+whole lines. 
+
+To select an arbitrary region of text:
+
+@enumerate
+@item
+Move the mouse cursor over the character at the beginning of the region of
+text you want to select.
+@item
+Press and hold the left mouse button. 
+@item
+While holding the left mouse button down, drag the cursor to the
+character at the end of the region of text you want to select.
+@item
+Release the left mouse button.
+@end enumerate
+The selected region of text is highlighted.
+
+  Once a region of text is selected, it becomes the primary X selection
+(@pxref{Using X Selections}) as well as the Emacs selected region. You
+can paste it into other X applications and use the options from the
+@b{Edit} pull-down menu on it.  Since it is also the Emacs region, you
+can use Emacs region commands on it.
+
+@node Additional Mouse Operations, Killing, Mouse Selection, Top
+@section Additional Mouse Operations
+@cindex mouse operations
+
+XEmacs also provides the following mouse functions.  Most of these are
+not bound to mouse gestures by default, but they are provided for your
+customization pleasure.  For example, if you wanted @kbd{shift-left}
+(that is, holding down the @key{Shift} key and clicking the left mouse
+button) to delete the character at which you are pointing, then you
+could do this:
+
+@example
+(global-set-key '(shift button1) 'mouse-del-char)
+@end example
+
+@findex mouse-del-char
+@findex mouse-delete-window
+@findex mouse-keep-one-window
+@findex mouse-kill-line
+@findex mouse-line-length
+@findex mouse-scroll
+@findex mouse-select
+@findex mouse-select-and-split
+@findex mouse-set-mark
+@findex mouse-set-point
+@findex mouse-track
+@findex mouse-track-adjust
+@findex mouse-track-and-copy-to-cutbuffer
+@findex mouse-track-delete-and-insert
+
+@table @kbd
+@item mouse-del-char
+Delete the character pointed to by the mouse.
+@item mouse-delete-window
+Delete the Emacs window that the mouse is on.
+@item mouse-keep-one-window
+Select the Emacs window that the mouse is on, then delete all other
+windows on this frame.
+@item mouse-kill-line
+Kill the line pointed to by the mouse.
+@item mouse-line-length
+Print the length of the line indicated by the pointer.
+@item mouse-scroll
+Scroll point to the mouse position.
+@item mouse-select
+Select the Emacs window the mouse is on.
+@item mouse-select-and-split
+Select the Emacs window mouse is on, then split it vertically in half.
+@item mouse-set-mark
+Select the Emacs window the mouse is on and set the mark at the mouse 
+position.  Display the cursor at that position for a second.
+@item mouse-set-point
+Select the Emacs window that the mouse is on and move point to the
+mouse position.
+@item mouse-track
+Make a selection with the mouse.   This is the default binding of 
+the left mouse button (@key{button1}).
+@item mouse-track-adjust
+Extend the existing selection.  This is the default binding of
+@key{Shift-button1}.
+@item mouse-track-and-copy-to-cutbuffer
+Make a selection like @code{mouse-track}, but also copy it to the cut buffer.
+@item mouse-track-delete-and-insert
+Make a selection with the mouse and insert it at point.  This is the
+default binding of @key{control-shift-button1}.
+@item mouse-track-insert
+Make a selection with the mouse and insert it at point.
+This is the default binding of @key{control-button1}.
+@item mouse-window-to-region
+Narrow a window to the region between the cursor and the mouse pointer.
+@end table
+
+The @kbd{M-x mouse-track} command should be bound to a mouse button.  If
+you click-and-drag, the selection is set to the region between the
+point of the initial click and the point at which you release the
+button.  These positions do not need to be ordered. 
+
+If you click-and-release without moving the mouse, the point is moved,
+and the selection is disowned (there will be no selection owner.)  The
+mark will be set to the previous position of point.
+
+If you double-click, the selection will extend by symbols instead of by
+characters.  If you triple-click, the selection will extend by lines.
+
+If you drag the mouse off the top or bottom of the window, you can
+select pieces of text that are larger than the visible part of the
+buffer; the buffer will scroll as necessary.
+
+The selected text becomes the current X selection, and is also copied to
+the top of the kill ring.  Point will be left at the position at
+which you released the button and the mark will be left at the initial
+click position.  Bind a mouse click to
+@kbd{mouse-track-and-copy-to-cutbuffer} to copy selections to the cut buffer.
+(See also the @code{mouse-track-adjust} command, on @kbd{Shift-button1}.)
+
+The @kbd{M-x mouse-track-adjust} command should be bound to a mouse
+button.  The selection will be enlarged or shrunk so that the point of
+the mouse click is one of its endpoints.  This is only meaningful
+after the @code{mouse-track} command (@key{button1}) has been executed.
+
+The @kbd{M-x mouse-track-delete-and-insert} command is exactly the same
+as the @code{mouse-track} command on @key{button1}, except that point is
+not moved; the selected text is immediately inserted after being
+selected; and the text of the selection is deleted.
+
+The @kbd{M-x mouse-track-insert} command is exactly the same as the
+@code{mouse-track} command on @key{button1}, except that point is not moved;
+the selected text is immediately inserted after being selected; and the
+selection is immediately disowned afterwards.

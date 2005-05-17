@@ -1,0 +1,73 @@
+CHANGES-msw
+
+This file briefly describes all mswindows-specific changes to XEmacs
+in the OXYMORON series of releases. The mswindows release branch
+contains additional changes on top of the mainline XEmacs
+release. These changes are deemed necessary for XEmacs to be fully
+functional under mswindows. It is not intended that these changes
+cause problems on UNIX systems, but they have not been tested on UNIX
+platforms. Caveat Emptor.
+
+See the file 'CHANGES-release' for a full list of mainline changes.
+
+to XEmacs 21.4.8 "Honest Recruiter (Windows)"
+
+  - All changes from 21.4.6 and 21.4.7.
+  - Make sure revert temporaries are not visiting files. Suggested by
+    Mike Alexander.
+  - File renaming fix from Mathias Grimmberger.
+  - Fix printer metrics on windows 95 from Jonathan Harris.
+  - Fix layout of widgets so that the search dialog works.
+  - Fix focus capture of widgets under X.
+  - Buffers tab doc fixes from John Palmieri.
+  - Sync with FSF custom :set-after behavior.
+  - Virtual window manager freeze fix from Rick Rankin.
+  - Fix various printing problems.
+  - Enable windows printing on cygwin.
+
+to XEmacs 21.4.7 "Economic Science (Windows)"
+
+  - All changes from 21.4.6.
+  - Fix problems with auto-revert with noconfirm.
+  - Undo autoconf 2.5x changes.
+  - Undo 21.4.7 process change.
+
+to XEmacs 21.4.6 "Common Lisp (Windows)"
+
+  - Made native registry entries match the installer.
+  - Fixed mousewheel lockups.
+  - Frame iconifcation fix from Adrian Aichner.
+  - Fixed some printing problems.
+  - Netinstaller updated to support kit revisions.
+  - Fixed customize popup menus.
+  - Fixed problems with too many dialog popups.
+  - Netinstaller fixed to correctly upgrade shortcuts when upgrading
+    core XEmacs.
+  - Fix for virtual window managers from Adrian Aichner.
+  - Installer registers all C++ file types.
+  - Short-filename fix from Peter Arius.
+  - Fix for GC assertions from Adrian Aichner.
+  - Winclient DDE client from Alastair Houghton.
+  - Fix event assert from Mike Alexander.
+  - Warning removal noticed by Ben Wing.
+  - Redisplay glyph height fix from Ben Wing.
+  - Printer margin fix from Jonathan Harris.
+  - Error dialog fix suggested by Thomas Vogler.
+  - Fixed revert-buffer to not revert in the case that there is
+    nothing to be done.
+  - Glyph-baseline fix from Nix.
+  - Fixed clipping of wide glyphs in non-zero-length extents.
+  - Windows build fixes.
+  - Fixed :initial-focus so that it works.
+
+to XEmacs 21.4.5 "Civil Service (Windows)"
+
+  - Fixed a scrollbar problem when selecting the frame with focus.
+  - Fixed `mswindows-shell-execute' under cygwin.
+  - Added a new function `mswindows-cygwin-to-win32-path' for JDE.
+  - Added support for dialog-based directory selection.
+  - The installer version has been updated to the 21.5 netinstaller. The 21.5
+    installer now does proper dde file association and adds uninstall
+    capability.
+  - Handle leak fix from Mike Alexander.
+  - New release build script.

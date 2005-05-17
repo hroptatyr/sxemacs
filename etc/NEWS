@@ -1,0 +1,168 @@
+-*- mode:outline -*-
+
+* Introduction
+==============
+
+This file presents the changes in recent SXEmacs versions.  It
+primarily documents user-visible (interface) changes, but also
+includes internal changes of possible interest to the users.  When
+describing new features, we try to also document ways of reverting to
+the old behavior, where applicable.  If you dislike a recent change in
+how SXEmacs behaves, this file might contain a remedy.
+
+Use `C-c C-f' to move to the next equal level of outline, and
+`C-c C-b' to move to previous equal level.  `C-h m' will give more
+info about the Outline mode.  Many commands are also available through
+the menubar.
+
+Users who would like to know which capabilities have been introduced
+in each release should look at the appropriate section of this file.
+
+
+
+* Changes in SXEmacs 22.1.2 (Audi)
+==================================
+
+** autoconf 2.59 compatible configure scripts -- Youngs, Purvis.
+
+Many configure options have changed.  Please run `./configure --help'
+to see what the new options are.
+
+** Most win32 code is now gone -- Youngs, Freundt.
+
+** `describe-installation' report libc version on Slackware -- Youngs.
+
+** etags.c updated to Francesco's version 17.11 -- Youngs.
+
+** Support `ls --dired' properly -- Sperber.
+
+** FFI (Foreign Function Interface) updates -- Zajcev.
+
+One of the most exciting things is that this version of SXEmacs can
+download files from the internet _without_ the need of any XEmacs
+packages being installed.  If you have libcurl and enable FFI in
+SXEmacs at build time, you can:
+
+	(require 'ffi-curl)
+	(curl:download "http://www.somedomain.com/path/file"
+	               "/tmp/file")
+
+To put your mind at ease, libcurl is _NOT_ needed to build SXEmacs.
+The above will work even if you install libcurl after
+building/installing SXEmacs.
+
+** Don't echo GC messages for non-string GC'ing -- Zajcev.
+
+This drastically reduces the number of "Garbage Collecting" messages
+that you see in the echo area.  Garbage collection is still happening,
+it is just not in your face as much.
+
+** movemail.c security fixes -- Oskarsson.
+
+** PUI's *packages* buffer enhancements -- Koch.
+
+** Saner fallbacks for `backup-buffer' -- Youngs.
+
+Based on an idea from JWZ, if the backup can't be written, try in
+`auto-save-directory', and if that fails, fall back to $HOME.
+
+** OpenSSL support -- Freundt.
+
+Of course. The OpenSSL library itself is actually separated into two
+libraries: libcrypto and libssl.  libcrypto is the part which comes to
+elisp with the current API.  libssl is planned for the near future.
+
+With this interface/gateway we now have access to the wonderful world
+of static cryptography (static here means no handshake/protocols/etc.).
+
+The API contains:
+
+- the OpenSSL PRNG = (pseudo) random number generator to provide
+  generating cryptographically secure randomness
+
+- the OpenSSL MDs (message digests) to provide all sorts of hashing
+  (we had an md5 implementation already)
+
+- the HMAC aka keyed hashing aka message authentication code to provide
+  hashes secured by a password
+
+- the CIPHER engine (i.e. symmetric crypto systems) to provide
+  encryption/decryption routines secured by a password
+
+- the PKEY engine (i.e. asymmetric crypto systems) to provide generation
+  and distribution of private/public key pairs (as probably known by
+  gpg)
+
+- the HYBRIDe engine aka PKCS aka public key crypto systems to provide
+  encryption based on (foreign) public keys and decryption with own
+  private keys to provide also digital signatures and verification (as
+  probably known by gpg)
+
+** Remove most of the generated files from the repo -- Youngs, Freundt.
+
+** Allow suppression of WM decorations -- Turnbull.
+
+This makes balloon-help windows infinitely better behaved.  Thank you
+very much, Steve T.
+
+** Fontify *scratch* buffer according to user's settings -- Kehoe.
+
+** Fix bug hanging SXEmacs when yanking > 260kb -- Kehoe.
+
+** lispref manual updated for SXEmacs -- Freundt.
+
+** PostgreSQL updates (mainly doc updates) -- Frenudt.
+
+
+* Changes in SXEmacs 22.1.1 (Aston Martin)
+==========================================
+
+** user-init-directory set to ~/.sxemacs -- Youngs.
+
+Symlinking this to your old ~/.xemacs directory is enough to get up
+and running with SXEmacs.
+
+** Packages hierarchy default set to $prefix/lib/sxemacs -- Youngs.
+
+Symlinking this to your old $prefix/lib/xemacs directory is enough to
+get up and running with SXEmacs.  SXEmacs will do this for you when
+you do `make install'.
+
+** Rename items in the menubar -- Slusar, Youngs.
+
+** Beginnings of FFI -- Zajcev.
+
+FFI is "Foreign Function Interface" and will allow access to functions
+and libraries outside of SXEmacs from within lisp.  Not completed yet,
+but the basic infrastructure is in place.
+
+** FreeBSD build fixes -- Slusar.
+
+** M-x report-sxemacs-bug -- Youngs.
+
+For now, this is just a wrapper around report-xemacs-bug with the
+appropriate variables set to SXEmacs values.
+
+** Fix etags.c -- Slusar.
+
+Avoid a segv.
+
+** M-x build-report -- Youngs.
+
+Make it work for SXEmacs.
+
+** Fix major bug in regex.c
+
+This fixed a whole swag of crashes involving regexps and
+syntax-tables. 
+
+** Sync up with XEmacs 21.4 -- Various Developers.
+
+
+* Changes in SXEmacs 22.1.0 (Alfa Romeo)
+========================================
+
+This is the first release of SXEmacs.  It is a fork of XEmacs
+21.4.16.  The vast majority of the changes between SXEmacs 22.1.0 and
+the code it descended from, XEmacs 21.4.16, are purely renaming
+"XEmacs" to "SXEmacs".

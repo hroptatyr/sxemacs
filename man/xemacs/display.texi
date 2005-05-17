@@ -1,0 +1,263 @@
+
+@node Display, Search, Registers, Top
+@chapter Controlling the Display
+
+  Since only part of a large buffer fits in the window, XEmacs tries to show
+the part that is likely to be interesting.  The display control commands
+allow you to specify which part of the text you want to see.
+
+@table @kbd
+@item C-l
+Clear frame and redisplay, scrolling the selected window to center
+point vertically within it (@code{recenter}).
+@item C-v
+@itemx pgdn
+@itemx next
+Scroll forward (a windowful or a specified number of lines) (@code{scroll-up}).
+On most X keyboards, you can get this functionality using the key
+labelled @samp{Page Down}, which generates either @kbd{next} or @kbd{pgdn}.
+@item M-v
+@itemx pgup
+@itemx prior
+Scroll backward (@code{scroll-down}).  On most X keyboards, you can get
+this functionality using the key labelled @samp{Page Up}, which
+generates either @kbd{prior} or @kbd{pgup}.
+@item @var{arg} C-l
+Scroll so point is on line @var{arg} (@code{recenter}).
+@item C-x <
+@itemx C-pgdn
+@itemx C-next
+Scroll text in current window to the left (@code{scroll-left}).
+@item C-x >
+@itemx C-pgup
+@itemx C-prior
+Scroll to the right (@code{scroll-right}).
+@item C-x $
+Make deeply indented lines invisible (@code{set-selective-display}).
+@end table
+
+@menu
+* Scrolling::	           Moving text up and down in a window.
+* Horizontal Scrolling::   Moving text left and right in a window.
+* Selective Display::      Hiding lines with lots of indentation.
+* Display Vars::           Information on variables for customizing display.
+@end menu
+
+@node Scrolling, Horizontal Scrolling, Display, Display
+@section Scrolling
+
+  If a buffer contains text that is too large to fit entirely within the
+window that is displaying the buffer, XEmacs shows a contiguous section of
+the text.  The section shown always contains point.
+
+@cindex scrolling
+  @dfn{Scrolling} means moving text up or down in the window so that
+different parts of the text are visible.  Scrolling forward means that text
+moves up, and new text appears at the bottom.  Scrolling backward moves
+text down and new text appears at the top.
+
+  Scrolling happens automatically if you move point past the bottom or top
+of the window.  You can also explicitly request scrolling with the commands
+in this section.
+
+@ifinfo
+@table @kbd
+@item C-l
+Clear frame and redisplay, scrolling the selected window to center
+point vertically within it (@code{recenter}).
+@item C-v
+@itemx pgdn
+@itemx next
+Scroll forward (a windowful or a specified number of lines) (@code{scroll-up}).
+@item M-v
+@itemx pgup
+@itemx prior
+Scroll backward (@code{scroll-down}).
+@item @var{arg} C-l
+Scroll so point is on line @var{arg} (@code{recenter}).
+@end table
+@end ifinfo
+
+@kindex C-l
+@findex recenter
+  The most basic scrolling command is @kbd{C-l} (@code{recenter}) with no
+argument.  It clears the entire frame and redisplays all windows.  In
+addition, it scrolls the selected window so that point is halfway down
+from the top of the window.
+
+@kindex C-v
+@kindex M-v
+@kindex pgup
+@kindex pgdn
+@kindex next
+@kindex prior
+@findex scroll-up
+@findex scroll-down
+  The scrolling commands @kbd{C-v} and @kbd{M-v} let you move all the text
+in the window up or down a few lines.  @kbd{C-v} (@code{scroll-up}) with an
+argument shows you that many more lines at the bottom of the window, moving
+the text and point up together as @kbd{C-l} might.  @kbd{C-v} with a
+negative argument shows you more lines at the top of the window.
+@kbd{Meta-v} (@code{scroll-down}) is like @kbd{C-v}, but moves in the
+opposite direction.@refill
+
+@vindex next-screen-context-lines
+  To read the buffer a windowful at a time, use @kbd{C-v} with no
+argument.  @kbd{C-v} takes the last two lines at the bottom of the
+window and puts them at the top, followed by nearly a whole windowful of
+lines not previously visible.  Point moves to the new top of the window
+if it was in the text scrolled off the top.  @kbd{M-v} with no argument
+moves backward with similar overlap.  The number of lines of overlap
+across a @kbd{C-v} or @kbd{M-v} is controlled by the variable
+@code{next-screen-context-lines}; by default, it is two.
+
+  Another way to scroll is using @kbd{C-l} with a numeric argument.
+@kbd{C-l} does not clear the frame when given an argument; it only
+scrolls the selected window.  With a positive argument @var{n}, @kbd{C-l}
+repositions text to put point @var{n} lines down from the top.  An
+argument of zero puts point on the very top line.  Point does not move
+with respect to the text; rather, the text and point move rigidly on the
+frame.  @kbd{C-l} with a negative argument puts point that many lines
+from the bottom of the window.  For example, @kbd{C-u - 1 C-l} puts
+point on the bottom line, and @kbd{C-u - 5 C-l} puts it five lines from
+the bottom.  Just @kbd{C-u} as argument, as in @kbd{C-u C-l}, scrolls
+point to the center of the frame.
+
+@vindex scroll-step
+  Scrolling happens automatically if point has moved out of the visible
+portion of the text when it is time to display.  Usually scrolling is
+done  to put point vertically centered within the window.  However, if
+the variable @code{scroll-step} has a non-zero value, an attempt is made to
+scroll the buffer by that many lines; if that is enough to bring point back
+into visibility, that is what happens.
+
+  Scrolling happens automatically if point has moved out of the visible
+portion of the text when it is time to display.  Usually scrolling is
+done  to put point vertically centered within the window.  However, if
+the variable @code{scroll-step} has a non-zero value, an attempt is made to
+scroll the buffer by that many lines; if that is enough to bring point back
+into visibility, that is what happens.
+
+@vindex scroll-conservatively
+  If you set @code{scroll-step} to a small value because you want to use 
+arrow keys to scroll the screen without recentering, the redisplay
+preemption will likely make XEmacs keep recentering the screen when
+scrolling fast, regardless of @code{scroll-step}.  To prevent this, set
+@code{scroll-conservatively} to a small value, which will have the
+result of overriding the redisplay preemption.
+
+@node Horizontal Scrolling,, Scrolling, Display
+@section Horizontal Scrolling
+
+@ifinfo
+@table @kbd
+@item C-x <
+Scroll text in current window to the left (@code{scroll-left}).
+@item C-x >
+Scroll to the right (@code{scroll-right}).
+@end table
+@end ifinfo
+
+@kindex C-x <
+@kindex C-x >
+@findex scroll-left
+@findex scroll-right
+@cindex horizontal scrolling
+  The text in a window can also be scrolled horizontally.  This means that
+each line of text is shifted sideways in the window, and one or more
+characters at the beginning of each line are not displayed at all.  When a
+window has been scrolled horizontally in this way, text lines are truncated
+rather than continued (@pxref{Continuation Lines}), with a @samp{$} appearing
+in the first column when there is text truncated to the left, and in the
+last column when there is text truncated to the right.
+
+  The command @kbd{C-x <} (@code{scroll-left}) scrolls the selected
+window to the left by @var{n} columns with argument @var{n}.  With no
+argument, it scrolls by almost the full width of the window (two columns
+less, to be precise).  @kbd{C-x >} (@code{scroll-right}) scrolls
+similarly to the right.  The window cannot be scrolled any farther to
+the right once it is displaying normally (with each line starting at the
+window's left margin); attempting to do so has no effect.
+
+@node Selective Display, Display Vars, Display, Display
+@section Selective Display
+@findex set-selective-display
+@kindex C-x $
+
+  XEmacs can hide lines indented more than a certain number
+of columns (you specify how many columns).  This allows you  to get an
+overview of a part of a program.
+
+  To hide lines, type @kbd{C-x $} (@code{set-selective-display}) with a
+numeric argument @var{n}.  (@xref{Arguments}, for information on giving
+the argument.)  Lines with at least @var{n} columns of indentation
+disappear from the screen.  The only indication of their presence are
+three dots (@samp{@dots{}}), which appear at the end of each visible
+line that is followed by one or more invisible ones.@refill
+
+  The invisible lines are still present in the buffer, and most editing
+commands see them as usual, so it is very easy to put point in the middle
+of invisible text.  When this happens, the cursor appears at the end of the
+previous line, after the three dots.  If point is at the end of the visible
+line, before the newline that ends it, the cursor appears before the three
+dots.
+
+  The commands @kbd{C-n} and @kbd{C-p} move across the invisible lines
+as if they were not there.
+
+  To make everything visible again, type @kbd{C-x $} with no argument.
+
+@node Display Vars,, Selective Display, Display
+@section Variables Controlling Display
+
+  This section contains information for customization only.  Beginning
+users should skip it.
+
+@vindex no-redraw-on-reenter
+  When you reenter XEmacs after suspending, XEmacs normally clears the
+screen and redraws the entire display.  On some terminals with more than
+one page of memory, it is possible to arrange the termcap entry so that
+the @samp{ti} and @samp{te} strings (output to the terminal when XEmacs
+is entered and exited, respectively) switch between pages of memory so
+as to use one page for XEmacs and another page for other output.  In that
+case, you might want to set the variable @code{no-redraw-on-reenter} to
+non-@code{nil} so that XEmacs will assume, when resumed, that the screen
+page it is using still contains what XEmacs last wrote there.
+
+@vindex echo-keystrokes
+  The variable @code{echo-keystrokes} controls the echoing of multi-character
+keys; its value is the number of seconds of pause required to cause echoing
+to start, or zero, meaning don't echo at all.  @xref{Echo Area}.
+
+@vindex ctl-arrow
+  If the variable @code{ctl-arrow} is @code{nil}, control characters in the
+buffer are displayed with octal escape sequences, all except newline and
+tab.  If its value is @code{t}, then control characters will be printed 
+with an up-arrow, for example @kbd{^A}.  
+
+If its value is not @code{t} and not @code{nil}, then characters whose
+code is greater than 160 (that is, the space character (32) with its
+high bit set) will be assumed to be printable, and will be displayed
+without alteration.  This is the default when running under X Windows,
+since XEmacs assumes an ISO/8859-1 character set (also known as
+``Latin1'').  The @code{ctl-arrow} variable may also be set to an
+integer, in which case all characters whose codes are greater than or
+equal to that value will be assumed to be printable.
+
+Altering the value of @code{ctl-arrow} makes it local to the current
+buffer; until that time, the default value is in effect.  @xref{Locals}.
+
+@vindex tab-width
+  Normally, a tab character in the buffer is displayed as whitespace which
+extends to the next display tab stop position, and display tab stops come
+at intervals equal to eight spaces.  The number of spaces per tab is
+controlled by the variable @code{tab-width}, which is made local by
+changing it, just like @code{ctl-arrow}.  Note that how the tab character
+in the buffer is displayed has nothing to do with the definition of
+@key{TAB} as a command.
+
+@vindex selective-display-ellipses
+  If you set the variable @code{selective-display-ellipses} to @code{nil},
+the three dots at the end of a line that precedes invisible
+lines do not appear.  There is no visible indication of the invisible lines.
+This variable becomes local automatically when set.

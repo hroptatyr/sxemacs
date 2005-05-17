@@ -1,0 +1,252 @@
+@comment  node-name,  next,  previous,  up
+@node Entering, Windows and Menus, Concept Index, Top
+@chapter Entering and Exiting Emacs
+@cindex buffer
+@cindex file
+@cindex windows
+
+While using Emacs you should be familiar with the following three terms:
+
+@table @asis
+@item Buffer
+A @b{buffer} is a region of memory holding characters. It is the basic
+editing unit; one buffer corresponds to one piece of text being
+edited. You can have multiple buffers but you can edit only one buffer
+at any one time. For more information, @xref{Buffers,,,xemacs,XEmacs User's
+Manual}.
+
+@item File
+A @b{file} is a region of disk space holding characters. Emacs edits a file by 
+reading it into a buffer, editing that buffer and writing out the buffer 
+back to the file. To save your work permanently you have to write it to a file.
+So after you load and work with a file, you have to save it back.
+
+@item Windows
+A @b{window} is a rectangular region in which a buffer is displayed. You can 
+open multiple windows with multiple buffers and edit them by selecting the 
+corresponding buffer. Initially, when you start emacs, it will automatically 
+open up a window for you.
+@end table
+
+@comment  node-name,  next,  previous,  up
+@menu
+* Enter::                       Entering Emacs from the shell
+* Frame::                      Basic information about the XEmacs Frame
+* Exiting::                     Exiting Emacs
+* Mode Line::                   Interpreting the mode line.
+* Echo Area::                   Bottom of the frame where you interact
+                                with Emacs.
+@end menu
+
+@node Enter, Frame, Entering, Entering
+@section Entering Emacs
+@cindex entering Emacs
+@cindex entering XEmacs
+
+To enter Emacs type @kbd{xemacs} and press the Return key at the
+shell i.e. @kbd{xemacs @key{RET}}. 
+This will bring up an emacs window with @samp{*scratch*} as the default
+buffer because Emacs must always have a buffer to work on. Then choose 
+the @b{Open...} option from the @b{File} menu on the menubar at the top 
+of the frame. It will prompt you to enter a filename. After you enter
+the filename, Emacs will read that file into the current buffer. You can
+also type :
+@example
+@kbd{xemacs <filename> @key{RET}} 
+@end example
+directly which will bring up
+an Emacs frame with the @dfn{filename} as the buffer. 
+ 
+
+@comment 
+@node Frame, Exiting, Enter, Entering
+@section Emacs Frame
+@cindex open another file
+
+When you run XEmacs under X, a menu bar on top of the Emacs frame
+provides access to pull-down menus of file, edit, and help-related
+commands. The menus only provide convenient shortcuts, the options that
+they provide are available via key commands. You can invoke those
+commands from the keyboard also. For many of the options, their
+corresponding key commands are displayed right besides them. The five
+default menus on the menubar that you will see on the frame are
+@b{File}, @b{Edit}, @b{Options}, @b{Buffers} and @b{Help}. @xref{XEmacs
+Pull-down Menus,,,xemacs,XEmacs User's Manual}, for detailed information on
+the functions provided by the pull-down menus.
+
+  The Emacs frame has a rectangle shaped box at the extreme right and you can
+drag it up or down to scroll the window accordingly. Clicking on the
+arrows also serves the same purpose. 
+
+  The last line in your window is @samp{the Mode line} which will give
+you a description of what's going on in that particular
+window. @xref{Mode Line}, for more
+information. Below the mode line is the @samp{Echo area}. Emacs uses
+this area to interact with the user. @xref{Echo Area}. 
+
+  If you wish to open another file in a new window after you enter
+XEmacs, select @b{Open in New Frame...} from the @b{File} menu, which
+will prompt you for a filename and open a new window with that filename
+as the current buffer. If you want to open a new file in the same
+window, select @b{Open..} from the @b{File} menu. You need to enter
+XEmacs only once, you can edit multiple files by opening several other
+frames or by switching between buffers.
+
+
+@comment new section
+@node Exiting, Mode Line, Frame, Entering
+@section Exiting Emacs
+@cindex exiting
+@cindex killing Emacs
+@cindex suspending
+@cindex shrinking XEmacs frame
+
+There are two commands for exiting Emacs, one for @dfn{suspending} Emacs
+and the other for @dfn{killing} Emacs. @dfn{Suspending} means stopping 
+Emacs temporarily and returning control to the shell, allowing you to 
+resume editing 
+later in the same Emacs job, with the same files, same kill ring, same
+undo history, and so on.  This is the usual way to exit.  @dfn{Killing}
+Emacs means destroying the Emacs job.  You can run Emacs again later,
+but you will get a fresh Emacs; there is no way to resume the same
+editing session after it has been killed. 
+
+@kindex C-z
+@findex suspend-emacs
+@kindex C-x C-c
+@findex save-buffers-kill-emacs
+ 
+@table @kbd
+@item C-z
+Suspend Emacs (@code{suspend-emacs}).  If used under the X window system,
+this command will shrink the X window containing the Emacs frame to an 
+icon. Clicking on the icon will resume that Emacs process
+again. @xref{Exiting Emacs,,,xemacs,XEmacs User's Manual}. 
+
+@item C-x C-c
+Kill Emacs (@code{save-buffers-kill-emacs}). You can also select 
+@b{Exit Emacs} option from the @b{File} menu to kill that Emacs
+process. If you haven't saved the file, Emacs will ask you if you wish
+to save the file before killing that process. 
+@end table
+
+
+
+@comment node-name,  next,  previous,  up
+@node Mode Line, Echo Area, Exiting, Entering
+@section The Mode Line
+@cindex mode line
+@cindex top level
+
+  When you enter XEmacs, each text window's last line is a @dfn{mode
+line} which describes what is going on in that window. Normally, the
+mode line looks like :
+
+@example
+@cartouche
+--@var{ch}-XEmacs: @var{buf}     (@var{major} @var{minor})----@var{pos}------
+@end cartouche
+@end example
+
+@noindent
+This gives information about the buffer being displayed in the window: the
+buffer's name, what major and minor modes are in use, whether the buffer's
+text has been changed, and how far down the buffer you are currently
+looking.
+
+  The @var{ch} contains :
+@table @samp
+@item **
+if the text in the buffer has been edited
+
+@item --
+if the text in the buffer has not been edited
+
+@item %%
+if the buffer is a read-only-buffer i.e. it cannot be edited
+@end table
+
+  @var{buf} is the name of the window's chosen @dfn{buffer}. If you are
+editing a file (which is the selected buffer), the file name appears
+in @var{buf}.  @xref{Buffers,,,xemacs,XEmacs User's Manual}.
+
+  @var{pos} contains :
+@table @samp
+@item All
+if your entire file is visible on the screen.
+@item Top
+if you are looking at the beginning of the file.
+@item Bot
+if you are looking at the end of the file.
+@item @var{nn}%
+@var{nn} will be a number corresponding to the percentage of the file
+above the top of the screen, for example @samp{52}, which means that 52%
+of the file is above the top of the screen.
+@end table
+
+   @var{major} is the name of the @dfn{major mode} in effect in the
+buffer.  At any time, each buffer is in one and only one major mode.
+The available major modes include Fundamental mode (the least
+specialized), Text mode, Lisp mode, and C mode.  @xref{Major
+Modes,,,xemacs,XEmacs User's Manual}, for details on how the modes differ
+and how you select one.
+
+   @var{minor} is a list of some of the @dfn{minor modes} that are
+turned on in the window's chosen buffer.  For example, @samp{Fill} means
+that Auto Fill mode is on which means that lines are broken
+automatically when they become too wide. @xref{Minor
+Modes,,,xemacs,XEmacs User's Manual}, for more information on various
+minor modes and how to enable them.
+
+  You can also display time in the mode line. @xref{The Mode
+Line,,,xemacs,XEmacs User's Manual}, for more information regarding the
+mode line.
+
+
+@comment  node-name,  next,  previous,  up
+@node Echo Area,  , Mode Line, Entering
+@section The Echo Area
+@cindex echo area
+
+  The line at the bottom of the frame (below the mode line) is the
+@dfn{echo area}.  Emacs uses this area to communicate with you:
+
+@itemize @bullet
+@item
+  The @dfn{echo area} will print out the characters that you type. For
+example, if you choose the @b{Open...} option from the @b{File} menu you
+might get the following in the echo area:
+
+@example
+Find file: /usr/lib/x11/
+@end example
+
+@noindent
+Now you need to give a file name to open, for example if the file name
+is @file{myfile}, you will type @file{myfile} after
+@file{/usr/lib/x11/} and press the @key{Return} key. If you pause for
+more than a second while typing, you will see the characters that you
+type in the @dfn{echo area}. 
+@item
+  The @dfn{echo area} also prints error messages. For example, if you
+misspell @samp{usr} and type @file{/urs/lib/x11/myfile} @key{RETURN} in
+the above example you might get an error message. Since 
+Emacs will not be able to find the @file{/urs} 
+directory, the @dfn{echo area} will say:
+
+@example
+@error{} Opening directory: no such file or directory, /urs/lib/x11/myfile
+@end example
+
+@noindent
+This error message will be accompanied by a beep. Some XEmacs commands
+will print informative messages in the @dfn{echo area}. @xref{The Echo
+Area,,,xemacs,XEmacs User's Manual}, for more information on the @dfn{echo
+area}.
+@end itemize
+
+
+
+
+
+  

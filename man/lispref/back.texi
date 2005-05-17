@@ -1,0 +1,33 @@
+\input /home/gd/gnu/doc/texinfo.tex  @c -*-texinfo-*-
+@c %**start of header
+@setfilename ../../info/back-cover
+@settitle SXEmacs Lisp Reference Manual
+@c %**end of header
+.
+@sp 7
+@center @titlefont {SXEmacs Lisp}
+@sp 1
+
+@quotation
+  Most of the SXEmacs text editor is written in the programming
+language called SXEmacs Lisp.  You can write new code in SXEmacs Lisp and
+install it as an extension to the editor.  However, SXEmacs Lisp is more
+than a mere ``extension language''; it is a full computer programming
+language in its own right.  You can use it as you would any other
+programming language.
+
+  Because SXEmacs Lisp is designed for use in an editor, it has special
+features for scanning and parsing text as well as features for handling
+files, buffers, displays, subprocesses, and so on.  SXEmacs Lisp is
+closely integrated with the editing facilities; thus, editing commands
+are functions that can also conveniently be called from Lisp programs,
+and parameters for customization are ordinary Lisp variables.
+
+  This manual describes SXEmacs Lisp.  Generally speaking, the earlier
+chapters describe features of SXEmacs Lisp that have counterparts in
+many programming languages, and later chapters describe features that
+are peculiar to SXEmacs Lisp or relate specifically to editing.
+@end quotation
+
+@hfil
+@bye

@@ -1,0 +1,301 @@
+@comment  node-name,  next,  previous,  up
+@node Edit, Customization Basics, Windows and Menus, Top
+@chapter Basic Editing Commands
+
+@kindex C-h t
+@findex help-with-tutorial
+  This chapter will introduce you to some basic editing commands. You
+can also learn the basic editing commands by typing @kbd{Control-h t}
+(@code{help-with-tutorial} OR by selecting @b{Emacs Tutorial} from the
+@b{Help} menu on the menu bar. Most of the Emacs commands will use the
+@key{CONTROL} key or the @key{META} key. The following abbreviations 
+will be used for the @key{CONTROL} and @key{META} key in this manual:
+
+@table @kbd
+@item C-<chr>
+This means that you should hold down the @key{CONTROL} key while typing
+@kbd{<chr>}. For example, if the command is @kbd{C-g}, you should hold
+the @key{CONTROL} key and type @key{g}. 
+@item M-<chr>
+This means that you should hold down the @kbd{META} key while typing
+@kbd{<chr>}. If there is no @kbd{META} key on your keyboard, use the
+@kbd{ESC} key instead. For example, if the command is @kbd{M-x}, then
+type @kbd{ESC}, release it and type @kbd{x}.
+@end table
+
+  The following abbreviations will be used for some other keys:
+
+@table @key
+@item SPC
+Space bar. 
+@item RET
+Return key.
+@item LFD
+Linefeed key.
+@item TAB
+Tab. 
+@item ESC
+Escape.
+@item SFT
+Shift. 
+@end table
+
+@comment  node-name,  next,  previous,  up
+@menu
+* Insert::                      Insert text in Emacs by simply typing at
+                                the cursor position.
+* Cursor Position::             Moving Around the cursor in the buffer,
+* Erase::                       Different commands for erasing text 
+* Numeric Argument::            Giving Numeric Arguments to commands
+* Undo::                        Undoing Changes made by mistake
+@end menu
+
+@node Insert, Cursor Position, Edit, Edit
+@section Inserting Text
+
+@cindex insertion
+@cindex overstrike
+   To insert printing characters into the text you are editing, just
+type them. Emacs will automatically insert the characters that you type
+into the buffer at the cursor. The cursor moves forward, but if you
+prefer to have text characters replace (overwrite) existing text
+characters, you can enable the @b{Overstrike} option from the
+@b{Options} menu in the menu bar. 
+
+@kindex DEL
+@cindex deletion
+   To @dfn{delete} text you have just inserted, use @key{DEL}.
+@key{DEL} deletes the character @var{before} the cursor (not the one
+that the cursor is on top of or under; that is the character @var{after}
+the cursor).  The cursor and all characters after it move backwards.
+Therefore, if you type a printing character and then type @key{DEL},
+they cancel out.
+
+@kindex RET
+@cindex newline
+@findex auto-fill-mode
+   To end a line and start typing a new one, type @key{RET}.  This
+inserts a newline character in the buffer.  If point is in the middle of
+a line, @key{RET} splits the line.  Typing @key{DEL} when the cursor is
+at the beginning of a line rubs out the newline before the line, thus
+joining the line with the preceding line.
+
+  Emacs automatically splits lines when they become too long, if you
+turn on a special mode called @dfn{Auto Fill} mode.
+@xref{Filling,,,xemacs,XEmacs User's Manual}, for information on using Auto Fill
+mode.
+
+
+@comment  node-name,  next,  previous,  up
+@node Cursor Position, Erase, Insert, Edit
+@section Moving Around
+@cindex cursor control
+@cindex cursor position
+
+  The following commands will allow you to move the cursor around the
+screen. The actual function names corresponding to these commands are
+given in parenthesis. You can also invoke these commands by typing
+@kbd{M-x <function name>}. You can do this for any command in XEmacs.
+
+@kindex C-a
+@kindex C-e
+@kindex C-fx
+@kindex C-b
+@kindex C-n
+@kindex C-p
+@kindex C-v
+@kindex M-v
+@kindex C-t
+@kindex M->
+@kindex M-<
+@findex beginning-of-line
+@findex end-of-line
+@findex forward-char
+@findex backward-char
+@findex next-line
+@findex previous-line
+@findex transpose-chars
+@findex beginning-of-buffer
+@findex end-of-buffer
+@findex goto-char
+@findex goto-line
+@table @kbd
+@item C-b
+Move the cursor backward one character (@code{backward-char}). 
+@item C-f
+Move the cursor forward one character (@code{forward-char}).
+@item C-p
+Move the cursor up one line vertically (@code{previous-line}).
+@item C-n
+Move the cursor down one line vertically (@code{next-line}).
+@item C-a
+Move the cursor to the beginning of the line (@code{beginning-of-line}).
+@item C-e
+Move the cursor to the end of the line (@code{end-of-line}).
+@item M-f
+@findex forward-word
+Move the cursor forward one word (@code{forward-word}).
+@item M-b
+@findex backward-word
+Move the cursor backward one word (@code{backward-word}).
+@item M-<
+Move the cursor to the top of the buffer (@code{beginning-of-buffer}).
+@item M->
+Move the cursor to the end of the buffer (@code{end-of-buffer}).
+@item M-x goto-char RET <number> RET
+To enable this command type @kbd{M-x goto-char}, and hit @key{RETURN}
+key. In the @dfn{echo area} you will see:
+
+@example
+Goto char:
+@end example
+
+@noindent
+You should then type in a number right after the colon 
+and hit the @kbd{RETURN} key again. After reading a number @var{n} this
+command will move the cursor to character number @var{n}.
+Position 1 is the beginning of the buffer. For example, if you type
+@kbd{M-x goto-char RET 200 RET}, then the cursor will move to the 200th
+character starting from the beginning of the buffer.
+
+@item M-x goto-line RET <number> RET
+@cindex goto-line
+To enable this command type @kbd{M-x goto-line}, and hit the
+@key{RETURN} key. After you see @kbd{Goto line:} in the @dfn{echo area},
+type in a number @var{n} and hit @key{RETURN} key again. This command will
+position the cursor on the nth line starting from the beginning of the
+buffer.
+@item M-x what-line RET
+This command will display the current line number in the echo area.
+
+@end table
+
+
+@comment  node-name,  next,  previous,  up
+@node Erase, Numeric Argument, Cursor Position, Edit
+@section Erasing Text
+
+@cindex erasing
+@cindex deleting
+@kindex C-d
+@kindex C-k
+@kindex M-d
+@kindex M-DEL
+@kindex M-k
+@kindex M-z
+@findex delete-backward-char
+@findex delete-char
+@findex kill-line
+@findex kill-word
+@findex backward-kill-word
+@findex kill-sentence
+@findex zap-to-char
+
+@table @kbd
+@item @key{DEL}
+If you press @key{DEL} i.e. the @dfn{delete} key, it will delete the 
+character before the cursor (@code{delete-backward-char}).
+@item C-d
+This will delete the character after the cursor (@code{delete-char}).
+@item C-k
+Kill to the end of the line (@code{kill-line}). If you kill the line by
+mistake you can @dfn{yank} or @samp{paste} it back by typing
+@kbd{C-y}. @xref{Moving Text}, for more information on yanking.
+@item M-d
+Kill forward to the end of the next word (@code{kill-word}).
+@item M-@key{DEL}
+Kill back to the beginning of the previous word
+(@code{backward-kill-word}).
+@item M-k
+Kill to the end of current sentence (@code{kill-sentence}).
+@item M-z @var{char}
+Kill up to next occurrence of @var{char} (@code{zap-to-char}). To use
+this command type @kbd{M-z}. You will see the following statement in the
+echo area :
+
+@example
+Zap to char:
+@end example
+
+Type any char and press the @key{RET} key. For example, if you type
+@samp{p} then the entire text starting from the position of the cursor
+until the first occurrence of @samp{p} is killed. 
+@end table
+
+
+@comment  node-name,  next,  previous,  up
+@node Numeric Argument, Undo, Erase, Edit
+@section Giving Numeric Arguments
+@cindex numeric argument
+@cindex digit argument
+@cindex negative argument
+@kindex C-u
+@kindex M-@t{-}
+
+  Any Emacs command can be given a @dfn{numeric argument}.  Some commands
+interpret the argument as a repetition count.  For example, if you want
+to move forward ten characters, you could type @kbd{C-f} ten
+times. However, a more efficient way to do this would be to give an
+argument of ten to the key @kbd{C-f} (the command @code{forward-char}, move
+forward one character). Negative arguments are also allowed. Often they tell
+a command to move or act backwards. For example, if you want to move
+down ten lines, type the following:
+@example
+C-u 10 C-n RET
+@end example
+@noindent
+After you press @key{RET} key, the cursor will move ten lines
+downward. You can also type:
+@example
+M-10 C-n RET
+@end example
+@noindent
+Both @kbd{C-u} and @kbd{M-} allow you to give numeric arguments. If you
+want to move ten lines backward, you can also give negative arguments, like:
+@example
+C-u -10 C-n RET
+@end example
+@noindent
+OR you could also type:
+@example
+M--10 C-n RET
+@end example
+@noindent
+You can obviously use @kbd{C-b} to move backward rather than giving
+negative arguments to @kbd{C-n}. @xref{Numeric Arguments,,,xemacs,XEmacs
+User's Manual}, for more information on numeric arguments.
+
+@comment  node-name,  next,  previous,  up
+@node Undo,  , Numeric Argument, Edit
+@section Undoing Changes
+@cindex undo
+@cindex mistakes, correcting
+
+  When you are editing a buffer, you might type something by
+mistake. Emacs allows you to undo all changes you make to a buffer (but
+not more than 8000 characters). Each buffer in Emacs keeps a record of
+the changes made to it individually, so the undo command applies to the
+current buffer. There are two undo commands:
+
+@table @kbd
+@kindex C-x u
+@item C-x u
+Undo one batch of changes (usually, one command's worth).
+(@code{undo}). 
+@item C-_
+The same as above, but this command might not be obvious to type on some
+keyboards so it might be better to use the above command.
+@end table
+
+  @xref{Undoing Changes,,,xemacs,XEmacs User's Manual}, for more information on
+undoing changes.
+  
+  
+
+
+
+
+
+
+
+  

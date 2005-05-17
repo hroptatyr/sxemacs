@@ -1,0 +1,1479 @@
+2004-12-05  Vin Shelton <acs@xemacs.org>
+
+	* XEmacs 21.4.16 is released
+
+2004-06-23  Sean Legassick <sean@informage.net>
+
+	* etags.c: Allow whitespace before python function definitions.
+
+2004-02-02  Vin Shelton <acs@xemacs.org>
+
+	* XEmacs 21.4.15 is released
+
+2003-09-03  Vin Shelton <acs@xemacs.org>
+
+	* XEmacs 21.4.14 is released
+
+2003-06-30  Andrew Begel  <abegel@CS.Berkeley.EDU>
+
+	* make-docfile.c (write_c_args): Escape newlines that arise in the
+	C argument list.
+
+2003-05-25  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.4.13 is released
+
+2003-01-30  Vin Shelton  <acs@xemacs.org>
+
+	* rcs2log: Synch to GNU version [patch from Jens Petersen].
+
+2003-01-15  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.12 "Portable Code" is released.
+
+2003-01-03  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.11 "Native Windows TTY Support" is released.
+
+2002-12-14  Ben Wing  <ben@xemacs.org>
+
+	* config.values.in: Typo fix.
+
+2002-11-02  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.10 "Military Intelligence" is released.
+
+2002-08-23  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.9 "Informed Management" is released.
+
+2002-07-17  Stephen J. Turnbull  <stephen@tleeps18>
+
+	* mmencode.c (fromqp):
+	* yow.c (yow):
+	* movemail.c (main):
+	* make-docfile.c (scan_c_file):
+	* gnuserv.c (permitted):
+	* ootags.c (erlang_func):
+	(prolog_pred):
+	* etags.c (C_entries):
+	Fix warnings.
+
+2002-05-29  Greg Steuck  <greg-xemacs-patches@nest.cx>
+
+	* gnuclient.c: Makes it possible again to #undef
+	INTERNET_DOMAIN_SOCKETS in lib-src/gnuserv.h and get a functional
+	gnuserv which is only accessible through UNIX_DOMAIN_SOCKETS.
+
+2002-05-10  Stephen J. Turnbull  <stephen@xemacs.org>
+	
+	* Makefile.in.in: Add winclient targets (Andy synch).
+	
+2002-05-09  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.8 "Honest Recruiter" is released.
+
+2002-05-04  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.7 "Economic Science" is released.
+
+2001-12-17  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.6 "Common Lisp" is released.
+
+2001-10-23  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.5 "Civil Service" is released.
+
+2001-07-28  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.4 "Artificial Intelligence" is released.
+
+2001-04-17  Isaac Hollander  <ysh@mindspring.com>
+
+	* gnuserv.c (setup_table): fix 2 signed/unsigned mismatches
+	* gnuslib.c (connect_to_internet_server): fix signed/unsigned mismatch
+
+2001-05-17  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.3 "Academic Rigor" is released.
+
+2001-05-10  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.2 "Developer-Friendly Unix APIs" is released.
+
+2001-04-20  Ben Wing  <ben@xemacs.org>
+
+	* .cvsignore: Added stuff for Windows.
+
+2001-04-19  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.1 "Copyleft" is released.
+
+2001-04-16  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.0 "Solid Vapor" is released.
+
+2001-04-14  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.2.47 "Zephir" is released.
+
+2000-08-01  Jon Schewe  <jpschewe@eggplant.mtu.net>
+
+	* gnuclient.c (filename_expand): Let Cygwin convert Windows path
+	to Unix.
+
+2001-03-23  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* gnuserv.h: Document TMPDIR lossage if client/server values differ.
+
+2001-03-21  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.46 "Urania" is released.
+
+2001-03-19  Andy Piper  <andy@xemacs.org>
+
+	* installexe.sh: use bash by default.
+
+2001-03-09  William M. Perry  <wmperry@aventail.com>
+
+	* gnuclient.c: The Great GTK Merge.
+
+2000-08-10  Ben Wing  <ben@xemacs.org>
+
+	* update-elc.sh: deleted (retroactively).  replaced by update-elc-2.el,
+	which does the same thing but in a platform-independent way.
+
+2001-02-23  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.45 "Thelxepeia" is released.
+
+2001-02-11  Martin Buchholz  <martin@xemacs.org>
+
+	* Makefile.in.in: Cleanup.
+	Fixes bug: all must depend on make-dump-id.
+	Don't install make-path; only used at build time.
+	Avoid duplicating file lists for maintainability.
+	(PUBLIC_INSTALLABLE_SCRIPTS): More logical naming.
+	(PUBLIC_INSTALLABLE_EXES): Likewise.
+	(PUBLIC_INSTALLABLES): Likewise.
+	(PRIVATE_INSTALLABLE_SCRIPTS): More logical naming.
+	(PRIVATE_INSTALLABLE_EXES): Likewise.
+	(PRIVATE_INSTALLABLES): Likewise.
+	(SCRIPTS): Likewise.
+	(EXES): New.
+	(PROGS): New.
+	(SOURCES): Remove.
+	(BUILD_UTILITIES): New.  Non-installed utilities.
+	(INSTALL_GNUSERV): New.
+	(unlock): Remove obsolete target.
+	(relock): Remove obsolete target.
+	(aixcc.c): Remove.  Obsolete.
+	* aixcc.lex:  Remove.  Obsolete.
+
+2001-02-12  Martin Buchholz  <martin@xemacs.org>
+
+	* make-dump-id.c (main): No longer #include dump-id.h.
+
+2001-02-08  Martin Buchholz  <martin@xemacs.org>
+
+	* gnuserv.c (permitted): Compiler warning fixes.
+
+2001-02-08  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.44 "Thalia" is released.
+
+2001-01-31  Francesco Potorti`  <pot@gnu.org>
+
+	* etags.c: [NDEBUG] #undef assert and #define it as ((void)0), for
+	the sake of some buggy assert.h (e.g. in MinGW and sunos4 pcc).
+	(C_entries): Tag token renamed to still_in_token because sunos4
+	pcc wants to expand it as the token() macro even though it has no
+	arguments.
+
+2001-01-30  Francesco Potorti`  <pot@gnu.org>
+
+	* etags.c: [WIN32-NATIVE]: #undef MSDOS, #undef WINDOWSNT and
+	#define it for the sake of Xemacs.
+	[WINDOWSNT]: #undef HAVE_NTGUI even if built without
+	HAVE_CONFIG_H.  This change only affects a standalone etags.
+	[WINDOWSNT]: #undef DOS_NT and #define it even if built with
+	HAVE_CONFIG_H.  This change does nothing in Emacs, as DOS_NT is
+	always defined when HAVE_CONFIG_H and WINDOWS are both defined.
+	[!HAVE_UNISTD_H]: use defined(WINDOWSNT) instead of the bare
+	WINDOWSNT, as this is the correct way to use it.
+
+2001-01-28  Francesco Potorti`  <pot@gnu.org>
+
+	* etags.c: Be capable to parse nested struct-like structures.
+	(structdef, structtag): Struct state machine revisited.
+	(struct tok): Revisited.
+	(cstack, nestlev, instruct): New struct and macros.
+	(pushclass_above, popclass_above, write_classname): New functions
+	for dealing with nested class names, inspired by Mykola Dzyuba.
+	(consider_token, make_C_tag, C_entries): Many changes for dealing
+	with arbitrarily nested structures.
+	(etags_getcwd): #if MSDOS, not #ifdef MSDOS!
+	(C_entries): Consider templates in C++.
+	(sym_type): New constant st_C_class for detecting "class" also in
+	C mode.
+	(C_AUTO): New macro for automatic detection of C++.
+	(consider_token): Automatic set C++ mode.
+	(C_entries): New security check for yacc.
+	(print_language_names, print_help): Mention the autodetect
+	feature, do not show help for the -C option, now mostly	useless.
+	(C_entries): Tag C++ forward declarations if --declarations.
+	(C_entries): Don't be fooled by things like XDEFUN.
+	(consider_token): Discard asm pseudo function.
+
+2001-01-25  Francesco Potorti`  <pot@gnu.org>
+
+	* etags.c (struct tok): Renamed from struct token.
+	(token): Renamed from tok.
+	(structtype): Make it a local variable.
+	[DEBUG]: Use assert.
+	(xrnew): Change the synopsis.
+	(typedefs_or_cplusplus): Renamed from typedefs_and_cplusplus.
+	(grow_linebuffer): Don't call xrnew when not needed.
+	(token): buffer renamed to line.
+	(C_entries): Three calls to inibuffer moved here from main.
+	(C_entries): Removed all references to var methodlen, delete it.
+	(linebuffer_setlen): Was grow_buffer, now also sets len.
+	(consider_token, C_entries, Pascal_functions): Use it.
+	(C_entries): Preventing problems relative to extern "C".
+	(C_entries): Can tag more than one variable or func separated by
+	comma when --declarations is used.
+	(C_entries): More accurate tagging of members and declarations.
+	(yacc_rules): Was global, made local to C_entries.
+	(next_token_is_func): Removed.
+	(fvdef): New constants fdefunkey, fdefunname.
+	(consider_token, C_entries): Use them.
+	(C_entries): Build proper lisp names for Emacs DEFUNs.
+
+2001-01-15  Francesco Potorti`  <pot@gnu.org>
+
+	* etags.c (print_language_names): Print filenames in addition to
+	suffixes.
+
+2001-01-12  Francesco Potorti`  <pot@gnu.org>
+
+	* etags.c (get_language_from_langname): Renamed from
+	get_language_from_name.
+	(get_language_from_filename): Renamed from
+	get_language_from_suffix.  Now first looks for the complete file
+	name.
+	(language): New member char **filenames.
+	(Makefile_filenames): List of possible filenames for makefiles.
+	(lang_names): Added a NULL member for every entry, added an entry
+	for makefiles.
+	(Makefile_targets): New function, inspired by Assar Westerlund
+	<assar@sics.se>.
+
+2000-11-07  Francesco Potorti`  <pot@gnu.org>
+
+	* etags.c (Texinfo_nodes): Renamed from Texinfo_fuctions and made
+	it conformant to the style of the rest of the code.
+
+2000-02-10  Francesco Potorti`  <pot@gnu.org>
+
+	* etags.c (iswhite): Redefined not to consider '\0' as white
+	space, and use it throughout in place of isspace, thus preventing a
+	potential signed char to int conversion problem.
+	(MSDOS): #undefine befere redefining
+
+2000-02-04  Francesco Potorti`  <pot@gnu.org>
+
+	* etags.c (many functions): Add prototypes.
+
+2000-01-31  Francesco Potorti`  <pot@gnu.org>
+
+	* etags.c [MSDOS]: Set MSDOS to 1 if #defined, 0 otherwise.
+	(get_compressor_from_suffix, process_file): Use MSDOS in if clause.
+	(etags_strchr, etags_strrchr): Use const char * and int as arguments.
+	(getenv, getcwd): Only declare them if necessary.
+	(EMACS_NAME): New constant macro.
+	(print_version): Use it.
+	(P_) [__STDC__]: Macro for defining function prototypes.
+
+2001-02-06  Martin Buchholz  <martin@xemacs.org>
+
+	* gnuclient.c:
+	* gnuserv.c:
+	* gnuslib.c:
+	* pop.c:
+	Remove use of BSD-specific types.
+	s/u_(char|short|int_long)/unsigned $1/g
+	Remove pointless casts.
+
+2001-01-28  Martin Buchholz  <martin@xemacs.org>
+
+	* gnuclient.c (get_current_working_directory): Use HAVE_GETCWD.
+	warning: getwd() possibly used unsafely, consider using getcwd().
+
+2001-01-26  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.43 "Terspichore" is released.
+
+2001-01-23  Jan Vroonhof  <jan@xemacs.org>
+
+	* gnuserv.c: Add version number to object file.
+
+2001-01-20  Klaus Frank <klausf@i3.informatik.rwth-aachen.de>
+
+	* gnuserv.c (permitted): Completed the checks of the authentication
+	data length, replaced memcmp() by constant-time comparision.
+
+2001-01-20  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.42 "Poseidon" is released.
+
+2001-01-17  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.41 "Polyhymnia" is released.
+
+2001-01-08  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.40 is released.
+
+2000-12-31  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.39 is released.
+
+2000-12-05  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.38 is released.
+
+2000-11-13  Yoshiki Hayashi  <yoshiki@xemacs.org>
+
+	* Makefile.in.in: Define emacs iff it's necessary.
+
+2000-11-14  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.37 is released.
+
+2000-09-01  Katsumi Yamaoka  <yamaoka@jpl.org>
+
+	* make-po.c (BUFSIZE): Increase value to 32768.
+
+2000-10-04  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.36 is released.
+
+2000-09-30  Martin Buchholz  <martin@xemacs.org>
+
+	* gnuserv.c (main): Warning removal.
+
+2000-09-27  Martin Buchholz  <martin@xemacs.org>
+
+	* ellcc.c: Make global variables static.  Avoids warnings on AIX.
+
+	* fakemail.c (make_file_preface): Use standard type time_t.
+	Actually check that the 25th char returned from ctime is '\n'.
+
+2000-09-19  Martin Buchholz  <martin@xemacs.org>
+
+	* *: Spelling mega-patch
+
+2000-09-12  Martin Buchholz  <martin@xemacs.org>
+
+	* gnuclient.c (main):
+	* hexl.c (usage):
+	Use `Usage', not `usage', in Usage messages.
+
+2000-07-15  Ben Wing  <ben@xemacs.org>
+
+	* etags.c (add_regex): added commented out code for use figuring
+	out Windows quoting problems.
+	* hexl.c (main): fixed warnings about possible used uninitialized.
+
+2000-07-19  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.35 is released.
+
+2000-07-12  Martin Buchholz  <martin@xemacs.org>
+
+	* gnuserv.c:
+	(handle_internet_request): 
+	(handle_unix_request): 
+	(internet_init): 
+	Use socklen_t instead of int or size_t.
+
+2000-07-11  Martin Buchholz  <martin@xemacs.org>
+
+	* hexl.c (usage): Use full ANSI C prototypes.
+
+2000-07-05  Craig Lanning  <lanning@scra.org>
+
+	* Makefile.in.in (INSTALL_DATA):
+	* Makefile.in.in (UTILITIES):
+	* Makefile.in.in (GETOPTDEPS):
+	* Makefile.in.in (i):
+	mingw support: don't try to build gnuclient, add
+        support for building and installing minitar
+
+2000-06-10  Ben Wing  <ben@xemacs.org>
+
+	* Makefile.in.in (INSTALLABLES_BASE):
+	* Makefile.in.in (ootags_args):
+	* Makefile.in.in (yow):
+	Build i.exe.
+	Don't build run*.exe.
+	
+	* b2m.c:
+	* b2m.c (main):
+	* ellcc.c (main):
+	* etags.c:
+	* etags.c (main):
+	* etags.c (get_compressor_from_suffix):
+	* etags.c (process_file):
+	* etags.c (readline_internal):
+	* etags.c (etags_getcwd):
+	* etags.c (relative_filename):
+	* etags.c (absolute_filename):
+	* etags.c (filename_is_absolute):
+	* etags.c (canonicalize_filename):
+	* fakemail.c:
+	* fakemail.c (make_file_preface):
+	* getopt.c:
+	* getopt.h:
+	* gnuclient.c:
+	* gnuclient.c (filename_expand):
+	* gnuserv.h:
+	* gnuserv.h (PATCHLEVEL):
+	* hexl.c:
+	* hexl.c (main):
+	* make-docfile.c:
+	* make-docfile.c (APPEND_BINARY):
+	* make-docfile.c (main):
+	* make-dump-id.c:
+	* mmencode.c:
+	* mmencode.c (fromqp):
+	* mmencode.c (main):
+	* movemail.c:
+	* movemail.c (main):
+	* movemail.c (popmail):
+	* ootags.c:
+	* ootags.c (main):
+	* ootags.c (readline_internal):
+	* ootags.c (etags_getcwd):
+	* ootags.c (absolute_filename):
+	* ootags.c (filename_is_absolute):
+	* ootags.c (canonicalize_filename):
+	* pop.c:
+	* pop.c (DONT_ENCAPSULATE):
+	* pop.c (pop_open):
+	* pop.c (socket_connection):
+	* pop.c (pop_trash):
+	* profile.c (gettimeofday):
+	* wakeup.c:
+	* yow.c (rootrelativepath):
+	Remove MSDOS support, converting to WIN32_NATIVE where necessary.
+	WINDOWSNT -> WIN32_NATIVE.
+	__CYGWIN32__ -> CYGWIN.
+	DOS_NT -> WIN32_NATIVE.
+	Remove unused NO_SHORTNAMES.
+	Changes for removed nt\inc.
+
+2000-06-07  Ben Wing  <ben@xemacs.org>
+
+	* run.c, run.h, run.rc: Removed.  We no longer need these for
+	building runxemacs.exe, and it's questionable at best whether
+	rungnuclient.exe was ever used or is even needed.  The correct
+	solution is just to make gnuclient.exe a windows program and
+	use the gnuattach script to run 'i gnuclient.exe'.  Not that
+	gnuclient currently works under Windows native in any case.
+
+2000-05-28  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.34 is released.
+
+2000-05-11  Ben Wing  <ben@xemacs.org>
+
+	* i.c (get_command): fix unused var warning.
+	
+	* make-docfile.c (MDGET):
+	* make-docfile.c (read_c_string):
+	rewrite and reindent -- handle closing doc string comment that's
+	not at beg of line.
+
+2000-05-01  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.33 is released.
+
+2000-04-19  Martin Buchholz  <martin@xemacs.org>
+
+	* gnuclient.c (initialize_signals): Always use full ANSI prototypes.
+
+2000-04-06  Kirill 'Big K' Katsnelson  <kkm@dtmx.com>
+
+	* i.c: New file, source for the i utility.
+
+2000-03-22  Mike Alexander  <mta@arbortext.com>
+
+	* make-dump-id.c (gettimeofday): new (Windows only)
+
+2000-03-20  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.32 is released.
+
+2000-03-20  Martin Buchholz  <martin@xemacs.org>
+
+	* make-dump-id.c: Use config.h and systime.h for portability.
+
+2000-02-20  Olivier Galibert  <galibert@pobox.com>
+
+	* make-dump-id.c: Added.
+
+	* Makefile.in.in: Add support for make-dump-id.
+
+2000-03-12  Ben Wing  <ben@xemacs.org>
+
+        * etags.c (canonicalize_filename): fixed a problem with gratuitous
+        capitalization of file names under MS Windows. 
+
+2000-02-23  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.31 is released.
+
+2000-02-21  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.30 is released.
+
+2000-02-16  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.29 is released.
+
+2000-02-13  Martin Buchholz  <martin@xemacs.org>
+
+	* etags.c: Upgrade to version 13.44.
+	Only added (unsigned char) casts to calls like isspace (*cp).
+
+2000-02-07  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.28 is released.
+
+2000-02-06  Martin Buchholz  <martin@xemacs.org>
+
+	* getopt.h:
+	* fakemail.c:
+	* gnuslib.c:
+	* sorted-doc.c:
+	* yow.c:
+	* cvtmail.c:
+	* movemail.c:
+	* gnuclient.c:
+	ANSIfy. Use coding standards for function definitions.
+	Make C++-compilable. Modified from patch by Zack Weinberg.
+
+2000-01-26  Kirill 'Big K' Katsnelson  <kkm@dtmx.com>
+
+	* hexl.c: Removed MSDOS code; set binary I/O flags for NT.
+
+2000-01-18  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.27 is released.
+
+2000-01-18  Martin Buchholz  <martin@xemacs.org>
+
+	* ootags.c: Ansify.
+	* etags.c:
+	* getopt.c:
+	* cvtmail.c:
+	Remove declarations of ANSI errno, getenv(), malloc().
+
+2000-01-13  Martin Buchholz  <martin@xemacs.org>
+
+	* movemail.c (main): 
+	* make-docfile.c (write_c_args): 
+	Simple compiler warning fixes.
+
+2000-01-09  Martin Buchholz  <martin@xemacs.org>
+
+	* *.[ch]: Change <../src/config.h> to <config.h>
+	* ellcc.c: Always use <...> to #include files not in `.'
+	* Makefile.in.in: Use safer -I paths.
+	Use $(top_srcdir) instead of $(srcdir)/../src
+	Add warning comment.
+
+2000-01-08  Martin Buchholz  <martin@xemacs.org>
+
+	* movemail.c: Warning removal.
+
+2000-01-06  Norbert Koch  <norbert@s.netic.de>
+
+	* movemail.c: Typo fix.
+
+2000-01-03  Michael Sperber [Mr. Preprocessor]  <sperber@informatik.uni-tuebingen.de>
+
+	* movemail.c: Overhaul of the locking code.
+
+2000-01-03  Martin Buchholz  <martin@xemacs.org>
+
+	* etags.c (etags_strrchr): Ansify.
+	(etags_strchr): Ansify.
+	(get_compressor_from_suffix): Remove warning, make code cleaner.
+
+1999-12-31  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.26 is released.
+
+1999-12-24  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.25 is released.
+
+1999-12-21  Martin Buchholz  <martin@xemacs.org>
+
+	* fakemail.c (cuserid): ((expr)) ==> (expr)
+
+	* fakemail.c (xmalloc): ANSIfy.
+
+1999-12-14  Martin Buchholz  <martin@xemacs.org>
+
+	* config.values.sh: Only update config.values.in if changed.
+	No external dependencies except perl.
+	No temporary files.
+
+1999-12-14  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.24 is released.
+
+1999-12-13  Martin Buchholz  <martin@xemacs.org>
+
+	* etags.c: Fix warning: `_GNU_SOURCE' redefined.
+
+1999-12-07  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.23 is released.
+
+1999-11-29  Andreas Jaeger  <aj@suse.de>
+
+	* Makefile.in.in (INSTALLABLE_SCRIPTS): Removed pstogif.
+	pstogif: Moved to package tm.
+
+1999-11-29  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.22 is released
+
+1999-11-28  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.21 is released.
+
+1999-11-20  Martin Buchholz  <martin@xemacs.org>
+
+	* process-gnu-depends.sh: Deleted.  Obsolete.
+	* process-depends.sh: Deleted.  Obsolete.
+
+1999-11-20  Jan Vroonhof  <jan@xemacs.org>
+
+	* Makefile.in.in (instvardir): Added. From
+	Jeff Miller <jmiller@smart.net>
+
+1999-11-19  Martin Buchholz  <martin@xemacs.org>
+
+	* etags.c: Upgrade to pot etags version 13.33.
+	Make `etags --version' print out `XEmacs', not `GNU Emacs'
+
+1999-11-17  Martin Buchholz  <martin@xemacs.org>
+
+	* etags.c (canonicalize_filename): Typo fix
+
+1999-11-05  Martin Buchholz  <martin@xemacs.org>
+
+	* etags.c:
+	* ../etc/etags.1:
+	* ../etc/NEWS:
+	Upgrade to etags version 13.32.
+	etags.c has warnings removed, in addition.
+
+1999-11-15  Martin Buchholz  <martin@xemacs.org>
+
+	* gnuserv.c (ipc_spawn_watchdog): Use pid_t instead of int.
+
+1999-11-10  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.20 is released
+
+1999-11-04  Martin Buchholz  <martin@xemacs.org>
+
+	* gnuserv.c (handle_response): Warning suppression
+
+1999-09-27  Martin Buchholz  <martin@xemacs.org>
+
+	* ellcc.c:
+	ANSIfy.
+	Remove MSDOS cruft.
+	Remove WINDOWS cruft.
+	Remove VMS cruft.
+	(main): The wrong number of bytes were being read during argument
+	processing.
+	Delete ANSI imitations like ellcc_strchr().
+	Call functions with the right number of arguments.
+	Fix a typo.
+	Make functions static.
+	Remove compiler warnings.
+
+1999-09-22  Martin Buchholz  <martin@xemacs.org>
+
+	* cvtmail.c (main): ANSIfy
+	* digest-doc.c (main): ANSIfy
+	* hexl.c (main): ANSIfy
+
+	* make-path.c: Remove declaration for errno.
+	* mmencode.c (nextcharin): ANSIfy
+	* movemail.c (pop_retr): ANSIfy
+
+1999-07-30  Gleb Arshinov  <gleb@cs.stanford.edu>
+
+	* pop.c (pop_quit): use CLOSESOCKET() instead of close()
+
+	* run.c (build_cmdline): Fix NT native build unreferenced variable
+ 	warning
+	(WinMain): Fix release mode build unreferenced variable warning
+
+1999-07-30  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.19 is released
+
+1999-07-22  SL Baur  <steve@miho>
+
+	* Makefile.in.in (datadir): Add.
+	From Jeff Miller <jmiller@smart.net>
+
+1999-07-13  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.18 is released
+
+1999-06-22  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.17 is released
+
+1999-06-11  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.16 is released
+
+1999-06-04  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.15 is released
+
+1999-06-03  SL Baur  <steve@steve1.m17n.org>
+
+	* Makefile.in.in: Move .PHONY up to force execution of `all'.
+
+1999-05-14  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.14 is released
+
+1999-05-14  SL Baur  <steve@gneiss.etl.go.jp>
+
+	* update-elc.sh (ignore_pattern): Correct ignore_dirs/ignore=dirs
+	european keyboard fuckage.
+
+1999-05-03  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* update-elc.sh (ignore_pattern): Installation.el is dead.
+
+1999-05-03  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* gnuclient.c: Include <sysfile.h> instead of <../src/sysfile.h>.
+
+	* Makefile.in.in (cppflags): Add -I$(top_srcdir)/src.
+
+1999-04-29  Andy Piper  <andy@xemacs.org>
+
+	* make-docfile.c: build fixes for mingw32.
+	* movemail.c: ditto.
+	* run.c: ditto.
+	* yow.c: ditto.
+	* profile.c: ditto.
+	(gettimeofday): new function copied from nt.c.
+
+	* fakemail.c (make_file_preface): make buildable under windows.
+
+	* Makefile.in.in: fix some build targets for when we are building
+ 	on a windows platform.
+
+1999-03-12  giacomo boffi  <giacomo.boffi@polimi.it>
+
+	* sorted-doc.c: corrected the outdated or plainly wrong
+	texinfo headers. Broken up the mega-@table that crashes (at
+	least RedHat's) TeX with:
+	 "! TeX capacity exceeded, sorry [save size=4000]."
+
+1999-03-12  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.13 is released
+
+1999-03-10  Martin Buchholz  <martin@xemacs.org>
+
+	* fakemail.c (add_a_stream): Always use full ANSI prototypes.
+
+1999-03-06  Martin Buchholz  <martin@xemacs.org>
+
+	* fakemail.c (main): Ansify.
+	(xmalloc): Ansify.
+	(xrealloc): Ansify.
+	(get_keyword): use paranoid casts ((int) (unsigned char) c) for
+	islower, toupper, isspace.
+
+1999-03-05  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.12 is released
+
+1999-03-01  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.11 is released
+
+1999-02-17  SL Baur  <steve@xemacs.org>
+
+	* update-elc.sh (ignore_dirs): Ignore lisp/mule subdirectory when
+	running latin-1 XEmacs.  Eliminate 20.4 bundled kludges.
+	* update-custom.sh (ignore_dirs): Ditto.
+
+1999-02-15  Martin Buchholz  <martin@xemacs.org>
+
+	* update-elc.sh:
+	* update-autoloads.sh:
+	* update-custom.sh:
+	- improved automounter tmp directory support.
+	- support 4 (!) empirically discovered automounter conventions
+
+1999-02-05  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.10 is released
+
+1999-02-02  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.9 is released
+
+1999-01-27  Martin Buchholz  <martin@xemacs.org>
+
+	* movemail.c (strerror): Must be NON-static, since it is used by
+	the POP code, which got moved to a separate file.
+
+1999-01-11  Damon Lipparelli  <lipp@primus.com>
+
+	* Makefile.in.in: use ellcc (not ellc) everywhere
+
+1999-01-10  J. Kean Johnston  <jkj@sco.com>
+
+	* Makefile.in.in: Include moduledir and sitemoduledir as defined
+	by configure.
+	- Install ellcc if we're supporting shared objects
+	- Rules and dependancies for ellcc
+
+	* ellcc.c: New file. Front end to the compiler for making modules.
+
+	* ellcc.h.in: New file. Contains path definitions used by ellcc.
+
+	* make-docfile.c (main): Add check for -E argument used by ellcc.
+
+	* make-docfile.c: Changed output format when in -E mode.
+
+1998-12-28  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.8 is released.
+
+1998-12-24  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.7 is released.
+
+1998-12-17  Andy Piper  <andy@xemacs.org>
+
+	* pop.c (pop_open): disable use of getpass() which doesn't exist under NT.
+
+	* movemail.c: mess with includes so that it builds under native NT.
+
+	* pop.c: mess with includes so that it builds under native NT.
+	From Fabrice Popineau <popineau@ese-metz.fr>
+
+1998-12-16  Andy Piper  <andy@xemacs.org>
+
+	* XEmacs 21.2.6 is released
+
+1998-12-05  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.5 is released
+
+1998-11-28  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.2-beta4 is released.
+
+1998-10-14  Andy Piper  <andyp@parallax.co.uk>
+
+	* Makefile.in.in (movemail): add getopt.o to objects to link with.
+
+	* movemail.c (main): rewrite to use getopt(). Add options for
+	order reversal, progress output, regexp matching and message
+	deletion.
+	(popmail): add some optional verbose messages. Use pop_search_top
+	for getting messages. Make message deletion optional. Delete all
+	messages at the end rather than on a message my message basis.
+	(pop_search_top): new function. Looks for messages matching regexp.
+	(compile_regex): new function stolen from etags.
+
+1998-10-15  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.2-beta3 is released.
+
+1998-10-12  SL Baur  <steve@altair.xemacs.org>
+
+	* lib-src/gnudepend.pl: Use /usr/bin/perl.
+	* Makefile.in.in (INSTALLABLE_SCRIPTS): Remove send-pr, install-sid.
+	(GEN_SCRIPTS): Ditto.
+	Delete TM_SCRIPTS.
+
+1998-10-11  SL Baur  <steve@altair.xemacs.org>
+
+	* tm-au:
+	* tm-file:
+	* tm-html:
+	* tm-image:
+	* tm-mpeg:
+	* tm-plain:
+	* tm-ps:
+	* tmdecode: packaged.
+
+1998-10-10  SL Baur  <steve@altair.xemacs.org>
+
+	* install-sid:
+	* send-pr:  Packaged
+
+1998-10-01  Jan Vroonhof  <vroonhof@math.ethz.ch>
+
+	* gnuclient.c (filename_expand): Don't forget to copy the
+	filename under UNIX.
+
+1998-09-29  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.2-beta2 is released.
+
+1998-09-08  Raymond Toy  <toy@rtp.ericsson.se>
+
+	* gnuclient.c (filename_expand): Added better recognition of
+	absolute pathnames for CYGWIN.  Convert absolute pathnames with
+	drive letters to something xemacs can handle.
+
+1998-07-19  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.2-beta1 is released.
+
+1998-07-15  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (ignore_pattern): Add very-early-lisp.el as
+	something to never bytecompile.
+
+1998-07-12  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.0-pre5 is released.
+
+1998-07-09  SL Baur  <steve@altair.xemacs.org>
+
+	* XEmacs 21.0-pre4 is released.
+
+1998-06-16  Jan Vroonhof  <vroonhof@math.ethz.ch>
+
+	* gnuclient.c (main): Use disconnect_from_server to read & echo
+	result.
+
+1998-06-15  Andy Piper  <andyp@parallax.co.uk>
+
+	* Makefile.in.in: add xemacs icon to the runemacs executable.
+
+1998-06-12  Jim Radford  <radford@robby.caltech.edu>
+
+	* gnuclient.c (initialize_signals): Don't pass SIGHUP to XEmacs.
+
+1998-06-04  Andy Piper  <andyp@parallax.co.uk>
+
+	* Makefile.in.in (runemacs): add runemacs as a build target if
+	HAVE_MS_WINDOWS is defined. move cpp stuff up slightly so that
+	build targets can benefit from it.
+
+1998-05-31  Kirill M. Katsnelson  <kkm@kis.ru>
+
+	* wakeup.c (sleep): Added NT preprocessor quirkfest.
+	(main): Exit when fflush() fails on stdout.
+
+1998-05-30  Kirill M. Katsnelson  <kkm@kis.ru>
+
+	* getopt.c: Undefine getpid before redefinition.
+
+	* make-docfile.c: Added <io.h> when compiling on NT
+
+	* movemail.c: Ditto.
+	(main): Declare some auto variables only when DISABLE_DIRECT_ACCESS
+	is undefined, so they are actually used, to supress compilation
+	warnings.
+
+1998-05-16  SL Baur  <steve@altair.xemacs.org>
+
+	* etags.c (C_entries): Avoid short circuiting comparisons on
+	characters that may appear in C++ operator constructs.
+
+	* ootags.c (C_entries): Commentary change.
+
+	* Makefile.in.in (PKG_SCRIPTS): Remove add-little-package.sh.
+
+1998-05-11  Martin Buchholz  <martin@xemacs.org>
+
+	* Makefile.in.in:
+	- Adjust for luser's CDPATH being set to something weird.
+	- Take into account bash 2.02's tendency to print the cwd when
+	  using CDPATH.  Always use `cd ./foo' instead of `cd foo'.
+	- fix the run-temacs target to use $(DUMPENV)
+	- fix the run-puremacs target to use $(DUMPENV)
+	- fix the `depend' target to properly $(RM) the right files
+	- Generate a better TAGS file for XEmacs' lisp code using
+	  hand-crafted regexps.
+	- Use standard coding conventions for modules/Makefile.in
+
+1998-05-07  Andy Piper  <andyp@parallax.co.uk>
+
+	* update-elc.sh: test x && y loses in the presence of set -e, use
+	if instead.
+
+1998-05-06  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in (INSTALLABLES): Add ootags.
+	(ootags): New rule.
+
+	* ootags.c: New file.
+	(C_entries): Annotate changes neeeded for increased OO-Browser
+	context.
+
+1998-05-05  Jeff Miller <jmiller@smart.net>
+
+	* Makefile.in.in: Fix blessmail target.
+
+1998-05-05  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in (etags_args): Back out -DOO_BROWSER
+
+	* etags.c: Revert to CVS version 1.11 (pre OO-browser additions).
+
+1998-05-04  SL Baur  <steve@altair.xemacs.org>
+
+	* etags.c (C_entries): Fix order typo.
+	(C_entries): Restore previous test.
+
+Wed Apr 22 12:59:35 1998  Andy Piper  <andyp@parallax.co.uk>
+
+	* installexe.sh: fix to use -f instead of -e file and fix shift
+	typo.
+
+1998-04-22  SL Baur  <steve@altair.xemacs.org>
+
+	* etags.c: Unconditionally define OO_BROWSER.
+
+	* update-elc.sh: Tighten up regexp on uname -r output.
+	From Marcus Thiessel <thiessel@tmbbwtx.bbn.hp.com>
+
+1998-04-19  Jan Vroonhof  <vroonhof@math.ethz.ch>
+
+	* gnuclient.c (main): Read eval from from stdin if just "-batch"
+	is given.
+	* gnudoit: Support this.
+	* gnuserv.1: Document this behavior.
+
+1998-04-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* etags.c (C_entries): Add parentheses.
+
+	* etags-vmslib.c: Remove.  It's not needed anymore.
+
+Fri Apr 17 12:59:35 1998  Andy Piper  <andyp@parallax.co.uk>
+
+	* installexe.sh: New file.
+
+1998-04-17  Olivier Galibert  <galibert@pobox.com>
+
+	* etags.c (print_help): Correct typo.
+
+1998-04-16  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in: Add -DOO_BROWSER to etags arguments.
+
+	* etags.c: Synch with InfoDock.
+
+	* update-autoloads.sh: Don't attempt to eval `make-special' stuffs
+	anymore.  They are no longer used.
+	* update-custom.sh: Always check in lisp/.
+
+1998-03-18  Jan Vroonhof  <vroonhof@math.ethz.ch>
+
+	* gnuclient.c (main): Do not copy string unnecessary in (too)
+	small buffers.
+
+1998-03-02  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh: Change all -q -no-site-file to -vanilla
+
+1998-02-27  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (ignore_pattern): Add Installation.el, remove old
+	stuff from 20.4.
+
+Tue Feb 17 12:50:37 1998  Andy Piper  <andyp@parallax.co.uk>
+
+	* lib-src/Makefile.in.in: make sure clean removes msw executables
+
+1998-02-24  SL Baur  <steve@altair.xemacs.org>
+
+	* gnuserv.h: Enable USE_TMPDIR.
+
+1998-02-23  Glynn Clements  <glynn@sensei.co.uk>
+
+	* gnuclient.c (main): initialise variable `tmpdir' from the TMPDIR
+ 	environment variable.
+
+	* gnuserv.c (various): replace hardcoded references to /tmp with
+ 	the value of `tmpdir'.
+	(main): initialise variable `tmpdir' from the TMPDIR
+ 	environment variable.
+
+	* gnuserv.h: include (commented-out) definition of USE_TMPDIR.
+	Add `extern char *tmpdir'.
+
+	* gnuslib.c (various): replace hardcoded references to /tmp with
+	the value of `tmpdir'.
+
+1998-02-15  SL Baur  <steve@altair.xemacs.org>
+
+	* getopt.c (_getopt_internal): Add braces for clarity.
+
+1998-01-13  Martin Buchholz  <martin@xemacs.org>
+
+	* lib-src/add-little-package.sh:
+	* lib-src/add-big-package.sh:
+	Use proper paranoid quoting for sh variables.
+	-batch implies -q.
+
+Thu Jan 08 09:42:36 1998    <andyp@parallax.co.uk>
+
+	* gnuserv.h: only set UNIX_DOMAIN_SOCKETS if HAVE_SYS_UN_H is
+	set.
+
+	* gnuserv.c: tidy up so that it builds when we don't have
+ 	UNIX_DOMAIN_SOCKETS.
+
+1998-01-07  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (ignore_pattern): Replace -vanilla with `-q
+	-no-site-file'.
+	* update-autoloads.sh (dirs): Ditto.
+	* update-custom.sh (dirs): Ditto.
+
+1997-12-18  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (mule_p): Remove skk's special treatment.
+
+1997-12-09  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (ignore_pattern): Correct paths of files that
+	should not be bytecompiled, and remove dead files.
+
+1997-12-02  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (mule_p): Update for addition of SKK.
+
+	* update-autoloads.sh (mule_p): Update ignore_dirs for
+	lisp/language and lisp/skk.
+	* update-custom.sh (mule_p): Ditto.
+
+1997-11-29  Jeff Miller <jmiller@smart.net>
+
+	* Makefile.in.in: Changed path to blessmail.el for blessmail target
+	  to match new lisp directory layout.
+
+1997-11-27  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh: Obliterate usage of make_special, since nothing
+	requires it any more.
+
+1997-11-23  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (BYTECOMP): cleantree.el has been moved.
+
+1997-11-18  Colin Rafferty  <craffert@ml.com>
+
+	* update-elc.sh (prune_vc): Made it ignore any directory that
+	starts with a period.
+
+1997-11-16  SL Baur  <steve@altair.xemacs.org>
+
+	* gnuserv.c (main): make return type int.
+	Suggested by Andreas Jaeger <aj@arthur.rhein-neckar.de>
+
+	* fakemail.c (main): Ditto.
+
+1997-11-13  SL Baur  <steve@altair.xemacs.org>
+
+	* pop.c: Add includes from movemail.c so standard functions get
+	declared.
+	(pop_retrieve): Return NULL if falling off the end of the
+	function.
+
+	* movemail.c: Hide declarations of popmail(), mbx_write(),
+	mbc_delimit_begin(), and mbx_delimit_end() behind MAIL_USE_POP
+	guard.
+	(pop_retr): Change 4th parameter to void *.
+
+1997-11-02  SL Baur  <steve@altair.xemacs.org>
+
+	* update-custom.sh (dirs): Remove packaged directories.
+
+	* update-elc.sh (ignore_pattern): Hyperbole, oobr and ilisp are
+	now packaged.
+
+	* update-autoloads.sh (mule_p): Hyperbole and oobr are now
+	packaged.
+
+1997-10-30  SL Baur  <steve@altair.xemacs.org>
+
+	* update-autoloads.sh (mule_p): EFS has been packaged.
+	* update-elc.sh (make_special_commands): Ditto.
+
+	* update-elc.sh: VM has been packaged.
+
+	* update-autoloads.sh: Add directory language
+
+1997-10-23  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (BYTECOMP): Specify -vanilla
+	* update-autoloads.sh (dirs): Ditto.
+	* update-custom.sh (dirs): Ditto.
+
+1997-10-10  Martin Buchholz  <mrb@eng.sun.com>
+
+	* config.values.in:  Run config.values.sh
+
+1997-10-09  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in (PKG_SCRIPTS): Add new package manipulation
+	scripts.
+
+	* add-little-package.sh: New file.  Support script to install
+	single file packages.
+
+	* Makefile.in.in (distclean): Reverse change -- do not remove
+	config.values.in.
+	Suggested by: Martin Buchholz <mrb@Eng.Sun.COM>
+
+1997-10-06  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in (distclean): Remove config.values.in.
+	From Martin Buchholz <mrb@Eng.Sun.COM>
+
+1997-10-04  SL Baur  <steve@altair.xemacs.org>
+
+	* update-autoloads.sh (mule_p): W3 is a package now.
+
+1997-09-30  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (ignore_pattern): Don't attempt bytecompiling
+	lisp/leim/quail/tibetan.el and lisp/language/tibet-util.el.
+
+1997-09-29  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (mule_p): Ignore mu/latex-math-symbol.el if we're
+	not building with Mule.
+
+1997-09-27  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* update-custom.sh: New file.
+
+	* update-autoloads.sh: Minor fixes.
+
+1997-08-11  Jeff Miller <jmiller@smart.net>
+	* Makefile.in.in:  Added a test for system-type equal to linux to
+	lisp/paths.el.  Mail spool dir should be /var/spool/mail.
+
+	* cleaned up lib-src/Makefile.in.in regarding targets blessmail and
+	maybe-blessmail. Added target do-blessmail.  Makefile.in.in was also
+	missing a variable called "configuration. This messed up archilibdir.
+
+	* Added highlighting to text suggesting to do "make gzip-el" in top
+	level Makefile.in.  Added code to do make maybe-blessmail after a
+	make install is done.
+
+1997-08-07  Jan Vroonhof  <vroonhof@math.ethz.ch>
+
+	* gnuclient.c (main): Made help string correspond to options.
+
+1997-08-01  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in (distclean): Remove config.values here only.
+
+1997-07-27  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in (UTILITIES): Add config.values so it can be
+	cleared away by `make distclean'.
+
+1997-07-21  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (make_special_commands): Remove processing for
+	Gnus and AUCTeX.
+
+1997-07-19  SL Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (mule_p): Do not attempt to bytecompile
+	char-table.el and chartblxmas.el.
+
+1997-07-08  Steven L Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (cc-mode): Don't give cc-mode special treatment.
+
+	* update-autoloads.sh (cc-mode): Don't give cc-mode special
+	treatment.
+
+	* rcs2log: Synch with Emacs/Mule zeta.
+
+1997-07-03  Steven L Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (make_special_commands): Fix building of ilisp so
+	custom-load.elc gets built.
+
+1997-06-27  Steven L Baur  <steve@altair.xemacs.org>
+
+	* update-autoloads.sh:  Major rework.  Avoid looking at MULE
+	directories if not running XEmacs/Mule.
+	- Look into all Mule directories for building autoloads.
+
+	* update-elc.sh (make_special_commands): Fix handling of
+	bytecompilation of AUCTeX to avoid looking at tex-jp.el if not
+	running MULE.
+
+1997-06-24  Steven L Baur  <steve@altair.xemacs.org>
+
+	* gnuattach: Needed executable bit set.
+	Suggested by Kyle Jones <kyle_jones@wonderworks.com>
+
+	* update-elc.sh (ignore_pattern): lisp/language/ethiopic byte
+	compiles now.
+
+1997-06-24  MORIOKA Tomohiko  <morioka@jaist.ac.jp>
+
+	* update-autoloads.sh: Search lisp/mule/.
+
+1997-06-20  Steven L Baur  <steve@altair.xemacs.org>
+
+	* gnuattach: Readd as warning script.
+
+	* Makefile.in.in (INSTALLABLE_SCRIPTS): Readd Gnuattach.
+	From Hrvoje Niksic <hniksic@srce.hr>
+
+1997-06-13  Steven L Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (mule_p): Ignore lisp/language when building
+	non-Mule.
+	(ignore_pattern): Ignore Languages we don't support yet.
+
+1997-06-02  Steven L Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (ignore_dirs): Handle ported Quail (LEIM).
+
+Tue May 20 23:22:00 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* update-autoloads.sh (dirs): Remove obsolete directory lisp/vms
+	from exclusion list (it doesn't exist any more).  Remove
+	lisp/eterm from exclusion list of directories searched for
+	autoloads.
+
+Thu May  1 15:26:20 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (mule_p): Test for mule bombs with change in format
+	of new output of featurep.
+
+Fri Apr 25 09:12:04 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* pstogif: Use Martin Buchholz magic to automagically find perl
+	interpreter.
+
+Tue Apr  8 03:08:22 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in: C Comment out Make comments.  No snide comments
+	from me, no sir.
+
+Tue Apr  1 12:26:53 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in: Added stuff for updated movemail.c.
+
+Sat Mar 29 16:57:01 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* send-pr (GNATS_ADDR): Use xemacs.org as submission address.
+	(DATADIR): Allow for DATADIR to be passed in as an environment
+	variable.
+
+Sun Mar 23 15:57:19 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (make_special_commands): Use target of x20 for efs.
+
+Wed Mar 19 10:38:04 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in (SCRIPTS): Link gzip-el.sh in --srcdir
+	configuration.
+
+Tue Mar 18 17:49:14 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (EMACS): Removed $XEMACS backdoor.  We will make
+	the .elcs *only* with the freshly built XEmacs.
+
+Mon Mar 17 10:12:03 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in (INSTALLABLE_SCRIPTS): Add install-sid and
+	send-pr (from GNATS).
+
+	* update-elc.sh (prune_vc): Use full path to cleantree.el.
+	(NUMTOCOMPILE): Remove useless rule to recompile out-of-date .elcs.
+
+Sun Mar 16 21:13:29 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* install-sid: New file (GNATS integration).
+
+	* send-pr: New file (GNATS integration).
+
+Fri Mar 14 17:59:57 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh (ignore_dirs): Build VM with `make autoload'.
+
+Wed Mar  5 18:07:57 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* gzip-el.sh: New file.  Courtesy of Jeff Miller and Hrvoje Niksic.
+
+	* update-elc.sh (els): Remove out of date .elcs before building.
+
+Tue Mar  4 18:45:10 1997  Martin Buchholz  <mrb@eng.sun.com>
+
+	* update-elc.sh (els): No more special treatment for vm.elc.
+
+Wed Feb 26 18:17:59 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* make-docfile.c (next_extra_elc): New function.
+	(main): Use it.  Implementation of `-i' parameter to pass a list
+	of site-loaded lisp files.
+
+Wed Feb 19 18:24:49 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* update-elc.sh: Added lisp/auctex.
+
+Thu Feb 13 11:32:47 1997  Steven L Baur  <steve@altair.xemacs.org>
+
+	* Makefile.in.in: Install pstogif script.
+
+Sun Dec 29 17:16:45 1996  Martin Buchholz  <mrb@eng.sun.com>
+
+	* update-elc.sh (make_special_commands): Make ilisp be a little
+	smarter about recompilation.
+
+Wed Dec 18 20:22:55 1996  Martin Buchholz  <mrb@eng.sun.com>
+
+	* mmencode.c: Don't declare index().
+
+	* Makefile.in.in: Documentation changes.
+
+	* update-elc.sh: Portability Fix.
+
+Thu Dec  5 15:41:53 1996  Martin Buchholz  <mrb@Eng.Sun.COM>
+
+	* update-elc.sh: Corrections to protect against too smart /bin/sh'es.
+

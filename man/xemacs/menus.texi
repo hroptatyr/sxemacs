@@ -1,0 +1,552 @@
+
+@node Pull-down Menus, Entering Emacs, Keystrokes, Top
+@comment  node-name,  next,  previous,  up
+@section XEmacs Pull-down Menus 
+
+If you are running XEmacs under X, a menu bar on top of the
+Emacs frame provides access to pull-down menus of file, edit, and
+help-related commands. The menus provide convenient shortcuts and an
+easy interface for novice users.  They do not provide additions to the
+functionality available via key commands; you can still invoke commands
+from the keyboard as in previous versions of Emacs.
+        
+@table @b
+@item File
+Perform file and buffer-related operations, such as opening and closing
+files, saving and printing buffers, as well as exiting Emacs.
+@cindex File menu
+
+@item Edit
+Perform standard editing operations, such as 
+cutting, copying, pasting, and killing selected text.
+@cindex Edit menu
+
+@c #### The Mule menu needs to be documented, but this is not the place
+@c for it since Ben just moved it.
+
+@item Apps
+Access to sub-applications implemented within XEmacs, such as the mail
+reader, the World Wide Web browser, the spell-checker, and the calendar
+program.
+@cindex Apps menu
+
+@item Options
+Control various options regarding the way XEmacs works, such as controlling
+which elements of the frame are visible, selecting the fonts to be used for
+text, specifying whether searches are case-sensitive, etc.
+@cindex Options menu
+
+@item Buffers
+Present a menu of buffers for selection as well as the option to display
+a buffer list.
+@cindex Buffers menu
+
+@item Tools
+Perform various actions designed to automate software development and
+similar technical work, such as searching through many files, compiling
+a program, and comparing or merging two or three files.
+@cindex Tools menu
+
+@item Help
+Access to Emacs Info.
+@cindex Help menu
+@end table
+@cindex Pull-down Menus
+@cindex menus
+
+There are two ways of selecting an item from a pull-down menu:
+
+@itemize @bullet
+@item
+Select an item in the menu bar by moving the cursor over it and click the
+left mouse-button.  Then move the cursor over the menu item you want to choose
+and click left again.
+@item
+Select an item in the menu bar by moving the cursor over it and click and
+hold the left mouse-button.  With the mouse-button depressed, move the
+cursor over the menu item you want, then release it to make your selection. 
+@end itemize
+
+If a command in the pull-down menu is not applicable in a given
+situation, the command is disabled and its name appears faded.  You
+cannot invoke items that are faded.  For example, many commands on the
+@b{Edit} menu appear faded until you select text on which they are to
+operate; after you select a block of text, edit commands are enabled.
+@xref{Mouse Selection}, for information on using the mouse to select
+text.  @xref{Using X Selections}, for related information.
+
+There are also @kbd{M-x} equivalents for each menu item.  To find the
+equivalent for any left-button menu item, do the following:
+
+@enumerate
+@item
+Type @kbd{C-h k} to get the @code{Describe Key} prompt. 
+@item
+Select the menu item and click. 
+@end enumerate
+
+Emacs displays the function associated with the menu item in a separate
+window, usually together with some documentation. 
+
+@menu
+* File Menu::           Items on the File menu.
+* Edit Menu::           Items on the Edit menu.
+* Apps Menu::		Items on the Apps menu.
+* Options Menu::        Items on the Options menu. 
+* Buffers Menu::        Information about the Buffers menu.
+* Tools Menu::		Items on the Tools menu.
+* Help Menu::           Items on the Help menu. 
+* Menu Customization::  Adding and removing menu items and related
+                        operations.
+@end menu
+
+@node File Menu
+@subsection The File Menu
+
+@cindex File menu
+
+The @b{File} menu bar item contains the items @b{New Frame}, @b{Open
+File...}, @b{Save Buffer}, @b{Save Buffer As...}, @b{Revert Buffer},
+@b{Print Buffer}, @b{Delete Frame}, @b{Kill Buffer} and @b{Exit Emacs}
+on the pull-down menu.  If you select a menu item, Emacs executes the
+equivalent command.
+
+@cindex Open File, New Frame... menu item
+@cindex Open File... menu item
+@cindex Insert File... menu item
+@cindex Save Buffer menu item
+@cindex Save Buffer As ... menu item
+@cindex Revert Buffer menu item
+@cindex Kill Buffer menu item
+@cindex Print Buffer menu item
+@cindex New Frame menu item
+@cindex Delete Frame menu item
+@cindex Split Frame
+@cindex Un-split (Keep This)
+@cindex Un-split (Keep Others)
+@cindex Exit Emacs menu item
+
+@table @b
+@item Open File, New Frame...
+Prompts you for a filename and loads that file into a new buffer in a
+new Emacs frame, that is, a new X window running under the same Emacs
+process.  You can remove the frame using the @b{Delete Frame} menu
+item.  When you remove the last frame, you exit Emacs and are prompted
+for confirmation. @refill
+
+@item Open File...
+Prompts you for a filename and loads that file into a new buffer. 
+@b{Open File...} is equivalent to the Emacs command @code{find-file} (@kbd{C-x
+C-f}).@refill 
+
+@item Insert File...
+Prompts you for a filename and inserts the contents of that file into
+the current buffer.  The file associated with the current buffer is
+not changed by this command.  This is equivalent to the Emacs command
+@code{insert-file} (@kbd{C-x i}).@refill 
+
+@item Save Buffer 
+Writes and saves the current Emacs buffer as the latest
+version of the current visited file.  @b{Save Buffer} is equivalent to the
+Emacs command @code{save-buffer} (@kbd{C-x C-s}).@refill
+
+@item Save Buffer As... 
+Writes and saves the current Emacs buffer to the filename you specify.
+@b{Save Buffer As...} is equivalent to the Emacs command
+@code{write-file} (@kbd{C-x C-w}).@refill
+
+@item Revert Buffer
+Restores the last saved version of the file to the current buffer.  When
+you edit a buffer containing a text file, you must save the buffer
+before your changes become effective.  Use @b{Revert Buffer} if you do
+not want to keep the changes you have made in the buffer.  @b{Revert
+Buffer} is equivalent to the Emacs command @code{revert-file} (@kbd{M-x
+revert-buffer}).@refill
+
+@item Kill Buffer
+Kills the current buffer, prompting you first if there are unsaved
+changes.  This is roughly equivalent to the Emacs command 
+@code{kill-buffer} (@kbd{C-x k}), except that @code{kill-buffer} 
+prompts for the name of a buffer to kill. @refill
+
+@item Print Buffer
+Prints a hardcopy of the current buffer.  Equivalent
+to the Emacs command @code{print-buffer} (@kbd{M-x print-buffer}).@refill
+
+@item New Frame
+Creates a new Emacs frame displaying the @code{*scratch*} buffer.  This
+is like the @b{Open File, New Frame...} menu item, except that it does
+not prompt for or load a file.@refill
+
+@item Delete Frame 
+Allows you to close all but one of the frames created by @b{New Frame}.
+If you created several Emacs frames belonging to the same Emacs
+process, you can close all but one of them.  When you attempt to close the
+last frame, Emacs informs you that you are attempting to delete the
+last frame.  You have to choose @b{Exit Emacs} for that.@refill
+
+@item Split Frame
+Divides the current window on the current frame into two equal-sized
+windows, both displaying the same buffer.  Equivalent to the Emacs
+command @code{split-window-vertically} (@kbd{C-x 2}).@refill
+
+@item Un-split (Keep This)
+If the frame is divided into multiple windows, this removes all windows
+other than the selected one.  Equivalent to the Emacs command
+@code{delete-other-windows} (@kbd{C-x 1}).@refill
+
+@item Un-split (Keep Others)
+If the frame is divided into multiple windows, this removes the
+selected window from the frame, giving the space back to one of the
+other windows.  Equivalent to the Emacs command @code{delete-window}
+(@kbd{C-x 0}).@refill
+
+@item Exit Emacs
+Shuts down (kills) the Emacs process.  Equivalent to the Emacs command
+@code{save-buffers-kill-emacs} (@kbd{C-x C-c}).  Before killing the
+Emacs process, the system asks which unsaved buffers to save by going through
+the list of all buffers in that Emacs process.@refill
+@end table
+
+@node Edit Menu
+@subsection The Edit Menu
+@cindex Edit menu
+
+The @b{Edit} pull-down menu contains the @b{Undo}, @b{Cut}, @b{Copy},
+@b{Paste}, and @b{Clear} menu items.  When you select a menu item, Emacs
+executes the equivalent command.  Most commands on the @b{Edit} menu
+work on a block of text, the X selection.  They appear faded until you
+select a block of text (activate a region) with the mouse.  @xref{Using
+X Selections}, @pxref{Killing}, and @pxref{Yanking} for more
+information.@refill
+
+@c  **** zmacs-regions is on by default these days - jwz
+@c
+@c Note: By default, you can use the @b{Edit} menu items on the region between
+@c point and the mark as well as regions selected with the mouse. To change
+@c this behavior, set the variable @code{zmacs-regions} to
+@c @code{t}. @xref{Active Regions} for more information.
+
+@cindex Undo menu item
+@cindex Cut menu item
+@cindex Copy menu item
+@cindex Paste menu item
+@cindex Clear menu item
+@cindex Start Macro Recording menu item
+@cindex End Macro Recording menu item
+@cindex Execute Last Macro menu item
+@table @b
+@item Undo 
+Undoes the previous command.  @b{Undo} is equivalent to
+the Emacs command @code{undo} (@kbd{C-x u}).@refill
+
+@item Cut
+Removes the selected text block from the current buffer, makes it the X
+clipboard selection, and places it in the kill ring.  Before executing
+this command, you have to select a region using Emacs region selection
+commands or with the mouse.@refill 
+
+@item Copy 
+Makes a selected text block the X clipboard selection, and places it in
+the kill ring.  You can select text using one of the Emacs region
+selection commands or by selecting a text region with the mouse.@refill
+
+@item Paste 
+Inserts the current value of the X clipboard selection in the current
+buffer.  Note that this is not necessarily the same as the Emacs
+@code{yank} command, because the Emacs kill ring and the X clipboard
+selection are not the same thing.  You can paste in text you
+have placed in the clipboard using @b{Copy} or @b{Cut}.  You can also
+use @b{Paste} to insert text that was pasted into the clipboard from other
+applications.
+
+@item Clear
+Removes the selected text block from the current buffer but does not
+place it in the kill ring or the X clipboard selection. 
+
+@item Start Macro Recording
+After selecting this, Emacs will remember every keystroke you type until
+@b{End Macro Recording} is selected.  This is the same as the Emacs 
+command @code{start-kbd-macro} (@kbd{C-x (}).
+
+@item End Macro Recording
+Selecting this tells emacs to stop remembering your keystrokes.  This is
+the same as the Emacs command @code{end-kbd-macro} (@kbd{C-x )}).
+
+@item Execute Last Macro
+Selecting this item will cause emacs to re-interpret all of the
+keystrokes which were saved between selections of the @b{Start Macro
+Recording} and @b{End Macro Recording} menu items.  This is the same
+as the Emacs command @code{call-last-kbd-macro} (@kbd{C-x e}).
+@end table
+
+@node Apps Menu
+@subsection The Apps Menu
+@cindex Apps menu
+
+The @b{Apps} pull-down menu contains the @b{Read Mail (VM)...}, @b{Read
+Mail (MH)...}, @b{Send Mail...}, @b{Usenet News}, @b{Browse the Web},
+@b{Gopher}, @b{Spell-Check Buffer} and @b{Emulate VI} menu items,
+and the @b{Calendar} and @b{Games} sub-menus.  When you select a menu
+item, Emacs executes the equivalent command.  For some of the menu
+items, there are sub-menus which you will need to select.
+
+@node Options Menu
+@subsection The Options Menu
+@cindex Options menu
+
+The @b{Options} pull-down menu contains the @b{Read Only}, @b{Case 
+Sensitive Search}, @b{Overstrike}, @b{Auto Delete Selection}, 
+@b{Teach Extended Commands}, @b{Syntax Highlighting}, @b{Paren 
+Highlighting}, @b{Font}, @b{Size}, @b{Weight}, @b{Buffers Menu 
+Length...}, @b{Buffers Sub-Menus} and @b{Save Options} menu items. 
+When you select a menu item, Emacs executes the equivalent command. 
+For some of the menu items, there are sub-menus which you will need 
+to select.
+
+@cindex Read Only menu item
+@cindex Case Sensitive Search menu item
+@cindex Overstrike menu item
+@cindex Auto Delete Selection menu item
+@cindex Teach Extended Commands menu item
+@cindex Syntax Highlighting menu item
+@cindex Paren Highlighting menu item
+@cindex Font menu item
+@cindex Size menu item
+@cindex Weight menu item
+@cindex Buffers Menu Length... menu item
+@cindex Buffers Sub-Menus menu item
+@cindex Save Options
+@table @b
+@item Read Only
+Selecting this item will cause the buffer to visit the file in a 
+read-only mode. Changes to the file will not be allowed. This is 
+equivalent to the Emacs command @code{toggle-read-only} 
+(@kbd{C-x C-q}).
+
+@item Case Sensitive Search
+Selecting this item will cause searches to be case-sensitive. If 
+its not selected then searches will ignore case. This option is 
+local to the buffer.
+
+@item Overstrike
+After selecting this item, when you type letters they will replace 
+existing text on a one-to-one basis, rather than pushing it to the 
+right. At the end of a line, such characters extend the line. Before 
+a tab, such characters insert until the tab is filled in. This is the 
+same as Emacs command @code{quoted-insert} (@kbd{C-q}).
+
+@item Auto Delete Selection
+Selecting this item will cause automatic deletion of the selected 
+region. The typed text will replace the selection if the selection 
+is active (i.e. if its highlighted). If the option is not selected 
+then the typed text is just inserted at the point.
+
+@item Teach Extended Commands
+After you  select this item, any time you execute a command with 
+@kbd{M-x}which has a shorter keybinding, you will be shown the 
+alternate binding before the command executes.
+
+@item Syntax Highlighting
+You can customize your init file to include the font-lock mode so that
+when you select this item, the comments will be displayed in one face,
+strings in another, reserved words in another, and so on. @xref{Init
+File}.  When @b{Fonts} is selected, different parts of the program will
+appear in different Fonts. When @b{Colors} is selected, then the program
+will be displayed in different colors. Selecting @b{None} causes the
+program to appear in just one Font and Color. Selecting @b{Less} resets
+the Fonts and Colors to a fast, minimal set of decorations. Selecting
+@b{More} resets the Fonts and Colors to a larger set of decorations. For
+example, if @b{Less} is selected (which is the default setting) then you
+might have all comments in green color.  Whereas, if @b{More} is
+selected then a function name in the comments themselves might appear in
+a different Color or Font.@refill
+
+@item Paren Highlighting
+After selecting @b{Blink} from this item, if you place the cursor 
+on a parenthesis, the matching parenthesis will blink. If you select 
+@b{Highlight} and place the cursor on a parenthesis, the whole 
+expression of the parenthesis under the cursor will be highlighted. 
+Selecting @b{None} will turn off the options (regarding @b{Paren 
+Highlighting}) which you had selected earlier.@refill
+
+@item Font
+You can select any Font for your program by choosing from one of the 
+available Fonts.
+
+@item Size
+You can select any size ranging from @b{2} to @b{24} by selecting the 
+appropriate option.@refill
+
+@item Weight
+You can choose either @b{Bold} or @b{Medium} for the weight.@refill
+
+@item Buffers Menu Length...
+Prompts you for the number of buffers to display. Then it will display 
+that number of most recently selected buffers.
+
+@item Buffers Sub-Menus
+After selection of this item the Buffers menu will contain several 
+commands, as submenus of each buffer line. If this item is unselected, 
+then there are no submenus for each buffer line, the only command 
+available will be selecting that buffer.
+
+@item Save Options
+Selecting this item will save the current settings of your Options 
+menu to your init file.  @xref{Init File}.
+@end table
+
+@node Buffers Menu
+@subsection The Buffers Menu
+@cindex Buffers menu
+The @b{Buffers} menu provides a selection of up to ten buffers and the
+item @b{List All Buffers}, which provides a Buffer List. @xref{List
+Buffers}, for more information.  
+
+@node Tools Menu
+@subsection The Tools Menu
+@cindex Tools menu
+
+The @b{Tools} pull-down menu contains the @b{Grep...}, @b{Compile...},
+@b{Shell Command...}, @b{Shell Command on Region...}, @b{Debug(GDB)...}
+and @b{Debug(DBX)...} menu items, and the @b{Compare}, @b{Merge},
+@b{Apply Patch} and @b{Tags} sub-menus.  When you select a menu item,
+Emacs executes the equivalent command.  For some of the menu items,
+there are sub-menus which you will need to select.
+
+@node Help Menu
+@subsection The Help Menu
+@cindex Help menu
+
+The Help Menu gives you access to Emacs Info and provides a menu
+equivalent for each of the choices you have when using @kbd{C-h}. 
+@xref{Help}, for more information. 
+
+The Help menu also gives access to UNIX online manual pages via the
+@b{UNIX Manual Page} option.  
+
+@node Menu Customization
+@subsection Customizing XEmacs Menus
+
+You can customize any of the pull-down menus by adding or removing menu
+items and disabling or enabling existing menu items.
+ 
+The following functions are available: 
+@table @kbd
+@item add-menu: (@var{menu-path} @var{menu-name} @var{menu-items} &optional @var{before})
+Add a menu to the menu bar or one of its submenus.
+@item add-menu-item: (@var{menu-path} @var{item-name} @var{function}
+@var{enabled-p} &optional @var{before})
+Add a menu item to a menu, creating the menu first if necessary.
+@item delete-menu-item: (@var{path})
+Remove the menu item defined by @var{path} from the menu hierarchy.
+@item disable-menu-item: (@var{path})
+Disable the specified menu item.
+@item enable-menu-item: (@var{path})
+Enable the specified previously disabled menu item.
+@item relabel-menu-item: (@var{path} @var{new-name})
+Change the string of the menu item specified by @var{path} to
+@var{new-name}.
+
+@end table
+
+@findex add-menu
+@cindex adding menus
+Use the function @code{add-menu} to add a new menu or submenu.
+If a menu or submenu of the given name exists already, it is changed.
+
+@var{menu-path} identifies the menu under which the new menu should be
+inserted.  It is a list of strings; for example, @code{("File")} names
+the top-level @b{File} menu.  @code{("File" "Foo")} names a hypothetical
+submenu of @b{File}.  If @var{menu-path} is @code{nil}, the menu is
+added to the menu bar itself.
+
+@var{menu-name} is the string naming the menu to be added.  
+
+@var{menu-items} is a list of menu item descriptions.  Each menu item
+should be a vector of three elements:
+
+@itemize @bullet
+@item 
+A string, which is the name of the menu item
+@item 
+A symbol naming a command, or a form to evaluate
+@item 
+@code{t} or @code{nil} to indicate whether the item is selectable
+@end itemize
+
+The optional argument @var{before} is the name of the menu before which
+the new menu or submenu should be added.  If the menu is already
+present, it is not moved.
+
+@findex add-menu-item
+@cindex adding menu items
+The function @code{add-menu-item} adds a menu item to the specified
+menu, creating the menu first if necessary.  If the named item already
+exists, the menu remains unchanged.
+
+@var{menu-path} identifies the menu into which the new menu item should
+be inserted.  It is a list of strings; for example, @code{("File")}
+names the top-level @b{File} menu.  @code{("File" "Foo")} names a
+hypothetical submenu of @b{File}.
+
+@var{item-name} is the string naming the menu item to add.
+
+@var{function} is the command to invoke when this menu item is selected.
+If it is a symbol, it is invoked with @code{call-interactively}, in the
+same way that functions bound to keys are invoked.  If it is a list, the
+list is simply evaluated.
+
+@var{enabled-p} controls whether the item is selectable or not.
+It should be @code{t}, @code{nil}, or a form to evaluate to decide.  
+This form will be evaluated just before the menu is displayed, and 
+the menu item will be selectable if that form returns non-@code{nil}.
+
+For example, to make the @code{rename-file} command available from the
+@b{File} menu, use the following code:
+
+@example
+(add-menu-item '("File") "Rename File" 'rename-file t)
+@end example
+
+To add a submenu of file management commands using a @b{File Management}
+item, use the following code: 
+
+@example
+(add-menu-item '("File" "File Management") "Copy File" 'copy-file t)
+(add-menu-item '("File" "File Management") "Delete File" 'delete-file t)
+(add-menu-item '("File" "File Management") "Rename File" 'rename-file t)
+@end example
+
+The optional @var{before} argument is the name of a menu item before
+which the new item should be added.  If the item is already present, it
+is not moved.
+
+@findex delete-menu-item
+@cindex deleting menu items
+To remove a specified menu item from the menu hierarchy, use
+@code{delete-menu-item}.
+
+@var{path} is a list of strings that identify the position of the menu
+item in the menu hierarchy.  @code{("File" "Save")} means the menu item
+called @b{Save} under the top level @b{File} menu.  @code{("Menu" "Foo"
+"Item")} means the menu item called @b{Item} under the @b{Foo} submenu
+of @b{Menu}.
+
+@findex disable-menu-item
+@findex enable-menu-item
+@cindex enabling menu items
+@cindex disabling menu items
+
+To disable a menu item, use @code{disable-menu-item}.  The disabled
+menu item is grayed and can no longer be selected.  To make the
+item selectable again, use @code{enable-menu-item}.
+@code{disable-menu-item} and @code{enable-menu-item} both have the
+argument @var{path}.
+
+@findex relabel-menu-item
+@cindex changing menu items
+To change the string of the specified menu item, use
+@code{relabel-menu-item}. This function also takes the argument @var{path}.
+
+@var{new-name} is the string to which the menu item will be changed.
