@@ -1,0 +1,87 @@
+SXEmacs Installation Guide
+Copyright (C) 2005 Steve Youngs
+
+In a nutshell:
+-------------
+See ./configure --help for a description of all possible options,
+then
+
+  $ ./configure [options]
+  $ make
+  $ make check
+  $ make install
+
+Prerequisites:
+-------------
+Your version of SXEmacs includes a file called `PROBLEMS' in the top
+directory of the source tarball.  Please take a moment now to look
+over it.
+
+SXEmacs needs an ANSI C compatible compiler such as GCC (at least
+version 2.95.3) to build.  If you don't have such a compiler you can
+get GCC from: http://gcc.gnu.org/.
+
+Please note that SXEmacs _CANNOT_ be built with a C++ compiler.
+
+Also, some configuration options may need external libraries that are
+not shipped with SXEmacs.  SXEmacs will determine which libraries it
+needs at configuration time (when you run `./configure').
+
+If configure can't find a particular library and you _do_ have it
+installed, you can usually get configure to find it by adding to the
+`--with-site-prefixes' option.
+
+Stripping:
+---------
+Our advice... _DON'T_ do it.  Stripping object files doesn't buy you
+anything other than a little bit of drive space.  And in an era where
+200 Gigabyte hard disks are common, the space saved by stripping is
+inconsequential at best.
+
+But that isn't the only reason why we suggest that you don't strip
+SXEmacs.  If you did, any bug reports you sent us would be useless
+because the backtrace from any coredump wouldn't contain any usefull
+information.
+
+Another reason for not stripping comes from the complexity of SXEmacs
+and how it is built.  SXEmacs first compiles to a basic binary
+(sometimes called "temacs"), and then it loads in a pile of lisp code
+and other goodies, and dumps itself out to become the finished SXEmacs
+binary.  Add into that mix, the portable dumper (where a lot of stuff
+for sxemacs actually resides _outside_ of the binary in a dump file)
+and it becomes apparent that stripping may not even be possible.  What
+do you strip? temacs? the portable dump file? sxemacs binary?
+
+Err on the side of caution and don't even try it.
+
+Compiler Optimisations:
+----------------------
+Considerable care has been taken to ensure that the maximum safe
+compiler optimisation flags have been turned on by default.  If you
+wish to use your own flags, that's OK, but understand that sometimes
+over-optimising (especially with something as complex as SXEmacs) can
+actually have an adverse affect.
+
+Packages:
+--------
+Like XEmacs, SXEmacs only comes with a minimal set of lisp libraries
+to cover only basic editing and functions.  To get fuller
+functionality you need to install some extra elisp packages.  SXEmacs
+doesn't actually distribute any elisp packages, but it can and does
+use XEmacs packages.
+
+Unlike XEmacs, SXEmacs does _NOT_ need any packages pre-installed
+before its packaging tools (PUI) are usable.  To install elisp
+packages into a virgin, packageless, SXEmacs, follow these steps...
+
+  1) Start SXEmacs
+
+  2) From the menubar, choose:
+
+	  Tools -> Packages -> Set Download Site -> Official Releases
+	    -> ...
+
+  3) M-x pui-bootstrap RET
+
+After the "bootstrapping" is finished you'll be asked if you want to
+install anymore packages.

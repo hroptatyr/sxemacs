@@ -1,0 +1,21 @@
+Per Abrahamsen <abraham@dina.kvl.dk> writes:
+
+	xemacs -q
+	
+	(require 'tex-site) RET 
+	
+	C-x C-f test.tex RET
+	
+	==> I now get the AUC TeX menus.
+	
+	C-c C-e RET RET german
+	
+	"
+	
+	==> Inserts ``
+	
+	C-c C-n "
+	
+	==> Inserts "
+
+This means it find AUC TeX correctly, as well as the style files.

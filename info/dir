@@ -1,0 +1,63 @@
+-*- Text -*-
+
+This is the file .../info/dir, which contains the topmost node of the Info
+hierarchy.  The first time you invoke Info you start off looking at that node,
+which is (dir)Top.
+
+Rather than adding new nodes to this directory (and this file) it is a better
+idea to put them in a site-local directory, and then configure info to search
+in that directory as well.  That way, you won't have to re-edit this file when
+a new release of the editor comes out.
+
+For example, you could add this code to .../lisp/site-start.el, which is
+loaded before ~/.sxemacs/init.el each time the editor starts up:
+
+  ;; find local info nodes
+  (setq Info-directory-list
+        (append Info-directory-list '("/private/info/")))
+
+Then, when you enter info, a dir file like this one will be automatically
+created and saved (provided you have write access to the directory).  The
+contents of that file "/private/info/dir" will be appended to the contents of
+this file.
+
+
+File: dir,	Node: Top	This is the top of the INFO tree
+
+  This (the Directory node) gives a menu of major topics.
+  Typing "q" exits, "?" lists all Info commands, "d" returns here,
+  "h" gives a primer for first-timers,
+  "mSXEmacs<Return>" visits the SXEmacs manual, etc.
+
+  In SXEmacs, you can click mouse button 2 on a menu item or cross reference
+  to select it.  Button 3 anywhere brings up a menu of commands.
+
+* Menu:
+
+SXEmacs Editor
+* Common Lisp: (cl).		GNU Emacs Common Lisp emulation package.
+* Customizations: (custom).	Customization Library.
+* Emodules: (emodules).            SXEmacs dynamic loadable module support.
+* External Widget: (external-widget) External Client Widget.
+* FAQ: (sxemacs-faq).            SXEmacs FAQ.
+* Internals: (internals).       SXEmacs Internals Manual.
+* Intro: (new-users-guide).	Introduction to the SXEmacs Editor.
+* Lispref: (lispref).		SXEmacs Lisp Reference Manual.
+* SXEmacs: (sxemacs).		SXEmacs Editor.
+* Term mode: (term).		Emacs terminal emulator mode.
+
+Texinfo documentation system
+* Info: (info).                 Documentation browsing system.
+* Texinfo: (texinfo).           The GNU documentation format.
+* install-info: (texinfo)Invoking install-info. Updating info/dir entries.
+* makeinfo: (texinfo)makeinfo Preferred.        Translate Texinfo source.
+* texi2dvi: (texinfo)Format with texi2dvi.      Printing Texinfo documentation.
+* texindex: (texinfo)Format with tex/texindex.  Sorting Texinfo index files.
+
+SXEmacs Development
+* SPPM::                        SXEmacs Policies & Procedures Manual.
+
+Miscellaneous
+* Standards: (standards).        GNU coding standards.
+* Termcap: (termcap).		Termcap library of the GNU system.
+

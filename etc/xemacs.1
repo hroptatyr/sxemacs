@@ -1,0 +1,801 @@
+.TH XEMACS 1 "2000-09-20"
+.UC 4
+.SH NAME
+xemacs \- Emacs: The Next Generation
+.SH SYNOPSIS
+.B xemacs
+[
+.I command-line switches
+] [
+.I files ...
+]
+.br
+.SH DESCRIPTION
+.I XEmacs
+is a version of
+.IR Emacs ,
+compatible with and containing many improvements over
+.I GNU
+.IR Emacs ,
+written by Richard Stallman of the Free Software Foundation.  It was
+originally based on an early release of
+.I GNU Emacs Version
+.IR 19 ,
+and has tracked subsequent releases of
+.I GNU Emacs
+as they have become available.
+.PP
+The primary documentation of
+.I XEmacs
+is in the
+.I XEmacs Reference
+.IR Manual ,
+which you can read on-line using Info, a subsystem of
+.IR XEmacs .
+Please look there for complete and up-to-date documentation.
+Complete documentation on using Emacs Lisp is available on-line
+through the
+.I XEmacs Lisp Programmer's
+.IR Manual .
+Both manuals also can be printed out nicely using the
+.I TeX
+formatting package.
+.PP
+The user functionality of
+.I XEmacs
+encompasses everything other
+.I Emacs
+editors do, and it is easily extensible since its
+editing commands are written in Lisp.
+.PP
+.I XEmacs
+has an extensive interactive help facility,
+but the facility assumes that you know how to manipulate
+.I XEmacs
+windows and buffers.
+CTRL-h enters the Help facility.  Help Tutorial (CTRL-h t)
+requests an interactive tutorial which can teach beginners the fundamentals
+of
+.I XEmacs
+in a few minutes.
+Help Apropos (CTRL-h a) helps you
+find a command given its functionality, Help Key Binding (CTRL-h k)
+describes a given key sequence's effect, and Help Function (CTRL-h f)
+describes a given Lisp function specified by name.  You can also
+look up key sequences in the
+.I XEmacs Reference Manual
+using Lookup Key Binding (CTRL-h CTRL-k),
+and look up Lisp functions in the
+.I XEmacs Lisp Programmer's Manual
+using Lookup Function (CTRL-h CTRL-f).  All of these help functions,
+and more, are available on the Help menu if you are using a window
+system.
+.PP
+.I XEmacs
+has extensive GUI (graphical user interface) support when running under
+a window system such as
+.IR X ,
+including multiple frames (top-level windows), a menubar, a toolbar,
+horizontal and vertical scrollbars, dialog boxes, and extensive mouse
+support.
+.PP
+.I XEmacs
+has full support for multiple fonts and colors, variable-width fonts,
+and variable-height lines, and allows for pixmaps to be inserted into
+a buffer. (This is used in the W3 web-browsing package and in some
+of the debugger and outlining interfaces, among other things.)
+.PP
+.IR XEmacs 's
+Undo can undo several steps of modification to your buffers, so it is
+easy to recover from editing mistakes.
+.PP
+.IR XEmacs 's
+many special packages handle mail reading (VM, MH-E and RMail) and
+sending (Mail), Usenet news reading and posting (GNUS), World Wide Web
+browsing (W3), specialized modes for editing source code in all common
+programming languages, syntax highlighting for many languages
+(Font-Lock), compiling (Compile), running subshells within
+.I XEmacs
+windows (Shell), outline editing (Outline), running a Lisp read-eval-print
+loop (Lisp-Interaction-Mode), and automated psychotherapy (Doctor).
+.PP
+There is an extensive reference manual, but users of other Emacsen
+should have little trouble adapting even without a copy.  Users new to
+Emacs will be able to use basic features fairly rapidly by studying
+the tutorial and using the self-documentation features.
+.PP
+.SM XEmacs Options
+.PP
+XEmacs accepts all standard X Toolkit command line options when run in
+an X Windows environment.  In addition, the following options are accepted
+(when options imply a sequence of actions to perform, they are
+performed in the order encountered):
+.TP 8
+.BI \-t " file"
+Use specified
+.I file
+as the terminal instead of using stdin/stdout.  This implies
+.BR \-nw \.
+.TP
+.BI \-batch
+Edit in batch mode.  The editor will send messages to stdout.  You
+must use the
+.BR \-l ,
+.BR \-f ,
+and
+.B \-eval
+options to specify files to execute and functions to call.
+.TP
+.B \-nw
+Inhibit the use of any window-system-specific display code: use the
+current TTY.
+.TP
+.B \-debug\-init
+Enter the debugger if an error occurs loading the init file.
+.TP
+.B \-unmapped
+Do not map the initial frame.
+.TP
+.B \-no\-site\-file
+Do not load the site-specific init file (site-start.el).
+.TP
+.B \-q, \-no\-init\-file
+Do not load an init file.
+.TP
+.B \-no-early-packages
+Do not process the early packages.
+.TP
+.B \-vanilla
+Load no extra files at startup.  Equivalent to the combination of
+.B \-q
+,
+.B \-no-site-file
+, and
+.B \-no-early-packages
+\.
+.TP
+.BI \-u " user, " \-user " user"
+Load
+.IR user 's
+init file.
+.TP 8
+.I file
+Edit
+.IR file \.
+.TP
+.BI \+ number
+Go to the line specified by
+.I number
+(do not insert a space between the "+" sign and the number).
+.TP
+.B \-help
+Print a help message and exit.
+.TP
+.B \-V, \-version,
+Print the version number and exit.
+.TP
+.BI \-f " function, " \-funcall " function"
+Execute the lisp function
+.IR function \.
+.TP
+.BI \-l " file, " \-load " file"
+Load the Lisp code in the file
+.IR file \.
+.TP
+.BI \-eval " form"
+Evaluate the Lisp form
+.IR form \.
+.TP
+.BI \-i " file, " \-insert " file"
+Insert
+.I file
+into the current buffer.
+.TP
+.B \-kill
+Exit
+.I XEmacs
+(useful with
+.BR \-batch ).
+.PP
+.SM Using XEmacs with X Windows
+.PP
+.I XEmacs
+has been tailored to work well with the X window system.
+If you run
+.I XEmacs
+from under X windows, it will create its own X window to display in.
+.PP
+.I XEmacs
+can be started with the following standard X options:
+.TP
+.BI \-visual " <visualname><bitdepth>"
+Select the visual that XEmacs will attempt to use.
+.I <visualname>
+should be one of the strings "StaticColor", "TrueColor", "GrayScale",
+"PseudoColor" or "DirectColor", and
+.I <bitdepth>
+should be the number of bits per pixel (example, "-visual TrueColor24"
+for a 24bit TrueColor visual) See
+.IR X (1)
+for more information.
+.TP
+.B -privateColormap
+Require XEmacs to create and use a private colormap for display.  This
+will keep XEmacs from taking colors from the default colormap and
+keeping them from other clients, at the cost of causing annoying
+flicker when the focus changes.  Use this option only if your X server
+does not support 24 bit visuals.
+.TP
+.BI \-geometry " ##x##+##+##"
+Specify the geometry of the initial window.  The ##'s represent a number;
+the four numbers are width (characters), height (characters), X offset
+(pixels), and Y offset (pixels), respectively.  Partial specifications of
+the form
+.I ##x##
+or
+.I +##+##
+are also allowed. (The geometry
+specification is in the standard X format; see
+.IR X (1)
+for more information.)
+.TP
+.B \-iconic
+Specifies that the initial window should initially appear iconified.
+.TP 8
+.BI \-name " name"
+Specifies the program name which should be used when looking up
+defaults in the user's X resources.
+.TP
+.BI \-title " title, " \-T " title, " \-wn " title"
+Specifies the title which should be assigned to the
+.I XEmacs
+window.
+.TP
+.BI \-d " displayname, " \-display " displayname"
+Create the
+.I XEmacs
+window on the display specified by
+.IR displayname .
+Must be the first option specified in the command line.
+.TP
+.BI \-font " font, " \-fn " font"
+Set the
+.I XEmacs
+window's font to that specified by
+.IR font \.
+You will find the various
+.I X
+fonts in the
+.I /usr/lib/X11/fonts
+directory.
+.I XEmacs
+works with either fixed- or variable-width fonts, but will probably
+look better with a fixed-width font.
+.TP
+.BI \-scrollbar\-width " pixels"
+Specify the width of the vertical scrollbars.
+.TP
+.BI \-scrollbar\-height " pixels"
+Specify the height of the horizontal scrollbars.
+.TP
+.BI \-bw " pixels, " \-borderwidth " pixels"
+Set the
+.I XEmacs
+window's border width to the number of pixels specified by
+.IR pixels \.
+Defaults to one pixel on each side of the window.
+.TP
+.BI \-ib " pixels, " \-internal\-border\-width " pixels"
+Specify the width between a frame's border and its text, in pixels.
+Defaults to one pixel on each side of the window.
+.TP
+.BI \-fg " color, " \-foreground " color"
+Sets the color of the text.
+
+See the file
+.I /usr/lib/X11/rgb.txt
+for a list of valid
+color names.
+.TP
+.BI \-bg " color, " \-background " color"
+Sets the color of the window's background.
+.TP
+.BI \-bd " color, " \-bordercolor " color"
+Sets the color of the window's border.
+.TP
+.BI \-mc " color"
+Sets the color of the mouse pointer.
+.TP
+.BI \-cr " color"
+Sets the color of the text cursor.
+.TP
+.B \-rv, \-reverse
+Reverses the foreground and background colors (reverse video).  Consider
+explicitly setting the foreground and background colors instead of using
+this option.
+.TP
+.BI \-xrm " argument"
+This allows you to set an arbitrary resource on the command line.
+.I argument
+should be a resource specification, as might be found in your
+.I \.Xresources
+or
+.I \.Xdefaults
+file.
+.PP
+You can also set resources, i.e.
+.I X
+default values, for your
+.I XEmacs
+windows in your
+.I \.Xresources
+or
+.I \.Xdefaults
+file (see
+.IR xrdb (1)).
+Use the following format:
+.IP
+Emacs.keyword:value
+.PP
+or
+.IP
+Emacs*EmacsFrame.keyword:value
+.PP
+where
+.I value
+specifies the default value of
+.IR keyword \.
+(Some resources need the former format; some the latter.)
+.PP
+You can also set resources for a particular frame by using the
+format
+.IP
+Emacs*framename.keyword:value
+.PP
+where
+.I framename
+is the resource name assigned to that particular frame.
+(Certain packages, such as VM, give their frames unique resource
+names, in this case "VM".)
+.PP
+.I XEmacs
+lets you set default values for the following keywords:
+.TP 8
+.B default.attributeFont (\fPclass\fB Face.AttributeFont)
+Sets the window's text font.
+.TP
+.B default.attributeForeground (\fPclass\fB Face.AttributeForeground)
+Sets the window's text color.
+.TP
+.B default.attributeBackground (\fPclass\fB Face.AttributeBackground)
+Sets the window's background color.
+.TP
+.B \fIface\fB.attributeFont (\fPclass\fB Face.AttributeFont)
+Sets the font for
+.IR face ,
+which should be the name of a face.  Common face names are
+.PP
+.in +\w'right-margin'u+12n
+.ta \w'right-margin'u+4n
+.ti -\w'right-margin'u+4n
+FACE		PURPOSE
+.br
+.ti -\w'right-margin'u+4n
+default	Normal text.
+.br
+.ti -\w'right-margin'u+4n
+bold	Bold text.
+.br
+.ti -\w'right-margin'u+4n
+italic	Italicized text.
+.br
+.ti -\w'right-margin'u+4n
+bold-italic	Bold and italicized text.
+.br
+.ti -\w'right-margin'u+4n
+modeline	Modeline text.
+.br
+.ti -\w'right-margin'u+4n
+zmacs-region	Text selected with the mouse.
+.br
+.ti -\w'right-margin'u+4n
+highlight	Text highlighted when the mouse passes over.
+.br
+.ti -\w'right-margin'u+4n
+left-margin	Text in the left margin.
+.br
+.ti -\w'right-margin'u+4n
+right-margin	Text in the right margin.
+.br
+.ti -\w'right-margin'u+4n
+isearch	Text highlighted during incremental search.
+.br
+.ti -\w'right-margin'u+4n
+info-node	Text of Info menu items.
+.br
+.ti -\w'right-margin'u+4n
+info-xref	Text of Info cross references.
+.TP 8
+.B \fIface\fB.attributeForeground (\fPclass\fB Face.AttributeForeground)
+Sets the foreground color for
+.IR face \.
+.TP 8
+.B \fIface\fB.attributeBackground (\fPclass\fB Face.AttributeBackground)
+Sets the background color for
+.IR face \.
+.TP 8
+.B \fIface\fB.attributeBackgroundPixmap (\fPclass\fB Face.AttributeBackgroundPixmap)
+Sets the background pixmap (stipple) for
+.IR face \.
+.TP 8
+.B \fIface\fB.attributeUnderline (\fPclass\fB Face.AttributeUnderline)
+Whether
+.I face
+should be underlined.
+.TP
+.B reverseVideo (\fPclass\fB ReverseVideo)
+If set to
+.IR on ,
+the window will be displayed in reverse video.  Consider
+explicitly setting the foreground and background colors instead
+of using this resource.
+.TP
+.B borderWidth (\fPclass\fB BorderWidth)
+Sets the window's border width in pixels.
+.TP
+.B internalBorderWidth (\fPclass\fB InternalBorderWidth)
+Sets the window's internal border width in pixels.
+.TP
+.B borderColor (\fPclass\fB BorderColor)
+Sets the color of the window's border.
+.TP
+.B cursorColor (\fPclass\fB Foreground)
+Sets the color of the window's text cursor.
+.TP
+.B pointerColor (\fPclass\fB Foreground)
+Sets the color of the window's mouse cursor.
+.TP
+.B emacsVisual (\fPclass\fB EmacsVisual)
+Sets the default visual
+.I XEmacs
+will try to use (as described above).
+.TP
+.B privateColormap (\fPclass\fB PrivateColormap)
+If set,
+.I XEmacs
+will default to using a private colormap.
+.TP
+.B geometry (\fPclass\fB Geometry)
+Sets the geometry of the
+.I XEmacs
+window (as described above).
+.TP
+.B iconic (\fPclass\fB Iconic)
+If set to on, the
+.I XEmacs
+window will initially appear as an icon.
+.TP
+.B menubar (\fPclass\fB Menubar)
+Whether the
+.I XEmacs
+window will have a menubar.  Defaults to true.
+.TP
+.B initiallyUnmapped (\fPclass\fB InitiallyUnmapped)
+Whether
+.I XEmacs
+will leave the initial frame unmapped when it starts up.
+.TP
+.B barCursor (\fPclass\fB BarCursor)
+Whether the cursor should be a bar instead of the traditional box.
+.TP
+.B title (\fPclass\fB Title)
+Sets the title of the
+.I XEmacs
+window.
+.TP
+.B iconName (\fPclass\fB Title)
+Sets the icon name for the
+.I XEmacs
+window icon.
+.TP
+.B scrollBarWidth (\fPclass\fB ScrollBarWidth)
+Sets the width of the vertical scrollbars, in pixels.  A width of 0
+means no vertical scrollbars.
+.TP
+.B scrollBarHeight (\fPclass\fB ScrollBarHeight)
+Sets the height of the horizontal scrollbars, in pixels.  A height of 0
+means no horizontal scrollbars.
+.TP
+.B scrollBarPlacement (\fPclass\fB ScrollBarPlacement)
+Sets the position of vertical and horizontal scrollbars.   Should be one
+of the strings "top-left", "bottom-left", "top-right", or "bottom-right".
+The default is "bottom-right" for the Motif and Lucid scrollbars and
+"bottom-left" for the Athena scrollbars.
+.TP
+.B topToolBarHeight (\fPclass\fB TopToolBarHeight)
+Sets the height of the top toolbar, in pixels.  0 means no top toolbar.
+.TP
+.B bottomToolBarHeight (\fPclass\fB BottomToolBarHeight)
+Sets the height of the bottom toolbar, in pixels.  0 means no
+bottom toolbar.
+.TP
+.B leftToolBarWidth (\fPclass\fB LeftToolBarWidth)
+Sets the width of the left toolbar, in pixels.  0 means no left toolbar.
+.TP
+.B rightToolBarWidth (\fPclass\fB RightToolBarWidth)
+Sets the width of the right toolbar, in pixels.  0 means no right toolbar.
+.TP
+.B topToolBarShadowColor (\fPclass\fB TopToolBarShadowColor)
+Sets the color of the top shadows for the toolbars. (For all toolbars,
+\fBnot\fR just the toolbar at the top of the frame.)
+.TP
+.B bottomToolBarShadowColor (\fPclass\fB BottomToolBarShadowColor)
+Sets the color of the bottom shadows for the toolbars. (For all toolbars,
+\fBnot\fR just the toolbar at the bottom of the frame.)
+.TP
+.B topToolBarShadowPixmap (\fPclass\fB TopToolBarShadowPixmap)
+Sets the pixmap of the top shadows for the toolbars. (For all toolbars,
+\fBnot\fR just the toolbar at the top of the frame.) If set, this
+resource overrides the corresponding color resource.
+.TP
+.B bottomToolBarShadowPixmap (\fPclass\fB BottomToolBarShadowPixmap)
+Sets the pixmap of the bottom shadows for the toolbars. (For all toolbars,
+\fBnot\fR just the toolbar at the bottom of the frame.) If set, this
+resource overrides the corresponding color resource.
+.TP
+.B toolBarShadowThickness (\fPclass\fB ToolBarShadowThickness)
+Thickness of the shadows around the toolbars, in pixels.
+.TP
+.B visualBell (\fPclass\fB VisualBell)
+Whether XEmacs should flash the screen rather than making an audible beep.
+.TP
+.B bellVolume (\fPclass\fB BellVolume)
+Volume of the audible beep.  Range is 0 through 100.
+.TP
+.B useBackingStore (\fPclass\fB UseBackingStore)
+Whether
+.I XEmacs
+should set the backing-store attribute of the
+.I X
+windows it creates.  This increases the memory usage of the
+.I X
+server but decreases the amount of
+.I X
+traffic necessary to update the screen, and is useful when the
+connection to the
+.I X
+server goes over a low-bandwidth line such as a modem connection.
+.TP
+.B textPointer (\fPclass\fB Cursor)
+The cursor to use when the mouse is over text.
+.TP
+.B selectionPointer (\fPclass\fB Cursor)
+The cursor to use when the mouse is over a mouse-highlighted
+text region.
+.TP
+.B spacePointer (\fPclass\fB Cursor)
+The cursor to use when the mouse is over a blank space in a buffer (that
+is, after the end of a line or after the end-of-file).
+.TP
+.B modeLinePointer (\fPclass\fB Cursor)
+The cursor to use when the mouse is over a mode line.
+.TP
+.B gcPointer (\fPclass\fB Cursor)
+The cursor to display when a garbage-collection is in progress.
+.TP
+.B scrollbarPointer (\fPclass\fB Cursor)
+The cursor to use when the mouse is over the scrollbar.
+.TP
+.B pointerColor (\fPclass\fB Foreground)
+The foreground color of the mouse cursor.
+.TP
+.B pointerBackground (\fPclass\fB Background)
+The background color of the mouse cursor.
+.PP
+.SM Using the Mouse
+.PP
+The following lists the mouse button bindings for the
+.I XEmacs
+window under X11.
+
+.in +\w'CTRL-SHIFT-middle'u+4n
+.ta \w'CTRL-SHIFT-middle'u+4n
+.ti -\w'CTRL-SHIFT-middle'u+4n
+MOUSE BUTTON	FUNCTION
+.br
+.ti -\w'CTRL-SHIFT-middle'u+4n
+left	Set point or make a text selection.
+.br
+.ti -\w'CTRL-SHIFT-middle'u+4n
+middle	Paste text.
+.br
+.ti -\w'CTRL-SHIFT-middle'u+4n
+right	Pop up a menu of options.
+.br
+.ti -\w'CTRL-SHIFT-middle'u+4n
+SHIFT-left	Extend a selection.
+.br
+.ti -\w'CTRL-SHIFT-middle'u+4n
+CTRL-left	Make a selection and insert it at point.
+.br
+.ti -\w'CTRL-SHIFT-middle'u+4n
+CTRL-middle	Set point and move selected text there.
+.br
+.ti -\w'CTRL-SHIFT-middle'u+4n
+CTRL-SHIFT-left	Make a selection, delete it, and insert it at point.
+.br
+.ti -\w'CTRL-SHIFT-middle'u+4n
+META-left	Make a rectangular selection.
+.SH FILES
+Lisp code is read at startup from the user's init file,
+\fB$HOME/.emacs\fP.
+
+/usr/local/info - files for the Info documentation browser
+(a subsystem of
+.IR XEmacs )
+to refer to.  The complete text of the
+.I XEmacs Reference Manual
+and the
+.I XEmacs Lisp Programmer's Manual
+is included in a convenient tree structured form.
+
+/usr/local/lib/xemacs-$VERSION/info - the Info files may be here instead.
+
+/usr/local/lib/xemacs-$VERSION/lisp/* - Lisp source files and compiled files
+that define most editing commands.  The files are contained in subdirectories,
+categorized by function or individual package.  Some are preloaded;
+others are autoloaded from these directories when used.
+
+/usr/local/lib/xemacs-$VERSION/etc - some files of information, pixmap
+files, other data files used by certain packages, etc.
+
+/usr/local/lib/xemacs-$VERSION/$CONFIGURATION - various programs that are used
+with XEmacs.
+
+/usr/local/lib/xemacs-$VERSION/$CONFIGURATION/DOC -
+contains the documentation strings for the Lisp primitives and
+preloaded Lisp functions of \fIXEmacs\fP.
+They are stored here to reduce the size of \fIXEmacs\fP proper.
+
+/usr/local/lib/xemacs/site-lisp - locally-provided Lisp files.
+.PP
+.SH BUGS AND HELP
+There is a newsgroup, comp.emacs.xemacs, for reporting
+.I XEmacs
+bugs and fixes and requesting help.  But before reporting something
+as a bug, please try to be sure that it really is a bug, not a
+misunderstanding or a deliberate feature.  We ask you to read the section
+``Reporting XEmacs Bugs'' near the end of the reference manual (or Info
+system) for hints on how and when to report bugs.  Also, include the version
+number of the
+.I XEmacs
+you are running and the system you are running it on
+in \fIevery\fR bug report that you send in.  Finally, the more you can
+isolate the cause of a bug and the conditions it happens under, the more
+likely it is to be fixed, so please take the time to do so.
+
+The newsgroup is bidirectionally gatewayed to and from the mailing list
+xemacs@xemacs.org.  You can read the list instead of the newsgroup if
+you do not have convenient Usenet news access.  To request to be added
+to the mailing list, send mail to xemacs-request@xemacs.org. (Do not
+send mail to the list itself.)
+
+The
+.I XEmacs
+maintainers read the newsgroup regularly and will attempt to
+fix bugs reported in a timely fashion.  However, not every message will
+get a response from one of the maintainers.  Note that there are many
+people other than the maintainers who read the newsgroup, and will usually
+be of assistance in helping with any problems encountered.
+
+If you need more personal assistance than can be provided by the
+newsgroup, look in the SERVICE file (see above) for a list of people
+who offer it.
+
+For more information about XEmacs mailing lists, see the
+file /usr/local/lib/xemacs-$VERSION/etc/MAILINGLISTS.
+.SH UNRESTRICTIONS
+.PP
+.I XEmacs
+is free; anyone may redistribute copies of
+.I XEmacs
+to
+anyone under the terms stated in the
+.I XEmacs
+General Public License,
+a copy of which accompanies each copy of
+.I XEmacs
+and which also
+appears in the reference manual.
+.PP
+Copies of
+.I XEmacs
+may sometimes be received packaged with distributions of Unix systems,
+but it is never included in the scope of any license covering those
+systems.  Such inclusion violates the terms on which distribution
+is permitted.  In fact, the primary purpose of the General Public
+License is to prohibit anyone from attaching any other restrictions
+to redistribution of
+.IR XEmacs \.
+.SH SEE ALSO
+X(1), xlsfonts(1), xterm(1), xrdb(1), emacs(1), vi(1)
+.SH AUTHORS
+.PP
+.I XEmacs
+was written by
+Steve Baur <steve@xemacs.org>,
+Martin Buchholz <martin@xemacs.org>,
+Richard Mlynarik <mly@adoc.xerox.com>,
+Hrvoje Niksic <hniksic@xemacs.org>,
+Chuck Thompson <cthomp@xemacs.org>,
+Ben Wing <ben@xemacs.org>,
+Jamie Zawinski <jwz@jwz.org>,
+and many others.
+It was based on an early version of
+.I GNU Emacs Version
+.IR 19 ,
+written by Richard Stallman <rms@gnu.org> of the Free Software
+Foundation, and has tracked subsequent releases of
+.I GNU Emacs
+as they have become available.  It was originally written by Lucid, Inc.
+(now defunct) and was called
+.I Lucid
+.IR Emacs \.
+.PP
+Chuck Thompson wrote the
+.I XEmacs
+redisplay engine, maintains the
+.I XEmacs
+FTP and WWW sites, and has put out all releases of
+.I XEmacs
+since 19.11 (the first release called
+.IR XEmacs ).
+Ben Wing wrote the Asian-language support, the on-line documentation
+(including this man page and much of the FAQ), the external widget code,
+and retooled or rewrote most of the basic, low-level
+.I XEmacs
+subsystems.  Jamie Zawinski put out all releases of
+.I Lucid
+.IR Emacs ,
+from the first (19.0) through the last (19.10), and was the primary
+code contributor for all of these releases.  Richard Mlynarik rewrote
+the
+.I XEmacs
+Lisp-object allocation system, improved the keymap and minibuffer code,
+and did the initial synching of
+.I XEmacs
+with
+.I GNU Emacs Version
+.IR 19 \.
+.PP
+Many others have also contributed significantly.  For more detailed
+information, including a long history of \fIXEmacs\fP from multiple
+viewpoints and pretty pictures and bios of the major \fIXEmacs\fP
+contributors, see the
+.I XEmacs About Page
+(the About XEmacs option on the Help menu).
+.SH MORE INFORMATION
+For more information about \fIXEmacs\fP, see the
+.I XEmacs About Page
+(mentioned above),
+look in the file /usr/local/lib/xemacs-$VERSION/etc/NEWS,
+or point your Web browser at
+.PP
+http://www.xemacs.org/
+.PP
+for up-to-the-minute information about \fIXEmacs\fP.
+.PP
+The
+.I XEmacs
+FAQ (Frequently Asked Questions) can be found at the Web site just listed.
+A possibly out-of-date version is also accessible through the Info system
+inside of \fIXEmacs\fP.
+.PP
+The latest version of \fIXEmacs\fP can be downloaded using anonymous
+FTP from
+.PP
+ftp://ftp.xemacs.org/pub/xemacs/
+.PP
+or from a mirror site near you.  Mirror sites are listed in the file
+etc/FTP in the XEmacs distribution or see the Web site for an up-to-date
+list of mirror sites.

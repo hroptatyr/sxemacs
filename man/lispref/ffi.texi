@@ -1,0 +1,711 @@
+@c -*-texinfo-*-
+@c This is part of the SXEmacs Lisp Reference Manual.
+@c Copyright (C) 2005 Sebastian Freundt <hroptatyr@sxemacs.org>
+@c Copyright (C) 2005 Zajcev Evgeny <lg@xwem.org>
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/ffi.info
+
+@node Foreign Functions, MULE, Internationalization, Top
+@chapter Foreign Function Interface (FFI)
+@cindex FO
+@cindex foreign objects
+@cindex foreign functions
+
+@macro FFI
+FFI
+@end macro
+
+  The SXEmacs @dfn{Foreign Function Interface} (@FFI{} for short) adds
+support for invoking code written in other programming languages from
+within elisp.  The @FFI{} focuses on interaction with C code, but the
+basic framework can also be used for interfacing to languages other
+than C, provided they support to be compiled to binary and linked into
+a @dfn{shared library}.
+
+  The SXEmacs @FFI{} can access sharable object files at runtime and
+use their definition without relocating or relinking the SXEmacs
+binary.  The purpose (and main motivation) therefore clearly is to
+supply elisp programmers with a convenient way to implement features
+from underlying libraries without even touching the C level.
+
+  The @FFI{} feature itself must be considered experimental, though.
+It is a lot of effort to secure raw library calls from misuse,
+especially because the SXEmacs error handler has no influence on the
+events triggered inside of the foreign library.  On the other hand,
+keeping foreign function calls under exhaustive surveillance would
+noticably slow down the @FFI{}, if not even limit the capabilities at
+all.
+
+@menu
+* Basic C Types and Functions::	Default type and function bindings
+				  from the Standard C library (libc)
+* Calling Foreign Functions::	How to call functions defined in an
+				  external library.
+* Examining and Modifying::	How to examine and modify foreign
+				  objects.
+* User-Defined Types::		How to reflect custom type definitions
+				  in an external library.
+@end menu
+
+
+@node Basic C Types and Functions
+@section Basic C Types and Functions
+
+  In order to provide a convenient way to access the standard C
+library (libc), FFI comes with a set of predefined types and
+functions.  Of course, you can access other functions and define other
+types beside the ones in libc.  The discussion here is intended to be
+a basic introduction to FFI.  To use a specific library see the more
+general sections @ref{Calling Foreign Functions} and @ref{User-Defined
+Types}.
+
+@menu
+* Predefined FFI data types::	A list of predefined, ready-to-go
+				  types provided by FFI.
+* The @code{pointer} form::	A type modifier to reference data.
+* The @code{function} form::	A type modifier to reference functions.
+* The @code{array} form::	A type modifier to specify arrays.
+* The @code{union} form::	A type modifier to specify unions.
+* The @code{struct} form::	A type modifier to specify stuctures.
+* FFI type-related functions::	Functions to gather information on types.
+@end menu
+
+@node Predefined FFI data types
+@subsection Predefined FFI data types
+
+  The following assortment lists all predefined C data types.  We
+assume these to be well known and do not explain them further.
+
+@itemize
+@item
+@code{byte}, @code{unsigned byte}
+@item
+@code{char}, @code{unsigned-char}
+@item
+@code{short}, @code{unsigned-short}
+@item
+@code{int}, @code{unsigned-int}
+@item
+@code{long}, @code{unsigned-long}
+@item
+@code{float},
+@item
+@code{double}
+@item
+@code{void}
+@item
+@code{c-string}
+@end itemize
+
+  As with C data types, the actual meaning of these types depends on
+the system architecture, but there is no difference between these FFI
+predefined types and their C-pendant if FFI is run on the same
+machine.
+
+  However, the last type in the list is special in that it is actually
+a @code{(pointer char)} (in C known as @samp{char*}), but (as the name
+suggests) data of this type form a string on C level which is
+translated in or translated from an ordinary emacs string.  In
+constrast, we should mention that the @samp{char*} is actually solely
+a pointer to one character, and @emph{not} a string a priori.
+
+
+@node The @code{pointer} form
+@subsection The @code{pointer} form
+@cindex pointer FFI type-modifier
+
+  As mentioned in the previous section, every data type can be
+pointerised, that is create another FFI-object with the address of the
+data (not the data itself).  We say such data @dfn{point to} other
+data.
+
+  The syntax for this is the form @code{'(pointer @var{data-type})},
+so for example the FFI-type @code{'(pointer int)} is the data type
+@samp{int*} in C.
+
+
+@node The @code{function} form
+@subsection The @code{function} form
+@cindex function FFI type-modifier
+
+  In addition to pointerised data, there is a special type modifier to
+represent function signatures.  Such type-cells are needed to declare
+function objects.
+
+  The syntax for this is the form @code{'(function @var{return-type}
+@var{arg1-type} @dots{} @var{argn-type})}, so for example
+the FFI-type @code{'(function int int unsigned-int)} would be
+rewritten in C as @samp{int some_undefined_name(int, unsigned int)}.
+
+  The return type and at least one argument type are mandatory!  So
+the syntax for functions without return values, i.e. procedures, is to
+pass the type @samp{void} as return type.  Similarly, pass a
+@samp{void} as arg1-type for functions without arguments.
+
+
+@node The @code{array} form
+@subsection The @code{array} form
+@cindex array FFI type-modifier
+
+  Arrays in general are finite, indexed sets of unityped data.  That
+is (informally), a contiguous piece of memory with data slots, where
+the data slots all have the same type and are enumerated from 0 to
+@code{size-1}.  Accessing a certain slot is achieved by passing its
+slot number to the accessor function.
+
+  The syntax for this type-modification is the form
+@code{'(array @var{type} @var{size})}, with size being a positive
+integer.  For example the FFI-type @code{'(array int 20)} would be
+equivalent to the C-syntax @samp{int some_undefined_name[20]}.
+
+
+@node The @code{union} form
+@subsection The @code{union} form
+@cindex union FFI type-modifier
+
+  Unions in general are mutually exclusive variants of data types
+which are united into a super-type.  More formally, the data in a
+union is a component projection of a product of many types.
+Informally, the union is a choice of one datum and (with it) one type
+at a time out of many ones.  Unions are arranged by named slots of
+different types.  The slots are accessed by their names.
+
+@noindent
+The syntax for this type-modification is the form:
+@example
+'(union @var{name}
+  (@var{slot-name1} @var{type1})
+  @dots{}
+  (@var{slot-namen} @var{typen}))
+@end example
+
+
+@node The @code{struct} form
+@subsection The @code{struct} form
+@cindex struct FFI type-modifier
+
+  Structures in general are products of other types.  Structures
+consist of named data slots of different types.  The slots are
+accessed by their names.
+
+@noindent
+The syntax for this type-modification is the form:
+@example
+'(struct @var{name}
+  (@var{slot-name1} @var{type1})
+  @dots{}
+  (@var{slot-namen} @var{typen}))
+@end example
+
+
+@node FFI type-related functions
+@subsection FFI type-related functions
+
+@c probably we should unify our documentation, sometimes it's `foreign
+@c type' sometimes it's `FFI type' etc.
+
+@defun ffi-basic-type-p type
+Return non-@code{nil} if @var{type} is a basic FFI type.
+
+A type is said to be basic, if it is neither a pointer nor a
+function, and there is a corresponding built-in type in C.
+@end defun
+
+@defun ffi-type-p type &optional signal-p
+Return non-@code{nil} if @var{type} is a valid FFI type.
+If optional argument @var{signal-p} is non-@code{nil} and @var{type}
+is not an FFI type, additionally signal an error.
+@end defun
+
+@defvar ffi-type-checker [defaults to: @code{ffi-type-p}]
+Function to call when the validity of an FFI type shall be checked.
+@end defvar
+
+@defvar ffi-named-types
+Alist of named FFI types with elements of the form 
+@code{(NAME . FFI-TYPE)}.
+@end defvar
+
+@defun ffi-size-of-type type
+Return the size of the foreign type @var{type}.
+
+Valid foreign types are: @samp{byte}, @samp{unsigned-byte},
+@samp{char}, @samp{unsigned-char}, @samp{short},
+@samp{unsigned-short}, @samp{int}, @samp{unsigned-int}, @samp{long},
+@samp{unsigned-long}, @samp{pointer-void}, @samp{float},
+@samp{double}, @samp{object}, and @samp{c-string}.
+@end defun
+
+@defun ffi-fixup-type type
+Return FFI type @var{type} in a canonical form.
+@end defun
+
+
+
+@node Calling Foreign Functions
+@section Calling Foreign Functions
+
+  Calling FFI functions is a many-step process.  The actual call of an
+external function is the last step in this chain but can be done
+repeatedly and almost as comfortable as elisp function calls
+thenceforth.  The chain to FFI function calls can be summed up as
+following.
+
+@enumerate
+@item
+incorporate external library contents
+@item
+declare function signatures
+@item
+initialise function arguments
+@item
+call the function
+@end enumerate
+
+  Hereby, step 1 is independent from the other steps.  It can be
+interchanged with the other steps arbitrarily, but is mandatory at
+all.
+
+@subsection Incorporate External Library Contents
+
+@defun ffi-load libname
+Load library @var{libname}.
+Return a foreign object handle if successful, or indicate an error if
+the library cannot be loaded.
+
+The argument @var{libname} should be the file-name string of a shared
+object library (usual extension is @file{.so}).
+
+The library should reside in one of the directories specified by the
+@var{$LD_LIBRARY_PATH} environment variable or the more global
+@file{ld.so.cache}.
+@end defun
+
+  Note you cannot simply modify the @file{ld.so.cache}, instead use the
+command @code{ldconfig} on a suited configuration file.  See your
+vendor's documentation how to do that.
+
+  Loading a library using @code{ffi-load} additionally registers this
+library in a list of already loaded libraries.
+
+@defvar ffi-loaded-libraries
+Alist of loaded libraries with elements of the form @code{(LIB-NAME . FFIO)}.
+@end defvar
+
+  There is a raw library loader function without the registration code
+and without error handling.  However, it is highly suggested to use
+@code{ffi-load} exclusively.
+
+@defun ffi-load-library libname
+Load library @var{libname}.
+Return a foreign object handle if successful, or @code{nil} if the
+library cannot be loaded.
+
+The argument @var{libname} should be the file-name string of a shared
+object library (usual extension is @file{.so}).
+
+The library should reside in one of the directories specified by the
+@var{$LD_LIBRARY_PATH} environment variable or the more global
+@file{ld.so.cache}.
+@end defun
+
+  The following example (like all other examples in this section) is
+taken from @file{ffi-curl.el} which comes with the SXEmacs
+distribution.  We assume the library @file{libcurl.so} to exist and to
+reside in a directory searched by the dynamic loader.
+
+@example
+(ffi-load "libcurl.so")
+     @result{} #<ffiobject type=(pointer void) size=4 fotype=2
+     foptr=0x8a1dad8>
+ffi-loaded-libraries
+     @result{} (("libcurl.so" . #<ffiobject type=(pointer void) size=4 fotype=2 foptr=0x8a1dad8>))
+@end example
+
+
+@subsection Declaring Function Signatures
+
+  Declaring the signature of a function is quite like reading a
+library's include file.  The main function to achieve this is
+@code{ffi-defun}.
+
+@defun ffi-defun type sym
+Make and return a foreign object of type @var{type} and bind it to the
+external symbol @var{sym}.
+
+The argument @var{type} should be a function type-cell.
+The argument @var{sym} should be a string naming a function in one of
+the loaded libraries.
+
+If @var{sym} does not exist in any of the loaded libraries, an error
+is indicated.
+
+This is like @code{ffi-bind} but for function objects.
+@end defun
+
+  On the other hand, a library may contain useful variables.  The main
+directive to bind such variable objects is @code{ffi-bind}.
+
+@defun ffi-bind type sym
+Make and return a foreign object of type @var{type} and bind it to the
+external symbol @var{sym}.
+
+The argument @var{type} can be any type-cell.
+The argument @var{sym} should be a string naming an arbitrary symbol
+in one of the loaded libraries.
+
+If @var{sym} does not exist in any of the loaded libraries, @code{nil}
+is returned.
+@end defun
+
+@noindent
+Again, let's look at an example taken from @file{ffi-curl.el}
+
+@example
+(setq curl:curl_easy_getinfo
+      (ffi-defun '(function int (pointer void) int) "curl_easy_getinfo"))
+     @result{} #<ffiobject type=(function int (pointer void) int) size=4 fotype=3 foptr=0x40bfa370>
+@end example
+
+@noindent
+The @code{ffi-bind} function works similarly.
+
+
+@subsection Initialising Function Arguments
+
+  As seen in the previous example, external objects are assigned an
+(elisp-)internal object which refers to them.  Following this
+abstraction process, it is kind of obvious that arguments for external
+functions cannot be passed as internal elisp objects, but have to be
+converted somehow.
+
+  The most user-friendly function to accomplish this task is
+@code{ffi-create-fo}, although it cannot catch all the cases
+(especially compound types are missing as of November 2005).
+
+@defun ffi-create-fo type val
+Create a foreign object of type @var{type} and set its value to
+@var{val}.  Return created FFI object.
+@end defun
+
+  Note that memory allocation and other administrative tasks are
+entirely performed within the FFI API without involving the user.
+That is why we can simply ``convert'' an elisp string to a C string,
+as the example below will demonstrate.
+
+@example
+@group
+(ffi-create-fo 'c-string "foobar")
+     @result{} #<ffiobject type=c-string size=4 fotype=0 foptr=0x88e3fdc>
+@end group
+@group
+(ffi-create-fo 'unsigned-int 2299)
+     @result{} #<ffiobject type=unsigned-int size=4 fotype=0 foptr=0x89f648c>
+@end group
+@end example
+
+  The function @code{ffi-create-fo} is written in lisp and decomposes
+to more elementary functions.  We are going to discuss them here
+flatly since they provide a more sophisticated basis for the handling
+of foreign objects.
+
+@defun make-ffi-object type &optional size
+Create a new FFI object of type @var{type}.
+If optional argument @var{size} is non-@code{nil} it should be an
+integer, in this case additional storage size to hold data of at
+least length @var{size} is allocated.
+@end defun
+
+@defun ffi-set fo val
+Set @var{fo}'s foreign value to @var{val}.
+@end defun
+
+  Note that currently @code{ffi-set} does @emph{not} work on compound
+data types, nevertheless there are workaround functions.
+
+  The following example will demonstrate the use of
+@code{make-ffi-object} and, in conjunction, @code{ffi-set}.
+
+@example
+@group
+(setq xmpl-fo (make-ffi-object 'long))
+     @result{} #<ffiobject type=long size=4 fotype=0 foptr=0x8937dcc>
+(ffi-set xmpl-fo 20000)
+     @result{} 20000
+xmpl-fo
+     @result{} #<ffiobject type=long size=4 fotype=0 foptr=0x8937dcc>
+@end group
+
+@group
+(setq xmpl-fo (make-ffi-object 'c-string))
+     @result{} #<ffiobject type=c-string size=4 fotype=0 foptr=0x890158c>
+(ffi-set xmpl-fo "some test string")
+     @result{} "some test string"
+xmpl-fo
+     @result{} #<ffiobject type=c-string size=4 fotype=0 foptr=0x890158c>
+(ffi-get xmpl-fo)
+     @result{} "some test string"
+@end group
+@end example
+
+  After using @code{make-ffi-object} to create foreign objects,
+@emph{always} make sure that these were assigned a value before
+requesting the object's data, or simply always use
+@code{ffi-create-fo}.  In the former case, FFI does not initialise the
+object with default data, its value is therefore indefinite and may
+cause a crash of SXEmacs when queried.
+
+  Also, check carefully to only assign data which is suited for the
+underlying C type.  Passing, for example, strings to
+@samp{unsigned-int}s or @samp{long} values to an object of type
+@samp{int} may not only result in unexpected behaviour but almost
+certainly a crash.
+
+  Like @code{ffi-create-fo} the function @code{ffi-set} is a higher
+level lisp binding.  It decomposes into several raw FFI API functions
+which are presented here just for completeness.  It is highly advised
+to exclusively use @code{ffi-set}.
+
+@defun ffi-store fo offset val-type val
+Store and return the value @var{val} of type @var{val-type} in
+@var{fo}'s foreign space at @var{offset}.
+
+@var{val-type} can be either a basic FFI type or an FFI pointer.
+If @var{val-type} is a basic FFI type, then @var{val} can be an
+ordinary, but suitable Emacs lisp object.
+If @var{val-type} is an FFI pointer then @var{val} @emph{must} be an
+FFI object of the underlying type pointed to.
+@end defun
+
+
+@subsection Calling Functions
+
+  Now that function signatures are bound and argument data is
+initialised, we can dare to actually apply functions and operations on
+our data.  The main function to achieve this is
+@code{ffi-call-function}.
+
+@defun ffi-call-function fo &rest args
+Call a function referred to by @var{fo} with arguments @var{args},
+maybe return a foreign object with the result or @code{nil} if there
+is none.
+
+@var{fo} should be a binding initiated by @code{ffi-defun}, and
+@var{args} should be foreign data objects or pointers to these.
+@end defun
+
+  Unlike with most Emacs lisp functional bindings foreign functions
+can be called by reference, this means a function may be passed a
+foreign object as argument and the function's result will reside in
+that foreign object.
+
+  Before we come to an example, we shall discuss two further functions
+which ``re-convert'' foreign object data to internal Emacs lisp data.
+
+@defun ffi-get fo &keys type off
+Return @var{fo}'s value (converted to Emacs lisp compliant form).
+
+Optional key @var{:type} may be used to cast @var{fo} to @var{:type},
+it defaults to the object's assigned type.
+Optional key @var{:off} may be used to specify an offset, it defaults
+to 0.
+@end defun
+
+  The backbone function of @code{ffi-get} is @code{ffi-fetch}, but it
+is highly advised to exclusively use @code{ffi-get}, which in contrast
+also works for structs, arrays and pointers.
+
+@defun ffi-fetch fo offset type
+Return @var{fo}'s value (converted to Emacs lisp compliant form).
+@var{fo} is cast to @var{type}, and the value is aligned to
+@var{offset}.
+@end defun
+
+
+@noindent
+Let us now look at the promised example.
+
+@example
+(ffi-load "libcurl.so")
+     @result{} #<ffiobject type=(pointer void) size=4 fotype=2 foptr=0x8a1cc78>
+
+;; we want: char *curl_escape(const char *string, int length);
+;; this function takes a usual string and returns a version suitable
+;; as URI
+(setq curl:curl_escape
+      (ffi-defun '(function c-string c-string int) "curl_escape"))
+     @result{} #<ffiobject type=(function c-string c-string int) size=4 fotype=3 foptr=0x40bf2e50>
+
+;; now prepare the funcall
+(let* ((url "http://foo.org/please escape this<$!=3>")
+       (str (ffi-create-fo 'c-string url))
+       (len (ffi-create-fo 'int (length url))))
+  ;; call the function
+  (setq result (ffi-call-function curl:curl_escape str len)))
+     @result{} #<ffiobject type=c-string size=4 fotype=0 foptr=0x8906af8>
+
+;; now let's see what the escaped form is
+(ffi-get result)
+     @result{} "http%3A%2F%2Ffoo%2Eorg%2Fplease%20escape%20this%3C%24%21%3D3%3E"
+
+;; and compare to
+(ffi-get result :off 13)
+     @result{} "foo%2Eorg%2Fplease%20escape%20this%3C%24%21%3D3%3E"
+
+;; and to
+(ffi-get result :type 'char)
+     @result{} ?h
+@end example
+
+
+@c   The whole procedure of binding foreign function objects can be
+@c abbreviated using the macro @code{define-ffi-function}.
+@c 
+@c @c all in one macro
+@c @defvr Macro define-ffi-function fsym args doc-string ftype ename
+@c 
+@c @end defvr
+
+
+
+@node Examining and Modifying
+@section Examining and Modifying Foreign Objects
+
+  In this section we give a quick overview of what else can be done
+with foreign objects or foreign function definitions.
+
+@c on objects and their types
+@defun ffi-object-p fo
+Return non-@code{nil} if @var{fo} is an FFI object, nil otherwise.
+@end defun
+@defun ffi-object-type fo
+Return @var{fo}'s type.
+@end defun
+@defun ffi-set-object-type fo type
+Cast @var{fo} to type @var{type} and reassign the cast value.
+@end defun
+
+@c on objects and their data
+@defun ffi-object-size fo
+Return the size of the allocated space of @var{fo}.
+@end defun
+@defun ffi-address-of fo
+Return the FFI object that stores address of given FFI object
+@var{fo}.
+
+This is the equivalent of the @samp{&} operator in C.
+@end defun
+@defun ffi-deref fo-pointer
+Return the data @var{fo-pointer} points to.
+
+This is the equivalent of the `*' operator in C.
+@end defun
+@defun ffi-null-p fo
+Return non-@code{nil} if @var{fo} is a null pointer, @code{nil}
+otherwise.
+Non-@code{nil} may be returned only for pointer types or the type
+@samp{c-string}.
+@end defun
+@defun ffi-null-pointer
+Return the FFI object that represents a null pointer.
+
+This is the equivalent of @samp{NULL} in C.
+@end defun
+
+@c @defun ffi-aref                
+@c @end defun
+@c @defun ffi-aset                 
+@c @end defun
+@c @defun ffi-slot-offset
+@c @end defun
+@c 
+@c @defun ffi-dlerror
+@c @end defun
+@c 
+@c @defun ffi-plist
+@c @end defun
+
+
+
+@node User-Defined Types
+@section User-Defined Types
+@cindex user-defined types
+
+  As usual in most libraries written in C, objects carry an abstract
+type.  These abstract types can be aliases for the built-in ones,
+@samp{struct}s or @samp{union}s composed by more atomic types.
+
+  For the bare aliasing of types, there is a macro
+@code{define-ffi-type}, which can also be used to construct unions, as
+well as arrays.
+
+@defvr Macro define-ffi-type name type
+Associate @var{name} with FFI @var{type}.  When defining global
+structures or unions, @var{name} may be @code{nil}, in that case
+@var{name} is derived from the name of @var{type}.
+@end defvr
+
+@example
+(define-ffi-type mytype unsigned-long)
+     @result{} mytype
+@end example
+
+  Once a type is defined that way, it can be used as if it was a
+native C-type.
+
+@example
+(ffi-type-p 'mytype)
+     @result{} t
+(ffi-size-of-type 'mytype)
+     @result{} 4
+@end example
+
+@noindent
+As mentioned above, we look at the construction of arrays now.
+
+@example
+(define-ffi-type myarray (array unsigned-long 8))
+     @result{} myarray
+(ffi-size-of-type 'myarray)
+     @result{} 32
+@end example
+
+  Similarly, unions and structs can be defined.  For structs, however,
+there exists a more dedicated definition function,
+@code{define-ffi-struct}.  This function also defines setter and
+getter forms which can be used to selectively set or get the slots in
+a structure.
+
+  Getting the value of a slot in a structure defined that way can be
+done with a function @code{@var{structname}->@var{slotname}}.  Setting
+values is achieved by using @code{setf} on
+@code{@var{structname}->@var{slotname}}.
+
+@defvr Macro define-ffi-struct name &rest slots
+Define a new structure of NAME and SLOTS.
+@end defvr
+
+@example
+(define-ffi-struct foo (sl1 unsigned-int) (sl2 char) (sl3 int))
+     @result{} (lambda (obj) "
+Common Lisp lambda list:
+  (foo->sl3 OBJ)
+
+" (block foo->sl3 (let* ((--obj--temp-- (gensym "--obj--"))
+(--nv--temp-- (gensym "--nv--"))) (list (list --obj--temp--) (list
+obj) (list --nv--temp--) (let* ((obj --obj--temp--) (nv --nv--temp--))
+(list (quote ffi-store) obj (list (quote ffi-slot-offset) (quote
+(quote foo)) (quote (quote sl3))) (list (quote ffi-slot-type) (quote
+(quote foo)) (quote (quote sl3))) nv)) (list (quote foo->sl3)
+--obj--temp--)))))
+(fboundp #'foo->sl1)
+     @result{} t
+(fboundp #'foo->sl2)
+     @result{} t
+(fboundp #'foo->sl2)
+     @result{} t
+@end example
+
+
+
+@c ffi.texi ends here

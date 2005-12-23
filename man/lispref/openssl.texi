@@ -1,0 +1,553 @@
+@c -*-texinfo-*-
+@c This is part of the SXEmacs Lisp Reference Manual.
+@c Copyright (C) 2005 Sebastian Freundt
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/openssl.info
+
+@node OpenSSL Support, Enhanced Number Types, PostgreSQL Support, top
+@comment  node-name,  next,  previous,  up
+@chapter OpenSSL Support
+@cindex OpenSSL
+
+SXEmacs can be linked with OpenSSL libcrypto and libssl to provide
+a comprehensive gateway to cryptographic and related functions.
+
+@comment HINT FOR EXPERIMENTAL STATUS
+Note: Currently the API provided for SXEmacs is experimental.
+Conceptional changes, renaming, and changes in the behaviour of
+functions are highly likely.
+@comment REMOVE ME WHEN I AM STABLE
+
+
+@menu
+* Building SXEmacs with OpenSSL support::
+* SXEmacs OpenSSL API::
+* SXEmacs openssl Examples::
+@end menu
+
+
+@node Building SXEmacs with OpenSSL support, SXEmacs OpenSSL API, , OpenSSL Support
+@comment  node-name,  next,  previous,  up
+@section Building SXEmacs with OpenSSL support
+
+SXEmacs OpenSSL support requires linking to the OpenSSL libcrypto and libssl
+libraries.  Describing how to build and install OpenSSL is beyond the
+scope of this document.  See the OpenSSL manual for details.
+@comment erm, why? we could give a rilly-quick howto
+
+@c If you have installed SXEmacs from one of the binary kits on
+@c (@url{ftp://ftp.sxemacs.org/}), or are using an SXEmacs binary from a CD
+@c ROM, you may have SXEmacs OpenSSL support by default.  @code{M-x
+@c describe-installation} will tell you if you do.
+@comment BUT we gotta get to this issue
+
+If you are building SXEmacs from source, you need to install OpenSSL
+first.  On some systems, OpenSSL will come pre-installed in /usr.  In
+this case, all you need to do is passing @samp{--enable-openssl} to
+configure.  Otherwise you must specify the location via
+@samp{--site-prefixes} when you run configure.
+
+
+@node SXEmacs OpenSSL API, SXEmacs openssl Examples, Building SXEmacs with OpenSSL support, OpenSSL Support
+@comment  node-name,  next,  previous,  up
+@section SXEmacs OpenSSL API
+
+Explaining cryptographical details behind OpenSSL API functions is
+beyond the scope of this document.  Ask Professor Google.
+@comment erm, again: Why? maybe some alice-bob examples?
+
+The SXEmacs OpenSSL API is intended to be a comprehensive exact (thusly
+policy-free) copy of OpenSSL API functions in libcrypto and libssl,
+respectively.  The intent is to provide elisp for everything you have
+told your OpenSSL library to contain.  Then, at stage 2, let higher
+level Lisp code come up with policies and remove the guts of libcrypto
+and libssl.
+
+Despite this rather noble intention of giving access to anything in
+OpenSSL there are conceptional limits.  Auxiliary stuff from OpenSSL
+such as BIO or BN will not be accessible to elisp, though the C
+implementation might use them directly or indirectly as well.
+
+On the one hand this is due to their very special purpose (like finding
+prime numbers), on the other hand due to their obsoleteness (like
+BIO_gets, BIO_do_connect, etc.) when SXEmacs already provides a similar
+or more powerful implementation.
+
+For convenience, we denote the elisp implementation of OpenSSL with openssl
+whereas the distributed library package from @url{http://www.openssl.org}
+is denoted OpenSSL.
+
+
+@menu
+* openssl Submodules::
+* openssl Lisp Symbols and Datatypes::
+* Unimplemented openssl Functions::
+@end menu
+
+
+@node openssl Submodules, openssl Lisp Symbols and Datatypes, SXEmacs OpenSSL API, SXEmacs OpenSSL API
+@comment  node-name,  next,  previous,  up
+@subsection openssl Submodules
+
+@menu
+* openssl General::	General Information
+* openssl RAND::	(Pseudo) Random Numbers
+* openssl MD::		Message Digests (aka hashes)
+* openssl HMAC::	Message Authentication Codes (aka keyed hashes)
+* openssl CIPHER::	Symmetric Cryptography
+* openssl PKEY::	Public Key Crypto Systems (aka asymmetric ciphers)
+* openssl SSL/TLS::	Secure Network Layers
+@end menu
+
+
+@node openssl General
+@subsubsection General information 
+
+To retrieve the version of the underlying OpenSSL installation
+you can use
+
+@defun ossl-version
+This function returns a version string.
+This string should be identical to the output of @code{openssl version}
+in a shell.
+@end defun
+
+@example
+@group
+(ossl-version)
+  => "OpenSSL 0.9.7g 11 Apr 2005"
+@end group
+@end example
+
+Since it is possible to strip certain cryptographic stuff from the
+OpenSSL installation (for example due to license or patent issues)
+the openssl API provides the following functions to retrieve a list
+of capabilities.
+
+@defun ossl-available-digests
+Return a list of digest algorithms in the underlying crypto library.
+This yields a plain list of symbols.
+@end defun
+
+@defun ossl-available-ciphers
+Return a list of cipher algorithms in the underlying crypto library.
+This yields a list of conses \(cipher . size\)
+@end defun
+
+@example
+@group
+(ossl-available-digests)
+  @result{} '(MD2 MD5 RSA-MD2 RSA-MD5 SHA RSA-SHA SHA1 RSA-SHA1 DSA-SHA
+       DSA-SHA1-old MDC2 RSA-MDC2 DSA-SHA1 RSA-SHA1-2 DSA RIPEMD160
+       RSA-RIPEMD160 MD4 RSA-MD4)
+@end group
+
+@group
+(ossl-available-ciphers)
+  @result{} '(RC4 DES-ECB DES-CFB DES-CBC DES-EDE DES-EDE3 IDEA-CBC IDEA-CFB
+       IDEA-ECB RC2-CBC RC2-ECB RC2-CFB RC2-OFB DES-EDE-CBC
+       DES-EDE3-CBC DES-OFB IDEA-OFB DES-EDE-CFB DES-EDE3-CFB
+       DES-EDE-OFB DES-EDE3-OFB DESX-CBC BF-CBC BF-ECB BF-CFB
+       BF-OFB RC4-40 RC2-40-CBC CAST5-CBC CAST5-ECB CAST5-CFB
+       CAST5-OFB RC5-CBC RC5-ECB RC5-CFB RC5-OFB RC2-64-CBC
+       AES-128-ECB AES-128-CBC AES-128-OFB AES-128-CFB AES-192-ECB
+       AES-192-CBC AES-192-OFB AES-192-CFB AES-256-ECB AES-256-CBC
+       AES-256-OFB AES-256-CFB AES-128-CFB1 AES-192-CFB1 AES-256-CFB1
+       AES-128-CFB8 AES-192-CFB8 AES-256-CFB8 DES-CFB1 DES-CFB8)
+@end group
+@end example
+
+You should use higher level forms to prevent errors caused by missing
+algorithms.
+
+@example
+(when (member 'MD4 (ossl-available-digests))
+  @dots{})
+@end example
+
+These functions work at run-time (not compile time) so it is possible
+when building a dynamically linked SXEmacs to update OpenSSL on the
+fly.
+
+As a general hint you can assume to have support for at least the
+MD5 and SHA1 message digests, and the BF-* symmetric cipher systems.
+
+
+@node openssl RAND
+@subsubsection (Pseudo) Random Numbers
+
+@defun ossl-rand-bytes count
+Return COUNT bytes of randomness.
+
+Note: You probably want to put a wrapping encoder function
+(like `base16-encode-string') around it, since this returns
+binary string data.
+@end defun
+
+@example
+@group
+(base16-encode-string (ossl-rand-bytes 8))
+  @result{} "5a78acd572984bdf"
+@end group
+@end example
+
+
+@node openssl MD
+@subsubsection Message Digests (aka hashes)
+
+Message digests are widely used in modern information
+infrastructure.  They are derived from (collision free) 
+one-way hash functions.
+
+A hash function (such as md5 or sha1) is a function with
+following properties:
+
+@enumerate
+@item reduction: data of arbitrary length is mapped onto data
+  of fixed length
+@item dispersion: a change of one bit in input data changes
+  (ideally) half the bits of the hash value.
+@item well definedness: computing a hash value from the same
+  source data twice yields the same result
+@item efficiency: computing hash values is efficient (ideally
+  with complexity O(n)) on the input, but it is hard to 
+  compute a preimage for a given hash value.
+@end enumerate
+
+Often, the last property is too weak in practice, therefore
+most hash functions comply with the even stronger:
+
+@itemize
+@item collision-freeness: it is hard to compute two different
+  source data which result in the same hash value.
+@end itemize
+
+
+Message digests fulfil several tasks in daily use.  Most
+commonly used are so called checksums.  They exist because
+of properties 1 through 3 in the prior table.  In modern
+days hash functions are used almost exclusively for their
+error detecting facilities in contrast to other checksum
+algorithms like CRC32.
+
+Beyond that, message digests play an important role in
+digital signatures.  Since public key crypto systems map
+long plaintexts on long ciphertexts, message digests are
+used to obscure the length of a plaintext.
+
+Therefore in digital signatures not the message itself 
+is signed but the hash value of that message.
+That also assures a certain upper bound of the length
+of a digital signature which is (as in real life) rather
+short compared to the message that was signed.
+
+Okay, after this short introduction to message digests,
+here is the function to access them from elisp.
+
+@defun ossl-digest digest string
+Return the message digest of STRING computed by DIGEST.
+DIGEST may be one of the OpenSSL digests you have compiled.
+See `ossl-available-digests'.
+
+Note: You probably want to put a wrapping encoder function
+(like `base16-encode-string') around it, since this returns
+binary string data.
+@end defun
+
+We are using the EVP layer of OpenSSL to access the  digests.
+
+@example
+@group
+(base16-encode-string (ossl-digest 'md5 "hash me"))
+  @result{} "17b31dce96b9d6c6d0a6ba95f47796fb"
+@end group
+
+@group
+(base16-encode-string (ossl-digest 'SHA1 "hash me"))
+  @result{} "43f932e4f7c6ecd136a695b7008694bb69d517bd""
+@end group
+
+@group
+(mapcar #'(lambda (digest)
+            (cons digest 
+                  (base16-encode-string
+                    (ossl-digest digest "foobar"))))
+        (ossl-available-digests))
+  @result{} '((MD2 . "3af4bb69e03489fc4ceebe50151d3e1a")
+       (MD5 . "3858f62230ac3c915f300c664312c63f")
+       (RSA-MD2 . "3af4bb69e03489fc4ceebe50151d3e1a")
+       (RSA-MD5 . "3858f62230ac3c915f300c664312c63f")
+       (SHA . "d3fb2f31117cc1481f6c5dc1905e06892a8ca38b")
+       (RSA-SHA . "d3fb2f31117cc1481f6c5dc1905e06892a8ca38b")
+       (SHA1 . "8843d7f92416211de9ebb963ff4ce28125932878")
+       (RSA-SHA1 . "8843d7f92416211de9ebb963ff4ce28125932878")
+       (DSA-SHA . "8843d7f92416211de9ebb963ff4ce28125932878")
+       (DSA-SHA1-old . "8843d7f92416211de9ebb963ff4ce28125932878")
+       (MDC2 . "ae5c0e02d923fe22507b1c5acc54c27f")
+       (RSA-MDC2 . "ae5c0e02d923fe22507b1c5acc54c27f")
+       (DSA-SHA1 . "8843d7f92416211de9ebb963ff4ce28125932878")
+       (RSA-SHA1-2 . "8843d7f92416211de9ebb963ff4ce28125932878")
+       (DSA . "8843d7f92416211de9ebb963ff4ce28125932878")
+       (RIPEMD160 . "a06e327ea7388c18e4740e350ed4e60f2e04fc41")
+       (RSA-RIPEMD160 . "a06e327ea7388c18e4740e350ed4e60f2e04fc41")
+       (MD4 . "547aefd231dcbaac398625718336f143")
+       (RSA-MD4 . "547aefd231dcbaac398625718336f143"))
+@end group
+@end example
+
+Let's do some performance tests.
+
+@example
+@group
+;; @r{this is the SXEmacs built-in implementation of MD5}
+(let ((a (current-time-string)))
+  (loop for i from 0 to 100000
+    do (md5 "Some test string to hash"))
+  (cons a (current-time-string)))
+  @result{} ("Mon May  9 13:32:44 2005" . "Mon May  9 13:32:50 2005")
+  ;; @r{which is 6 seconds}
+@end group
+
+@group
+;; @r{now compare to the OpenSSL implementation}
+(let ((a (current-time-string)))
+  (loop for i from 0 to 100000 
+    do (ossl-digest 'md5 "Some test string to hash"))
+  (cons a (current-time-string)))
+  @result{} ("Mon May  9 13:35:51 2005" . "Mon May  9 13:36:01 2005")
+  ;; @r{which is 10 seconds}
+@end group
+@end example
+
+As we can see, the built-in implementation has slightly better
+performance when hashing short strings.  The following example
+shows performance on long strings, like the buffer string here.
+
+@example
+@group
+(length (buffer-string))
+  @result{} 13032
+@end group
+
+@group
+;; @r{we begin with the built-in implementation}
+(let ((a (current-time-string))
+      (b (buffer-string)))
+  (loop for i from 0 to 100000
+    do (md5 b))
+  (cons a (current-time-string)))
+  @result{} ("Mon May  9 13:39:36 2005" . "Mon May  9 13:40:18 2005")
+  ;; @r{which is 42 seconds}
+@end group
+
+@group
+;; @r{compare to the OpenSSL API}
+(let ((a (current-time-string))
+      (b (buffer-string)))
+  (loop for i from 0 to 100000
+    do (base16-encode-string 
+         (ossl-digest 'md5 b)))
+  (cons a (current-time-string)))
+  @result{} ("Mon May  9 13:41:26 2005" . "Mon May  9 13:41:39 2005")
+  ;; @r{which is 13 seconds}
+@end group
+@end example
+
+This latter example shows digest hashing ``under real conditions'' since
+in practice messages to be hashed typically are in the range of 1000 to
+30000 characters.  This range is even vastly exceeded when dealing with
+checksums for files.
+
+Another performance test which compares the elisp implementation of sha1
+(taken from `No Gnus v0.4') to the one from the OpenSSL API
+
+@example
+@group
+(let ((a (current-time-string)))
+  (loop for i from 0 to 50000
+    do (sha1-binary "a short test string"))
+  (cons a (current-time-string)))
+  @result{} ("Mon May  9 14:27:07 2005" . "Mon May  9 14:27:32 2005")
+  ;; @r{which is 25 seconds}
+@end group
+
+@group
+(let ((a (current-time-string))
+      (b (buffer-string)))
+  (loop for i from 0 to 50000
+    do (ossl-digest 'sha1 "a short test string"))
+  (cons a (current-time-string)))
+  @result{} ("Mon May  9 14:28:51 2005" . "Mon May  9 14:28:55 2005")
+  ;; @r{which is 4 seconds}
+@end group
+@end example
+
+These results suggest to always use the openssl interface in favour of
+other implementations.
+
+
+@node openssl HMAC
+@subsubsection Message Authentication Codes (aka keyed hashes)
+
+Not yet documented.
+
+@c  *  ossl-hmac - gateway to message authentication codes
+@c  *
+
+
+@node openssl CIPHER
+@subsubsection Symmetric Cryptography
+
+Not yet documented.
+
+@c  *  ossl-bytes-to-key - key generation for symmetric ciphers
+@c  *  ossl-encrypt - gateway to symmetric cipher encryption
+@c  *  ossl-decrypt - gateway to symmetric cipher decryption
+@c  *
+
+
+@node openssl PKEY
+@subsubsection public key crypto systems
+
+Not yet documented.
+
+@c  * + General
+@c  *  ossl-pkey-p - discriminator of public keys
+@c  *  ossl-pkey-size - selector of public key sizes
+@c  *  ossl-pkey-get-public - strip the private data
+@c  *  Lisp_EVP_PKEY - lrecord object to store public keys
+@c  * + RSA
+@c  *  ossl-rsa-generate-key - constructor of RSA public keys
+@c  *  ossl-rsa-pkey-p - discriminator of RSA public keys
+@c  *  ossl-rsa-subkey-p - comparator of two keys
+@c  * + DSA
+@c  *  ossl-dsa-generate-key - constructor of DSA public keys
+@c  *  ossl-dsa-pkey-p - discriminator of DSA public keys
+@c  *  ossl-dsa-subkey-p - comparator of two keys
+@c  * + EC
+@c  *  ossl-ec-generate-key - constructor of EC public keys
+@c  *  ossl-ec-pkey-p - discriminator of EC public keys
+@c  * + DH
+@c  *  ossl-dh-pkey-p - discriminator of DH public keys
+@c  *
+@c  * - HYBRID
+@c  *  ossl-seal - gateway to public key hybrid (envelope) encryption
+@c  *  ossl-open - gateway to public key hybrid (envelope) decryption
+@c  *
+@c  * - SIGN
+@c  *  ossl-sign - gateway to public key signature
+@c  *  ossl-verify - gateway to public key signature verification
+@c  *
+@c  * - PEM
+@c  *  ossl-pem-read-public-key
+@c  *  ossl-pem-read-key
+@c  *  ossl-pem-write-public-key
+@c  *  ossl-pem-write-key
+@c  *
+
+
+@node openssl SSL/TLS
+@subsubsection Secure Network Layers
+
+The SSL/TLS support in this API is definitely not a copy of the
+underlying libssl functions.  Instead we chose a higher level of access
+methods because for example @code{SSL_connect} does not work
+standalone, and having an elisp loop to check socket messages is
+probably not desirable.
+
+Also we chose to actually do what SSL/TLS stands for, namely to
+establish a transparent security layer on top of an existing network
+connection.  That is, you can use the usual @code{open-network-stream}+
+@code{set-process-filter} + @code{process-send-string} chain and at some
+point after the establishment of the connection you can coat that
+connection with a secure layer.  Of course, this is done transparently
+and your existing process filter or send-string commands will not notice
+the change.
+
+@defun ossl-connect process &optional timeout
+Return an SSL connection object on top of PROCESS.
+Establishing a connection performs a handshake with the
+other peer.
+
+If optional argument TIMEOUT is non-nil, it should be a
+positive integer to indicate (in seconds) how long to wait
+for a successful handshake.
+Default: 2 seconds.
+@end defun
+
+Currently there are no high level `@code{open-ssl-stream}' (and such)
+functions.  You have to invoke @code{open-network-stream} first and
+after establishing that connection @code{ossl-connect} should be
+performed.
+
+Also, be sure to store the returned SSL-CONN object for later
+reference.  Currently there is no way to extract that information from
+the underlying network process.
+
+@defun ossl-finish ssl-conn
+Finish an SSL connection SSL-CONN.
+
+Note: This may also finish the network connection.
+@end defun
+
+As noted above, not all peers finish the connection after finishing
+the SS-Layer but it is highly suggested to do so.  Unpredictible
+results may occur when you keep using that connection.
+
+@example
+@group
+;; @r{open a https connection to addons.mozilla.org}
+(setq p (open-network-stream "moz" "moz" "addons.mozilla.org" 443))
+  @result{} #<network connection "moz" (443 . "addons.mozilla.org") state:run>
+
+(setq m (ossl-connect p))
+  @result{} #<OpenSSL socket layer: TLSv1 on top of moz>
+
+;; @r{Let's examine @samp{p}}
+p
+  @result{} #<secure network connection "moz" (443 . "addons.mozilla.org") state:run>
+
+(ossl-finish m)
+  @result{} #<OpenSSL socket layer: dead>
+
+;; @r{Let's examine @samp{p} again}
+p
+  @result{} #<network connection "moz" (443 . "addons.mozilla.org") state:exit>
+@end group
+@end example
+
+
+
+@c  *  ossl-connect - constructor for SSL connection objects
+@c  *  ossl-finish - destructor of SSL connection objects
+@c  *  ossl-pending - predicate if data is available for read
+@c  *  ossl-read - 
+@c  *  ossl-write -
+@c  *  ossl-x509-get-subject
+@c  *  ossl-x509-get-issuer
+@c  *  ossl-x509-get-pubkey
+@c  *  ossl-cipher-get-version
+@c  *  ossl-cipher-get-name
+@c  *  ossl-cipher-get-bits
+
+
+@node openssl Lisp Symbols and Datatypes, Unimplemented openssl Functions, openssl Submodules, SXEmacs OpenSSL API
+@comment  node-name,  next,  previous,  up
+@subsection openssl Lisp Symbols and Datatypes
+
+Not yet documented.
+
+
+@node Unimplemented openssl Functions, , openssl Lisp Symbols and Datatypes, SXEmacs OpenSSL API
+@comment  node-name,  next,  previous,  up
+@subsection Unimplemented openssl Functions
+
+Not yet documented.
+
+
+@node SXEmacs openssl Examples,  , SXEmacs OpenSSL API, OpenSSL Support
+@comment  node-name,  next,  previous,  up
+@section SXEmacs openssl Examples
+
+Not yet documented.
+
