@@ -1,0 +1,1364 @@
+@c -*-texinfo-*-
+@c This is part of the XEmacs Lisp Reference Manual.
+@c Copyright (C) 2001 Free Software Foundation, Inc.
+@c See the file lispref.texi for copying conditions.
+
+@setfilename ../../info/packaging.info
+
+@c Macro to make formatting of the XEmacs pms name consistent.
+@c Maybe @sc looks OK in HTML?  If so, condition on Info.
+@iftex
+@macro xpms
+XE@sc{macs} Packaging System
+@end macro
+@end iftex
+@ifnottex
+@macro xpms
+XEmacs Packaging System
+@end macro
+@end ifnottex
+
+@node Packaging, Lisp Data Types, Introduction, Top
+@chapter The @xpms{}
+@cindex package
+@cindex packaging
+
+The XEmacs distribution, starting with version 21, comes only with a
+very basic set of built-in modes and libraries.  Most of the libraries
+that were part of the distribution of earlier versions of XEmacs are now
+available separately.  The user as well as the system administrator can
+choose which packages to install; the actual installation process is
+easy.  This gives an installer the ability to tailor an XEmacs
+installation for local needs with safe removal of unnecessary code.
+
+This chapter describes how to package Lisp libraries for use with the
+@xpms{}.
+
+@emph{Please note carefully} that the term @dfn{package} as used in
+XEmacs refers to an aggregation of Lisp code and/or data distributed as
+a unit.  It does not, as it does in many Lisps, refer to a way of
+creating separate name spaces.  XEmacs has no facility for providing
+separate name spaces.  (If we ever do get separate name spaces, we'll
+probably regret overloading the nomenclature in this way, but it's
+become established.)
+
+@menu
+Introduction:
+* Package Overview::            Lisp Libraries and Packages.
+
+Packaging Lisp Libraries:
+* Package Terminology::         Basic stuff.
+* Building Packages::           Turn packaged source into a tarball.
+* Makefile Targets::            Package @file{Makefile} targets
+* Local.rules File::            Tell the @xpms{} about your host.
+* Creating Packages::           Tell the @xpms{} about your package.
+* Documenting Packages::        Explain your package to users and hackers.
+@c * History::                     History of the @xpms{}
+@c * Installation::                Installing the @xpms{} with your (X)Emacs.
+@c * Configuration::               Configuring the @xpms{} for use.
+@c * Usage::                       An overview of the operation of the @xpms{}.
+@c * Bug Reports::                 Reporting Bugs and Problems
+@c * Frequently Asked Questions::  Questions and answers from the mailing list.
+
+Internals and Package Release Engineering:
+* Issues::                      
+@end menu
+
+@node Package Overview, Package Terminology, , Packaging
+@chapter An overview of the @xpms{}
+
+The @xpms{} is a system for administering the installation, upgrade, and
+removal of Lisp libraries.  For the end user, it provides facilities for
+determining availability of packages and which versions at remote
+sites.  It will download and automatically install a package, ensuring
+that any old files from previous versions of the package are removed
+first.  By providing a standard set of hierarchies for installation, it
+makes configuration of XEmacs simpler.  Furthermore, packages normally
+provide ancillary auto-autoloads and custom-loads libraries, which are
+automatically detected and loaded by XEmacs upon startup.  This means
+that once installed, all facilities of package, including autoloading
+the library upon invocation of a command provided by the library and
+convenient configuration and customization, are automatically available
+to the user.  There is no need to add autoloads or keybindings to in the
+init file, and structured configuration of the package is available
+through the Customize system even before the libraries are loaded.
+
+All of this convenience comes at a cost.  The cost of administration at
+the package level is negligible compared to the benefits, of course.
+However, the requirement that XEmacs find and load auto-autoloads and
+custom-loads libraries comes at a fairly large cost in startup time.  In
+order to reduce this cost, XEmacs imposes fairly strict conditions on
+the structure of an installed package.
+
+Meeting these requirements, as well as simply providing the
+auto-autoloads and the information about availability and so on does
+impose some costs on the library maintainer.  The @xpms{} also provides
+structure and utilities to the library maintainer to make these tasks
+easier.  This manual documents the requirements and the tools that the
+@xpms{} provides to ensure that a package satisfies them.
+
+@menu
+* The User View::
+* The Library Maintainer View::
+* The Package Release Engineer View::
+@end menu
+
+
+@node The User View, The Library Maintainer View, , Package Overview
+@section The User View
+
+@strong{N.B.}  Much of the discussion in this section undoubtedly
+belongs elsewhere, @ref{Packages,,,xemacs}.
+
+From the user's point of view, an XEmacs binary package is simply a
+standard tarball (usually gzipped) containing Lisp sources, compiled
+Lisp, documentation, and possibly data files or supporting executables.
+The tarball is unpacked using standard tools such as GNU tar and gzip.
+The package system does impose certain requirements for automatic
+configuration to work.
+
+Here the main consideration is that the tarball ``expects'' to be
+unpacked from the top of a package hierarchy.  A @dfn{package hierarchy}
+is basically an image of a classic Emacs ``run-in-place'' tree, with
+@file{lisp}, @file{etc}, @file{info}, @file{man}, @file{lib-src}, and
+@file{pkginfo} subdirectories of the top.  The @file{pkginfo}
+subdirectory is for use by the @xpms{} administration tools, and
+currently contains a @file{MANIFEST.@var{package-name}} file for each
+package to ensure that no cruft remains when a package is removed or
+updated.  The @file{lisp}, @file{etc}, and @file{lib-src} subdirectories
+are further subdivided, with a subdirectory for each package.  The
+@file{info} directory obeys the usual conventions.
+@emph{I.e.}, the @file{info} directory is flat
+with a(n) (optional) @file{dir} file and one (set of) info file(s) per
+package.  The @file{man} subdirectory typically contains documentation
+sources, separated by package.  (It does not contain @file{man(1)}
+pages, as Emacs provides very few of them.)
+
+There are several standard package hierarchies, and administrators can
+configure others at build time, while users can configure others at run
+time.  The standard system hierarchies are all subdirectories of an
+@c #### This is possibly incorrect usage of "installation root."
+XEmacs installation root, typically @file{/usr/local/lib/xemacs/}.
+These are the @file{xemacs-packages}, @file{mule-packages},
+@file{infodock-packages}, and @file{site-packages} hierarchies.  Each
+has the structure described above, but the purposes differ.  The
+@file{xemacs-packages} is the normal place for installing ``official''
+packages and many third-party libraries.  Unfortunately, it is not yet
+quite possible to read libraries containing international characters
+with a non-Mule XEmacs, so such libraries are sequestered in the
+@file{mule-packages} hierarchy.  Some packages are compatible only with
+the Infodock development environment, and they will be installed in the
+@file{infodock-packages} hierarchy.  The @file{site-packages} hierarchy
+is for packages not distributed by XEmacs.org, typically locally
+developed.
+
+Packages are in principle supposed to be XEmacs version-independent, but
+if such dependencies are unavoidable, additional standard package
+hierarchies may be installed under version directories, @emph{e.g.}
+@file{/usr/local/lib/xemacs-21.4.6/}.
+
+Users who do not have sufficient privilege to install packages in the
+system hierarchies may install package hierarchies under @file{~/.xemacs}.
+At present only the @file{xemacs-packages}, @file{mule-packages}, and
+@file{site-packages} hierarchies are supported, but it might make sense to
+extend this to support @file{infodock-packages} hierarchies in the future.
+
+The package hierarchies are not searched directly for libraries to be
+loaded; this would be very costly.  Instead, the hierarchies are ordered
+according to certain rules, and searched for package lisp directories at
+invocation.  These directories are added to the general
+@code{load-path}.  As usual, it is @code{load-path} that is searched at
+run-time.  This approach is somewhat costly at initialization, but
+results in a very ``clean'' @code{load-path}.
+
+The order of search can be changed at build time by specifying the
+@samp{--package-path} option to @file{configure}, or at run-time by
+specifying the @code{EMACSPACKAGEPATH} environment variable.
+@xref{Packages,,,xemacs}.
+
+@c #### The following description is quite possibly inaccurate.
+@c Please, Michael, write some specs up!
+The default order of search is hierarchically determined.  First, the
+roots are ordered.  The @dfn{early} roots are the user-specific roots,
+typically @file{~/.xemacs}.  The @dfn{late} roots are the system roots,
+typically @file{/usr/local/lib/xemacs-21.4.6} and
+@file{/usr/local/lib/xemacs}, in that order.  All hierarchies for a
+given root are searched for package Lisp directories, which are appended
+to @code{load-path} in the order found.  Then the search proceeds to the
+next root, whose results will be appended to the @code{load-path}
+generated by previous roots.
+
+Second, the hierarchies below each root are searched in the order
+@file{site-packages}, @file{infodock-packages}, @file{mule-packages},
+then @file{xemacs-packages}.
+
+In each hierarchy there should be a @file{lisp} subdirectory, containing
+directories named for the packages.  Each package's Lisp libraries thus
+are contained in a directory of the form
+@var{root}/@var{hierarchy}/lisp/@var{package}/.
+
+With such a complex search algorithm, the possibility of libraries being
+shadowed by another library with the same name is quite real.  There are
+two considerations here.  First, every XEmacs package contains certain
+libraries with constant names.  These are
+
+@table @file
+@item _pkg.el
+Lisp code to inform the package administration system about the package
+
+@item auto-autoloads.el
+Lisp code to set up autoloaded functions and variables that may be
+needed at load time
+
+@item custom-load.el
+definitions of configuration variables for use with the Customize
+system.
+@end table
+
+They are special-cased, because the way they are used prevents shadowing
+from being an issue.
+
+Second, it is possible that multiple copies of some library, or
+different libraries with the same name, are installed in various places
+in the hierarchies.  To detect such shadows, use
+@code{list-load-path-shadows}.
+
+Finally, note that most basic Emacs functionality, including most of the
+Lisp API, is implemented in Lisp libraries.  Because they use internal
+reserved APIs that are subject to change according the needs of the
+developers, these libraries are distributed with the XEmacs binary, and
+are called @dfn{core Lisp libraries}.  Most core Lisp libraries are
+``preloaded'' into the Emacs binary and in normal usage are never
+explicitly loaded.  However, they can be explicitly loaded, and if so
+they are searched on @code{load-path}.
+@c #### Is this correct?  It is not for C-h f, for example.
+Furthermore, functions such as @code{locate-library} will also search on
+the @code{load-path}.  The searching takes place under somewhat
+different rules from those used for packaged Lisp.  It is probably
+easiest to think of the package hierarchy searching algorithm as
+receiving a @code{load-path} initialized to the core Lisp directories.
+
+
+@node The Library Maintainer View, The Package Release Engineer View, The User View, Package Overview
+@section The Library Maintainer View
+
+From the library maintainer's viewpoint, the advantages to the @xpms{}
+stem from the convenience to the user of installation and upgrade.
+Since an installed package automatically registers its entry points via
+autoload and its configuration variables with the Customize system,
+configuration FAQs are reduced.  When it's easy to upgrade, users learn
+to try @samp{Tools | Packages | Update Installed Packages} before
+posting a FAQ whose answer is ``long since fixed, please upgrade.''
+
+This comes at some cost, as the library maintainer needs to arrange that
+the package be installed in a directory structure that satisfies the
+requirements of the @xpms{}.  Autoload cookies and defcustoms must also
+be added to existing libraries.  The @xpms{} provides infrastructure to
+assure that all of these annoyances need only be dealt with once.  The
+autoload cookies and defcustoms are beyond the scope of this chapter, but
+most maintainers of modern packages are already familiar with these
+mechanisms.
+
+The @xpms{} may be divided into the @dfn{infrastructure} common to all
+packages, and the package-specific @dfn{control files}.  The
+infrastructure supports global builds, installation, and generation of
+the ``sumo'' bundles of packages, as well as generation of individual
+packages.  The package control files describe the structure of the
+package's source tree and provide administrative information.
+
+@menu
+* Infrastructure::              Global Makefiles and common rules.
+* Control Files::               Package-specific Makefiles and administrative files.
+* Obtaining::                   Obtaining the @xpms{} and required utilities.
+@end menu
+
+@node Infrastructure, Control Files, , The Library Maintainer View
+@subsection Infrastructure
+
+In order to get the greatest benefit from the @xpms{}, a library
+maintainer should place the package sources in an appropriate place in
+the XEmacs source package hierarchy, and arrange to have the source
+package imported into the XEmacs CVS repository.
+@c #### the parenthetical remark should go to "issues."
+(We realize that the
+latter requirement can be quite burdensome.  We are working on ways to
+remove this requirement, but for the present it remains necessary.)  The
+library maintainer must also keep sources for any packages his/her
+package requires.  This requirement is somewhat burdensome, but unlikely
+to be relaxed because of the implementation of compilation of macros in
+Emacs Lisp.  Macros cannot be called by compiled Lisp (the macro
+expansion, which is always known at compile time, is inlined), so the
+source of the macro must be loaded before compiling the called function.
+
+The source package hierarchy may be rooted anywhere.  The CVS module is
+called ``packages,'' so we will refer to the top directory of the source
+package hierarchy as ``the @file{packages} directory.''  The
+@file{packages} directory contains two source subdirectories,
+@file{xemacs-packages} and @file{mule-packages} (for convenience in
+segregating the packages which depend on Mule, as they will cause
+load-time errors in a non-Mule XEmacs).  Each subdirectory contains many
+package source directories, whose internal structure is not specified.
+That structure is left up to the convenience of the library maintainers.
+The requirements on the top directory of an individual package source
+tree are given below, @ref{Control Files}.
+
+The @file{packages} directory contains some auxiliary Lisp libraries
+used in the compilation and packaging process.  The content of these
+libraries is of interest primarily to the packaging engineers, @ref{The 
+Package Release Engineer View}.
+
+Finally, the @file{packages}, @file{packages/xemacs-packages}, and
+@file{packages/mule-packages} directories contain @file{Makefile}s and
+include files to control the package creation process.  The
+@file{Makefile}s in @file{packages/xemacs-packages} and
+@file{packages/mule-packages} simply define the default sets of known
+packages and include @file{../iterate.rules}, which implements recursive
+building of all target packages.
+
+The @samp{make} infrastructure in @file{packages} includes
+
+@table @file
+@item Makefile
+controls building of individual packages, local installation, and
+bundling of ``sumo'' tarballs
+
+@item iterate.rules
+controls recursive builds of multiple packages
+
+@item meta-iterate.rules
+This is used by higher-level subdirectories that do not directly
+contain packages.  Subdirectories directly containing packages should
+use iterate.rules instead.
+
+@item XEmacs.rules
+provides the rules for building and packaging.  Included by all package
+@file{Makefile}s.
+
+@item Local.rules
+provides local configuration, such as installation targets and staging
+directories, as well as a number of kludges (many now obsolete) required
+for building packages on the Windows platform.
+
+@item Local.rules.template
+a template for Local.rules, liberally commented
+
+@item Local.rules.mk
+consistency checking for @file{Local.rules}, included by both the
+top-level @file{Makefile} and by @file{XEmacs.rules}.
+
+@item Local.rules.inc
+a file to @code{include} in package @file{Makefile}s to be able to get
+at variables in @file{Local.rules} @emph{before} including
+@file{XEmacs.rules}. 
+
+@c #### Add to "issues"
+@item package-compile.el
+compile environment (@emph{e.g.}, load-path) setup.
+@end table
+
+Of these, only @file{Local.rules} and @file{package-compile.el} need to
+be modified by the library maintainer.  The changes to Local.rules
+affect only your environment.  This should need to be done only once
+when first preparing the source environment.  The necessary
+modifications to @file{package-compile.el} need to be done for each
+package and are discussed in the next section, @ref{Control Files}.
+
+
+@node Control Files, Obtaining, Infrastructure, The Library Maintainer View
+@subsection Control Files
+
+Each package source must contain a number of control files in the
+top-level directory.  These files in general can be created and then
+ignored, except for a few variables that need to be updated when new
+versions are released.  In most cases even adding, renaming, and
+removing library source files can be handled by generic rules.
+
+The package control files include
+
+@table @file
+@item Makefile
+Must set a few @file{make} variables used by the administrative
+utilities, and defines a couple of package-building targets to depend on
+appropriate targets defined generically in @file{XEmacs.rules}.  It may
+also provide various variables and rules to transform the source tree
+structure into that expected by the run-time system.
+
+@item package-info.in
+Provides a template for package information to be provided to the
+administrative utilities.  Static variables that are rarely changed
+(such as the package's name) are entered as literals.  Some variables
+are generated by the build process (build dates and MD5 checksums) and
+are automatically filled in.  Finally, some variables that change
+irregularly (dependences and even version numbers) are set as
+@file{make} variables in the @file{Makefile}.
+
+@item ChangeLog
+Not strictly required, but normally a ChangeLog will be added by the
+XEmacs package maintainer if different from the upstream maintainer.
+
+@item _pkg.el
+Generated.  Simply does a @code{package-provide} for the package.
+
+@item auto-autoloads.el
+Generated.  Read when XEmacs is initialized, and provides autoloads for
+defuns and other forms in the sources that are marked with an
+@dfn{autoload cookie} (@samp{;;;###autoload}.
+
+@item custom-loads.el
+Generated.  Read when XEmacs is initialized, and informs the Customize
+subsystem how to find the defcustom forms needed to create Customization
+forms for the usre configuration variables of the package.
+@end table
+
+
+@node Obtaining, , Control Files, The Library Maintainer View
+@subsection Obtaining the @xpms{} and Required Utilities
+
+Currently both the infrastructure for creating XEmacs packages and the
+package sources themselves are available only by CVS.  See
+@uref{http://www.xemacs.org/Develop/cvsaccess.html} for more
+intformation.
+
+The @xpms{} currently requires GNU @file{make}, and XEmacs, to build
+packages.
+
+
+@node The Package Release Engineer View, , The Library Maintainer View, Package Overview
+@subsection The Package Release Engineer View
+
+The XEmacs Package Release Engineer is responsible for keeping the
+system coherent.  The changes to @file{packages/package-compile.el} and
+@file{packages/xemacs-packages/Makefile} required to make the package
+available to others, and for building SUMO tarballs, @emph{etc}, are
+done by the Package Release Engineer, not individual library
+maintainers.
+
+The Package Release Engineer also maintains assorted infrastructure for
+actually making releases.  These are generally available for inspection
+in the @code{xemacs-builds} module in the CVS repository.
+
+@c #### To be completed.
+
+
+@node Package Terminology, Building Packages, Package Overview, Packaging
+@comment  node-name,  next,  previous,  up
+@heading Package Terminology:
+
+@subsection Libraries and Packages
+@cindex library
+@cindex package
+
+A Lisp @dfn{library} is a single loadable file containing Lisp code.  It
+may be in source or byte-compiled form.  A Lisp @dfn{package} is a set
+of one or more libraries, usually related to each other in some way,
+bundled with administrative information for convenient distribution.
+
+@subsection Package Flavors
+
+There are two main flavors of packages.
+
+@table @strong
+@item Regular Packages
+@cindex regular package
+A regular package is a set of Lisp libraries design to cooperate with
+one another.  A very complex example is Gnus.  One may not in general
+safely remove any of the component libraries.
+
+@item Single-File Packages
+@cindex single-file package
+A single-file package is a collection of thematically related but
+otherwise independent Lisp libraries.  These libraries are bundled
+together for convenience of the maintainers.  Usually individual
+libraries may be deleted at will without any loss of functionality of
+other libraries in the package.  However, we would recommend that you
+follow this rule of thumb: "When in doubt, don't delete".  If it's
+really that big a deal, request that the maintainers split the package
+into smaller aggregations.
+@end table
+
+@subsection Package Distributions
+@cindex package distributions
+@cindex binary packages
+@cindex source packages
+XEmacs Lisp packages are distributed in two ways.  @dfn{Binary packages}
+are used by system administrators and end users.  They are packaged in a
+form convenient for direct installation into an XEmacs package
+hierarchy.  @dfn{Source packages} are for developers and include all
+files necessary for rebuilding byte-compiled lisp and creating tarballs
+for distribution or installation.  This is all of the package author's
+source code plus all of the files necessary to build distribution
+tarballs (Unix Tar format files, gzipped for space savings).
+(Occasionally sources that are not relevant to XEmacs are usually
+renamed to @file{file.upstream}.)
+
+Currently, source packages are only available via CVS.  See
+@url{http://www.xemacs.org/Develop/cvsaccess.html} for details.
+
+The package distributions are also split according to major features
+required in XEmacs to support them.  At present there are @dfn{generic}
+packages, which can be loaded by @emph{any} XEmacs, and @dfn{Mule}
+packages, which @emph{require} Mule support or they will cause errors
+when loaded.  Note that there is no guarantee that a generic package
+will have any useful functionality in a minimally configured XEmacs.  As
+long as any XEmacs can successfully load the package's libraries
+(perhaps given other required Lisp libraries), it will be classified as
+generic.  At the present time only Mule packages need be treated
+specially, and even those only if they contain multibyte characters.
+
+
+@node Building Packages, Makefile Targets, Package Terminology, Packaging
+@comment  node-name,  next,  previous,  up
+@cindex building packages
+@cindex package building
+@heading Building Packages:
+Currently, source packages are only available via anonymous CVS.  See
+@url{http://www.xemacs.org/Develop/cvsaccess.html} for details of
+checking out the @file{packages} module.
+
+@subsection Prerequisites for Building Source Packages
+
+@table @code
+@item GNU cp
+@item GNU install 
+(or a BSD compatible install program).
+@item GNU make 
+(3.79 or later preferred).
+@item makeinfo 
+(4.2 from texinfo-4.2)
+@item GNU tar
+(or equivalent).
+@item GNU gzip
+(or equivalent).
+@item A properly configured @file{Local.rules} file.
+@ref{Local.rules File}.
+@end table
+
+And of course, XEmacs, 21.0 or higher.
+
+@section What You Can Do With Source Packages
+
+The packages CVS sources are most useful for creating XEmacs package
+tarballs for installation into your own XEmacs installations or for
+distributing to others.
+
+It should be noted that most of the package @file{Makefile}s do
+@emph{not} need to contain @emph{any} target rules.  Everything is
+handled from the @file{XEmacs.rules} file, located in the toplevel
+directory of the packages source tree.
+
+
+@node Makefile Targets, Local.rules File, Building Packages, Packaging
+@cindex package makefile targets
+@chapter @file{Makefile} targets
+The following targets can be used when running @code{make} to build the
+packages: 
+
+@table @samp
+@item mostlyclean
+Removes any documentation files that have been processed by @TeX{}.
+
+@item clean
+Does a @code{mostlyclean}, plus removes generated postscript and dvi
+files.  Also removes any generated .elc files, along with the normal
+.elc files in the package and HTML and .info files.
+
+@item distclean
+Use this when preparing a distribution.  It kills anything that can be
+rebuilt. 
+
+@item extraclean
+Does a @code{distclean} and also removes any backup files (@file{*~})
+and @file{core} files.
+
+@item package-info
+Creates the @file{package-info} file from the @file{package-info.in} and
+writes an entry in the @file{package-index} file.
+
+@item bindist
+Builds the package, including any Texinfo documentation (info format),
+writes an entry into the @file{package-index} file and builds a tarball
+of the package.  Also writes an entry into @file{setup-packages.ini}
+which is later used in the creation of netinstaller's @file{setup.ini}.
+
+@item install
+Builds and installs a package
+
+@item install-only
+Doesn't build anything, just installs it.
+
+@item autoloads
+Generate the package's @file{auto-autoloads.el} file.
+
+@item binkit
+Creates the directories needed for installation and copies the files
+there.  Basically this is an alias for @code{install-only}.
+
+@item html
+Builds the HTML versions of the documentation.
+
+@item compile
+Does most of the work.  Builds the elcs, infos at a minimum.
+@end table
+
+@subsection The targets that most people would be interested in would be:
+
+@itemize @bullet
+@item @code{all}
+@item @code{bindist}
+@item @code{html}
+@item @code{install}
+@item @code{install-only}
+@item @code{clean}
+@item @code{distclean}
+@end itemize
+
+
+@node Local.rules File, Creating Packages, Makefile Targets, Packaging
+@comment  node-name,  next,  previous,  up
+@cindex local.rules
+@heading The Local.rules File:
+This file in @file{packages} provides the @xpms{} with information about
+the local configuration and environment.  To create @file{Local.rules},
+simply copy @file{Local.rules.template} from that directory to
+@file{Local.rules} and edit it to suit your needs.
+
+These are the variables in @file{Local.rules} that you may need to
+provide values for:
+
+@table @samp
+@item XEMACS
+The name (and path if needed) of the XEmacs binary to use for building
+the packages.  The default is @code{xemacs}.
+
+@item XEMACS_21_5
+This will enable some, as yet, unimplemented features in XEmacs 21.5 and
+above.  For now leave this blank (the default) regardless of the XEmacs
+version you are using.
+
+@item BUILD_WITHOUT_MULE
+Set this to @samp{t} if you are using a non-Mule XEmacs.  The default is
+that this variable is not set (blank) which means to build @emph{with}
+Mule. 
+
+@item XEMACS_NATIVE_NT
+Set this to @samp{t} if you are using a native Microsoft Windows build
+of XEmacs (not a Cygwin build) to build the packages.
+@strong{N.B.} To Windows users, you still need the Cygwin environment to
+actually build the packages.
+
+@item XEMACS_INSTALLED_PACKAGES_ROOT
+Set this to the root of where you want the packages to be installed.
+Under this directory will hang @file{xemacs-packages} and
+@file{mule-packages}.  See @var{NONMULE_INSTALLED_PACKAGES_ROOT} and
+@var{MULE_INSTALLED_PACKAGES_ROOT}.  The default for this is
+@file{/usr/local/lib/xemacs}.  Which may not be what you want if you are
+developing XEmacs.  To quote the comments in
+@file{Local.rules.template}: 
+
+@quotation
+If you are developing XEmacs, you probably don't want to install the
+packages under /usr/local, which is where the stable, released version
+of XEmacs goes.  Instead, we suggest a layout as described in the base
+README file of recent versions of XEmacs.  In a nutshell, we suggest
+you put your source under /src/xemacs, and under this put the package
+sources in package-src/, and the installed packages in xemacs-packages/
+and mule-packages/.  If you do everything this way, you might want to
+set things as follows:
+
+XEMACS_INSTALLED_PACKAGES_ROOT = $@{XEMACS_PACKAGES_BASE@}/..
+
+which puts the xemacs-packages/ and mule-packages/ directories as sisters
+of the package-src/ directory, and you have to tell configure the location
+of the installed packages using `--package-path', something like
+
+configure --package-path=/src/xemacs/xemacs-packages;/src/xemacs/mule-packages
+@end quotation
+
+@item symlink
+The default is unset (blank).  If you set this to @samp{t} then
+@code{make install} will create a @dfn{symlink farm} of the installed
+packages under @var{XEMACS_INSTALLED_PACKAGES_ROOT}.  Obviously, for
+this to work, your system has to support symbolic links.  This is as
+close as you can get to @dfn{running in place} for the packages.
+
+@item NONMULE_INSTALLED_PACKAGES_ROOT
+This is where the non-Mule packages get installed to.  The default is
+@file{$@{XEMACS_INSTALLED_PACKAGES_ROOT@}/xemacs-packages}. 
+
+@item MULE_INSTALLED_PACKAGES_ROOT
+This is where the Mule packages get installed to.  The default is
+@file{$@{XEMACS_INSTALLED_PACKAGES_ROOT@}/mule-packages}. 
+
+@item NONMULE_PACKAGES
+A whitespace separated list of non-Mule packages to build/install.
+
+@example
+NONMULE_PACKAGES = bbdb gnus xemacs-base prog-modes
+@end example
+
+The value for this variable can also be the symbol
+@samp{xemacs-packages}, which means to build/install @emph{all} of the
+non-Mule packages.  The default is @samp{xemacs-packages}.
+
+@item MULE_PACKAGES
+A whitespace separated list of Mule packages to build/install.
+
+@example
+MULE_PACKAGES = mule-base leim locale
+@end example
+
+The value for this variable can also be the symbol
+@samp{mule-packages}, which means to build/install @emph{all} of the
+Mule packages.  The default is @samp{mule-packages}.
+
+@item PACKAGE_INDEX
+The name of the package-index file.  The default is @file{package-index}
+and you probably don't need to worry about changing it.
+
+@item INSTALL
+The path to a BSD compatible install program.  The default is
+@code{install -c}.
+
+@item TAR
+The path to GNU/tar.  The default is @code{tar}.
+
+@item BZIP2
+The path to the bzip2 compression program.  The default is unset
+(blank).  If this is set @file{.tar.bz2} archives will be built 
+@emph{in addition to} the @file{.tar.gz} archives.
+
+@item EXCLUDES
+For things that you @emph{don't} want to go into the package tarballs.
+It takes the same format as GNU/tar's @code{--exclude} option.  The
+default is:
+
+@example
+EXCLUDES =					\
+	--exclude 'CVS'				\
+	--exclude 'RCS'				\
+	--exclude 'SCCS'			\
+	--exclude '*~'				\
+	--exclude '*.orig'			\
+	--exclude '*.rej'			\
+	--exclude '.\#*'
+@end example
+
+@item VANILLA
+Set to the XEmacs command line option that forces running in
+@dfn{vanilla} mode.  The default is @samp{-vanilla}.  You wouldn't ever
+need to alter this.
+
+@item BATCH
+How to put XEmacs into @dfn{batch} mode.  It also sets a couple of other
+things and in the normal course of events you wouldn't need to alter
+this from the default which is:
+
+@example
+BATCH = $(VANILLA) -batch -eval \
+        '(setq stack-trace-on-error t \
+               load-always-display-messages t \
+               load-ignore-out-of-date-elc-files t \
+               load-show-full-path-in-messages t)'
+@end example
+
+@item MAKEINFO
+The path to @code{makeinfo}.  The default is @samp{makeinfo}
+
+@item INSTALL_HTML
+Set this to @samp{t} if you want to install HTML versions of the Texinfo
+documentation.  The default is unset (blank).
+
+@item TEXI2HTML
+The path to the program that can convert Texinfo source to HTML.  The
+default is @code{texi2html}.
+
+@item TEXI2DVI
+The path to the program that can convert Texinfo source to DVI.  The
+default is @code{texi2dvi}
+
+@item DVIPS
+The path to the program that can convert DVI to Postscript.  The default
+is @code{dvips}
+
+@item TEXI2PDF
+The path to the program that can convert Texinfo source to PDF format.
+The default is @code{texi2pdf}.
+
+@item TEX
+The path to @TeX{}.  The default is @code{tex}
+
+@item MSGFMT
+The path to msgfmt.  The default is @code{msgfmt}
+
+@item RCOPY
+The path to your copy command (GNU cp).  The default is dependent on
+whether or not @var{symlink} is set (@samp{t}).
+
+If @var{symlink} is unset (blank), @var{RCOPY}'s default is 
+@code{cp -af}.  If @var{symlink} is set (@samp{t}), @var{RCOPY}'s
+default is @code{cp --force --recursive --symbolic-link}.
+@end table
+
+It should be noted that in most cases the defaults should be fine.  Most
+people will probably only need to alter:
+
+@itemize @bullet
+@item @var{XEMACS_INSTALLED_PACKAGES_ROOT}
+@item @var{NONMULE_INSTALLED_PACKAGES_ROOT}
+@item @var{MULE_INSTALLED_PACKAGES_ROOT}
+@item @var{NONMULE_PACKAGES}
+@item @var{MULE_PACKAGES}
+@end itemize
+
+@node Creating Packages, Documenting Packages, Local.rules File, Packaging
+@comment  node-name,  next,  previous,  up
+@cindex creating packages
+@chapter Creating Packages:
+Creating a package from an existing Lisp library is not very difficult.
+
+In addition to the Lisp libraries themselves, you need a
+@ref{package-info.in} file and a simple @ref{Makefile}.  The rest is
+done by @file{XEmacs.rules}, part of the packaging system
+infrastructure.
+
+@menu
+* package-info.in::             package-info.in
+* Makefile::                    @file{Makefile}
+@end menu
+
+@node package-info.in, Makefile,,Creating Packages
+@chapter package-info.in
+@cindex package-info.in
+@cindex package-info
+@file{package-info.in} contains information that gets injected into the
+@file{package-index} file when @code{make bindist} is run.  Here is a
+real world example from the xemacs-base package (a description of each
+field follows the example):
+
+@example
+(xemacs-base
+  (standards-version 1.1
+   version VERSION
+   author-version AUTHOR_VERSION
+   date DATE
+   build-date BUILD_DATE
+   maintainer MAINTAINER
+   distribution xemacs
+   priority high
+   category CATEGORY
+   dump nil
+   description "Fundamental XEmacs support, you almost certainly need this."
+   filename FILENAME
+   md5sum MD5SUM
+   size SIZE
+   provides (add-log advice-preload advice annotations assoc case-table chistory comint-xemacs comint compile debug ebuff-menu echistory edmacro ehelp electric enriched env facemenu ffap helper imenu iso-syntax macros novice outline passwd pp regexp-opt regi ring shell skeleton sort thing time-stamp timezone tq xbm-button xpm-button)
+   requires (REQUIRES)
+   type regular
+))
+@end example
+
+@subheading Description of the Fields in @file{package-info.in}:
+@table @samp
+@item NAME
+The name of the package.  In the case of the example it is
+@samp{xemacs-base}. 
+
+@item standards-version
+Part of the internal package infrastructure, its value should always be
+@samp{1.1}.  Do not change this.
+
+@item version
+This is the XEmacs package version number of the package.  It is set
+from the @file{Makefile} variable @var{VERSION}.  This is something that
+the XEmacs Package Release Engineer deals with so there is no need for a
+package maintainer to touch it.  In @file{package-info.in} just put the
+place-marker, @samp{VERSION} here.
+
+@item author-version
+This is the package's internal, or @samp{upstream} version number if it
+has one.  It is set from the @file{Makefile} variable
+@var{AUTHOR_VERSION}. 
+
+@item date
+This is the date of the last change made to the package.  It is
+auto-generated at build time, taken from the package's toplevel
+@file{ChangeLog}. 
+
+@item build-date
+The date the package was built.  It is auto-generated.
+
+@item maintainer
+This is the name and email address of the package's maintainer.  It is
+taken from the @file{Makefile} variable @var{MAINTAINER}.
+
+@item distribution
+An unused field, leave as @samp{xemacs}
+
+@item priority
+An unused field, can be any of @samp{high}, @samp{medium}, or
+@samp{low}. 
+
+@item category
+The @samp{category} of the package.  It is taken from the
+@file{Makefile} variable @var{CATEGORY} and can be either
+@samp{standard} for non-Mule packages, or @samp{mule} for Mule
+packages.  The is also provision for @samp{unsupported} in this field
+which would be for packages that XEmacs.org do not distribute.
+
+@strong{N.B.} As yet, the @xpms{} does @emph{not} support this type of
+package.  It will in the future.
+
+@item dump
+Unused.  Always @samp{nil}
+
+@item description
+A free form short description of the package.
+
+@item filename
+The file name of the package's binary tarball.  It is generated at build
+time by @code{make bindist}.
+
+@item md5sum
+The MD5 message digest of the package's binary tarball.  Generated at
+build time by @code{make bindist}.
+
+@item size
+The size in bytes of the package's binary tarball.  Generated at build
+time. 
+
+@item provides
+A whitespace separated list of @emph{all} the features the package
+provides.  Surround the list with parens.
+
+@item requires
+Taken from the @file{Makefile} variable @var{REQUIRES}.  It is a list of
+all the package's dependencies, including any macros and defstructs that
+need to be inlined.
+
+@samp{REQUIRES} cannot be correctly computed from the calls to
+@code{require} in the package's library sources.  @samp{REQUIRES} is
+used to ensure that all macro and defstruct definitions used by the
+package are available at build time.  This is not merely a matter of
+efficiency, to get the expansions inlined.  In fact, it is
+@emph{impossible} to call a macro by name in byte-compiled Emacs Lisp
+code.  Thus, if the macro expansion is not inlined, the call will result
+in an error at run-time!  Thus, packages providing libraries that would
+be loaded because of autoload definitions must also be included.
+
+@item type
+Can either be @samp{regular} for a regular package, or
+@samp{single-file} for a single file package.
+
+@strong{N.B.} This doesn't refer to the number of lisp files in a
+package.  A single-file package can have multiple lisp files in it.
+@xref{Package Terminology}.
+@end table
+
+The fields in @file{package-info.in} that need to be changed directly
+are:
+
+@itemize @bullet
+@item NAME
+@item description
+@item provides
+@item type
+@end itemize
+
+Everything else is either set from the appropriate @file{Makefile}
+variable, is auto-generated at build time, or is static.
+
+@node Makefile,,package-info.in,Creating Packages
+@chapter @file{Makefile}
+@cindex Makefile, package
+@cindex package Makefile
+The @file{Makefile} is quite stylized.  The idea is similar to an
+@file{Imakefile} or an @code{automake} file: the complexity is hidden in
+generic rules files, in this case the @file{XEmacs.rules} include file
+in the top directory of the packages hierarchy.
+
+It is important to note that the XEmacs used to compile packages is
+the bare minimum: it is called with the @samp{-no-autoloads}.  This
+means that anything not dumped into XEmacs by default needs to be
+specified in the @samp{REQUIRES} variable (for packaged Lisp) or in
+some cases the @samp{PRELOADS} (autoloads used in libraries mentioned
+in @samp{PRELOADS}).
+
+There isn't much to an @xpms{} @file{Makefile}, basically it just
+contains a few @file{Makefile} variables and that's it.  See the
+example. 
+
+Here is a real world example, from the @samp{build} package:
+
+@example
+# Makefile for build lisp code
+
+# This file is part of XEmacs.
+
+# XEmacs is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2, or (at your option) any
+# later version.
+
+# XEmacs is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with XEmacs; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+# For the time being, remove MULE_ELCS from the all dependencies if
+# building without Mule.
+
+VERSION = 1.10
+AUTHOR_VERSION = 2.02
+MAINTAINER = Adrian Aichner <adrian@@xemacs.org>
+PACKAGE = build
+PKG_TYPE = regular
+REQUIRES = xemacs-base pcl-cvs dired w3 prog-modes
+CATEGORY = standard
+
+ELCS = build.elc build-report.elc
+
+STANDARD_DOCS = t
+
+include ../../XEmacs.rules
+@end example
+
+Most packages don't need any more than what you see above.  It is
+usually @emph{not} necessary to specify any special @file{Makefile}
+rules.  Everything is handled from the @file{*.rules} files in the
+toplevel of the package source hierarchy.
+
+Of course, with that said, there are always exceptions to the rule.  If
+you think that your package will need some special @file{Makefile}
+hackery contact the @email{xemacs-beta@@xemacs.org, XEmacs developers}.
+We distribute over 100 packages so the chances are good that you won't
+be the first to need such hackery and it is probably already catered
+for. 
+
+@subheading @file{Makefile} Variables Explained:
+A number of @file{make} variables are defined by the @xpms{}.  Some are
+required, others are optional.  Of course your @file{Makefile} may
+define other variables for private use, but you should be careful not to
+choose names that conflict with variables defined and used by the
+@xpms{}.
+
+The required variables are described in the table below.
+The corresponding field names for @file{package-info.in}, where
+relevant, are given in parentheses.
+
+@c This is the canonical place for this information.  If there is
+@c unnecessary duplication with package-info.in documentation, shorten
+@c that and leave this full-length.
+@table @samp
+@item VERSION
+(version)
+The version of the XEmacs package, a numeric literal (a decimal
+fixed-point number with two-places of precision).  The only person who
+ever needs to touch this is the XEmacs Packages Release Engineer.
+
+@item AUTHOR_VERSION
+(author-version)
+The upstream author's version, an uninterpreted literal.
+
+@item MAINTAINER
+(maintainer)
+A literal containing the XEmacs package's maintainer and his/her email
+address.
+
+@item PACKAGE
+The name of the package, a literal
+
+@item PKG_TYPE
+The type of package, a literal containing either @samp{regular} for
+regular packages, or @samp{single-file} for single-file packages.  This
+should feed the @samp{type} field in @file{package-info.in}, but
+currently it doesn't.
+
+@strong{N.B.} @samp{single-file} here does @emph{not} refer to the
+number of lisp files in a package. @xref{Package Terminology}.
+
+@item CATEGORY
+(category)
+A literal, either @samp{standard} or @samp{mule}.  The non-Mule packages
+are @samp{standard} and the Mule packages are, you guessed it,
+@samp{mule}.  This field is used at package installation time as part of
+the process of determining where a package should be installed to.
+
+@item REQUIRES
+(requires)
+A list of packages required to correctly build this package.
+
+Note that the usual form in @file{package-info.in} already has the
+parentheses, so the @file{make} variable should be set to a
+space-separated list of package names @emph{not} enclosed in
+parentheses.
+
+The list is of @emph{packages}, not @emph{libraries}, as would
+ordinarily be provided to the Lisp @code{require} function.
+
+@samp{REQUIRES} cannot be correctly computed from the calls to
+@code{require} in the package's library sources.  @samp{REQUIRES} is
+used to ensure that all macro and defstruct definitions used by the
+package are available at build time.  This is not merely a matter of
+efficiency, to get the expansions inlined.  In fact, it is
+@emph{impossible} to call a macro by name in byte-compiled Emacs Lisp
+code.  Thus, if the macro expansion is not inlined, the call will result
+in an error at run-time!  Thus, packages providing libraries that would
+be loaded because of autoload definitions must also be included.
+
+@item ELCS
+The list of the byte-compiled Lisp files used by the package.  These
+files and their @file{.el} versions will be included in the binary
+package.  This variable determines which libraries will be
+byte-compiled.  These libraries are also deleted by @samp{make clean}.
+
+Note there is no sanity-checking done on this variable.  If you put
+@samp{.el} files in here, they will not be compiled and they @emph{will}
+be deleted by @samp{make clean}.  You would surely be very distressed if
+that happened, so be very careful.  If this variable is left empty, none
+of your Lisp code will be compiled or packaged.  This would be a less
+than amusing surprise, too.
+
+We don't consider this a feature, of course.  Please do submit code to
+do sanity checking to @email{xemacs-patches@@xemacs.org}.
+@end table
+
+Optional, but commonly used variables are explained below.
+
+@table @samp
+@item ELCS_1
+A list of extra byte-compiled Lisp files used by the package to be
+installed in a subdirectory of the package's lisp directory.  The same
+care should be taken with this as with @var{ELCS} in regard to
+@code{make clean}.
+
+@item ELCS_1_DEST
+The name of the subdirectory for the @var{ELCS_1} files to be installed
+to.  Be sure to include @samp{$(PACKAGE)/} as part of the name.
+
+@example
+ELCS_1_DEST = $(PACKAGE)/extra
+@end example
+
+Would put the @var{ELCS_1} files for the package, @samp{foo} into
+@file{xemacs-packages/lisp/foo/extra/}. 
+
+@item EARLY_GENERATED_LISP
+For additional @file{.el} files that will be generated before any
+byte-compiling happens.  Use this for @samp{autoload-type} files.  You
+must write @file{Makefile} rules to build these files.
+
+@item GENERATED_LISP
+For additional @file{.el} files that will be generated at
+byte-compilation time.  You must write @file{Makefile} rules to build
+these files.
+
+@item PRELOADS 
+This is used if you need to pass extra command line arguments to
+XEmacs to build the package.  For instance, a specification for
+loading libraries containing macros before compiling the Lisp in the
+package.  This is spliced directly into the invocation of XEmacs for
+byte-compilation, so it must contain the @samp{-l} flag for XEmacs:
+
+@example
+PRELOADS=-l ./apackage-macros.el -l ../bpackage/lisp/bpackage-macros.el
+@end example
+
+Preloads are loaded before @file{package-compile.el}, so the
+@var{load-path} is minimal.  Therefore @samp{PRELOADS} must specify a
+full path to packaged Lisp.  The base @var{load-path} does include the
+core Lisp directory, so core libraries are found.
+
+@item AUTOLOAD_PATH
+The subdirectory in the package's source tree where the @file{.el} files
+reside.  This is where the @file{auto-autoloads.el} file will be placed.
+
+@strong{N.B.} There is no need to use this variable if the @file{.el}
+files are in the package's toplevel directory.  @var{AUTOLOAD_PATH}
+defaults to @samp{.}.
+
+@item PACKAGE_SUPPRESS
+Place calls to @code{package-suppress} here to indicate Lisp libraries
+that should only be available to particular versions of XEmacs.  For
+example: 
+
+@example
+PACKAGE_SUPPRESS = \
+ (package-suppress 'xemacs-base \"regexp-opt\" '(emacs-version>= 21 5 11)) \
+ (package-suppress 'xemacs-base \"easy-mmode\" '(emacs-version>= 21 5 11))
+@end example
+
+@c Change this when Ben has committed the WS that implements
+@c `package-suppress' --SY.
+@strong{N.B.} This feature has not yet been implemented in XEmacs yet.
+It will appear in an upcoming version of XEmacs 21.5.
+
+@item STANDARD_DOCS
+Set this to @samp{t} if your package's Texinfo source file is located in
+the package's toplevel directory @emph{and} is named
+@file{$(PACKAGE).texi}. 
+
+@item EXPLICIT_DOCS
+Use this to explicitly list Texinfo sources that @emph{aren't} in the
+package's toplevel directory.  For example:
+
+@example
+EXPLICIT_DOCS = texi/$(PACKAGE).texi
+@end example
+
+See @var{DOCS_TXI_EXTENSION} and @var{DOCS_TEXINFO_EXTENSION} if you
+don't use the @file{.texi} file extension on your Texinfo sources.
+
+@item EXTRA_TEXI_FILES
+List here extra Texinfo source files needed to build your
+documentation.  Whatever is listed here is passed on to @code{makeinfo}
+as a dependency.
+
+@item EXTRA_HTML_FILES
+Use this to specify extra @file{.html} files to output.
+
+@item DOCS_TEXINFO_EXTENSION
+Set this to @samp{t} if your Texinfo source files have a @samp{.texinfo}
+extension.
+
+@item DOCS_TXI_EXTENSION
+Set this to @samp{t} if your Texinfo source files have a @samp{.txi}
+extension. 
+
+@item EXTRA_DOC_FILES
+Files listed here will be installed to @file{.../man/$(PACKAGE)/}.  For
+example, you might want to list @TeX{} files or @file{.eps} files here.
+
+@item EXTRA_SOURCES
+Other files (such as extra Lisp sources or an upstream @file{Makefile})
+that are normally placed in the installed Lisp directory, but not
+byte-compiled.  These files are @emph{preserved} by the @samp{clean}
+targets.
+
+@item LIBSRC_FILES
+For files that need to be installed to @file{lib-src/$(PACKAGE)/}.  If
+the files listed here need to be built you will have to write
+@file{Makefile} rules to do so.
+
+@item DATA_FILES
+Any data files, such as pixmaps, READMEs, and ChangeLogs.  These must be
+paths relative to the root of the package's source tree.  These files
+will be copied to @samp{$(DATA_DEST)} for installation.  Any directory
+component of the path for a file will be stripped, so that the
+file ends up in @samp{$(DATA_DEST)}, not in a subdiredtory.
+
+@item DATA_DEST
+The directory where the files in @var{DATA_FILES} are installed to.  It
+is a subdirectory of the installed @file{etc/} directory.  Be sure to
+prefix this value with @samp{$(PACKAGE)}, for example:
+
+@example
+DATA_DEST = $(PACKAGE)/foo
+@end example
+
+Would put files into @file{.../etc/$(PACKAGE)/foo/}.
+
+@item DATA_1_FILES ... DATA_35_FILES
+For data files that need to go into a different directory from
+@var{DATA_DEST}. 
+
+@item DATA_1_DEST ... DATA_35_DEST
+The name of the subdirectory for files specified in @var{DATA_n_FILES}.
+And like @var{DATA_DEST}, be sure to prefix @samp{$(PACKAGE)} to the
+value of these variables.
+
+@item EXTRA_DEPENDENCIES
+For additional files to build that aren't appropriate to place in any
+other @file{Makefile} variable.  You will need to write @file{Makefile}
+rules to build these files.
+@end table
+
+@section @file{package-compile.el}
+@cindex package-compile.el
+@cindex compiling packages
+The @xpms{} does not automatically become aware of your package simply
+because there is a new subtree.  If any package, including your own,
+requires any of your files, it must be explicitly added to the compile
+environment or loads/requires that search load-path will fail.  The
+changes that need to be made are
+
+@table @strong
+@item an entry in @code{package-directory-map}
+This tells the @xpms{} which distribution (currently
+@samp{xemacs-packages} or @samp{mule-packages}) your package is found
+in.  It then looks in the distribution subdirectory whose name is the
+same as the package's.
+
+@item an entry in the @code{cond} in @code{package-name-to-directory}
+This is optional; it is necessary only if you keep your Lisp code
+somewhere other than the top-level directory of the package's source
+tree, eg, in @file{packages/xemacs-packages/@var{PACKAGE}/lisp}.
+@end table
+
+This only needs to be done once, when the package is first added to the
+@xpms{}.  (Well, when you randomly change the subdirectory layout, too.)
+Your changes to @file{package-compile.el} must be cleared and checked in
+by the XEmacs Package Release Engineer before your package will build
+correctly from a fresh checkout.
+
+This is unfortunate; it works pretty well once set up, but can cause
+confusion when first building a package in the @xpms{} context.  In
+particular, if the @code{package-directory-map} entry for a required
+package, including the package itself, is not found, the necessary
+requires will not be executed by @file{package-compile.el}.  If
+required functions are executed (under @code{eval-when-compile}),
+they won't be found and the compile will fail.  If required function
+is actually a macro, the byte compiler will not recognize that,
+compile a function call to the macro.  This will cause a run-time
+error because the byte-code interpreter does not know how to execute
+macros.  (Macros can always be expanded at compile-time, and this is
+more efficient.)
+
+If your package keeps some or all Lisp code somewhere other than the top
+directory, then an entry in @code{package-name-to-directory} is also
+necessary, or requires will fail, leading to the problems just described.
+
+@node Documenting Packages, Issues, Creating Packages, Packaging
+@comment  node-name,  next,  previous,  up
+@cindex documenting packages
+@heading Documenting Packages:
+
+@c #### Add a documentation section to Internals, and xref here.
+Some random notes on documenting your package.
+
+Do write a Texinfo file.  It's not that hard to do basically, and even
+using the more advanced features of Texinfo soon become natural.  For a
+start, just grab the template @file{Samples/package.texi} from the
+@xpms{} source tree, and drop your current README into the Top node.  At
+least this way your documentation will be accessible from the standard
+Info readers.  Next, try to add lots of cross-referencing and logical
+markup, and then node structure.
+
+Address both end users and developer issues.  You may not be the
+maintainer forever.
+
+If you are maintaining a package that is part of the GNU Emacs
+distribution, you'll likely find that you occasionally synchronize your
+package with the GNU Emacs sources.  When you synch a file,
+conventionally you should place a comment just above the standard
+@code{;;; Code} comment that looks like this:
+
+@example
+;; Synched with:
+;; GNU Emacs 21.1, 2002-02-08, Stephen Turnbull <stephen@@xemacs.org>
+@end example
+
+This comment is a status flag; the ChangeLog doesn't really give the
+same information.
+
+Do maintain a detailed ChangeLog.
+
+@node Issues, , Documenting Packages, Packaging
+@section Issues
+
+To be completed.
+

@@ -1,0 +1,564 @@
+@c -*-texinfo-*-
+@c This is part of the SXEmacs Lisp Reference Manual.
+@c Copyright (C) 2005, 2006 Sebastian Freundt <hroptatyr@sxemacs.org>
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/media.info
+
+@node Media, Hash Tables, Display, Top
+@chapter Handling Media
+
+  This chapter describes a number of other features related to dealing
+with media streams (such as audio or video).
+
+  Because SXEmacs' developers are lazy guys, or just annoyed to
+re-invent a wheel, the current media facilities require a heap of other
+libraries which themselves depend on more atomic libraries and so
+forth.
+
+@menu
+* Prerequisites::		External library dependencies. 
+* Media Streams::		The concept of media streams.
+* Audio Devices::		Audio output facilities.
+* Media Threads::		Plugging a stream to an output device.
+@end menu
+
+
+
+@node Prerequisites
+@section Prerequisites --- What do I need to start?
+
+  In order to use MM features with SXEmacs you need at least two
+libraries.  One of which is responsible for handling different types of
+media files, that is parses them, demuxes them and decodes them to a raw
+form suitable for your audio hardware.  The other library cares for the
+actual audio output, that is takes some raw audio data and feeds it to
+your speakers (or somewhere else).
+
+@noindent
+In the land of ASCII-arts diagrams this would translate to:
+@example
++------------+   +-----------+   +-------------+  +------------+
+| media file |   | media lib |   |   SXEmacs   |  | audio lib  |  
+|------------|-->|-----------|-->|-------------|->|------------|->...
+| e.g.       |   | parser    |   | bind to var |  | connect to |
+| .wav  .mp3 |   | demuxer   |   | start/stop  |  | soundcard  |
+| .ogg  .mka |   | decoder   |   |             |  | and play   |
++------------+   +-----------+   +-------------+  +------------+
+@end example
+
+  As can be seen, MM features will not work if either a media lib or an
+audio lib is missing.  SXEmacs supports a bunch of libraries in either
+category.  We discuss the supported audio libraries, their properties
+and their availability first, afterwards we discuss the different media
+handling libraries.
+
+@noindent
+@iftex
+ {@bf The developers' recommendation is clearly to choose Polyp as the
+ audio library and FFmpeg as media library.}
+@end iftex
+@ifinfo
+The developers' recommendation is clearly to choose Polyp as the
+audio library and FFmpeg as media library!
+@end ifinfo
+
+@subsection Audio Library: OSS (Open Sound System)
+
+@itemize
+@item Availability: Linux and BSD systems only; ships with the linux kernel
+@item Dependencies: none
+@item Download:
+
+@url{http://www.kernel.org}
+
+@item Pros: easy consistent interface
+@item Cons: old, ugly, depends too much on hardware
+@item Known caveats with SXE: none
+@end itemize
+
+
+@subsection Audio Library: NAS (Network Audio System)
+
+@itemize
+@item Availability: Unix-wide
+@item Dependencies: X, OSS
+@item Webpage: @url{http://nas.codebrilliance.com/}
+@item Download:
+
+@url{http://nas.codebrilliance.com/nas/nas-1.7b.src.tar.gz}
+
+@item Pros: device independent, network-mode possible, mixing possible,
+small
+@item Cons: integrates to X, not recent, not very configurable
+@item Known caveats with SXE: none
+@end itemize
+
+
+@subsection Audio Library: ESD (the enlightenment sound daemon)
+
+@itemize
+@item Availability: Unix-wide
+@item Dependencies: libaudiofile; optional: ALSA
+@item Webpage: @url{http://developer.gnome.org/doc/whitepapers/esd/}
+@item Download:
+
+@url{ftp://ftp.gnome.org/pub/gnome/sources/esound/0.2/esound-0.2.36.tar.bz2}
+
+@item Pros:
+device independent (if used with ALSA), 
+network-mode possible, mixing possible, small
+@item Cons:
+high latency, not recent, not very configurable
+@item Known caveats with SXE: none
+@end itemize
+
+
+@subsection Audio Library: Polyp (the Polypaudio daemon)
+
+@itemize
+@item Availability: Unix-wide
+@item Dependencies: OSS, liboil, samplerate;
+optional: ALSA, libasyncns, sndfile
+@item Webpage: @url{http://0pointer.de/lennart/projects/polypaudio/}
+@item Download:
+
+@url{http://0pointer.de/lennart/projects/polypaudio/polypaudio-0.7.tar.gz}
+
+@url{svn co svn://0pointer.de/polypaudio/trunk polypaudio}
+
+@item Pros:
+device independent (if used with ALSA), 
+network-mode possible, mixing possible, multiple inputs, multiple
+outputs, low latency, very configurable, @emph{developers' choice}
+@item Cons:
+unstable with many simultaneous connections
+@item Known caveats with SXE: none
+@end itemize
+
+
+@subsection Audio Library: aRts (the analog realtime synthesizer)
+
+@itemize
+@item Availability: Unix-wide
+@item Dependencies: OSS, (KDE); 
+optional: ALSA, Jack, ESD, mas, NAS, libaudiofile, Qt, sgilibaudio
+@item Webpage: @url{http://www.arts-project.org/}
+@item Download:
+
+@url{ftp://ftp.kde.org/pub/kde/stable/latest/src/arts-1.5.2.tar.bz2},
+
+standalone version:
+@url{http://arts-project.org/download/arts-0.5.4.tar.gz}
+
+@item Pros:
+device independent (if used with ALSA or other sound servers), 
+network-mode possible, mixing possible, very flexible, very configurable
+@item Cons:
+standalone version discontinued, lots of processes, uses/needs MCOP
+@item Known caveats with SXE: none
+@end itemize
+
+
+@subsection Audio Library: Jack (a low-latency audio server)
+
+@itemize
+@item Availability: Unix-wide
+@item Dependencies: ALSA
+@item Webpage: @url{http://jackit.sourceforge.net/}
+@item Download:
+@url{http://prdownloads.sourceforge.net/jackit/jack-audio-connection-kit-0.100.0.tar.gz},
+@url{cvs -z3 -d:pserver:anonymous@@cvs.sourceforge.net:/cvsroot/jackit co jack}
+@item Pros:
+high accuracy, extreme low latency, device independent, mixing possible
+@item Cons:
+not network-aware
+@item Known caveats with SXE: not working
+@end itemize
+
+  JACK is a low-latency audio server, written for POSIX conformant
+operating systems such as GNU/Linux and Apple's OS X. It can connect a
+number of different applications to an audio device, as well as allowing
+them to share audio between themselves. Its clients can run in their own
+processes (ie. as normal applications), or can they can run within the
+JACK server (ie. as a "plugin").
+
+  JACK was designed from the ground up for professional audio work, and
+its design focuses on two key areas: synchronous execution of all
+clients, and low latency operation.
+
+
+@subsection Audio Library: ao (generic and portable audio output)
+
+@itemize
+@item Availability: Unix-wide
+@item Optional Dependencies: OSS, ALSA, polyp, esd, sunaudio, NAS
+@item Webpage: @url{http://www.xiph.org/ao/}
+@item Download:
+
+@url{http://downloads.xiph.org/releases/ao/libao-0.8.6.tar.gz},
+
+@url{svn co http://svn.xiph.org/trunk/ao ao}
+
+@item Pros:
+portable, wrapper library around system libraries
+@item Cons:
+@item Known caveats with SXE: none
+@end itemize
+
+  Libao is a cross-platform audio library that allows programs to output
+audio using a simple API on a wide variety of platforms. It currently
+supports Null output (handy for testing without a sound device), OSS,
+ALSA, polypaudio (next generation GNOME sound server), esd (EsounD or
+Enlightened Sound Daemon), AIX, Sun/NetBSD/OpenBSD, IRIX, NAS
+
+
+@subsection Audio Library: alsa (Advanced Linux Sound Architecture)
+
+@itemize
+@item Availability: Linux
+@item Dependencies: ALSA kernel modules
+@item Webpage: @url{http://www.alsa-project.org/}
+@item Download (user-space libs):
+
+@url{ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.0.10.tar.bz2}
+
+@item Pros:
+mature, SMP and thread-safe design
+@item Cons:
+only available under linux, needs kernel support
+@item Known caveats with SXE: none
+@end itemize
+
+
+
+@subsection Media Library: sndfile
+
+@itemize
+@item Availability: Unix-wide
+@item Dependencies: none
+@item Webpage: @url{http://www.mega-nerd.com/libsndfile/}
+@item Download:
+
+@url{http://www.mega-nerd.com/libsndfile/libsndfile-1.0.15.tar.gz}
+
+@item Maximally provided formats: 
+@item Notes:
+@item Known caveats with SXE: none
+@end itemize
+
+
+@subsection Media Library: ffmpeg
+
+@itemize
+@item Availability: Unix-wide
+@item Optional Dependencies: mp3lame, libogg, libvorbis, theora, faad,
+faac, xvid, x264, a52dec, libdts, amr_nb, amr_wb, amr_if2, Flac,
+libmatroska
+@item Webpage: @url{http://ffmpeg.sourceforge.net/}
+@item Download:
+
+@url{cvs -z3 -d:pserver:anonymous@@mplayerhq.hu:/cvsroot/ffmpeg co ffmpeg}
+
+@item Maximally provided formats: a52, ac3, adpcm, adx, .mp2, .mp3,
+Ogg/Vorbis, theora, AAC, xvid, mpeg1-video, mpeg-audio, h.264, h.263,
+h.263p, FLV, RealVideo 1.0, RealVideo 2.0, MPEG-4, WMV1, WMV2, SVQ,
+MJPEG, LJPEG, JPEGls, .jpeg, .png, .ppm, .pgm, YUV, .pbm, .pam, .bmp,
+Huffman-YUV, ASV, Snow, Sonic, DV captures, x264, GSM, Indeo2/3, TSCC,
+CSCD, nuppel-video, Qdraw, Qpeg, Loco, Fraps, Xvmc, MACE3/6, CLJR, ROQ,
+ROQ Dpcm, interplay video, interplay Dpcm, Xan-WC3, RPZA, Cinepak,
+MS-RLE, VQA, 8bps, SMC, flac, truemotion1/2, VMD-Video, VMD-Audio, ZMBV,
+Smacker, .dts, RealAudio-144, RealAudio-288, Qt-RLE, Cook, Truespeech,
+TTA, AVS, AMR Narrowband, AMR Wideband, ADPCM WAV, PCM/WAV,
+DVD-Subtitles, h.261, ASF, matroska, ShockWave Flash, Apple .mov, MP4,
+Westwood, V4L, V4L2, MPEG-PS, DV1394, RealMedia, RTP/RTSP, SGI .aiff,
+Flic, TTA
+@item Notes: Only recent CVS versions are fully supported
+@item Known caveats with SXE: none
+@end itemize
+
+  FFmpeg has always been a very experimental and developer-driven
+project. It is a key component in many multimedia projects and has new
+features added constantly. New, official "releases" are few and far
+between. In short, if you want to work with FFmpeg, you are advised to
+go along with CVS development rather than relying on formal
+releases. CVS snapshots work really well 99% of the time so people are
+not afraid to use them.
+
+@noindent
+Sample @samp{./configure}-line:
+@smallexample
+./configure --enable-shared --enable-static --enable-mp3lame \
+--enable-libogg --enable-vorbis --enable-theora --enable-faad \
+--enable-faadbin --enable-faac --enable-xvid --enable-x264 \
+--enable-a52 --enable-a52bin --enable-dts --enable-pp \
+--enable-amr_nb --enable-amr_wb --enable-amr_if2 \
+--enable-pthreads --enable-gpl
+@end smallexample
+
+
+@subsection Media Library: mad
+
+@itemize
+@item Availability: Unix-wide
+@item Dependencies: none
+@item Webpage: @url{http://www.underbit.com/products/mad/}
+@item Download:
+
+@url{ftp://ftp.mars.org/pub/mpeg/libmad-0.15.1b.tar.gz}
+
+@item Maximally provided formats: mpeg-audio .mpa, .mp2, .mp3
+@item Notes: seems discontinued, not recent
+@item Known caveats with SXE: none
+@end itemize
+
+  MAD is a high-quality MPEG audio decoder. It currently supports MPEG-1
+and the MPEG-2 extension to lower sampling frequencies, as well as the
+de facto MPEG 2.5 format. All three audio layers -- Layer I, Layer
+II, and Layer III (i.e. MP3) -- are fully implemented.
+
+  MAD does not yet support MPEG-2 multichannel audio (although it should
+be backward compatible with such streams) nor does it currently support
+AAC.
+
+
+
+@subsection Media Library: SoX
+
+@itemize
+@item Availability: Unix-wide
+@item Dependencies: none
+@item Webpage: @url{http://sox.sourceforge.net/}
+@item Download:
+
+@url{http://prdownloads.sourceforge.net/sox/sox-12.17.9.tar.gz}
+
+@item Maximally provided formats: raw, 8svx, SGI .aiff, Sun .au, .snd, AVR,
+GSM raw, HCOM, MAUD, mp3, TX-16w, .voc, ADPCM .vox, .wav, RIFX, ADPCM
+WAV, Ogg/Vorbis, A-law, .wve
+@item Notes: must do @samp{make install-lib}
+@item Known caveats with SXE: not sufficiently working
+@end itemize
+
+
+@subsection Media Library: xine
+
+@itemize
+@item Availability: Unix-wide
+@item Dependencies: none
+@item Webpage: @url{http://xinehq.de/}
+@item Download:
+
+@url{http://prdownloads.sourceforge.net/xine/xine-lib-1.1.1.tar.gz}
+
+@url{cvs -z3 -d:pserver:anonymous@@cvs.sf.net:/cvsroot/xine co xine-lib}
+
+@item Maximally provided formats: 
+@item Notes:
+@item Known caveats with SXE: not working
+@end itemize
+
+
+@subsection Media Library: gstreamer
+
+@itemize
+@item Availability: Unix-wide
+@item Dependencies: none
+@item Webpage: @url{http://gstreamer.freedesktop.org/}
+@item Download:
+
+@url{http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-0.10.4.tar.bz2}
+
+@url{cvs -z3 -d:pserver:anoncvs@@anoncvs.freedesktop.org:/cvs/gstreamer co gstreamer}
+
+@item Maximally provided formats: 
+@item Notes:
+@item Known caveats with SXE: not working
+@end itemize
+
+
+@subsection Built-in media file handling
+
+@itemize
+@item Availability: Unix-wide
+@item Dependencies: none
+@item Webpage: n/a
+@item Download: n/a
+@item Maximally provided formats: .wav, RIFX, Sun .au
+@item Notes: ugly and old
+@item Known caveats with SXE: very limited, very slow
+@end itemize
+
+
+
+@node Media Streams
+@section Media Streams
+
+  SXEmacs provides a common and opaque API to all of the above
+libraries.  Media files or streams are encapsulated into media stream
+objects, which behave equally whatever library is used to parse them.
+
+@noindent
+The fundamental function to create such media streams is
+@code{make-media-stream}.
+
+@defun make-media-stream from data
+Create a new media stream from @var{data}.
+@var{from} is a keyword and defines how @var{data} is
+interpreted:
+@code{:file} - @var{data} is the name of a file
+@code{:data} - @var{data} is a string with the stream data
+@end defun
+
+  Hereby, the media driver which is used in order to handle the
+resulting media stream is chosen automatically.  Portions of the data
+are passed to all available media APIs, that is all APIs which have been
+configured at compile time.  The first such API which parses the portion
+successfully is chosen as driver.
+
+@example
+(make-media-stream :file "/home/media/audio/Bloke.mp3")
+  @result{} #<media-stream :kind #<file "/home/media/audio/Bloke.mp3">
+#<media-substream :type #<audio mp3 (mp3), stereo, 44100 Hz, 16 Bit, 128
+kb/s>> driven by ffmpeg :author "Chris Franklin " :title: "Bloke " :year
+2000>
+@end example
+
+  Media stream objects contain information about where to find a medium,
+the characteristics (like number of channels, sample rate, resolution),
+which demuxer and which decoder to use, and some informational extras.
+They do not contain the medium itself nor a raw (i.e. undecoded) form
+nor portions of these.  Hence, if you want to use a media stream object
+after its creation you should make sure that it still exists.
+
+  Media streams usually consist of several substreams internally.  These
+substreams each represent a certain partition of the whole stream.  If
+you regard an ordinary movie DVD, the media stream with location
+@samp{/path/dvd-drive} would be made up of a substream which contains
+the motion picture, a substream which contains a language track, other
+audio track substreams which contain the further languages, possibly a
+substream for subtitles and so forth.
+
+@noindent
+Substreams cannot be accessed individually nor extracted.  This may
+change in the future.
+
+
+
+@node Audio Devices
+@section Audio Devices
+
+  Considering media stream objects as sources for multimedia playback,
+the targets are obviously X displays, buffers and soundcards.
+
+
+@node Media Threads
+@section Media Threads
+
+  Media threads can be thought of a way to plug a certain media stream
+into a certain output device.  Since SXEmacs merely supports audio
+output devices the only partition which is finally ``played'' is an
+audio substream.
+
+@c This changeset completely splits up the Thread and Stream types into trees. This
+@c allows to have several substreams embedded into a stream, respectively several
+@c subthreads can be started from a thread.
+
+The current structure looks like:
+
+@example
+                     up          up
+          +------------> Stream <------------+
+          |                 ^                |
+    first |                 | up             | last
+          v       next      |        next    v
+    substream1 <-----> substream2 <-----> substream3
+               prev               prev
+@end example
+
+Similarly for Threads:
+
+@example
+                     up          up
+          +------------> Thread <------------+
+          |                 ^                |
+    first |                 | up             | last
+          v       next      |        next    v
+    subthread1 <-----> subthread2 <-----> subthread3
+               prev               prev
+@end example
+
+
+To be precise, threads are the containers for the streams. Streams are stored
+(along with devices) inside threads, while substreams are stored inside
+subthreads. In source/sink language, a thread is the cable to plug a source
+(stream) to a sink (device).
+
+This brings us to:
+
+@example
+                     up  +========+  up
+                 ,-----> | Thread | <-----,
+                /        +--------+        \
+               /         | Stream |         \
+              /          | Device |          \
+             /           | State  |           \
+            /            | PState |            \
+           /             | Result |             \
+          /              +========+              \
+          |                   ^                  |
+    first |                   | up               | last
+          v                   |                  v
+   +==========+    next +==========+    next +==========+
+   |subthread1| <-----> |subthread2| <-----> |subthread3|
+   +----------+ prev    +----------+ prev    +----------+
+   |substream1|         |substream2|         |substream3|
+   |pthread_t1|         |pthread_t2|         |pthread_t3|
+   |privdata1 |         |privdata2 |         |privdata3 |
+   +==========+         +==========+         +==========+
+@end example
+
+Note: It is yet _not_ possible to specify different devices for each
+subthread. This will require another split of the device structure into
+a device+subdevice tree.
+
+
+
+@c moved from display.texi
+@defun play-sound sound &optional volume device sentinel
+Play the sound @var{sound} (a symbol) from @var{sound-alist}.
+
+The sound is played at the specified @var{volume} (0-100, default
+specified by the @var{bell-volume} variable).
+
+With no further media drivers, the sound file must be in the
+Sun/NeXT U-LAW format. Under Linux WAV files are also supported.
+
+@var{device} can be any device created by @code{make-audio-device}
+and defaults to @var{default-audio-device}, or, if that is @code{nil},
+to the selected device.
+
+Optional argument @var{sentinel} specifies a lisp function to be
+called after the stream playback finishes.  The function should
+take two arguments (@var{stream} @var{state}) where @var{stream}
+is bound to the media stream which finished and @var{state} is a
+symbol (currently the only valid symbol is @code{'finished}).
+See @code{set-media-thread-sentinel}.
+@end defun
+
+@c OBSOLETE
+@defun play-sound-file file &optional volume device
+Play the sound in @var{file} on @var{device}'s speaker at the
+specified @var{volume} (0-100, default specified by the
+@var{bell-volume} variable).
+
+With no further media drivers, the sound file must be in the
+Sun/NeXT U-LAW format. Under Linux WAV files are also supported.
+
+@var{device} can be any device created by @code{make-audio-device} and
+defaults to @var{default-audio-device}, or, if that is @code{nil},
+to the selected device.
+
+Note: This function is obsolete, use @code{make-media-stream} and
+@code{play-media-stream} instead.
+@end defun
+

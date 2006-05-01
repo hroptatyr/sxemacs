@@ -1,0 +1,1364 @@
+-*- mode:outline -*-
+
+* Introduction
+==============
+
+This file presents the changes in recent XEmacs versions.  It
+primarily documents user-visible (interface) changes, but also
+includes internal changes of possible interest to the users.  When
+describing new features, we try to also document ways of reverting to
+the old behavior, where applicable.  If you dislike a recent change in
+how XEmacs behaves, this file might contain a remedy.
+
+Use `C-c C-f' to move to the next equal level of outline, and
+`C-c C-b' to move to previous equal level.  `C-h m' will give more
+info about the Outline mode.  Many commands are also available through
+the menubar.
+
+Users who would like to know which capabilities have been introduced
+in each release should look at the appropriate section of this file.
+Starting with version 20.0, XEmacs includes ChangeLogs, which can be
+consulted for a more detailed list of changes.
+
+    N.B.  The term "GNU Emacs" refers to any release of Emacs Version
+    19 from the Free Software Foundation's GNU Project.  (We do not
+    say just "Emacs" as Richard M. Stallman ["RMS"] prefers, because
+    it is clearly a more generic term.)  The term "XEmacs" refers to
+    this program or sometimes to its predecessors "Era" and "Lucid
+    Emacs".  The predecessor of all these program is called "Emacs
+    18".  When no particular version is implied, "Emacs" will be used.
+
+
+* Changes in XEmacs 21.4
+========================
+
+** Summary of user-visible changes:
+
+  -- PUI related changes (Package User Interface)
+    - A minor rearrangement of the "Tools -> Packages" menu.
+    - Only a single package download site can be selected.
+    - Managing packages via the `customize' interface is no longer
+      supported. 
+    - Non-Mule XEmacsen can not install Mule packages.
+    - The "mule-base" package is not needed to "bootstrap" PUI for
+      Mule enabled XEmacsen.
+    - The default for PGP verifying the package-index file is "off" in
+      21.4.
+    - The default package-index filename has changed to
+      `package-index.LATEST.gpg'.
+    - The location of the local index file is customisable.  See
+      `package-get-package-index-file-location'. 
+    - `pui-add-install-directory' has been obsoleted and replaced by
+      `pui-set-local-package-get-directory'.  
+  -- The delete key now deletes forward by default.
+  -- Shifted motion keys now select text by default.
+  -- You can now build XEmacs with support for GTK+ widget set.
+  -- ~/.xemacs/init.el is now the preferred location for the init file.
+    - XEmacs now supports a `~/.xemacs/init.el' startup file.
+    - Custom file will move to ~/.xemacs/custom.el.
+  -- Much-improved sample init.el, showing how to use many useful features.
+  -- XEmacs support for menu accelerators has been much improved.
+  -- Default menubar improvements.
+    - Default menubar has many new commands and better organization.
+    - The font-menu is now available under MS Windows.
+  -- Dialog box improvements, including a real file dialog box.
+    - XEmacs now has a proper file dialog box under MS Windows (and GTK)!
+    - The old clunky file dialog box is improved.
+    - Keyboard traversal now works correctly in MS Windows dialog boxes.
+    - There is a Search dialog box available from Edit->Find...
+  -- New buffer tabs.
+  -- There is a new MS Windows installer, netinstall, ported from Cygwin.
+  -- The subprocess quote-handling mechanism under Windows is much improved.
+  -- Printing support now available under MS Windows.
+  -- Selection improvements.
+    - Kill and yank now interact with the clipboard under Windows.
+    - MS Windows support for selection is now much more robust.
+    - Motif selection support is now more correct (but slower).
+  -- Mail spool locking now works correctly.
+  -- International support changes.
+    - The default coding-priority-list is now safer.
+    - International keysyms are now supported under X.
+    - MS Windows 1251 code page now supported.
+    - Czech, Thai, Cyrillic-KOI8, Vietnamese, Ethiopic now supported.
+    - Proper support for words in Latin 3 and Latin 4.
+  -- Help buffers contain hyperlinks, and other changes.
+  -- The modeline's text is now scrollable.
+  -- The mouse wheel under MS Windows now functions correctly.
+  -- Interactive searching and matching case improvements.
+    - Incremental search will now highlight all visible matches.
+    - Interactive searches always respect uppercase characters.
+  -- Rectangle functions rewritten to avoid inserting extra spaces.
+  -- New command `kill-entire-line' that always kills the entire line.
+  -- Default values correctly stored in minibuffer histories.
+  -- You can now create "indirect buffers", like in GNU Emacs.
+  -- Pixel-based scrolling has been implemented.
+  -- Operation progress can be displayed using graphical widgets.
+  -- User names following a tilde can now be completed at file name prompts.
+  -- XEmacs can now play sound using Enlightenment Sound Daemon (ESD).
+  -- X-Face support is now available under MS Windows.
+  -- The PostgreSQL Relational Database Management System is now supported.
+  -- Indentation no longer indents comments that begin at column zero.
+  -- Face and variable settings can have comments in Customize.
+  -- New locations for early package hierarchies.
+  -- The `auto-save' library has been greatly improved.
+  -- New variable `mswindows-alt-by-itself-activates-menu'.
+  -- Other init-file-related changes.
+    - Init file in your home directory may be called `.emacs.el'.
+    - New command-line switches -user-init-file and -user-init-directory.
+  -- Etags changes.
+    - In DOS, etags looks for file.cgz if it cannot find file.c.
+    - New option --ignore-case-regex is an alternative to --regex.
+    - New option --declarations, for C-type languages.
+    - In C++, tags are created for "operator".
+    - Ada now supported.
+    - In Fortran, procedure is no longer tagged.
+    - In Java, tags are created for "interface".
+    - In Lisp, def-type constructs are now tagged.
+    - In Perl, the --globals option tags global variables.
+    - Python now supported.
+    - New file extensions recognized: .ss, .pdb, .psw.
+
+** The delete key now deletes forward by default.
+
+This is regulated by the variable `delete-key-deletes-forward', which
+now defaults to t.  `delete-key-deletes-forward' takes effect only on
+the systems that offer both a backspace and a delete key.  If set to
+nil, the key labeled "Delete" will always delete backward.  If set to
+non-nil, the "Delete" key will delete forward, except on keyboards
+where a "Backspace" key is not provided (e.g. old DEC keyboards).
+
+Unless our implementation has bugs, the only reason why you would want
+to set `delete-key-deletes-forward' to nil is if you want to use the
+Delete key to delete backwards, despite the presence (according to
+Xlib) of a BackSpace key on the keyboard.
+
+** Shifted motion keys now select text by default.
+
+You can turn this off by setting `shifted-motion-keys-select-region'
+to nil.  This works based off of particular keys, not particular
+commands: Thus, the arrow keys will normally trigger selection when
+the Shift key is held down regardless of their bindings, and non-arrow
+keys with the same bindings (e.g. C-f) will not work this way.  You
+can control which keys trigger shifted motion using
+`motion-keys-for-shifted-motion'.  See also
+`unshifted-motion-keys-deselect-region'.
+
+** You can now build XEmacs with support for GTK+ widget set.
+
+XEmacs built that way uses GTK+ to draw menubars, scrollbars, and
+other GUI components, as well GDK for drawing text, choosing fonts,
+allocating colors, etc.  Additionally, GTK-XEmacs supports Lisp
+functions for writing your own GTK programs in Emacs Lisp!
+
+To use this, build XEmacs with the `--with-gtk' configure flag.  (Of
+course, you'll need to have the GTK+ libraries and header files on the
+system.)  Gnome widgets and functionality are supported where
+available, and can be turned off.
+
+** ~/.xemacs/init.el is now the preferred location for the init file.
+
+*** XEmacs now supports a `~/.xemacs/init.el' startup file.
+If it exists, XEmacs will prefer it over `.emacs' and `.emacs.el'.
+The file may be byte-compiled as `~/.xemacs/init.elc'.
+
+If present, the `~/.xemacs/' directory may contain startup files for
+XEmacs packages that support it.
+
+The first time you start up XEmacs, it will ask you if you would like
+to migrate your `.emacs' to the new location. (Your custom settings
+will also be moved, to `~/.xemacs/custom.el' -- see below.) If so, you
+will also be asked whether you would like to create a compatibility
+`.emacs' for backward compatibility with previous versions of XEmacs
+and with GNU Emacs. (This compatibility `.emacs' simply loads the new
+init and custom files.) Doing this is generally a good idea -- new
+versions of XEmacs will prefer `~/.xemacs/init.el' over `~/.emacs' in
+any case.
+
+You can manually migrate at any time with `migrate-user-init-file',
+and undo any migration with `unmigrate-user-init-file'.  The function
+`create-compatibility-dot-emacs' also lets you manually create a
+compatibility `.emacs'.
+
+NOTE: Under MS Windows, your home directory (i.e. the directory named
+`~') is specified by the HOME environment variable, and defaults to
+C:\.  To set this variable, modify AUTOEXEC.BAT under Windows 95/98,
+or select Control Panel->System->Advanced->Environment Variables...
+under Windows NT/2000.
+
+*** Custom file will move to ~/.xemacs/custom.el.
+
+Whereas customize settings were formerly stored in the regular init
+file, XEmacs now prefers them to be in a separate file
+`~/.xemacs/custom.el', completely under automatic control.  This
+change goes with the migration of the init file, and XEmacs offers
+automatic migration upon startup.
+
+** Much-improved sample init.el, showing how to use many useful features.
+
+The sample init file, located in the `etc/' directory of the XEmacs
+installation, has been renamed from `sample.emacs' to `sample.init.el',
+and pretty much rewritten from scratch. (You can view it by selecting
+the menu item Help->Samples->Sample init.el.)  Many of the most-useful
+optional features in XEmacs have been enabled, and other features that
+are useful but may be annoying to some are present but commented out.
+There is also extensive documentation on how to add your own
+improvements to the init file and where to find more documentation
+elsewhere in XEmacs.  The file has been specifically designed so that
+most people can simply make it their own init file by copying it to
+~/.xemacs/init.el, and they will be satisfied with the results.
+
+** XEmacs support for menu accelerators has been much improved.
+
+It now works properly under MS Windows, for example.  To enable
+accelerators, set `menu-accelerator-enabled' to `menu-force'.  Menus
+now have accelerators by default, currently on the first letter of the
+menu item unless another letter was indicated as the accelerator using
+%_ in the menu string.  These %_ specifications are automatically
+removed when displaying the menu item, and are handled correctly in
+functions such as `normalize-menu-item-name'.  Some auto-generated
+menus will have accelerators added dynamically, using numbers 1-9 and
+letters; to add this feature yourself, use the Lisp command
+`submenu-generate-accelerator-spec' in a menu filter.  The feature
+`menu-accelerator-support' has been added so that packages can check
+whether this support exists.
+
+** Default menubar improvements.
+
+*** Default menubar has many new commands and better organization.
+
+The default menubar has been extensively reorganized.  Many more
+commands are available, and they are more logically organized.  The
+Options menu, in particular, has been significantly expanded, and almost
+everything on the new Cmds menu is new. (Much of the useful
+functionality from the `big-menubar' package has been imported.)
+
+*** The font-menu is now available under MS Windows.
+
+** Dialog box improvements, including a real file dialog box.
+
+*** XEmacs now has a proper file dialog box under MS Windows (and GTK)!
+This will appear whenever you select a menu item that requires a file
+as an argument.
+
+*** The old clunky file dialog box is improved.
+The in-buffer file dialog box (visible on non-MS-Windows, non-GTK
+systems) is still clunky but has had many improvements to make it work
+significantly better.
+
+*** Keyboard traversal now works correctly in MS Windows dialog boxes.
+
+*** There is a Search dialog box available from Edit->Find...
+However, it's very experimental and needs a lot of work.
+
+** New buffer tabs.
+
+You can now use buffer tabs to switch between buffers.
+
+The tabs are located between the toolbar and the uppermost window, in
+a location called the "gutter".  If you dislike the buffer tabs, you can
+disable them using the menu item `Options->Display->Buffers Tab Visible'
+by customizing `gutter-buffers-tab-visible-p', or by placing this in
+your .xemacs/init.el:
+
+   (custom-set-variables '(gutter-buffers-tab-visible-p nil))
+
+You can change the location of the gutter using the menu item
+`Options->Display->Default Gutter Location' or with (e.g.)
+
+   (custom-set-variables '(default-gutter-position 'left))
+
+However, currently only MS Windows supports tab widgets with
+orientations other than vertical, and it doesn't currently support
+gutters on the bottom of the frame.
+
+** There is a new MS Windows installer, netinstall, ported from Cygwin.
+
+Nearly complete automation of the XEmacs install process from
+ftp.xemacs.org.  Includes selection of Lisp packages to install, etc.
+
+** The subprocess quote-handling mechanism under Windows is much improved.
+
+Specifically, the quote-handling mechanism has been completely rewritten,
+and you should now be able to use single or double quotes to quote arguments
+just like under Unix, and expect to get correct results regardless of the
+shell you are using (e.g. CMD.EXE, bash from Cygwin, etc.).  For example,
+the following command:
+
+M-x grep '<<<<<<<' *.c
+
+should work as intended.
+
+** Printing support now available under MS Windows.
+
+The File->Print... menu item pretty-prints using the standard MS
+Windows printing facilities.  Unfortunately it's still rather
+experimental.  There is a separate `msprinter' device tag for MS
+Windows printers, and so you can control the way that faces appear on
+the printer by using this tag to specify device-specific face
+settings.
+
+** Selection improvements.
+
+*** Kill and yank now interact with the clipboard under Windows.
+
+This was done by changing the default value of `interprogram-cut-function'
+and `interprogram-paste-function'.  You can get the old behavior by
+setting these to nil, and there is an option on the options menu to do
+this.
+
+*** MS Windows support for selection is now much more robust.
+
+Generally selection should now do what you would expect under
+MS Windows: the middle mouse button will paste your current selection
+or the clipboard; conversions from different types of selection to the
+clipboard can be made; the kill-ring and friends will be updated as
+per X.
+
+The only thing selection doesn't do is set the clipboard automatically
+as this would break the MS Windows model.  If you want this behavior
+then set `selection-sets-clipboard' to t.
+
+*** Motif selection support is now more correct (but slower).
+
+Changes have been made to allow correct operation of cut/copy/paste
+operations between native widgets and XEmacs buffers.  However, this
+can lead to a lot of X traffic which slows down the performance of
+`C-k'. If you want the old behaviour then set
+`x-selection-strict-motif-ownership' to nil.
+
+** Mail spool locking now works correctly.
+
+XEmacs has always come with a little auxiliary program, movemail,
+which moves mail out of the system's spool area into user storage.  To
+coordinate between XEmacs, the mail delivery agent, and other mail
+user agents, movemail needs to properly lock the spool file before
+moving it.  Movemail now correctly respects the --mail-locking option
+to configure.  Moreover, movemail's locking behavior can be specified
+at run-time, via a new command-line option -m to movemail, or through
+the environment variable EMACSLOCKMETHOD.
+
+When installing XEmacs, make sure you configure it according to your
+environment's mail spool locking conventions.  When you're using a
+binary kit, set the `mail-lock-method' variable at startup, or the
+EMACSLOCKMETHOD environment variable.
+
+** International support changes.
+
+*** The default coding-priority-list is now safer.
+
+This means that if you have no language environment set, Mule no
+longer automatically recognizes ISO 2022 escapes in your files.  This
+makes editing binary files safe.
+
+*** International keysyms are now supported under X.
+
+This means that XEmacs running under Mule will automatically recognize
+the keysym `scaron' to be the lower-case `s' with caron in the Latin 2
+character set.  (Specifically, it will bind the keysym to
+`self-insert' and augment its `ascii-character' property.)  This is
+very useful with XFree under European locales as shipped by recent
+Linux distributions.  If XEmacs is compiled without Mule support, the
+feature still works, but it is unaware of different character sets --
+it unconditionally sets the `ascii-character' property to values in
+the [160, 256) range.
+
+*** MS Windows 1251 code page now supported.
+
+It's available as coding system `windows-1251'.
+
+*** Czech, Thai, Cyrillic-KOI8, Vietnamese, Ethiopic now supported.
+
+*** Proper support for words in Latin 3 and Latin 4.
+
+The appropriate characters in Latin 3 and Latin 4 character sets are
+correctly defined as words.
+
+** Help buffers contain hyperlinks, and other changes.
+
+The help buffers created by C-h commands now contain hyperlinks to
+other commands, functions and variables mentioned in the documentation.
+Use button2 to follow a link.  Use button3 to bring up a context menu
+that lets you follow the link, find the source for the item, do a tag
+search, etc.  The buffers are also syntax-highlighted.
+
+Help functions (e.g. `C-h f') now know how to print macro argument
+lists.  If your macro definition included an argument list for the sake
+of help output, you no longer need to do that.
+
+** The modeline's text is now scrollable.
+
+This is controlled by the variable `modeline-scrolling-method', which
+you need to set to a non-nil value.  You can also choose scrolling
+types; see the docstring of `modeline-scrolling-method' for more
+information.
+
+** The mouse wheel under MS Windows now functions correctly.
+
+It scrolls the XEmacs window under the pointer, not the selected
+window.
+
+** Interactive searching and matching case improvements.
+
+*** Incremental search will now highlight all visible matches.
+
+This makes it easier to anticipate where consecutive C-s or C-r will
+place the point.  If you want to disable the feature, set
+`isearch-highlight-all-matches' to nil.
+
+*** Interactive searches always respect uppercase characters.
+
+Case sensitiveness in searching operations is normally controlled
+by the variable `case-fold-search' (if non-nil, case is ignored while
+searching).  This mechanism has now been slightly improved for
+interactive searches: if the search string (or regexp) contains
+uppercase characters, the searching is forced to be case-sensitive,
+`case-fold-search'.
+
+The new behavior affects all functions performing interactive
+searches, like `zap-to-char', `list-matching-lines', `tags-search'
+etc.  The incremental search facility has always behaved that way.
+
+** Rectangle functions rewritten to avoid inserting extra spaces.
+
+The rectangle functions have been almost completely rewritten in
+order to avoid inserting undesirable spaces, notably at the end of
+lines.  Two typical examples of the old behavior were
+`string-rectangle', which filled all lines up to the right side of the
+rectangle, and `clear-rectangle', which filled even empty lines up to
+the left side.  All functions have been rewritten to avoid inserting
+unwanted spaces, and an optional prefix now allows them to behave the
+old way.
+
+Also, the behavior of `string-rectangle' is now compliant with
+`pending-delete-mode': if this mode is active, then the string
+replaces the region rectangle.  Otherwise, the command does not delete
+or overwrite any existing text.  For those who want that feature but do
+not use pending-delete-mode, a new function, `replace-rectangle', is
+available.
+
+As a side effect, the FORCE argument to `move-to-column' now
+understands the special value `coerce', which means that the line
+should not be filled if it is too short to reach the desired column.
+
+** New command `kill-entire-line' that always kills the entire line.
+
+This kills the entire line at point, regardless of whether the point
+is at the beginning of line, and regardless of the setting of
+`kill-whole-line'.
+
+** Default values correctly stored in minibuffer histories.
+
+When you press RET at a minibuffer prompt that provides a default
+value, the value is stored in history instead of an empty line.  Also,
+you can now edit the default value by pressing the down arrow,
+accessing the logical "future" value.  Not all minibuffer prompts have
+yet been converted to support this feature.
+
+** You can now create "indirect buffers", like in GNU Emacs.
+
+An indirect buffer shares its text with another buffer ("base
+buffer"), but has its own major mode, local variables, extents, and
+narrowing.  An indirect buffer has a name of its own, distinct from
+those of the base buffer and all other buffers.  An indirect buffer
+cannot itself be visiting a file (though its base buffer can be).
+The base buffer cannot itself be indirect.
+
+Use (make-indirect-buffer BASE-BUFFER NAME) to make an indirect buffer
+named NAME whose base is BASE-BUFFER.  If BASE-BUFFER is itself an
+indirect buffer, its base buffer is used as the base for the new
+buffer.
+
+You can make an indirect buffer current, or switch to it in a window,
+just as you would a non-indirect buffer.
+
+The function `buffer-base-buffer' returns a buffer's base buffer or
+nil, if given an ordinary (non-indirect) buffer.  The function
+`buffer-indirect-children' returns a list of the indirect children of
+a base buffer.
+
+** Pixel-based scrolling has been implemented.
+By default this will attempt to scroll in increments equal to the
+height of the default face.  Set `window-pixel-scroll-increment' to
+modify this behavior.
+
+** Operation progress can be displayed using graphical widgets.
+See `progress-feedback' for details.  This support has been switched
+on by default for font-lock and some web browsing functions.  If you
+do not like this behavior, set `progress-feedback-use-echo-area' to
+nil.
+
+** User names following a tilde can now be completed at file name prompts.
+e.g. `C-x C-f ~hni<TAB>' will complete to `~hniksic/'.  To make this
+operation faster, a cache of user names is maintained internally.
+
+The new primitives available for this purpose are functions named
+`user-name-completion' and `user-name-all-completions'.
+
+** XEmacs can now play sound using Enlightenment Sound Daemon (ESD).
+It will try NAS first, then ESD, then playing native sound directly.
+
+** X-Face support is now available under MS Windows.
+If an X-Face library built under MS Windows is available then XEmacs
+will use this at build time.
+
+** The PostgreSQL Relational Database Management System is now supported.
+It is now possible to build XEmacs so that the programming interface
+to the PostgreSQL RDBMS (libpq) is available in XEmacs Lisp.
+Supported versions of PostgreSQL are 6.5.3 (earlier versions may work,
+but have not been tested) and 7.0-beta1.
+
+** Indentation no longer indents comments that begin at column zero.
+This makes it easy to deal with commented out regions of code.
+
+** Face and variable settings can have comments in Customize.
+Customize now supports adding comments about your face and variable
+settings using a new menu entry.  Comments for variables can also be
+assigned by calling `customize-set-(value|variable)' with a prefix
+argument.
+
+** New locations for early package hierarchies.
+XEmacs now locates the early package hierarchies at
+~/.xemacs/mule-packages/ and ~/.xemacs/xemacs-packages/.  Previously,
+the early packages were located in ~/.xemacs/.
+
+** The `auto-save' library has been greatly improved.
+(This lets you group all your auto-save files into one directory, and
+is provided standardly with XEmacs.  See `etc/sample.init.el',
+available on the Help menu, for more info on how to set it up.)
+Specifically, it now works under MS Windows, and it uses a completely
+reversible encoding (basically quoted-printable), so that all
+filenames (as well as non-filename buffers) are successfully handled
+regardless of any special characters in their names.
+
+** New variable `mswindows-alt-by-itself-activates-menu'.
+If you set this variable to nil then pressing and releasing the Alt
+key under MS Windows will no longer activate the menubar.  The default
+is t.  This is not to be confused with `menu-accelerator-enabled',
+which enables the use of Alt+<Letter> accelerators to invoke the
+menus.
+
+** Other init-file-related changes.
+
+*** Init file in your home directory may be called `.emacs.el'.
+
+Like in GNU Emacs 20.4 and on, you can now name the XEmacs init file
+located in your home directory `.emacs.el'.  Formerly the name had to
+be `.emacs'.  If you use the name `.emacs.el', you can byte-compile
+the file in the usual way.
+
+If both `.emacs' and `.emacs.el' exist, the latter file is the one
+that is used.
+
+*** New command-line switches -user-init-file and -user-init-directory.
+
+These can be used to specify alternate locations for what is normally
+~/.emacs and ~/.xemacs.
+
+Moreover, the `-user <user>' command-line option (which used to only
+work in unpredictable ways) is now equivalent to `-user-init-file
+~<user>/.xemacs/init.el -user-init-directory ~<user>/.xemacs', or
+`-user-init-file ~<user>/.emacs -user-init-directory ~<user>/.xemacs',
+whichever init file comes first.
+
+** Etags changes.
+
+*** In DOS, etags looks for file.cgz if it cannot find file.c.
+
+*** New option --ignore-case-regex is an alternative to --regex.
+It is now possible to bind a regexp to a language, by prepending the
+regexp with {lang}, where lang is one of the languages that `etags
+--help' prints out.  This feature is useful especially for regex
+files, where each line contains a regular expression.  The manual
+contains details.
+
+*** New option --declarations, for C-type languages.
+In C and derived languages, etags creates tags for function
+declarations when given the --declarations option.
+
+*** In C++, tags are created for "operator".
+The tags have the form "operator+", without spaces between the
+keyword and the operator.
+
+*** Ada now supported.
+Tags are functions, procedures, packages, tasks, and types.
+
+*** In Fortran, procedure is no longer tagged.
+
+*** In Java, tags are created for "interface".
+
+*** In Lisp, def-type constructs are now tagged.
+This includes "(defstruct (foo", "(defun (operator" and similar constructs.
+
+*** In Perl, the --globals option tags global variables.
+my and local variables are tagged.
+
+*** Python now supported.
+def and class at the beginning of a line are tags.
+
+*** New file extensions recognized: .ss, .pdb, .psw.
+.ss files are Scheme files, .pdb is Postscript with C syntax, .psw is
+for PSWrap.
+
+
+* Lisp and internal changes in XEmacs 21.4
+==========================================
+
+** A new portable dumper is available for beta testing.
+
+Olivier Galibert has written a portable dumper for XEmacs, based on
+initial work by Kyle Jones.  To perform even the most basic editor,
+XEmacs requires some amount of Lisp code to be loaded.  To avoid
+repeating the expensive loading process at every startup, XEmacs is
+built in a special way.  Its C sources link into an executable called
+`temacs', which loads the bootstrap Lisp code and uses a special
+"unexec" call to dump the resulting memory image into a proper
+`xemacs' executable on disk.  The unexec() process is hard to
+implement correctly and makes XEmacs very hard to port to new
+operating systems, or even to new releases of old systems.
+
+The new portable dumper uses a different approach to dumping: instead
+of dumping full-fledged executable, it only dumps out the initialized
+data structures (both Lisp and C) into an external file.  A normally
+running XEmacs only needs to mmap that file and relocate a bit to get
+to the initialized data.  In that scheme, there is no difference
+between `temacs' and `xemacs'.
+
+Unfortunately, the portable dumper has not been completely finished
+for this release, and will not be used by default.  However, if you
+wish to experiment with it, or if you need to compile XEmacs on a new
+and unsupported platform, you can test it by configuring XEmacs with
+`--pdump' flag.
+
+** Much effort has been invested to make XEmacs Lisp faster:
+
+*** Many basic lisp operations are now faster.
+This is especially the case when running a Mule-enabled XEmacs.
+
+A general overhaul of the lisp engine should produce a speedup of 1.4
+in a non-Mule XEmacs, and 2.1 in a Mule XEmacs.  These numbers were
+obtained running `(byte-compile "simple.el")', which should be a
+pretty typical test of "pure" Lisp.
+
+*** Lisp hash tables have been re-implemented.  The Common Lisp style
+hash table interface has been made standard, and moved from cl.el into
+fast C code (See the section on hash tables in the XEmacs Lisp
+Reference).  A speedup factor of 3 can be expected with code that
+makes intensive use of hash tables.
+
+*** The garbage collector has been tuned, leading to a speedup of
+1.16.
+
+*** The byte-compiler and the byte-optimizer have been tuned to
+produce better code in many small ways.
+
+*** The family of functions that iterate over lists, like `memq', and
+`rassq', have been made a little faster (typically 1.3).
+
+*** Lisp function calls are faster, by approximately a factor of two.
+However, defining inline functions (via defsubst) still makes sense
+for tight loops.
+
+*** Finally, a few functions have had dramatic performance
+improvements.  For example, `(last long-list)' is now 30 times faster.
+
+Of course, your mileage will vary.
+
+Many operations do not see any improvement.  Surprisingly, running
+(font-lock-fontify-buffer) does not use the Lisp engine much at all.
+Speeding up your favorite slow operation is an excellent project to
+improve XEmacs.  Don't forget to profile!
+
+** Native widgets can be displayed in buffers.
+
+The glyph system has been extended to allow the display of glyphs that
+are implemented as native window-system widgets.  Thus you can embed
+buttons, scrollbars, combo boxes, edit fields and progress gauges in a
+buffer.  As a side effect subwindow support now works once again.
+
+All of this is still fairly experimental and there is no
+documentation.  The current APIs might change in a future version of
+XEmacs.  Some widgets are only available under MS Windows.  See the
+file glyphs-test.el in the XEmacs src distribution for examples of
+usage.
+
+The buffers-tab functionality and progress gauge have been implemented
+using this feature.
+
+** Case translation now supports international characters.
+
+*** Instead of being lists of 256-character strings, case tables are
+now opaque objects.  The interface to access them is almost the same,
+except it now works for international characters, and you can set the
+case pairs using `put-case-table-pair'.  `set-case-table' and friends
+still support the old list/string based interface for backward
+compatibility.
+
+*** As a consequence of this change, functions `downcase' and `upcase'
+as well as all the case-transformation commands now work with
+non-ASCII characters.  Built-in tables cover all the Latin character
+sets that we support.  If your language has a distinction between
+upper and lower case that is not handled by XEmacs/Mule, please let us
+know.
+
+*** The code that implements case-insensitive search has been modified
+to respect the case table settings.  This also applies to regexp
+search.
+
+** Syntax tables may now be specified for a part of a buffer by
+attaching the `syntax-table' property to an extent.  For compatibility
+with GNU Emacs, you may use the text-property interface to achieve the
+same result.
+
+** Values of variables `user-init-file' and `user-init-directory' are
+now absolute file/directory names.  Previously, both variables used to
+be relative to `(concat "~" init-file-user)'.  This turned out to be
+too complicated for most packages (and some core Lisp files) to use
+correctly.  Also, the `init-file-user' variable has been obsoleted in
+the process.
+
+The user-visible options like `-u' have not changed their behavior.
+
+** XEmacs finally has an automated test suite!
+Although this is not yet very sophisticated, it is already responsible
+for several important bug fixes in XEmacs.  To try it out, simply use
+the makefile target `make check' after building XEmacs.
+
+** Hash tables have been reimplemented.
+As was pointed out above, the standard interface to hash tables is now
+the Common Lisp interface, as described in Common Lisp, the Language
+(CLtL2, by Steele).  The older interface (functions with names
+containing the phrase `hashtable') will continue to work, but the
+preferred interface now has names containing the phrase `hash-table'.
+
+Here's the executive overview: create hash tables using
+make-hash-table, and use gethash, puthash, remhash, maphash and
+clrhash to manipulate entries in the hash table.  See the (updated)
+Lisp Reference Manual for details.
+
+** Lisp code handles circular lists much more robustly.
+Many basic lisp functions used to loop forever when given a circular
+list, expecting you to C-g (quit) out of the loop.  Now this is more
+likely to trigger a `circular-list' error.  Printing a circular list
+now results in something like this:
+
+    (let ((x (cons 'foo 'foo)))
+      (setcdr x x)
+      x)
+      => (foo ... <circular list>)
+
+An extra bonus is that checking for circularities is not just
+friendlier, but actually faster than checking for C-g.
+
+** Functions for decoding base64 encoding are now available; see
+`base64-encode-region', `base64-encode-string', `base64-decode-region'
+and `base64-decode-string'.
+
+** The functions `read-string', `read-expression', `eval-minibuffer',
+`read-variable', `read-command', `read-function', `read-number',
+`read-shell-command', `read-from-minibuffer', and `completing-read'
+now take an additional argument which specifies the default value.  If
+this argument is non-nil, it should be a string; that string is used
+in two ways:
+
+ * It is returned if the user enters empty input.
+ * It is available as the logical "future" entry, by pressing the down
+   arrow.
+
+** LDAP changes.
+
+*** The LDAP interface now consists of two layers, a low-level layer
+that closely matches the LDAP C API, and a more convenient
+higher-level set of functions.
+
+*** The low-level functions that used to be named *-internal are now
+named more simply: `ldap-open', `ldap-close', `ldap-search-basic',
+`ldap-add', and `ldap-modify'.  They should be used directly for very
+specific purposes (such as multiple operations on a connection) only.
+
+*** The higher-level functions provide a more convenient way to access
+LDAP directories hiding the subtleties of handling the connection,
+translating arguments and ensuring compliance with LDAP
+internationalization rules and formats (currently partly implemented
+only.)  This layer provides atomic operations for searches,
+modification, addition and deletion of multiple entries at once:
+`ldap-search-entries', `ldap-add-entries', `ldap-delete-entries', and
+`ldap-modify-entries'.
+
+*** To maintain compatibility with previous code, the now obsolete
+function `ldap-search' is now merely a wrapper that calls either
+`ldap-search-basic' or `ldap-search-entries'.  Please don't use the
+`ldap-search' function in your new programs -- a direct call to one of
+the two replacements is more efficient and unambiguous.
+
+** The arguments to `locate-file' are now more Lisp-like.  As before,
+the usage is:
+
+    (locate-file FILENAME PATH-LIST &optional SUFFIXES MODE)
+
+Except that SUFFIXES are now a list of strings instead of a single,
+colon-separated string.  MODE is now a symbol or a list of symbols
+(symbols `exists', `executable', `writable', and `readable' are
+supported) instead of an integer code.  See the documentation for
+details.  Of course, the old form is still accepted for backward
+compatibility.
+
+Several bugs in locate-file have been fixed, most notably its failure
+to call expand-file-name on elements of PATH-LIST.  Because of that
+elements of load-path of the form "~/..." used to not work.
+locate-file is now guaranteed to expand files during its course of
+operation.
+
+** `translate-region' has been improved in several ways.  Its TABLE
+argument used to be a 256-character string.  In addition to this, it
+can now also be a vector or a char-table, which makes the function
+useful for Mule, which it wasn't.  If TABLE is a vector or a generic
+char-table, you can map characters to strings instead of to other
+characters.  For instance:
+
+    (let ((table (make-char-table 'generic)))
+      (put-char-table ?a "the letter a" table)
+      (put-char-table ?b "" table)
+      (put-char-table ?c ?\n table)
+      (translate-region (point-min) (point-max) table))
+
+** The new form `ignore-file-errors', similar to `ignore-errors' may
+be used as a short-hand for condition-case when you wish to ignore
+file-related error.  For example:
+
+    (ignore-file-errors (delete-file "foo"))
+
+** The first argument to `intern-soft' may now also be a symbol, like
+with `unintern'.  If given a symbol, `intern-soft' will look for that
+exact symbol rather than for any string.  This is useful when you want
+to check whether a specific symbol is interned in an obarray, e.g.:
+
+    (intern "foo")
+    (intern-soft "foo")
+      => foo
+    (intern-soft (make-symbol "foo"))
+      => nil
+
+** The `keywordp' function now returns non-nil only on symbols
+interned in the global obarray.  For example:
+
+    (keywordp (intern ":foo" [0]))
+      => nil
+    (keywordp (intern ":foo"))       ; The same as (keywordp :foo)
+      => t
+
+This behavior is compatible with other code which treats symbols
+beginning with colon as keywords only if they are interned in the
+global obarray.  `keywordp' used to wrongly return t in both above
+cases.
+
+** The function `replace-in-string' has been rewritten to use
+`replace-match'.  This not only makes it much faster, but adds all the
+features of `replace-match'.
+
+** New variables `this-command-properties' and
+`last-command-properties' are now available for communication between
+consecutive commands.  Commands should use these to communicate with
+the pre/post-command hooks, subsequent commands, wrapping commands,
+etc. in preference to looking at and/or setting `this-command'.
+
+** New functions `add-one-shot-hook' and `add-local-one-shot-hook' make
+it possible to add a "one-shot" hook, which is to say a hook that runs
+only once, and automatically removes itself after the first time it
+has run.
+
+** The descriptor that specifies the text of a menu item can now be an
+evaluated expression.  This makes it parallel with other descriptors,
+which can also be expressions.
+
+
+* Changes in XEmacs 21.0
+========================
+
+** XEmacs has been unbundled into constituent installable packages.
+See the Info documentation under "Packages" for more information.
+See the file `etc/PACKAGES' in the distribution for a partial list of
+packages available at the time of the 21.0 release.
+
+** XEmacs is now supported under Microsoft Windows 95/98 and Windows
+NT operating systems.  For starters, look at the XEmacs on Windows FAQ
+at <URL:http://jagor.srce.hr/~hniksic/xemacs-on-windows-faq.txt>.  To
+discuss Windows-specific issues, subscribe to the mailing list at
+<xemacs-nt-request@xemacs.org>.
+
+** XEmacs will now use `XEmacs' as its application class if it finds
+any `XEmacs' resources in the resource database.  Otherwise, it will
+continue to use the `Emacs' class.
+
+** The options menu has been ported to Custom.
+This means that each entry in the options menu acts as if you had customized
+the corresponding variable by hand.  ### WARNING: there is currently no
+upgrading function to help you port your old options settings to the new
+format. Consequently, if you want to modify the options for XEmacs 21, you
+will have to set them all again through the menu, and remove the code loading
+.xemacs-options from your .emacs.
+
+** When the Zmacs region is active, `M-x query-replace' and the other
+replace commands now operate on the region contents only.
+
+** XEmacs now is able to choose X visuals and use private colormaps.
+The '-visual <visualStr>' command line option or the '.EmacsVisual'
+Xresource controls which visual XEmacs will use, and
+'-privateColormap' or '.privateColormap' will force XEmacs to create a
+private colormap for use.  The syntax for the visual string is
+"<visual><bitdepth>" where <visual> is one of 'StaticColor',
+'TrueColor', 'GrayScale', 'PseudoColor' or 'DirectColor' and
+<bitdepth> is the appropriate number of bits per pixel.  If an invalid
+or non-supported combination is entered, XEmacs attempts to find a happy
+medium.  The X creation mechanism will then determine if it needs to
+create a colormap for use, or the presence of the private flags will
+force it to create it.
+
+** The `imenu' package has been ported to XEmacs and is available as a
+package.
+
+** `echo-keystrokes' can now be a floating-point number, so that you
+can set it to intervals shorter than one second.
+
+   (setq echo-keystrokes 0.1)
+
+** The new command `center-to-window-line' works like `recenter'
+(bound to `C-l'), only it does not redisplay the whole display area.
+
+** The M-. command will now first search through exact tags matches,
+and then through inexact matches, as one would expect.
+
+** The new variable `user-full-name' can be used to customize one's
+name when using the Emacs mail and news reading facilities.
+
+Normally, `user-full-name' is a function that returns the full name of
+a user or UID, as specified by the system -- for instance,
+(user-full-name "root") returns something like "Super-User".  However,
+when the function is called without arguments, it will return the
+value of the `user-full-name' variable.  The `user-full-name' variable
+is initialized using the environment variable NAME and (failing that)
+the user's system name.
+
+The behavior of the `user-full-name' function with an argument
+specified is unchanged.
+
+** The new command `M-x customize-changed-options' lets you customize
+all the options whose default values have changed in recent Emacs
+versions.  You specify a previous Emacs version number as argument,
+and the command creates a customization buffer showing all the
+customizable options whose default values were changed since that
+version.
+
+If you don't specify a particular version number argument, then the
+customization buffer shows all the customizable options for which
+Emacs versions of changes are recorded.
+
+** The new command `add-log-convert' can be used to convert the
+old-style (pre-20.3) ChangeLog buffers to new style, for
+consistency.  A reminder: if you wish to revert to old-style
+ChangeLogs instead, customize the value of `add-log-time-format'
+variable.
+
+** The new command `zap-up-to-char' is now available.  It is similar
+to `zap-to-char', except that it does not delete the searched-for
+character.  It is not bound to a key by default.
+
+** You can now store a number into a register with `C-u NUMBER C-x r n'
+REG, increment it by INC with `C-u INC C-x r + REG' (to increment by
+one, omit C-u INC), and insert it in the buffer with `C-x r g REG'.
+This is useful for writing keyboard macros.
+
+** The M-: command, when given a prefix argument, will now insert its
+result to the current buffer.
+
+** The `C-h c' command, when given a prefix argument, will now insert
+the message into the current buffer.
+
+** Horizontally split windows may now be dragged using the mouse.
+Because of this, the dividers between vertical windows are always
+visible.  To turn it off, set `vertical-divider-always-visible-p' to
+nil.
+
+** XEmacs/Mule (internationalization) changes.
+
+*** Mule support now works on TTY's.  Use `set-terminal-coding-system'
+and `set-keyboard-coding-system' to specify the coding system of your
+display and keyboard.
+
+*** Egg/SJ3 input method is now officially supported.  Quail and
+Egg/Skk have been available through the generalized Leim since 20.3.
+
+*** Localized Japanese menubars are available if XEmacs is built with
+XFONTSET and either the X11 libraries are built with X_LOCALE defined
+or the native C libraries support Japanese localization.  This has
+been available since 20.3, only it hasn't been announced before.
+
+** Jamie Zawinski's `gdb-highlight' extension is now distributed with
+the `debug' package.  gdb-highlight makes most objects printed in a
+gdb buffer be mouse-sensitive: as text shows up in the buffer, it is
+parsed, and objects which are recognized have context-sensitive
+commands attached to them.  To use it, add the following to `.emacs':
+
+  (add-hook 'gdb-mode-hook (lambda () (require 'gdb-highlight)))
+
+** The package popper.el is now included in the edit-utils package.
+It has been greatly enhanced with respect to the one once included
+with the ilisp package and should work well under XEmacs 21.0.
+
+** Gnuserv changes
+
+*** Like the old 'gnudoit' program. Gnuclient -batch now can read from stdin.
+
+*** Gnuclient -batch no longer breaks off the output at the first LF.
+
+** C mode changes
+
+*** Multiline macros are now handled, both as they affect indentation,
+and as recognized syntax.  New syntactic symbol cpp-macro-cont is
+assigned to second and subsequent lines of a multiline macro
+definition.
+
+*** A new style "user" which captures all non-hook-ified
+(i.e. top-level) .emacs file variable setings and customizations.
+Style "cc-mode" is an alias for "user" and is deprecated.  "gnu" style
+is still the default however.
+
+*** "java" style now conforms to Sun's JDK coding style.
+
+*** There are new commands c-beginning-of-defun, c-end-of-defun which
+are alternatives which you could bind to C-M-a and C-M-e if you prefer
+them.  They do not have key bindings by default.
+
+*** New and improved implementations of M-a (c-beginning-of-statement)
+and M-e (c-end-of-statement).
+
+*** C++ namespace blocks are supported, with new syntactic symbols
+namespace-open, namespace-close, and innamespace.
+
+*** File local variable settings of c-file-style and c-file-offsets
+makes the style variables local to that buffer only.
+
+*** New indentation functions c-lineup-close-paren,
+c-indent-one-line-block, c-lineup-dont-change.
+
+*** Improvements (hopefully!) to the way CC Mode is loaded.  You
+should now be able to do a (require 'cc-mode) to get the entire
+package loaded properly for customization in your .emacs file.  A new
+variable c-initialize-on-load controls this and is t by default.
+
+** In Text mode, now only blank lines separate paragraphs.
+This makes it possible to get the full benefit of Adaptive Fill mode
+in Text mode, and other modes derived from it (such as Mail mode).
+TAB in Text mode now runs the command indent-relative; this makes a
+practical difference only when you use indented paragraphs.
+
+As a result, the old Indented Text mode is now identical to Text mode,
+and is an alias for it.
+
+If you want spaces at the beginning of a line to start a paragraph,
+use the new mode, Paragraph Indent Text mode.
+
+** Changes to Gnus, the XEmacs newsreader.
+
+*** New functionality for using Gnus as an offline newsreader has been
+added.  A plethora of new commands and modes have been added.  See the
+Gnus manual for the full story.
+
+*** The nndraft backend has returned, but works differently than
+before.  All Message buffers are now also articles in the nndraft
+group, which is created automatically.
+
+*** `gnus-alter-header-function' can now be used to alter header
+values.
+
+*** `gnus-summary-goto-article' now accept Message-ID's.
+
+*** A new Message command for deleting text in the body of a message
+outside the region: `C-c C-v'.
+
+*** You can now post to component group in nnvirtual groups with
+`C-u C-c C-c'.
+
+*** `nntp-rlogin-program' -- new variable to ease customization.
+
+*** `C-u C-c C-c' in `gnus-article-edit-mode' will now inhibit
+re-highlighting of the article buffer.
+
+*** New element in `gnus-boring-article-headers' -- `long-to'.
+
+*** `M-i' symbolic prefix command.  See the section "Symbolic
+Prefixes" in the Gnus manual for details.
+
+*** `L' and `I' in the summary buffer now take the symbolic prefix
+`a' to add the score rule to the "all.SCORE" file.
+
+*** `gnus-simplify-subject-functions' variable to allow greater
+control over simplification.
+
+*** `A T' -- new command for fetching the current thread.
+
+*** `/ T' -- new command for including the current thread in the
+limit.
+
+*** `M-RET' is a new Message command for breaking cited text.
+
+*** \\1-expressions are now valid in `nnmail-split-methods'.
+
+*** The `custom-face-lookup' function has been removed.
+If you used this function in your initialization files, you must
+rewrite them to use `face-spec-set' instead.
+
+*** Cancelling now uses the current select method.  Symbolic prefix
+`a' forces normal posting method.
+
+*** New command to translate M******** sm*rtq**t*s into proper text
+-- `W d'.
+
+*** For easier debugging of nntp, you can set `nntp-record-commands'
+to a non-nil value.
+
+*** nntp now uses ~/.authinfo, a .netrc-like file, for controlling
+where and how to send AUTHINFO to NNTP servers.
+
+*** A command for editing group parameters from the summary buffer
+has been added.
+
+*** A history of where mails have been split is available.
+
+*** A new article date command has been added -- `article-date-iso8601'.
+
+*** Subjects can be simplified when threading by setting
+`gnus-score-thread-simplify'.
+
+*** A new function for citing in Message has been added --
+`message-cite-original-without-signature'.
+
+*** `article-strip-all-blank-lines' -- new article command.
+
+*** A new Message command to kill to the end of the article has
+been added.
+
+*** A minimum adaptive score can be specified by using the
+`gnus-adaptive-word-minimum' variable.
+
+*** The "lapsed date" article header can be kept continually
+updated by the `gnus-start-date-timer' command.
+
+*** Web listserv archives can be read with the nnlistserv backend.
+
+*** Old dejanews archives can now be read by nnweb.
+
+*** Byte-compilation of user-specs now works under XEmacs.
+
+** The `dir' files are no longer essential for functioning of the Info
+subsystem.  If the `dir' file does not exist in an Info directory, the
+relevant information will be generated on-the-fly.
+
+This behavior can be customized, look for `Info-auto-generate-directory'
+and `Info-save-auto-generated-dir' in the `info' customization group.
+
+
+* Lisp and internal changes in XEmacs 21.0
+==========================================
+
+** It is now possible to build XEmacs with support for 31-bit Lisp
+integers (normally, Lisp integers are only 28 bits wide on 32-bit
+machines.)  Configure with --use-minimal-tagbits to test.  With this
+change, the maximum buffer size on 32-bit machines is increased from
+128M to 1G.  This setting will be made default in a future XEmacs
+version.
+
+** Specifier changes.
+
+*** When instantiating a specifier, the window locale now has a higher
+precedence than the buffer locale.  This is because the window locale
+is more specific than the buffer locale.
+
+*** The new macro `let-specifier' can be used to temporarily add
+specifications to specifiers.  See the documentation for details.
+
+*** The new specifiers `vertical-scrollbar-visible-p' and
+`horizontal-scrollbar-visible-p' may be used to control scrollbar
+visibility.  Previously, the only way to remove a scrollbar was to set
+its size to 0.  This method is still supported for backward
+compatibility.
+
+*** The new specifiers `scrollbar-on-left-p' and `scrollbar-on-top-p'
+may be used to control the position of the vertical and horizontal
+toolbar.  Previously, their position could be changed only through the
+use of X resources.
+
+*** The new draggable vertical dividers between windows may be turned
+off using the `vertical-divider-always-visible-p' specifier.  When
+this is set to nil, the vertical dividers between windows are shown
+only when needed, and they are not draggable.
+
+Other properties of the vertical dividers may be controlled using
+`vertical-divider-shadow-thickness', `vertical-divider-line-width' and
+`vertical-divider-spacing' specifiers, which see.
+
+** Frame focus management changes.
+
+*** When the variable focus-follows-mouse is non-nil, `select-frame'
+no longer permanently selects a different frame.  The frame selection
+is temporary and is reverted when the current command terminates, much
+like the buffer selected by `set-buffer'.  This is the same as in FSF
+Emacs.
+
+*** The new function `focus-frame' sets the window system focus to
+FRAME (and selects it), regardless of the value of
+`focus-follows-mouse'.  Doing this is not well behaved, so be
+absolutely sure that you want this.
+
+The code that uses `select-frame' only to get the window manager focus
+should be changed to use `set-frame-focus' instead, so that they keep
+working when `focus-follows-mouse' is non-nil.
+
+*** The special forms `save-selected-frame' and `with-selected-frame'
+can now be used to temporarily change selected frame.
+
+*** The behavior of `other-frame' command (`C-x 5 o') is unaffected by
+these changes.
+
+** The function `select-window' now has an optional second argument
+NORECORD which if non-nil inhibits the recording of a buffer change.
+
+** The function `vertical-motion' now correctly handles the second,
+optional WINDOW argument.  A new third argument PIXELS, if non-nil,
+indicates that the returned motion should be in pixels.
+
+** The new function `vertical-motion-pixels' is similar to
+vertical-motion but takes as input a vertical motion in pixels.
+
+** The new functions window-text-area-pixel-{width,height,edges} can
+be used to obtain information about the text-displaying area of a
+window.
+
+** The new functions `shrink-window-pixels' and `enlarge-window-pixels'
+can be used to adjust the size of a window by a pixel amount.
+
+** The new function `window-displayed-text-pixel-height' can be used
+to determine the height of the text actually displayed in a window.
+
+** The arithmetic comparison functions <, >, =, /= now accept a
+variable number of arguments.
+
+This means that if you want to test whether A < B < C, you can write
+it as (< A B C) instead of (and (< A B) (< B C)).  Likewise,
+(apply #'> LIST) now tests if LIST is monotonously increasing -- and
+so on.
+
+** The XEmacs hashtables now have a consistent read/print syntax.
+This means that a hashtable will be readably printed in a
+structure-like form:
+
+   #s(hashtable size 2 data (key1 value1 key2 value2))
+
+When XEmacs reads this form, it will create a new hashtable according
+to description.  This allows you to easily dump hashtables to files
+using `prin1', and read them back in using `read'.
+
+If `print-readably' is non-nil, a more relaxed syntax is used; for
+instance:
+
+   #<hashtable size 2/13 data (key1 value1 key2 value2) 0x874d>
+
+** It is now possible to build XEmacs with LDAP support.
+You will need to install a LDAP library first.  The following have
+been tested:
+  - LDAP 3.3 from the University of Michigan
+    (get it from <URL:http://www.umich.edu/~dirsvcs/ldap/>)
+  - OpenLDAP 1.0.3 from the OpenLDAP Foundation
+    (get it from <URL:http://www.openldap.org/>)
+  - LDAP SDK 1.0 from Netscape Corp.
+    (get it from <URL:http://developer.netscape.com/>)
+
+** When profiling is in effect, a call-count of all recorded functions
+is now calculated.  This information is stored in
+`call-count-profile-table', and is utilized by `profile-results' as
+well as the new command `profile-call-count-results'.
+
+** It is now an error to change the value of a symbol whose name
+starts with a colon, if it is interned in the standard obarray.
+
+However, setting such a symbol to its proper value, which is that
+symbol itself, is not an error.  This is for the sake of programs that
+support pre-19.12 XEmacs and pre-20 GNU Emacs by explicitly setting
+these variables to themselves.
+
+** The `concat' function no longer accepts integer arguments.
+
+** The new function `string' concatenates all its argument characters
+and returns the resulting string.  This is consistent with other
+functions, like `list', `vector', etc.
+
+** The function `temp-directory' is now available to return the
+directory to store temporary files.  On Unix this will be obtained
+from TMPDIR, defaulting to `/tmp'.
+
+** The function load-average now accepts an optional argument
+USE-FLOATS.  If it is non-nil, the load average values are returned as
+floating point numbers, rather than as integers to be divided by 100.
+
+** The `make-event' function now supports the TYPE and PLIST
+arguments, which can be used to create various events from Lisp.  See
+the documentation for details.
+
+** `function-interactive' is a new function that returns the
+interactive specification of a funcallable object.
+
+** The new `lmessage' function allows printing of a formatted message
+with a particular label.
+
+   (lmessage 'progress "Processing... %d" counter)
+
+This function is more convenient than `display-message' because it
+automatically applies `format' to its arguments.
+
+** The new `lwarn' function, analogous to `lmessage', allows printing
+a formatted warning, with a non-default CLASS or LABEL.
+
+** The new function `split-path' can now be used to explode the
+components of a colon-separated search path into a list.
+
+   (split-path "foo:bar")
+     => ("foo" "bar")
+
+** Specifiers and symbols whose value is a specifier are now allowed
+as modeline specifications.
+
+** defcustom now accepts the keyword `:version'.  Use this to specify
+in which version of Emacs a certain variable's default value changed.
+For example,
+
+   (defcustom foo-max 34 "*Maximum number of foo's allowed."
+     :type 'integer
+     :group 'foo
+     :version "21.0")
+
+This information is used to control the customize-changed-options
+command.
+
+** The line number tracking in modeline is now efficient, even for
+very large buffers.  This is achieved by caching the line numbers of
+recent buffer positions, and reusing them.  This cache is used only in
+the buffers where `line-number-mode' is in effect.
+
+** When the new GNU Malloc aka Doug Lea Malloc is available, it will
+be used.  This should result in better performance on Linux systems
+with libc6.
+
+** The code XEmacs uses to assemble its various paths into the
+directory hierarchy has been rewritten to support the package system.
+Look under "Startup Paths" in the Info documentation for more
+information.
+
+*** site-lisp is no longer part of the load-path by default.
+Its use is deprecated, but you can specify --with-site-lisp=yes at the
+configure command line to get it back.
+
+*** `Info-default-directory-list' is now obsolete.  If you want to
+change the path which XEmacs uses to search for info files, set
+`Info-directory-list' instead.
+
+
+* For older news, see the file ONEWS.

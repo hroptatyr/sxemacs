@@ -1,0 +1,4 @@
+precious ^(finder-inf\.el)$
+precious ^(custom-load\.el)$
+precious ^(auto-autoloads\.el)$
+precious ^(.*\.elc)$

@@ -1,0 +1,28 @@
+/* XPM */
+static char *folder[] = {
+/* width height num_colors chars_per_pixel */
+"    17    17        4            1",
+/* colors */
+". c #000000",
+"a c #a8b038",
+"b c #f8f800",
+"c s None c None",
+/* pixels */
+"ccccccccccccccccc",
+"ccccccccccccccccc",
+"ccccccccccccccccc",
+"ccccccccccccccccc",
+"cccccccccaaaaaacc",
+"ccccccccaaaaaaacc",
+"cc......a.a.a.aac",
+"c.bbbbbbbbbbbbb.c",
+".bbbbbbbbbbbbbb.c",
+".bbbbbbbbbbbbbb.c",
+".bbbbbbbbbbbbbb.c",
+".bbbbbbbbbbbbbb.c",
+".bbbbbbbbbbbbbb.c",
+".bbbbbbbbbbbbbb.c",
+".bbbbbbbbbbbbbb.c",
+".bbbbbbbbbbbbbb.c",
+"a..............ac"
+};
