@@ -1,0 +1,330 @@
+
+Emacs Tooltalk API Summary
+
+The Emacs Lisp interface to Tooltalk is similar, at least in spirit,
+to the standard C Tootalk API.  Only the message and pattern parts
+of the API are supported at present, more of the API could be added
+if needed.  The Lisp interface departs from the C API in a few ways:
+
+- Tooltalk is initialized automatically at emacs startup-time.  Messages
+can only be sent other Tooltalk applications connected to the same
+X11 server that emacs is running on.
+
+- There are fewer entry points, polymorphic functions with keyword
+arguments are used instead.
+
+- The callback interface is simpler and marginally less functional.
+A single callback may be associated with a message or a pattern,
+the callback is specified with a Lisp symbol (the symbol should
+have a function binding).
+
+- The session attribute for messages and patterns is always
+initialized to the default session.
+
+- Anywhere a Tooltalk enum constant, e.g. TT_SESSION, is valid one
+can substitute the corresponding symbol, e.g. 'TT_SESSION.  This
+simplifies building lists that represent messages and patterns.
+
+
+* Example: Receiving Messages
+
+Here's a simple example of a handler for a message that tells
+emacs to display a string in the mini-buffer area.  The message
+operation is called "emacs-display-string", its first (0th) argument
+is the string to display:
+
+(defun tooltalk-display-string-handler (msg)
+  (message (get-tooltalk-message-attribute msg 'arg_val 0)))
+
+(defvar display-string-pattern
+  '(category TT_HANDLE
+       scope TT_SESSION
+          op "emacs-display-string"
+    callback tooltalk-display-string-handler))
+
+(let ((p (make-tooltalk-pattern display-string-pattern)))
+  (register-tooltalk-pattern p))
+
+
+* Example: Sending Messages
+
+Here's a simple example that sends a query to another application
+and then displays its reply.  Both the query and the reply are
+stored in the first argument of the message.
+
+(defun tooltalk-random-query-handler (msg)
+  (let ((state (get-tooltalk-message-attribute msg 'state)))
+    (cond
+      ((eq state 'TT_HANDLED)
+       (message (get-tooltalk-message-attribute msg arg_val 0)))
+      ((memq state '(TT_FAILED TT_REJECTED))
+       (message "Random query turns up nothing")))))
+
+(defvar random-query-message
+  '(   class TT_REQUEST
+       scope TT_SESSION
+     address TT_PROCEDURE
+          op "random-query"
+        args '((TT_INOUT "?" "string"))
+    callback tooltalk-random-query-handler))
+
+(let ((m (make-tooltalk-message random-query-message)))
+  (send-tooltalk-message m))
+
+
+* Emacs Lisp Tooltalk API
+
+** Sending Messages:
+
+(make-tooltalk-message attributes)
+
+Create a tooltalk message and initialize its attributes.
+The value of attributes must be a list of alternating keyword/values,
+where keywords are symbols that name valid message attributes.
+For example:
+
+  (make-tooltalk-message
+    '(class TT_NOTICE
+      scope TT_SESSION
+      address TT_PROCEDURE
+      op "do-something"
+      args ("arg1" 12345 (TT_INOUT "arg3" "string"))))
+
+Values must always be strings, integers, or symbols that
+represent Tooltalk constants.  Attribute names are the same as
+those supported by set-tooltalk-message-attribute, plus 'args.
+
+The value of args should be a list of message arguments where
+each message argument has the following form:
+
+   (mode [value [type]]) or just value
+
+Where mode is one of TT_IN, TT_OUT, TT_INOUT and type is a string.
+If type isn't specified then "int" is used if the value is a
+number otherwise "string" is used.  If type is "string" then value is
+converted to a string (if it isn't a string already) with
+prin1-to-string.  If only a value is specified then mode defaults
+to TT_IN.  If mode is TT_OUT then value and type don't need
+to be specified.  You can find out more about the semantics and
+uses of ToolTalk message arguments in chapter 4 of the Tooltalk
+Programmers Guide.
+
+
+
+(send-tooltalk-message msg)
+
+Send the message on its way.  Once the message has been sent it's
+almost always a good idea to get rid of it with destroy-tooltalk-message.
+
+
+
+(return-tooltalk-message msg &optional mode)
+
+Send a reply to this message.  The second argument can be
+'reply, 'reject or 'fail, the default is 'reply.  Before sending
+a reply all message arguments whose mode is TT_INOUT or TT_OUT should
+have been filled in - see set-tooltalk-message-attribute."
+
+
+
+(get-tooltalk-message-attribute msg attribute &optional argn)
+
+Returns the indicated Tooltalk message attribute.  Attributes are
+identified by symbols with the same name (underscores and all) as the
+suffix of the Tooltalk tt_message_<attribute> function that extracts the value.
+String attribute values are copied, enumerated type values (except disposition)
+are converted to symbols - e.g. TT_HANDLER is 'TT_HANDLER, uid and gid are
+represented by fixnums (small integers), opnum is converted to a string,
+and disposition is converted to a fixnum.  We convert opnum (a C int) to a
+string, e.g. 123 => \"123\" because there's no guarantee that opnums will fit
+within the range of Emacs Lisp integers.
+
+[TBD] Use the 'plist attribute instead of C API 'user attribute
+for user defined message data.  To retrieve the value of a message property
+specify the indicator for argn.  For example to get the value of a property
+called 'rflagg, use
+   (get-tooltalk-message-attribute msg 'plist 'rflag)
+
+
+To get the value of a message argument use one of the 'arg_val (strings),
+'arg_ival (integers), or 'arg_bval (strings with embedded nulls), attributes.
+Because integer valued arguments can be larger than Emacs Lisp integers
+'arg_ival yields a string.  If the value is will fit within 24 bits then
+convert it to an integer with string-to-int.  For example to get the integer
+value of the third argument:
+
+   (string-to-int (get-tooltalk-message-attribute msg 'arg_ival 2))
+
+As you can see, argument numbers are zero based.  The type of each arguments
+can be retrieved, with the 'arg_type attribute, however Tooltalk doesn't
+define any semantics for the string value of 'arg_type.  Conventionally
+"string" is used for strings and "int" for 32 bit integers.  Note that
+Emacs Lisp stores the lengths of strings explicitly (unlike C) so treating the
+value returned by 'arg_bval like a string is fine.
+
+
+
+
+(set-tooltalk-message-attribute value msg attribute &optional argn)
+
+Initialize one ToolTalk message attribute.
+
+Attribue names and values are the same as for get-tooltalk-message-attribute.
+A property list is provided for user data (instead of the 'user message
+attribute), see get-tooltalk-message-attribute.
+
+Callbacks are handled slightly differently than in the C Tooltalk API.
+The value of callback should be the name of a function of one argument.
+It will be called each time the state of the message changes.  This
+is usually used to notice when the messages state has
+changed to TT_HANDLED (or TT_FAILED), so that reply argument values
+can be used.
+
+If one of the argument attributes is specified, 'arg_val, 'arg_ival, or
+'arg_bval then argn must be the number of an already created argument.
+Arguments can be added to a message with add-tooltalk-message-arg.
+
+
+
+(add-tooltalk-message-arg msg mode type &optional value)
+
+Append one new argument to the message.  Mode must be one of: TT_IN,
+TT_INOUT, or TT_OUT, type must be a string, and value can
+be a string or an integer.   Tooltalk doesn't
+define any semantics for type, so only the participants in the
+protocol you're using need to agree what types mean (if anything).
+Conventionally "string" is used for strings and "int" for 32 bit integers.
+Arguments can initialized by providing a value or with
+set-tooltalk-message-attribute, the latter is necessary if you
+want to initialize the argument with a string that can contain
+embedded nulls (use 'arg_bval).
+
+
+(create-tooltalk-message)
+
+Create a new tooltalk message.  The messages session attribute is
+initialized to the default session.  Other attributes can be initialized
+with set-tooltalk-message-attribute.  Make-tooltalk-message is the
+preferred to create and initialize a message.
+
+
+(destroy-tooltalk-message msg)
+
+Apply tt_message_destroy to the message.  It's not necessary
+to destroy messages after they've been processed by a message or
+pattern callback, the Lisp/Tooltalk callback machinery does this
+for you.
+
+
+
+** Receiving Messages:
+
+
+(make-tooltalk-pattern attributes)
+
+Create a tooltalk pattern and initialize its attributes.
+The value of attributes must be a list of alternating keyword/values,
+where keywords are symbols that name valid pattern attributes
+or lists of valid attributes.  For example:
+
+  (make-tooltalk-pattern
+    '(category TT_OBSERVE
+         scope TT_SESSION
+            op ("operation1" "operation2")
+          args ("arg1" 12345 (TT_INOUT "arg3" "string"))))
+
+Attribute names are the same as those supported by
+add-tooltalk-pattern-attribute, plus 'args.
+
+Values must always be strings, integers, or symbols that
+represent Tooltalk constants or lists of same.  When a list
+of values is provided all of the list elements are added to
+the attribute.  In the example above, messages whose op
+attribute is "operation1" or "operation2" would match the pattern.
+
+The value of args should be a list of pattern arguments where
+each pattern argument has the following form:
+
+   (mode [value [type]]) or just value
+
+Where mode is one of TT_IN, TT_OUT, TT_INOUT and type is a string.
+If type isn't specified then "int" is used if the value is a
+number otherwise "string" is used.  If type is "string" then value is
+converted to a string (if it isn't a string already) with
+prin1-to-string.  If only a value is specified then mode defaults
+to TT_IN.  If mode is TT_OUT then value and type don't need
+to be specified.  You can find out more about the semantics and
+uses of ToolTalk pattern arguments in chapter 3 of the Tooltalk
+Programmers Guide.
+
+
+
+(register-tooltalk-pattern pat)
+
+Emacs will begin receiving messages that match this pattern.
+
+
+(unregister-tooltalk-pattern pat)
+
+Emacs will stop receiving messages that match this pattern.
+
+
+
+(add-tooltalk-pattern-attribute value pat indicator)
+
+Add one value to the indicated pattern attribute. The names of attributes
+are the same as the Tooltalk accessors used to set them less the
+"tooltalk_pattern_" prefix and the "_add" suffix).  For example
+the name of the attribute for tt_pattern_disposition_add attribute
+is 'disposition.  The 'category attribute is handled specially,
+since a pattern can only be a member of one category (TT_OBSERVE
+or TT_HANDLE.
+
+Callbacks are handled slightly differently than in the C Tooltalk API.
+The value of callback should be the name of a function of one argument.
+It will be called each time the pattern matches an incoming message.
+
+
+
+(add-tooltalk-pattern-arg pat mode type value)
+
+Add one, fully specified, argument to a tooltalk pattern.  Mode must
+be one of TT_IN, TT_INOUT, or TT_OUT, type must be a string.
+Value can be an integer, string or nil.  If value is an integer then
+an integer argument (tt_pattern_iarg_add) added otherwise a string argument
+is added.  At present there's no way to add a binary data argument.
+
+
+(create-tooltalk-pattern)
+
+Create a new Tooltalk pattern and initialize its session attribute to
+be the default session.
+
+
+
+(destroy-tooltalk-pattern pat)
+
+Apply tt_pattern_destroy to the pattern.  This effecticely unregisters
+the pattern.
+
+
+
+(describe-tooltalk-message msg &optional stream)
+
+Print the messages attributes and arguments to stream.  This is often
+useful for debugging.
+
+
+
+* Things to be Done
+
+- At the moment there is almost no support for detecting and
+handling ToolTalk errors.  This should be added.
+
+- Message and patterns should support a plist attribute.  This
+would be based on one more Tooltalk user data key.  This would also make
+it useful to apply the message and pattern callbacks to
+both the message and the matching pattern.
+
+
+

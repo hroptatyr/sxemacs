@@ -1,0 +1,5 @@
+precious ^(.*\.dvi)$
+precious ^(.*\.ps)$
+precious ^(.*\.pdf)$
+# arch-tag: stty: standard input: Inappropriate ioctl for device
+a07742b8-3d5a-4f39-90c5-7d7d98a71477

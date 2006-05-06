@@ -1,0 +1,28 @@
+This directory contains C header files containing machine-specific
+definitions.  Each file describes a particular machine.  The emacs
+configuration script edits ../config.h to include the appropriate one of
+these files, and then each emacs source file includes config.h.
+
+template.h is a generic template for machine descriptions; it
+describes the parameters a machine file can specify.
+
+
+General XEmacs Changes
+----------------------
+1. Removed all code dealing with VALBITS and XSET*.  These are handled
+   differently in XEmacs.
+
+2. Removed all defines of WORDS_BIGENDIAN.  Now determined by configure.
+
+3. Put #ifndef PURESIZE around all PURESIZE defines so that it can be
+   overridden at configure time.
+
+4. Removed all defines of NO_ARG_ARRAY.  The arg-array hack is not
+   done in XEmacs. (If you want to put it back, use configure --
+   autoconf has a check for this.)
+
+5. Removed all defines of BITS_PER_INT, BITS_PER_LONG -- now
+   determined by configure.
+
+See ../s/README for a list of other changes made to the FSF 19.30
+configuration files for XEmacs.

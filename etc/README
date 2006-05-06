@@ -1,0 +1,80 @@
+
+This directory contains some text files of documentation for XEmacs or
+of interest to XEmacs users, some programs used by or with XEmacs, and
+the file of on-line documentation for XEmacs.
+
+BETA			Information about Beta versions
+CHARSETS		Character set descriptions
+CODING-STANDARDS	XEmacs C & Lisp coding standards
+CODINGS			Character set codings
+COOKIES			Urban Legend, or True Story? :-)
+COPYING			GNU Public License
+COPYING.LIB		Library GNU Public License
+DEBUG			Hints on how to debug XEmacs
+DISTRIB			How to obtain copies of XEmacs and Emacs
+Emacs.ad		Sample Resource file
+FTP			XEmacs FTP Mirrors
+GNU			GNU Manifesto
+GOATS			Complete XEmacs internals documentation
+InstallGuide		Fast track to installation
+LPF			Information about the League for Programming Freedom
+MACHINES		List of known machines configurations (OLD)
+MAILINGLISTS		List of available Mailing lists
+MORE.STUFF		List of useful unbundled packages
+NEWS			XEmacs 21.4 release information
+ORDERS
+ORDERS.EUROPE
+ORDERS.JAPAN		Order forms for GNU software
+PACKAGES		List of packages available for 21.4 release
+README			This file
+README.HYPERBOLE
+README.OO-BROWSER	How to obtain Hyperbole and the OO-Browser
+SERVICE			How to obtain paid support for free software
+TERMS			Information about termcap entries
+TUTORIAL		Tutorial for first time users (English version)
+TUTORIAL.*		Tutorials in non-English languages
+XKeysymDB		X Keysym Database with Motif bindings
+aliases.sh		Useful shell aliases
+cbx.png			"Created by XEmacs" logo
+check_cygwin_setup.sh	Script to check for presence of Cygwin
+ctags.1			Ctags man page
+custom/			Images used in Custom mode
+editclient.sh		Either start up XEmacs or connect to a running one
+emacskeys.sco		
+emacsstrs.sco		Special files for running on an SCO console
+eos/			Images for EOS support (GUD)
+etags.1			Etags man page
+gnu.xbm			
+gnu.xpm			Image of a Gnu.
+gnuattach.1		Gnuattach man page
+gnuclient.1		Gnuclient man page
+gnudoit.1		Gnudoit man page
+gnuserv.1		Gnuserv man page
+gnuserv.README		Original README file from gnuserv
+gnusref.tex		Gnus reference card
+gray1.xbm		Gray bitmap
+ms-kermit
+ms-kermit-7bit		Files for running XEmacs through kermit
+photos/*.Z		Various pictures of XEmacs developers
+recycle.xpm
+recycle2.xpm		Two versions of oversized Recycle cursor
+refcard.ps.gz		Postscript version of XEmacs reference card
+refcard.tex		XEmacs reference card
+sample.Xdefaults	Example ~/.Xdefaults file
+sample.init.el		Example ~/.xemacs/init.el file
+sink.xbm		A Gnu icon
+sparcworks/		Support files for Sparcworks
+tests/			Testcases for external widget
+time/			Image files for display-time
+toolbar/		Image files for the toolbar
+trash.xpm		Garbage can icon
+xemacs-beta.xpm		XEmacs Beta logo
+xemacs-fe.sh		XEmacs frontend driver
+xemacs-icon.xpm
+xemacs-icon2.xbm
+xemacs-icon2.xpm
+xemacs-icon3.xpm	Various versions of an XEmacs WM icon
+xemacs-ja.1		Japanese XEmacs man page
+xemacs.1		XEmacs man page
+xemacs.xbm
+xemacs.xpm		XEmacs logo used on the splash screen
