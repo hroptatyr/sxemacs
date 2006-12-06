@@ -1,0 +1,570 @@
+-*- mode:outline -*-
+
+* Introduction
+==============
+
+This file presents the changes in recent SXEmacs versions.  It
+primarily documents user-visible (interface) changes, but also
+includes internal changes of possible interest to the users.  When
+describing new features, we try to also document ways of reverting to
+the old behavior, where applicable.  If you dislike a recent change in
+how SXEmacs behaves, this file might contain a remedy.
+
+Use `C-c C-f' to move to the next equal level of outline, and
+`C-c C-b' to move to previous equal level.  `C-h m' will give more
+info about the Outline mode.  Many commands are also available through
+the menubar.
+
+Users who would like to know which capabilities have been introduced
+in each release should look at the appropriate section of this file.
+
+
+
+* Changes in SXEmacs 22.1.6 (Cadillac)
+======================================
+
+** ENT (Enhanced Number Types) updates and fixes -- Freundt, Ferreira.
+
+** MM (MultiMedia) updates and fixes -- Freundt, Ferreira, Youngs.
+
+** FFi (Foreign Function Interface) updates -- Freundt, Zajcev.
+
+** New ffi-gcrypt.el -- Freundt.
+
+ffi-gcrypt.el brings GnuPG's libgcrypt bindings to SXEmacs.
+
+** Line/column numbers in modeline are now padded -- Ferreira.
+
+** New skiplists -- Freundt.
+
+This is a basic implementation of Pugh's skip lists.  Their efficiency
+is overwhelming when compared to alists or plists.  They also perform
+better on insertion and removal than large hash-tables (due to the
+resizing/rehashing which takes place).  They can be created almost as
+fast as lisp lists and thus beat hash-tables there, too.
+
+** Fix module (DSO) load paths -- Youngs.
+
+** SXEmacs maintainer turned 40 -- Mr and Mrs Youngs.
+
+This is a recurring bug that was first discovered on June 19th, 1966.
+
+** Test suite updates/improvements -- Turnbull, Youngs.
+
+** Etags updates/fixes -- Ferreira, Youngs.
+
+Sync to Francesco's version 17.20 etags.  And major surgery on
+etags.el to make it usable, fixing completion and support for the
+"include" directive.
+
+** Fix raw string parsing -- Kehoe.
+
+A problem that arose in lisp-interaction-mode, where raw strings
+were parsed as normal strings if you did a C-j after them, becase
+forward-sexp couldn~t handle them.
+
+** Sync bytecomp-runtime.el with XEmacs 21.5 -- Youngs.
+
+The significance of this is that SXEmacs now has all those cool
+with,if,when,and-boundp macros for clean byte-compiler warning
+suppression.
+
+** OpenSSL updates/fixes/improvements -- Freundt.
+
+A rewrite of the old handshake functions.  SSL connections can be
+established as before: open a network-stream, call ossl-ssl-handshake
+on it and store the result.  The new implementation provides also
+support for certificate authorities (CA), for peer certificates and,
+using the network-server-streams, secure listening sockets.  This will
+allow to connect/accept to/from servers/clients which require valid
+peer certificates.
+
+** New PulseAudio support -- Freundt.
+
+PulseAudio is the successor to PolypAudio.  Because there were so few
+users using Polyp (think we counted 2 and they're both SXEmacs
+developers) SXEmacs support for PolypAudio was replaced by PulseAudio
+support. 
+
+** New Caching compiled regular expressions -- Freundt.
+
+All you really need to do to use them is assign them (the regexp) to a
+variable.  Here's an example...
+
+  (let ((reg1 "^;+\\s-")
+        (reg2 "\\s-+;+"))
+    (while (and (re-search-forward reg1 nil t)
+                (re-search-forward reg2 nil t))
+      ...))
+
+instead of:
+
+  (while (and (re-search-forward "^;+\\s-" nil t)
+              (re-search-forward "\\s-+;+" nil t))
+    ...)
+
+The former construct will store the compiled regular expressions in the
+object property list of `reg1' and `reg2' on the first iteration of
+`while', all following iterations will then use the already compiled
+regexps.  The latter construct will behave as before, the regular
+expression is compiled and stored, but since the string is hard-coded in
+the buffer, it will be newly generated (with empty object-plist of
+course) during every cycle of the while loop.
+
+** Cleaner dump file -- Freundt, Youngs.
+
+The portable dump file was getting polluted with things in the
+packages load-path causing all sorts of undefined and unexpected
+impossible to track down bugs.  No longer!
+
+** Fix many many byte-compiler warnings in building core lisp -- Youngs.
+
+** Fix building without emodules -- Ferreira.
+
+** New Support emodules on MacOS -- Ferreira.
+
+** Fix BerkeleyDB detection on NetBSD -- Ferreira.
+
+** New SXEmacs icons added to dist -- Ferreira.
+
+** Major restructuring of the build chain and install layout -- Freundt.
+
+SXEmacs is now pretty much a completely autotool'd project... automake,
+autoheader, the whole 9 yards.  And if that wasn't enough, we are now
+also, to the best of our knowledge, reasonably FHS-compliant with our
+install.
+
+The changes to the install directory hierarchies are:
+
+           now go to...                before went to...
+  lisp     share/sxemacs-22.1.6/lisp/  lib/sxemacs-22.1.6/lisp/
+  etc      share/sxemacs-22.1.6/etc/   lib/sxemacs-22.1.6/etc/
+  info     share/info/                 lib/sxemacs-22.1.6/info/
+  headers  include/sxemacs/22.1.6/     lib/sxemacs-22.1.6/<arch>/include/
+
+Packages are now searched for in
+
+  $prefix/share/sxemacs/{{s,}xemacs,mule,site}-packages/
+
+instead of $prefix/lib/sxemacs/.../
+
+** DnD dragged out and dropped on /dev/null -- Freundt.
+
+** Misc build fixes -- Freundt, Ferreira, Youngs.
+
+** Fix `tags' Makefile target -- Youngs.
+
+** Fix bug in `lib-complete' -- Freundt.
+
+The bug was causing `find-library' to visit the .elc instead of the
+.el if you were running SXEmacs in-place from the build tree.
+
+** Fix stack overflow crash in mapconcat -- Ferreira.
+
+** Large update of about.el -- Freundt, Ferreira, Youngs.
+
+See: M-x about-sxemacs
+
+** Various documentation updates/fixes/improvements -- Freundt, Ferreira, Youngs.
+
+
+* Changes in SXEmacs 22.1.5 (Bugatti)
+=====================================
+First up, this release has turned into a purely maintenance/bugfix
+release.  SXEmacs 22.1.4 had several build-related issues that this
+release addresses.
+
+** version.sh fix -- Youngs.
+
+Fix a problem with the wrong version being generated.
+
+** Autoconf fixes -- Youngs, Ferreira, Freundt.
+
+Lots of changes to the autoconf configure script
+
+	- Recognise $CFLAGS environment variables
+	- X toolkit autodetection redone
+	- TTY autodetection fixed
+	- PostgreSQL detection properly reported
+	- Change allowed values for menubars, dialogs, widgets
+		menubars -- no athena or motif
+		dialogs  -- no lucid
+		widgets  -- no lucid
+	- Set configure's "bugreport address" to
+	  http://issues.sxemacs.org. 
+	- Fix gdbm/berkdb detection
+	- Improve libc version detection
+
+** New Makefile target (build-report) -- Kuehl.
+
+`make build-report' is a convenience target.  It automatically
+captures make output to files that `M-x build-rpt' knows about.  It
+also runs `make check'.  The SXEmacs developers recommend that you use
+this target to build SXEmacs.
+
+** PROBLEMS updated -- Kuehl, Freundt.
+
+Document SELinux/libffi issues and GMP/mpfr Fedora issues.
+
+** pdump/ENT fix for *BSD -- Freundt.
+
+** Documentation updates/fixes -- Youngs, Ferreira, Freundt.
+
+
+* Changes in SXEmacs 22.1.4 (Bentley Turbo)
+===========================================
+
+** Many more image formats via FFI/libWand -- Freundt.
+
+FFI-enabled SXEmacs can load up libWand and thus display any image
+format that libWand (ImageMagick) supports.
+
+** Lots of updates to the ENT (Enhanced Number Types) code -- Freundt.
+
+** Mule is on by default -- Youngs.
+
+** Embeddable keyboard macros -- Kuehl.
+
+This means that the following sort of thing is possible:
+
+      C-x ( bar C-x )
+      C-x ( foo C-x e C-x )
+    
+      C-x e
+      => foo bar
+
+** Default widgets/dialogs to Athena instead of Motif -- Youngs.
+
+** OpenSSL updates -- Freundt.
+
+Digest, encryption, and decryption routines that operate on files has
+been added.  Previously this was only available for buffers.
+
+** Build reports have been revamped -- Youngs, Freundt.
+
+The SXEmacs build report no longer conflicts with the XEmacs
+build-report.el.  Plus ours also reports on shared lib dependencies
+and config.h stuff.  Sending from Gnus is also supported.
+
+** FFI updates/fixes -- Youngs, Zajcev, Freundt.
+
+** Ability to build postscript, pdf, and html docs -- Ferreira.
+
+** Double linked lists and bloom filters implemented -- Freundt.
+
+Bloom filters are a space and time-efficient way to decide about the
+membership of an element to a given set. Using lisp-lists or vectors,
+one usually has to traverse the entire list or vector, before
+membership can be decided.  Using hash tables, membership decision is
+in O(1) (bloom filters also decide in O(1)), but the hash-table's size
+grows proportionally with the number n of elements, thus its space
+complexity is O(n), whereas Bloom filters take a constant amount of
+space regardless how many elements are in it.
+
+** Lightning fast recursive version of directory-files -- Freundt.
+
+It's called `directory-files-recur' and in some situations it is even
+faster than GNU's find(1).
+
+** Portuguese added to etc/HELLO -- Ferreira.
+
+** Massive improvements, enhancements for multimedia (audio) -- Freundt.
+
+SXEmacs supports several "sound servers" like: OSS, NAS, ESD, Polypaudio,
+ALSA, aRts, and Jack.  And media streams can be handled by sndfile, ffmpeg,
+sox, mad, xine, gstreamer.  The SXEmacs developers recommend Polyp/ffmpeg
+whenever possible.
+
+And yes, SXEmacs _can_ play mp3 files. :-)
+
+** Autoconf fixes/updates -- Youngs, Freundt.
+
+All of the enable/disable options have been converted to with/without
+options.  This allows us to sort them into groups.
+
+Also fixes were made to allow building on FreeBSD and NetBSD.
+
+** Big update for the FAQ -- Youngs, Freundt.
+
+** Server Sockets! -- Ferreira.
+
+SXEmacs now has server sockets (Yay!).  See
+`open-network-server-stream'.
+
+** Compiler fixes (gcc 2.95) -- Freundt.
+
+** bug-reporter update -- Youngs.
+
+`report-sxemacs-bug' now directs people to our BugZilla installation
+at http://issues.sxemacs.org/
+
+** Documentation updates/fixes/improvements -- Youngs, Ferreira, Freundt.
+
+
+* Changes in SXEmacs 22.1.3 (BMW)
+=================================
+
+** OpenSSL updates, improvements, and fixes -- Freundt.
+
+** FFI updates, and fixes -- Zajcev.
+
+FFI now defaults to "on" if libffi can be found at configure time.  It
+you don't want this, use: `--disable-ffi'.
+
+FTP downloads with `curl:download' is working properly now.  And with
+HTTP transfers you can transfer just the HTTP header for a file if you
+wish.
+
+** Extent/glyph fixes -- Sidwell, Kuehl.
+
+** 32 mouse buttons supported -- Youngs.
+
+(global-set-key [(button32)] 'some-function) is valid in SXEmacs.
+
+** Modeline tweaks -- Ferreira.
+
+Move line/column number indicators to left side (aka XE 21.5)
+
+** M-x uptime -- Youngs.
+
+Every good OS has an uptime util, SXEmacs is no exception.  Reports
+uptime in various formats.
+
+** ia64 build fixes -- Lesjak.
+
+** `C-h n' will no longer find NEWS files from packages -- Youngs.
+
+** List of package mirrors updated -- Aichner, Skyttä.
+
+** Bootstrappable PUI -- Youngs.
+
+SXEmacs no longer needs to have _any_ packages pre-installed before
+PUI can be used.  See (Info-goto-node "(sxemacs)Bootstrapping PUI").
+
+** Bignums, and a whole swag of sexy new number goodness -- Freundt.
+
+Bignums, bigfloats, and ratios that you may know from XEmacs 21.5 are
+now in SXEmacs.  That and a whole lot more...
+
+Features provided when all of the library demands are met:
+    
+  (featurep 'bigz) and 
+  (featurep 'bignum)       <=> if MPZ from GMP or BSD MP is present
+  
+  (featurep 'bigq) and
+  (featurep 'ratio)        <=> if MPQ from GMP is present
+  
+  (featurep 'bigf) and
+  (featurep 'bigfloat)     <=> if MPF from GMP is present
+  
+  (featurep 'bigfr)        <=> if MPFR is present
+  
+  (featurep 'bigc)         <=> if MPC is present
+  
+  (featurep 'number-types) <=> if one of the above features is
+  provided
+
+For complete details see: (Info-goto-node "(lispref)Enhanced Number Types")
+
+** Raw strings -- Kuehl.
+
+SXEmacs tries to relieve backslashitis by implementing raw strings.
+You'll imediately notice the benefit of raw strings when use them for
+those hairy regexps.  Consider the regular expression (from
+font-latex.el)... 
+
+  "\\(?:^\\|[^\\]\\)\\(?:\\\\\\\\\\)*\\(\\\\[@A-Za-z]+\\)"
+
+As a raw string it could be written as...
+
+  #r"\(?:^\|[^\]\)\(?:\)*\(\\[@A-Za-z]+\)"
+
+Most of the SXEmacs core lisp code has been converted over to using
+raw strings whereever appropriate.
+
+** Improved font-locking in a TTY -- Ferreira.
+
+To illustrate this...
+
+  $ sxemacs -nw -vanilla
+
+...and look at the modeline.  Now open a .c file and turn on
+font-lock... 
+
+  C-x C-f /path/to/file.c RET
+  M-x font-lock-mode RET
+
+** Compiler fixes -- Zajcev.
+
+** SXEmacs can no longer be built with a C++ compiler -- Youngs.
+
+To build SXEmacs you will need a C compiler at least the equivalent of
+GCC 2.95.3.  Building with a C++ compiler is no longer supported.
+
+** Autoconf fixes, updates -- Freundt, Kuehl, Youngs.
+
+All autoconf options now have a help string (for ./configure --help)
+and the default setting for each option is noted.
+
+** PostgreSQL auto-detection improved -- Youngs.
+
+If pg_config is in your $PATH, SXEmacs will add PostgreSQL support at
+configure/build time.
+
+** Documentation (Texinfo) updates -- Freundt, Youngs.
+
+The SXEmacs manual is now called "sxemacs" instead of "xemacs".  C-h
+C-i sxemacs RET to read it.
+
+Most of the Texinfo docs now have been updated to say "SXEmacs"
+whereever appropriate instead of "XEmacs".
+
+** GTK (version 1.2) build fixes -- Youngs.
+
+
+* Changes in SXEmacs 22.1.2 (Audi)
+==================================
+
+** autoconf 2.59 compatible configure scripts -- Youngs, Purvis.
+
+Many configure options have changed.  Please run `./configure --help'
+to see what the new options are.
+
+** Most win32 code is now gone -- Youngs, Freundt.
+
+** `describe-installation' report libc version on Slackware -- Youngs.
+
+** etags.c updated to Francesco's version 17.11 -- Youngs.
+
+** Support `ls --dired' properly -- Sperber.
+
+** FFI (Foreign Function Interface) updates -- Zajcev.
+
+One of the most exciting things is that this version of SXEmacs can
+download files from the internet _without_ the need of any XEmacs
+packages being installed.  If you have libcurl and enable FFI in
+SXEmacs at build time, you can:
+
+	(require 'ffi-curl)
+	(curl:download "http://www.somedomain.com/path/file"
+	               "/tmp/file")
+
+To put your mind at ease, libcurl is _NOT_ needed to build SXEmacs.
+The above will work even if you install libcurl after
+building/installing SXEmacs.
+
+** Don't echo GC messages for non-string GC'ing -- Zajcev.
+
+This drastically reduces the number of "Garbage Collecting" messages
+that you see in the echo area.  Garbage collection is still happening,
+it is just not in your face as much.
+
+** movemail.c security fixes -- Oskarsson.
+
+** PUI's *packages* buffer enhancements -- Koch.
+
+** Saner fallbacks for `backup-buffer' -- Youngs.
+
+Based on an idea from JWZ, if the backup can't be written, try in
+`auto-save-directory', and if that fails, fall back to $HOME.
+
+** OpenSSL support -- Freundt.
+
+Of course. The OpenSSL library itself is actually separated into two
+libraries: libcrypto and libssl.  libcrypto is the part which comes to
+elisp with the current API.  libssl is planned for the near future.
+
+With this interface/gateway we now have access to the wonderful world
+of static cryptography (static here means no handshake/protocols/etc.).
+
+The API contains:
+
+- the OpenSSL PRNG = (pseudo) random number generator to provide
+  generating cryptographically secure randomness
+
+- the OpenSSL MDs (message digests) to provide all sorts of hashing
+  (we had an md5 implementation already)
+
+- the HMAC aka keyed hashing aka message authentication code to provide
+  hashes secured by a password
+
+- the CIPHER engine (i.e. symmetric crypto systems) to provide
+  encryption/decryption routines secured by a password
+
+- the PKEY engine (i.e. asymmetric crypto systems) to provide generation
+  and distribution of private/public key pairs (as probably known by
+  gpg)
+
+- the HYBRIDe engine aka PKCS aka public key crypto systems to provide
+  encryption based on (foreign) public keys and decryption with own
+  private keys to provide also digital signatures and verification (as
+  probably known by gpg)
+
+** Remove most of the generated files from the repo -- Youngs, Freundt.
+
+** Allow suppression of WM decorations -- Turnbull.
+
+This makes balloon-help windows infinitely better behaved.  Thank you
+very much, Steve T.
+
+** Fontify *scratch* buffer according to user's settings -- Kehoe.
+
+** Fix bug hanging SXEmacs when yanking > 260kb -- Kehoe.
+
+** lispref manual updated for SXEmacs -- Freundt.
+
+** PostgreSQL updates (mainly doc updates) -- Frenudt.
+
+
+* Changes in SXEmacs 22.1.1 (Aston Martin)
+==========================================
+
+** user-init-directory set to ~/.sxemacs -- Youngs.
+
+Symlinking this to your old ~/.xemacs directory is enough to get up
+and running with SXEmacs.
+
+** Packages hierarchy default set to $prefix/lib/sxemacs -- Youngs.
+
+Symlinking this to your old $prefix/lib/xemacs directory is enough to
+get up and running with SXEmacs.  SXEmacs will do this for you when
+you do `make install'.
+
+** Rename items in the menubar -- Slusar, Youngs.
+
+** Beginnings of FFI -- Zajcev.
+
+FFI is "Foreign Function Interface" and will allow access to functions
+and libraries outside of SXEmacs from within lisp.  Not completed yet,
+but the basic infrastructure is in place.
+
+** FreeBSD build fixes -- Slusar.
+
+** M-x report-sxemacs-bug -- Youngs.
+
+For now, this is just a wrapper around report-xemacs-bug with the
+appropriate variables set to SXEmacs values.
+
+** Fix etags.c -- Slusar.
+
+Avoid a segv.
+
+** M-x build-report -- Youngs.
+
+Make it work for SXEmacs.
+
+** Fix major bug in regex.c
+
+This fixed a whole swag of crashes involving regexps and
+syntax-tables. 
+
+** Sync up with XEmacs 21.4 -- Various Developers.
+
+
+* Changes in SXEmacs 22.1.0 (Alfa Romeo)
+========================================
+
+This is the first release of SXEmacs.  It is a fork of XEmacs
+21.4.16.  The vast majority of the changes between SXEmacs 22.1.0 and
+the code it descended from, XEmacs 21.4.16, are purely renaming
+"XEmacs" to "SXEmacs".

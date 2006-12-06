@@ -1,0 +1,1118 @@
+@c -*-texinfo-*-
+@c This is part of the SXEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993 Free Software Foundation, Inc.
+@c Copyright (C) 2005, 2006 Sebastian Freundt <hroptatyr@sxemacs.org>
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/tips.info
+
+@node Tips, Building SXEmacs and Object Allocation, MULE, Top
+@appendix Tips and Standards
+@cindex tips
+@cindex standards of coding style
+@cindex coding standards
+
+  This chapter describes no additional features of SXEmacs Lisp.
+Instead it gives advice on making effective use of the features described
+in the previous chapters.
+
+@menu
+* Style Tips::                Writing clean and robust programs.
+* Performance Tips::          How to write efficient lisp code.
+* Compatibility Tips::        How to write compatible lisp code.
+* Documentation Tips::        Writing readable documentation strings.
+* Comment Tips::	      Conventions for writing comments.
+* Library Headers::           Standard headers for library packages.
+@end menu
+
+
+@node Style Tips
+@section Writing Clean Lisp Programs
+
+  Here are some tips for avoiding common errors in writing Lisp code
+intended for widespread use:
+
+@itemize @bullet
+@item
+Since all global variables share the same name space, and all functions
+share another name space, you should choose a short word to distinguish
+your program from other Lisp programs.  Then take care to begin the
+names of all global variables, constants, and functions with the chosen
+prefix.  This helps avoid name conflicts.
+
+This recommendation applies even to names for traditional Lisp
+primitives that are not primitives in SXEmacs Lisp---even to @code{cadr}.
+Believe it or not, there is more than one plausible way to define
+@code{cadr}.  Play it safe; append your name prefix to produce a name
+like @code{foo-cadr} or @code{mylib-cadr} instead.
+
+If you write a function that you think ought to be added to SXEmacs under
+a certain name, such as @code{twiddle-files}, do not call it by that name
+in your program.  Call it @code{mylib-twiddle-files} in your program,
+and send mail to @samp{sxemacs-devel@@sxemacs.org} suggesting we add
+it to SXEmacs.  If and when we do, we can change the name easily enough.
+
+If one prefix is insufficient, your package may use two or three
+alternative common prefixes, so long as they make sense.
+
+Separate the prefix from the rest of the symbol name with a hyphen,
+@samp{-}.  This will be consistent with SXEmacs itself and with most
+Emacs Lisp programs.
+
+@item
+It is often useful to put a call to @code{provide} in each separate
+library program, at least if there is more than one entry point to the
+program.
+
+@item
+If a file requires certain other library programs to be loaded
+beforehand, then the comments at the beginning of the file should say
+so.  Also, use @code{require} to make sure they are loaded.
+
+@item
+If one file @var{foo} uses a macro defined in another file @var{bar},
+@var{foo} should contain this expression before the first use of the
+macro:
+
+@example
+(eval-when-compile (require '@var{bar}))
+@end example
+
+@noindent
+And, of course, @var{bar} should contain @code{(provide '@var{bar})}, to
+make the @code{require} work.  This will cause @var{bar} to be loaded
+when you byte-compile @var{foo}.  Otherwise, you risk compiling
+@var{foo} without the necessary macro loaded, and that would produce
+compiled code that will not work right.  @xref{Compiling Macros}.
+
+Using @code{eval-when-compile} avoids loading @var{bar} when
+the compiled version of @var{foo} is @emph{used}.
+
+@item
+If you define a major mode, make sure to run a hook variable using
+@code{run-hooks}, just as the existing major modes do.  @xref{Hooks}.
+
+@item
+If the purpose of a function is to tell you whether a certain condition
+is true or false, give the function a name that ends in @samp{p}.  If
+the name is one word, add just @samp{p}; if the name is multiple words,
+add @samp{-p}.  Examples are @code{framep} and @code{frame-live-p}.
+
+@item
+If a user option variable records a true-or-false condition, give it a
+name that ends in @samp{-flag}.
+
+@item
+Please do not define @kbd{C-c @var{letter}} as a key in your major
+modes.  These sequences are reserved for users; they are the
+@strong{only} sequences reserved for users, so we cannot do without
+them.
+
+Instead, define sequences consisting of @kbd{C-c} followed by a
+non-letter.  These sequences are reserved for major modes.
+
+Changing all the major modes in Emacs 18 so they would follow this
+convention was a lot of work.  Abandoning this convention would make
+that work go to waste, and inconvenience users.
+
+@item
+Sequences consisting of @kbd{C-c} followed by @kbd{@{}, @kbd{@}},
+@kbd{<}, @kbd{>}, @kbd{:} or @kbd{;} are also reserved for major modes.
+
+@item
+Sequences consisting of @kbd{C-c} followed by any other punctuation
+character are allocated for minor modes.  Using them in a major mode is
+not absolutely prohibited, but if you do that, the major mode binding
+may be shadowed from time to time by minor modes.
+
+@item
+You should not bind @kbd{C-h} following any prefix character (including
+@kbd{C-c}).  If you do not bind @kbd{C-h}, it is automatically available
+as a help character for listing the subcommands of the prefix character.
+
+@item
+You should not bind a key sequence ending in @key{ESC} except following
+another @key{ESC}.  That is, it is ok to bind a sequence ending in
+@kbd{@key{ESC} @key{ESC}}.
+
+The reason for this rule is that a non-prefix binding for @key{ESC} in
+any context prevents recognition of escape sequences as function keys in
+that context.
+
+@item
+Applications should not bind mouse events based on button 1 with the
+shift key held down.  These events include @kbd{S-mouse-1},
+@kbd{M-S-mouse-1}, @kbd{C-S-mouse-1}, and so on.  They are reserved for
+users.
+
+@item
+Modes should redefine @kbd{mouse-2} as a command to follow some sort of
+reference in the text of a buffer, if users usually would not want to
+alter the text in that buffer by hand.  Modes such as Dired, Info,
+Compilation, and Occur redefine it in this way.
+
+@item
+When a package provides a modification of ordinary SXEmacs behavior, it
+is good to include a command to enable and disable the feature, Provide
+a command named @code{@var{whatever}-mode} which turns the feature on or
+off, and make it autoload (@pxref{Autoload}).  Design the package so
+that simply loading it has no visible effect---that should not enable
+the feature.  Users will request the feature by invoking the command.
+
+@item
+It is a bad idea to define aliases for the SXEmacs primitives.  Use the
+standard names instead.
+
+@item
+Redefining a SXEmacs primitive is an even worse idea.
+It may do the right thing for a particular program, but
+there is no telling what other programs might break as a result.
+
+@item
+If a file does replace any of the functions or library programs of
+standard SXEmacs, prominent comments at the beginning of the file should
+say which functions are replaced, and how the behavior of the
+replacements differs from that of the originals.
+
+@item
+Please keep the names of your SXEmacs Lisp source files to 13 characters
+or less.  This way, if the files are compiled, the compiled files' names
+will be 14 characters or less, which is short enough to fit on all kinds
+of Unix systems.
+
+@item
+Do not use @code{next-line} or @code{previous-line} in programs; nearly
+always, @code{forward-line} is more convenient as well as more
+predictable and robust.  @xref{Text Lines}.
+
+@item
+Do not call functions that set the mark, unless setting the mark is one
+of the intended features of your program.  The mark is a user-level
+feature, so it is incorrect to change the mark except to supply a value
+for the user's benefit.  @xref{The Mark}.
+
+In particular, do not use these functions:
+
+@itemize @bullet
+@item
+@code{beginning-of-buffer}, @code{end-of-buffer}
+@item
+@code{replace-string}, @code{replace-regexp}
+@end itemize
+
+If you just want to move point, or replace a certain string, without any
+of the other features intended for interactive users, you can replace
+these functions with one or two lines of simple Lisp code.
+
+@item
+Use lists rather than vectors, except when there is a particular reason
+to use a vector.  Lisp has more facilities for manipulating lists than
+for vectors, and working with lists is usually more convenient.
+
+Vectors are advantageous for tables that are substantial in size and are
+accessed in random order (not searched front to back), provided there is
+no need to insert or delete elements (only lists allow that).
+
+@item
+The recommended way to print a message in the echo area is with
+the @code{message} function, not @code{princ}.  @xref{The Echo Area}.
+
+@item
+When you encounter an error condition, call the function @code{error}
+(or @code{signal}).  The function @code{error} does not return.
+@xref{Signaling Errors}.
+
+Do not use @code{message}, @code{throw}, @code{sleep-for},
+or @code{beep} to report errors.
+
+@item
+An error message should start with a capital letter but should not end
+with a period.
+
+@item
+Try to avoid using recursive edits.  Instead, do what the Rmail @kbd{e}
+command does: use a new local keymap that contains one command defined
+to switch back to the old local keymap.  Or do what the
+@code{edit-options} command does: switch to another buffer and let the
+user switch back at will.  @xref{Recursive Editing}.
+
+@item
+In some other systems there is a convention of choosing variable names
+that begin and end with @samp{*}.  We do not use that convention in
+SXEmacs Lisp, so please don't use it in your programs.  Emacs uses such
+names only for program-generated buffers.  The users will find Emacs
+more coherent if all libraries use the same conventions.
+
+@item
+Use names starting with a space for temporary buffers (@pxref{Buffer
+Names}), or at least call @code{buffer-disable-undo} on them.  Otherwise
+they may stay referenced by internal undo variables after getting
+killed.  If this happens before dumping (@pxref{Building SXEmacs}), this
+may cause fatal error when portable dumper is used.
+
+@item
+Indent each function with @kbd{C-M-q} (@code{indent-sexp}) using the
+default indentation parameters.
+
+@item
+Do not make a habit of putting close-parentheses on lines by themselves;
+Lisp programmers find this disconcerting.  Once in a while, when there
+is a sequence of many consecutive close-parentheses, it may make sense
+to split them in one or two significant places.
+
+@item
+Please put a copyright notice on the file if you give copies to anyone.
+Use the same lines that appear at the top of the Lisp files in SXEmacs
+itself.
+@end itemize
+
+
+
+@node Performance Tips
+@section Tips for efficient lisp code
+@cindex execution speed
+@cindex speedups
+@cindex performance
+@cindex efficiency
+
+Here are ways of improving the execution speed of Lisp programs.
+
+@itemize @bullet
+@item
+Use byte compilation whenever you can.
+
+Beside the static byte compilation yielding @file{.elc} files, you can
+also use the @code{byte-compile} function to create and use compiled
+objects inline.
+
+@smallexample
+@group
+;; @r{We create a byte compiled predicate and bind it to the variable}
+;; @r{@code{is-minus-one-p}.}
+;; @r{Note that we do _NOT_ create a function @code{is-minus-one-p}.}
+(setq is-minus-one-p
+      (byte-compile
+        #'(lambda (a) (zerop (1+ a)))))
+  @result{} #<compiled-function (a) "...(5)" [a zerop] 2>
+@end group
+
+@group
+;; @r{We use the compiled function object of @code{is-minus-one-p}.}
+(require 'cl)
+(some is-minus-one-p '(1 2 3 4 -1))
+  @result{} t
+@end group
+@end smallexample
+
+@item
+Certain built-in functions are handled specially in byte-compiled code,
+avoiding the need for an ordinary function call.  It is a good idea to
+use these functions rather than alternatives.  To see whether a function
+is handled specially by the compiler, examine its @code{byte-compile}
+property.  If the property is non-@code{nil}, then the function is
+handled specially.
+
+For example, the following input will show you that @code{aref} is
+compiled specially (@pxref{Array Functions}) while @code{assoc} is not
+(@pxref{Sequence Functions}):
+
+@example
+@group
+(get 'aref 'byte-compile)
+     @result{} byte-compile-two-args
+@end group
+
+@group
+(get 'assoc 'byte-compile)
+     @result{} nil
+@end group
+@end example
+
+@item
+Teach yourself to tag functions with the special quote @code{function}
+(short form is @code{#'}) instead of using an ordinary @code{quote}
+(short @code{'}).  In byte compilation, the byte-compiler will look
+for function quotes and compile them.  Ordinarily quoted function
+names will not be investigated nor byte compiled.
+
+The same applies to anonymous function objects (lambda lists) in
+non-obvious forms like backquoted macro bodies, or @code{fset}
+constructions in macros of the form @code{(list 'lambda argname
+...)}.
+
+On the other hand, if cheating the byte compiler is explicitly what
+you want emacs lisp will also accept the normal @code{quote} to refer
+to the function cell in most cases.
+
+@item
+If calling a small function accounts for a substantial part of your
+program's running time, make the function inline (use @code{defsubst}.
+This eliminates the function call overhead.  Since making a function
+inline reduces the flexibility of changing the program, do not do it
+unless it gives a noticeable speedup in something slow enough that
+users care about the speed.  @xref{Inline Functions}.
+
+@c these are more general tips
+@item
+@cindex iteration vs. recursion
+@cindex recursion vs. iteration
+Use iteration rather than recursion whenever possible.
+Function calls are slow in SXEmacs Lisp even when a compiled function
+is calling another compiled function.
+
+@item
+Using the primitive list-searching functions @code{memq}, @code{member},
+@code{assq}, or @code{assoc} is even faster than explicit iteration.  It
+may be worth rearranging a data structure so that one of these primitive
+search functions can be used.
+
+@item
+@cindex profiling
+@cindex timing programs
+@cindex @file{profile.el}
+Use the @file{profile} library to profile your program.  See the file
+@file{profile.el} for instructions.
+
+@item
+If absolute performance timings are of interest do not use profile.el
+since it redefines the investigated functions and hence slows down
+their execution.  With a minimal overhead you can use the
+@code{current-btime} function to obtain an absolute time stamp with a
+microsecond resolution.
+
+@noindent
+For example we measure the execution time of @code{nreverse} for a
+list of 1000 random numbers.
+
+@example
+@group
+;; @r{initialise the list}
+(setq lrn nil)
+(dotimes (i 1000)
+  (setq lrn (cons (random) lrn)))
+  @result{} @strong{omitted}
+@end group
+
+@group
+;; @r{We use two time variables start and end.}
+(progn
+  (setq start (current-btime))
+  (setq lrn (nreverse lrn))
+  (setq end (current-btime)))
+@end group
+
+@group
+;; @r{We investigate the time by simply subtracting start from end.}
+(- end start)
+  @result{} 190
+
+;; @r{This means @code{nreverse} took about 190 microseconds.}
+@end group
+
+@group
+;; @r{The real value is highly likely a little less than this.}
+;; @r{Let's measure the overhead.}
+(progn
+  (setq start (current-btime))
+  (setq end (current-btime))
+  (- end start))
+  @result{} 17
+@end group
+@end example
+
+@item
+Deliberate about your data representation.
+
+SXEmacs provides a multiplicity of types and containers to store your
+data.  Which of them suits your purpose best depends on many things
+@itemize @bullet
+@item
+Do you want to be compatible to other Emacs flavours?
+
+Well, in this case you should definitely have a glance at the flavour
+you want to be compatible with.  Also @pxref{Compatibility Tips}.
+
+If compatibility is not an issue, you can benefit in many cases from
+the large variety of dedicated data types in SXEmacs.  See next item.
+
+@item
+Do you want speed or comfort or flexibility or memory frugality?
+
+(Not yet prepared)
+
+@c Just a draft atm:
+@c
+@c Speed   - derived from the time complexity
+@c Comfort - derived from the number of supporter functions or the
+@c           support at all
+@c Flexi   - derived from the number and costs of prerequisites which
+@c           have to be met
+@c Memory  - derived from the space complexity
+@c
+@c
+@c SET LIKE TYPES:
+@c +++++++++++++++
+@c lists:
+@c ======
+@c operation  speed   comfort  flexibility  memory frugality
+@c creation    ++       ++      ++           ++
+@c prepend     ++       +       ++           ++
+@c append      --       o       ++           +
+@c search      --       +       +            +
+@c modify      --       -       o            +
+@c sort        --       -       --           --
+@c
+@c dllists:
+@c ========
+@c operation  speed   comfort  flexibility  memory frugality
+@c creation    ++       -       ++           +
+@c prepend     ++       -       ++           ++
+@c append      ++       -       ++           ++
+@c search      n/a      n/a     --           n/a
+@c modify      n/a      n/a     --           n/a
+@c sort        n/a      n/a     --           n/a
+@c
+@c vectors:
+@c ========
+@c operation  speed   comfort  flexibility  memory frugality
+@c creation    ++       o       -            -
+@c prepend     ++       --      -            --
+@c append      ++       --      ++           --
+@c search      --       o       +            +  
+@c modify      ++       +       o            ++ 
+@c sort        -        -       -            ++ 
+
+@end itemize
+
+@item
+Consider external tools.  But think first!
+
+In some cases it is simply appropriate to use external tools.  For
+example it does not make sense to re-implement the block zipping
+algorithm of bzip2 in elisp, instead create a process and call the
+bzip2 binary.
+
+However, if external tools provide a shared object library the
+process approach will highly likely be a snail compared to an FFI
+implementation.  The advantage is simply that FFI calls will not
+create that much overhead because the available data is simply reused
+and does not need further steps, e.g. preparing the input data for the
+external tool, or parsing the results and converting them to lisp
+data, again.
+
+Again, think twice! An FFI implementation can waste a large amount of
+development time.  Moreover, it requires a detailed knowledge of the
+internal concept of the external resource.  It is very easy to crash
+your SXEmacs with FFI!
+
+A safer way of using external libraries in the way FFI does is to
+create an emodule.  In very time critical scenarios, emodules may even
+outperform FFI because large parts of a procedure can run at C level
+without interacting with the lisp engine at all.  You can even use all
+the usual advantages of C, such as parallelism, multi-threading and
+similar.  Moreover, if desired you can wrap intermediate results to
+special containers (using @code{emodptr}s), and pass these to the lisp
+level.  Indeed, @code{emodptr}s which escaped to the lisp level
+are safe since there is no way to access or modify them.  Of course,
+you can envisage dedicated interface functions within your emodule
+but even in that case the actual processing will always take place in
+your emodule at C level.
+
+Anyway, emodules suffer from a serious drawback: they have to be built
+first in order to use them.  In contrast, both the process approach
+and the FFI implementation just work out of the box.
+
+@end itemize
+
+
+
+@node Compatibility Tips
+@section Tips for writing compatible code
+
+Writing compatible code is very easy whenever a problem is decoupled
+enough.  That is when your problem is of abstract nature and does not
+explicitly depend on a certain OS, emacs flavour, external tools, or
+file system layout.
+
+In that case you would simply divide your code in two parts, the
+abstract layer which contains the solution of your problem in an
+abstract (read independent) way, and the implementation layer which
+contains OS specific, flavour specific, tool specific and/or file
+system layout specific implementations and which thus provides one or
+more interfaces for your abstract layer.
+
+Fine, so why are there so many problems between, say, code for FSF
+Emacs and (S)XEmacs?  Well, programmers are not always professional
+software designers.  Also, compatibility often plays a minor role,
+especially in young projects or projects with little man power.  But
+the most understandable reason might be that one or more pieces of
+code simply cannot be decoupled or at least not in an efficient way.
+
+Anyway, let us look at very simple compatibility issues.  The most
+trivial case of course is a problem independent from all of the
+aforementioned requisites, like sorting a list of numbers
+ascendingly.  This can be done using only an iteration function (like
+@code{while}), assignment operators (@code{setq}), a predicate
+(@code{<}) and the list primitives @code{cons}, @code{car},
+@code{cdr}.  All of these routines are available in any emacs on any
+OS.  Hence compatibility is not an issue.
+
+Nonetheless, even such a simple thing can be transformed into a
+broadly incompatible mess.  Just assume that programmers choose the
+way with least obstacles -- some people prefer the term lazy though --
+they will definitely use a primitive like @code{sort},
+@code{stable-sort} or @code{sort*}.  Or assume that sorting numbers is
+just a small subproblem of a larger one and the context stipulates
+that numbers must be arranged in vectors instead of lists.  In such
+cases consider the following small checklist.
+
+@itemize @bullet
+@item
+Are all the constructors, modifiers and predicates defined?
+
+Conditionalise with @code{fboundp} and @code{boundp} constructions
+like:
+@smallexample
+(when (fboundp #'make-hash-table)
+  ...)
+@end smallexample
+
+or emacs flavours:
+@smallexample
+(when (featurep 'sxemacs)
+  ...)
+@end smallexample
+
+or operating systems, e.g.:
+@smallexample
+(when (eq system-type 'linux)
+  ...)
+@end smallexample
+
+@item
+Do they behave as expected?
+
+Check for number, order and type of the arguments.  If feasible write
+a small, simple testcase, like
+@smallexample
+(hash-table-p (make-hash-table :size 120 :test #'eq))
+@end smallexample
+
+In order to use this sort of test within your code, for example to
+trigger an implementation based on the success, you could use the
+@code{condition-case} construction:
+@smallexample
+(unless
+  (condition-case nil
+      (prog1
+        (hash-table-p (make-hash-table :size 120 :test #'eq))
+        (garbage-collect))
+    (error nil))      ;; return `nil' in case of error
+
+  ...)
+@end smallexample
+
+@item
+Does your code depend on other elisp libraries or packages?
+Perhaps not even distributed ones?
+
+If feasible consider distributing a compatibility layer (see below).
+In this case, you must decouple your code such that it can either use
+the native implementation or the one provided by your compatibility
+layer.
+
+If reinventing the wheel is not an issue, consider distributing the
+foreign requisites along with your code.  This implies of course that
+you carefully checked the foreign resources for their compatibility.
+Also, make sure that the licences permit your decision.
+
+In case there are too many requisite libraries to stuff them all into
+your package, or if licences forbid this, you should definitely give
+your users a notice, preferrably with detailed instructions on how to
+resolve the dependencies, at least include a location where users can
+fetch a known-to-work version.
+
+@item
+Does your code depend on external, perhaps OS specific resources, like
+ssh, apache, C compilers, shared libraries, special hardware and
+similar?
+
+This is probably the hardest case and there is definitely no patent
+remedy.  If you cannot grant compatibility or detect missing
+necessities for a specific target, you must at least notify your users
+accordingly.
+
+If you know other code or projects which manage the situation `better'
+than you (i.e. with less requisites or better/native support) name
+those alternatives.  If you do not know alternatives or other
+approaches seem to far away from your own it is definitely a good idea
+to explain in @strong{great} detail what you are trying to do.  This
+way users get the chance to look for alternatives themselves.
+
+@end itemize
+
+
+@subsection How to write a compatibility layer
+@cindex compatibility layer
+
+There is no generic approach to do that.  However, there is a general
+idea which has been mentioned already in the introduction.  Decouple
+your program so much that you do not call any functions, macros or
+variables which are suspicious to be incompatible.
+
+Let us work out this idea in a practical scenario.  Imagine you have
+to deal with aspect ratios as they occur in image data or video
+material, e.g. 16:9, 16:10 or the like.  Now initial research reveals
+that both XEmacs 21.5.x and SXEmacs may provide built-in support for
+rational quotients, whereas XEmacs 21.4.x and GNU Emacs do not.
+
+Now since we know that we only want to multiply fractions with
+integers, we merely provide this single operation, along with a
+constructor, a predicate and two accessors.  Note, we will put the
+detection code along with the two implementations in the following
+example.  In practice each implementation usually occupies a file of
+its own and the detection resides at a central location, for example
+in the library's main file.
+
+@example
+(when 
+  ;; check if SXEmacs is build with ENT support (bigq submodule)
+  (and (featurep 'ent) (featurep 'bigq))
+
+  ;; the constructor (takes two arguments, two rational integers)
+  (defalias 'expkg-make-quotient #'//)
+  ;; the predicate (takes one argument, a bigq)
+  (defalias 'expkg-quotient-p #'bigqp)
+
+  ;; an accessor for the numerator of a quotient (takes a bigq)
+  (defalias 'expkg-quotient-num #'numerator)
+  ;; an accessor for the denominator of a quotient (takes a bigq)
+  (defalias 'expkg-quotient-den #'denominator)
+
+  ;; a * function for quotients by integers
+  (defalias 'expkg-mult-quo-int #'*))
+
+(when
+  ;; or is it XEmacs with ratio support? SXE says `t', too, so check
+  ;; for non-SXE
+  (and (not (featurep 'sxemacs)) (featurep 'ratio))
+
+  (defalias 'expkg-make-quotient #'div)
+  (defalias 'expkg-quotient-p #'ratiop)
+
+  (defalias 'expkg-quotient-num #'numerator)
+  (defalias 'expkg-quotient-den #'denominator)
+
+  (defalias 'expkg-mult-quo-int #'*))
+
+;; just check if expkg-make-quotient is bound already
+(unless (fboundp #'expkg-make-quotient)
+
+  ;; constructor
+  (defun expkg-make-quotient (numerator denominator)
+    "Return the quotient numerator/denominator"
+    ;; we choose to store in a 3 component vector
+    (vector 'quotient numerator denominator))
+
+  ;; predicate
+  (defun expkg-quotient-p (object)
+    "Return `t' if OBJECT is a quotient."
+    ;; we check for the vector property, if length equals 3 and
+    ;; finally if our indicator is present
+    (and (vectorp object)
+         (= (length object) 3)
+         (eq (aref object 0) 'quotient)))
+
+  ;; num accessor
+  (defun expkg-quotient-num (quotient)
+    "Return the numerator of QUOTIENT."
+    ;; check if QUOTIENT is indeed what we expect
+    (if (expkg-quotient-p quotient)
+        (aref quotient 1)
+      (error "Wrong type argument, quotientp `%s'" quotient)))
+
+  ;; den accessor
+  (defun expkg-quotient-den (quotient)
+    "Return the denominator of QUOTIENT."
+    ;; check if QUOTIENT is indeed what we expect
+    (if (expkg-quotient-p quotient)
+        (aref quotient 2)
+      (error "Wrong type argument, quotientp `%s'" quotient)))
+
+  ;; multiplication
+  (defun expkg-mult-quo-int (quo int)
+    "Return the product of QUO with INT."
+    (if (and (expkg-quotient-p quo)
+             (integerp int))
+        (expkg-make-quotient
+         ;; new-num <- num * int
+         (* (expkg-quotient-num quo) int)
+         ;; new-den <- den
+         (expkg-quotient-den quo))
+      ;; otherwise barf
+      (error "Wrong type argument, quotientp `%s', integerp `%s'"
+             quo int))))
+@end example
+
+Now that's it!  Now we can use the functions defined here to interface
+the quotient functionality in an abstract way.  Moreover, this example
+demonstrates how to decouple a concept (quotients in this case) from
+the actual data type used to represent the concept, in order of
+appearance quotients can be represented as bigqs, as ratios or as
+vectors.
+
+However, as you may have noticed not all internals can be abstracted
+in a sane way.  In our case, the abstract layer will make up quotients
+of integers.  We simply assumed -- or knew -- that these exist in all
+emacs flavours and behave identically.
+
+
+
+@node Documentation Tips
+@section Tips for Documentation Strings
+
+  Here are some tips for the writing of documentation strings.
+
+@itemize @bullet
+@item
+Every command, function, or variable intended for users to know about
+should have a documentation string.
+
+@item
+An internal variable or subroutine of a Lisp program might as well have
+a documentation string.  In earlier Emacs versions, you could save space
+by using a comment instead of a documentation string, but that is no
+longer the case.
+
+@item
+The first line of the documentation string should consist of one or two
+complete sentences that stand on their own as a summary.  @kbd{M-x
+apropos} displays just the first line, and if it doesn't stand on its
+own, the result looks bad.  In particular, start the first line with a
+capital letter and end with a period.
+
+The documentation string can have additional lines that expand on the
+details of how to use the function or variable.  The additional lines
+should be made up of complete sentences also, but they may be filled if
+that looks good.
+
+@item
+For consistency, phrase the verb in the first sentence of a
+documentation string as an infinitive with ``to'' omitted.  For
+instance, use ``Return the cons of A and B.'' in preference to ``Returns
+the cons of A and B@.''  Usually it looks good to do likewise for the
+rest of the first paragraph.  Subsequent paragraphs usually look better
+if they have proper subjects.
+
+@item
+Write documentation strings in the active voice, not the passive, and in
+the present tense, not the future.  For instance, use ``Return a list
+containing A and B.'' instead of ``A list containing A and B will be
+returned.''
+
+@item
+Avoid using the word ``cause'' (or its equivalents) unnecessarily.
+Instead of, ``Cause Emacs to display text in boldface,'' write just
+``Display text in boldface.''
+
+@item
+Do not start or end a documentation string with whitespace.
+
+@item
+Format the documentation string so that it fits in an Emacs window on an
+80-column screen.  It is a good idea for most lines to be no wider than
+60 characters.  The first line can be wider if necessary to fit the
+information that ought to be there.
+
+However, rather than simply filling the entire documentation string, you
+can make it much more readable by choosing line breaks with care.
+Use blank lines between topics if the documentation string is long.
+
+@item
+@strong{Do not} indent subsequent lines of a documentation string so
+that the text is lined up in the source code with the text of the first
+line.  This looks nice in the source code, but looks bizarre when users
+view the documentation.  Remember that the indentation before the
+starting double-quote is not part of the string!
+
+@item
+A variable's documentation string should start with @samp{*} if the
+variable is one that users would often want to set interactively.  If
+the value is a long list, or a function, or if the variable would be set
+only in init files, then don't start the documentation string with
+@samp{*}.  @xref{Defining Variables}.
+
+@item
+The documentation string for a variable that is a yes-or-no flag should
+start with words such as ``Non-nil means@dots{}'', to make it clear that
+all non-@code{nil} values are equivalent and indicate explicitly what
+@code{nil} and non-@code{nil} mean.
+
+@item
+When a function's documentation string mentions the value of an argument
+of the function, use the argument name in capital letters as if it were
+a name for that value.  Thus, the documentation string of the function
+@code{/} refers to its second argument as @samp{DIVISOR}, because the
+actual argument name is @code{divisor}.
+
+Also use all caps for meta-syntactic variables, such as when you show
+the decomposition of a list or vector into subunits, some of which may
+vary.
+
+@item
+@iftex
+When a documentation string refers to a Lisp symbol, write it as it
+would be printed (which usually means in lower case), with single-quotes
+around it.  For example: @samp{`lambda'}.  There are two exceptions:
+write @code{t} and @code{nil} without single-quotes.
+@end iftex
+@ifinfo
+When a documentation string refers to a Lisp symbol, write it as it
+would be printed (which usually means in lower case), with single-quotes
+around it.  For example: @samp{lambda}.  There are two exceptions: write
+t and nil without single-quotes.  In this manual, we normally do use
+single-quotes for those symbols.
+@end ifinfo
+
+@item
+Do not write key sequences directly in documentation strings.  Instead,
+use the @samp{\\[@dots{}]} construct to stand for them.  For example,
+instead of writing @samp{C-f}, write @samp{\\[forward-char]}.  When
+SXEmacs displays the documentation string, it substitutes whatever key
+is currently bound to @code{forward-char}.  This is normally @samp{C-f},
+but it may be some other character if the user has moved key bindings.
+@xref{Keys in Documentation}.
+
+@item
+In documentation strings for a major mode, you will want to refer to the
+key bindings of that mode's local map, rather than global ones.
+Therefore, use the construct @samp{\\<@dots{}>} once in the
+documentation string to specify which key map to use.
+
+Do this before the first use of @samp{\\[@dots{}]}.  The text inside the
+@samp{\\<@dots{}>} should be the name of the variable containing the
+local keymap for the major mode.
+
+It is not practical to use @samp{\\[@dots{}]} very many times, because
+display of the documentation string will become slow.  So use this to
+describe the most important commands in your major mode, and then use
+@samp{\\@{@dots{}@}} to display the rest of the mode's keymap.
+@end itemize
+
+
+@node Comment Tips
+@section Tips on Writing Comments
+
+  We recommend these conventions for where to put comments and how to
+indent them:
+
+@table @samp
+@item ;
+Comments that start with a single semicolon, @samp{;}, should all be
+aligned to the same column on the right of the source code.  Such
+comments usually explain how the code on the same line does its job.
+
+In Lisp mode and related modes, the @kbd{M-;}
+(@code{indent-for-comment}) command automatically inserts such a
+@samp{;} in the right place, or aligns such a comment if it is already
+present. 
+
+This and following examples are taken from the SXEmacs sources.
+
+@smallexample
+@group
+(setq base-version-list                 ; there was a base
+      (assoc (substring fn 0 start-vn)  ; version to which
+             file-version-assoc-list))  ; this looks like
+                                        ; a subversion
+@end group
+@end smallexample
+
+@item ;;
+Comments that start with two semicolons, @samp{;;}, should be aligned to
+the same level of indentation as the code.  Such comments usually
+describe the purpose of the following lines or the state of the program
+at that point.  For example:
+
+@smallexample
+@group
+(prog1 (setq auto-fill-function
+             @dots{}
+             @dots{}
+  ;; update modeline
+  (redraw-modeline)))
+@end group
+@end smallexample
+
+Every function that has no documentation string (because it is used only
+internally within the package it belongs to), should have instead a
+two-semicolon comment right before the function, explaining what the
+function does and how to call it properly.  Explain precisely what each
+argument means and how the function interprets its possible values.
+
+@item ;;;
+Comments that start with three semicolons, @samp{;;;}, should start at
+the left margin.  Such comments are used outside function definitions to
+make general statements explaining the design principles of the program.
+For example:
+
+@smallexample
+@group
+;;; This Lisp code is run in SXEmacs
+;;; when it is to operate as a server
+;;; for other processes.
+@end group
+@end smallexample
+
+Another use for triple-semicolon comments is for commenting out lines
+within a function.  We use triple-semicolons for this precisely so that
+they remain at the left margin.
+
+@smallexample
+(defun foo (a)
+;;; This is no longer necessary.
+;;;  (force-mode-line-update)
+  (message "Finished with %s" a))
+@end smallexample
+
+@item ;;;;
+Comments that start with four semicolons, @samp{;;;;}, should be aligned
+to the left margin and are used for headings of major sections of a
+program.  For example:
+
+@smallexample
+;;;; The kill ring
+@end smallexample
+@end table
+
+@noindent
+The indentation commands of the Lisp modes in SXEmacs, such as @kbd{M-;}
+(@code{indent-for-comment}) and @key{TAB} (@code{lisp-indent-line})
+automatically indent comments according to these conventions,
+depending on the number of semicolons.  @xref{Comments,,
+Manipulating Comments, sxemacs, The SXEmacs User's Manual}.
+
+
+@node Library Headers
+@section Conventional Headers for XEmacs Libraries
+@cindex header comments
+@cindex library header comments
+
+  SXEmacs has conventions for using special comments in Lisp libraries
+to divide them into sections and give information such as who wrote
+them.  This section explains these conventions.  First, an example:
+
+@smallexample
+@group
+;;; lisp-mnt.el --- minor mode for Emacs Lisp maintainers
+
+;; Copyright (C) 1992 Free Software Foundation, Inc.
+@end group
+
+;; Author: Eric S. Raymond <esr@@snark.thyrsus.com>
+;; Maintainer: Eric S. Raymond <esr@@snark.thyrsus.com>
+;; Created: 14 Jul 1992
+;; Version: 1.2
+@group
+;; Keywords: docs
+
+;; This file is part of SXEmacs.
+@var{copying permissions}@dots{}
+@end group
+@end smallexample
+
+  The very first line should have this format:
+
+@example
+;;; @var{filename} --- @var{description}
+@end example
+
+@noindent
+The description should be complete in one line.
+
+  After the copyright notice come several @dfn{header comment} lines,
+each beginning with @samp{;; @var{header-name}:}.  Here is a table of
+the conventional possibilities for @var{header-name}:
+
+@table @samp
+@item Author
+This line states the name and net address of at least the principal
+author of the library.
+
+If there are multiple authors, you can list them on continuation lines
+led by @code{;;} and a tab character, like this:
+
+@smallexample
+@group
+;; Author: Ashwin Ram <Ram-Ashwin@@cs.yale.edu>
+;;      Dave Sill <de5@@ornl.gov>
+;;      Dave Brennan <brennan@@hal.com>
+;;      Eric Raymond <esr@@snark.thyrsus.com>
+@end group
+@end smallexample
+
+@item Maintainer
+This line should contain a single name/address as in the Author line, or
+an address only.  If there is no maintainer line, the person(s) in the
+Author field are presumed to be the maintainers.  The example above is
+mildly bogus because the maintainer line is redundant.
+
+The idea behind the @samp{Author} and @samp{Maintainer} lines is to make
+possible a Lisp function to ``send mail to the maintainer'' without
+having to mine the name out by hand.
+
+Be sure to surround the network address with @samp{<@dots{}>} if
+you include the person's full name as well as the network address.
+
+@item Created
+This optional line gives the original creation date of the
+file.  For historical interest only.
+
+@item Version
+If you wish to record version numbers for the individual Lisp program, put
+them in this line.
+
+@item Adapted-By
+In this header line, place the name of the person who adapted the
+library for installation (to make it fit the style conventions, for
+example).
+
+@item Keywords
+This line lists keywords for the @code{finder-by-keyword} help command.
+This field is important; it is how people will find your package when
+they're looking for things by topic area.  To separate the keywords, you
+can use spaces, commas, or both.
+@end table
+
+  Just about every Lisp library ought to have the @samp{Author} and
+@samp{Keywords} header comment lines.  Use the others if they are
+appropriate.  You can also put in header lines with other header
+names---they have no standard meanings, so they can't do any harm.
+
+  We use additional stylized comments to subdivide the contents of the
+library file.  Here is a table of them:
+
+@table @samp
+@item ;;; Commentary:
+This begins introductory comments that explain how the library works.
+It should come right after the copying permissions.
+
+@item ;;; Change log:
+This begins change log information stored in the library file (if you
+store the change history there).  For most of the Lisp
+files distributed with SXEmacs, the change history is kept in the file
+@file{ChangeLog} or may be retrieved with the @code{tla changelog} shell
+command. They are not kept in the source file at all; these files do
+not have a @samp{;;; Change log:} line.
+
+@item ;;; Code:
+This begins the actual code of the program.
+
+@item ;;; @var{filename} ends here
+This is the @dfn{footer line}; it appears at the very end of the file.
+Its purpose is to enable people to detect truncated versions of the file
+from the lack of a footer line.
+@end table
+
+
+
+@c tips.texi ends here

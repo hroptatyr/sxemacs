@@ -1,0 +1,18 @@
+/* XPM */
+static char * down[] = {
+"10 10 5 1",
+" 	c Gray40",
+".	c Gray40",
+"X	c Gray90",
+"o	c none",
+"O	c Gray75",
+"          ",
+"..      XX",
+"o..OOOOXXo",
+"o..OOOOXXo",
+"oo..OOXXoo",
+"oo..OOXXoo",
+"ooo..XXooo",
+"ooo..XXooo",
+"oooo.Xoooo",
+"oooo.Xoooo"};

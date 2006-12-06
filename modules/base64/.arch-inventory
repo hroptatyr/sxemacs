@@ -1,0 +1,6 @@
+precious ^(Makefile\.in)$
+precious ^(Makefile)$
+precious ^(base64\.ell)$
+precious ^(base64_i\.c)$
+precious ^(\.deps)$
+precious ^(.*-.*\.o)$

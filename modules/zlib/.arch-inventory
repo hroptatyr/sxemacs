@@ -1,0 +1,7 @@
+precious ^(Makefile\.in)$
+precious ^(Makefile)$
+precious ^(zlib\.ell)$
+precious ^(zlib_i\.c)$
+precious ^(\.deps)$
+precious ^(libzlib\.a)$
+precious ^(.*-.*\.o)$

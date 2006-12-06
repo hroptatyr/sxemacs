@@ -1,0 +1,9 @@
+precious ^(Makefile\.in)$
+precious ^(Makefile)$
+precious ^(GNUmakefile)$
+precious ^(.*\.o)$
+precious ^(liblw\.a)$
+precious ^(config\.h)$
+precious ^(stage[12])$
+precious ^(stamp-h2)$
+precious ^(\.deps)$
