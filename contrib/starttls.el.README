@@ -1,0 +1,10 @@
+This patch is meant to be applied to starttls.el from the mail-lib
+package.
+
+This patch provides some basic SSL/TLS functionality used by other stuff
+in the mail-lib package.  Basically it just pretends to be Josefsson's
+starttls.el.  Instead of calling the gnutls binary externally the
+internal OpenSSL API functions are used.
+
+Sebastian Freundt <hroptatyr@sxemacs.org>
+

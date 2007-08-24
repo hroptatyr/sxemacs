@@ -1,0 +1,101 @@
+		DYNODUMP
+		--------
+
+Dynodump, not to be confused with DinoTurd (as seen in Jurassic Park),
+is a shared object that provides one function:
+
+	int dynodump(char *new_file);
+
+dynodump(), called from a running program will write a new executable
+in new_file a la unexec() in GNU Emacs.  The difference lies in the
+relocations.
+
+dynodump() will create an image with any relocations (which were
+performed by the run-time dynamic linker) undone.  This allows the new
+image to be run in a different environment.  There is, however, one
+potentially major caveat.  If a symbol reference gets updated during
+the running of the calling program, its updated value will be lost.
+An example (with additional blank lines for legibility):
+
+	$ cat lib.c
+	char _foo[] = "hello";
+	char _bar[] = "world";
+
+	$ cc -G -o lib.so lib.c
+
+	$ cat prog.c
+	extern char _foo, _bar;
+ 
+	int beenhere = 0;
+	char * foo = &_foo;
+	char * bar = &_bar;
+ 
+	int
+	main(void)
+	{
+	    (void) printf("%d: foo = %x\n", beenhere, foo);
+	    (void) printf("%d: bar = %x, ", beenhere, bar);
+ 
+	    if (!beenhere) {
+	        beenhere = 1;
+	        bar++;
+	        dynodump("newfile");
+	    }
+	    (void) printf("%x\n", bar);
+	}
+
+	$ cc -o prog prog.c -R. lib.so dynodump.so
+
+	$ ./prog
+	0: foo = ef7503cc
+	0: bar = ef7503d2, ef7503d3
+
+	$ ./newfile
+	1: foo = ef7503cc
+	1: bar = ef7503d2, ef7503d2
+
+Notice that in the run of newfile, bar points at "world" instead of
+the perhaps expected "orld".
+
+Dynodump supports sparc, intel, and power pc architectures.
+
+Dynodump is buildable with GNU make and gcc.  If it works for you
+with these tools, let me know.
+
+unexec()
+--------
+
+Also supplied is an unexsol2.c which belongs in the XEmacs src
+directory with the other unex*.c files.  The src/s/sol2.h should be
+have the following added to it:
+
+	#ifdef UNEXEC
+	#undef UNEXEC
+	#endif
+	#define UNEXEC unexsol2.o
+
+This unexec() will attempt to dlopen() the dynodump.so to find the
+dynodump function.  The default is "../dynodump/dynodump.so" which
+should be appropriate for the typical XEmacs build (unless you used
+configure to set up separate build and source trees).  You may change
+it by setting the DYNODUMP environment variable to the full path of
+the dynodump shared object.
+
+Other notes:
+
+If you're using the 4.0 C compiler from Sun, you should arrange to
+shut off the incremental linker.  This is done with the -xildoff
+option to the compiler.  The common.mk and testsuite/Makefile files
+have commentary and ready made lines for uncommenting for this
+purpose.
+
+If you're interested in playing with the UltraSPARC specific options
+to the aforementioned compiler, then the same makefiles have some
+commentary and flags settings to point you in that direction.
+
+Questions:
+
+dynodump() was developed by Rod.Evans@Eng.Sun.COM and
+Georg.Nikodym@Canada.Sun.COM.  If you have questions, feel free to ask
+them but be aware that Rod, "don't know jack about emacs."
+

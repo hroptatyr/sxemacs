@@ -1,0 +1,15 @@
+This directory contains the Tex sources of the XEmacs manuals,
+plus the macro package (texinfo.tex) necessary for processing them.
+
+To make a foo.dvi file from a foo.texi file:
+
+1) Run configure
+
+2) Install TeX and the texinfo package
+
+3) Run `make foo.dvi' in this directory.
+
+The most important manuals are available in postscript and dvi formats
+via anonymous ftp from:
+
+ftp://ftp.xemacs.org/pub/docs

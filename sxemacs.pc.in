@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@/sxemacs/@old_version@
+
+Name: sxemacs-@old_version@
+Description: SXEmacs -- a simple editor
+Version: @old_version@
+Libs:
+Cflags: @CPPFLAGS@ -I${includedir}
+

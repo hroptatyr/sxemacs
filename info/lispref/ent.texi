@@ -1,0 +1,2745 @@
+@c -*-texinfo-*-
+@c This is part of the SXEmacs Lisp Reference Manual.
+@c Copyright (C) 2005 Sebastian Freundt <hroptatyr@sxemacs.org>
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/ent.info
+
+
+@node Enhanced Number Types, Internationalization, OpenSSL Support, Top
+@chapter Enhanced Number Types (ENT)
+@cindex integers
+@cindex numbers
+@cindex enhanced number types
+@cindex multi-precision numbers
+@cindex BSD-MP numbers
+@cindex GMP numbers
+@cindex MPFR floats
+@cindex MPC complex numbers
+@cindex complex numbers
+@cindex Gaussian numbers
+@cindex Residue Class Rings
+@cindex Residue Classes
+@cindex Quaternions
+@cindex Octonions
+
+
+@macro ENT
+ENT
+@end macro
+
+  Compiling SXEmacs with enhanced number type support not only brings
+a full heap of new number types, but also provides a more convenient
+concept of numbers at all.  This concept is mostly driven by
+mathematical issues.  Nonetheless we attempt to provide as much
+backward compatibility as possible.
+
+  The purpose of enhanced number types is to propagate both a
+convenient set of additional functionality which is (hopefully) widely
+used in the future, and a consistent concept for dealing with
+numeric computations from within emacs lisp.
+
+  The feature itself must be considered experimental, though.  Howbeit 
+programmers can benefit from extremely increased performance, even
+with the current implementation.
+
+@menu
+* ENT Basics::			Introduction to enhanced numbers.
+* Types of Numbers::		How do C types reflect in elisp.
+* Unions of Number Types::	Categories of numbers.
+* Coercion::			Converting from on number type to
+				  another. 
+* Revised Arithmetics::		How ENT modifies arithmetics.
+* Revised Formatting::		New output formatting features.
+* Number Theoretic Functions::	Functions provided by ENT concerning
+				  number theory.
+* Auxiliary Functions::		Functions that make use of ENT.
+@end menu
+
+
+@node ENT Basics
+@section ENT Basics
+
+  SXEmacs supports several of the available arithmetical and
+mathematical libraries.  Wherever possible, it is attempted to
+introduce a transparency layer, such that one library can be exchanged
+by another when both provide equal or similar functionality.  This
+layering allow emacs lisp and C programmers to minimise their efforts
+by using a standardised interface.
+
+  On the other hand, it is attempted to additionally bring all
+library-specific features into the emacs lisp environment.  That way
+emacs lisp (and also C) programmers can easily use certain functions
+which are contained in only one specific library.
+
+  Some of the functionality provided by libraries is even
+re-implemented in C in order to allow emacs lisp programmers to use
+such functions even if the external library is not available.  This
+may sound a little obscure, but it is important to establish a
+consistent and convenient concept of number types in the emacs lisp
+environment once the enhanced number type support is enabled.
+
+We start this section with a quick overview of what is available out
+there, and what is additionally available due to re-implementation.
+
+@menu
+* GNU-MP::			The GNU multi-precision arithmetic
+				  library (GMP). 
+* BSD-MP::			The BSD multi-precision library.
+* MPFR::			Multi-precision floats with correct.
+				  rounding (based on GMP).
+* MPC::				Multi-precision complex numbers with
+				  correct rounding (based on MPFR).
+* Pseudocomplex Numbers::	A native SXEmacs implementation of
+				  complex numbers (based on MPF/MPFR).
+* Pseudogaussian Numbers::	A native SXEmacs implementation of
+				  Gaussian numbers (based on MPZ).
+* Residue Class Rings::		A native SXEmacs implementation of
+				  residue class rings (based on MPZ)
+* Quaternions::			A native SXEmacs implementation of
+				  the quaternionic division algebra.
+* Octonions::			A native SXEmacs implementation of
+				  the octonions division algebra.
+* Algebraic Numbers::		A native SXEmacs implementation of
+				  algebraic numbers (based on GMP).
+* Modules/Lattices::		A native SXEmacs implementation of
+				  lattices (Z-modules).
+@end menu
+
+
+
+@node GNU-MP
+@subsection The GNU multi-precision arithmetic library (GMP)
+
+  The GMP library is the most widely used library of its kind, and
+probably the most versatile and powerful library for high precision
+arithmetic.  Hence SXEmacs will extensively support this library in
+its ENT system.  Also, many other libraries and pseudo-implementations
+are based on GMP.  That is why it is probably worth fetching and
+installing it.
+
+@cindex multi-precision arithmetic
+@cindex arbitrary-precision arithmetic
+  The term @dfn{multi-precision arithmetic}, also called
+@dfn{arbitrary-precision arithmetic}, is used to mean that the number
+of digits of handled numbers is not limited in any way.  Practically
+of course it is limited by the amount of virtual memory and, more
+often these days, by time.
+
+   GMP is distributed under the GNU LGPL and the library is available
+at @url{http://swox.com/gmp}.  Please refer also to their
+documentation, and especially their instructions on how to install it.
+
+  The GMP library consists of roughly 4 parts, MPN, MPZ, MPQ, and
+MPF.  Only the latter three are intended for consumption.
+
+@cindex MPN
+  MPN is sort of the spine of GMP and provides the actual
+implementation of the multi-precision arithmetic.  It is not further
+interesting for SXEmacs since MPN functions are never accessed
+directly.
+
+@cindex MPZ
+  MPZ is a higher level interface to arbitrary precision integer
+arithmetic.  The name is derived from the mathematical symbol for
+integral numbers Z.  We will also use the term @dfn{rational integers}
+to refer to the mathematical concept of Z.  In turn, historically Z is
+derived from the German word ``Zahlen'' which stands for ``numbers''.
+@cindex rational integers
+
+@cindex MPQ
+  MPQ is the interface to @dfn{rational numbers}.  The name is derived
+from the mathematical symbol for the rational field Q.  Rational
+numbers, also referred to as @dfn{fractions of integers} or
+@dfn{quotients of integers}, or (if the meaning is clear) simply
+@dfn{fractions} and @dfn{quotients} respectively.  This nomenclature
+already suggests how rationals can be represented, namely by two MPZ
+integers written in the form @samp{a/b}.  In such a representation we
+call @samp{a} the @dfn{numerator} and @samp{b} the @dfn{denominator}
+of @samp{a/b}.  Internally, a fraction is always stored in its
+canonical form, that is the @dfn{fraction is cancelled} as far as
+possible, such that @samp{a} and @samp{b} are coprime.  For reasons of
+compatibility to XEmacs 21.5, we will also refer to fractions as
+@dfn{ratios}.
+@cindex numerator
+@cindex denominator
+@cindex quotient
+@cindex fraction
+@cindex ratio
+@cindex canonical form
+@cindex cancelled fraction
+
+@cindex MPF
+  MPF is an interface to multi-precision floats.  They are implemented
+like ordinary floats but are not limited to fixed number of mantissa
+and exponent bits.  These numbers may vary instead and is called the
+@dfn{precision} of such a number.  The precision in turn does not need
+to be a multiple of 4 or 8 or something similar and is measured in
+bits.  In this sense, MPF numbers may be regarded as an approximation
+for @dfn{real numbers}, see @ref{Unions of Number Types}.
+
+
+@node BSD-MP
+@subsection The BSD multi-precision library
+
+  The BSD-MP library comes natively (as the name maybe suggests) with
+BSD distributions.  It is also widely, though mostly stealthily,
+spread in form of the crypto library @file{libcrypto.so} of OpenSSL.
+
+  BSD-MP, like GMP, provides a form of arbitrary-precision rational
+integers, called MINT.  Both MPZ and MINT integers are transparently
+unified within SXEmacs, which is why you can use only one
+implementation at a time.
+
+
+@node MPFR
+@subsection The MPFR library
+
+  MPFR is a portable library for arbitrary precision arithmetic on
+floating-point numbers, based on the GMP library.  It works similar to
+the MPF module of GMP, however the main differences with MPF are:
+
+@itemize
+@item
+the mpfr code is portable, i.e. the result of any operation does not
+depend on the machine word size mp_bits_per_limb (32 or 64 on most
+machines);
+@item
+the precision in bits can be set exactly to any valid value for each
+variable;
+@item
+MPFR provides the four rounding modes from the IEEE 754-1985
+standard.
+@end itemize
+
+  In particular, with a precision of 53 bits, mpfr should be able to
+exactly reproduce all computations with double-precision machine
+floating-point numbers (double type in C).  Furthermore, MPFR comes
+with a heap of useful functions over the reals, like logarithms,
+trigonometrical functions and so forth.
+
+  The MPFR library is released under the GNU LGPL and can be obtained
+from @url{http://www.mpfr.org}.    Please refer also to their
+documentation, and especially their instructions on how to install it.
+
+  Especially note that we currently do @emph{only support the
+standalone version of MPFR}, and not the one distributed with GMP.
+
+
+@node MPC
+@subsection The MPC library
+
+  MPC is a portable library written by Andreas Enge for
+arbitrary-precision arithmetic on complex numbers.  It is based on the
+GMP and MPFR libraries.
+
+  The MPC library is released under the GNU LGPL and is available at
+@url{http://www.lix.polytechnique.fr/Labo/Andreas.Enge/mpc/mpc.html}.
+
+  Unfortunately, as of November 2005, the build system of MPC is
+extremely poor, hence we describe shortly how to install it.  After
+untarring the archive invoke @samp{make}.  This will produce a
+@file{libmpc.a}.  Copy this file to your favourite @file{lib/}
+directory, for example @file{/path/to/gmp/prefix/lib/} and make that
+path known to SXEmacs via the @samp{--with-site-prefixes} switch when
+configuring.  Secondly, copy the file @file{mpc.h} to your favourite
+@file{include/} directory, for example to
+@file{/path/to/gmp/prefix/include/}.  That's it!
+
+@cindex complex numbers
+  The name MPC is probably derived from the mathematical symbol C for
+the complex number field.  Without further explanations, the
+@dfn{complex numbers} are an algebraic extension of the real numbers,
+indeed it is the only sensible extension.  It turns out, that efforts
+to find an algebraic closure of any number field end up in the complex
+numbers.
+
+@cindex complex number
+@cindex imaginary unit
+@cindex real part
+@cindex imaginary part
+  Complex numbers have different representations, but one of the most
+known is the representation as a tuple of reals (more formally as
+vector space over R).  The notation of a @dfn{complex number} for this
+representation is @samp{(a,b)} or @samp{a+bi}, where @samp{a} and
+@samp{b} are real numbers.  The symbol @samp{i} denotes the
+@dfn{imaginary unit}.  In this representation, we refer to @samp{a} as
+the @dfn{real part} and to @samp{b} as the @dfn{imaginary part} of
+@samp{a+bi}.
+
+  There are other representations of complex numbers which are not
+implemented yet and hence will not be explained at this place.
+
+
+@node Pseudocomplex Numbers
+@subsection Pseudocomplex Numbers
+
+  Pseudocomplex numbers are the poor man's version of MPC.  Its
+implementation is based on MPFR which must be available therefore.
+The representation of complex numbers follows the one used in MPC,
+namely in the form @samp{a+bi}.  Complex numbers are internally stored
+by two independent MPFR floats.
+
+  Pseudocomplex numbers are gratis whenever MPFR is provided on a
+system.  They are contained and maintained within the SXEmacs source
+distribution and hence inherit the licence of SXEmacs.
+
+
+@node Pseudogaussian Numbers
+@subsection Pseudogaussian Numbers
+
+  Pseudogaussian numbers are implemented like pseudocomplex numbers.
+They are based on GMP-MPZ which must be available therefore.
+
+  Like pseudocomplex numbers, pseudogaussians are gratis whenever
+GMP-MPZ is provided on a system.  They are contained and maintained
+within the SXEmacs source distribution and hence inherit the licence
+of SXEmacs.
+
+  The representation of Gaussian numbers within SXEmacs follows the
+one usually used in algebra, namely as the ring of integers of Q+Qi.
+Gaussian numbers may thusly be written like complex ones, @samp{a+bi},
+where @samp{a} and @samp{b} are both rational integers.
+
+
+@node Residue Class Rings
+@subsection Residue Class Rings
+
+  Residue classes are a special form of partitioning the class of
+rational integers into finitely many classes of congruent elements.
+They are based on GMP-MPZ which must be available therefore.
+
+  Like pseudocomplex or pseudogaussian numbers residue class rings are
+gratis whenever GMP-MPZ is provided on a system.  The classes
+themselves are represented additively and canonicalised, that is
+@samp{c+mZ}, where @samp{c} and @samp{m} are both rational integers,
+and canonically @samp{c} is in [0..m).
+
+
+@node Quaternions
+@subsection Quaternions
+
+  Quaternions are a special form of hypercomplex numbers.  Currently,
+we support the integer ring of the usual quaternion definition.  That
+way, quaternions form a special Z-module.  They are based, however, on
+the GMP-MPZ which must be available therefore.
+
+  Quaternions are represented additively by a set of basis vectors,
+called 1, i, j, and k.  These suffice the fundamental equation:
+@iftex
+@tex
+$i^2 = j^2 = k^2 = ijk = -1$
+@end tex
+@end iftex
+@ifinfo
+i^2 = j^2 = k^2 = ijk = -1
+@end ifinfo
+
+
+@node Octonions
+@subsection Octonions
+
+  Neither documented nor implemented yet.
+
+
+@node Algebraic Numbers
+@subsection Algebraic Numbers
+
+  Neither documented nor implemented yet.
+
+
+@node Modules/Lattices
+@subsection Modules and Lattices
+
+  Neither documented nor implemented yet.
+
+
+
+@node Types of Numbers
+@section Types of Numbers
+
+  For proper understanding, we are using the terms type and
+category in the next sections.  These terms are used (quite inclusive)
+in the meaning of type and category theory in some sense.  A
+@dfn{category} is a class of elements related to each other by
+fulfilling a common predicate.  Then on the other hand the @dfn{type}
+of an object is something like the strongest category an object may
+live in disjointly.
+
+  The main difference between both terms is that in C an object must
+have exactly one type, whereas it still can belong to other
+categories.  For example, having the integer @code{0} and the fraction
+@code{0/1}, then both of these belong to the category @samp{zero}, but
+it is quite obvious that nobody would expect them to be of type
+@samp{zero}.
+
+@menu
+* Type bigz::			The type @samp{bigz} (@samp{bignum}).
+* Type bigq::			The type @samp{bigq} (@samp{ratio}).
+* Type bigf::			The type @samp{bigf} (@samp{bigfloat}).
+* Type bigfr::			The type @samp{bigfr}.
+* Type bigc::			The type @samp{bigc}.
+* Type bigg::			The type @samp{bigg}.
+* Type indefinite::		The type @samp{indefinite}.
+* Type residue-class-ring::	The Type @samp{residue-class-ring}.
+* Type residue-class::		The Type @samp{residue-class}.
+* Type quatern::		The Type @samp{quatern}.
+@end menu
+
+
+@node Type bigz
+@subsection The Type @samp{bigz}
+
+  The type @samp{bigz} is an abstract C type for arbitrary-precision
+rational integers.  Its actual library-specific implementation is
+chosen at configure time, and can be either GMP-MPZ or BSD-MP.  In the
+former case the actual C type would be @samp{mpz_t}, in the latter
+case it is @samp{MINT}.
+
+  Any other library which implements something similar to MPZ, should
+be accessed via the abstract type @samp{bigz}, too.
+
+  Lisp objects can be tested for the type @samp{bigz} by the following
+predicates.
+
+@defun bigzp object
+This predicate tests whether its argument is a big integer (as
+provided by GMP-MPZ or BSD-MP), and returns @code{t} if so, @code{nil}
+otherwise.
+@end defun
+
+@defun bignump object
+This is roughly the same as @code{bigzp} and is provided for
+compatibility to XEmacs.
+@end defun
+
+  The read syntax (and print syntax) of rational integers is the same
+as for ordinary emacs integers.  If the mantissa is not sufficient to
+regard an integer as fixnum, that integer is automatically treated as
+@samp{bigz} integer and created as such.
+
+  There are no other forms of creation, especially there are no
+constructors for @samp{bigz} objects.
+
+  Although named `arbitrary'-precision integers there is no way to
+take influence on the precision or internal representation of
+@samp{bigz}s (unlike the float types).  The number of limbs used, read
+the precision, is administered solely by the underlying library
+implementation.
+
+
+@node Type bigq
+@subsection The Type @samp{bigq}
+
+  The type @samp{bigq} is an abstract C type for arbitrary-precision
+rational numbers (fractions).  The actual C type provided by the
+GMP-MPQ library is @samp{mpq_t}.
+
+  Any other library which implements something similar to MPQ, should
+be accessed via the abstract type @samp{bigq}, too.
+
+  Lisp objects can be tested for the type @samp{bigq} by the following
+predicates.
+
+@defun bigqp object
+This predicate tests whether its argument is a fraction of integers
+(as provided by GMP-MPQ), and returns @code{t} if so, @code{nil}
+otherwise.
+@end defun
+
+@defun ratiop object
+This is roughly the same as @code{bigqp} and is provided for
+compatibility to XEmacs.
+@end defun
+
+  Furthermore, for @samp{bigq} objects exist two accessor functions,
+namely @code{numerator} and @code{denominator} to access the
+respective parts of a fraction.
+
+@defun numerator rational
+Return the numerator of the canonical form of @var{rational}.
+If @var{rational} is an integer, @var{rational} is returned.
+@end defun
+
+@defun denominator rational
+Return the denominator of the canonical form of @var{rational}.
+If @var{rational} is an integer, 1 is returned.
+@end defun
+
+  The read syntax of rational quotients is the intuitive one, and
+identical to their output syntax if the quotients are not integral
+(i.e. have denominator 1).  The lisp reader interprets
+@samp{@var{a}/@var{b}} with @var{a} a rational integer and @var{b} a
+positive integer as the quotient @samp{a/b}.
+
+  Within the lisp reader quotients are automatically cancelled and
+stored in their canonical form (@var{a} coprime to @var{b}), consider
+the following examples:
+
+@example
+1/3
+     @result{} 1/3
+6/18
+     @result{} 1/3
+21/3
+     @result{} 7
+@end example
+
+  Please note that the result in the latter example is @emph{not} of
+type @samp{bigq} because auto-coercion is in effect (see the notes in
+@ref{Category integer}) which canonicalises rational fractions with
+denominator 1 to rational integers.
+
+  Also note that the read syntax for quotients steals a whole class of
+possible symbol identifiers.  In a non-ENT-SXEmacs @var{1/3} is a
+valid name for a variable.
+
+  Beside the creation of rational quotients, the arithmetic operation
+@code{//} can also be used to construct quotients.  This function is
+not exclusively a @samp{bigq}-constructor, but passing two integral
+arguments (interpretable as numerator and denominator) will yield a
+quotient:
+
+@example
+(// 2 3)
+     @result{} 2/3
+@end example
+
+  Again, in spite of their name arbitrary-precision quotients do not
+offer a way to take influence on the precision or internal
+representation of @samp{bigq}s (unlike the float types).  The number
+of limbs used, read the precision, is administered solely by the
+underlying library implementation.
+
+
+@node Type bigf
+@subsection The Type @samp{bigf}
+
+  The type @samp{bigf} is an abstract C type for arbitrary-precision
+real number approximations (so called floats).  The actual C type
+provided by the GMP-MPF library is @samp{mpf_t}.
+
+  Any other library which implements something similar to MPF, should
+be accessed via the abstract type @samp{bigf}, too.
+
+  Lisp objects can be tested for the type @samp{bigq} by the following
+predicates.
+
+@defun bigfp object
+This predicate tests whether its argument is a MP-float (as provided
+by GMP-MPF), and returns @code{t} if so, @code{nil} otherwise.
+@end defun
+
+@defun bigfloatp object
+This is roughly the same as @code{bigfp} and is provided for
+compatibility to XEmacs.
+@end defun
+
+  The read syntax (and print syntax) of @samp{bigf}s is the same as
+for emacs floats.  The interpretation in the lisp reader depends on
+the variable @var{read-real-as} (see @ref{Category real}).
+
+  There are no other forms of creation, especially there are no
+constructors for @samp{bigf} objects.
+
+  As the name arbitrary-precision suggested, numbers of type
+@samp{bigf} can be assigned a precision.  This precision can be
+queried and even may be changed at any time.
+
+@defun bigf-get-precision number
+Return the precision of @var{number} as an integer.
+@end defun
+
+@defun bigf-set-precision number precision
+Set the precision of @var{number} to @var{precision}, a nonnegative
+integer.
+The new precision of @var{number} is returned.
+
+Note that the return value may differ from @var{precision} if the
+underlying library is unable to support exactly @var{precision} bits
+of precision.
+Note also, that setting the precision is @emph{lossy}, that means
+@var{number} after setting the precision is not necessarily the same
+as the original @var{number}.
+@end defun
+
+
+@node Type bigfr
+@subsection The Type @samp{bigfr}
+
+  The type @samp{bigfr} is an abstract C type for arbitrary-precision
+real number approximations with correct rounding facilities (so called
+floats).  The actual C type is provided by the MPFR library and is
+called @samp{mpfr_t}.
+
+  Any other library which implements something similar to MPFR, should
+be accessed via the abstract type @samp{bigfr}, too.
+
+  We have chosen to not regard MPFR and GMP-MPF as equivalent.  MPFR
+provides a lot more behind the scenes.
+
+  Lisp objects can be tested for the type @samp{bigfr} by the
+following predicate.
+
+@defun bigfrp object
+This predicate tests whether its argument is a MP-float (as provided
+by MPFR), and returns @code{t} if so, @code{nil} otherwise.
+@end defun
+
+  The read syntax (and print syntax) of @samp{bigfr}s is the same as
+for emacs floats.  The interpretation in the lisp reader depends on
+the variable @var{read-real-as} (see @ref{Category real}).
+
+  There are no other forms of creation, especially there are no
+constructors for @samp{bigfr} objects.
+
+  As required by MPFR, SXEmacs supports indefinite number values which
+can occur as return values of some MPFR functions.  Such number
+objects, however, are @emph{not} of type @samp{bigfr} anymore.  We
+provide a more general handling for these, see @ref{Type indefinite}
+for more information.
+
+  Again, numbers of type @samp{bigfr} can be assigned a precision.
+This precision can be queried and even may be changed at any time.
+
+@defun bigfr-get-precision number
+Return the precision of @var{number} as an integer.
+@end defun
+
+@defun bigfr-set-precision number precision
+Set the precision of @var{number} to @var{precision}, a nonnegative
+integer.
+The new precision of @var{number} is returned.
+
+Note that the return value may differ from @var{precision} if the
+underlying library is unable to support exactly @var{precision} bits
+of precision.
+Note also, that setting the precision is @emph{lossy}, that means
+@var{number} after setting the precision is not necessarily the same
+as the original @var{number}.
+@end defun
+
+
+@node Type bigc
+@subsection The Type @samp{bigc}
+
+  The type @samp{bigc} is an abstract C type for arbitrary-precision
+complex number approximations with correct rounding facilities.  The
+actual C type is provided either by the MPC library (@samp{mpc_t}) or
+by the SXEmacs pseudo imlementation based on MPFR.
+
+  Any other library which implements something similar to MPC, should
+be accessed via the abstract type @samp{bigc}, too.
+
+  Lisp objects can be tested for the type @samp{bigc} by the following
+predicate.
+
+@defun bigcp object
+This predicate tests whether its argument is a complex number (as
+provided by MPC or the SXEmacs pseudo-implementation), and returns
+@code{t} if so, @code{nil} otherwise.
+@end defun
+
+  For @samp{bigc} objects exist two accessor functions, namely
+@code{real-part} and @code{imaginary-part} to access the respective
+parts of a complex number.
+
+@defun real-part number
+Return the real part of @var{number}.
+@end defun
+
+@defun imaginary-part number
+Return the imaginary part of @var{number}.
+If @var{number} is a comparable, 0 is returned.
+@end defun
+
+  The read syntax of @samp{bigc}s is inspired by the notation of
+elements of algebraic adjunctions.  In these terms the lisp reader
+interprets @var{a}+@var{b}i as @samp{bigc} whenever both @var{a} and
+@var{b} are written in float syntax, alternatively it is allowed to
+capitalise the imaginary symbol.  If the imaginary part of a
+@samp{bigc} is one, it is additionally allowed to omit @var{b}.
+Consider the examples:
+
+@example
+2.0+3.0i
+     @result{} 2.000000+3.000000i
+2.0+3.0I
+     @result{} 2.000000+3.000000i
+3.0+i
+     @result{} 3.000000+1.000000i
+@end example
+
+  Note that the read syntax for complex numbers steals a whole class
+of possible symbol identifiers.  In a non-ENT-SXEmacs @var{2.0+3.0i}
+is a valid name for a variable.
+
+  There is also the possibility to create @samp{bigc} objects with a
+constructor, passing a real and an imaginary part to it.  Both real
+and imaginary part may be of any comparable number type, in this
+case.  In a certain sense, this is the inverse function of the
+selector functions above.
+
+@defun make-bigc real-part imaginary-part
+Return the bigc number whose real component is @var{real-part} and
+whose imaginary component is @var{imaginary-part}.
+@end defun
+
+@example
+(make-bigc 1 2)
+     @result{} 1.000000+2.000000i
+(make-bigc 1/2 3/2)
+     @result{} 0.500000+1.500000i
+@end example
+
+  Again, numbers of type @samp{bigc} can be assigned a precision.
+This precision can be queried and changed at any time.
+
+@defun bigc-get-precision number
+Return the precision of @var{number} as an integer.
+@end defun
+
+@defun bigc-set-precision number precision
+Set the precision of @var{number} to @var{precision}, a nonnegative
+integer.
+The new precision of @var{number} is returned.
+
+Note that the return value may differ from @var{precision} if the
+underlying library is unable to support exactly @var{precision} bits
+of precision.
+Note also, that setting the precision is @emph{lossy}, that means
+@var{number} after setting the precision is not necessarily the same
+as the original @var{number}.
+@end defun
+
+  The precision always affects both, the real and the imaginary part.
+Although supported by the underlying library, SXEmacs will not handle
+selective precision assignment.
+
+
+@node Type bigg
+@subsection The Type @samp{bigg}
+
+  As of November 2005, there is no library dedicated to Gaussian
+numbers available.  Thusly, the abstract C type @samp{bigg} is
+implemented only via the SXEmacs pseudo implementation based on
+GMP-MPZ.  Gaussian numbers are represented by two MPZ objects.
+
+  Nonetheless, any library which implements Gaussian numbers should be
+accessed via the abstract type @samp{bigg} in the future.
+
+  Lisp objects can be tested for the type @samp{bigg} by the following
+predicate.
+
+@defun biggp object
+This predicate tests whether its argument is a Gaussian number (as
+provided by the SXEmacs pseudo-implementation), and returns @code{t}
+if so, @code{nil} otherwise.
+@end defun
+
+  For @samp{bigg} objects exist the same accessor functions as for
+@samp{bigc} objects, @code{real-part} and @code{imaginary-part} to
+access the respective parts of a Gaussian number.  Hereby,
+@code{real-part} returns the integral rational part.
+
+  The read syntax of @samp{bigg}s is inspired by the traditional
+notation of the elements of a Gaussian lattice.  In these terms the
+lisp reader interprets @var{a}+@var{b}i as @samp{bigg} whenever both
+@var{a} and @var{b} are written in integer syntax, alternatively it is
+allowed to capitalise the imaginary symbol.  If the imaginary part of
+a @samp{bigg} is one, it is additionally allowed to omit @var{b}.
+Consider the examples:
+
+@example
+2+3i
+     @result{} 2+3i
+2+3I
+     @result{} 2+3i
+3+i
+     @result{} 3+1i
+@end example
+
+  And similar to @samp{bigc} complex numbers, there is a constructor
+which composes a Gaussian number from a given integral rational and
+a given imaginary component.
+
+@defun make-bigg real-part imaginary-part
+Return the bigg number whose rational component is @var{real-part} and
+whose imaginary component is @var{imaginary-part}.
+@end defun
+
+
+@node Type indefinite
+@subsection The Type @samp{indefinite}
+
+  In order to handle indefinite number values, SXEmacs provides an
+abstract type to gather these and sophisticated means to handle them.
+Indefinites are treated like ordinary numbers.  They take part in
+arithmetic and can be used for many mathematical functions.
+
+  Howbeit, indefinites cannot be explicitly generated because there
+merely finitely many.  Hence there are variables which refer to the
+indefinites, their print syntax is identical to their symbol name.
+
+@vindex +infinity
+@defvar +infinity
+A symbol representing positive infinity.
+@end defvar
+
+@vindex -infinity
+@defvar -infinity
+A symbol representing negative infinity.
+@end defvar
+
+@vindex complex-infinity
+@defvar complex-infinity
+A symbol representing the infinitely distant point in the complex
+plane.
+@end defvar
+
+@vindex not-a-number
+@defvar not-a-number
+A symbol representing a not-a-number (NaN) value.
+@end defvar
+
+  The big difference to other number objects is that indefinites may
+shadow another other number types.  This makes them more a category
+than actually a number type of its own.  Due to efficiency reasons and
+cleaner coding we have chosen to assign them their own type and
+allowed them to behave as another number type.  That is SXEmacs does
+not distinguish between the positively infinite point of the rational
+integers and the positively infinite point of the reals.
+
+  On the other hand (and as typically seen in mathematics), the
+infinities are not part of the class of numbers of a certain type,
+therefore the type predicates of other number types will always yield
+@code{nil}.  That means the programmer must track the history of
+computations to find out which element or term spawned the occurrence
+of indefinites (if that information is valuable of course).
+
+@noindent
+As usual for number types indefinites have their own predicate
+
+@defun indefinitep object
+Return @code{t} if @var{object} is an indefinite symbol, @code{nil}
+otherwise.
+@end defun
+
+  Infinities, a subset of the indefinites, can be type-checked
+separatedly.
+
+@defun infinityp object
+Return @code{t} if @var{object} is a form of infinity, @code{nil}
+otherwise.
+@end defun
+
+  Note also, the indefinite @code{not-a-number} is indeed not a
+number, thence the category predicate @code{numberp} will return
+@code{nil} for @code{not-a-number} (see @ref{Category number}).
+
+
+@node Type residue-class-ring
+@subsection The Type @samp{residue-class-ring}
+
+  The type @samp{residue-class-ring} is a super-type for all possible
+residue class rings, which in turn are the worlds (actually the types)
+of residue classes.  To progressively meet the actual need for
+infinitely many types, we instead gather them into this super-type.
+The underlying C-type is @samp{resc_rng}.
+
+  Lisp objects can be tested for the type @samp{residue-class-ring} by
+the following predicate.
+
+@defun residue-class-ring-p object
+Return @code{t} if @var{object} is a residue class ring, @code{nil}
+otherwise.
+@end defun
+
+  The read syntax of @samp{residue-class-ring}s is inspired by the
+traditional algebra, hence the lisp reader interprets
+@code{Z/@var{m}Z} as @samp{residue-class-ring} whenever @var{m} is a
+rational integer.  We call @var{m} the modulus of the residue class
+ring.
+
+  Of course, there exists a constructor to derive a residue class ring
+from a given modulus:
+
+@defun make-residue-class-ring modulus
+Return a residue class ring of size @var{modulus} (>= 2).
+@end defun
+
+@example
+Z/24Z
+     @result{} Z/24Z
+(make-residue-class-ring 24)
+     @result{} Z/24Z
+@end example
+
+@noindent
+The converse is possible via the accessor function
+@code{residue-class-modulus}, too.  See next section for a detailed
+description.
+
+
+@node Type residue-class
+@subsection The Type @samp{residue-class-ring}
+
+  The type @samp{residue-class} is actually a world of worlds where
+residue class ring elements may live.  Their actual ``type'' is the
+residue class ring where the element is contained.  Therefore
+(higher-ary) operations over residue classes @emph{must} always
+perform two type checks, firstly whether an object lives in the world
+of worlds of residue classes, and secondly whether all of the residue
+classes are contained in the same ring.
+The underlying C-type is @samp{resc_elm}.
+
+  Lisp objects can be tested for the type @samp{residue-class} by the
+following predicate.
+
+@defun residue-class-p object
+Return @code{t} if @var{object} is a residue class, @code{nil}
+otherwise.
+@end defun
+
+  For @samp{residue-class} objects exists an accessor function to
+obtain the ring in which a certain residue class is contained.
+
+@defun residue-class-ring resclass
+Return the parental residue class ring (the world) of @var{resclass}.
+@end defun
+
+  The read syntax of @samp{residue-class}es is inspired by the
+traditional algebra, hence the lisp reader interprets
+@code{@var{c}+@var{m}Z} as @samp{residue-class} whenever both @var{c}
+and @var{m} are rational integers, and @var{m} is positive.  We
+call @var{c} a representant of the residue class.
+
+  Of course, there exists a constructor to derive a residue class
+from a given representant:
+
+@defun make-residue-class element ring
+Return the residue class of @var{element} in @var{ring}.
+
+This is a lift of the integer @var{element} into one of the classes of
+@var{ring}.
+@end defun
+
+@noindent
+Note that arbitrary class members of a residue class are mapped to one
+canonical representant.
+
+@example
+@group
+2+9Z
+     @result{} 2+9Z
+(make-residue-class 2 Z/9Z)
+     @result{} 2+9Z
+@end group
+
+@group
+;; a canonicalisation
+24+9Z
+     @result{} 6+9Z
+@end group
+@end example
+
+  To regain the representant's integer value there is an accessor
+function @code{residue-class-representant}:
+
+@defun residue-class-representant element
+Return the representant of the residue class @var{element} lifted to
+the ring of rational integers.
+@end defun
+
+@noindent
+Similarly there is an accessor for the modulus:
+
+@defun residue-class-modulus ring-or-element
+Return the modulus of the residue class ring @var{ring-or-element},
+or the modulus of a residue class, respectively.
+@end defun
+
+@example
+@group
+(residue-class-representant 3+4Z)
+     @result{} 3
+(residue-class-representant 6+4Z)
+     @result{} 2
+@end group
+
+@group
+(residue-class-modulus 3+4Z)
+     @result{} 4
+(residue-class-modulus Z/7Z)
+     @result{} 7
+@end group
+@end example
+
+
+@node Type quatern
+@subsection The Type @samp{quatern}
+
+  The type @samp{quatern} is an abstract C type for integral elements
+of the quaternion division algebra.  The actual C type
+(@samp{quatern}) is pseudo-implemented as a struct of 4 MP-integers,
+which are based on either GMP-MPZ or BSD-MP.
+
+  Lisp objects can be tested for the type @samp{quatern} by the
+following predicate.
+
+@defun quaternp object
+Return @code{t} if @var{object} is a quaternion, @code{nil}
+otherwise.
+@end defun
+
+  The read syntax of @samp{quatern}s is similar to the read syntax for
+complex numbers.  The lisp reader interprets
+@code{@var{a}+@var{b}i+@var{c}j+@var{d}k} as @samp{quatern} whenever
+@var{a}, @var{b}, @var{c} and @var{d} are all rational integers.  We 
+call @var{a} the z-part, @var{b} the i-part, @var{c} the j-part
+and @var{d} the k-part of the quaternion.
+
+  As for complex or gaussian numbers, there exists a constructor
+@code{make-quatern} which may be used to compose a quaternion by its
+components.
+
+@defun make-quatern z i j k
+Return the Quaternion whose z-component is @var{z},
+whose i-, j-, and k-components are @var{i}, @var{j} and @var{k},
+respectively.
+@end defun
+
+@example
+2+4i+3j+k
+     @result{} 2+4i+3j+1k
+0-I-J-K
+     @result{} 0-1i-1j-1k
+(make-quatern 2 1 2 0)
+     @result{} 2+1i+2j+0k
+@end example
+
+  And again, the single linear factors of a quaternion are regainable
+by the accessor functions @code{quatern-z}, @code{quatern-i},
+@code{quatern-j} and @code{quatern-k}.
+
+@defun quatern-z quatern
+Return @var{quatern}'s z-component.
+@end defun
+
+@defun quatern-i quatern
+Return @var{quatern}'s i-component.
+@end defun
+
+@defun quatern-j quatern
+Return @var{quatern}'s j-component.
+@end defun
+
+@defun quatern-k quatern
+Return @var{quatern}'s k-component.
+@end defun
+
+@example
+(quatern-z 1+2i-3j-k)
+     @result{} 1
+(quatern-i 1+2i-3j-k)
+     @result{} 2
+(quatern-j 1+2i-3j-k)
+     @result{} -3
+(quatern-k 1+2i-3j-k)
+     @result{} -1
+@end example
+
+
+
+@node Unions of Number Types
+@section Unions of Number Types
+@cindex unions of number types
+@cindex number categories
+@cindex categories of numbers
+
+  Formally, we refer to numbers (and anything number-related) in the
+SXEmacs lisp environment by a category called @samp{number}.  The
+category @samp{number} (deductively) consists of all SXEmacs lisp
+objects which can be used in the arithmetical functions @code{+} and
+@code{*}, and which possess a @dfn{canonical norm}, i.e. for which the
+function @code{canonical-norm} returns a value. 
+
+  Of course, in our deductive approach, we wish to fragment the
+category @samp{number} seamlessly into several subcategories.  You can
+take for granted that this is possible.  To not scare you completely
+off, we look at an inductive approach instead.
+
+  The inductive approach attempts to start at something like the atoms
+of the enhanced number facilities, namely the C types.  As discussed
+in the previous section, C types themselves are gathered and unified
+into an abstract C type, which is library independent.  Now we try
+further unifications to get something like @emph{the} super-type,
+which we call a category, since its objects do not physically carry
+this type.
+
+@menu
+* Category integer::		Unifications of rational integers.
+* Category rational::		Unifications of rationals.
+* Category real::
+* Category comparable::
+* Category nonnegative::
+* Category complex::
+* Category archimedean::
+* Category nonarchimedean::
+* Category algebraic::
+* Category transcendent::
+* Category zero::
+* Category one::
+* Category number::
+@end menu
+
+
+@node Category integer
+@subsection The category @samp{integer}
+
+  The category of integers is probably the most transparent one.  This
+is of course due to the fact, that SXEmacs did provide integers
+before.  Now it would be unregrettably stupid, if we invented another
+read-syntax for the additional integers.  Hence big integers are
+unified transparently with ordinary 28-bit integers.  The subcategory
+of ordinary emacs integers is called @dfn{int} or @dfn{fixnum}.
+
+  Nevertheless, we provide functions to distinguish them, and to
+coerce from the one type to the other.
+
+@defun intp object
+This predicate tests whether its argument is an ordinary emacs
+integer, and return @code{t} if so, @code{nil} otherwise.
+@end defun
+
+@defun fixnump object
+This is roughly the same as @code{intp} and is provided for
+compatibility to XEmacs.
+@end defun
+
+@defun bigzp object
+This predicate tests whether its argument is a big integer (as
+provided by GMP-MPZ or BSD-MP), and returns @code{t} if so, @code{nil}
+otherwise.
+@end defun
+
+@defun bignump object
+This is roughly the same as @code{bigzp} and is provided for
+compatibility to XEmacs.
+@end defun
+
+  Unfortunately, ordinary emacs integers show some behaviour which in
+the new category of integers is not bearable anymore.  This may lead
+to confusion in simpler cases, if not even to wrong code.
+
+The following example shows the most significant change:
+@example
+@group
+In an old fixnum-only SXEmacs:
+(+ 1 134217727)
+     @result{} -134217728
+@end group
+
+The same in a SXEmacs with ENT:
+@group
+(+ 1 134217727)
+     @result{} 134217728
+@end group
+
+Now the resulting integer is of bigz type.
+@group
+(bigzp (+ 1 134217727))
+     @result{} t
+@end group
+@end example
+
+  Now, in general we can state, that whenever space is too tight for
+an integer to fit into the built-in integer type, this integer is
+coerced to the type @samp{bigz}.
+
+  The reverse is not necessarily true.  But there is an auto-coercion,
+known as canonicalisation, to bang big integers to ints, when they are
+small enough and to bang fractions which cancel to denominator 1 to
+integers, but some functions acquiesce their output as is.
+See the following examples:
+
+@example
+@group
+(bigzp (2^ 42))
+     @result{} t
+(bigzp (/ (2^ 42) (2^ 30)))
+     @result{} nil
+@end group
+@group
+(factorial 4)
+     @result{} 24
+(bigzp (factorial 4))
+     @result{} t
+@end group
+@end example
+
+  We say, that @code{/} canonicalises its results, whereas
+@code{factorial} does not.  Canonicalisation usually depends on the
+size of output compared to average input values.  This is much too
+vague for practice.
+
+  However, in order to be absolutely sure about the world where
+resulting integers (even fractions which cancel to integers) live,
+there is a canonicalisation function.
+
+@defun canonicalize-number number
+Return the canonical form of @var{number}.
+@end defun
+
+  This function determines the smallest category a number can live in,
+and coerces to there.  Hereby smallest category means the category
+with the least cardinality.
+
+@example
+(bigzp (factorial 4))
+     @result{} t
+(bigzp (canonicalize-number (factorial 4)))
+     @result{} nil
+@end example
+
+  Canonicalisation actually begins in the expression reader already,
+consider the quotient @samp{4/2}, which cancels to @samp{2}.
+
+@example
+4/2
+     @result{} 2
+(bigqp 4/2)
+     @result{} nil
+@end example
+
+
+@node Category rational
+@subsection The category @samp{rational}
+
+  The category of rationals gathers everything that is rational.
+Practically, it is the union of the integers with the @samp{bigq}s.
+
+@noindent
+The category's predicate is @code{rationalp}.
+
+@defun rationalp object
+Return @code{t} if @var{object} is a rational (i.e. a rational integer
+or a rational quotient), @code{nil} otherwise.
+@end defun
+
+@example
+(rationalp 0)
+     @result{} t
+(rationalp (factorial 100))
+     @result{} t
+(rationalp 1/2)
+     @result{} t
+@end example
+
+
+@node Category real
+@subsection The category @samp{real}
+
+  The category of reals consists of the emacs floats and all
+arbitrary real-approximations (@samp{bigf}, @samp{bigfr} if provided).
+Possibly, if provided, it contains the symbolic ``number'' objects for
+positive and negative infinity, as well as @var{not-a-number}.
+
+  Important note: As stated in the definition above, rationals are
+@emph{not} in the category of reals.  This might seem contradictory,
+because (especially in school mathematics or calculus classes) reals
+are sometimes defined as the union of rationals and irrationals.  From
+the algebraic view, this is approach is inconsistent.  Please see
+@ref{Category comparable}.  On the other hand, the non-ENT equivalent
+of real would be float, and in terms of non-ENT emacsen, fixnums are
+no floats.
+
+@noindent
+The category's predicate is @code{realp}.
+
+@defun realp object
+Return @code{t} if @var{object} is real (i.e. a float or one of the
+arbitrary-precision floats), @code{nil} otherwise.
+@end defun
+
+@example
+@group
+(realp 0.0)
+     @result{} t
+(realp (exp 1))
+     @result{} t
+(realp (coerce 1 'bigf))
+     @result{} t
+(realp +infinity)
+     @result{} t
+(realp not-a-number)
+     @result{} t
+@end group
+
+@group
+(realp 1)
+     @result{} nil
+(realp 1/2)
+     @result{} nil
+@end group
+@end example
+
+  Additionally, the category real has some variables to control which
+float implementation is used.  This is necessary as there is no
+information about loss of precision, and there is no function to
+measure if a float number would fit in one type or the other.
+
+@defvar read-real-as
+Indicate how real numbers should be read.
+If set to `nil' or 'float, reals are always converted to floats.
+If set to 'bigf or 'bigfr, reals are read as MPF floats or MPFR 
+floats respectively.
+@end defvar
+
+@defvar default-real-precision
+The default floating-point precision for newly created
+floating point values.
+This should be an unsigned integer no greater than
+@var{max-real-precision} to create external floats with the
+indicated precision.
+
+This variable is effective only when @var{read-real-as} is set to a
+float type which supports setting a precision.
+@end defvar
+
+@defvar max-real-precision
+The maximum number of bits of precision a @samp{bigf} or @samp{bigfr}
+can have.  This is determined by the underlying library used to
+implement arbitrary-precision floats.
+@end defvar
+
+
+@node Category comparable
+@subsection The category @samp{comparable}
+
+  Deductively, the category of comparables are all numbers which
+possess a total (archimedean) order.  Inductively, this category is
+the union of reals and rationals.  Comparables, as the names suggests,
+can be directly compared with ordering relations, such as @code{<} or
+@code{>}.
+
+@noindent
+The category's predicate is @code{comparablep}.
+
+@defun comparablep object
+Return @code{t} if @var{object} is comparable (i.e. a real or a
+rational), @code{nil} otherwise.
+
+We call a number comparable if there exists a total (archimedean)
+order on the underlying structure.
+@end defun
+
+@example
+(comparablep 0)
+     @result{} t
+(comparablep 1/2)
+     @result{} t
+(comparablep 0.5)
+     @result{} t
+@end example
+
+
+@node Category nonnegative
+@subsection The category @samp{nonnegative}
+
+  The category of nonnegatives are those comparables which are not
+less than zero.  This explicitly implies, that 0 is nonnegative.  The
+restriction to comparables is necessary, since the membership is
+indeed tested as in the definition.
+
+@noindent
+The category's predicate is @code{nonnegativep}.
+
+@defun nonnegativep object
+Return @code{t} if @var{object} is a nonnegative number, @code{nil}
+otherwise.
+
+We call a number object non-negative iff it is comparable
+and its value is not less than 0.
+@end defun
+
+@example
+@group
+(nonnegativep 0)
+     @result{} t
+(nonnegativep 1/2)
+     @result{} t
+(nonnegativep 1.5)
+     @result{} t
+@end group
+
+@group
+(nonnegativep -1/2)
+     @result{} nil
+(nonnegativep -0.5)
+     @result{} nil
+@end group
+
+@group
+(nonnegativep 1+2i)
+     @result{} nil
+@end group
+@end example
+
+
+@node Category complex
+@subsection The category @samp{complex}
+
+  The category of complices is the union of @samp{bigc}s and
+@samp{bigg}s.  Explicitly, neither reals nor rationals are in the
+category of complex numbers, in contrast to some analytical
+definitions.  See @ref{Category archimedean} for that.
+
+@noindent
+The category's predicate is @code{complexp}.
+
+@defun complexp object
+Return @code{t} if @var{object} is a complex number (i.e. either a
+@samp{bigc} or a @samp{bigg}), @code{nil} otherwise.
+@end defun
+
+@example
+@group
+(complexp 1+2i)
+     @result{} t
+(complexp 1.0+2.2i)
+     @result{} t
+(complexp (sqrt -2))
+     @result{} t
+@end group
+
+@group
+(complexp 1)
+     @result{} nil
+(complexp 1.0)
+     @result{} nil
+(complexp 1/2)
+     @result{} nil
+@end group
+@end example
+
+
+@node Category archimedean
+@subsection The category @samp{archimedean}
+
+  Deductively, the category of archimedeans contains all numbers which
+do have an archimedean valuation.  Inductively, the category of
+archimedeans is the union of reals, rationals, complices and
+quaternions.
+
+@noindent
+The category's predicate is @code{archimedeanp}.
+
+@defun archimedeanp object
+Return @code{t} if @var{object} is a number with an archimedean
+valuation, @code{nil} otherwise.
+@end defun
+
+@example
+(archimedeanp 0)
+     @result{} t
+(archimedeanp 1/2)
+     @result{} t
+(archimedeanp 1.2)
+     @result{} t
+(archimedeanp pi)
+     @result{} t
+(archimedeanp (sqrt -2))
+     @result{} t
+@end example
+
+
+@node Category nonarchimedean
+@subsection The category @samp{nonarchimedean}
+
+
+  Deductively, the category of non-archimedeans contains all numbers
+which do not have an archimedean valuation -- hence this category also
+holds numbers with trivial valuation.
+
+  Currently, only residue classes are non-archimedeans for their only
+possible valuation is the trival one (which is not archimedean).
+
+@noindent
+The category's predicate is @code{nonarchimedeanp}.
+
+@defun nonarchimedeanp object
+Return @code{t} if @var{object} is a number with an non-archimedean
+valuation, @code{nil} otherwise.
+@end defun
+
+@example
+(nonarchimedeanp 0)
+     @result{} nil
+(nonarchimedeanp 1/2)
+     @result{} nil
+(nonarchimedeanp 1.2)
+     @result{} nil
+(nonarchimedeanp 12+121Z)
+     @result{} t
+@end example
+
+
+@node Category algebraic
+@subsection The category @samp{algebraic}
+
+  Not yet implemented.
+
+
+@node Category transcendent
+@subsection The category @samp{transcendent}
+
+  Not yet implemented.
+
+
+@node Category zero
+@subsection The category @samp{zero}
+
+  The category of zeroes are all numbers which represent a zero, that
+is an additive neutral element.  In that sense, the following is
+always true:
+
+@example
+(equal @var{num} (+ 0 @var{num}))
+@end example
+
+@noindent
+The category's predicate is @code{zerop}.
+
+@defun zerop object
+Return @code{t} if @var{object} is a zero, @code{nil} otherwise.
+@end defun
+
+@noindent
+Let us look at a variety of examples.
+
+@example
+(zerop 0)
+     @result{} t
+(zerop 0/1)
+     @result{} t
+(zerop 0.0)
+     @result{} t
+(zerop 0+0i)
+     @result{} t
+(zerop 0.0+0.0i)
+     @result{} t
+(zerop 0+7Z)
+     @result{} t
+(zerop 7+7Z)
+     @result{} t
+(zerop 0+0i+0j+0k)
+     @result{} t
+@end example
+
+  There is a constructor for zeroes which accepts an arbitrary number
+and uses that to determine the world, read type, the number lives in.
+Afterwards it creates and returns the zero of that number type.
+
+@defun zero number
+Return the zero of the world @var{number} lives in.
+@end defun
+
+@example
+(zero 23)
+     @result{} 0
+(zero 2/3)
+     @result{} 0
+(zero 1.4)
+     @result{} 0.0
+(zero 1+2i)
+     @result{} 0+0i
+(zero 1.2+3.4i)
+     @result{} 0.000000+0.000000i
+(zero 7+14Z)
+     @result{} 0+14Z
+(zero 7+13Z)
+     @result{} 0+13Z
+@end example
+
+@node Category one
+@subsection The category @samp{one}
+
+  The category of ones are all numbers which represent a one, that
+is a multiplicative neutral element.  In that sense, the following is
+always true:
+
+@example
+(equal @var{num} (* 1 @var{num}))
+@end example
+
+@noindent
+The category's predicate is @code{onep}.
+
+@defun onep object
+Return @code{t} if @var{object} is a one, @code{nil} otherwise.
+@end defun
+
+  As for zeroes, there is a constructor for ones, too, which similarly
+accepts an arbitrary number and uses that to determine the world of
+the number.  Afterwards it creates and returns the one of that number
+type.
+
+@defun one number
+Return the one of the world @var{number} lives in.
+@end defun
+
+@example
+(one 23)
+     @result{} 1
+(one 2/3)
+     @result{} 1
+(one 1.4)
+     @result{} 1.0
+(one 1+2i)
+     @result{} 1+0i
+(one 1.2+3.4i)
+     @result{} 1.000000+0.000000i
+(one 7+14Z)
+     @result{} 1+14Z
+(one 7+13Z)
+     @result{} 1+13Z
+@end example
+
+
+@node Category number
+@subsection The category @samp{number}
+
+  Inductively, the union of all categories discussed above is the
+category @samp{number}.  The category's predicate is @code{numberp}.
+
+@defun numberp object
+Return @code{t} if @var{object} is a number, @code{nil} otherwise.
+@end defun
+
+
+@node Coercion
+@section Coercion
+
+  Like for non-ENT-SXEmacsen, various coercions (conversions) can be
+done.  Hereby, on coercion numbers may lose some of their
+information.  Possibly this loss of information totally destroys the
+numeric value of a number, and thusly makes coercion uninvertable in
+general.
+
+@defun coerce-number number type &optional precision
+Convert NUMBER to the indicated type, possibly losing information.
+See @code{coerce}.
+
+TYPE is one of the symbols:
+- @var{fixnum} or @var{int}  to convert to built-in integers
+- @var{bigz} or @var{bignum} to convert to bigz integers
+- @var{integer}              to convert to the most suitable type out 
+                             of @var{bigz} or @var{int}
+
+- @var{bigq} or @var{ratio}  to convert to bigq fractions
+- @var{rational}             to convert to the most suitable type out
+                             of @var{bigq}, @var{bigz} or @var{int}
+
+- @var{float}                to convert to built-in floats
+- @var{bigf} or @var{bigfloat}  to convert to bigf floats
+- @var{bigfr}                to convert to bigfr floats
+- @var{real}                 to convert to the type indicated by 
+                             @var{read-real-as} with a fallback to
+                             @var{float}
+
+- @var{bigg}                 to convert to a Gaussian
+- @var{bigc}                 to convert to a bigc complex number
+
+@emph{Note:} Not all of these types may be supported.
+
+The optional argument @var{precision} is the number of bits of
+precision to use when converting to reals; it is ignored otherwise.
+If @code{nil}, the default precision is used.
+
+Note that some conversions lose information.  No error is signaled in
+such cases; the information is silently lost.
+@end defun
+
+@example
+@group
+(coerce-number 1 'bigz)
+     @result{} 1
+(bigzp (coerce-number 1 'bigz))
+     @result{} t
+@end group
+
+@group
+(coerce-number 1 'integer)
+     @result{} 1
+(coerce-number (exp 40) 'integer)
+     @result{} 235385266837019985
+(bigzp (coerce-number 1 'integer))
+     @result{} nil
+(bigzp (coerce-number (exp 40) 'integer))
+     @result{} t
+@end group
+
+@group
+(coerce-number 8/2 'bigq)
+     @result{} 4
+(coerce-number 8/2 'rational)
+     @result{} 4
+(bigqp (coerce-number 8/2 'bigq))
+     @result{} t
+(bigqp (coerce-number 8/2 'rational))
+     @result{} nil
+@end group
+@end example
+
+@noindent
+Now an example for how to effectively lose information and hence make
+coercion uninvertable.
+
+@example
+(coerce-number 4/3 'bigfr)
+     @result{} 1.333333333333333333333333333333333333335
+(coerce-number (coerce-number 4/3 'bigfr) 'bigq)
+     @result{} 105637550019019116791391933781/79228162514264337593543950336
+@end example
+
+  Besides, the types @samp{bigf}, @samp{bigfr} and @samp{bigc} allow
+you to pass a precision to @code{coerce-number} and some mathematical
+functions.  In order to get a notion of varying precisions, we will
+first present some examples:
+
+@example
+(coerce-number 49000 'bigfr 16)
+     @result{} 49000.0
+(coerce-number 49000 'bigfr 13)
+     @result{} 49000.
+(coerce-number 49000 'bigfr 12)
+     @result{} 48992.
+(coerce-number 49000 'bigfr 10)
+     @result{} 49024.
+(coerce-number 49000 'bigfr 9)
+     @result{} 49020
+(coerce-number 49000 'bigfr 8)
+     @result{} 48900
+(coerce-number 49000 'bigfr 7)
+     @result{} 49150
+(coerce-number 49000 'bigfr 4)
+     @result{} 49200
+@end example
+
+  Here you can see precisely how rounding affects the actual value of
+a number.  Also note, with precision 9 or lower the number is not
+actually a float anymore, because the radix would require more digits
+in order to be set.  Whenever something like this occurs, we fill the
+output with trailing zeroes instead of using the scientific
+exponential notation.  That means, we write @samp{48900} instead of
+@samp{4.89E+4}.
+
+
+  Even more complicated is the situation with one-way coercions.
+Numbers of the category @samp{complex} cannot be coerced to numbers of
+the category @samp{comparable}.  This is because there exist a dozen
+methods to do that, and it is not clear which one to use.
+
+@example
+(coerce-number 1 'bigg)
+     @result{} 1+0i
+(coerce-number (coerce-number 1 'bigg))
+     @result{} Wrong type argument: comparablep, 1+0i
+@end example
+
+  To ease that pain a little you can explicitly use your favourite
+embedding into comparables.  For example:
+
+@example
+(defun my-coerce-from-bigg (num)
+  (if (zerop (imaginary-part num))
+      (real-part num)
+    (canonical-norm num)))
+     @result{} my-coerce-from-bigg
+
+(let ((num (coerce-number 3 'bigg)))
+  (my-coerce-from-bigg num))
+     @result{} 3
+
+(let ((num 3+2i))
+  (my-coerce-from-bigg num))
+     @result{} 13
+@end example
+
+
+@noindent
+There are some abbreviated forms for number coercion.
+
+@defun int number &optional precision
+Return the ordinary integer numerically equal to @var{number}.
+The optional argument @var{precision} is unused.
+
+This is equivalent to 
+@code{(coerce-number @var{number} 'int precision)}
+@end defun
+
+@defun bigz (number &optional precision)
+Return the MPZ number numerically equal to @var{number}.
+The optional argument @var{precision} is unused.
+
+This is equivalent to 
+@code{(coerce-number @var{number} 'bigz precision)}
+@end defun
+
+@defun bigq (number &optional precision)
+Return the MPQ number numerically equal to @var{number}.
+The optional argument @var{precision} is unused.
+
+This is equivalent to 
+@code{(coerce-number @var{number} 'bigq precision)}
+@end defun
+
+@defun rational (number &optional precision)
+Return a rational most suitable to represent @var{number}.
+The optional argument @var{precision} is unused.
+
+This is equivalent to 
+@code{(coerce-number @var{number} 'rational precision)}
+@end defun
+
+@defun float number
+Return the floating point number numerically equal to @var{number}.
+@end defun
+
+@defun bigf (number &optional precision)
+Return the MPF number numerically equal to @var{number}.
+If optional argument @var{precision} is non-@code{nil}, its value
+(an integer) is used as precision.
+
+This is equivalent to 
+@code{(coerce-number @var{number} 'bigf precision)}
+@end defun
+
+@defun bigfr (number &optional precision)
+Return the MPFR number numerically equal to @var{number}.
+If optional argument @var{precision} is non-@code{nil}, its value
+(an integer) is used as precision.
+
+This is equivalent to 
+@code{(coerce-number @var{number} 'bigfr precision)}
+@end defun
+
+@defun real (number &optional precision)
+Return a real with respect to @var{read-real-as} numerically
+equal to @var{number}.
+If optional argument @var{precision} is non-@code{nil}, its value
+(an integer) is used as precision.
+
+This is equivalent to 
+@code{(coerce-number @var{number} 'real precision)}
+@end defun
+
+
+@defun bigg (number &optional precision)
+Return the Gaussian number numerically equal to @var{number}.
+The optional argument @var{precision} is unused.
+
+This is equivalent to 
+@code{(coerce-number @var{number} 'bigg precision)}
+@end defun
+
+@defun bigc (number &optional precision)
+Return the MPC number numerically equal to @var{number}.
+If optional argument @var{precision} is non-@code{nil}, its value
+(an integer) is used as precision.
+
+This is equivalent to 
+@code{(coerce-number @var{number} 'bigc precision)}
+@end defun
+
+
+
+
+@node Revised Arithmetics
+@section Revised Arithmetics
+
+  Of course, arithmetical functions like @code{+}, @code{*} and so
+forth, have been reused for enhanced number types.  These are
+transparently overlaid.  This concept allows to use the same emacs
+lisp code for both non-ENT and ENT-SXEmacsen.
+
+  However, some of the arithmetical changes are not intuitive, so we
+discuss them here.  Please always refer to @ref{Numbers} for
+function and variable equivalents in a non-ENT-SXEmacs.
+
+@menu
+* Basic Arithmetics and ENT::	How does ENT work with basic
+				  arithmetic operations.
+* New Arithmetics::		New arithmetical functions.
+@end menu
+
+
+@node Basic Arithmetics and ENT
+@subsection Basic Arithmetics and ENT
+
+  Of course, all of the provided new number types work when used with
+the basic arithmetic operations, @code{+}, @code{-}, @code{*},
+@code{/}, @code{%}, @code{1+}, and @code{1-}.  At first glance, there
+are no severe differences to non-ENT-SXEmacs.  However, there is a
+traditional rule, whenever one argument in a basic arithmetic
+operation is a float, the result is a float.  This is an auto-coercion
+behaviour, which is heavily generalised in an ENT-SXEmacs.
+
+  First, a remark on the alternatives.  The most obvious alternative
+would have been to @emph{disallow} algebraic operations on arguments
+of different types, or (to be more fair) to disallow certain category
+mixtures in the arguments.  But since SXEmacs is not a strict maths
+professor, we will allow most combinations of argument types.
+
+  Indeed there are a few cases of binary operations where coercion
+would be so confusing that SXEmacs rather answers with an error
+instead of trying the insane.
+
+  For a better understanding of the behaviour of auto-coercion,
+imagine that the expression @code{(+ @var{a} @var{b})} does something
+like:
+
+@example
+(let ((super-category (find-least-common-category a b)))
+  (+ (coerce a super-category) (coerce 'b super-category)))
+@end example
+
+@noindent
+analogously for more than two arguments.
+
+  Now we just have to look at what this
+@code{find-least-common-category} actually does.  For some types it is
+obvious, an @samp{int} and a @samp{bigz} share the super-category
+@samp{integer}, a @samp{float} and a @samp{bigfr} belong to
+@samp{real}.  In that way, we can define the following chains:
+
+@example
+int < bigz < bigq < float < bigf < bigfr < bigc
+int < bigz < bigg < bigc
+@end example
+
+@noindent
+which verbosely means, if argument one is of type @samp{int} and
+argument two of type @samp{bigz}, then their super-category is
+@samp{bigz}; if argument one is of type @samp{bigz} and argument two
+of type @samp{bigq} their super-category is @samp{bigq}, and so on.
+
+  The general rule is to look for the first argument's type in one of
+the chains, then if the second is in the same chain, use the type
+which is more to the right.  If the arguments' types lie in different
+chains, go rightwards to the leftmost type which is in both chains and
+use that one.
+
+@noindent
+Some examples:
+@example
+@group
+(+ 1 1/2)
+     @result{} 3/2
+(+ 2 2.0)
+     @result{} 4.0
+(+ 2 1+i)
+     @result{} 3+1i
+(+ 2/3 1.4+2.8i)
+     @result{} 2.066666664+2.800000000i
+@end group
+@end example
+
+  To be honest, this is chain technique is just a hint for users or
+programmers.  The awful truth is that for every binary operation and
+every two types there has to be a function which returns the
+operation's value.
+
+  Given that we currently support 12 different number types and 16
+elementary binary operations and relations, there is a total of 2304
+combinations -- which is too much to list here.  The above chain
+technique is a good approximation of the actual behaviour for all of
+the elementary binary operations and relations.
+
+  A variety of exceptions results from operations on residue classes
+and quaternions at the moment, which is due to the imposed
+mathematical background.  Rather we discuss the resulting errors, all
+being sub-errors of the @samp{arith-error} class:
+
+@defvr Error operation-error
+Error signalled when an operation is undefined over the worlds of the
+arguments.
+@end defvr
+
+@defvr Error relation-error
+Error signalled when a relation is undefined over the worlds of the
+arguments.
+@end defvr
+
+@defvr Error valuation-error
+Error signalled when a valuation is undecidable or unknown over the
+world of an argument.
+@end defvr
+
+@defvr Error domain-error
+Error signalled when the world of an argument cannot be coerced or
+lifted onto or into another world.
+@end defvr
+
+@noindent
+We close this discussion with a small list of examples:
+
+@example
+@group
+(+ 3+7Z 3+8Z)
+     Operation undefined over domain
+(* 3+7Z 3)
+     Operation undefined over domain
+@end group
+
+@group
+(< 2+i 1+2i)
+     Relation undefined over domain
+(= 2.0+1.0i 2.0+1.0i)
+     Relation undefined over domain
+@end group
+@end example
+
+
+  In order to retain compatibility to existing lisp code, there are a
+number of issues dealing with division.  We have to distinguish
+between historical lisp-behaviour and mathematically correct
+behaviour.  The historic behaviour of @code{/} is to act as what is
+known as @code{div}.
+
+@example
+(/ 2)
+     @result{} 0
+(/ 1 2)
+     @result{} 0
+(/ 10 2 2)
+     @result{} 2
+@end example
+
+  However, in order to construct quotients of integers, in terms of
+creating a @samp{bigq}, there is the function @code{//}.  This
+quotient function behaves just like @code{/} with the mentioned
+exception of returning always a fraction when all arguments are in the
+category of rationals.
+
+@defun // &rest numbers
+Return first argument divided by all the remaining arguments.
+If a rest occurred, the category is enlarged, such that
+the division can be performed without leaving a rest.
+
+The arguments must be numbers, characters or markers.
+With one argument, reciprocates the argument.
+@end defun
+
+@noindent
+The above examples using @code{//} then yield:
+
+@example
+(// 2)
+     @result{} 1/2
+(// 1 2)
+     @result{} 1/2
+(// 10 2 2)
+     @result{} 5/2
+@end example
+
+  The mathematical division (division with remainder) is provided by
+the function @code{div}, the corresponding remainder function is
+@code{mod}.
+
+@defun div &rest numbers
+Return first argument divided by all the remaining
+arguments, possibly leaving a rest.
+
+The arguments must be numbers, characters or markers.
+With one argument, reciprocates the argument.
+
+The division of @var{a} and @var{b} is defined as the 
+largest number @var{c} such that (* @var{b} @var{c}) is 
+less or equal @var{a}.
+Hereby, @var{c} lies in the larger category of @var{a} 
+and @var{b}.
+
+The rest can be queried by `mod'.
+@end defun
+
+
+@defun mod x y
+Return @var{x} modulo @var{y}.
+The result falls between zero (inclusive) and @var{y} (exclusive).
+Both @var{x} and @var{y} must be numbers, characters or markers.
+
+The result value lies in the larger category of @var{x} and @var{y}.
+@end defun
+
+
+
+@node New Arithmetics
+@subsection New Arithmetical Functions
+
+  Completing basic arithmetics, ENT provides functions for
+exponentiation.  In general, it is highly advised to prefer the
+dedicated power function over successive multiplication.  We give a
+timing example below.
+
+@defun ^ number1 number2
+Return the power @var{number1} to the @var{number2}.
+@end defun
+
+@example
+(^ 3 4)
+     @result{} 81
+(^ 81 23)
+     @result{} 78551672112789411833022577315290546060373041
+@end example
+
+  Note that exponentiation is @emph{not} associative.  That is why
+@code{^} merely takes two arguments at a time.  Check the order of
+computation carefully.  The following example demonstrates the
+generated error in case of wrong association.
+
+@example
+(^ 2 (^ 3 4))
+     @result{} 2417851639229258349412352
+(^ (^ 2 3) 4)
+     @result{} 4096
+@end example
+
+  In order to get a notion of the time differences,
+
+@example
+(let ((start (current-btime))
+      (dummy (^ 2 (^ 3 4)))
+      (stop (current-btime)))
+  (- stop start))
+     @result{} 31
+@end example
+
+@noindent
+Now we perform the same with sequential multiplication:
+
+@example
+(let* ((start (current-btime))
+       (3^4 (* 3 3 3 3))
+       (result 1)
+       (2^3^4 (dotimes (i 3^4 result)
+                 (setq result (* 2 result))))
+       (stop (current-btime)))
+  (- stop start))
+     @result{} 567
+@end example
+
+@noindent
+To see the superiority, we modify the actual problem.
+
+@example
+@group
+(let ((start (current-btime))
+      (dummy (^ 5 (^ 5 5)))
+      (stop (current-btime)))
+  (- stop start))
+     @result{} 77
+@end group
+
+@group
+(let* ((start (current-btime))
+       (5^5 (* 5 5 5 5 5))
+       (result 1)
+       (5^5^5 (dotimes (i 5^5 result)
+                 (setq result (* 5 result))))
+       (stop (current-btime)))
+  (- stop start))
+     @result{} 21963
+@end group
+@end example
+
+
+  Whenever computing two-powers or ten-powers, there are dedicated
+functions which make use of special algorithms.
+
+@defun 2^ number &optional precision
+Return the exponential of @var{number} to 2 power.
+If optional argument @var{precision} is non-@code{nil}, its value
+(an integer) is used as precision in float computations.
+@end defun
+
+@defun 10^ number &optional precision
+Return the exponential of @var{number} to 10 power.
+If optional argument @var{precision} is non-@code{nil}, its value
+(an integer) is used as precision in float computations.
+@end defun
+
+
+  There is another arithmetic function working on the
+@dfn{prime decomposition} of integer numbers.  This is roughly
+equivalent to repeatedly check if a number is congruent modulo a
+factor and if so a division by that factor.
+
+@defun remove-factor factor number
+Remove all occurences of @var{factor} in @var{number} and
+return a cons cell with @var{number} divided by a maximal
+power of @var{factor} in the car and the exponent in the cdr.
+@end defun
+
+@example
+(remove-factor 5 25)
+     @result{} (1 . 2)
+(remove-factor 7 25)
+     @result{} (25 . 0)
+(remove-factor 11 2198765678901)
+     @result{} (18171617181 . 2)
+@end example
+
+
+
+
+@node Revised Formatting
+@section New Output Formatting Features
+
+@noindent
+ENT provides a number of new format specifiers:
+
+@itemize
+@item
+@samp{%Z} means print as big integer (convert to bigz)
+@item
+@samp{%Q} means print as fraction (convert to bigq)
+@item
+@samp{%F} means print as bigfr or bigf float (convert to in that order)
+   this specifier always converts the argument, regardless the
+   value of `read-real-as'
+@item
+@samp{%R} means print as real number (convert to bigfr, bigf or float)
+   this specifier respects the value of `read-real-as'
+@item
+@samp{%B} means print as Gaussian number (convert to bigg)
+@item
+@samp{%C} means print as complex number (convert to bigc)
+@end itemize
+
+Both @samp{%B} and @samp{%C} are actually rewrites to @samp{%Z%+Z} and
+@samp{%F%+F} respectively with the argument @var{arg} rewritten to
+@code{(real-part @var{arg})} @code{(imaginary-part @var{arg})}.
+Flags are passed on to at least the real part specifier.
+
+
+  On the other hand, we have tried to seamlessly integrate the new
+specifiers along with the ordinary ones.  Any number object is
+coerced to the integers if @samp{%d} or @samp{%Z} is used, if that is
+possible (see @ref{Coercion}).  Besides, the base converters work on
+any number in two steps, too: firstly, coerce to the integers,
+secondly convert to another base.
+
+@noindent
+Time for examples.  Here we demonstrate the equivalence of @samp{%d}
+and @samp{%Z} if used with big integers as arguments.
+
+@example
+@group
+(format "%d" (factorial 20))
+     @result{} "2432902008176640000"
+(format "%30d" (factorial 20))
+     @result{} "           2432902008176640000""
+(format "%.30d" (factorial 20))
+     @result{} "000000000002432902008176640000"
+@end group
+
+@group
+(format "%Z" (factorial 20))
+     @result{} "2432902008176640000"
+(format "%30Z" (factorial 20))
+     @result{} "           2432902008176640000""
+(format "%.30Z" (factorial 20))
+     @result{} "000000000002432902008176640000"
+@end group
+@end example
+
+@noindent
+Now we look at the coercion facilities:
+
+@example
+(format "%d" (exp 1))
+     @result{} "3"
+(format "%Z" pi)
+     @result{} "3"
+(format "%d" 2/3)
+     @result{} "0"
+(format "%Z" 4+3i)
+     @result{} Wrong type argument: comparablep, 4+3i
+@end example
+
+
+  Let us have a quick glance at the specifiers @samp{%f}, @samp{%F}
+and @samp{%R}.  The most obvious difference is their way to format
+precision flags, especially how they do precision rounding.
+
+  The specifier @samp{%f} performs a mathematically correct rounding,
+whereas @samp{%F} cuts the precision, that is it truncates the result
+at the given place.
+
+@example
+@group
+(format "%f" (exp 1))
+     @result{} "2.718282"
+(format "%.2f" (exp 1))
+     @result{} "2.72"
+(format "%+.2f" (exp 1))
+     @result{} "+2.72"
+@end group
+
+@group
+(format "%F" (exp 1))
+     @result{} "2.718281828459045235360287471352662497759"
+(format "%.2F" (exp 1))
+     @result{} "2.71"
+(format "%+.2f" (exp 1))
+     @result{} "+2.71"
+@end group
+@end example
+
+  Indeed, @samp{%R} is rewritten to either @samp{%f} or @samp{%F},
+depending on whether @var{read-real-as} is set to @code{'float} or
+@code{'bigf} or @code{'bigfr}, thusly precision rounding is performed
+the way of the rewritten specifier.
+
+@example
+@group
+read-real-as
+     @result{} 'float
+(format "%R" (exp 1))
+     @result{} "2.718282"
+(format "%.2R" (exp 1))
+     @result{} "2.72"
+@end group
+
+@group
+(let ((read-real-as 'bigfr))
+  (format "%R" (exp 1)))
+     @result{} "2.718281828459045235360287471352662497759"
+(let ((read-real-as 'bigfr))
+  (format "%.2R" (exp 1)))
+     @result{} "2.71"
+@end group
+@end example
+
+  A special exception of the float formatting rule are indefinite
+numbers (we like it to call them indefinite symbols since they are not
+numbers).  These are @code{+infinite}, @code{-infinite} and
+@code{not-a-number}.  Except the total width flag all of the special
+flags are ignored in their format specification.
+
+@example
+@group
+(format "%F" +infinity)
+     @result{} "+infinity"
+(format "%F" -infinity)
+     @result{} "-infinity"
+(format "%F" not-a-number)
+     @result{} "not-a-number"
+@end group
+
+@group
+(format "%+F" +infinity)
+     @result{} "+infinity"
+(format "% F" -infinity)
+     @result{} "-infinity"
+(format "%.10F" not-a-number)
+     @result{} "not-a-number"
+@end group
+@end example
+
+@noindent
+and compare to:
+
+@example
+(format "%12F" +infinity)
+     @result{} "   +infinity"
+(format "%-12F" -infinity)
+     @result{} "-infinity   "
+(format "%20F" not-a-number)
+     @result{} "        not-a-number"
+@end example
+
+
+  The coercion to rational quotients (and their output formatting) is
+straightforward.  It suffers from the impossibility to sanely coerce
+from floating point numbers, see @ref{Coercion}.
+
+  The precision flag, in contrast, has no effect on rational
+quotients.  It is generally deprecated to prepend leading zeroes to
+the numerator of a fraction.
+
+  If the quotient can be cancelled it is done so, and the formatted
+output uses this cancelled fraction.  If the quotient cancels to a
+rational integer, i.e. if the denominator is 1, the formatted output
+shows the integer equivalent of the fraction.  Note that even in that
+situation the precision flag has no effect.
+
+@example
+@group
+(format "%Q" 2)
+     @result{} "2"
+(format "%Q" 4/2)
+     @result{} "2"
+(format "%4Q" 4/2)
+     @result{} "   2"
+(format "%.4Q" 4/2)
+     @result{} "2"
+@end group
+
+@group
+(format "%Q" 2/3)
+     @result{} "2/3"
+(format "%5Q" 2/3)
+     @result{} "  2/3"
+(format "%5.5Q" 2/3)
+     @result{} "  2/3"
+(format "%+Q" 2/3)
+     @result{} "+2/3"
+(format "% Q" 2/3)
+     @result{} " 2/3"
+@end group
+
+@group
+(format "%Q" 1.5)
+     @result{} "3/2"
+(format "%Q" 0.66666)
+     @result{} "3002369727582815/4503599627370496"
+@end group
+@end example
+
+
+  Finally we have a detailed look at the rewriting technique of
+complex and Gaussian numbers.
+
+@example
+@group
+(format "%B" 2+i)
+     @result{} "2+1i"
+(format "%Z%+Zi" (real-part 2+i) (imaginary-part 2+i))
+     @result{} "2+1i"
+@end group
+@group
+(format "%C" 1+i)
+     @result{} "1.00000000000000+1.00000000000000i"
+(format "%F%+Fi" (real-part 1+i) (imaginary-part 1+i))
+     @result{} "1.00000000000000+1.00000000000000i"
+@end group
+@end example
+
+  Flag characters as well as padding and precision flags are passed to
+the rewritten specifiers with the following exception, the space and
+unary plus flags are @emph{not} passed to the second rewritten
+specifier, instead the second rewritten specifier is always flagged
+with the unary plus.
+
+@example
+@group
+(format "%.4C" 1+i)
+     @result{} "1.0000+1.0000i"
+(format "% B" 2+i)
+     @result{} " 2+1i"
+(format "%+.2C" 2+3i)
+     @result{} "+2.00+3.00i"
+@end group
+
+@group
+(format "%10.4C" 1+i)
+     @result{} "    1.0000   +1.0000i"
+(format "%+10.4B" 1+i)
+     @result{} "     +0001     +0001i"
+(format "%-10.2C" 0+0i)
+     @result{} "0.00      +0.00     i"
+@end group
+@end example
+
+
+
+@node Number Theoretic Functions
+@section Number Theoretic Functions
+
+  If GMP is available, some number theoretic functions are in effect.
+Most of which accept, unlike in number theory, all kinds of numbers.
+In that case coercion to the target range (mostly integer) takes
+place. 
+
+@defun primep number &optional certainty-threshold
+Return @code{nil} if @var{number} is known to be composite,
+return @code{t} if @var{number} is definitely prime and
+return @code{'probably-prime} if @var{number} seems to be
+prime but it is not certain.
+
+If optional argument @var{certainty-threshold} is non-@code{nil},
+it should be a natural number to indicate how many probabilistic
+primality tests must be passed in order to have certainty about the
+primality of @var{number}.
+The default is 8.
+@end defun
+
+@defun next-prime number
+Return the next prime number greater than @var{number}.
+@end defun
+
+@defun gcd &rest numbers
+Return the greatest common divisor of the arguments.
+@end defun
+
+@defun xgcd &rest numbers
+@ifinfo
+Return the extended gcd of the arguments.
+The result is a list of integers, where the car is the actual gcd
+and the cdr consists of coefficients, @var{s1}, @dots{}, @var{sn}, 
+such that @var{s1}*@var{arg1} + @dots{} + @var{sn}*@var{argn} = gcd.
+@end ifinfo
+@iftex
+Return the extended gcd of the arguments.
+The result is a list of integers, where the car is the actual gcd
+and the cdr consists of coefficients, 
+@tex
+$s_1, @dots{}, s_n$,
+@end tex 
+such that 
+@tex
+$\sum_{i=1}^n s_i arg_i = gcd$.
+@end tex
+@end iftex
+@end defun
+
+@defun lcm &rest numbers
+Return the least common multiple of the arguments.
+@end defun
+
+@defun factorial number
+Return the factorial of @var{number}.
+@end defun
+
+@defun binomial-coefficient n k
+Return the binomial coefficient, @var{n} over @var{k}.
+@end defun
+
+
+@defun fibonacci number
+Return the @var{number}th Fibonacci number.
+To compute both, the @var{number}th and (@var{number}-1)th
+Fibonacci number use @code{fibonacci2} instead.
+@end defun
+
+@defun fibonacci2 number
+Return a cons with the @var{number}th and (@var{number}-1)th
+Fibonacci number.
+To compute a series of Fibonacci numbers starting at index
+@var{number}, use this function and recursively compute the rest.
+@end defun
+
+@defun lucas number
+Return the @var{number}th Lucas number.
+To compute both, the @var{number}th and (@var{number}-1)th
+Lucas number use @code{lucas2} instead.
+@end defun
+
+@defun lucas2 number
+Return a cons with the @var{number}th and (@var{number}-1)th
+Lucas number.
+To compute a series of Lucas numbers starting at index
+@var{number}, use this function and recursively compute the rest.
+@end defun
+
+
+@defun divisiblep number d
+Return @code{t} if @var{number} is divisible by @var{d},
+@code{nil} otherwise.
+@end defun
+
+@defun congruentp number c m
+Return @code{t} if @var{number} is congruent to @var{c} 
+modulo @var{m}, @code{nil} otherwise.
+@end defun
+
+
+@defun perfect-power-p number
+Return @code{t} if @var{number} is a perfect power, @code{nil} otherwise.
+An integer @var{number} is said to be a perfect power if there 
+exist integers, @var{a} and @var{b}, such that
+@samp{@var{a}^@var{b} = @var{number}}.
+@end defun
+
+@defun perfect-square-p number
+Return @code{t} if @var{number} is a perfect square, @code{nil} otherwise.
+An integer @var{number} is said to be a perfect square if there 
+exists an integer @var{b} such that
+@samp{@var{b}^2 = @var{number}}.
+@end defun
+
+
+@defun integral-sqrt number
+Return a cons with the integral square root of @var{number}
+in the car and the remainder in the cdr.
+An integral square root is a number @var{b} and a remainder @var{c}
+such that @samp{@var{b}*@var{b} + @var{c} = @var{number}}.
+@end defun
+
+
+
+@defun canonical-norm number
+Return the canonical norm of @var{number}.
+@end defun
+
+@defun conjugate number
+Return the (canonical) conjugate of @var{number}.
+If @var{number} is a comparable, just return @var{number}.
+@end defun
+
+
+@defun zero-divisor-p number
+Return @code{t} if @var{number} is a zero-divisor, @code{nil} otherwise.
+@var{number} is said to be a zero-divisor, if there exists another
+non-zero number @var{b}, such that
+  @samp{@var{number} * @var{b} = 0}
+@end defun
+
+@defun unitp number
+Return @code{t} if @var{number} is a unit, @code{nil} otherwise.
+@var{number} is said to be a unit, if there exists another number
+@var{b} (the inverse of @var{number}), such that
+  @samp{@var{number} * @var{b} = 1}
+@end defun
+
+
+
+
+@node Auxiliary Functions
+@section Auxiliary Functions using ENT
+
+  This section is an unstructured assortment of new functions or
+functions which change their behaviour in an ENT-build.
+
+@subsection Time functions
+
+@defun current-btime
+Return the current time, as the number of microseconds since
+1970-01-01 00:00:00.
+The time is returned as a big integer.
+@end defun
+
+@example
+(current-btime)
+     @result{} 1131714421468312
+(current-btime)
+     @result{} 1131714424362856
+@end example
+
+  With @code{current-btime} some of the functions of the
+@samp{time-date} library can be quickly rewritten.
+
+@noindent
+Compare
+
+@example
+(/ (current-btime) (bigfr 86400000000))
+     @result{} 13098.5557760026967592
+@end example
+
+@noindent
+to
+
+@example
+(time-to-number-of-days (current-time))
+     @result{} 13098.55588377945
+@end example
+
+
+  Also, conversions from ordinary time conses to big time integers and
+vice versa are supported.
+
+@defun time-to-btime specified-time
+Return a big integer from @var{specified-time} with the
+number of microseconds since the Epoch.
+@end defun
+
+@defun btime-to-time specified-time
+Return a time specified as (high low usec) as obtainable
+from @code{current-time} from @var{specified-time}.
+@end defun
+
+@example
+@group
+(time-to-btime (current-time))
+     @result{} 1131959836543525
+@end group
+(btime-to-time 1131959836543525)
+     @result{} (17272 22044 543525)
+@group
+@end group
+@end example
+
+  Of course, existing time functions are changed when SXEmacs is
+compiled with ENT enabled, such that they take both, time cons cells
+and big integer time values.  We do not list the respective functions
+here again.
+
+@defun encode-btime &rest arguments
+Like `encode-time' but return a big integer time instead.
+@end defun
+
+
+@subsection Random numbers
+
+  Having ENT enabled the @code{random} function may return
+pseudo-random integers of unlimited size.  However, called without the
+optional limit argument, @code{random} always returns an ordinary
+integer (@samp{int}).
+
+@defun random &optional limit
+Return a pseudo-random number.
+All integers representable in Lisp are equally likely.
+On most systems, this is 31 bits' worth.
+
+With positive integer argument @var{limit}, return random number in
+interval [0,@var{limit}).
+@var{limit} can be a big integer, in which case the range of possible
+values is extended.
+
+With argument @code{t}, set the random number seed from the current
+time and pid.
+@end defun
+
+@example
+(random (factorial 20))
+     @result{} 2391898294963683867
+(random (factorial 20))
+     @result{} 1300461496957250511
+@end example
+
+@defun randomb limit
+Return a uniform pseudo-random number in the range
+@samp{[0, 2^@var{limit})}.
+@end defun
+
+
+@subsection Sequences
+
+  Having ENT and the residue class subfeature enabled the sequence
+accessor functions accept residue classes as their input.  This is a
+neat feature when round-robins over sequences are regarded.
+
+@example
+(let ((v (make-vector 12 0))
+      (rr 0+12Z)
+      (i 0))
+  (while (<= (aref v rr) 43)
+    (aset v rr i)
+    (incf rr)
+    (incf i))
+  v)
+     @result{} [48 49 50 51 52 53 54 55 44 45 46 47]
+@end example
+
+  The above example shows a counter (@var{rr}) which can be
+continuously incremented without the need to check if its value is
+still in the bounds of the vector.  The same snippet with @var{rr}
+being set to @code{0} would survive for 12 cycles and then yield:
+@samp{Args out of range: [0 1 2 3 4 5 6 7 8 9 10 11], 12}.
+
+
+
+@c ent.texi ends here
