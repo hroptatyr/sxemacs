@@ -1,0 +1,366 @@
+SXEmacs Installation Guide
+Copyright (C) 2005 - 2007 Steve Youngs
+
+
+Building from tarball release: 
+-----------------------------
+(See "Building from arch source" below if you got SXEmacs that way)
+
+In a nutshell:
+-------------
+See ./configure --help for a description of all possible options,
+then
+
+  $ ./configure [options]
+  $ make
+  $ make check
+  $ make install
+
+
+Prerequisites:
+-------------
+Your version of SXEmacs includes a file called `PROBLEMS' in the top
+directory of the source tarball.  Please take a moment now to look
+over it.
+
+SXEmacs needs an ANSI C compatible compiler such as GCC (at least
+version 2.95.3) to build.  If you don't have such a compiler you can
+get GCC from: http://gcc.gnu.org/.
+
+Please note that SXEmacs _CANNOT_ be built with a C++ compiler.
+
+Also, some configuration options may need external libraries that are
+not shipped with SXEmacs.  SXEmacs will determine which libraries it
+needs at configuration time (when you run `./configure').
+
+If configure can't find a particular library and you _do_ have it
+installed, you can usually get configure to find it by adding to the
+`--with-site-prefixes' option.
+
+There are several optional external libraries you may use to extend
+the feature-range of SXEmacs.  See section `Optional Libraries'.
+
+
+Stripping:
+---------
+Our advice... _DON'T_ do it.  Stripping object files doesn't buy you
+anything other than a little bit of drive space.  And in an era where
+200 Gigabyte hard disks are common, the space saved by stripping is
+inconsequential at best.
+
+But that isn't the only reason why we suggest that you don't strip
+SXEmacs.  If you did, any bug reports you sent us would be useless
+because the backtrace from any core dump wouldn't contain any useful
+information.
+
+Another reason for not stripping comes from the complexity of SXEmacs
+and how it is built.  SXEmacs first compiles to a basic binary
+(sometimes called "temacs"), and then it loads in a pile of lisp code
+and other goodies, and dumps itself out to become the finished SXEmacs
+binary.  Add into that mix, the portable dumper (where a lot of stuff
+for sxemacs actually resides _outside_ of the binary in a dump file)
+and it becomes apparent that stripping may not even be possible.  What
+do you strip? temacs? the portable dump file? sxemacs binary?
+
+Err on the side of caution and don't even try it.
+
+
+Compiler Optimisations:
+----------------------
+Considerable care has been taken to ensure that the maximum safe
+compiler optimisation flags have been turned on by default.  If you
+wish to use your own flags, that's OK, but understand that sometimes
+over-optimising (especially with something as complex as SXEmacs) can
+actually have an adverse affect.
+
+
+Packages:
+--------
+Like XEmacs, SXEmacs only comes with a minimal set of lisp libraries
+to cover only basic editing and functions.  To get fuller
+functionality you need to install some extra elisp packages.  SXEmacs
+doesn't actually distribute any elisp packages, but it can and does
+use XEmacs packages.
+
+Unlike XEmacs, SXEmacs does _NOT_ need any packages pre-installed
+before its packaging tools (PUI) are usable.  To install elisp
+packages into a virgin, packageless, SXEmacs, follow these steps...
+
+  1) Start SXEmacs
+
+  2) From the menubar, choose:
+
+	  Tools -> Packages -> Set Download Site -> Official Releases
+	    -> ...
+
+  3) M-x pui-bootstrap RET
+
+After the "bootstrapping" is finished you'll be asked if you want to
+install anymore packages.
+
+
+File hierarchies:
+----------------
+As of 22.1.6 SXEmacs installs its files in a LFSH-compliant (Linux
+FileSystem Hierarchy) way.  Here is a small table:
+
+         now go to...                before went to...
+lisp     share/sxemacs-$ver/lisp/  lib/sxemacs-22.1.6/lisp/
+etc      share/sxemacs-$ver/etc/   lib/sxemacs-22.1.6/etc/
+info     share/info/                 lib/sxemacs-22.1.6/info/
+headers  include/sxemacs/$ver/     lib/sxemacs-22.1.6/<arch>/include/
+
+The only thing that remained are modules which are located at
+lib/sxemacs-22.1.6/<arch>/modules.
+
+
+Optional Libraries:
+------------------
+Optional libraries enhance your SXEmacs with additional features.  Since
+most of the added features are not mandatory for the core SXEmacs, we
+decided to make them optional.  That is, you can - but do not need to -
+install them and incorporate them into SXEmacs.
+
+
+  Multimedia Libraries:
+  --------------------
+  In order to use MM features you need libraries which are responsible
+  for handling different types of media files, that is parses them,
+  demuxes them and decodes them to a raw form suitable for your audio
+  hardware.  We call such libs multimedia libraries.
+
+  Note: To get multimedia working you also have to install at least one
+  audio output library.  See next section.
+
+  - sndfile:
+    http://www.mega-nerd.com/libsndfile/
+
+  - ffmpeg:
+    http://ffmpeg.sourceforge.net/
+
+  - mad:
+    http://www.underbit.com/products/mad/
+
+  - SoX:
+    http://sox.sourceforge.net/
+
+  Note: Some of the media libraries above may in turn have dependencies
+  to even lower level libraries.  Consult the documentation of the
+  respective project.
+
+  The configure option to control media libraries is --with-media.  It
+  defaults to `all'.
+
+
+  Audio Output Libraries:
+  ----------------------
+  The other type of libraries for SXEmacs multimedia features cares for
+  the actual audio output, that is takes some raw audio data and feeds
+  it to your speakers (or somewhere else).  We call those Audio Output
+  Libraries.
+
+  - OSS (Open Sound System): native on Linux and BSD. DEPRECATED!
+
+  - NAS (Network Audio System):
+    http://nas.codebrilliance.com/
+
+  - ESD (Enlightenment Sound Daemon):
+    ftp://ftp.gnome.org/pub/gnome/sources/esound/0.2/
+
+  - PulseAudio:
+    http://pulseaudio.org/
+
+  - aRts (Analog Realtime Synthesizer):
+    http://www.arts-project.org/
+
+  - Jack (Jack Audio Connection Kit):
+    http://jackit.sourceforge.net/
+
+  - ALSA (Advanced Linux Sound Architecture): Linux-only
+    http://www.alsa-project.org/
+
+  - AO: generic and portable audio output
+    http://www.xiph.org/ao/
+
+  Note: Some of the audio libraries above may in turn have dependencies
+  to even lower level libraries.  Consult the documentation of the
+  respective project.
+
+  The configure option to control media libraries is --with-sound.  It
+  defaults to `all'.
+
+
+  Image Decoding Libraries:
+  ------------------------
+  For image media, SXEmacs provides support for various standard formats.
+  We call those Image Format Libraries.
+
+  - GIF: built-in, i.e. no extra library necessary
+
+  - XPM (X PixMap format): included in the X distribution, see for one
+    http://www.x.org 
+
+  - PNG (Portable Network Graphic):
+    http://www.libpng.org/
+
+  - JPEG:
+    http://www.ijg.org/
+
+  - TIFF:
+    http://www.remotesensing.org/libtiff/
+
+  - xface (base64 encoded xbm):
+    http://ftp.xemacs.org/pub/xemacs/aux/compface-1.5.1.tar.gz
+
+  The configure option to control media libraries is --with-image.  It
+  defaults to `all'.
+
+
+  Additional Number Types:
+  -----------------------
+  SXEmacs can extend its arithmetics enormously by using external
+  support.  We refer to enhanced number types as ENT.
+
+  - GMP (GNU MultiPrecision arithmetics library):
+    http://swox.com/gmp
+
+  - BSD mp:
+    Available natively on BSD distributions.  Also included in the
+    OpenSSL distribution.
+
+  - MPFR (Multi-Precision Floating point numbers with correct Rounding):
+    http://www.mpfr.org
+
+  - MPC (Multi-Precision Complex numbers):
+    http://www.lix.polytechnique.fr/Labo/Andreas.Enge/mpc/mpc.html
+
+  The configure option to control ENT libraries is --with-ent.  It
+  defaults to `all'.
+
+
+  Foreign Function Interface:
+  --------------------------
+  Foreign functions open the world to any library on your system.
+  The support library you need is hidden in the GNU Compiler Collection
+  (GCC).  However, the GCC package of most distributions is not what
+  we would call suitable, because important header files are missing.
+  See the PROBLEMS file.
+  ftp://ftp.gnu.org/pub/gnu/gcc/
+
+  The configure option for the FFI support is --with-ffi.  It defaults
+  to `yes'.
+
+
+  OpenSSL interface:
+  -----------------
+  SXEmacs supports cryptographic algorithms and security protocols via
+  the OpenSSL toolkit.  To make use of it build and install any version
+  since 0.9.8.
+  http://www.openssl.org/
+
+  The configure option for OpenSSL support is --with-openssl which
+  defaults to `no'.
+
+
+  PostgreSQL Support:
+  ------------------
+  SXEmacs can interact with databases managed by the PostgreSQL DBMS.
+  The functionality roughly corresponds to that of the libpq interface.
+  http://www.postgresql.org/
+
+  The configure option for PgSQL support is --with-postgresql and
+  defaults to `autodetect'.
+
+
+The build failed:
+----------------
+Advise 1:
+Don't panic.  Take a look at the PROBLEMS file first and see if your
+issue is listed there.
+
+Advise 2:
+If the build fails at the configure script, try to examine the output
+and/or the more verbose config.log.  If the culprit seems to be a
+certain test or configure option, try to circumvent it.  You can for one
+disable almost any functionality using --without-<feature>.
+
+Advise 3:
+If the build fails at the make stage somewhere, try to figure out which
+functionality was attempted to make.  If it appears to be at some of the
+optional features, try configuring again with that option disabled.  If
+it seems to be a compiler or linker problem read advise number 4.
+
+Advise 4:
+If the build fails and you have absolutely no clue why it does, contact
+the friendly people at SXEmacs.  For almost real-time help consider the
+IRC channel 
+  #sxemacs on freenode  irc://irc.freenode.net/#sxemacs
+
+If you cannot stand real-time help you can try the
+  SXEmacs developers mailing list  sxemacs-devel@sxemacs.org
+
+Unfortunately, because of spam issues, the SXEmacs mailing lists are
+all "member only".  This means that if you are not subscribed, it'll
+go to the moderator.  Our moderator is a very busy guy and he has to
+filter through more spam than you can poke a stick at... occasionally
+things can slip through the cracks.  Your best bet is to subscribe to
+the lists.  We are truly sorry for this inconvenience.
+
+Be sure to keep anything that could help to track the problem down, in
+particular that is:
+- configure output
+- config.log
+- make output
+- core dump files if any
+- your OS and machine architecture
+- the steps you have done
+
+Before submitting a report at http://issues.sxemacs.org/, please show
+up either on the mailing list or the IRC channel.  The developers can
+tell you in much greater detail what they need and how you can get the
+files and information you need.
+
+
+Building from arch source:
+-------------------------
+This is identical to building from the tarball sources, with the
+addition of an extra step, and some extra requirements (that are most
+likely already on your system).
+
+  $ ./autogen.sh
+  $ ./configure [options]
+  $ make
+  $ make check
+  $ make install
+
+Extra requirements:
+------------------
+The SXEmacs sources in the arch repo do not contain _any_ generated
+files.  You will need recent versions of the GNU autotools (automake,
+autoconf).
+
+You need at least...
+
+  automake 1.9.4
+  autoconf 2.60
+
+Warnings from autogen.sh:
+------------------------
+You may notice several warnings from running the autogen.sh script.
+They can be safely ignored unless it dies completely or a configure
+script isn't generated.
+
+The two most common warnings seen are...
+
+  Warnings about underquoting of macros in /usr/share/aclocal/foo.m4
+
+    These are because recent versions of aclocal have become more strict
+    about quoting and you have some older style macros defined like:
+    AC_DEFUN(NAME, ...) instead of AC_DEFUN([NAME], ...).
+
+  Warnings about ETAGS variable being redifined
+
+    These are because automake has a pre-defined ETAGS target that
+    projects can use, unfortunately it doesn't fit in with our needs,
+    and isn't easily customisable.  So we wrote our own ETAGS Makefile
+    target.

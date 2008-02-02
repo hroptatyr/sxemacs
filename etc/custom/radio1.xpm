@@ -1,0 +1,18 @@
+/* XPM */
+static char * radio1_xpm[] = {
+"12 11 4 1",
+" 	c #FFFFFFFFFFFF s background",
+".	c #737373737373",
+"X	c #22228B8B2222",
+"o	c #E6E6E6E6E6E6",
+"     ..     ",
+"    ....    ",
+"   ..XX..   ",
+"  ..XXXX..  ",
+" ..XXXXXX.. ",
+"ooXXXXXXXXoo",
+" ooXXXXXXoo ",
+"  ooXXXXoo  ",
+"   ooXXoo   ",
+"    oooo    ",
+"     oo     "};

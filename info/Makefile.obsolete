@@ -1,0 +1,377 @@
+#  Makefile for man subdirectory in SXEmacs
+#   Copyright (C) 1995 Board of Trustees, University of Illinois
+#   Copyright (C) 1994, 1995 Sun Microsystems.
+
+# This file is part of SXEmacs.
+
+# SXEmacs is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2, or (at your option) any
+# later version.
+
+# SXEmacs is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with SXEmacs; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+SHELL    = /bin/sh
+MAKEINFO = makeinfo
+TEXI2DVI = texi2dvi
+DVI2PS   = dvips
+DVI2PDF  = dvipdf
+
+RM = rm -f
+
+.SUFFIXES:
+.SUFFIXES: .info .texi .dvi
+
+RECURSIVE_MAKE_ARGS = $(MAKE) $(MFLAGS) MAKEINFO='$(MAKEINFO)' TEXI2DVI='$(TEXI2DVI)'
+
+all : info
+
+# Ughhh!  The things we do to have portable makefiles...
+
+INFODIR = ../info
+HTMLDIR = ../html
+
+info_files = \
+	$(INFODIR)/cl.info \
+	$(INFODIR)/custom.info \
+	$(INFODIR)/emodules.info \
+	$(INFODIR)/external-widget.info \
+	$(INFODIR)/lispref.info \
+	$(INFODIR)/internals.info \
+	$(INFODIR)/new-users-guide.info \
+	$(INFODIR)/sppm.info \
+	$(INFODIR)/term.info \
+	$(INFODIR)/widget.info \
+	$(INFODIR)/sxemacs.info \
+	$(INFODIR)/sxemacs-faq.info
+
+html_files = \
+	$(HTMLDIR)/cl.html \
+	$(HTMLDIR)/custom.html \
+	$(HTMLDIR)/emodules.html \
+	$(HTMLDIR)/external-widget.html \
+	$(HTMLDIR)/lispref.html \
+	$(HTMLDIR)/internals.html \
+	$(HTMLDIR)/new-users-guide.html \
+	$(HTMLDIR)/sppm.html \
+	$(HTMLDIR)/term.html \
+	$(HTMLDIR)/widget.html \
+	$(HTMLDIR)/sxemacs.html \
+	$(HTMLDIR)/sxemacs-faq.html
+
+dvi_files = \
+	cl.dvi \
+	custom.dvi \
+	emodules.dvi \
+	external-widget.dvi \
+	lispref.dvi \
+	internals.dvi \
+	new-users-guide.dvi \
+	sppm.dvi \
+	term.dvi \
+	widget.dvi \
+	sxemacs.dvi \
+	sxemacs-faq.dvi
+
+ps_files = \
+	cl.ps \
+	custom.ps \
+	emodules.ps \
+	external-widget.ps \
+	lispref.ps \
+	internals.ps \
+	new-users-guide.ps \
+	sppm.ps \
+	term.ps \
+	widget.ps \
+	sxemacs.ps \
+	sxemacs-faq.ps
+
+pdf_files = \
+	cl.pdf \
+	custom.pdf \
+	emodules.pdf \
+	external-widget.pdf \
+	lispref.pdf \
+	internals.pdf \
+	new-users-guide.pdf \
+	sppm.pdf \
+	term.pdf \
+	widget.pdf \
+	sxemacs.pdf \
+	sxemacs-faq.pdf
+
+sxemacs-srcs = \
+	sxemacs/abbrevs.texi \
+	sxemacs/basic.texi \
+	sxemacs/buffers.texi \
+	sxemacs/building.texi \
+	sxemacs/calendar.texi \
+	sxemacs/cmdargs.texi \
+	sxemacs/custom.texi \
+	sxemacs/display.texi \
+	sxemacs/entering.texi \
+	sxemacs/files.texi \
+	sxemacs/fixit.texi \
+	sxemacs/frame.texi \
+	sxemacs/glossary.texi \
+	sxemacs/help.texi \
+	sxemacs/indent.texi \
+	sxemacs/keystrokes.texi \
+	sxemacs/killing.texi \
+	sxemacs/m-x.texi \
+	sxemacs/major.texi \
+	sxemacs/mark.texi \
+	sxemacs/menus.texi \
+	sxemacs/mini.texi \
+	sxemacs/misc.texi \
+	sxemacs/mouse.texi \
+	sxemacs/mule.texi \
+	sxemacs/new.texi \
+	sxemacs/packages.texi \
+	sxemacs/picture.texi \
+	sxemacs/programs.texi \
+	sxemacs/reading.texi \
+	sxemacs/regs.texi \
+	sxemacs/search.texi \
+	sxemacs/sending.texi \
+	sxemacs/startup.texi \
+	sxemacs/text.texi \
+	sxemacs/trouble.texi \
+	sxemacs/undo.texi \
+	sxemacs/windows.texi \
+	sxemacs/sxemacs.texi
+
+lispref-srcs = \
+	lispref/abbrevs.texi \
+	lispref/annotations.texi \
+	lispref/back.texi \
+	lispref/backups.texi \
+	lispref/buffers.texi \
+	lispref/building.texi \
+	lispref/commands.texi \
+	lispref/compile.texi \
+	lispref/consoles-devices.texi \
+	lispref/control.texi \
+	lispref/customize.texi \
+	lispref/databases.texi \
+	lispref/debugging.texi \
+	lispref/dialog.texi \
+	lispref/display.texi \
+	lispref/dragndrop.texi \
+	lispref/edebug-inc.texi \
+	lispref/edebug.texi \
+	lispref/ent.texi \
+	lispref/errors.texi \
+	lispref/eval.texi \
+	lispref/extents.texi \
+	lispref/faces.texi \
+	lispref/files.texi \
+	lispref/frames.texi \
+	lispref/functions.texi \
+	lispref/glyphs.texi \
+	lispref/hash-tables.texi \
+	lispref/help.texi \
+	lispref/hooks.texi \
+	lispref/index.texi \
+	lispref/internationalization.texi \
+	lispref/intro.texi \
+	lispref/keymaps.texi \
+	lispref/ldap.texi \
+	lispref/lispref.texi \
+	lispref/lists.texi \
+	lispref/loading.texi \
+	lispref/locals.texi \
+	lispref/macros.texi \
+	lispref/maps.texi \
+	lispref/markers.texi \
+	lispref/menus.texi \
+	lispref/minibuf.texi \
+	lispref/modes.texi \
+	lispref/mouse.texi \
+	lispref/mule.texi \
+	lispref/numbers.texi \
+	lispref/objects.texi \
+	lispref/openssl.texi \
+	lispref/os.texi \
+	lispref/packaging.texi \
+	lispref/positions.texi \
+	lispref/postgresql.texi \
+	lispref/processes.texi \
+	lispref/range-tables.texi \
+	lispref/scrollbars.texi \
+	lispref/searching.texi \
+	lispref/sequences.texi \
+	lispref/specifiers.texi \
+	lispref/streams.texi \
+	lispref/strings.texi \
+	lispref/symbols.texi \
+	lispref/syntax.texi \
+	lispref/text.texi \
+	lispref/tips.texi \
+	lispref/toolbar.texi \
+	lispref/tooltalk.texi \
+	lispref/variables.texi \
+	lispref/windows.texi \
+	lispref/x-windows.texi
+
+internals-srcs = \
+	internals/internals.texi
+
+new-users-guide-srcs = \
+	new-users-guide/custom1.texi \
+	new-users-guide/custom2.texi \
+	new-users-guide/edit.texi \
+	new-users-guide/enter.texi \
+	new-users-guide/files.texi \
+	new-users-guide/help.texi \
+	new-users-guide/modes.texi \
+	new-users-guide/new-users-guide.texi \
+	new-users-guide/region.texi \
+	new-users-guide/search.texi \
+	new-users-guide/xmenu.texi
+
+$(INFODIR)/cl.info : cl.texi
+	$(MAKEINFO) -o $(INFODIR)/cl.info cl.texi
+
+$(INFODIR)/custom.info : custom.texi
+	$(MAKEINFO) -o $(INFODIR)/custom.info custom.texi
+
+$(INFODIR)/emodules.info : emodules.texi
+	$(MAKEINFO) -o $(INFODIR)/emodules.info emodules.texi
+
+$(INFODIR)/external-widget.info : external-widget.texi
+	$(MAKEINFO) -o $(INFODIR)/external-widget.info external-widget.texi
+
+$(INFODIR)/sppm.info : sppm.texi
+	$(MAKEINFO) -o $(INFODIR)/sppm.info sppm.texi
+
+$(INFODIR)/term.info : term.texi
+	$(MAKEINFO) -o $(INFODIR)/term.info term.texi
+
+$(INFODIR)/widget.info : widget.texi
+	$(MAKEINFO) -o $(INFODIR)/widget.info widget.texi
+
+$(INFODIR)/sxemacs-faq.info : sxemacs-faq.texi
+	$(MAKEINFO) -o $(INFODIR)/sxemacs-faq.info sxemacs-faq.texi
+
+# Manuals with their own subdirectory
+$(INFODIR)/sxemacs.info : $(sxemacs-srcs)
+	$(MAKEINFO) -P sxemacs -o $(INFODIR)/sxemacs.info sxemacs/sxemacs.texi
+
+$(INFODIR)/lispref.info : $(lispref-srcs)
+	$(MAKEINFO) -P lispref -o $(INFODIR)/lispref.info lispref/lispref.texi
+
+$(INFODIR)/internals.info : $(internals-srcs)
+	$(MAKEINFO) -P internals -o $(INFODIR)/internals.info internals/internals.texi
+
+$(INFODIR)/new-users-guide.info : $(new-users-guide-srcs)
+	$(MAKEINFO) -P new-users-guide -o $(INFODIR)/new-users-guide.info new-users-guide/new-users-guide.texi
+
+
+$(HTMLDIR)/cl.html : cl.texi
+	$(MAKEINFO) --html -o $(HTMLDIR)/cl/ $<
+
+$(HTMLDIR)/custom.html : custom.texi
+	$(MAKEINFO) --html -o $(HTMLDIR)/custom/ $<
+
+$(HTMLDIR)/emodules.html : emodules.texi
+	$(MAKEINFO) --html -o $(HTMLDIR)/dso/ $<
+
+$(HTMLDIR)/external-widget.html : external-widget.texi
+	$(MAKEINFO) --html -o $(HTMLDIR)/extwidget/ $<
+
+$(HTMLDIR)/sppm.html : sppm.texi
+	$(MAKEINFO) --html -o $(HTMLDIR)/sppm/ $<
+
+$(HTMLDIR)/term.html : term.texi
+	$(MAKEINFO) --html -o $(HTMLDIR)/term/ $<
+
+$(HTMLDIR)/widget.html : widget.texi
+	$(MAKEINFO) --html -o $(HTMLDIR)/widget/ $<
+
+$(HTMLDIR)/sxemacs-faq.html : sxemacs-faq.texi
+	$(MAKEINFO) --html -o $(HTMLDIR)/faq/ $<
+
+# Manuals with their own subdirectory
+$(HTMLDIR)/sxemacs.html : $(sxemacs-srcs)
+	$(MAKEINFO) -P sxemacs --html -o $(HTMLDIR)/sxemacs/ sxemacs/sxemacs.texi
+
+$(HTMLDIR)/lispref.html : $(lispref-srcs)
+	$(MAKEINFO) -P lispref --html -o $(HTMLDIR)/lispref/ lispref/lispref.texi
+
+$(HTMLDIR)/internals.html : $(internals-srcs)
+	$(MAKEINFO) -P internals --html -o $(HTMLDIR)/internals/ internals/internals.texi
+
+$(HTMLDIR)/new-users-guide.html : $(new-users-guide-srcs)
+	$(MAKEINFO) -P new-users-guide --html -o $(HTMLDIR)/intro/ new-users-guide/new-users-guide.texi
+
+
+sxemacs : $(INFODIR)/sxemacs.info
+lispref : $(INFODIR)/lispref.info
+internals : $(INFODIR)/internals.info
+new-users-guide.info : $(INFODIR)/new-users-guide.info
+
+.PHONY : sxemacs lispref internals new-users-guide info dvi
+
+info : $(info_files)
+
+.PHONY: info dvi html
+
+.texi.dvi: 
+	$(TEXI2DVI) -c -s $< 
+
+sxemacs.dvi : $(sxemacs-srcs)
+	$(TEXI2DVI) -I sxemacs -c -s sxemacs/sxemacs.texi
+
+lispref.dvi : $(lispref-srcs)
+	$(TEXI2DVI) -I lispref -c -s lispref/lispref.texi
+
+internals.dvi : $(internals-srcs)
+	$(TEXI2DVI) -I internals -c -s internals/internals.texi
+
+new-users-guide.dvi : $(new-users-guide-srcs)
+	$(TEXI2DVI) -I new-users-guide -c -s new-users-guide/new-users-guide.texi 
+
+dvi :  $(dvi_files)
+
+
+%.ps: %.dvi
+	$(DVI2PS) $< -o $@
+
+ps : $(ps_files)
+
+
+
+%.pdf: %.dvi 
+	$(DVI2PDF) $< $@
+
+
+pdf : $(pdf_files)
+
+$(HTMLDIR):
+	mkdir -p $@
+
+html: $(HTMLDIR) $(html_files)
+
+
+
+
+.PHONY: mostlyclean clean distclean realclean extraclean
+mostlyclean:
+	$(RM) *.toc *.aux *.log *.op *.cp *.cps *.fn *.fns
+	$(RM) *.ky *.kys *.pg *.pgs *.tp *.tps *.vr *.vrs
+clean: mostlyclean
+	$(RM) core *.dvi *.pdf *.ps
+distclean: clean
+realclean: distclean
+extraclean: distclean
+	$(RM) *~ \#* */*~ */\#*

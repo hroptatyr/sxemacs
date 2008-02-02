@@ -1,0 +1,27 @@
+This patch is meant to be applied to pop3.el from the mail-lib package.
+
+This patch provides SSL/TLS support for Gnus based on SXEmacs' native
+OpenSSL interface.  It works with the stream types 'ssl and 'starttls,
+so mail-sources already using one of these stream types will just keep
+on working.
+
+An example mail source for a POP3 TLS connection:
+
+	(pop :server "some.pop3.server.tld"
+	     :user "me"
+             :password "verysecret"
+             :stream starttls)
+
+An example mail source for a POP3s server:
+
+	(pop :server "some.pop3s.server.tld"
+	     :user "anotherme"
+	     :password "verysecret"
+	     :port 995
+	     :stream 'ssl)
+
+The provided functionality has drop-in behaviour, so anything that worked
+before will keep on working.
+
+Sebastian Freundt <hroptatyr@sxemacs.org>
+

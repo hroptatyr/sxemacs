@@ -1,0 +1,185 @@
+@c -*-texinfo-*-
+@c This is part of the SXEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993 Free Software Foundation, Inc.
+@c Copyright (C) 2005 Sebastian Freundt <hroptatyr@sxemacs.org>
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/maps.info
+
+@node Standard Keymaps, Standard Hooks, Standard Buffer-Local Variables, Top
+@appendix Standard Keymaps
+
+The following symbols are used as the names for various keymaps.
+Some of these exist when SXEmacs is first started, others are
+loaded only when their respective mode is used.  This is not
+an exhaustive list.
+
+Almost all of these maps are used as local maps.  Indeed, of the modes
+that presently exist, only Vip mode and Terminal mode ever change the
+global keymap.
+
+@table @code
+@item bookmark-map
+@vindex bookmark-map
+A keymap containing bindings to bookmark functions.
+
+@item Buffer-menu-mode-map
+@vindex Buffer-menu-mode-map
+A keymap used by Buffer Menu mode.
+
+@item c++-mode-map
+@vindex c++-mode-map
+A keymap used by C++ mode.
+
+@item c-mode-map
+@vindex c-mode-map
+A keymap used by C mode.
+A sparse keymap used by C mode.
+
+@item command-history-map
+@vindex command-history-map
+A keymap used by Command History mode.
+
+@item ctl-x-4-map
+@vindex ctl-x-4-map
+A keymap for subcommands of the prefix @kbd{C-x 4}.
+
+@item ctl-x-5-map
+@vindex ctl-x-5-map
+A keymap for subcommands of the prefix @kbd{C-x 5}.
+
+@item ctl-x-map
+@vindex ctl-x-map
+A keymap for @kbd{C-x} commands.
+
+@item debugger-mode-map
+@vindex debugger-mode-map
+A keymap used by Debugger mode.
+
+@item dired-mode-map
+@vindex dired-mode-map
+A keymap for @code{dired-mode} buffers.
+
+@item edit-abbrevs-map
+@vindex edit-abbrevs-map
+A keymap used in @code{edit-abbrevs}.
+
+@item edit-tab-stops-map
+@vindex edit-tab-stops-map
+A keymap used in @code{edit-tab-stops}.
+
+@item electric-buffer-menu-mode-map
+@vindex electric-buffer-menu-mode-map
+A keymap used by Electric Buffer Menu mode.
+
+@item electric-history-map
+@vindex electric-history-map
+A keymap used by Electric Command History mode.
+
+@item emacs-lisp-mode-map
+@vindex emacs-lisp-mode-map
+A keymap used by Emacs Lisp mode.
+
+@item help-map
+@vindex help-map
+A keymap for characters following the Help key.
+
+@item Helper-help-map
+@vindex Helper-help-map
+A keymap used by the help utility package.@*
+It has the same keymap in its value cell and in its function
+cell.
+
+@item Info-edit-map
+@vindex Info-edit-map
+A keymap used by the @kbd{e} command of Info.
+
+@item Info-mode-map
+@vindex Info-mode-map
+A keymap containing Info commands.
+
+@item isearch-mode-map
+@vindex isearch-mode-map
+A keymap that defines the characters you can type within incremental
+search.
+
+@item itimer-edit-map
+@vindex itimer-edit-map
+A keymap used when in Itimer Edit mode.
+
+@item lisp-interaction-mode-map
+@vindex lisp-interaction-mode-map
+A keymap used by Lisp mode.
+
+@item lisp-mode-map
+@vindex lisp-mode-map
+A keymap used by Lisp mode.
+
+@vindex minibuffer-local-completion-map
+A keymap for minibuffer input with completion.
+
+@item minibuffer-local-isearch-map
+@vindex minibuffer-local-isearch-map
+A keymap for editing isearch strings in the minibuffer.
+
+@item minibuffer-local-map
+@vindex minibuffer-local-map
+Default keymap to use when reading from the minibuffer.
+
+@item minibuffer-local-must-match-map
+@vindex minibuffer-local-must-match-map
+A keymap for minibuffer input with completion, for exact match.
+
+@item mode-specific-map
+@vindex mode-specific-map
+The keymap for characters following @kbd{C-c}.  Note, this is in the
+global map.  This map is not actually mode specific: its name was chosen
+to be informative for the user in @kbd{C-h b} (@code{display-bindings}),
+where it describes the main use of the @kbd{C-c} prefix key.
+
+@item modeline-map
+@vindex modeline-map
+The keymap consulted for mouse-clicks on the modeline of a window.
+
+@item objc-mode-map
+@vindex objc-mode-map
+A keymap used in Objective C mode as a local map.
+
+@item occur-mode-map
+@vindex occur-mode-map
+A local keymap used by Occur mode.
+
+@item overriding-local-map
+@vindex overriding-local-map
+A keymap that overrides all other local keymaps.
+
+@item query-replace-map
+@vindex query-replace-map
+A local keymap used for responses in @code{query-replace} and related
+commands; also for @code{y-or-n-p} and @code{map-y-or-n-p}.  The functions
+that use this map do not support prefix keys; they look up one event at a
+time.
+
+@item read-expression-map
+@vindex read-expression-map
+The minibuffer keymap used for reading Lisp expressions.
+
+@item read-shell-command-map
+@vindex read-shell-command-map
+The minibuffer keymap used by @code{shell-command} and related commands.
+
+@item shared-lisp-mode-map
+@vindex shared-lisp-mode-map
+A keymap for commands shared by all sorts of Lisp modes.
+
+@item text-mode-map
+@vindex text-mode-map
+A keymap used by Text mode.
+
+@item toolbar-map
+@vindex toolbar-map
+The keymap consulted for mouse-clicks over a toolbar.
+
+@item view-mode-map
+@vindex view-mode-map
+A keymap used by View mode.
+@end table

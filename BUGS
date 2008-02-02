@@ -1,0 +1,26 @@
+If you think you may have found a bug in SXEmacs, you should report
+it.  But before you do, make sure...
+
+        o You can reproduce it.  This is very important because if we
+          can't see your bug for ourselves then we have no hope of
+          fixing it.
+
+        o You have read through the "Bugs" section of the SXEmacs
+          manual...
+	
+	    From within SXEmacs: C-h C-i sxemacs RET m bugs RET
+	    From info(1): info -f /path/to/sxemacs.info bugs RET
+
+	o You have checked the PROBLEMS file and the FAQ (section 2)
+	  that came with your version of SXEmacs (read the FAQ with:
+	  `C-h F'), and also search http://issues.sxemacs.org/ to see
+	  if your bug has already been reported and/or fixed.
+
+If you discover that your bug is already known to us but still hasn't
+been fixed, you should still let us know about it.  Some bugs need a
+little motivating to get fixed. :-)  Unless you have new or different
+information about the bug to add, the simplest way of letting us know
+you are seeing it too is to "vote" for the bug at
+http://issues.sxemacs.org/.
+
+

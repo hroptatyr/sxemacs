@@ -1,0 +1,1208 @@
+\input texinfo  @c -*-texinfo-*-
+
+@c %**start of header
+@setfilename emodules.info
+@settitle Extending Emacs using C Modules
+@c %**end of header
+
+@c
+@c Use some macros so that we can format for either SXEmacs
+@c or (shudder) GNU Emacs.
+@c WTF?!
+
+@clear EMACS
+@set HAVE-EMACS
+
+@ifinfo
+This file documents the module loading technology of SXEmacs.
+
+Copyright @copyright{} 1998 J. Kean Johnston.
+Copyright @copyright{} 2007 Sebastian Freundt.
+
+Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries copying permission notice
+identical to this one except for the removal of this paragraph (this
+paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the
+entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation
+approved by the Foundation.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+section entitled ``GNU General Public License'' is included exactly as
+in the original, and provided that the entire resulting derived work is
+distributed under the terms of a permission notice identical to this
+one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that the section entitled ``GNU General Public License'' may be
+included in a translation approved by the Free Software Foundation
+instead of in the original English.
+@end ifinfo
+
+@c Combine indices.
+@syncodeindex fn cp
+@syncodeindex vr cp
+@syncodeindex ky cp
+@syncodeindex pg cp
+@syncodeindex tp cp
+
+@setchapternewpage odd
+@finalout
+
+@titlepage
+@title Extending SXEmacs using C and C++
+@subtitle Version 2.0, September 2007
+
+@author J. Kean Johnston
+@author Sebastian Freundt
+@page
+@vskip 0pt plus 1fill
+
+@noindent
+Copyright @copyright{} 1998 J. Kean Johnston. @*
+Copyright @copyright{} 2007 Sebastian Freundt. @*
+
+@sp 2
+Version 2.0 @*
+September, 2007.@*
+
+Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+section entitled ``GNU General Public License'' is included
+exactly as in the original, and provided that the entire resulting
+derived work is distributed under the terms of a permission notice
+identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that the section entitled ``GNU General Public License'' may be
+included in a translation approved by the Free Software Foundation
+instead of in the original English.
+@end titlepage
+@page
+
+@ifinfo
+@dircategory SXEmacs Editor
+@direntry
+* Emodules: (emodules).            SXEmacs dynamic loadable module support.
+@end direntry
+@end ifinfo
+
+@ifnottex
+@node Top
+@top
+
+This Info file contains v2.0 of the SXEmacs dynamic loadable module
+support documentation.
+
+@menu
+* Introduction::                Introducing emodules
+* Anatomy of a Module::         Basic module layout and technology
+* Building your Module::        How to build emodules
+* Defining Functions::          Creating new Lisp primitives
+* Defining Variables::          Creating new Lisp variables
+* Index::                       Concept Index
+
+@c @c Can't do that when using the simple node structure
+@c 
+@c  --- The Detailed Node Listing ---
+@c 
+@c Anatomy of a Module
+@c 
+@c * Special Header Files::        Better include <emodules-ng.h>
+@c * Recognised Functions::        Specially treated functions
+@c * Recognised Variables::        Specially treated variables
+@c * Loading other Modules::       How to load dependent modules
+@c 
+@c @c @c museum section?
+@c @c Using @code{ellcc}
+@c @c 
+@c @c * Compile Mode::                Compiling modules using ellcc
+@c @c * Initialization Mode::         Generating documentation and variables
+@c @c * Link Mode::                   Creating the final loadable module
+@c @c * Other ellcc options::         Other useful options
+@c @c * Environment Variables::       How to control ellcc
+@c 
+@c Building your Module
+@c 
+@c * Configuring::                 How to
+@c * Compiling and linking::       How to
+@c * More Ideas::                  Other things you might want
+@c 
+@c Defining Functions
+@c 
+@c * Using DEFUN::                 Using the DEFUN macro to define functions
+@c * Declaring Functions::         Declaring functions to the Lisp reader
+@end menu
+
+@end ifnottex
+
+@node Introduction
+@chapter Introduction
+
+  SXEmacs is a powerful, extensible editor.  The traditional way of
+extending the functionality of SXEmacs is to use its built-in Lisp
+language (called Emacs Lisp, or elisp for short).  However, while elisp
+is a full programming language and capable of extending SXEmacs in more
+ways than you can imagine, it does have its short-comings.
+
+  Firstly, elisp is an interpreted language, and this has serious speed
+implications.  Like all other interpreted languages (like Java), elisp
+is often suitable only for certain types of application or extension.
+So although elisp is a general purpose language, and very high level,
+there are times when it is desirable to descend to a lower level compiled
+language for speed purposes.
+
+  Secondly, elisp (or Lisp in general) is not a very common language any
+more, except for certain circles in the computer industry.  C is a far
+more commonly known language, and because it is compiled, more suited to
+a wider range of applications, especially those that require low level
+access to a system or need to be as quick as possible.
+
+@cindex Emacs Modules
+@cindex DLL
+@cindex DSO
+@cindex shared object
+@cindex emodules
+  This manual describes a way of extending SXEmacs using dynamic
+sharable objects (DSOs aka dynamic loadable modules aka dynamically
+loadable libraries, or just simply shared objects), which can
+be written in C or C++ (or more generally in anything that can be
+compiled to native object code on platforms that support shared
+objects).  After the build, they can be loaded into SXEmacs at any
+time.
+
+  SXEmacs module support is detected and enabled during configure time
+by default on all systems that support loading of shared objects,
+provided libtool and libltdl is properly installed.  From a users
+perspective, the internals of SXEmacs modules are irrelevant.
+All a user will ever need to know about shared objects is the name of
+the shared object when they want to load a given module.  From a
+developers perspective though, a lot more is provided.
+
+@c keep? museum section maybe?
+@c @itemize @bullet
+@c @item
+@c @cindex compiler
+@c @cindex linker
+@c   Of primary interest is the @code{ellcc} program.  This program is
+@c created during compile time, and is intended to abstract compiler
+@c specific characteristics from the developer.  This program is called to
+@c compile and link all objects that will make up the final shared object,
+@c and accepts all common C compiler flags.  @code{ellcc} also sets up the
+@c correct environment for compiling modules by enabling any special
+@c compiler modes (such as PIC mode), setting the correct include paths for
+@c the location of @value{emacs} internal header files etc.  The program will also
+@c invoke the linker correctly to created the final shared object which is
+@c loaded into @value{emacs}.
+@c 
+@c @item
+@c @cindex header files
+@c   CEmacs also makes all of the relevant @value{emacs} internal header files
+@c available for module authors to use.  This is often required to get data
+@c structure definitions and external variable declarations.  The header
+@c files installed include the module specific header file
+@c @file{emodules.h}.  Due to the nature of dynamic modules, most of the
+@c internals of @value{emacs} are exposed.
+@c @xref{Top,,,internals,@value{emacs} Internals Manual}, for a
+@c more complete discussion on how to extend and understand @value{emacs}.  All of
+@c the rules for C modules are discussed there.
+@c 
+@c @item
+@c @cindex samples
+@c   Part of the @value{emacs} distribution is a set of sample modules.  These are
+@c not installed when @value{emacs} is, but remain in the @value{emacs} source tree.
+@c These modules live in the directory @file{modules}, which is a
+@c sub-directory of the main @value{emacs} source code directory.  Please look at
+@c the samples carefully, and maybe even use them as a basis for making
+@c your own modules.  Most of the concepts required for writing extension
+@c modules are covered in the samples.
+@c 
+@c @item
+@c @cindex documentation
+@c @cindex help
+@c   Last, but not least is this manual.  This can be viewed from within
+@c @value{emacs}, and it can be printed out as well.  It is the intention of this
+@c document that it will describe everything you need to know about
+@c extending @value{emacs} in C.  If you do not find this to be the case, please
+@c contact the author(s).
+@c @end itemize
+
+  The rest of this document will discuss the actual mechanics of
+SXEmacs modules and work through several of the samples.  Please be
+sure that you have read the SXEmacs Internals Manual and understand
+everything in it.  The concepts there apply to all modules.  This
+document may have some overlap, but it is the internals manual which
+should be considered the final authority.  It will also help a great
+deal to look at the actual SXEmacs source code to see how things are
+done.
+
+
+@node Anatomy of a Module
+@chapter Anatomy of a Module
+@cindex anatomy
+@cindex module skeleton
+@cindex skeleton, module
+@cindex module format
+@cindex format, module
+
+  A dynamically loadable SXEmacs extension (hereafter referred to as a
+emodule) can carry certain special pieces of information and functions
+which are then used in a predefined special way.  This chapter
+describes the basic layout of such a module, and provides a very
+simple sample.
+
+@menu
+* Special Header Files::        Better include <emodules-ng.h>
+* Recognised Functions::        Specially treated functions
+* Recognised Variables::        Specially treated variables
+* Loading other Modules::       Additional notes on dependent modules
+@end menu
+
+
+@node Special Header Files
+@section Special Header Files
+@cindex headers
+@cindex include files
+
+@cindex emodules-ng.h
+@cindex config.h
+@cindex sxemacs.h
+  Every module better includes the file @file{emodules-ng.h}.  This
+will primarily set up certain vital macros.  If you want to stay close
+to the rest of the SXEmacs binary, for example provide lisp bindings
+of your stuff or implement functionality depending on whether or not
+SXEmacs was configured with a certain feature, you should have a
+thorough glance at @file{sxemacs.h}.
+
+  Most modules will probably require some pre-processor conditionals
+based on constants defined in @file{config.h} which is included
+automatically upon inclusion of @file{sxemacs.h}.  This file is
+automatically generated during the configure phase of SXEmacs, its
+prototype is @file{config.h.in} which in turn is autogenerated from
+various macros in the @file{m4/} directory and @file{configure.ac}.
+
+  Depending on what your module will be doing at last, you will
+probably need to include other header files as well.
+
+@c @c Bullshit
+@c @table @file
+@c @item lisp.h
+@c 
+@c @item sysdep.h
+@c 
+@c @item window.h
+@c 
+@c @item buffer.h
+@c 
+@c @item insdel.h
+@c 
+@c @item frame.h
+@c @end table
+
+
+@node Recognised Functions
+@section Recognised Functions
+@cindex functions, specially treated
+@cindex recognised functions
+
+A typical emodule will implement a fancy feature (or hopefully many
+thereof) and thence be willing to provide a lisp binding in the
+surface, e.g. a function, or anything similar to make use of the
+feature.  Sounds simple, is simple: SXEmacs just asks its inbuilt
+crystal ball to determine which of your functions was meant to appear
+in the lisp engine.
+
+  Albeit tempting with respect to simplicity and comfort this
+behaviour is technically an effort to realise.  SXEmacs therefore
+treats some symbols of your module in a special way.
+
+@defun init
+Code which is run after opening the module and all its requisite
+modules.
+
+Usually this carries all the bindings you want to export to the lisp
+surface, such as macros, functions, variables and (lisp) symbols.
+Moreover, depending on your code this can be used to initialise
+private setups, such as private tables or memory blocks.
+@end defun
+
+@defun reinit
+Code which is run upon a reload of the module.
+
+Normally this is just a @code{deinit();} call followed by another
+@code{init();} call.  The reason to have a special entry point for
+reinitialisation is that, roughly, @code{reinit()} is not exactly just
+a @code{deinit(); init();} sequence.  For instance you might want to
+avoid to initialise certain private memory blocks again because their
+setup was a very expensive operation.
+@end defun
+
+@defun deinit
+Code which is run after closing all of a module's requisites upon a
+@code{unload-module} request.
+
+Usually you would unleash all your privately held resources and unbind
+any exported variables, functions, macros, and so forth.
+@end defun
+
+@defun docs
+A special function called to incorporate documentation strings for
+your lisp bindings.
+
+Normally this entry point is generated automatically using the
+@file{make-docfile} utility.
+@end defun
+
+All these function are truly optional.  Their signature is actually
+@example
+@code{void(*)(emodng_t)}
+@end example
+but you can also make them
+@example
+@code{void(*)(void)}
+@end example
+
+  Quick notes re emodule unloading.  It seems quite natural to be
+able to unload stuff, at least in the perfect world.  While this is
+still true if your module provides truly complementary functionality
+(whatever that is) it becomes a critical issue once you truly
+intervene or even replace internal functionality.  We are @emph{NOT}
+barring you from unloading your emodule nor are we saying you should
+avoid that feature but you should be aware of its dramatical
+consequences when done sloppily.
+
+  The best comparison we can come up with is the concept of modules
+for the linux kernel.  Imagine you were a module providing ultra fast
+access to, say, scsi drives and therefore had to oust the kernel's
+normal handlers for those drives.  Now after unloading your module you
+would reestablish the old, superseded handlers, would you not?  As
+mentioned before, today's system are usually not equipped with a
+superior intelligence being able to completely understand your concept
+and your mode of operation in order to automatically withdraw, or
+simply revert, your actions just by looking at the module's code.
+
+@noindent
+Ergo @emph{YOU} are responsible to restore the state of the system!
+
+  It does not necessarily mean that you have to unwind completely to
+the exact state before you entered the scene, no, you are `only'
+encouraged to leave a working system behind, whatever that means in
+the context of your module.
+
+@itemize
+@item
+Carefully consider if you want to unbind exported lisp variables.
+
+If they are not filled with special lisp objects only your module
+knows about it is definitely wise to leave them in the environment.
+
+@item
+Carefully consider if you want to unbind exported macros.
+
+After all a macro is just a piece of code which produces another piece
+of code under the influence of some variables passed to it, so why not
+simply keep that?
+
+@item
+Carefully consider if you want to unbind exported functions.
+
+This is a bit more delicate.  The lisp language does not distinguish
+between code and data and your function could have ended up literally
+anywhere.  Simply unbinding your functions, using @code{UNDEFSUBR} or
+@code{Ffmakunbound}, will possibly turn any reference to them into an
+error generator.  This is especially annoying when your module's
+functions were used in so frequented hooks like @code{pre-gc-hook}.
+
+Solution: Do not unbind your functions.  Instead rebind them to
+something which has the same input signature but, for instance,
+produces an unmistakable message.  Be prolific!
+
+@item
+Any other scenario not covered here is basically either a real
+auxiliary, read optionally, thing where unloading does not harm at
+all, or it really affects the guts of SXEmacs in which case we take it
+for granted that you know what you are doing anyway.
+@end itemize
+
+
+@node Recognised Variables
+@section Recognised Variables
+@cindex variables, specially treated
+@cindex recognised variables
+
+Basically there is only one specially-treated variable.
+
+@defvar dependencies
+A @code{const char *} array which lists the names of all requisite
+modules and is terminated with a @code{NULL} entry.  These are opened
+and initialised before the actual module is initialised.
+@end defvar
+
+  Like the specially-treated functions above, this variable is also
+optional.  Moreover, the same naming policies apply, and most
+importantly there is a convenience macro which hides the raw C work
+you had to do.
+
+@deffn macro REQUIRE name &rest names
+Proclaim the requisite modules of @var{name}.  Set up and fill the
+@code{dependencies} variable from @var{names} as discussed above. 
+@end deffn
+
+
+@node Loading other Modules
+@section Loading other Modules
+@cindex dependencies
+
+Sometimes it is necessary to use functions, or generally symbols,
+defined in a foreign module you depend on.  In general it is
+impossible to open (as in @code{dlopen()}) your module to extract the
+@code{dependencies} variable when you refer to one of these external
+symbols in your code.  The corresponding error message goes along the
+lines of
+@example
+@code{Cannot open modules foo: Undefined symbol bar.}
+@end example
+
+@noindent
+So what happened?
+
+  The module itself can contain dynamic references to other libraries,
+or, most likely, symbols from the SXEmacs binary.  However, they have
+to be resolvable, and in fact are tried to be resolved, when opening a
+module.  Now if you refer to symbols defined in another module
+@footnote{This was not possible with the old emodule system} you, the
+user, have to load that other module before.
+
+@noindent
+So what's the rant about that @var{dependencies} thingiedingie?
+
+  As mentioned above the new @code{load-module} function will exactly
+relieve you, the user, of this task provided the emodule proclaimed
+the list of its dependencies.  Now this seems to be a charade, in
+order to open the module to read its dependencies you, the user, have
+to load all of its dependencies because naively opening the module
+will yield nothing but the error above when foreign symbols are used.
+
+  The solution is to provide a, sort of, low-quality draught version
+of the foreign functions you, the module author, refer to.  The
+missing link here are the so-called @dfn{weak symbols}.  They
+usually do not carry any real information (variable) or functionality
+(function) and are meant to be overwritten by the ``real'' symbol as
+soon as possible.  When properly coded their life-time spans just
+about the time from opening the module to opening the requisite
+module which, hopefully, defines real symbol and thence replaces the
+weak one.
+
+@noindent
+Imagine @samp{module-A} is doing all the hard work and provides the
+function
+@example
+/* inside module-A.c */
+bool solve_complex_problem(void)
+@{
+        @dots{}
+        return true;
+@}
+@end example
+
+@noindent
+Now @samp{module-B} contains a function @code{void
+compute_lotto_numbers(void)} which goes:
+@example
+@group
+/* inside module-B.c */
+void compute_lotto_numbers(void)
+@{
+        if (solve_complex_problem()) @{
+                /* lotto numbers found, hooray! print them */
+                @dots{}
+        @}
+        @dots{}
+@}       
+@end group
+@end example
+
+@noindent
+Leaving it like that will effectively bar your users from computing
+the lotto numbers and I personally would hate you, the module
+developer, for the rest of my life.  However, to finish this example
+using weak symbols you would additionally put into @file{module-B.c}:
+
+@example
+@group
+bool solve_complex_problem(void) __attribute__((weak));
+
+bool solve_complex_problem(void)
+@{
+        return false;
+@}
+@end group
+@end example
+
+Some practical hints:
+@itemize
+@item
+If you have included @file{sxemacs.h} already you can use its
+@code{WEAK} and @code{WEAK_EXTERN} macros to hide the compiler
+specific attribute declaration.
+@item
+This magic spell can also be applied to C variables.
+@item
+Do not simply make your weak version of a function a no-op, rather
+make it notify your users or yourself that the weak version is still
+in effect.  This can save you a lot of trouble when things go wrong
+and the weak version is stronger than you thought or never
+overridden or the like.
+@end itemize
+
+
+@node Building your Module
+@chapter Building your Module
+@cindex module building
+
+In contrast to former emodule concepts, the current <wordhere> is much
+more flexible in all respects.  This is a drama however since there is
+no @emph{THE} way to do it and hence this section is only a showcase.
+Nonetheless, we try to give a few more examples, clues even, in the
+@ref{More Ideas} section below, obviously in the hope that they turn
+out to be useful.
+
+@menu
+* Configuring::                 How to
+* Compiling and linking::       How to
+* More Ideas::                  Other things you might want
+@end menu
+
+@node Configuring
+@section Configuring your module
+
+This step really depends on the purpose of your module.  So we cut it
+really short here.  Consider this passage an assortment of useful
+tips.
+
+@itemize
+@item
+SXEmacs by default installs its configuration file @file{config.h} in
+its header directory, @file{$prefix/include/sxemacs/@var{version}/} by
+default, so you can conditionalise on whatever has been configured by
+the user.
+@item
+SXEmacs installs all its configure tests (written in m4) into
+aclocal's macro directory, @file{$prefix/share/aclocal/} by default,
+so you can basically repeat every single test which facilitates the
+scenario where your module is configured differently than SXEmacs.
+@end itemize
+
+@node Compiling and linking
+@section Compiling and linking your module
+
+Basically using autotools and libtool your module is compiled with
+almost a one liner:
+@example
+@cartouche
+module_LTLIBRARIES = my-module
+my_module_SOURCES = source1.c source2.c @dots{}
+my_module_LDFLAGS = -module
+@end cartouche
+@file{Makefile.am} assuming @var{moduledir} is properly defined.
+@end example
+
+It becomes a wee bit more complex than that if you define lisp
+bindings for which documentation strings are supposed to be exported.
+
+@example
+@cartouche
+module_LTLIBRARIES = my-module.la
+my_module_la_SOURCES = source1.c source2.c @dots{}
+nodist_my_module_la_SOURCES = source.doc.c
+my_module_la_LDFLAGS = -module
+BUILT_SOURCES = source.doc.c
+
+SUFFIXES = .doc.c
+source.doc.c: $(my_module_la_SOURCES)
+	$(make_docfile) --modname $* -E $@ $^
+@end cartouche
+@file{Makefile.am} for module @samp{my-module} with built
+documentation strings
+@end example
+
+Note: In both examples we assume that you defined a (make) variable
+moduledir.  The final module will be installed there.  In the second
+example we also assume that the variable @var{make_docfile} points to
+the @file{make-docfile} utility.
+
+
+@node More Ideas
+@section More Ideas
+
+The sole purpose of the above examples is to show off.  Making
+emodules has become as easy as making children, but basically you are
+not restricted to the above way.  Hence an assortment of useful clues:
+
+@itemize
+@item
+The basic manual compilation command for C sources goes along the
+lines of:
+@example
+gcc -g -O2 -shared -o my-module.so.0 my-source.c
+@end example
+
+@item
+For fortran:
+@example
+f77 -g -O2 -shared -o my-module.so.0 my-source.f
+@end example
+
+@item
+Modules themselves can be linked to a whole world of shared libraries,
+they are automatically loaded.  Linking modules to other modules is
+possible on some platforms but in general not portable.
+
+@item
+The @file{make-docfile} utility can always be very easily found when
+you know the location of an installed SXEmacs binary.  Instead of
+calling @file{make-docfile} directly you would call 
+@code{sxemacs --make-docfile} and pass all arguments you would
+normally pass thereafter.
+
+The target of the example in the previous section then reads:
+@example
+make_docfile = sxemacs --make-docfile
+
+SUFFIXES = .doc.c
+source.doc.c: $(my_module_la_SOURCES)
+	$(make_docfile) --modname $* -E $@ $^
+@end example
+
+@item
+Basically the suffix @file{.doc.c} is not compulsory.  In fact, you
+can choose whatever you like there.  In our eyes this is yet
+convenient since the created file is indeed a C file and hence there
+will be no trouble for any @samp{.c.o} rules you might have to cope
+with the compilation.
+
+On the other hand, having its suffix be @file{.doc.c} facilitates the
+use of a pattern-based rule in your Makefile when your module consists
+of many single source files which otherwise means that you had to
+create a @samp{@var{file}.doc.c} rule for each file.
+
+We ourselves use the following pattern-based rule:
+@example
+make_docfile = $(SXEMACS) --make-docfile
+
+SUFFIXES = .doc.c
+.c.doc.c:
+	$(make_docfile) --modname $* -E $@ $<
+@end example
+where the @var{SXEMACS} variable points to the just built
+@file{sxemacs} binary.
+
+For all make-agnostics the above rule means that given a C file
+@file{foo.c} the rule to create a file @file{foo.doc.c} with the
+documentation strings in it goes:
+@example
+$(SXEMACS) --make-docfile --modname foo -E foo.doc.c foo.c
+@end example
+when the command is maximally expanded.
+
+@item
+The @file{make-docfile} utility itself does not (yet) come with a
+sensible @samp{--help} output.  Here in short the explanation you may
+long for:
+@example
+make-docfile [--modname <name>] -E <outfile> <infile> [<infile> @dots{}]
+@end example
+@end itemize
+
+
+@c @c for our museum
+@c @node Compile Mode, Initialization Mode, Using ellcc, Using ellcc
+@c @section Compile Mode
+@c @cindex compiling
+@c 
+@c By default, @code{ellcc} is in @dfn{compile} mode.  This means that it
+@c assumes that all of the command line arguments are C compiler arguments,
+@c and that you want to compile the specified source file or files.  You
+@c can force compile mode by specifying the @code{--mode=compile} argument
+@c to @code{ellcc}.
+@c 
+@c In this mode, @code{ellcc} is simply a front-end to the same C compiler
+@c that was used to create the @value{emacs} binary itself.  All @code{ellcc}
+@c does in this mode is insert a few extra command line arguments before
+@c the arguments you specify to @code{ellcc} itself.  @code{ellcc} will
+@c then invoke the C compiler to compile your module, and will return the
+@c same exit codes and messages that your C compiler does.
+@c 
+@c By far the easiest way to compile modules is to construct a
+@c @file{Makefile} as you would for a normal program, and simply insert, at
+@c some appropriate place something similar to:
+@c 
+@c @example
+@c @cartouche
+@c CC=ellcc --mode=compile
+@c 
+@c .c.o:
+@c     $(CC) $(CFLAGS) -c $<
+@c @end cartouche
+@c @end example
+@c 
+@c After this, all you need to do is provide simple @code{make} rules for
+@c compiling your module source files.  Since modules are most useful when
+@c they are small and self-contained, most modules will have a single
+@c source file, aside from the module specific initialization file (see
+@c below for details).
+@c 
+@c @node Initialization Mode, Link Mode, Compile Mode, Using ellcc
+@c @section Initialization Mode
+@c @cindex initialization
+@c @cindex documentation
+@c 
+@c @value{emacs} uses a rather bizarre way of documenting variables and
+@c functions.  Rather than have the documentation for compiled functions
+@c and variables passed as static strings in the source code, the
+@c documentation is included as a C comment.  A special program, called
+@c @file{make-docfile}, is used to scan the source code files and extract
+@c the documentation from these comments, producing the @value{emacs} @file{DOC}
+@c file, which the internal help engine scans when the documentation for a
+@c function or variable is requested.
+@c 
+@c Due to the internal construction of Lisp objects, subrs and other such
+@c things, adding documentation for a compiled function or variable in a
+@c compiled module, at any time after @value{emacs} has been @dfn{dumped} is
+@c somewhat problematic.  Fortunately, as a module writer you are insulated
+@c from the difficulties thanks to your friend @code{ellcc} and some
+@c internal trickery in the module loading code.  This is all done using
+@c the @dfn{initialization} mode of @code{ellcc}.
+@c 
+@c The result of running @code{ellcc} in initialization mode is a C source
+@c file which you compile with (you guessed it) @code{ellcc} in compile
+@c mode.  Initialization mode is where you set the module name, version,
+@c title and gather together all of the documentation strings for the
+@c functions and variables in your module.  There are several options that
+@c you are required to pass @code{ellcc} in initialization mode, the first
+@c of which is the mode switch itself, @code{--mode=init}.
+@c 
+@c Next, you need to specify the name of the C source code file that
+@c @code{ellcc} will produce, and you specify this using the
+@c @code{--mod-output=FILENAME} argument.  @var{FILENAME} is the name of
+@c the C source code file that will contain the module variables and
+@c @code{docs_of_module} function.
+@c 
+@c As discussed previously, each module requires a short @dfn{handle} or
+@c module name.  This is specified with the @code{--mod-name=NAME} option,
+@c where @var{NAME} is the abbreviated module name.  This @var{NAME} must
+@c consist only of characters that are valid in C function and variable
+@c names.
+@c 
+@c The module version is specified using @code{--mod-version=VERSION}
+@c argument, with @var{VERSION} being any arbitrary version string.  This
+@c version can be passed as an optional second argument to the Lisp
+@c function @code{load-module}, and as the third argument to the internal
+@c module loading command @code{emodules_load}.  This version string is
+@c used to distinguish between different versions of the same module, and
+@c to ensure that the module is loaded at a specific version.
+@c 
+@c Last, but not least, is the module title.  Specified using the
+@c @code{--mod-title=TITLE} option, the specified @var{TITLE} is used when
+@c the list of loaded modules is displayed.  The module title serves no
+@c purpose other than to inform the user of the function of the module.
+@c This string should be brief, as it has to be formatted to fit the
+@c screen.
+@c 
+@c Following all of these parameters, you need to provide the list of all
+@c source code modules that make up your module.  These are the files which
+@c are scanned by @file{make-docfile}, and provide the information required
+@c to populate the @code{docs_of_module} function.  Below is a sample
+@c @file{Makefile} fragment which indicates how all of this is used.
+@c 
+@c @example
+@c @cartouche
+@c CC=ellcc --mode=compile
+@c LD=ellcc --mode=link
+@c MODINIT=ellcc --mode=init
+@c CFLAGS=-O2 -DSOME_STUFF
+@c 
+@c .c.o:
+@c     $(CC) $(CFLAGS) -c $<
+@c 
+@c MODNAME=sample
+@c MODVER=1.0.0
+@c MODTITLE="Small sample module"
+@c 
+@c SRCS=modfile1.c modfile2.c modfile3.c
+@c OBJS=$(SRCS:.c=.o)
+@c 
+@c all: sample.ell
+@c clean:
+@c     rm -f $(OBJS) sample_init.o sample.ell
+@c 
+@c install: all
+@c     mkdir `ellcc --mod-location`/mymods > /dev/null
+@c     cp sample.ell `ellcc --mod-location`/mymods/sample.ell
+@c 
+@c sample.ell: $(OBJS) sample_init.o
+@c     $(LD) --mod-output=$@ $(OBJS) sample_init.o
+@c 
+@c sample_init.o: sample_init.c
+@c sample_init.c: $(SRCS)
+@c     $(MODINIT) --mod-name=$(MODNAME) --mod-version=$(MODVER) \
+@c     --mod-title=$(MODTITLE) --mod-output=$@ $(SRCS)
+@c @end cartouche
+@c @end example
+@c 
+@c The above @file{Makefile} is, in fact, complete, and would compile the
+@c sample module, and optionally install it.  The @code{--mod-location}
+@c argument to @code{ellcc} will produce, on the standard output, the base
+@c location of the @value{emacs} module directory.  Each sub-directory of that
+@c directory is automatically searched for modules when they are loaded with
+@c @code{load-module}.  An alternative location would be
+@c @file{/usr/local/lib/sxemacs/site-modules}.  That path can change depending
+@c on the options the person who compiled @value{emacs} chose, so you can
+@c always determine the correct site location using the
+@c @code{--mod-site-location} option.  This directory is treated the same way
+@c as the main module directory.  Each sub-directory within it is searched for
+@c a given module when the user attempts to load it.  The valid extensions that
+@c the loader attempts to use are @file{.so}, @file{.ell} and @file{.dll}.  You
+@c can use any of these extensions, although @file{.ell} is the preferred
+@c extension.
+@c 
+@c @node Link Mode, Other ellcc options, Initialization Mode, Using ellcc
+@c @section Link Mode
+@c @cindex linking
+@c 
+@c Once all of your source code files have been compiled (including the
+@c generated init file) you need to link them all together to create the
+@c loadable module.  To do this, you invoke @code{ellcc} in link mode, by
+@c passing the @code{--mode=link} option.  You need to specify the final
+@c output file using the @code{--mod-output=NAME} option, but other than
+@c that all other arguments are passed on directly to the system compiler
+@c or linker, along with any other required arguments to create the
+@c loadable module.
+@c 
+@c The module has complete access to all symbols that were present in the
+@c dumped @value{emacs}, so you do not need to link against libraries that were
+@c linked in with the main executable.  If your library uses some other
+@c extra libraries, you will need to link with those.  There is nothing
+@c particularly complicated about link mode.  All you need to do is make
+@c sure you invoke it correctly in the @file{Makefile}.  See the sample
+@c @file{Makefile} above for an example of a well constructed
+@c @file{Makefile} that invoked the linker correctly.
+@c 
+@c @node Other ellcc options, Environment Variables, Link Mode, Using ellcc
+@c @section Other @code{ellcc} options
+@c @cindex paths
+@c 
+@c Aside from the three main @code{ellcc} modes described above,
+@c @code{ellcc} can accept several other options.  These are typically used
+@c in a @file{Makefile} to determine installation paths.  @code{ellcc} also
+@c allows you to over-ride several of its built-in compiler and linker
+@c options using environment variables.  Here is the complete list of
+@c options that @code{ellcc} accepts.
+@c 
+@c @table @code
+@c @item --mode=compile
+@c Enables compilation mode.  Use this to compile source modules.
+@c 
+@c @item --mode=link
+@c Enabled link edit mode.  Use this to create the final module.
+@c 
+@c @item --mode=init
+@c Used to create the documentation function and to initialize other
+@c required variables.  Produces a C source file that must be compiled with
+@c @code{ellcc} in compile mode before linking the final module.
+@c 
+@c @item --mode=verbose
+@c Enables verbose mode.  This will show you the commands that are being
+@c executed, as well as the version number of @code{ellcc}.  If you specify
+@c this option twice, then some extra debugging information is displayed.
+@c 
+@c @item --mod-name=NAME
+@c Sets the short internal module @var{NAME} to the string specified,
+@c which must consist only of valid C identifiers.  Required during
+@c initialization mode.
+@c 
+@c @item --mod-version=VERSION
+@c Sets the internal module @var{VERSION} to the specified string.
+@c Required during initialization mode.
+@c 
+@c @item --mod-title=TITLE
+@c Sets the module descriptive @var{TITLE} to the string specified.  This
+@c string can contain any printable characters, but should not be too
+@c long.  It is required during initialization mode.
+@c 
+@c @item --mod-output=FILENAME
+@c Used to control the output file name.  This is used during
+@c initialization mode to set the name of the C source file that will be
+@c created to @var{FILENAME}.  During link mode, it sets the name of the
+@c final loadable module to @var{FILENAME}.
+@c 
+@c @item --mod-location
+@c This will print the name of the standard module installation path on the
+@c standard output and immediately exit @code{ellcc}.  Use this option to
+@c determine the directory prefix of where you should install your modules.
+@c 
+@c @item --mod-site-location
+@c This will print the name of the site specific module location and exit.
+@c 
+@c @item --mod-archdir
+@c Prints the name of the root of the architecture-dependent directory that
+@c @value{emacs} searches for architecture-dependent files.
+@c 
+@c @item --mod-config
+@c Prints the name of the configuration for which @value{emacs} and @code{ellcc}
+@c were compiled.
+@c @end table
+@c 
+@c @node Environment Variables,  , Other ellcc options, Using ellcc
+@c @section Environment Variables
+@c @cindex environment variables
+@c 
+@c During its normal operation, @code{ellcc} uses the compiler and linker
+@c flags that were determined at the time @value{emacs} was configured.  In
+@c certain rare circumstances you may wish to over-ride the flags passed to
+@c the compiler or linker, and you can do so using environment variables.
+@c The table below lists all of the environment variables that @code{ellcc}
+@c recognizes.
+@c 
+@c @table @code
+@c @item ELLCC
+@c @cindex @code{ELLCC}
+@c This is used to over-ride the name of the C compiler that is invoked by
+@c @code{ellcc}.
+@c 
+@c @item ELLLD
+@c @cindex @code{ELLLD}
+@c Sets the name of the link editor to use to created the final module.
+@c 
+@c @item ELLCFLAGS
+@c @cindex @code{ELLCFLAGS}
+@c Sets the compiler flags passed on when compiling source modules.  This
+@c only sets the basic C compiler flags.  There are certain hard-coded
+@c flags that will always be passed.
+@c 
+@c @item ELLLDFLAGS
+@c @cindex @code{ELLLDFLAGS}
+@c Sets the flags passed on to the linker.  This does @strong{not} include
+@c the flags for enabling PIC mode.  This just sets basic linker flags.
+@c 
+@c @item ELLDLLFLAGS
+@c @cindex @code{ELLDLLFLAGS}
+@c Sets the flags passed to the linker that are required to created shared
+@c and loadable objects.
+@c 
+@c @item ELLPICFLAGS
+@c @cindex @code{ELLPICFLAGS}
+@c Sets the C compiler option required to produce an object file that is
+@c suitable for including in a shared library.  This option should turn on
+@c PIC mode, or the moral equivalent thereof on the target system.
+@c 
+@c @item ELLMAKEDOC
+@c @cindex @code{ELLMAKEDOC}
+@c Sets the name of the @file{make-docfile} program to use.  Usually
+@c @code{ellcc} will use the version that was compiled and installed with
+@c @value{emacs}, but this option allows you to specify an alternative path.
+@c Used during the compile phase of @value{emacs} itself.
+@c @end table
+
+
+@node Defining Functions
+@chapter Defining Functions
+@cindex defining functions
+
+  One of the main reasons you would ever write a module is to
+provide one or more @dfn{functions} for the user or the editor to use.
+The term @dfn{function} is a bit overloaded here, as it refers to both
+a C function and the way it appears to Lisp, which is a
+@dfn{subroutine}, or simply a @dfn{subr}.
+
+  A Lisp subr is also known as a Lisp primitive, but that term applies
+less to dynamic modules.  @xref{Writing Lisp
+Primitives,,,internals,SXEmacs Internals Manual}, for details on
+how to declare functions.
+
+  Normal Lisp primitives document the functions they define by
+including the documentation as a C comment.  During the build process,
+a program called @file{make-docfile} is run, which will extract all of
+these comments, build up a single large documentation file, and will
+store pointers to the start of each documentation entry in the dumped
+SXEmacs.
+
+@menu
+* Using DEFUN::                 Using the DEFUN macro to define functions
+* Declaring Functions::         Declaring functions to the Lisp reader
+@end menu
+
+
+@node Using DEFUN
+@section Using @code{DEFUN}
+@cindex subrs
+@findex DEFUN
+@cindex functions, Lisp
+@cindex functions, defining
+
+  Although the full syntax of a function declaration is discussed in the
+SXEmacs internals manual in greater depth, what follows is a brief
+description of how to define and implement a new Lisp primitive in a
+module.  This is done using the @code{DEFUN} macro.  Here is a small
+example:
+
+@example
+@cartouche
+DEFUN("my-function", Fmy_function, 1, 1, "FFile name: ", /*
+Sample Emacs primitive function.
+
+The specified FILE is frobnicated before it is fnozzled.
+*/
+    (file))
+@{
+        char *filename;
+
+        if (NILP(file))
+                return Qnil;
+
+        filename = (char *)XSTRING_DATA(file);
+        frob(filename);
+        return Qt;
+@}
+@end cartouche
+@end example
+
+The first argument is the name of the function as it will appear to the
+Lisp reader.  This must be provided as a string.  The second argument is
+the name of the actual C function that will be created.  This is
+typically the Lisp function name with a preceding capital @code{F}, with
+hyphens converted to underscores.  This must be a valid C function
+name.  Next come the minimum and maximum number of arguments,
+respectively.  This is used to ensure that the correct number of
+arguments are passed to the function.  Next is the @code{interactive}
+definition.  If this function is meant to be run by a user
+interactively, then you need to specify the argument types and prompts
+in this string.  Please consult the SXEmacs Lisp manual for more
+details.  Next comes a C comment that is the documentation for this
+function.  Last comes the list of function argument names, if any.
+
+@node Declaring Functions
+@section Declaring Functions
+@findex DEFSUBR
+@cindex functions, declaring
+
+Simply writing the code for a function is not enough to make it
+available to the Lisp reader.  You should use the specially treated
+@code{init} function in your module to let the lisp reader know about
+all the great subroutines you have coded, @xref{Recognised Functions}.
+
+  This is done by calling @code{DEFSUBR} with the name of the
+function (its C name, ya know?) as its only argument.  Using the
+example function above, your body of the @code{init} function would
+look like:
+
+@example
+@cartouche
+void init(void)
+@{
+        DEFSUBR(Fmy_function);
+@}
+@end cartouche
+@end example
+
+This call will instruct SXEmacs to make the function visible to the
+Lisp reader and will prepare for the insertion of the documentation
+into the right place.  Once this is done, the user can call the Lisp
+function @code{my-function}.
+
+Basically, that is all you need to define and proclaim new functional
+lisp bindings.  The rules for what goes inside the functions, and how
+to write good modules, is beyond the scope of this document.  Please
+consult the SXEmacs internals manual for more details.
+
+
+@node Defining Variables
+@chapter Defining Variables
+@cindex defining variables
+@cindex defining objects
+@findex DEFVAR_LISP
+@findex DEFVAR_BOOL
+@findex DEFVAR_INT
+@cindex variables, Lisp
+@cindex variables, defining
+@cindex objects, defining
+@cindex objects, Lisp
+
+  Rarely will you write a module that only contains functions.  It is
+common to also provide variables which can be used to control the
+behaviour of functions or store a certain state or simply the results
+of a function being executed.  The actual C variable types are the
+same for modules and internal SXEmacs primitives, and the declaration
+of the variables is identical.
+
+  @xref{Adding Global Lisp Variables,,,internals,SXEmacs Internals Manual},
+for more information on variables and naming conventions.
+
+  Once your variables are defined and initialised properly, you need
+to make the Lisp reader aware of them.  This is done in the specially
+treated @code{init} function of your module using special SXEmacs
+macros such as @code{DEFVAR_LISP}, @code{DEFVAR_BOOL}, @code{DEFVAR_INT}
+etc.  The best way to see how to use these macros is to look at existing
+source code, or read the internals manual.
+
+  Below is a small example which declares and properly proclaims two
+variables.  You will note that this code takes into account the fact
+that this module may very well be compiled into SXEmacs itself.  This
+is a prudent thing to do.
+
+@example
+@cartouche
+Lisp_Object Vsample_string;
+int sample_boolean;
+
+void init(void)
+@{
+        DEFVAR_LISP("sample-string", &Vsample_string /*
+This is a sample string, declared in a module.
+
+Nothing magical about it.
+*/);
+
+        DEFVAR_BOOL("sample-boolean", &sample_boolean /*
+*Sample user-settable boolean.
+*/);
+
+        sample_boolean = 0;
+        Vsample_string = build_string("My string");
+@}
+@end cartouche
+@end example
+
+
+@c Print the tables of contents
+@contents
+@c That's all
+
+
+@node Index
+@chapter Index
+
+@printindex cp
+
+@bye
+

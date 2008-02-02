@@ -1,0 +1,129 @@
+@c -*-texinfo-*-
+@c This is part of the SXEmacs Lisp Reference Manual.
+@c Copyright (C) 1998 Oliver Graf <ograf@fga.de>
+@c Original reference is (c) 1990, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+@c Copyright (C) 2005 Sebastian Freundt <hroptatyr@sxemacs.org>
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/dragndrop.texi
+
+@node Drag and Drop, Modes, Scrollbars, Top
+@chapter Drag and Drop
+@cindex drag and drop
+
+@emph{WARNING}: the Drag'n'Drop API is still under development and the
+interface may change! The current implementation is considered experimental.
+
+  Drag'n'drop is a way to transfer information between multiple applications.
+To do this several GUIs define their own protocols. Examples are OffiX, CDE,
+Motif, KDE, GNOME, and many more. To catch all these protocols,
+SXEmacs provides a generic API.
+
+One prime idea behind the API is to use a data interface that is
+transparent for all systems. The author thinks that this is best
+archived by using URL and MIME data, cause any internet enabled system
+must support these for email already. SXEmacs also already provides
+powerful interfaces to support these types of data (tm and w3).
+
+@menu
+* Supported Protocols:: Which low-level protocols are supported.
+* Drop Interface::      How SXEmacs handles a drop from another application.
+* Drag Interface::      Calls to initiate a drag from SXEmacs.
+@end menu
+
+
+@node Supported Protocols
+@section Supported Protocols
+
+The current release of SXEmacs only support a small set of Drag'n'drop
+protocols. Some of these only support limited options available in the API.
+
+@menu
+* OffiX DND::           A generic X based protocol.
+* CDE dt::              Common Desktop Environment used on suns.
+* Loose ends::          The other protocols.
+@end menu
+
+
+@node OffiX DND
+@subsection OffiX DND
+@cindex OffiX DND
+
+@emph{WARNING}: If you compile in OffiX, you may not be able to use
+multiple X displays successfully.  If the two servers are from
+different vendors, the results may be unpredictable.
+
+The OffiX Drag'n'Drop protocol is part of a X API/Widget library created by
+Cesar Crusius. It is based on X-Atoms and ClientMessage events, and works with
+any X platform supporting them.
+
+OffiX is supported if 'offix is member of the variable dragdrop-protocols, or
+the feature 'offix is defined.
+
+Unfortunately it uses it's own data types. Examples are: File, Files,
+Exe, Link, URL, MIME. The API tries to choose the right type for the data that
+is dragged from SXEmacs (well, not yet...).
+
+SXEmacs supports both MIME and URL drags and drops using this API. No application
+interaction is possible while dragging is in progress.
+
+For information about the OffiX project have a look at http://leb.net/~offix/
+
+
+@node CDE dt
+@subsection CDE dt
+@cindex CDE dt
+
+CDE stands for Common Desktop Environment. It is based on the Motif
+widget library. It's drag'n'drop protocol is also an abstraction of the
+Motif protocol (so it might be possible, that SXEmacs will also support
+the Motif protocol soon).
+
+CDE has three different types: file, buffer, and text. SXEmacs only uses
+file and buffer drags. The API will disallow full URL drags, only file
+method URLs are passed through.
+
+Buffer drags are always converted to plain text.
+
+
+@node Loose ends
+@subsection Loose ends
+
+The following protocols will be supported soon: Xdnd, Motif, Xde (if I
+get some specs), KDE OffiX (if KDE can find XEmacs windows).
+
+In particular Xdnd will be one of the protocols that can benefit from
+the SXEmacs API, cause it also uses MIME types to encode dragged data.
+
+
+@node Drop Interface
+@section Drop Interface
+@cindex drop
+@cindex Drop API
+
+For each activated low-level protocol, an internal routine will catch
+incoming drops and convert them to a dragdrop-drop type
+misc-user-event.
+
+This misc-user-event has its function argument set to
+@code{dragdrop-drop-dispatch} and the object contains the data of the drop
+(converted to URL/MIME specific data). This function will search the variable
+@code{experimental-dragdrop-drop-functions} for a function that can handle the
+dropped data.
+
+To modify the drop behavior, the user can modify the variable
+@code{experimental-dragdrop-drop-functions}. Each element of this list
+specifies a possible handler for dropped data. The first one that can handle
+the data will return @code{t} and exit. Another possibility is to set a
+extent-property with the same name. Extents are checked prior to the
+variable.
+
+The customization group @code{drag-n-drop} shows all variables of user
+interest.
+
+
+@node Drag Interface
+@section Drag Interface
+@cindex drag
+@cindex Drag API
+
+This describes the drag API (not implemented yet).

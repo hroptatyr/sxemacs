@@ -1,0 +1,23 @@
+This patch is meant to be applied to smtpmail.el from the mail-lib
+package.
+
+This patch provides SSL/TLS support for smtp connections using SXEmacs'
+native OpenSSL interface.  It works out of the box with the usual
+credential definitions.
+
+Additionally extends the smtpmail-starttls-credentials specifications by
+another argument, the fifth one, which can be a certificate authority's
+certificate file.  If specified the server must present a valid
+certificate signed by or verifiably by the certificate authority.
+
+An example credential:
+
+	(setq smtpmail-starttls-credentials
+	      '(("some.smtp.server.tld" 25	;; server+port
+		 "~/.certs/my.smtpd.key"	;; the cert's secret key
+		 "~/.certs/my.smtpd.cert"	;; the public cert
+		 "~/.certs/smtp.server.ca"	;; server's ca cert
+		)))
+
+Sebastian Freundt <hroptatyr@sxemacs.org>
+
