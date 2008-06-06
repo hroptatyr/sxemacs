@@ -1,0 +1,8 @@
+precious ^(finder-inf\.el)$
+precious ^(custom-(load|defines)\.el)$
+precious ^(auto-autoloads\.el)$
+precious ^(.*\.elc)$
+precious ^(.*\.elc.stamp)$
+precious ^(Makefile\.in)$
+precious ^(update-elc\.stamp)$
+precious ^(Makefile)$

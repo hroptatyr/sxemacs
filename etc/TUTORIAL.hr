@@ -1,0 +1,1128 @@
+Copyright (c) 1985, 1996 Free Software Foundation, Inc.  Uvjeti
+kopiranja na kraju.
+
+Ovo su osnovne upute za Emacs.
+
+Opæenito, Emacsove naredbe sadr¾e tipku CONTROL (ponekad oznaèenu CTRL
+ili CTL) ili tipku META.  Na nekim tipkovnicama tipka META je oznaèena
+kao ALT ili EDIT, ili ne¹to treæe (na primjer, na Sunovim tipkovnicama
+karo znak lijevo od razmaknice je META).  Ako nemate tipku META,
+umjesto nje mo¾ete koristiti ESC.  Da ne pi¹emo META ili CONTROL svaki
+put kad mislimo na prefiksnu tipku, koristit æemo sljedeæe skraæenice:
+
+ C-<znak>  znaèi dr¾eæi tipku CONTROL, stisnite znak <znak>.  Tako bi
+	   C-f bilo: Dr¾eæi tipku CONTROL, napi¹ite f.
+ M-<znak>  znaèi dr¾eæi tipku META, pritisnite <znak>.  Ako nema tipke 
+	   META, pritisnite <ESC>, otpustite ga, i napi¹ite znak
+	   <znak>.
+
+Napomena: za izlazak iz Emacsa, utipkajte C-x C-c.  (Dva znaka.)
+Znakovi ">>" na lijevom rubu naznaèuju uputstva da poku¹ate koristiti
+neku naredbu.  Na primjer:
+<<Sredina stranice namjerno ostavljena prazna.  Tekst se nastavlja dolje.>>
+>>  Sad utipkajte C-v za pomak na sljedeæi ekran.
+	(samo naprijed, uèinite to tako da dr¾ite tipku control i
+	pritisnite 'v').  Od sad, ovo trebate napraviti kad god zavr¹ite
+	sa èitanjem stranice teksta.
+
+Uoèite dva reda koja se preklapaju kad se pomaknete s ekrana na ekran; 
+preklapanje osigurava kontinuitet koji vam olak¹ava èitanje teksta.
+
+Prva stvar koju trebate znati jest kako se micati s mjesta na mjesto u
+tekstu.  Veæ znate kako se pomaknuti ekran naprijed, pomoæu C-v.  Da 
+biste se pomakli ekran natrag, pritisnite M-v (dr¾ite tipku META i
+pritisnite v, ili upi¹ite <ESC>v ako nemate tipke META, EDIT ili ALT).
+
+>>  Poku¹ajte tipkati M-v, zatim C-v, nekoliko puta.
+
+
+* SA®ETAK
+---------
+
+Sljedeæe naredbe su korisne za pregledavanje stranica teksta:
+
+	C-v	Pomièe stranicu naprijed
+	M-v	Pomièe stranicu natrag
+	C-l	Bri¹e ekran, i ponovno iscrtava sve, stavljajuæi tekst 
+		pokraj kursora u sredinu.
+		 (to je control-L, a ne control-1.)
+
+>> Naðite kursor, i pogledajte tekst pokraj njega.
+   Sada stisnite C-l.
+   Opet naðite kursor, i uoèite da se pokraj kursora nalazi isti
+   tekst.
+
+
+* OSNOVE KONTROLE KURSORA
+-------------------------
+
+Pomaci s ekrana na ekran su korisni, ali kako se pomaknuti na pojedino 
+mjesto u tekstu na ekranu?
+
+To mo¾ete uèiniti na nekoliko naèina.  Najosnovniji naèin je
+upotrijebiti naredbe C-p, C-b, C-f i C-n.  Svaka od ovih naredbi
+pomièe kursor jedan redak ili stupac u pojedinom smjeru.  Evo tablice
+koja pokazuje ove èetiri naredbe i smjerove u kojem pomièu.
+
+			  Prethodni red, C-p
+			 (eng. previous line)
+				  :
+				  :
+     Natrag, C-b  .... Trenutni polo¾aj kursora .... Naprijed, C-f
+  (eng. backward)		  :		    (eng. forward)
+				  :
+			  Sljedeæi red, C-n
+			   (eng. next line)
+
+>> Pomaknite kursor do retka u sredini tablice koristeæi C-n i C-p.
+   Tada stisnite C-l da vidite cijelu tablicu u sredi¹tu ekrana.
+
+Ove su naredbe temeljene na engleskim mnemonicima: P za previous, N za
+next, B za backward i F za forward.  Ovo su osnovne naredbe za
+pomicanje kursora, i s vremenom æete ih SVE koristiti, pa bi bilo vrlo
+korisno da ih sada nauèite.
+
+>> Stisnite C-n nekoliko puta, tako da dovedete kursor do ovog retka.
+
+>> Pomaknite se na red s C-f-ovima, i onda gore do C-p-ova.
+   Uoèite ¹to C-p radi kad je kursor na sredini reda.
+
+Svaki red teksta zavr¹ava znakom Newline (novi red), èime ga se odvaja 
+od sljedeæeg reda.  Zadnji red u datoteci bi trebao imati Newline na
+kraju (ali Emacs to ne zahtijeva).
+
+>> Poku¹ajte stisnuti C-b na poèetku reda.  Trebalo bi vas pomaknuti
+   na kraj prethodnog reda.  To se dogaða zato ¹to ste se pomakli
+   unatrag, preko znaka Newline.
+
+C-f se mièe preko Newline-a, ba¹ kao i C-b.
+
+>> Pritisnite jo¹ nekoliko puta C-b, da steknete osjeæaj za kursor.
+   Tad sti¹æite C-f dok se ne vratite na kraj reda.
+   Zatim se jo¹ jednim C-f-om pomaknite na poèetak sljedeæeg reda.
+
+Kad se pomaknete preko gornjeg ili donjeg ruba ekrana, tekst iza ruba
+se pomakne na ekran.  Ovo se naziva "pomak" (eng. scrolling).  Njime
+Emacs mo¾e pomaknuti kursor na neko mjesto u tekstu bez uklanjanja
+kursora s ekrana.
+
+>> Poku¹ajte pomaknuti kursor s donjeg ruba sa C-n, i pogledajte ¹to
+   se dogaða.
+
+Ako je micanje po znakovima presporo, mo¾ete se micati po rijeèima.
+M-f (Meta-f) mièe rijeè naprijed, a M-b mièe rijeè natrag.
+
+>> Pritisnite nekoliko puta M-f i M-b.
+
+Kad se nalazite u sredini rijeèi, M-f pomièe na kraj rijeèi.  Kad se
+nalazite u praznom prostoru izmeðu rijeèi, M-f pomièe na kraj sljedeæe 
+rijeèi.  M-b se pona¹a na isti naèin, ali u suprotnom smjeru.
+
+>> Pritisnite M-f i M-b nekoliko puta, izmije¹ano s C-f i C-b, tako da 
+   mo¾ete promotriti kako se M-f i M-b pona¹aju na razlièitim mjestima 
+   unutar i izmeðu rijeèi.
+
+Uoèite paralelu izmeðu C-f i C-b na jednoj strani, i M-f i M-b na
+drugoj.  Meta znakovi se èesto koriste za operacije vezane uz jedinice 
+definirane jezikom (rijeèi, reèenice, paragrafi), dok Control znakovi
+rade na osnovnim jedinicama, neovisno o onome ¹to editirate (znakovi, 
+redovi, itd.)
+
+Analogija vrijedi i izmeðu redova i reèenica: C-a i C-e pomièu na
+poèetak, odnosno na kraj reda, dok M-a i M-e pomièu na poèetak, odnosno 
+kraj reèenice.
+
+>> Isku¹ajte C-a nekoliko puta, potom C-e nekoliko puta.
+>> Iskupajte M-a nekoliko puta, potom M-e nekoliko puta.
+
+Uoèite kako ponovljeni C-a ne rade ni¹ta, dok ponovljeni M-a
+nastavljaju micati po reèenicama.  Iako ovo nije sasvim analogno,
+svaka se naredba doima prirodnom.
+
+Polo¾aj kursora u tekstu se takoðer naziva "toèka" (eng. point).
+Drugaèije reèeno, kursor pokazuje na ekranu gdje se point nalazi u
+tekstu.
+
+Evo sa¾etka jednostavnih operacija za micanje kursora, ukljuèujuæi i
+naredbe za pomicanje preko rijeèi i reèenica:
+
+	C-f	Znak naprijed
+	C-b	Znak natrag
+
+	M-f	Rijeè naprijed
+	M-b	Rijeè natrag
+
+	C-n	Sljedeæi red
+	C-p	Prethodni red
+
+	C-a	Poèetak reda
+	C-e	Kraj reda
+
+	M-a	Poèetak reèenice
+	M-e	Kraj reèenice
+
+>> Isku¹ajte sve ove naredbe jo¹ nekoliko puta, za vje¾bu.
+   To su najèe¹æe rabljene naredbe.
+
+Dvije druge va¾ne naredbe za pomicanje kursora su M-< (Meta Manje),
+koja pomièe na poèetak cijelog teksta, i M-> (Meta Veæe), koja pomièe
+na kraj cijelog teksta.
+
+Na veæini terminala, "<" je iznad zareza, tako da morate koristiti
+tipku shift da biste ga utipkali.  Na tim terminalima morate koristiti 
+tipku shift i da biste utipkali M-<; bez shifta, pisali biste M-zarez.
+
+>> Sada isku¹ajte M-<, da biste se pomaknuli na poèetak uputa.
+   Potom upotrijebite C-v nekoliko puta da se vratite ovamo.
+
+>> Sada isku¹ajte M->, pomaknuv¹i se na kraj uputa.
+   Potom upotrijebite M-v nekoliko puta da se vratite ovamo.
+
+Ako va¹ terminal ima kursorske tipke, mo¾ete kursor pomicati njima.
+Preporuèujemo da nauèite C-b, C-f, C-n i C-p iz tri razloga.  Prvo,
+rade na svim vrstama terminala.  Drugo, kad steknete rutinu kori¹tenja 
+Emacsa, primijetit æete da je tipkanje ovih CTRL znakova br¾e od
+uporabe kursorskih tipki (jer ne morate odmicati prste od polo¾aja za
+tipkanje).  Treæe, jednom kad se naviknete koristiti CTRL znakovne
+naredbe, lako æete nauèiti koristiti druge napredne naredbe za micanje 
+kursora.
+
+Veæina Emacsovih naredbi prihvaæa numerièki argument; za veæinu njih
+ovo slu¾i kao brojaè ponavljanja.  Brojaè ponavljanja zadajete tako da 
+utipkate C-u i potom znamenke prije nego ¹to utipkate naredbu.  Ako
+imate tipku META (ili EDIT ili ALT), postoji jo¹ jedan alternativan
+naèin uno¹enja numerièkog argumenta: tipkajte znamenke dr¾eæi svo vrijeme 
+tipku META.  Preporuèujemo uèenje metode pomoæu C-u, jer radi na svim
+terminalima.
+
+Primjerice, C-u 8 C-f pomièe osam znakova naprijed.
+
+>> Poku¹ajte koristiti C-n ili C-p s numerièkim argumentom, tako da
+   pomaknete kursor na liniju blisku ovoj samo jednom naredbom.
+
+Veæina naredbi koristi numerièki argument kao brojaè ponavljanja.
+Neke ga naredbe, izunimno, koriste drugaèije.  C-v i M-v su meðu
+iznimkama.  Kad im se proslijedi argument, one pomaknu ekran gore ili
+dolje, za toliko redova, a ne stranica.  Na primjer, C-u 4 C-v pomièe
+ekran za èetiri reda.
+
+>> Sada poku¹ajte upisati C-u 8 C-v.
+
+Ovo je trebalo pomaknuti ekran za 8 redova.  Ako ga hoæete pomaknuti
+natrag, mo¾ete dati isti argument M-v.
+
+Ako koristite X Window sistem, vjerojatno se na desnoj strani Emacsova
+prozora nalazi pravokutno podruèje nazvano "vrpca za pomicanje"
+(eng. scroll-bar).  Mo¾ete pomicati tekst mi¹em povlaèeæi klizaè
+unutar vrpce.
+
+>> Poku¹ajte pritisnuti srednju tipku mi¹a na vrh klizaèa unutar
+   scroll-bara.  Ovo bi trebalo pomaknuti tekst do polo¾aja odreðenog
+   visinom toèke pritiska.
+
+>> Pomaknite mi¹a na toèku scroll-bara otprilike tri reda od vrha, i
+pritisnite lijevu tipku mi¹a nekoliko puta.
+
+
+* KONTROLA KURSORA NA X TERMINALU
+---------------------------------
+
+Ako imate X terminal, vjerojatno æe vam biti lak¹e koristiti tipke
+kursorskog bloka.  Lijeva, desna, gornja i donja strelica pomièu u
+oèekivanom smjeru; one funkcioniraju jednako kao i C-b, C-f, C-p i
+C-n, ali ih je lak¹e tipkati i zapamtiti.  Takoðer mo¾ete koristiti
+C-lijevo i C-desno za pomake po rijeèima, a C-gore i C-dolje za pomake 
+po blokovima (npr. paragrafima, ako editirate tekst).  Ako imate tipke 
+oznaèene s HOME (ili BEGIN) i END, one æe vas pomaknuti na poèetak
+odnosno kraj reda, a C-home i C-end æe vas pomaknuti na poèetak
+odnosno kraj datoteke.  Ako va¹a tipkovnica ima tipke PgUp i PgDn,
+mo¾ete ih koristiti za pomicanje gore i dolje po stranicama, kao M-v i 
+C-v.
+
+Sve ove naredbe mogu primiti numerièke argumente, kao ¹to je gore
+opisano.  Mo¾ete taj argument unijeti kraæim putem: samo dr¾ite tipku
+CONTROL ili META, i upi¹ite broj.  Na primjer, za pomak 12 rijeèi
+desno, tipkajte C-1 C-2 C-desno.  Uoèite da je ovo jako lako utipkati, 
+jer ne morate otpu¹tati tipku CONTROL izmeðu pritisaka tipki.
+
+
+* KAD EMACS BLOKIRA
+-------------------
+
+Ako Emacs prestane odgovarati na va¹e naredbe, mo¾ete ga zaustaviti
+utipkav¹i C-g.  Mo¾ete koristiti C-g da zaustavite naredbu koja predugo
+traje.
+
+Takoðer s C-g mo¾ete odbaciti numerièki argument, ili poèetak naredbe
+koju ne ¾elite zavr¹iti.
+
+>> Upi¹ite C-u 100 da napravite numerièki argument 100, zatim stisnite C-g.
+   Sad upi¹ite C-f.  Pomaknut æe se samo za jedan znak, jer ste
+   argument odbacili s C-g.
+
+Ako gre¹kom stisnete <ESC>, mo¾ete ga se rije¹iti s C-g.
+
+
+* ONEMOGUÆENE NAREDBE
+---------------------
+
+Neke Emacsove naredbe su "onemoguæene", tako da ih poèetnici ne mogu
+pokrenuti gre¹kom.
+
+Ako utipkate jednu od onemoguæenih naredbi, Emacs æe vas porukom
+obavijestiti koju ste naredbu poku¹ali pokrenuti, i pitati vas ¾elite
+li je ipak izvr¹iti.
+
+Ako je zaista ¾elite isprobati, pritisnite razmaknicu kao odgovor na
+pitanje.  Inaèe, ako ne ¾elite izvr¹iti onemoguæenu naredbu,
+odgovorite na pitanje s "n".
+
+>> Pritisnite `C-x n p' (¹to je onemoguæena naredba),
+   zatim na pitanje odgovorite s "n".
+
+
+* PROZORI
+---------
+
+Emacs mo¾e imati nekoliko prozora, svaki s vlastitim tekstom.  Uoèite
+da se pojam "prozora" kako ga koristi Emacs ne odnosi na odvojene
+preklapajuæe prozore windowing sustava, veæ na razdvojene dijelove
+unutar jednog X prozora.  (Emacs takoðer mo¾e prikazati vi¹e X
+prozora, odnosno "okvira", u Emacsovoj terminologiji.  To je opisano
+kasnije.)
+
+Za sada je bolje ne ulaziti u tehnike kori¹tenja vi¹e prozora.  Ono
+¹to trebate znati jest kako se rije¹iti dodatnih prozora koji se mogu
+javiti za prikaz pomoæi, ili kao izlaz nekih naredbi.
+Jednostavno:
+
+	C-x 1	Jedan prozor (tj. ubij sve druge prozore)
+
+To je Control-x praæen znamenkom 1.  C-x 1 pro¹iruje prozor u kojem je 
+kursor, tako da on zauzme cijeli ekran.  Pobri¹e, takoðer, i ostale
+prozore.
+
+>> Pomaknite kursor na ovu liniju i upi¹ite C-u 0 C-l.
+
+(Sjetite se da C-l ponovno iscrtava ekran.  Ako ovoj naredbi date
+numerièki argument, on znaèi "iscrtaj ekran i smjesti trenutni red
+toliko linija od vrha ekrana."  Tako C-u 0 C-l znaèi "iscrtaj ekran, i 
+stavi trenutni red na vrh.")
+
+>> Pritisnite Control-x 2
+   Uoèite kako se ovaj prozor smanjuje, dok se novi pojavljuje
+   prikazujuæi sadr¾aj ovog spremnika (buffera).
+
+>> Upi¹ite C-x 1 i gledajte kako novi prozor nestaje.
+
+
+* UMETANJE I BRISANJE
+---------------------
+
+®elite li umetnuti tekst, samo ga utipkajte.  Znakove koje vidite, kao 
+¹to su A, 7, *, itd. Emacs shvaæa kao tekst i umeæe trenutno.
+Pritisnite <Return> (znak za novi red) da umetnete znak Newline.
+
+Zadnji znak koji ste umetnuli mo¾ete izbrisati pritisnuv¹i <Delete>.
+<Delete> je tipka na tipkovnici koja mo¾e biti oznaèena kao "Del".  U
+nekim sluèajevima, tipka "Backspace" slu¾i kao <Delete>, ali ne
+uvijek!
+
+Opæenitije, <Delete> bri¹e znak neposredno ispred trenutnog polo¾aja
+kursora.
+
+>> Uèinite sljedeæe: utipkajte nekoliko znakova, zatim ih izbri¹ite
+   stisnuv¹i <Delete> nekoliko puta.  Ne brinite o promjeni ove
+   datoteke; neæete izmijeniti glavnu verziju uputa.  Ovo je va¹a
+   osobna kopija.
+
+Kad red teksta postane prevelik za jedan red na ekranu, red se
+"nastavlja" na drugi ekranski red.  Obrnuta kosa crta ("\") na desnom
+rubu ukazuje na red koji je nastavljen.
+
+>> Upisujte tekst dok ne doðete do desnog ruba, i nastavite pisati.
+   Vidjet æete kako se pojavljuje nastavljeni red.
+
+>> Tipkom <Delete> bri¹ite tekst dok red teksta opet ne stane na red
+   ekrana.  Kontinuacijski red tada nestaje.
+
+Mo¾ete izbrisati znak Newline kao i bilo koji drugi znak.  Brisanje
+znaka Newline izmeðu dva reda ih spaja u jedan red.  Ako je novonastali
+zajednièki red prevelik da stane na ekranski red, bit æe prikazan
+kontinuacijskim redom.
+
+>> Pomaknite kursor na poèetak reda i pritisnite <Delete>.  Red æe se
+   spojiti s redom iznad.
+
+>> Pritisnite <Return> tako da ponovno umetnete Newline koji ste
+   izbrisali.
+
+Upamtite da se veæini Emacsovih naredbi mo¾e zadati brojaè
+ponavljanja; ovo ukljuèuje znakove teksta.  Ponavljanje znaka teksta
+unosi ga nekoliko puta.
+
+>>  Isku¹ajte sad -- upi¹ite C-u 8 * da upi¹ete ********.
+
+Sada ste nauèili najosnovnije naèine upisivanja u Emacs i ispravljanja 
+gre¹aka.  Sada mo¾ete i brisati po rijeèima ili redovima.  Evo sa¾etka 
+operacija brisanja:
+
+	<Delete>     bri¹i znak neposredno pred kursorom
+	C-d   	     bri¹i znak nakon kursora
+
+	M-<Delete>   ubij rijeè prije kursora
+	M-d	     ubij rijeè poslije kursora
+
+	C-k	     ubij od pozicije kursora do kraja reda
+	M-k	     ubij do kraja trenutne reèenice
+
+Uoèite da <Delete> i C-d nasuprot M-<Delete> i M-d pro¹iruju paralelu
+zaèetu s C-f i M-f (dobro, <Delete> ba¹ i nije kontrolni znak, ali
+nemojmo brinuti o tome).  C-k i M-k su na neki naèin slièni C-e i M-e, 
+po operaciji na redovima, odnosno reèenicama.
+
+Kad bri¹ete vi¹e od jednog znaka istovremeno, Emacs sprema izbrisani
+tekst, tako da ga mo¾ete dobiti natrag.  Vraæanje ubijenog teksta zove 
+se "dobavljanje" (eng. yanking).  Mo¾ete dobaviti ubijeni tekst bilo
+na isto mjesto gdje je bio ubijen, bilo na neko drugo mjesto u
+tekstu.  Mo¾ete dobaviti tekst nekoliko puta, èime æete dobiti
+vi¹estruke kopije.  Komanda za dobavljanje je C-y.
+
+Uoèite da je razlika izmeðu "ubijanja" i "brisanja" neèega u tome ¹to
+se ubijeni tekst mo¾e dobaviti natrag, a izbrisani ne mo¾e.  Opæenito,
+naredbe koje uklanjaju puno teksta spreme izbrisani tekst, dok ga
+naredbe koje bri¹u samo jedan znak ili samo prazne linije i razmake ne
+spremaju.
+
+>> Pomaknite kursor na poèetak reda koji nije prazan.
+   Zatim pritisnite C-k da ubijete tekst u tom redu.
+>> Stisnite C-k drugi put.  Vidjet æete da ubija Newline koji prati
+   taj red.
+
+Uoèite da jedan C-k ubija sadr¾aj reda, dok drugi C-k ubija sam red, i
+mièe sve druge redove prema gore.  C-k tretira numerièki argument na
+specijalan naèin: ubija toliko redova, i njihov sadr¾aj.  Ovo nije
+obièno ponavljanje.  C-u 2 C-k ubija dva reda i njihove newline;
+pritiskanje C-k dvaput ne bi dalo taj rezultat.
+
+Da povratite zadnji ubijeni tekst i stavite ga gdje je kursor
+trenutno, pritisnite C-y.
+
+>> Poku¹ajte; pritisnite C-y da dobavite tekst.
+
+Gledajte na C-y kao da dobavljate natrag ne¹to ¹to vam je netko uzeo.
+Uoèite da ako ponovite C-k nekoliko puta, sav tekst bit æe spremljen
+zajedno, tako da æe ga C-y dobaviti odjednom.
+
+>> Uèinite to sad, pritisnite C-k nekoliko puta.
+
+Sad, da bi vratili ubijeni tekst:
+
+>> Stisnite C-y.  Tad spustite kursor nekoliko linija ni¾e i opet
+   stisnite C-y.  Sada vidite kako se kopira tekst.
+
+©to napraviti ako imate tekst koji ¾elite dobaviti, ali onda ubijete
+ne¹to drugo?  C-y bi dobavio zadnji tekst.  Ali prethodni tekst nije
+izgubljen.  Mo¾ete ga povratiti koristeæi naredbu M-y.  Nakon ¹to
+pritisnete C-y i dobijete zadnje ubijeni tekst, pritiskanje M-y ga
+zamjenjuje s prethodno ubijenim tekstom.  Uzastopno pozivanje M-y
+dobavlja sve ranije i ranije tekstove.  Kad doðete do teksta koji ste
+tra¾ili, ne morate uèiniti ni¹ta posebno da ga zadr¾ite.  Samo
+nastavite s editiranjem, ostaviv¹i dobavljeni tekst gdje jest.
+
+Ako pritisnete M-y dovoljno puta, vratit æete se na polaznu toèku
+(zadnji ubijeni tekst).
+
+>> Ubijte jedan red, pomièite se po tekstu, ubijte drugi red.
+   Zatim pritisnite C-y da biste dobili natrag drugi ubijeni red.
+   Zatim napravite M-y pa æe taj tekst biti zamijenjen prvim ubijenim
+   redom.  Napravite jo¹ par puta M-y i pogledajte ¹to dobivate.
+   Nastavite s M-y dok ne vratite drugi ubijeni red, a zatim M-y 
+   pritisnite jo¹ par puta.  Ako ¾elite, mo¾ete poku¹ati proslijediti
+   naredbi M-y pozitivne i negativne argumente.
+
+
+* PONI©TENJE
+------------
+
+Ako napravite izmjenu u tekstu, pa se zatim predomislite, mo¾ete
+poni¹titi (eng. "undo") promjenu naredbom undo, C-x u.
+
+Obièno, C-x u poni¹tava promjene koje su rezultat jedne naredbe; ako
+ponovite C-x u nekoliko puta uzastopce, svako novo ponavljanje
+poni¹tava uèinak jo¹ jedne naredbe.
+
+Ali, postoje dva izuzetka: naredbe koje ne mijenjaju tekst se ne
+raèunaju (ovo ukljuèuje naredbe koje mièu kursor i pomièu tekst), a
+samo-umeæuæi znakovi se obièno grupiraju u skupine od po 20 (da se
+umanji broj C-x u koje morate stisnuti da biste poni¹tili unos
+teksta).
+
+>> Ubijte ovu liniju s C-k, zatim utipkajte C-x u i trebala bi se
+   ponovno pojaviti.
+
+C-_ je alternativna naredba za poni¹tenje; ona radi isto kao C-x u,
+ali ju je lak¹e utipkati nekoliko puta za redom.  Mana C-_ je da na
+nekim tipkovnicama nije oèigledno kako je utipkati.  Zato ostavljamo i 
+C-x u.  Na nekim terminalima mo¾ete dobiti C-_ kombinacijom CTRL i /.
+
+Numerièki argument naredbi C-_ ili C-x u slu¾i kao brojaè ponavljanja.
+
+
+* DATOTEKE
+----------
+
+Da biste za stalno spremili izmjene na tekstu koji editirate, morate ga
+spremiti u datoteku.  Ako to ne uèinite, tekst æe nestati kada izaðete 
+iz Emacsa.  Svoje izmjene stavljate u datoteku tako ¹to je prvo
+"naðete" (ovo se jo¹ naziva i "posjeta" datoteci).
+
+Nala¾enje datoteke znaèi da vidite sadr¾aj datoteke unutar Emacsa.  U
+neku ruku, ovo je kao da editirate samu datoteku.  Meðutim, izmjene
+koje napravite koristeæi Emacs ne postaju trajne dok niste "snimili"
+datoteku.  Tako mo¾ete izbjeæi ostavljanje poluzavr¹ene datoteke u
+sustavu, ako to ne ¾elite.  Èak i kad snimate, Emacs ostavlja izvornu
+datoteku pod promijenjenim imenom, za sluèaj da se kasnije
+predomislite.
+
+Ako pogledate pri dnu ekrana, vidjet æete red koji poèinje i zavr¹ava
+s crticama, i sadr¾i niz "XEmacs: TUTORIAL.hr".  Ovaj dio ekrana
+uvijek pokazuje naziv datoteke koju posjeæujete.  U ovom trenutku vi
+posjeæujete datoteku koja se zove "TUTORIAL", a koja je va¹a osobna
+kopija Emacsovih uputa.  Koju god datoteku na¹li, njen æe se naziv
+pojaviti na tom istom mjestu.
+
+Naredbe za pronala¾enje i spremanje datoteka se razlikuju od drugih
+naredbi koje ste dosad upoznali, po tome ¹to se sastoje od dva znaka.
+Obje poèinju znakom Control-x; mnoge od njih rade s datotekama,
+spremnicima i povezanim stvarima.  Ove naredbe su dugaèke dva, tri ili
+èetiri znaka.
+
+Jo¹ jedna stvar u vezi naredbe za nala¾enje datoteke je da morate reæi 
+koju datoteku ¾elite.  Ka¾emo da naredba "èita argument s terminala"
+(u ovom sluèaju, argument je naziv datoteke).  Kad utipkate naredbu
+
+	C-x C-f   Naði datoteku
+
+Emacs tra¾i od vas da upi¹ete naziv datoteke.  Naziv datoteke koji
+upi¹ete pojavljuje se u donjem redu ekrana.  Taj donji red naziva se
+minispremnik (minibuffer) kad se koristi za tu vrstu unosa.  Mo¾ete
+koristiti uobièajene Emacsove naredbe da editirate naziv datoteke.
+
+Dok unosite naziv datoteke (ili za bilo kojeg unosa iz minispremnika), 
+mo¾ete otkazati naredbu pomoæu C-g.
+
+>> Upi¹ite C-x C-f, potom C-g.  Ovo otkazuje minispremnik, a takoðer
+   otkazuje i naredbu C-x C-f koja je koristila minispremnik.  Tako
+   nijedna datoteka neæe biti pronaðena.
+
+Kad zavr¹ite s upisom imena datoteke, stisnite <Return> za kraj.  Tad
+æe naredba C-x C-f otpoèeti svoj posao, i naæi datoteku koju ste
+izabrali.  Minispremnik nestaje kad naredba C-x C-f zavr¹i.
+
+Ubrzo æe se sadr¾aj datoteke pojaviti na ekranu, i moæi æete editirati 
+sadr¾aj.  Kad po¾elite trajno saèuvati svoje izmjene, upi¹ite naredbu
+
+	C-x C-s   Spremi datoteku
+
+Ovo kopira tekst unutar Emacsa u datoteku na disku.  Prvi put kad ovo
+uèinite, Emacs æe preimenovati izvornu datoteku u novo ime, tako da je
+ne izgubite.  Novo se ime tvori dodavanjem znaka ~ na izvorno ime
+datoteke.
+
+Kad snimanje zavr¹i, Emacs ispi¹e ime snimljene datoteke.  Trebali
+biste snimati relativno èesto, tako da ne izgubite puno ako sustav
+padne.
+
+>> Upisav¹i C-x C-s, spremite svoju kopiju uputa.
+   Na dnu ekrana bi trebalo pisati "Wrote ...TUTORIAL.hr".
+
+Primjedba: Na nekim sustavima, tipkanje C-x C-s æe zamrznuti ekran, i
+neæete vi¹e vidjeti Emacsov output.  To znaèi da "prednost"
+operativnog sustava zvana "kontrola toka" (eng. flow control) presreæe
+C-s i ne da mu da doðe do Emacsa.  Odmrznite sustav tipkom C-q.  Tada
+pogledajte odjeljak "Spontaneous Entry to Incremental Search"
+Emacsovog manuala za savjet kako se nositi s ovom "predno¹æu".
+
+Mo¾ete naæi postojeæu datoteku, da je pogledate ili editirate.  Mo¾ete 
+takoðer naæi i datoteku koja jo¹ ne postoji.  Tako se stvaraju nove
+datoteke Emacsom: naðite datoteku, koja æe ispoèetka biti prazna, i
+poènite unositi tekst u datoteku.  Kad zatra¾ite "snimanje" datoteke,
+Emacs æe zaista stvoriti datoteku s tekstom koji ste unijeli.  Od tad
+pa nadalje, mo¾ete smatrati da editirate veæ postojeæu datoteku.
+
+
+* SPREMNICI
+-----------
+
+Ako naðete jo¹ jednu datoteku s C-x C-f, ona prva ostaje unutar
+Emacsa.  Mo¾ete se vratiti natrag na nju nalazeæi je opet s C-x C-f.
+Ovako mo¾ete otvoriti prilièan broj datoteka unutar Emacsa.
+
+>> Stvorite datoteku imena "foo" tipkajuæi C-x C-f foo <Return>.
+   Tad unesite neki tekst, editirajte ga, i snimite "foo" utipkav¹i
+   C-x C-s.
+   Konaèno, upi¹ite C-x C-f TUTORIAL.hr <Return> da se vratite na
+   upute.
+
+Emacs pohranjuje tekst svake datoteke u objektu zvanom "spremnik"
+(eng. buffer).  Nala¾enje datoteke otvara novi spremnik unutar
+Emacsa.  Popis spremnika koji se nalaze u trenutnom pozivu Emacsa
+mo¾ete dobiti sa
+
+	C-x C-b   Izlistaj spremnike
+
+>> Sada isku¹ajte C-x C-b.
+
+Uoèite kako svaki spremnik ima naziv, a mo¾e imati i ime datoteke koje
+se odnosi na datoteku èiji sadr¾aj je u njemu.  Neki spremnici ne
+odgovaraju ni jednoj datoteci.  Na primjer, spremnik "*Buffer List*" nema
+ni jednu datoteku.  To je spremnik koji sadr¾i spisak spremnika koji
+je stvorila naredba C-x C-b.  BILO KOJI tekst koji vidite u nekom
+Emacsovom prozoru uvijek je dio nekog spremnika.
+
+>> Pritisnite C-x 1 da se rije¹ite spiska spremnika.
+
+Ako promijenite tekst jedne datoteke, zatim naðete drugu datoteku, ova 
+prva neæe biti snimljena.  Njene promjene ostaju unutar Emacsa, u
+spremniku te datoteke.  Ovo je korisno, ali to i znaèi da je potreban
+pogodan naèin snimanja datoteke prvog spremnika.  Bilo bi nespretno
+prebacivati se natrag u spremnik s C-x C-f samo zato da ga se snimi s
+C-x C-s.  Zato imamo
+
+	C-x s     Snimi neke spremnike.
+
+C-x s vas pita za svaki spremnik koji sadr¾i izmjene koje niste
+snimili.  Za svaki takav spremnik pita vas da li ga ¾elite snimiti.
+
+>> Upi¹ite red teksta, potom upi¹ite C-x s.
+   Pitat æe vas ¾elite li snimiti spremnik s nazivom TUTORIAL.hr.
+   Odgovorite potvrdno na pitanje, tipkajuæi "y".
+
+
+* UPORABA IZBORNIKA
+-------------------
+
+Ako ste na X terminalu, uoèit æete izbornik na vrhu Emacsovog prozora.
+Mo¾ete koristiti izbornik za pristup svim uobièajenim Emacsovim
+naredbama, kao ¹to su "find file".  Ovo æe vam u poèetku biti lak¹e,
+jer neæete morati pamtiti tipke za neku naredbu.  Jednom kad vam rad u
+Emacsu postane ugodan, lako æete poèeti koristiti naredbe s
+tipkovnice, jer svaka stavka izbornika sadr¾i i odgovarajuæu tipku za
+pokretanje naredbe.
+
+Uoèite da postoji puno stavki koje nemaju ekvivalent na tipkovnici.
+Na primjer, izbornik "Buffers" prikazuje sve raspolo¾ive spremnike
+redosljedom posljednje uporabe.  Mo¾ete se prebaciti na bilo koji
+spremnik tako da jednostavno izaberete njegov naziv u izborniku
+"Buffers".
+
+
+* UPORABA MI©A
+--------------
+
+Kad radite pod X-ima, Emacs je u potpunosti integriran s mi¹em.
+Mo¾ete pozicionirati tekstualni kursor pritisnuv¹i lijevu tipku mi¹a
+na ¾eljenom mjestu, mo¾ete izabrati tekst povlaèeæi lijevu tipku mi¹a
+po ¾eljenom tekstu.  (Ili, na drugi naèin, pritisnuti lijevu tipku
+mi¹a s jedne strane, zatim se pomaknuti na drugu stranu, i koristiti
+Shift i tipku mi¹a za izbor teksta.)
+
+Ako ¾elite ubiti izabrani tekst, mo¾ete pritisnuti C-w, ili izabrati
+Cut u izborniku Edit.  Uoèite da ovo dvoje *nije* isto: C-w samo
+sprema tekst unutar Emacsa (slièno C-k, kako je opisano gore), dok Cut
+radi ovo, i jo¹ sprema tekst u X clipboard, gdje do njega mogu
+pristupiti ostale aplikacije.
+
+Tekst s X clipboarda mo¾ete dobiti koristeæi stavku Paste izbornika
+Edit.
+
+Srednja tipka mi¹a se obièno koristi za izbor stvari koje su vidljive
+na ekranu.  Na primjer, ako uðete u Info (Emacsovu on-line
+dokumentaciju) koristeæi C-h i ili izbornik Help, mo¾ete pratiti
+osvijetljeni link pritisnuv¹i srednju tipku mi¹a na njemu.  Slièno,
+ako tipkate naziv datoteke (npr. na "Find File" promptu) i pritisnete
+TAB da vidite moguænosti, mo¾ete stisnuti srednju tipku mi¹a na neku
+od moguænosti, da je izaberete.
+
+Desna tipka mi¹a poziva "skoèni" izbornik.  Sadr¾aj ovog izbornika
+ovisi o modu u kojem se trenutno nalazite, i obièno sadr¾i nekoliko
+èesto kori¹tenih naredbi, tako da se do njih lak¹e doðe.
+
+>> Sada pritisnite desnu tipku mi¹a.
+
+Morat æete dr¾ati tipku da zadr¾ite izbornik.
+
+
+* PRO©IRENJE SKUPA NAREDBI
+--------------------------
+
+Emacsovih naredbi ima puno puno vi¹e nego ¹to bi ikad moglo stati na
+sve kontrolne i meta znakove.  Emacs ovo zaobilazi pro¹irenim
+(eXtended) naredbama.  One dolaze u dva oblika:
+
+	C-x	Pro¹iri znak.  Praæena jednim znakom.
+	M-x	Pro¹irena naredba s imenom.  Praæena dugim imenom.
+
+Postoje naredbe koje jesu korisne, ali ih se rabi manje nego naredbe o 
+kojima smo dosad govorili.  Veæ ste vidjeli dvije: naredbe s
+datotekama C-x C-f za nala¾enje i C-x C-s za snimanje.  Jo¹ jedan
+primjer je naredba kojom se izlazi iz Emacsa -- to je naredba C-x
+C-c.  (ne brinite o gubljenju izmjena koje ste napravili; C-x C-c vam
+nudi da snimite svaku izmijenjenu datoteku prije no ¹to izaðe iz
+Emacsa).
+
+Naredbom C-z *privremeno* izlazite iz Emacsa -- tako da se mo¾ete
+nakon nekog vremena opet vratiti u Emacs.
+
+Na sustavima koji to dozvoljavaju, C-z "suspendira" Emacs; to jest,
+vraæa se u ljusku, ali ne uni¹tava Emacs.  U veæini ljuski, mo¾ete
+nastaviti rad Emacsa naredbom `fg', ili s `%emacs'.
+
+Na sustavima koji ne podr¾avaju suspendiranje, C-z stvara podljusku
+koja radi pod Emacsom, tako da mo¾ete pokrenuti druge programe i
+naknadno se vratiti u Emacs; ona neæe zaista "izaæi" iz Emacsa.  U
+ovom sluèaju, ljuskina naredba `exit' je uobièajen naèin povratka iz
+podljuske u Emacs.
+
+Vrijeme za C-x C-c je onda kad se kanite odlogirati.  Takoðer, to je
+ispravna stvar kad je Emacs pozvan iz èitaèa po¹te, ili nekog drugog
+programa, jer se oni ne moraju znati nositi sa suspendiranjem Emacsa.
+U normalnim okolnostima, meðutim, ako se ne kanite odlogirati, bolje
+je suspendirati Emacs s C-z nego izaæi iz njega.
+
+Postoji puno C-x naredbi.  Evo spiska onih koje ste nauèili:
+
+	C-x C-f		Naði datoteku.
+	C-x C-s		Snimi datoteku.
+	C-x C-b		Popis spremnika.
+	C-x C-c		Izaði iz Emacsa.
+	C-x u		Poni¹ti zadnju naredbu.
+
+Imenovane pro¹irene naredbe su naredbe koje se jo¹ rjeðe koriste, ili
+se koriste samo unutar stanovitih modova.  Primjer je naredba
+replace-string, koja globalno zamjenjuje jedan niz drugim.  Kad
+napi¹ete M-x, Emacs æe vam dati prompt na dnu ekrana, a vi trebate
+samo napisati naziv naredbe.  U ovom sluèaju, "replace-string".  Samo
+napi¹ite "repl s<TAB>", i Emacs æe dovr¹iti ime.  Zavr¹ite naziv
+naredbe s <Return>.
+
+Naredba replace-string tra¾i dva argumenta -- niz koji se zamjenjuje,
+i niz kojim æe se zamijeniti.  Zavr¹ite svaki argument s <Return>.
+
+>> Pomaknite kursor na prazan red dva reda ispod ovoga.  Zatim
+   napi¹ite M-x repl s <Return>promijenio<Return>izmijenio<Return>.
+
+   Primijetite kako se ovaj red promijenio: zamijenili ste rijeè
+   p-r-o-m-i-j-e-n-i-o s "izmijenio" gdje god se ova pojavila, nakon
+   poèetnog polo¾aja kursora.
+
+
+* AUTOMATSKO SNIMANJE
+---------------------
+
+Kada ste promijenili datoteku, ali je jo¹ niste snimili, va¹e bi
+izmjene mogle biti izgubljene ako raèunalo padne.  Da vas za¹titi od
+ovoga, Emacs povremeno ispisuje "auto save" (automatsko snimanje)
+datoteku za svaku datoteku koju editirate.  Auto-save datoteka ima #
+na poèetku i na kraju imena; na primjer, ako se va¹a datoteka zove
+"hello.c", njezina æe se auto-save datoteka zvati "#hello.c#".  Kad
+snimite datoteku na normalan naèin, Emacs æe izbrisati njezinu
+auto-save datoteku.
+
+Ako raèunalo padne, mo¾ete obnoviti svoje automatski spremljene
+promjene tako ¹to normalno naðete datoteku, i napi¹ete
+M-x recover file <Return>.  Kad vas pita za potvrdu, upi¹ite
+yes<return> za nastavak i vratite automatski snimljene podatke.
+
+
+* PROSTOR ZA PORUKE
+-------------------
+
+Ako Emacs vidi da pi¹ete naredbe polako, pokazat æe vam ih na dnu
+ekrana na mjestu koje se zove "prostor za poruke" (eng. echo area).
+Prostor za poruke je na najni¾em redu ekrana.
+
+
+* STATUSNI RED
+--------------
+
+Red odmah iznad prostora za poruke se zove "statusni red"
+(eng. modeline).  Statusni red izgleda otprilike ovako:
+
+--**-XEmacs: TUTORIAL.hr       (Fundamental)--L670--58%----------------
+
+Ovaj red pru¾a korisne informacije o statusu Emacsa i tekstu koji
+editirate.
+
+Veæ znate ¹to je ime datoteke -- to je datoteka koju ste na¹li.
+-NN%-- predstavlja va¹ trenutni polo¾aj u tekstu; to znaèi da je NN
+postotaka teksta iznad vrha ekrana.  Ako je vrh teksta na ekranu,
+pisat æe --Top-- umjesto --00%--.  Ako je kraj teksta na ekranu, pisat 
+æe --Bot--.  Ako gledate u tako kratak tekst da sav stane na ekran, u
+statusnoj liniji æe pisati --All--.
+
+Zvjezdice na poèetku znaèe da ste napravili izmjene na tekstu.
+Neposredno po posjeti ili snimanju datoteke, taj dio statusne linije
+nema zvjezdica, veæ samo crtice.
+
+Dio statusne linije u zagradama govori u kojem se modu editiranja
+nalazite.  Podrazumijeva se Fundamentalni mod, koji trenutno koristite.
+On je primjer "glavnog moda".
+
+Emacs ima puno razlièitih glavnih modova.  Neki od njih su predviðeni
+za editiranje razlièitih jezika i/ili vrsta teksta, kao ¹to je Lisp
+mod, tekst mod, itd.  U bilo kojem trenutku jedan i samo jedan glavni
+mod je aktivan, i njegovo se ime nalazi na statusnom redu, gdje sada
+stoji "Fundamental".
+
+Svaki glavni mod èini da se nekoliko naredbi pona¹a razlièito.  Na
+primjer, postoje naredbe za stvaranje komentara u programu, a buduæi
+da svaki programski jezik ima drugaèiju predod¾bu o tome kako komentar 
+izgleda, svaki glavni mod razlièito unosi komentare.  Svaki glavni mod 
+je ime jedne pro¹irene naredbe, ¹to je i naèin kako se mo¾ete
+prebaciti u taj mod.  Na primjer, M-x fundamental-mode je naredba koja 
+vas prebacuje u Fundamental mod.
+
+Ako editirate tekst na hrvatskom, kao ¹to je ova datoteka, vjerojatno
+biste trebali koristiti tekstualni mod.
+>> Napi¹ite M-x text-mode<Return>.
+
+Ne brinite, nijedna od naredbi koje ste nauèili neæe promijeniti Emacs 
+na znaèajan naèin.  Ali mo¾ete uoèiti da M-f i M-b sad tretiraju
+apostrofe kao dio rijeèi.  U fundamentalnom modu M-f i M-b su
+tretirali apostrofe kao separatore rijeèi.
+
+Glavni modovi obièno rade suptilne izmjene poput navedene: veæina 
+naredbi rade "isti posao" u svakom glavnom modu, ali funkcioniraju s
+malom razlikom.
+
+Da biste vidjeli dokumentaciju trenutnog glavnog moda, pritisnite
+C-h m.
+
+>> Pritisnite jo¹ jednom C-u C-v da dovedete ovu liniju do vrha ekrana.
+>> Utipkajte C-h m, da vidite kako se tekstualni mod razlikuje od
+   fundamentalnog moda.
+>> Pritisnite q da uklonite dokumentaciju s ekrana.
+
+Glavni modovi se nazivaju glavnima, jer postoje jo¹ i sporedni
+modovi.  Sporedni su modovi nisu zamjena za glavne modove, veæ njihova 
+usputna modifikacija.  Svaki sporedni mod mo¾e biti ukljuèen ili
+iskljuèen za sebe, neovisno o ostalim sporednim modovima, i neovisno o 
+glavnom modu.  Tako mo¾ete ne biti niti u jednom sporednom modu, ili u 
+jednom sporednom modu, ili u kombinaciji nekoliko sporednih modova.
+
+Jedan vrlo koristan sporedni mod, naroèito za editiranje hrvatskog
+teksta, jest mod za automatsko popunjavanje (Auto Fill mode).  Kad je
+ovaj mod ukljuèen, Emacs automatski lomi linije izmeðu rijeèi kad god
+umetanjem teksta stvorite red koji je pre¹irok.
+
+Mo¾ete ukljuèiti Auto Fill mod pisanjem M-x auto-fill-mode<Return>.
+Kad je mod ukljuèen, iskljuèujete ga s M-x auto-fill-mode<Return>.
+Kad je mod iskljuèen, ova ga naredba ukljuèuje, kad je ukljuèen, ona
+ga iskljuèuje.
+
+>> Napi¹ite M-x auto-fill-mode<Return> sad.  Potom umeæite tekst "asdf "
+   dok god se red ne razdvoji na dva dijela.  Morate stavljati razmake 
+   izmeðu, jer Auto Fill lomi redove samo na razmacima.
+
+Rub je obièno postavljen na 70 znakova, ali ga mo¾ete promijeniti
+naredbom C-x f.  Rub koji ¾elite postaviti pode¹avate numerièkim
+argumentom.
+
+>> Utipkajte C-x f s argumentom 20.  (C-u 2 0 C-x f).
+   Potom upi¹ite neki tekst, i gledajte kako Emacs lomi redove dulje
+   od 20 znakova.  Tad postavite rub natrag na 70 ponovno
+   upotrijebiv¹i C-x f.
+
+Ako napravite promjene u sredini paragrafa, Auto Fill mod ga neæe
+cijelog reformatirati.
+Za preoblikovanje paragrafa, utipkajte M-q (Meta-q) s kursorom unutar
+paragrafa.
+
+>> Pomaknite kursor na prethodni paragraf, i stisnite M-q.
+
+
+* TRA®ENJE
+----------
+
+Emacs mo¾e tra¾iti nizove (grupe uzastopnih znakova ili rijeèi) bilo
+prema naprijed ili prema natrag kroz tekst.  Tra¾enje niza je naredba
+kojom se pomièe kursor; ona æe pomaknuti kursor do sljedeæeg mjesta na 
+kom se niz pojavljuje.
+
+Emacsova naredba za tra¾enje se razlikuje od sliènih naredbi veæine
+editora po tome ¹to je "postupna" (eng. incremental).  To znaèi da se 
+pretra¾ivanje odvija dok upisujete niz koji tra¾ite.
+
+Naredba kojom poèinjete naredbu je C-s za tra¾enje prema naprijed, i
+C-r za tra¾enje unatrag.  ALI ÈEKAJTE!  Nemojte ih odmah isprobati.
+
+Kad utipkate C-s, primijetit æete da se tekst "I-search" pojavljuje
+kao prompt u prostoru za poruke.  Ovo vam ka¾e da je Emacs u stanju
+postupnog tra¾enja, i da èeka da upi¹ete ¹to ¾elite tra¾iti.
+<Return> zaustavlja tra¾enje.
+
+>> Sad stisnite C-s da zapoènete pretra¾ivanje.  POLAKO, znak po znak, 
+   utipkajte rijeè `kursor', radeæi stanku izmeðu znakova da uoèite
+   ¹to se dogaða s kursorom.
+   Sad ste na¹li "kursor", jednom.
+>> Stisnite C-s opet, da naðete sljedeæe pojavljivanje "kursora".
+>> Sad stisnite <Delete> èetiri puta, i gledajte kako se kursor
+   pomièe.
+>> Stisnite <RET> da prekinete tra¾enje.
+
+Jeste li vidjeli ¹to se dogodilo?  Za vrijeme inkrementalnog tra¾enja, 
+Emacs poku¹ava otiæi na mjesto gdje se pojavljuje niz kojeg ste do sad 
+utipkali, osvjetljavajuæi ga zbog preglednosti.  Za odlazak na
+sljedeæe mjesto gdje se "kursor" pojavljuje, samo opet stisnite C-s.
+Ako ni jedno takvo mjesto ne postoji, Emacs æe se oglasiti zvuènim
+signalom i reæi vam da pretraga niju uspjela ("failing").  Pretragu
+mo¾ete prekinuti i pomoæu C-g.
+
+
+PRIMJEDBA: Na nekim sustavima, tipkanje C-s æe smrznuti sustav i vi¹e
+neæete vidjeti daljnji Emacsov output.  To pokazuje da "prednost"
+operativnog sustava zvana "kontrola toka" (eng. flow control) presreæe
+C-s i ne da mu da doðe do Emacsa.  Pritisak na C-q æe odmrznuti ekran.
+Tad pogledajte odjeljak "Spontaneous Entry to Incremental Search"
+Emacsovog manuala za savjet kako se nositi s ovom "predno¹æu".
+
+Ako za vrijeme postupnog tra¾enja pritisnete <Delete>, uoèit æete 
+da je zadnji znak niza izbrisan i da se pretraga vratila na zadnje
+mjesto.  Na primjer, pretpostavimo da ste stisnuli "k" ne bi li na¹li
+prvo pojavljivanje "k".  Ako sad stisnete "u", kursor æe se pomaknuti
+na mjesto prvog pojavljivanja "ku".  Sad stisnite <Delete>.  Ovo æe
+ukloniti "u" iz tra¾enog niza, i pomaknuti kursor natrag na prvu
+pojavu "k".
+
+Ako ste usred tra¾enja i stisnete kontrolni ili meta znak (s nekoliko
+iznimki -- znakova koji imaju posebno znaèenje pri tra¾enju, kao ¹to
+su C-s i C-r), tra¾enje se zaustavlja.
+
+C-s zapoèinje pretragu koja tra¾i bilo koju pojavu tra¾enog niza NAKON 
+trenutnog polo¾aja kursora.  Ako ¾elite tra¾iti ne¹to ¹to se
+pojavljuje ranije u tekstu, stisnite C-r.  Sve ¹to smo rekli za C-s
+vrijedi i za C-r, jedino ¹to je smjer pretrage suprotan.
+
+
+* VI©ESTRUKI PROZORI
+--------------------
+
+Jedna od lijepih stvari u Emacsu je ¹to mo¾ete prikazati vi¹e prozora
+na ekranu istovremeno.
+
+>> Dovedite kursor do ovog reda i stisnite C-u 0 C-l.
+
+>> Sad stisnite C-x 2, ¹to razdvaja ekran na dva prozora.
+   Oba prozora prikazuju ove upute.  Kursor ostaje u gornjem prozoru.
+
+>> Stisnite C-M-v da pomaknete donji prozor.
+   (Ako nemate pravu tipku Meta, stisnite ESC C-v.)
+
+>> Stisnite C-x o ("o" kao eng. "other", drugi) da pomaknete kursor u
+   donji prozor.
+>> U donjem se prozoru pomièite s C-v i M-v.
+   Nastavite èitati ove upute u gornjem prozoru.
+
+>> Opet stisnite C-x o da pomaknete kursor natrag u gornji prozor.
+   Kursor u gornjem prozoru je upravo gdje je prije bio.
+
+Mo¾ete stalno koristiti C-x o za pomicanje meðu prozorima.  Svaki
+prozor ima vlastiti polo¾aj kursora, ali samo jedan prozor zapravo
+prikazuje kursor.  Sve uobièajene naredbe za editiranja djeluju na
+prozoru u kojem je kursor.  Taj prozor nazivamo "izabrani prozor"
+(eng. selected window).
+
+Naredba C-M-v korisna je kad editirate tekst u jednom prozoru, a drugi 
+koristite za referencu.  Tada mo¾ete dr¾ati kursor uvijek u prozoru
+gdje editirate, a napredovati kroz onaj drugi s C-M-v.
+
+C-M-v je primjer CONTROL-META znaka.  Ako imate pravu tipku META,
+mo¾ete dobiti C-M-v dr¾eæi zajedno i CTRL i META, dok tipkate v.  Nema 
+veze da li je CTRL ili META "prvi", jer obje ove tipke rade
+mijenjajuæi znakove koji pi¹ete.
+
+Ako nemate pravu META tipku, a umjesto nje koristite ESC, tad je
+poredak va¾an: morate stisnuti ESC praæen s CTRL-v; CTRL-ESC v neæe
+raditi.  Razlog za ovo je ¹to je ESC tipka za sebe, a ne modifikator.
+
+>> Pritisnite C-x 1 (u gornjem prozoru) da se rije¹ite donjeg
+   prozora.
+
+(Da ste stisnuli C-x 1 u donjem prozoru, rije¹ili biste se gornjeg.
+Ovu naredbu mo¾ete shvatiti kao "Ostavi samo jedan prozor -- onaj u
+kojem veæ jesam.")
+
+Ne morate prikazivati isti spremnik u oba prozora.  Ako pritisnete C-x 
+C-f da naðete datoteku u jednom prozoru, drugi se prozor ne mijenja.
+Mo¾ete naæi datoteku u svakom prozoru neovisno o drugima.
+
+Evo jo¹ jednog naèina da upotrijebite dva prozora za prikaz dvije
+razlièite stvari:
+
+>> Utipkajte C-x 4 C-f, a zatim ime neke od va¹ih datoteka.
+   Zavr¹ite s <Return>.  Uoèite da se navedena datoteka pojavila u
+   donjem prozoru, a takoðer i kursor.
+
+>> Pritisnite C-x o za povrat u gornji prozor, i C-x 1 da uklonite
+   donji.
+
+
+* REKURZIVNE RAZINE EDITIRANJA
+------------------------------
+
+Ponekad æete po¾eljeti uæi u ono ¹to se zove "rekurzivna razina
+editiranja" (eng. recursive editing level).  Ovo je naznaèeno uglatim
+zagradama u statusnom redu, koje okru¾uju okrugle zagrade oko naziva
+moda.  Na primjer, vidjeli biste [(Fundamental)] umjesto
+(Fundamental).
+
+Za izlazak iz rekurzivnog editiranja, pritisnite ESC ESC ESC.  To je
+vi¹enamjenska naredba za "izlazak".  Mo¾ete je koristiti i za
+uklanjanje dodatnih prozora, kao i za izlazak iz minispremnika.
+
+>> Stisnite M-x za ulazak u minispremnik; potom utipkajte ESC ESC ESC
+   za izlaz.
+
+Iz rekurzivne razine editiranja ne mo¾ete izaæi s C-g.  To je zato ¹to 
+se C-g koristi za otkazivanje naredbi i argumenata UNUTAR te razine
+editiranja.
+
+
+* DODATNA POMOÆ
+---------------
+
+U ovim smo uputama poku¹ali dati upravo toliko informacija da mo¾ete
+poèeti koristiti Emacs.  Toliko je toga prisutno u Emacsu da bi bilo
+nemoguæe sve to ovdje objasniti.  Meðutim, mo¾da po¾elite nauèiti vi¹e 
+o Emacsu, jer on ima jo¹ puno korisnih prednosti.  Emacs ima naredbe
+za èitanje dokumentacije o Emacsovim naredbama.  Ove naredbe "pomoæi"
+sve poèinju sa znakom Control-h, koji se zove "znak za pomoæ"
+(eng. the Help character).
+
+Za kori¹tenje naredbi pomoæi, stisnite znak C-h, praæen znakom koji
+ka¾e koju vrstu pomoæi ¾elite.  Ako ste ZAISTA izgubljeni, stisnite
+C-h ? i Emacs æe vam reæi koje vrste pomoæi mo¾e dati.  Ako stisnete
+C-h, ali se predomislite, samo pritisnite C-g za otkaz pomoæi.
+
+(Na nekim je sistemima promijenjeno znaèenje C-h.  Ovo se zaista ne bi
+smjelo raditi, pa se po¾alite sistemskom administratoru.  U meðuvremenu,
+ako C-h ne prikazuje poruku o pomoæi na dnu ekrana, poku¹ajte upisati
+M-x help RET umjesto toga.)
+
+Osnovna naredba pomoæi je C-h c.  Napi¹ite C-h, potom c, i znak ili
+niz znakova, i Emacs æe pokazati vrlo kratak opis naredbe.
+
+>> Stisnite C-h c Control-p.
+  Poruka bi trebala biti poput:
+
+	C-p runs the command previous-line
+
+	(C-p pokreæe naredbu previous-line)
+
+Ovo vam ka¾e "ime funkcije".  Imena funkcija se koriste uglavnom za
+mijenjanje i pro¹irivanje Emacsa.  Ali buduæi da se imena funkcija
+biraju tako da pokazuju ¹to naredba radi, ona mogu poslu¾iti i kao
+vrlo kratka dokumentacija -- dovoljna da vas podsjeti na naredbu koju
+veæ znate.
+
+Vi¹e-znakovne naredbe kao ¹to su C-x C-s i (ako nemate tipku META,
+EDIT ili ALT) <ESC>v su takoðer dozvoljene nakon C-h c.
+
+Za vi¹e podataka o naredbi, pritisnite C-h k umjesto C-h c.
+
+>> Stisnite C-h k Control-p.
+
+Osim imena, sad vidite i dokumentaciju funkcije u Emacsovom prozoru.
+Kad zavr¹ite s èitanjem ispisa, stisnite q da se rije¹ite teksta.
+
+Evo nekoliko korisnih moguænosti C-h:
+
+   C-h f	Opi¹i funkciju.  Upi¹ete ime funkcije.
+
+>> Poku¹ajte stisnuti C-h f previous-line<Return>.
+   Ovo æe ispisati sve ¹to Emacs zna o funkciji koja implementira
+   naredbu C-p.
+
+   C-h a	Hiper Apropos.  Upi¹ite rijeè, i Emacs æe popisati sve
+		funkcije i varijable èija imena sadr¾e rijeè.  Naredbe 
+		koje se mogu izvr¹iti s Meta-x bit æe oznaèene
+		zvjezdicom slijeva.
+
+>> Utipkajte C-h a newline<Return>.
+
+Ovo prikazuje hipertekstualni spisak svih funkcija i varijabli s
+"newline" u imenima.  Stisnite <Return>, ili pritisnite srednju tipku
+mi¹a da saznate vi¹e o funkciji ili varijabli.  Stisnite `q' za izlaz
+iz hiper-aproposa.
+
+
+* ZAKLJUÈAK
+-----------
+
+Upamtite, za trajan izlaz iz Emacsa stisnite C-x C-c.  Za privremeni
+izlaz u ljusku upotrijebite C-z.  (pod X-ima, ovo ikonizira trenutni
+Emacsov okvir.)
+
+Ove upute su predviðene da budu razumljive svim novim korisnicima, pa
+ako vam je ne¹to ovdje nejasno, nemojte sjediti i kriviti sebe -
+¾alite se!
+
+
+KOPIRANJE
+---------
+
+Ove upute potjeèu iz duge loze Emacsovih uputa, poèev¹i od onih koje
+je napisao Stuart Cracraft za izvorni Emacs.  Ben Wing je dopisao
+poglavlje o X Windowsima.  Martin Buchholz i Hrvoje Nik¹iæ su dodali
+jo¹ ispravki vezanih uz XEmacs.
+
+Na Hrvatski preveo Hrvoje Nik¹iæ, uz dodatnu lekturu Denisa Pleiæa.
+
+Ova verzija uputa je, kao i GNU Emacs, pod autorskim pravima, i dolazi 
+s dozvolom redistribuiranja uz sljedeæe uvjete:
+
+(c) 1985, 1996 Free Software Foundation, sva prava zadr¾ana.
+
+   Svakome je dozvoljeno praviti ili distribuirati nepromijenjene
+   kopije ovog dokumenta, na bilo kojem mediju, uz uvjet da su
+   saèuvane poruka o autorskim pravima i dozvolama, i da distributer
+   daje drugima prava za daljnju redistribuciju, kako ovdje pi¹e.
+
+   Dozvoljena je distribucija izmijenjenih verzija ovog dokumenta ili
+   njegovih djelova, pod gore navedenim uvjetima, uz dodatni uvjet da
+   sadr¾i obavijest o zadnjoj promjeni.
+
+Uvjeti kopiranja samog Emacsa su slo¾eniji, ali u istom duhu.  Molimo
+vas da proèitate datoteku COPYING, i da podijelite kopije GNU Emacsa
+svojim prijateljima.  Pomozite nam zgaziti opstrukcionizam
+("vlasni¹tvo") nad softverom koristeæi, pi¹uæi i dijeleæi slobodan
+softver!
+
+
+This tutorial descends from a long line of Emacs tutorials
+starting with the one written by Stuart Cracraft for the original Emacs.
+Ben Wing updated the tutorial for X Windows.  Martin Buchholz and
+Hrvoje Niksic added more corrections for XEmacs.
+
+This version of the tutorial, like GNU Emacs, is copyrighted, and
+comes with permission to distribute copies on certain conditions:
+
+Copyright (c) 1985, 1996 Free Software Foundation
+
+   Permission is granted to anyone to make or distribute verbatim copies
+   of this document as received, in any medium, provided that the
+   copyright notice and permission notice are preserved,
+   and that the distributor grants the recipient permission
+   for further redistribution as permitted by this notice.
+
+   Permission is granted to distribute modified versions
+   of this document, or of portions of it,
+   under the above conditions, provided also that they
+   carry prominent notices stating who last altered them.
+
+The conditions for copying Emacs itself are more complex, but in the
+same spirit.  Please read the file COPYING and then do give copies of
+GNU Emacs to your friends.  Help stamp out software obstructionism
+("ownership") by using, writing, and sharing free software!

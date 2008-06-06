@@ -1,0 +1,110 @@
+@c -*-texinfo-*-
+@c This is part of the SXEmacs Lisp Reference Manual.
+@c Copyright (C) 1990, 1991, 1992, 1993 Free Software Foundation, Inc.
+@c Copyright (C) 2005 Sebastian Freundt <hroptatyr@sxemacs.org>
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/mouse.info
+
+@node Mouse
+@chapter The Mouse
+@cindex mouse
+
+* Mouse Position::		Asking where the mouse is, or moving it.
+
+@ignore  @c Not in SXEmacs.
+@node Mouse Tracking
+@section Mouse Tracking
+@cindex mouse tracking
+@cindex tracking the mouse
+
+(deleted)
+@end ignore
+
+@ignore
+@c These are not implemented yet.
+
+These functions change the screen appearance instantaneously.  The
+effect is transient, only until the next ordinary SXEmacs redisplay.  That
+is ok for mouse tracking, since it doesn't make sense for mouse tracking
+to change the text, and the body of @code{track-mouse} normally reads
+the events itself and does not do redisplay.
+
+@defun x-contour-region window start end
+This function draws lines to make a box around the text from @var{start}
+to @var{end}, in window @var{window}.
+@end defun
+
+@defun x-uncontour-region window start end
+This function erases the lines that would make a box around the text
+from @var{start} to @var{end}, in window @var{window}.  Use it to remove
+a contour that you previously made by calling @code{x-contour-region}.
+@end defun
+
+@defun x-draw-rectangle frame left top right bottom
+This function draws a hollow rectangle on frame @var{frame} with the
+specified edge coordinates, all measured in pixels from the inside top
+left corner.  It uses the cursor color, the one used for indicating the
+location of point.
+@end defun
+
+@defun x-erase-rectangle frame left top right bottom
+This function erases a hollow rectangle on frame @var{frame} with the
+specified edge coordinates, all measured in pixels from the inside top
+left corner.  Erasure means redrawing the text and background that
+normally belong in the specified rectangle.
+@end defun
+@end ignore
+
+
+@node Mouse Position
+@section Mouse Position
+@cindex mouse position
+@cindex position of mouse
+
+The functions @code{mouse-position}, @code{mouse-pixel-position},
+@code{set-mouse-position} and @code{set-mouse-pixel-position} give
+access to the current position of the mouse.
+
+@defun mouse-position &optional device
+This function returns a list (@var{window} @var{x} . @var{y}) giving the
+current mouse window and position.  The position is given in character
+cells, where @samp{(0, 0)} is the upper-left corner.
+
+@var{device} specifies the device on which to read the mouse position,
+and defaults to the selected device.  If the device is a mouseless
+terminal or SXEmacs hasn't been programmed to read its mouse position, it
+returns the device's selected window for @var{window} and @code{nil} for
+@var{x} and @var{y}.
+@end defun
+
+@defun mouse-pixel-position &optional device
+This function returns a list (@var{window} @var{x} . @var{y}) giving the
+current mouse window and position.  The position is given in pixel
+units, where @samp{(0, 0)} is the upper-left corner.
+
+@var{device} specifies the device on which to read the mouse position,
+and defaults to the selected device.  If the device is a mouseless
+terminal or SXEmacs hasn't been programmed to read its mouse position, it
+returns the device's selected window for @var{window} and @code{nil} for
+@var{x} and @var{y}.
+@end defun
+
+@defun set-mouse-position window x y
+This function @dfn{warps the mouse} to the center of character position
+@var{x}, @var{y} in frame @var{window}.  The arguments @var{x} and
+@var{y} are integers, giving the position in characters relative to
+the top left corner of @var{window}.
+
+@cindex warping the mouse
+@cindex mouse warping
+Warping the mouse means changing the screen position of the mouse as if
+the user had moved the physical mouse---thus simulating the effect of
+actual mouse motion.
+@end defun
+
+@defun set-mouse-pixel-position window x y
+This function @dfn{warps the mouse} to pixel position @var{x}, @var{y}
+in frame @var{window}.  The arguments @var{x} and @var{y} are integers,
+giving the position in pixels relative to the top left corner of
+@var{window}.
+@end defun
