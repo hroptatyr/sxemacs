@@ -1,0 +1,117 @@
+--- smtpmail.el	2006-03-08 10:12:55.000000000 +0000
++++ smtpmail.el.mod	2007-03-19 12:03:47.000000000 +0000
+@@ -441,6 +441,29 @@
+ (defsubst smtpmail-cred-cert (cred)
+   (nth 3 cred))
+ 
++(defsubst smtpmail-cred-ca (cred)
++  (let* ((optca (nthcdr 4 cred)))
++    (when optca
++      (car optca))))
++
++(defsubst smtpmail-push-cred-key (key)
++  (when (and (stringp key)
++             (file-regular-p key))
++    (push (expand-file-name key) starttls-extra-arguments)
++    (push "--x509keyfile" starttls-extra-arguments)))
++
++(defsubst smtpmail-push-cred-cert (cert)
++  (when (and (stringp cert)
++             (file-regular-p cert))
++    (push (expand-file-name cert) starttls-extra-arguments)
++    (push "--x509certfile" starttls-extra-arguments)))
++
++(defsubst smtpmail-push-cred-ca (ca)
++  (when (and (stringp ca)
++             (file-regular-p ca))
++    (push (expand-file-name ca) starttls-extra-arguments)
++    (push "--x509cafile" starttls-extra-arguments)))
++
+ (defsubst smtpmail-cred-passwd (cred)
+   (nth 3 cred))
+ 
+@@ -469,38 +492,7 @@
+ (defvar starttls-extra-arguments)
+ 
+ (defun smtpmail-open-stream (process-buffer host port)
+-  (let ((cred (smtpmail-find-credentials
+-	       smtpmail-starttls-credentials host port)))
+-    (if (null (and cred (condition-case ()
+-			    (with-no-warnings
+-			      (require 'starttls)
+-			      (call-process (if starttls-use-gnutls
+-						starttls-gnutls-program
+-					      starttls-program)))
+-			  (error nil))))
+-	;; The normal case.
+-	(open-network-stream "SMTP" process-buffer host port)
+-      (let* ((cred-key (smtpmail-cred-key cred))
+-	     (cred-cert (smtpmail-cred-cert cred))
+-	     (starttls-extra-args
+-	      (append
+-	       starttls-extra-args
+-	       (when (and (stringp cred-key) (stringp cred-cert)
+-			  (file-regular-p
+-			   (setq cred-key (expand-file-name cred-key)))
+-			  (file-regular-p
+-			   (setq cred-cert (expand-file-name cred-cert))))
+-		 (list "--key-file" cred-key "--cert-file" cred-cert))))
+-	     (starttls-extra-arguments
+-	      (append
+-	       starttls-extra-arguments
+-	       (when (and (stringp cred-key) (stringp cred-cert)
+-			  (file-regular-p
+-			   (setq cred-key (expand-file-name cred-key)))
+-			  (file-regular-p
+-			   (setq cred-cert (expand-file-name cred-cert))))
+-		 (list "--x509keyfile" cred-key "--x509certfile" cred-cert)))))
+-	(starttls-open-stream "SMTP" process-buffer host port)))))
++  (open-network-stream "SMTP" process-buffer host port))
+ 
+ (defun smtpmail-try-auth-methods (process supported-extensions host port)
+   (let* ((mechs (cdr-safe (assoc 'auth supported-extensions)))
+@@ -668,19 +660,32 @@
+ 			       (smtpmail-warn-about-unknown-extensions
+ 			      (message "Unknown extension %s" name)))))))
+ 
+-	    (if (and do-starttls
+-		     (smtpmail-find-credentials smtpmail-starttls-credentials host port)
+-		     (member 'starttls supported-extensions)
+-		     (numberp (process-id process)))
+-		(progn
+-		  (smtpmail-send-command process (format "STARTTLS"))
+-		  (if (or (null (car (setq response-code (smtpmail-read-response process))))
+-			  (not (integerp (car response-code)))
+-			  (>= (car response-code) 400))
+-		      (throw 'done nil))
+-		  (starttls-negotiate process)
+-		  (setq do-starttls nil))
+-	      (setq do-ehlo nil))))
++            (let* ((cred (smtpmail-find-credentials
++                          smtpmail-starttls-credentials host port))
++                   (cred-key (smtpmail-cred-key cred))
++                   (cred-cert (smtpmail-cred-cert cred))
++                   (cred-ca (smtpmail-cred-ca cred)))
++              (if (and do-starttls cred
++                       (member 'starttls supported-extensions)
++                       (process-live-p process))
++                  (progn
++                    (smtpmail-send-command process (format "STARTTLS"))
++                    (when (or (null
++                               (car (setq response-code
++                                          (smtpmail-read-response process))))
++                              (not (integerp (car response-code)))
++                              (>= (car response-code) 400))
++                      (throw 'done nil))
++                    (let* (starttls-extra-arguments)
++                      (smtpmail-push-cred-key cred-key)
++                      (smtpmail-push-cred-cert cred-cert)
++                      (smtpmail-push-cred-ca cred-ca)
++                      (starttls-negotiate process))
++                    (setq do-starttls nil))
++                (setq do-ehlo nil)))))
++
++            (unless (process-live-p process)
++              (throw 'done nil))
+ 
+ 	    (smtpmail-try-auth-methods process supported-extensions host port)

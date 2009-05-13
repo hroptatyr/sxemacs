@@ -1,0 +1,245 @@
+-*- text -*-
+
+In here you'll find a few odds and sods that may or may not be
+useful.
+
+File List:
+=========
+	10sendlog.................tla hook script
+	20mirror..................tla hook script
+	do_builds.sh..............automate builds
+	hook......................tla master hook script
+	make-pkg.sh...............bash script to create a SXEmacs tar package
+	pop3.el.patch.............SXEmacs native OpenSSL goodies
+	report-build-failure.sh...bash script to send a build report failure
+	show-tty-256-colors.pl....Perl script to test 256 color output on terminal 
+	smtpmail.el.patch.........SXEmacs native OpenSSL goodies
+	starttls.el.patch.........SXEmacs native OpenSSL goodies
+	tar-build-failure.sh......bash script w/ tar of build report failure
+	tty-colors.c..............C program to check the terminal color definitions
+
+More Info:
+=========
+
+tla hook scripts (hook, 10sendlog, 20mirror):
+--------------------------------------------
+These scripts let you automate parts of your tla'ing, leaving you more
+time for SXEmacs hacking. :-)
+
+This tla hook "system" is designed to work with multiple archives,
+categories, branches, versions, even revisions.  Allowing you to have
+different scripts run for each.  The master hook script makes the
+decisions as to which sub-scripts to run based on a directory
+hierarchy where the directory names match
+archive/category/branch/version/revision names.
+
+Installation and use of these scripts is fairly straight forward.
+First, put `hook' in ~/.arch-params directory.  Then create a
+~/.arch-hooks directory, under which you put the directory hierarchy
+where your "action" scripts go.  The scripts themselves go in
+directories named `=$ACTION' where $ACTION can be one of...
+
+  import, precommit, commit, tag, make-archive, make-category, make-branch,
+  make-version, find-pristine, make-pristine, make-tmp-pristine
+
+Here is an example of how my ~/.arch-hooks hierarchy is laid out...
+
+~/.arch-hooks/
+    |-/steve@emchat.org--2008/
+    |   |-/=commit/10mirror
+    |   |-/=precommit/10forcedefaults
+    |   |-/emchat/
+    |   |   |-/=commit/10sendlog
+    |   |   |-/emchat--main/
+    |   |       |-/=commit/10chglogweb
+    |   |       |-/=commit/20updftp
+    |   |-/emchat-web/
+    |   |   |-/=commit/10sendlog
+    |   |   |-/emchat-web--main/
+    |   |       |-/=commit/10updsite
+    |   |-/xetla/
+    |       |-/=commit/10sendlog
+    |       |-/xetla--main/
+    |           |-/=commit/10updftp
+    |-/steve@sxemacs.org--2008/
+        |-/=commit/10mirror
+        |-/=precommit/10forcedefaults
+        |-/digitxt/
+        |   |-/digitxt--main/
+        |       |-/=commit/10sendlog
+        |-/emoney/
+        |   |-/emoney--main/
+        |       |-/=commit/10updftp
+        |-/fresse/
+        |   |-/fresse--steve/
+        |       |-/=commit/10sendlog
+        |-/sxemacs/
+        |   |-/sxemacs--main/
+        |       |-/=commit/10sendlog
+        |       |-/=commit/20chglogweb
+        |       |-/=commit/30log2rss
+        |-/sxemacs-web/
+            |-/sxemacs-web--main/
+                |-/=commit/10sendlog
+                |-/=commit/20updsite
+                |-/=commit/30news2rss
+
+Steve Youngs <steve@sxemacs.org>
+
+do_builds.sh:
+------------
+
+This script allows the automation of the builds with several different
+configure options.
+It does autogen.sh, configure and reports success and of failure.
+To setup:
+
+   1. Create a directory *outside* of the source directory in order
+   not to be "hammered" by autogen. You use a build directory directly
+   below the top source directory IF you do not set the HAMMER variable
+   in the configuration file (,,conf)
+
+   2. Run the script from *that* directory. That will create a ,,conf 
+   file, which you *must* edit to at least point to the sxemacs source
+   directory.
+
+   3. Create several .conf files, one for each of you different
+   configurations. On this file place all the options you'd usually
+   pass on to configure. If you would set environment variables like
+   CC or CFLAGS, you can do so at the end of the file with <var>=<value>
+   
+   4. Execute do_builds.sh
+
+Nelson Ferreira <njsf@sxemacs.org>
+
+make-pkg.sh:
+-------------
+This script conveniently creates a tar from your workspace for use
+in systems without proper autoconf or tla.
+
+It needs to be run from the top of source directory and requires
+the name of the package to be given.
+
+Usage: contrib/make-pkg.sh <package-name> [<package-location>]
+
+Example: contrib/make-pkg.sh sxemacs-22.1.9 $HOME/public_html
+will create a sxemacs-22.1.9.tar.gz in your html area.
+
+Nelson Ferreira <njsf@sxemacs.org>
+
+
+pop3.el.patch:
+-------------
+This patch is meant to be applied to pop3.el from the mail-lib package.
+
+This patch provides SSL/TLS support for Gnus based on SXEmacs' native
+OpenSSL interface.  It works with the stream types 'ssl and 'starttls,
+so mail-sources already using one of these stream types will just keep
+on working.
+
+An example mail source for a POP3 TLS connection:
+
+	(pop :server "some.pop3.server.tld"
+	     :user "me"
+             :password "verysecret"
+             :stream starttls)
+
+An example mail source for a POP3s server:
+
+	(pop :server "some.pop3s.server.tld"
+	     :user "anotherme"
+	     :password "verysecret"
+	     :port 995
+	     :stream 'ssl)
+
+The provided functionality has drop-in behaviour, so anything that worked
+before will keep on working.
+
+Sebastian Freundt <hroptatyr@sxemacs.org>
+
+
+report-build-failure.sh:
+-----------------------
+Send an email to the SXEmacs developers mailing list with the details
+needed to troubleshoot failures to build SXEmacs.
+
+The script requires your email address.
+
+Usage: contrib/report-build-failure.sh superhacker@sxemacs.org
+
+When tla is available the script will find the branch and closeness to
+the main branch as well as uncommitted changes.
+
+Nelson Ferreira <njsf@sxemacs.org>
+
+
+show-tty-256-color.pl:
+----------------------
+This script is from the X distribution and outputs a 6x6x6 color cube
+as well as a grayscale ramp consistent with the default 256 color xterm
+settings.
+You can use it to see if your terminal is capable of showing 256 colors.
+
+Todd Larason <jtl@molehill.org>
+
+
+smtpmail.el.patch:
+-----------------
+This patch is meant to be applied to smtpmail.el from the mail-lib
+package.
+
+This patch provides SSL/TLS support for smtp connections using SXEmacs'
+native OpenSSL interface.  It works out of the box with the usual
+credential definitions.
+
+Additionally extends the smtpmail-starttls-credentials specifications by
+another argument, the fifth one, which can be a certificate authority's
+certificate file.  If specified the server must present a valid
+certificate signed by or verifiably by the certificate authority.
+
+An example credential:
+
+	(setq smtpmail-starttls-credentials
+	      '(("some.smtp.server.tld" 25	;; server+port
+		 "~/.certs/my.smtpd.key"	;; the cert's secret key
+		 "~/.certs/my.smtpd.cert"	;; the public cert
+		 "~/.certs/smtp.server.ca"	;; server's ca cert
+		)))
+
+Sebastian Freundt <hroptatyr@sxemacs.org>
+
+starttls.el.patch:
+-----------------
+This patch is meant to be applied to starttls.el from the mail-lib
+package.
+
+This patch provides some basic SSL/TLS functionality used by other stuff
+in the mail-lib package.  Basically it just pretends to be Josefsson's
+starttls.el.  Instead of calling the gnutls binary externally the
+internal OpenSSL API functions are used.
+
+Sebastian Freundt <hroptatyr@sxemacs.org>
+
+tar-build-failure.sh
+--------------------
+Script that creates a tar file withe the contents that would also
+be emailed by report-build-failure.sh
+
+Nelson Ferreira <njsf@sxemacs.org>
+
+
+tty-colors.c
+------------
+C program using the curses library that detects the number of colors,
+the code sequences and can show the available colormap.
+Compile with:
+	gcc -o tty-colors tty-colors.c -lncurses 
+Invoke with:
+       -m	Do a colormap
+       -c	Do all foreground/background color combinations
+       -f	Force the output of the basic ansi colors
+       -s	Force the use of standout code
+       -bs	Force the use of both bold and standout codes
+       -q	Try to query the color map from the terminal
+
+Nelson Ferreira <njsf@sxemacs.org>

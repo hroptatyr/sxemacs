@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Name=SXEmacs
+Comment=Text editor and development environment
+Comment[pt_PT]=Editor de texto e ambiente de desenvolvimento
+Comment[pt_BR]=Editor de texto e ambiente de desenvolvimento
+Comment[de]=Texteditor und Entwicklungsumgebung
+Terminal=false
+StartupNotify=true
+MimeType=text/plain;
+Categories=Utility;TextEditor;
+Version=@old_version@
+TryExec=@ABS_PROGNAME@
+Exec=@ABS_PROGNAME@ %F
+Icon=@ABS_ETCDIR@/sxemacs-icon3.png
