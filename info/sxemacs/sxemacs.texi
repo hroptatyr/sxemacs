@@ -1,0 +1,822 @@
+\input texinfo  @c -*-texinfo-*-
+@setfilename sxemacs.info
+@comment  node-name,  next,  previous,  up
+
+
+@ifinfo
+@dircategory SXEmacs Editor
+@direntry
+* SXEmacs: (sxemacs).		SXEmacs Editor.
+@end direntry
+
+This file documents the SXEmacs editor.
+
+Copyright (C) 1985, 1986, 1988 Richard M. Stallman.
+Copyright @copyright{} 1991, 1992, 1993, 1994 Lucid, Inc.
+Copyright @copyright{} 1993, 1994 Sun Microsystems, Inc.
+Copyright @copyright{} 1995 Amdahl Corporation.
+Copyright @copyright{} 2005 - 2008 Steve Youngs.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through Tex and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore Permission is granted to copy and distribute modified
+versions of this manual under the conditions for verbatim copying,
+provided also that the sections entitled ``Distribution'' and ``GNU
+General Public License'' are included exactly as in the original, and
+provided that the entire resulting derived work is distributed under
+the terms of a permission notice identical to this one.
+
+Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that the sections entitled ``Distribution'' and ``GNU
+General Public License'' may be included in a translation approved by
+the author instead of in the original English.
+@end ifinfo
+@c
+@setchapternewpage odd
+@settitle SXEmacs User's Manual
+@c
+@titlepage
+@sp 6
+@center @titlefont{SXEmacs User's Manual}
+@sp 4
+@sp 1
+@sp 1
+@center July 1994
+@center (General Public License upgraded, January 1991)
+@sp 5
+@center Richard Stallman
+@sp 1
+@center Lucid, Inc.
+@sp 1
+@center and
+@sp 1
+@center Ben Wing
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1985, 1986, 1988 Richard M. Stallman.
+
+Copyright @copyright{} 1991, 1992, 1993, 1994  Lucid, Inc.
+
+Copyright @copyright{} 1993, 1994 Sun Microsystems, Inc.
+
+Copyright @copyright{} 1995 Amdahl Corporation.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of
+this manual under the conditions for verbatim copying, provided also
+that the sections entitled ``Distribution'' and ``GNU General Public
+License'' are included exactly as in the original, and provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+
+Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that the sections entitled ``Distribution'' and ``GNU
+General Public License'' may be included in a translation approved by
+the author instead of in the original English.
+@end titlepage
+@page
+@ifnottex
+@node Top, License,, (dir)
+@top The SXEmacs Editor
+
+
+SXEmacs is the extensible, customizable, self-documenting real-time
+display editor.  This Info file describes how to edit with Emacs
+and some of how to customize it, but not how to extend it.  It
+corresponds to:
+
+steve@@sxemacs.org--2008/sxemacs--main--22.1.10--version-0
+
+Although, it hasn't had a complete rewrite for quite some time.
+
+This manual is intended as a detailed reference to SXEmacs.  If
+you are looking for an introductory manual, see the New User's
+Guide.
+
+@end ifnottex
+@menu
+* License::     The GNU General Public License gives you permission
+		to redistribute SXEmacs on certain terms; and also
+		explains that there is no warranty.
+* Distrib::     How to get SXEmacs.
+* Intro::       An introduction to SXEmacs concepts.
+* Glossary::    The glossary.
+
+Indices, nodes containing large menus
+* Key Index::      An item for each standard SXEmacs key sequence.
+* Command Index::  An item for each command name.
+* Variable Index:: An item for each documented variable.
+* Concept Index::  An item for each concept.
+
+Important General Concepts
+* Frame::      How to interpret what you see on the screen.
+* Keystrokes::  Keyboard gestures SXEmacs recognizes.
+* Pull-down Menus:: 
+                The SXEmacs Pull-down Menus available under X.
+* Entering Emacs::    
+                Starting Emacs from the shell.
+* Exiting::     Stopping or killing SXEmacs.
+* Command Switches::  
+                Hairy startup options.
+* Startup Paths::
+                How SXEmacs finds Directories and Files.
+* Packages::    How SXEmacs organizes its high-level functionality.
+
+Fundamental Editing Commands
+* Basic::       The most basic editing commands.
+* Undo::        Undoing recently made changes in the text.
+* Minibuffer::  Entering arguments that are prompted for.
+* M-x::         Invoking commands by their names.
+* Help::        Commands for asking SXEmacs about its commands.
+
+Important Text-Changing Commands
+* Mark::        The mark: how to delimit a ``region'' of text.
+* Mouse Selection:: 
+                Selecting text with the mouse.
+* Additional Mouse Operations::
+                Other operations available from the mouse.
+* Killing::     Killing text.
+* Yanking::     Recovering killed text.  Moving text.
+* Using X Selections::
+                Using primary selection, cut buffers, and highlighted regions.
+* Accumulating Text::
+                Other ways of copying text.
+* Rectangles::  Operating on the text inside a rectangle on the screen.
+* Registers::   Saving a text string or a location in the buffer.
+* Display::     Controlling what text is displayed.
+* Search::      Finding or replacing occurrences of a string.
+* Fixit::       Commands especially useful for fixing typos.
+
+Larger Units of Text
+* Files::       All about handling files.
+* Buffers::     Multiple buffers; editing several files at once.
+* Windows::     Viewing two pieces of text at once.
+* Mule::	Using world scripts.
+
+Advanced Features
+* Major Modes:: Text mode vs. Lisp mode vs. C mode ...
+* Indentation:: Editing the white space at the beginnings of lines.
+* Text::        Commands and modes for editing English.
+* Programs::    Commands and modes for editing programs.
+* Running::     Compiling, running and debugging programs.
+* Abbrevs::     How to define text abbreviations to reduce
+                 the number of characters you must type.
+* Picture::     Editing pictures made up of characters
+                 using the quarter-plane screen model.
+* Sending Mail:: Sending mail in SXEmacs.
+* Reading Mail:: Reading mail in SXEmacs.
+* Calendar/Diary:: A Calendar and diary facility in SXEmacs.
+* Sorting::	Sorting lines, paragraphs or pages within SXEmacs.
+* Shell::       Executing shell commands from SXEmacs.
+* Narrowing::   Restricting display and editing to a portion
+                 of the buffer.
+* Hardcopy::	Printing buffers or regions.
+* Recursive Edit::
+                A command can allow you to do editing
+                 "within the command".  This is called a
+                 `recursive editing level'.
+* Dissociated Press::  Dissociating text for fun.
+* CONX::	       A different kind of dissociation.
+* Amusements::         Various games and hacks.
+* Emulation::	       Emulating some other editors with SXEmacs.
+* Customization::      Modifying the behavior of SXEmacs.
+
+Recovery from Problems.
+* Quitting::    Quitting and aborting.
+* Lossage::     What to do if SXEmacs is hung or malfunctioning.
+* Bugs::        How and when to report a bug.
+
+Here are some other nodes which are really inferiors of the ones
+already listed, mentioned here so you can get to them in one step:
+
+ --- The Detailed Node Listing ---
+
+The Organization of the Frame
+
+* Point::	        The place in the text where editing commands operate.  
+* Echo Area::           Short messages appear at the bottom of the frame.  
+* Mode Line::	        Interpreting the mode line.  
+* SXEmacs under X::      Some information on using SXEmacs under the X 
+                        Window System. 
+
+Keystrokes
+
+* Intro to Keystrokes::      Keystrokes as building blocks of key sequences.
+* Representing Keystrokes::  Using lists of modifiers and keysyms to
+                             represent keystrokes.
+* Key Sequences::            Combine key strokes into key sequences you can
+                             bind to commands.
+* String Key Sequences::     Available for upward compatibility.
+* Meta Key::                 Using @key{ESC} to represent @key{Meta}
+* Super and Hyper Keys::     Adding modifier keys on certain keyboards.
+* Character Representation:: How characters appear in SXEmacs buffers.
+* Commands::                 How commands are bound to key sequences.
+                    
+Pull-down Menus
+
+* File Menu::           Items on the File menu.
+* Edit Menu::           Items on the Edit menu.
+* Apps Menu::		Items on the Apps menu.
+* Options Menu::        Items on the Options menu. 
+* Buffers Menu::        Information about the Buffers menu.
+* Tools Menu::		Items on the Tools menu.
+* Help Menu::           Items on the Help menu. 
+* Menu Customization::  Adding and removing menu items and related
+                        operations.
+
+Packages
+
+* Packages::            Introduction to SXEmacs Packages.
+* Package Terminology:: Understanding different kinds of packages.
+* Installing Packages:: How to install packages.
+* Building Packages::   Building packages from sources.
+* Local.rules File::    An important part of building packages.
+* Available Packages::  A brief directory of packaged LISP.
+
+Basic Editing Commands
+
+* Blank Lines::        Commands to make or delete blank lines.
+* Continuation Lines:: Lines too wide for the frame.
+* Position Info::      What page, line, row, or column is point on?
+* Arguments::	       Numeric arguments for repeating a command.
+
+The Minibuffer
+
+* File: Minibuffer File.  Entering file names with the minibuffer.
+* Edit: Minibuffer Edit.  How to edit in the minibuffer.
+* Completion::		  An abbreviation facility for minibuffer input.
+* Repetition::		  Re-executing commands that used the minibuffer.
+
+The Mark and the Region
+
+* Setting Mark::	Commands to set the mark.
+* Using Region::	Summary of ways to operate on contents of the region.
+* Marking Objects::	Commands to put region around textual units.
+* Mark Ring::   	Previous mark positions saved so you can go back there.
+
+Yanking
+
+* Kill Ring::       Where killed text is stored.  Basic yanking.
+* Appending Kills:: Several kills in a row all yank together.
+* Earlier Kills::   Yanking something killed some time ago.
+
+Using X Selections
+
+* X Clipboard Selection::     	Pasting to the X clipboard.
+* X Selection Commands::	Other operations on the selection.
+* X Cut Buffers::       	X cut buffers are available for compatibility.
+* Active Regions::      	Using zmacs-style highlighting of the
+                        	 selected region.
+
+Registers
+
+* Position: RegPos.           Saving positions in registers.
+* Text: RegText.              Saving text in registers.
+* Rectangle: RegRect.         Saving rectangles in registers.
+* Configurations: RegConfig.  Saving window configurations in registers.
+* Files: RegFiles.            File names in registers.
+* Numbers: RegNumbers.        Numbers in registers.
+* Bookmarks::                 Bookmarks are like registers, but persistent.
+
+Controlling the Display
+
+* Scrolling::	           Moving text up and down in a window.
+* Horizontal Scrolling::   Moving text left and right in a window.
+* Selective Display::      Hiding lines with lots of indentation.
+* Display Vars::           Information on variables for customizing display.
+
+Searching and Replacement
+
+* Incremental Search::     Search happens as you type the string.
+* Non-Incremental Search:: Specify entire string and then search.
+* Word Search::            Search for sequence of words.
+* Regexp Search::          Search for match for a regexp.
+* Regexps::                Syntax of regular expressions.
+* Search Case::            To ignore case while searching, or not.
+* Replace::                Search, and replace some or all matches.
+* Other Repeating Search:: Operating on all matches for some regexp.
+
+Replacement Commands
+
+* Unconditional Replace::  Replacing all matches for a string.
+* Regexp Replace::         Replacing all matches for a regexp.
+* Replacement and Case::   How replacements preserve case of letters.
+* Query Replace::          How to use querying.
+
+Commands for Fixing Typos
+
+* Kill Errors:: Commands to kill a batch of recently entered text.
+* Transpose::   Exchanging two characters, words, lines, lists...
+* Fixing Case:: Correcting case of last word entered.
+* Spelling::    Apply spelling checker to a word, or a whole file.
+
+File Handling
+
+* File Names::       How to type and edit file name arguments.
+* Visiting::         Visiting a file prepares SXEmacs to edit the file.
+* Saving::           Saving makes your changes permanent.
+* Reverting::        Reverting cancels all the changes not saved.
+* Auto Save::        Auto Save periodically protects against loss of data.
+* Version Control::  Version control systems (RCS and SCCS).
+* ListDir::          Listing the contents of a file directory.
+* Comparing Files::  Finding where two files differ.
+* Dired::            ``Editing'' a directory to delete, rename, etc.
+                     the files in it.
+* Misc File Ops::    Other things you can do on files.
+
+Saving Files
+
+* Backup::       How SXEmacs saves the old version of your file.
+* Interlocking:: How SXEmacs protects against simultaneous editing
+                  of one file by two users.
+
+Backup Files
+
+* Names: Backup Names.		How backup files are named;
+				Choosing single or numbered backup files.
+* Deletion: Backup Deletion.	SXEmacs deletes excess numbered backups.
+* Copying: Backup Copying.	Backups can be made by copying or renaming.
+
+Auto-Saving: Protection Against Disasters
+
+* Files: Auto Save Files.
+* Control: Auto Save Control.
+* Recover::		Recovering text from auto-save files.
+
+Version Control
+
+* Concepts of VC::		Basic version control information;
+				  checking files in and out.
+* Editing with VC::		Commands for editing a file maintained
+				  with version control.
+* Variables for Check-in/out::	Variables that affect the commands used
+				  to check files in or out.
+* Log Entries::			Logging your changes.
+* Change Logs and VC::		Generating a change log file from log
+				  entries. 
+* Old Versions::		Examining and comparing old versions.
+* VC Status::			Commands to view the VC status of files and
+				  look at log entries.
+* Renaming and VC::		A command to rename both the source and
+				  master file correctly.
+* Snapshots::			How to make and use snapshots, a set of
+				  file versions that can be treated as a unit.
+* Version Headers::		Inserting version control headers into
+				  working files.
+
+Snapshots
+
+* Making Snapshots::		The snapshot facilities.
+* Snapshot Caveats::		Things to be careful of when using snapshots.
+
+Dired, the Directory Editor
+
+* Enter: Dired Enter.         How to invoke Dired.
+* Edit: Dired Edit.           Editing the Dired buffer.
+* Deletion: Dired Deletion.   Deleting files with Dired.
+* Immed: Dired Immed.         Other file operations through Dired.
+
+Using Multiple Buffers
+
+* Select Buffer::   Creating a new buffer or reselecting an old one.
+* List Buffers::    Getting a list of buffers that exist.
+* Misc Buffer::     Renaming; changing read-onliness; copying text.
+* Kill Buffer::     Killing buffers you no longer need.
+* Several Buffers:: How to go through the list of all buffers
+                     and operate variously on several of them.
+
+Multiple Windows
+
+* Basic Window::     Introduction to SXEmacs windows.
+* Split Window::     New windows are made by splitting existing windows.
+* Other Window::     Moving to another window or doing something to it.
+* Pop Up Window::    Finding a file or buffer in another window.
+* Change Window::    Deleting windows and changing their sizes.
+
+Major Modes
+
+* Choosing Modes::     How major modes are specified or chosen.
+
+Indentation
+
+* Indentation Commands:: Various commands and techniques for indentation.
+* Tab Stops::            You can set arbitrary "tab stops" and then
+                         indent to the next tab stop when you want to.
+* Just Spaces::          You can request indentation using just spaces.
+
+Commands for Human Languages
+
+* Text Mode::   The major modes for editing text files.
+* Nroff Mode::  The major mode for editing input to the formatter nroff.
+* TeX Mode::    The major modes for editing input to the formatter TeX.
+* Outline Mode:: The major mode for editing outlines.
+* Words::       Moving over and killing words.
+* Sentences::   Moving over and killing sentences.
+* Paragraphs::	Moving over paragraphs.
+* Pages::	Moving over pages.
+* Filling::     Filling or justifying text
+* Case::        Changing the case of text
+
+@TeX{} Mode
+
+* Editing: TeX Editing.   Special commands for editing in TeX mode.
+* Printing: TeX Print.    Commands for printing part of a file with TeX.
+
+Outline Mode
+
+* Format: Outline Format.	  What the text of an outline looks like.
+* Motion: Outline Motion.	  Special commands for moving through outlines.
+* Visibility: Outline Visibility. Commands to control what is visible.
+
+Filling Text
+
+* Auto Fill::	  Auto Fill mode breaks long lines automatically.
+* Fill Commands:: Commands to refill paragraphs and center lines.
+* Fill Prefix::   Filling when every line is indented or in a comment, etc.
+
+Editing Programs
+
+* Program Modes::       Major modes for editing programs.
+* Lists::               Expressions with balanced parentheses.
+                         There are editing commands to operate on them.
+* Defuns::              Each program is made up of separate functions.
+                         There are editing commands to operate on them.
+* Grinding::            Adjusting indentation to show the nesting.
+* Matching::            Insertion of a close-delimiter flashes matching open.
+* Comments::            Inserting, filling and aligning comments.
+* Balanced Editing::    Inserting two matching parentheses at once, etc.
+* Lisp Completion::     Completion on symbol names in Lisp code.
+* Documentation::       Getting documentation of functions you plan to call.
+* Change Log::          Maintaining a change history for your program.
+* Tags::                Go directly to any function in your program in one
+                         command.  Tags remembers which file it is in.
+* CC Mode::             Modes for C, C++, Java and similar languages
+* Fortran::		Fortran mode and its special features.
+* Asm Mode::            Asm mode and its special features.
+
+Indentation for Programs
+
+* Basic Indent::
+* Multi-line Indent::   Commands to reindent many lines at once.
+* Lisp Indent::		Specifying how each Lisp function should be indented.
+
+Tags Tables
+
+* Tag Syntax::		Tag syntax for various types of code and text files.  
+* Create Tags Table::	Creating a tags table with @code{etags}.
+* Select Tags Table::	How to visit a tags table.
+* Find Tag::		Commands to find the definition of a specific tag. 
+* Tags Search::		Using a tags table for searching and replacing.
+* List Tags::		Listing and finding tags defined in a file.
+
+Fortran Mode
+
+* Motion: Fortran Motion.     Moving point by statements or subprograms.
+* Indent: Fortran Indent.     Indentation commands for Fortran.
+* Comments: Fortran Comments. Inserting and aligning comments.
+* Columns: Fortran Columns.   Measuring columns for valid Fortran.
+* Abbrev: Fortran Abbrev.     Built-in abbrevs for Fortran keywords.
+
+Fortran Indentation
+
+* Commands: ForIndent Commands. Commands for indenting Fortran.
+* Numbers:  ForIndent Num.      How line numbers auto-indent.
+* Conv:     ForIndent Conv.     Conventions you must obey to avoid trouble.
+* Vars:     ForIndent Vars.     Variables controlling Fortran indent style.
+
+Compiling and Testing Programs
+
+* Compilation::        Compiling programs in languages other than Lisp
+                        (C, Pascal, etc.)
+* Modes: Lisp Modes.   Various modes for editing Lisp programs, with
+                       different facilities for running the Lisp programs.
+* Libraries: Lisp Libraries.      Creating Lisp programs to run in SXEmacs.
+* Eval: Lisp Eval.     Executing a single Lisp expression in SXEmacs.
+* Debug: Lisp Debug.   Debugging Lisp programs running in SXEmacs.
+* Interaction: Lisp Interaction.  Executing Lisp in an SXEmacs buffer.
+* External Lisp::      Communicating through SXEmacs with a separate Lisp.
+
+Lisp Libraries
+
+* Loading::		Loading libraries of Lisp code into SXEmacs for use.
+* Compiling Libraries:: Compiling a library makes it load and run faster.
+* Mocklisp::		Converting Mocklisp to Lisp so SXEmacs can run it.
+
+Abbrevs
+
+* Defining Abbrevs::  Defining an abbrev, so it will expand when typed.
+* Expanding Abbrevs:: Controlling expansion: prefixes, canceling expansion.
+* Editing Abbrevs::   Viewing or editing the entire list of defined abbrevs.
+* Saving Abbrevs::    Saving the entire list of abbrevs for another session.
+* Dynamic Abbrevs::   Abbreviations for words already in the buffer.
+
+Editing Pictures
+
+* Basic Picture::         Basic concepts and simple commands of Picture Mode.
+* Insert in Picture::     Controlling direction of cursor motion
+                           after "self-inserting" characters.
+* Tabs in Picture::       Various features for tab stops and indentation.
+* Rectangles in Picture:: Clearing and superimposing rectangles.
+
+Sending Mail
+
+* Format: Mail Format.    Format of the mail being composed.
+* Headers: Mail Headers.  Details of allowed mail header fields.
+* Mode: Mail Mode.        Special commands for editing mail being composed.
+
+Running Shell Commands from SXEmacs
+
+* Single Shell::         How to run one shell command and return.
+* Interactive Shell::    Permanent shell taking input via SXEmacs.
+* Shell Mode::           Special SXEmacs commands used with permanent shell.
+
+Customization
+
+* Minor Modes::     Each minor mode is one feature you can turn on
+                     independently of any others.
+* Variables::       Many SXEmacs commands examine SXEmacs variables
+                     to decide what to do; by setting variables,
+                     you can control their functioning.
+* Keyboard Macros:: A keyboard macro records a sequence of keystrokes
+                     to be replayed with a single command.
+* Key Bindings::    The keymaps say what command each key runs.
+                     By changing them, you can "redefine keys".
+* Syntax::          The syntax table controls how words and expressions
+                     are parsed.
+* Init File::       How to write common customizations in the init file.
+* Audible Bell::    Changing how SXEmacs sounds the bell. 
+* Faces::           Changing the fonts and colors of a region of text. 
+* X Resources::	    X resources controlling various aspects of the
+                     behavior of SXEmacs.
+
+Variables
+
+* Examining::           Examining or setting one variable's value.
+* Easy Customization::  Convenient and easy customization of variables.
+* Edit Options::        Examining or editing list of all variables' values.
+* Locals::              Per-buffer values of variables.
+* File Variables::      How files can specify variable values.
+
+Keyboard Macros
+
+* Basic Kbd Macro::     Defining and running keyboard macros.
+* Save Kbd Macro::      Giving keyboard macros names; saving them in files.
+* Kbd Macro Query::     Keyboard macros that do different things each use.
+
+Customizing Key Bindings
+
+* Keymaps::    Definition of the keymap data structure.
+               Names of SXEmacs's standard keymaps.
+* Rebinding::  How to redefine one key's meaning conveniently.
+* Disabling::  Disabling a command means confirmation is required
+                before it can be executed.  This is done to protect
+                beginners from surprises.
+
+The Syntax Table
+
+* Entry: Syntax Entry.    What the syntax table records for each character.
+* Change: Syntax Change.  How to change the information.
+
+The Init File
+
+* Init Syntax::     Syntax of constants in Emacs Lisp.
+* Init Examples::   How to do some things with an init file.
+* Terminal Init::   Each terminal type can have an init file.
+
+Dealing with SXEmacs Trouble
+
+* Stuck Recursive::    `[...]' in mode line around the parentheses.
+* Screen Garbled::     Garbage on the screen.
+* Text Garbled::       Garbage in the text.
+* Unasked-for Search:: Spontaneous entry to incremental search.
+* Emergency Escape::   Emergency escape---
+                        What to do if SXEmacs stops responding.
+* Total Frustration::  When you are at your wits' end.
+
+@end menu
+
+@iftex
+@unnumbered Preface
+
+  This manual documents the use and simple customization of the SXEmacs
+editor.  The reader is not expected to be a programmer to use this
+editor, and simple customizations do not require programming skills either.
+Users who are not interested in customizing SXEmacs can ignore the scattered
+customization hints.
+
+  This document is primarily a reference manual, but it can also be used as a
+primer.  However, if you are new to SXEmacs, consider using the on-line,
+learn-by-doing tutorial, which you get by running SXEmacs and typing
+@kbd{C-h t}.  With it, you learn SXEmacs by using SXEmacs on a specially
+designed file which describes commands, tells you when to try them,
+and then explains the results you see.  Using the tutorial gives a more vivid
+introduction than the printed manual.  Also consider reading the SXEmacs
+New User's Guide, which is intended specifically as an introductory
+manual rather than as a reference guide.
+
+  On first reading, just skim chapters one and two, which describe the
+notational conventions of the manual and the general appearance of the
+SXEmacs display frame.  Note which questions are answered in these chapters,
+so you can refer back later.  After reading chapter four you should
+practice the commands there.  The next few chapters describe fundamental
+techniques and concepts that are used constantly.  You need to understand
+them thoroughly, experimenting with them if necessary.
+
+  To find the documentation on a particular command, look in the index.
+Keys (character commands) and command names have separate indexes.  There
+is also a glossary, with a cross reference for each term.
+
+@ignore
+  If you know vaguely what the command
+does, look in the command summary.  The command summary contains a line or
+two about each command, and a cross reference to the section of the
+manual that describes the command in more detail; related commands
+are grouped together.
+@end ignore
+
+  This manual comes in two forms: the published form and the Info form.
+The Info form is for on-line perusal with the INFO program; it is
+distributed along with SXEmacs.  Both forms contain substantially the
+same text and are generated from a common source file, which is also
+distributed along with SXEmacs.
+
+  SXEmacs is a member of the Emacs editor family.  There are many Emacs
+editors, all sharing common principles of organization.  For information on
+the underlying philosophy of Emacs and the lessons learned from its
+development, write for a copy of AI memo 519a, ``Emacs, the Extensible,
+Customizable Self-Documenting Display Editor'', to Publications Department,
+Artificial Intelligence Lab, 545 Tech Square, Cambridge, MA 02139, USA.  At
+last report they charge $2.25 per copy.  Another useful publication is LCS
+TM-165, ``A Cookbook for an Emacs'', by Craig Finseth, available from
+Publications Department, Laboratory for Computer Science, 545 Tech Square,
+Cambridge, MA 02139, USA.  The price today is $3.
+
+This manual is for SXEmacs installed on UNIX systems.
+@end iftex
+
+@comment  node-name,  next,  previous,  up
+@node License, Distrib, Top, Top
+@include gpl.texi
+@node Distrib, Intro, License, Top
+@unnumbered Distribution
+
+SXEmacs is @dfn{free}; this means that everyone is free to use it and
+free to redistribute it on a free basis.  SXEmacs is not in the public
+domain; it is copyrighted and there are restrictions on its
+distribution, but these restrictions are designed to permit everything
+that a good cooperating citizen would want to do.  What is not allowed
+is to try to prevent others from further sharing any version of SXEmacs
+that they might get from you.  The precise conditions are found in
+the GNU General Public License that comes with SXEmacs and also appears
+following this section.
+
+The easiest way to get a copy of SXEmacs is from someone else who has it.
+You need not ask for permission to do so, or tell any one else; just copy
+it.
+
+If you have access to the Internet, you can get the latest version of
+SXEmacs from the anonymous FTP server @file{ftp.sxemacs.org} in the directory
+@file{/pub/sxemacs}.  It can also be found at numerous other archive
+sites around the world; check the file @file{etc/DISTRIB} in an SXEmacs
+distribution for the latest known list.
+
+
+@unnumberedsec Getting Other Versions of Emacs
+
+The Free Software Foundation's version of Emacs (called @dfn{FSF Emacs}
+in this manual and often referred to as @dfn{GNU Emacs}) is available
+by anonymous FTP from @file{prep.ai.mit.edu}.
+
+@node Intro, Glossary, Distrib, Top
+@unnumbered Introduction
+
+  You are reading about SXEmacs, an incarnation of the advanced,
+self-documenting, customizable, extensible real-time display editor
+Emacs.  SXEmacs provides many powerful display and user-interface
+capabilities not found in other Emacsen and is mostly upwardly
+compatible with GNU Emacs from the Free Software Foundation
+(referred to as @dfn{FSF Emacs} in this manual).  SXEmacs also
+comes standard with a great number of useful packages.
+
+  We say that SXEmacs is a @dfn{display} editor because normally the text
+being edited is visible on the screen and is updated automatically as you
+type.  @xref{Frame,Display}.
+
+  We call SXEmacs a @dfn{real-time} editor because the display is updated very
+frequently, usually after each character or pair of characters you
+type.  This minimizes the amount of information you must keep in your
+head as you edit.  @xref{Basic,Real-time,Basic Editing}.
+
+  We call SXEmacs advanced because it provides facilities that go beyond
+simple insertion and deletion: filling of text; automatic indentation of
+programs; viewing two or more files at once; and dealing in terms of
+characters, words, lines, sentences, paragraphs, and pages, as well as
+expressions and comments in several different programming languages.  It is
+much easier to type one command meaning ``go to the end of the paragraph''
+than to find that spot with simple cursor keys.
+
+  @dfn{Self-documenting} means that at any time you can type a special
+character, @kbd{Control-h}, to find out what your options are.  You can
+also use @kbd{C-h} to find out what a command does, or to find all the
+commands relevant to a topic.  @xref{Help}.
+
+  @dfn{Customizable} means you can change the definitions of SXEmacs
+commands.  For example, if you use a programming language in
+which comments start with @samp{<**} and end with @samp{**>}, you can tell
+the SXEmacs comment manipulation commands to use those strings
+(@pxref{Comments}).  Another sort of customization is rearrangement of the
+command set.  For example, you can set up the four basic cursor motion
+commands (up, down, left and right) on keys in a diamond pattern on the
+keyboard if you prefer.  @xref{Customization}.
+
+  @dfn{Extensible} means you can go beyond simple customization and
+write entirely new commands, programs in the Lisp language to be run by
+SXEmacs' own Lisp interpreter.  SXEmacs is an ``on-line extensible''
+system: it is divided into many functions that call each other.  You can
+redefine any function in the middle of an editing session and replace
+any part of SXEmacs without making a separate copy of all of SXEmacs.  Most
+of the editing commands of SXEmacs are written in Lisp; the few
+exceptions could have been written in Lisp but are written in C for
+efficiency.  Only a programmer can write an extension to SXEmacs, but anybody
+can use it afterward.
+
+@include frame.texi
+@include keystrokes.texi
+@include menus.texi
+@include entering.texi
+@include cmdargs.texi
+@include startup.texi
+@include basic.texi
+@include undo.texi
+@include mini.texi
+@include m-x.texi
+@include help.texi
+@include mark.texi
+@include mouse.texi
+@include killing.texi
+@include regs.texi
+@include display.texi
+@include search.texi
+@include fixit.texi
+@include files.texi
+@include buffers.texi
+@include windows.texi
+@include mule.texi
+@include major.texi
+@include indent.texi
+@include text.texi
+@include programs.texi
+@include building.texi
+@include packages.texi
+@include abbrevs.texi
+@include picture.texi
+@include sending.texi
+@include reading.texi
+@include calendar.texi
+@include misc.texi
+@include custom.texi
+@include trouble.texi
+
+@include new.texi
+@include glossary.texi
+
+@node Key Index, Command Index,, Top
+@unnumbered Key (Character) Index
+@printindex ky
+
+@node Command Index, Variable Index, Key Index, Top
+@unnumbered Command and Function Index
+@printindex fn
+
+@node Variable Index, Concept Index, Command Index, Top
+@unnumbered Variable Index
+@printindex vr
+
+@node Concept Index, Frame, Variable Index, Top
+@unnumbered Concept Index
+@printindex cp
+
+@summarycontents
+@contents
+@bye
+
+
+@c Remember to delete these lines before creating the info file.
+@iftex
+@lucidbook
+@bindingoffset = 0.5in
+@parindent = 0pt
+@end iftex

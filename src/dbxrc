@@ -1,0 +1,385 @@
+# -*- ksh -*-
+# Copyright (C) 1998 Free Software Foundation, Inc.
+
+# This file is part of SXEmacs
+
+# SXEmacs is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# SXEmacs is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Author: Martin Buchholz
+
+# You can use this file to debug SXEmacs using Sun WorkShop's dbx.
+
+# Some functions defined here require a running process, but most
+# don't.  Considerable effort has been expended to this end.
+
+# Since this file is called `.dbxrc', it will be read by dbx
+# automatically when dbx is run in the build directory, which is where
+# developers usually debug their SXEmacs.
+
+# See also the comments in .gdbinit.
+
+# See also the question of the SXEmacs FAQ, titled
+# "How to Debug a SXEmacs problem with a debugger".
+
+# gdb sources the ./.gdbinit in _addition_ to ~/.gdbinit.
+# But dbx does _not_ source ~/.dbxrc if it found ./.dbxrc.
+# So we simulate the gdb algorithm by doing it ourselves here.
+if test -r $HOME/.dbxrc; then . $HOME/.dbxrc; fi
+
+dbxenv language_mode ansic
+
+ignore POLL
+ignore IO
+
+document lbt << 'end'
+Usage: lbt
+Print the current Lisp stack trace.
+Requires a running SXEmacs process.
+end
+
+function lbt {
+  call debug_backtrace()
+}
+
+document ldp << 'end'
+Usage: ldp lisp_object
+Print a Lisp Object value using the Lisp printer.
+Requires a running SXEmacs process.
+end
+
+function ldp {
+  call debug_print ($1);
+}
+
+Lisp_Type_Int=-2
+
+# A bug in dbx prevents string variables from having values beginning with `-'!!
+function SXEmacsInit {
+  function ToInt { eval "$1=\$[(int) \`alloc.c\`$1]"; }
+  ToInt dbg_USE_UNION_TYPE
+  ToInt Lisp_Type_Char
+  ToInt Lisp_Type_Record
+  ToInt dbg_valbits
+  ToInt dbg_gctypebits
+  function ToLong { eval "$1=\$[(\`alloc.c\`unsigned long) \`alloc.c\`$1]"; }
+  ToLong dbg_valmask
+  ToLong dbg_typemask
+  sxemacs_initted=yes
+}
+
+function printvar {
+  for i in $*; do eval "echo $i=\$$i"; done
+}
+
+document decode_object << 'end'
+Usage: decode_object lisp_object
+Extract implementation information from a Lisp Object.
+Defines variables $val, $type and $imp.
+end
+
+# Various dbx bugs cause ugliness in following code
+function decode_object {
+  if test -z "$sxemacs_initted"; then SXEmacsInit; fi;
+  if test $dbg_USE_UNION_TYPE = 1; then
+    # Repeat after me... dbx sux, dbx sux, dbx sux...
+    # Allow both `pobj Qnil' and `pobj 0x82746834' to work
+    case $(whatis $1) in
+      *Lisp_Object*) obj="$[(`alloc.c`unsigned long)(($1).i)]";;
+      *) obj="$[(`alloc.c`unsigned long)($1)]";;
+    esac
+  else
+    obj="$[(`alloc.c`unsigned long)($1)]";
+  fi
+  if test $[(int)($obj & 1)] = 1; then
+    # It's an int
+    val=$[(long)(((unsigned long long)$obj) >> 1)]
+    type=$Lisp_Type_Int
+  else
+    type=$[(int)(((void*)$obj) & $dbg_typemask)]
+    if test $type = $Lisp_Type_Char; then
+      val=$[(void*)(long)(((unsigned long long)($obj & $dbg_valmask)) >> $dbg_gctypebits)]
+    else
+      # It's a record pointer
+      val=$[(void*)$obj]
+      if test "$val" = "(nil)"; then type=null_pointer; fi
+    fi
+  fi
+
+  if test $type = $Lisp_Type_Record; then
+    lheader="((struct lrecord_header *) $val)"
+    lrecord_type=$[(enum lrecord_type) $lheader->type]
+    imp=$[(void*)(`alloc.c`lrecord_implementations_table[$lheader->type])]
+  else
+    lheader="((struct lrecord_header *) -1)"
+    lrecord_type=-1
+    imp="0xdeadbeef"
+  fi
+  # printvar obj val type imp
+}
+
+function xint {
+  decode_object "$*"
+  print (long) ($val)
+}
+
+document xtype << 'end'
+Usage: xtype lisp_object
+Print the Lisp type of a lisp object.
+end
+
+function xtype {
+  decode_object "$*"
+  if   test $type = $Lisp_Type_Int;    then echo "int"
+  elif test $type = $Lisp_Type_Char;   then echo "char"
+  elif test $type = null_pointer;      then echo "null_pointer"
+  else
+    echo "record type with name: $[((struct lrecord_implementation *)$imp)->name]"
+  fi
+}
+
+function lisp-shadows {
+  run -batch -vanilla -f list-load-path-shadows
+}
+
+function environment-to-run-temacs {
+  unset EMACSLOADPATH
+  export EMACSBOOTSTRAPLOADPATH=@abs_top_srcdir@/lisp/
+  export EMACSBOOTSTRAPMODULEPATH=@abs_top_srcdir@/modules/
+}
+
+document run-temacs << 'end'
+Usage: run-temacs
+Run temacs interactively, like SXEmacs.
+Use this with debugging tools (like purify) that cannot deal with dumping,
+or when temacs builds successfully, but SXEmacs does not.
+end
+
+function run-temacs {
+  environment-to-run-temacs
+  run -nd -batch -l @abs_top_srcdir@/lisp/loadup.el run-temacs -q ${1+"$@"}
+}
+
+document check-sxemacs << 'end'
+Usage: check-sxemacs
+Run the test suite.  Equivalent to 'make check'.
+end
+
+function check-sxemacs {
+  run -batch -l @abs_top_srcdir@/tests/automated/test-harness.el -f batch-test-emacs @abs_top_srcdir@/tests/automated
+}
+
+document check-temacs << 'end'
+Usage: check-temacs
+Run the test suite on temacs.  Equivalent to 'make check-temacs'.
+Use this with debugging tools (like purify) that cannot deal with dumping,
+or when temacs builds successfully, but SXEmacs does not.
+end
+
+function check-temacs {
+  run-temacs -q -batch -l @abs_top_srcdir@/tests/automated/test-harness.el -f batch-test-emacs @abs_top_srcdir@/tests/automated
+}
+
+document update-elc << 'end'
+Usage: update-elc
+Run the core lisp byte compilation part of the build procedure.
+Use when debugging temacs, not SXEmacs!
+Use this when temacs builds successfully, but SXEmacs does not.
+end
+
+function update-elc {
+  environment-to-run-temacs
+  run -nd -batch -l @abs_top_srcdir@/lisp/update-elc.el
+}
+
+document dmp << 'end'
+Usage: dmp
+Run the dumping part of the build procedure.
+Use when debugging temacs, not SXEmacs!
+Use this when temacs builds successfully, but SXEmacs does not.
+end
+
+function dmp {
+  environment-to-run-temacs
+  run -nd -batch -l @abs_top_srcdir@/lisp/loadup.el dump
+}
+
+function pstruct { # pstruct foo.c struct-name
+  module "$1" > /dev/null
+  type_ptr="((struct $2 *) $val)"
+  print $type_ptr
+  print *$type_ptr
+}
+
+document pobj << 'end'
+Usage: pobj lisp_object
+Print the internal C representation of a Lisp Object.
+end
+
+function pobj {
+  decode_object $1
+  if test $type = $Lisp_Type_Int; then
+    print -f"Integer: %d" $val
+  elif test $type = $Lisp_Type_Char; then
+    if test $[$val > 32 && $val < 128] = 1; then
+      print -f"Char: %c" $val
+    else
+      print -f"Char: %d" $val
+    fi
+  elif test $lrecord_type = lrecord_type_string; then
+    pstruct alloc.c Lisp_String
+  elif test $lrecord_type = lrecord_type_cons; then
+    pstruct alloc.c Lisp_Cons
+  elif test $lrecord_type = lrecord_type_symbol; then
+    pstruct symbols.c Lisp_Symbol
+    echo "Symbol name: $[(char *)($type_ptr->name->data)]"
+  elif test $lrecord_type = lrecord_type_vector; then
+    pstruct alloc.c Lisp_Vector
+    echo "Vector of length $[$type_ptr->size]"
+  elif test $lrecord_type = lrecord_type_bit_vector; then
+    pstruct fns.c Lisp_Bit_Vector
+  elif test $lrecord_type = lrecord_type_buffer; then
+    pstruct buffer.c buffer
+  elif test $lrecord_type = lrecord_type_char_table; then
+    pstruct chartab.c Lisp_Char_Table
+  elif test $lrecord_type = lrecord_type_char_table_entry; then
+    pstruct chartab.c Lisp_Char_Table_Entry
+  elif test $lrecord_type = lrecord_type_charset; then
+    pstruct mule-charset.c Lisp_Charset
+  elif test $lrecord_type = lrecord_type_coding_system; then
+    pstruct file-coding.c Lisp_Coding_System
+  elif test $lrecord_type = lrecord_type_color_instance; then
+    pstruct objects.c Lisp_Color_Instance
+  elif test $lrecord_type = lrecord_type_command_builder; then
+    pstruct event-stream.c command_builder
+  elif test $lrecord_type = lrecord_type_compiled_function; then
+    pstruct bytecode.c Lisp_Compiled_Function
+  elif test $lrecord_type = lrecord_type_console; then
+    pstruct console.c console
+  elif test $lrecord_type = lrecord_type_database; then
+    pstruct database.c Lisp_Database
+  elif test $lrecord_type = lrecord_type_device; then
+    pstruct device.c device
+  elif test $lrecord_type = lrecord_type_event; then
+    pstruct events.c Lisp_Event
+  elif test $lrecord_type = lrecord_type_extent; then
+    pstruct extents.c extent
+  elif test $lrecord_type = lrecord_type_extent_auxiliary; then
+    pstruct extents.c extent_auxiliary
+  elif test $lrecord_type = lrecord_type_extent_info; then
+    pstruct extents.c extent_info
+  elif test $lrecord_type = lrecord_type_face; then
+    pstruct faces.c Lisp_Face
+  elif test $lrecord_type = lrecord_type_float; then
+    pstruct floatfns.c Lisp_Float
+  elif test $lrecord_type = lrecord_type_font_instance; then
+    pstruct objects.c Lisp_Font_Instance
+  elif test $lrecord_type = lrecord_type_frame; then
+    pstruct frame.c frame
+  elif test $lrecord_type = lrecord_type_glyph; then
+    pstruct glyph.c Lisp_Glyph
+  elif test $lrecord_type = lrecord_type_gui_item; then
+    pstruct gui.c Lisp_Gui_Item
+  elif test $lrecord_type = lrecord_type_hash_table; then
+    pstruct elhash.c Lisp_Hash_Table
+  elif test $lrecord_type = lrecord_type_image_instance; then
+    pstruct glyphs.c Lisp_Image_Instance
+  elif test $lrecord_type = lrecord_type_keymap; then
+    pstruct keymap.c Lisp_Keymap
+  elif test $lrecord_type = lrecord_type_lcrecord_list; then
+    pstruct alloc.c lcrecord_list
+  elif test $lrecord_type = lrecord_type_ldap; then
+    pstruct ldap.c Lisp_LDAP
+  elif test $lrecord_type = lrecord_type_lstream; then
+    pstruct lstream.c lstream
+  elif test $lrecord_type = lrecord_type_marker; then
+    pstruct marker.c Lisp_Marker
+  elif test $lrecord_type = lrecord_type_opaque; then
+    pstruct opaque.c Lisp_Opaque
+  elif test $lrecord_type = lrecord_type_opaque_ptr; then
+    pstruct opaque.c Lisp_Opaque_Ptr
+  elif test $lrecord_type = lrecord_type_popup_data; then
+    pstruct gui-x.c popup_data
+  elif test $lrecord_type = lrecord_type_process; then
+    pstruct process.c Lisp_Process
+  elif test $lrecord_type = lrecord_type_range_table; then
+    pstruct rangetab.c Lisp_Range_Table
+  elif test $lrecord_type = lrecord_type_specifier; then
+    pstruct specifier.c Lisp_Specifier
+  elif test $lrecord_type = lrecord_type_subr; then
+    pstruct eval.c Lisp_Subr
+  elif test $lrecord_type = lrecord_type_symbol_value_buffer_local; then
+    pstruct symbols.c symbol_value_buffer_local
+  elif test $lrecord_type = lrecord_type_symbol_value_forward; then
+    pstruct symbols.c symbol_value_forward
+  elif test $lrecord_type = lrecord_type_symbol_value_lisp_magic; then
+    pstruct symbols.c symbol_value_lisp_magic
+  elif test $lrecord_type = lrecord_type_symbol_value_varalias; then
+    pstruct symbols.c symbol_value_varalias
+  elif test $lrecord_type = lrecord_type_timeout; then
+    pstruct event-stream.c Lisp_Timeout
+  elif test $lrecord_type = lrecord_type_toolbar_button; then
+    pstruct toolbar.c toolbar_button
+  elif test $lrecord_type = lrecord_type_tooltalk_message; then
+    pstruct tooltalk.c Lisp_Tooltalk_Message
+  elif test $lrecord_type = lrecord_type_tooltalk_pattern; then
+    pstruct tooltalk.c Lisp_Tooltalk_Pattern
+  elif test $lrecord_type = lrecord_type_weak_list; then
+    pstruct data.c weak_list
+  elif test $lrecord_type = lrecord_type_window; then
+    pstruct window.c window
+  elif test $lrecord_type = lrecord_type_window_configuration; then
+    pstruct window.c window_config
+  elif test "$type" = "null_pointer"; then
+    echo "Lisp Object is a null pointer!!"
+  else
+    echo "Unknown Lisp Object type"
+    print $1
+  fi
+}
+
+dbxenv suppress_startup_message 4.0
+# dbxenv mt_watchpoints on
+
+function dp_core {
+  print ((struct x_frame *)(((struct frame*)(Fselected_frame(Qnil)&0x00FFFFFF))->frame_data))->widget->core
+}
+
+# Barf!
+function print_shell {
+  print *(`frame-x.c`TopLevelShellRec*) (((struct `frame-x.c`x_frame*) (((struct `frame-x.c`frame*) (Fselected_frame(Qnil)&0x00FFFFFF))->frame_data))->widget)
+}
+
+# -------------------------------------------------------------
+# functions to test the debugging support itself.
+# If you change this file, make sure the following still work...
+# -------------------------------------------------------------
+function test_xtype {
+  function doit { echo -n "$1: "; xtype "$1"; }
+  test_various_objects
+}
+
+function test_pobj {
+  function doit { echo '==============================='; echo -n "$1: "; pobj "$1"; }
+  test_various_objects
+}
+
+function test_various_objects {
+  doit Vemacs_major_version
+  doit Vhelp_char
+  doit Qnil
+  doit Qunbound
+  doit Vobarray
+  doit Vall_weak_lists
+  doit Vsxemacs_codename
+}

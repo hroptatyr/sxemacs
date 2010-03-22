@@ -1,0 +1,27 @@
+This directory contains XEmacs' automated test suite.  The usual way
+of running all the tests is running `make check' from the top-level
+source directory.
+
+The test suite is unfinished and it's still lacking some essential
+features.  It is nevertheless recommended that you run the tests to
+confirm that XEmacs behaves correctly.
+
+If you want to run a specific test case, you can do it from the
+command-line like this:
+
+$ xemacs -batch -l test-harness.elc -f batch-test-emacs TEST-FILE
+
+If something goes wrong, you can run the test suite interactively by
+loading `test-harness.el' into a running XEmacs and typing
+`M-x test-emacs-test-file RET <filename> RET'.  You will see a log of
+passed and failed tests, which should allow you to investigate the
+source of the error and ultimately fix the bug.
+
+Adding a new test file is trivial: just create a new file here and it
+will be run.  There is no need to byte-compile any of the files in
+this directory -- the test-harness will take care of any necessary
+byte-compilation.
+
+Look at the existing test cases for the examples of coding test cases.
+It all boils down to your imagination and judicious use of the macros
+`Assert', `Check-Error', `Check-Error-Message', and `Check-Message'.

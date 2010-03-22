@@ -1,0 +1,1818 @@
+@c -*-texinfo-*-
+@c This is part of the SXEmacs Lisp Reference Manual.
+@c Copyright (C) 2005 Sebastian Freundt
+@c See the file lispref.texi for copying conditions.
+@setfilename ../../info/openssl.info
+
+@node OpenSSL Support, Enhanced Number Types, PostgreSQL Support, top
+@comment  node-name,  next,  previous,  up
+@chapter OpenSSL Support
+@cindex OpenSSL
+
+SXEmacs can be linked with OpenSSL libcrypto and libssl to provide
+a comprehensive gateway to cryptographic and related functions.
+
+@comment HINT FOR EXPERIMENTAL STATUS
+Note: Currently the API provided for SXEmacs is experimental.
+Conceptional changes, renaming, and changes in the behaviour of
+functions are highly likely.
+@comment REMOVE ME WHEN I AM STABLE
+
+
+@menu
+* Building SXEmacs with OpenSSL support::
+* SXEmacs OpenSSL API::
+@end menu
+
+
+@node Building SXEmacs with OpenSSL support
+@section Building SXEmacs with OpenSSL support
+
+SXEmacs OpenSSL support requires linking to the OpenSSL libcrypto and libssl
+libraries.  We recommend the most recent stable version, which is
+0.9.8b as of writing this documentation.  Nonetheless, we have
+successfully tested each version since 0.9.6d (May 2002).  OpenSSL can
+be obtained at
+@example
+@url{http://www.openssl.org}
+@end example
+
+For most systems the following snippet can be used to build a
+reasonably feature-rich and yet fast library:
+
+@example
+./config --prefix=/usr/local/ threads enable-mdc2 enable-gmp \
+enable-rc5 enable-shared enable-zlib enable-zlib-dynamic enable-dso \
+enable-krb5 enable-asm
+@end example
+
+Some of the above options depend in turn on external resources, like
+GMP and zlib.  However, describing in detail how to build and install
+OpenSSL is beyond the scope of this document.  See the OpenSSL manual
+for details.
+
+If you plan to build SXEmacs with OpenSSL support you need to install
+OpenSSL first.  On some systems, OpenSSL will come pre-installed in
+/usr.  In this case, all you need to do is passing
+@samp{--with-openssl} to configure.
+
+If the configure script fails to detect your installation of OpenSSL,
+make sure you supplied header files, or try to explicitly name the
+location of your OpenSSL installation via the @samp{--site-prefixes}
+flag when you run the SXEmacs configure script.
+
+
+@node SXEmacs OpenSSL API
+@section SXEmacs OpenSSL API
+
+@c Explaining cryptographical details behind OpenSSL API functions is
+@c beyond the scope of this document.  Ask Professor Google.
+@c @comment erm, again: Why? maybe some alice-bob examples?
+
+The SXEmacs OpenSSL API is intended to be an exact copy of the OpenSSL
+API functions in libcrypto and libssl.  The intent is to provide elisp
+for everything you have told your OpenSSL library to contain.  Then,
+at stage 2, let higher level Lisp code come up with policies and
+remove the guts of libcrypto and libssl.
+
+Despite this rather noble intention of giving access to anything in
+OpenSSL there are conceptional limits.  Auxiliary stuff from OpenSSL
+such as BIO or BN will not be accessible to elisp, though the C
+implementation might use them directly or indirectly as well.
+
+On the one hand this is due to their very special purpose (like finding
+prime numbers), on the other hand due to their obsoleteness (like
+BIO_gets, BIO_do_connect, etc.) when SXEmacs already provides a similar
+or more powerful implementation.
+
+For convenience, we denote the elisp implementation of OpenSSL with openssl
+whereas the distributed library package from @url{http://www.openssl.org}
+is denoted OpenSSL.
+
+
+@menu
+* openssl General::		General Information
+* openssl RAND::		(Pseudo) Random Numbers
+* openssl MD::			Message Digests (aka hashes)
+* openssl HMAC::		Message Authentication Codes (aka keyed hashes)
+* openssl CIPHER::		Symmetric Cryptography
+* openssl PKEY::		Public Key Crypto Systems (aka asymmetric ciphers)
+* openssl SSL/TLS::		Secure Network Layers
+@end menu
+
+
+@node openssl General
+@subsection General information 
+
+In this section we deal with informative functions which kind of
+reflect the underlying library capabilities.  It is very hard to say
+which of the capabilities are guaranteed to exist since it is possible
+to strip certain cryptographic stuff from the OpenSSL installation,
+for instance due to license, patent, or legal issues.
+
+@defun ossl-version
+Return a descriptive version number of the OpenSSL in use.
+
+The version string should be identical to the output of @code{openssl
+version} in a shell.
+
+@example
+@group
+(ossl-version)
+  @result{} "OpenSSL 0.9.9-dev XX xxx XXXX"
+@end group
+@end example
+@end defun
+
+@defun ossl-available-digests
+Return a list of digest algorithms in the underlying crypto library.
+This yields a plain list of symbols.
+@end defun
+
+@defun ossl-available-ciphers
+Return a list of cipher algorithms in the underlying crypto library.
+This yields a list of symbols.
+@end defun
+
+@example
+@group
+(ossl-available-digests)
+  @result{} '(UNDEF MD2 MD5 RSA-MD2 RSA-MD5 SHA RSA-SHA SHA1 RSA-SHA1 DSA-SHA
+       DSA-SHA1-old MDC2 RSA-MDC2 DSA-SHA1 RSA-SHA1-2 DSA RIPEMD160
+       RSA-RIPEMD160 MD4 RSA-MD4 ecdsa-with-SHA1 RSA-SHA256 RSA-SHA384
+       RSA-SHA512 RSA-SHA224 SHA256 SHA384 SHA512 SHA224 whirlpool)
+@end group
+
+@group
+(ossl-available-ciphers)
+  @result{} '(RC4 DES-ECB DES-CFB DES-CBC DES-EDE DES-EDE3 IDEA-CBC IDEA-CFB
+       IDEA-ECB RC2-CBC RC2-ECB RC2-CFB RC2-OFB DES-EDE-CBC
+       DES-EDE3-CBC DES-OFB IDEA-OFB DES-EDE-CFB DES-EDE3-CFB
+       DES-EDE-OFB DES-EDE3-OFB DESX-CBC BF-CBC BF-ECB BF-CFB BF-OFB
+       RC4-40 RC2-40-CBC CAST5-CBC CAST5-ECB CAST5-CFB CAST5-OFB
+       RC5-CBC RC5-ECB RC5-CFB RC5-OFB RC2-64-CBC AES-128-ECB
+       AES-128-CBC AES-128-OFB AES-128-CFB AES-192-ECB AES-192-CBC
+       AES-192-OFB AES-192-CFB AES-256-ECB AES-256-CBC AES-256-OFB
+       AES-256-CFB AES-128-CFB1 AES-192-CFB1 AES-256-CFB1 AES-128-CFB8
+       AES-192-CFB8 AES-256-CFB8 DES-CFB1 DES-CFB8 CAMELLIA-128-CBC
+       CAMELLIA-192-CBC CAMELLIA-256-CBC CAMELLIA-128-ECB
+       CAMELLIA-192-ECB CAMELLIA-256-ECB CAMELLIA-128-CFB
+       CAMELLIA-192-CFB CAMELLIA-256-CFB CAMELLIA-128-CFB1
+       CAMELLIA-192-CFB1 CAMELLIA-256-CFB1 CAMELLIA-128-CFB8
+       CAMELLIA-192-CFB8 CAMELLIA-256-CFB8 CAMELLIA-128-OFB
+       CAMELLIA-192-OFB CAMELLIA-256-OFB)
+@end group
+@end example
+
+@noindent
+These two functions are most useful to conditionalise like
+@example
+(when (member 'MD4 (ossl-available-digests))
+  @dots{})
+@end example
+
+The aforementioned functions work at run-time (not compile time) so it
+is possible when building a dynamically linked SXEmacs to update
+OpenSSL on the fly.  A very rough estimate is to assume to have
+support for the MD5 and SHA1 message digests, and the BF-* symmetric
+cipher systems, any installation of OpenSSL without those is purely
+ridiculous although not impossible.
+
+
+Furthermore we provide convenience functions which, given a digest or
+cipher algorithm symbol, allow to obtain information about the hash
+result size of a digest, and the key size of a cipher, respectively.
+
+@defun ossl-digest-size digest
+Return the hash length of @var{digest} in bytes.
+
+@example
+(ossl-digest-size 'MD5)
+  @result{} 16
+(ossl-digest-size 'SHA512)
+  @result{} 64
+@end example
+@end defun
+
+@defun ossl-digest-block-size digest
+Return the block size of @var{digest} in bytes.
+
+@example
+(ossl-digest-block-size 'MD5)
+  @result{} 64
+(ossl-digest-block-size 'SHA512)
+  @result{} 128
+@end example
+@end defun
+
+@defun ossl-cipher-key-length cipher
+Return the effective key size of @var{cipher} in bytes.
+
+@example
+(ossl-cipher-key-length 'RC4)
+  @result{} 16
+(ossl-cipher-key-length 'CAMELLIA-256-CBC)
+  @result{} 32
+@end example
+@end defun
+
+@defun ossl-cipher-iv-length cipher
+Return the initialisation vector length of @var{cipher} in bytes.
+
+@example
+(ossl-cipher-iv-length 'idea-cbc)
+  @result{} 8
+(ossl-cipher-iv-length 'aes-256-cbc)
+  @result{} 16
+@end example
+@end defun
+
+@defun ossl-cipher-block-size cipher
+Return the block size of @var{cipher} in bytes.
+
+@example
+(ossl-cipher-block-size 'aes-256-cbc)
+  @result{} 16
+(ossl-cipher-block-size 'rc4)
+  @result{} 1
+@end example
+@end defun
+
+@defun ossl-cipher-mode cipher
+Return the operation mode of @var{cipher}.
+
+@example
+(ossl-cipher-mode 'rc4)
+  @result{} stream
+(ossl-cipher-mode 'aes-192-ofb)
+  @result{} ofb
+@end example
+@end defun
+
+
+The openssl API provides following features:
+@itemize
+@item
+@code{'openssl} when fundamental functions are available
+@item
+@code{'openssl-rsa} when RSA keys are available
+@item
+@code{'openssl-dsa} when DSA keys are available
+@item
+@code{'openssl-ec} when elliptic curves are available
+@item
+@code{'openssl-dh} when DH keys are available
+@item
+@code{'openssl-ssl} when the TLS/SSL and X509 capabilities are
+available
+@end itemize
+
+
+@node openssl RAND
+@subsection (Pseudo) Random Numbers
+
+Random numbers are necessary for cryptographically secure
+implementations.  The term number here indeed means a string.  OpenSSL
+itself provides random number generators which fulfill the the demands
+of cryptography.
+
+@defun ossl-rand-bytes count
+Return @var{count} bytes of randomness.
+
+Note: You probably want to put a wrapping encoder function
+(like @code{base16-encode-string}) around it, since this returns
+binary string data.
+@end defun
+
+@example
+@group
+(base16-encode-string (ossl-rand-bytes 8))
+  @result{} "5a78acd572984bdf"
+@end group
+@end example
+
+@noindent
+Modern systems supply more sophisticated sources for random data, so
+called entropy gathering daemons.
+
+@defun ossl-rand-bytes-egd count egd
+Return @var{count} bytes of randomness from an EGD socket.
+By default use the socket @file{/var/run/egd-pool}.
+
+Note: You probably want to put a wrapping encoder function
+(like @code{base16-encode-string}) around it, since this returns
+binary string data.
+@end defun
+
+@example
+@group
+(base16-encode-string (ossl-rand-bytes-egd 8 "/var/run/egd-pool"))
+  @result{} "59342a240b356a04"
+@end group
+@end example
+
+Please note that the system's random sources are used only for seeding
+OpenSSL's pseudo-random number generator.  So even large amounts of
+random data should be feasible.  In contrast querying for large
+amounts of random data directly most likely freezes your process since
+the size of random devices or pools, and hence the size of cached
+random data, is quite limited.
+
+Random numbers generated this way, can be used as ``passwords'' or
+salt values in various encryption and decryption functions.  As stated
+above, whenever security is concerned one of the above functions,
+@code{ossl-rand-bytes} or @code{ossl-rand-bytes-egd} should be used to
+obtain random numbers.  The built-in @code{random} function of SXEmacs
+is @emph{not} cryptographically secure.
+
+
+@node openssl MD
+@subsection Message Digests (aka hashes)
+
+  Message digests are widely used in modern information
+infrastructure.  They are derived from (collision free) one-way hash
+functions. 
+
+  A hash function (such as @samp{md5} or @samp{sha1}) is a function
+with following properties:
+
+@enumerate
+@item reduction: data of arbitrary length is mapped onto data
+  of fixed length
+@item dispersion: a change of one bit in input data changes
+  (ideally) half the bits of the hash value.
+@item well definedness: computing a hash value from the same
+  source data twice yields the same result
+@item efficiency: computing hash values is efficient (ideally
+  with complexity O(n)) on the input, but it is hard to 
+  compute a preimage for a given hash value.
+@end enumerate
+
+Often, the last property is too weak in practice, therefore
+most hash functions comply with the even stronger:
+
+@itemize
+@item collision-freeness: it is hard to compute two different
+  source data which result in the same hash value.
+@end itemize
+
+  Message digests fulfill several tasks in daily use.  Most commonly
+used are so called checksums.  In modern days hash functions are used
+almost exclusively for their error detecting facilities in contrast to
+other checksum algorithms like CRC32.
+
+  Beyond that, message digests play an important role in digital
+signatures.  Since public key crypto systems map long plaintexts on
+long ciphertexts, message digests are used to obscure the length of a
+plaintext.
+
+  Therefore in digital signatures not the message itself is signed but
+the hash value of that message.  That also assures a certain upper
+bound of the length of a digital signature which is (as in real life)
+rather short compared to the message that was signed.
+
+  Okay, after this short introduction to message digests, here are the
+functions to access them from elisp.
+
+@defun ossl-digest digest string
+Return the message digest of @var{string} computed by @var{digest}.
+@var{digest} may be one of the OpenSSL digests you have compiled.
+See @code{ossl-available-digests}.
+
+Note: You probably want to put a wrapping encoder function (like
+@code{base16-encode-string}) around it, since this returns binary
+string data.
+@end defun
+
+  In order to compute digest sums from files without actually looking
+at the file contents explicitly, there is the companion function
+@code{ossl-digest-file} which works similarly.
+
+@defun ossl-digest digest file
+Return the message digest of the contents of @var{file} computed by
+@var{digest}.
+@var{digest} may be one of the OpenSSL digests you have compiled.
+See @code{ossl-available-digests}.
+
+Note: You probably want to put a wrapping encoder function (like
+@code{base16-encode-string}) around it, since this returns binary
+string data.
+@end defun
+
+  The current implementation of the OpenSSL API in SXEmacs uses the
+EVP layer of OpenSSL to access the digests.
+
+@example
+@group
+(base16-encode-string (ossl-digest 'md5 "hash me"))
+  @result{} "17b31dce96b9d6c6d0a6ba95f47796fb"
+@end group
+
+@group
+(base16-encode-string (ossl-digest 'SHA1 "hash me"))
+  @result{} "43f932e4f7c6ecd136a695b7008694bb69d517bd""
+@end group
+@end example
+
+Let's do some performance tests.
+
+@example
+@group
+;; @r{this is the SXEmacs built-in implementation of MD5}
+(let ((st (current-btime)))
+  (dotimes (i 100000)
+    (md5 "Some test string to hash"))
+  (- (current-btime) st))
+  @result{} 6194289
+  ;; @r{time in microseconds, so this is about 6 seconds}
+@end group
+
+@group
+;; @r{now compare to the OpenSSL implementation}
+(let ((st (current-btime)))
+  (dotimes (i 100000)
+    (ossl-digest 'md5 "Some test string to hash"))
+  (- (current-btime) st))
+  @result{} 10589408
+  ;; @r{which is about 10 seconds}
+@end group
+@end example
+
+  As we can see, the built-in implementation has slightly better
+performance when hashing short strings.  The following example shows
+performance on long strings, like the buffer string here.
+
+@example
+@group
+(length (buffer-string))
+  @result{} 16861
+@end group
+
+@group
+;; @r{we begin with the built-in implementation}
+(let ((st (current-btime))
+      (b (buffer-string)))
+  (dotimes (i 100000)
+    (md5 b))
+  (- (current-btime) st))
+  @result{} 74350982
+  ;; @r{which is about 74 seconds}
+@end group
+
+@group
+;; @r{compare to the OpenSSL API}
+(let ((st (current-btime))
+      (b (buffer-string)))
+  (dotimes (i 100000)
+    (base16-encode-string 
+      (ossl-digest 'md5 b)))
+  (- (current-btime) st))
+  @result{} 31697926
+  ;; @r{which is about 31 seconds}
+@end group
+@end example
+
+  This latter example shows digest hashing ``under real conditions''
+since in practice messages to be hashed are typically in the range of
+1000 to 30000 characters.  This range is even vastly exceeded when
+dealing with checksums for files.
+
+  Since the built-in md5 implementation cannot handle file streams, we
+have to turn them into strings.  A possible way to achieve this has
+been suggested by Steve Youngs.  I shall illustrate it with a tarball
+file.
+
+@example
+@group
+freundt@@muck:~> ls -sh ~/temp/pdftex-1.30.3.tar.bz2 
+3.2M /home/freundt/temp/pdftex-1.30.3.tar.bz2
+@end group
+
+@group
+(let ((st (current-btime))
+      (b (with-temp-buffer
+           (insert-file-contents-literally
+            "~/temp/pdftex-1.30.3.tar.bz2")
+           (buffer-string))))
+  (dotimes (i 100)
+    (md5 b))
+  (- (current-btime) st))
+  @result{} 22729718
+  ;; @r{which is about 22 seconds}
+@end group
+@end example
+
+Compared to the file stream function @code{ossl-digest-file}:
+
+@example
+@group
+(let ((st (current-btime)))
+  (dotimes (i 100)
+    (ossl-digest-file 'md5 "~/temp/pdftex-1.30.3.tar.bz2"))
+  (- (current-btime) st))
+  @result{} 4189695
+  ;; @r{which is about 4 seconds}
+@end group
+@end example
+
+  Another performance test which compares the elisp implementation of
+sha1 (taken from `No Gnus v0.4') to the one from the OpenSSL API
+
+@example
+@group
+(let ((st (current-btime)))
+  (dotimes (i 500)
+    (sha1-binary "a short test string"))
+  (- (current-btime) st))
+  @result{} 2574326
+  ;; @r{which is about 2.5 seconds}
+@end group
+
+@group
+  ;; @r{the same with the OpenSSL API}
+(let ((st (current-btime)))
+  (dotimes (i 500)
+    (ossl-digest 'sha1 "a short test string"))
+  (- (current-btime) st))
+  @result{} 31378
+  ;; @r{which is about 0.03 seconds}
+@end group
+@end example
+
+  These results suggest to always use the openssl interface in favour of
+other implementations.
+
+
+@node openssl HMAC
+@subsection Message Authentication Codes (aka keyed hashes)
+
+  Ordinary message digests only offer data integrity verification,
+while HMACs may be used to simultaneously verify both the data
+integrity and the authenticity of a message.  This is accomplished by
+using a secret key.  Now whenever two parties have agreed upon a
+common secret key, one of them can verify that a message hash was
+indeed computed by the other one.
+
+@defun ossl-hmac digest message password
+Return the message authentication code of @var{message}
+using the hash function @var{digest} and the key @var{password}.
+
+Note: You probably want to put a wrapping encoder function
+(like @code{base16-encode-string}) around it, since this returns
+binary string data.
+@end defun
+
+  Unlike in public-key cryptography, this technique requires a new
+secret key for any two parties which want to communicate.  On the
+other hand, this technique works symmetrically, that is the same
+function can be used for both generating and verifying a keyed message
+digest.
+
+@example
+@group
+(base16-encode-string
+ (ossl-hmac 'SHA512 "string to hash" "secret"))
+  @result{} "62351dfae2030fb28058a2aeba6ce3597d803575c120109ed6cfee240d7
+      50e71ffff1d8dfc8d52e666549dcb6ba95fb4d550bdc9f31178c19fecb4
+      30ddb7b565"
+@end group
+
+@group
+;; @r{now hashing with a false password}
+(base16-encode-string
+ (ossl-hmac 'SHA512 "string to hash" "false"))
+  @result{} "44afb8f67ea7f66693e891e79b7295569163e3e6faebd47d2a63e564778
+      c72221cbb4cdff01ff1052ea98d2058f33c1ecf48f0c45bb64e526a81d8
+      f389436ab0"
+@end group
+@end example
+
+
+@node openssl CIPHER
+@subsection Symmetric Cryptography
+
+  Symmetric-key algorithms can be divided into stream ciphers and
+block ciphers.  Stream ciphers encrypt the bits of the message one at
+a time, and block ciphers take a number of bits and encrypt them as a
+single unit.
+
+  In order to use symmetric-key cryptography some preparations have to
+be done, mostly due to the block-oriented operation of the algorithms.
+The following function, given a cipher and digest algorithm, computes
+a valid key suitable for the given cipher algorithm.
+
+@defun ossl-bytes-to-key cipher digest salt password count
+Derive a key and initialisation vector (iv) suitable for a cipher.
+Return a string @var{key} being the key. The initialisation vector is
+put into @var{key}'s property list as @code{'iv}.
+
+@var{cipher} (a symbol) is the cipher to derive the key and IV for.
+Valid ciphers can be obtained by @code{ossl-available-ciphers}.
+
+@var{digest} (a symbol) is the message digest to use.
+Valid digests can be obtained by @code{ossl-available-digests}.
+
+@var{salt} (string or @code{nil}) is used as a salt in the derivation.
+Use @code{nil} here to indicate that no salt is used.
+
+@var{password} is an arbitrary string which is processed to derive a
+unique key and IV.
+
+@var{count} (a positive integer) is the iteration count to use. This
+indicates how often the hash algorithm is called recursively.
+
+Note: You probably want to put a wrapping encoder function 
+(like @code{base16-encode-string}) around it, since this returns
+binary string data.
+@end defun
+
+Note: It is disregarded to use the key/iv pair of, say, AES-128 cipher
+for e.g. a blowfish (BF) cipher, although it seems possible and is not
+explicitly forbidden.  Such malpractices may result in severe
+crashes.
+
+@example
+@group
+(base16-encode-string
+ (ossl-bytes-to-key 'AES-256-OFB 'SHA512 "somesalt" "secret" 1))
+  @result{} "bd2b1aaf7ef4f09be9f52ce2d8d599674d81aa9d6a4421696dc4d93dd0619d68"
+@end group
+
+@group
+(base16-encode-string
+ (ossl-bytes-to-key 'AES-256-OFB 'SHA512 "diffsalt" "secret" 1))
+  @result{} "bd2b1aaf7ef4f09be9f52ce2d8d599674d81aa9d6a4421696dc4d93dd0619d68"
+@end group
+
+@group
+(base16-encode-string
+ (ossl-bytes-to-key 'AES-256-OFB 'SHA512 "diffsalt" "retsec" 1))
+  @result{} "38515c1868bcab470075ec32bc79b0ed1aa945de95d2261991ea840921e7747b"
+@end group
+@end example
+
+These examples show how different passwords yield different keys, and
+that different salts do not affect the result.  As mentioned in the
+doc string the result carries an object-plist with the initialisation
+vector inside:
+
+@example
+@group
+(object-plist
+ (ossl-bytes-to-key 'AES-256-OFB 'SHA512 "somesalt" "secret" 1))
+  @result{} (iv "????????????????")
+@end group
+
+@group
+(base16-encode-string
+ (get 
+  (ossl-bytes-to-key 'AES-256-OFB 'SHA512 "somesalt" "secret" 1)
+  'iv))
+  @result{} "2ce56b4d64a9ef097761ced99e0f6726"
+@end group
+@end example
+
+
+@defun ossl-encrypt cipher string key &optional iv
+Return the cipher of @var{string} computed by @var{cipher} under
+@var{key}.
+
+@var{cipher} (a symbol) may be one of the OpenSSL cipher algorithms
+you have compiled. See @code{ossl-available-ciphers}.
+
+@var{string} is the text to be encrypted.
+
+@var{key} should be a key generated suitably for this cipher, for
+example by @code{ossl-bytes-to-key}.
+
+Optional fourth argument @var{iv} should be an initialisation vector
+suitable for this cipher. Normally the initialisation vector from
+@var{key}'s property list is used. However, if @var{iv} is
+non-@code{nil}, use this IV instead.
+
+Note: You probably want to put a wrapping encoder function
+(like @code{base16-encode-string}) around it, since this returns
+binary string data.
+@end defun
+
+@defun ossl-decrypt cipher string key &optional iv
+Return the deciphered version of @var{string} computed by @var{cipher}
+under @var{key}.
+
+@var{cipher} (a symbol) may be one of the OpenSSL cipher algorithms
+you have compiled. See @code{ossl-available-ciphers}.
+
+@var{string} is the text to be decrypted.
+
+@var{key} should be a key generated suitably for this cipher, for
+example by @code{ossl-bytes-to-key}.
+
+Optional fourth argument @var{iv} should be an initialisation vector
+suitable for this cipher. Normally the initialisation vector from
+@var{key}'s property list is used. However, if @var{iv} is
+non-@code{nil}, use this IV instead.
+@end defun
+
+@example
+@group
+(base16-encode-string
+ (let ((key
+        (ossl-bytes-to-key 'AES-256-OFB 'SHA512 "salt" "secret" 10)))
+   (ossl-encrypt 'AES-256-OFB "Very secret text." key)))
+  @result{} "bbedc78c88eddea29c8653f551da391091"
+@end group
+
+@group
+(let ((key
+       (ossl-bytes-to-key 'AES-256-OFB 'SHA512 "salt" "secret" 10))
+      (s (base16-decode-string "bbedc78c88eddea29c8653f551da391091")))
+  (ossl-decrypt 'AES-256-OFB s key))
+  @result{} "Very secret text."
+@end group
+
+@group
+(let ((key
+       (ossl-bytes-to-key 'AES-256-OFB 'SHA512 "salt" "dontknow" 1))
+      (s (base16-decode-string "bbedc78c88eddea29c8653f551da391091")))
+  (ossl-decrypt 'AES-256-OFB s key))
+  @result{} "?????????????????"
+@end group
+@end example
+
+The above example shows a complete cycle of encryption and decryption,
+as well as an attempt to decrypt a string using a wrong password.
+
+  As for message digests, there are two companion functions which
+directly work on files.
+
+@defun ossl-encrypt-file cipher file key &optional iv outfile
+Return the encrypted contents of @var{file} computed by @var{cipher}
+under @var{key}.
+
+@var{cipher} (a symbol) may be one of the OpenSSL cipher algorithms
+you have compiled. See @code{ossl-available-ciphers}.
+
+@var{file} is the file to be encrypted.
+
+@var{key} should be a key generated suitably for this
+cipher, for example by @code{ossl-bytes-to-key}.
+
+Optional fourth argument @var{iv} should be an initialisation vector
+suitable for this cipher. Normally the initialisation vector from
+@var{key}'s property list is used. However, if @var{iv} is
+non-@code{nil}, use this IV instead.
+
+Optional fifth argument @var{outfile} may specify a file to have the
+encrypted data redirected.
+
+Note: You probably want to put a wrapping encoder function
+(like @code{base16-encode-string}) around it, since this returns
+binary string data.
+@end defun
+
+
+@defun ossl-decrypt-file cipher file key &optional iv outfile
+Return the deciphered version of @var{file} computed by @var{cipher}
+under @var{key}.
+
+@var{cipher} (a symbol) may be one of the OpenSSL cipher algorithms
+you have compiled. See @code{ossl-available-ciphers}.
+
+@var{file} is the file to be decrypted.
+
+@var{key} should be a key generated suitably for this
+cipher, for example by @code{ossl-bytes-to-key}.
+
+Optional fourth argument @var{iv} should be an initialisation vector
+suitable for this cipher. Normally the initialisation vector from
+@var{key}'s property list is used. However, if @var{iv} is
+non-@code{nil}, use this IV instead.
+
+Optional fifth argument @var{outfile} may specify a file to have the
+decrypted data redirected.
+@end defun
+
+
+
+@node openssl PKEY
+@subsection public key crypto systems
+
+While keys for symmetric ciphers can be easily stored as strings, keys
+for asymmetric algorithms are more complex.  The openssl API therefore
+provides a dedicated primitive type, called pkey.  Pkey objects can
+contain key pairs -- i.e. pairs of public keys and corresponding
+private keys, public keys, and also certificates.  They are general
+container object for various subtypes such as RSA, DSA, EC, and DH
+keys.
+
+However, you cannot directly create such a pkey object nor access nor
+modify parts of it.  Pkey objects are actually meant as transporter
+objects to simplify those functions which need them.
+
+@defun ossl-pkey-p object
+Return @code{t} if @var{object} is a pkey, @code{nil} otherwise.
+@end defun
+
+@defun ossl-pkey-size pkey
+Return the size a public key @var{pkey} in bits.
+@end defun
+
+@defun ossl-pkey-private-p pkey
+Return non-@code{nil} if @var{pkey} contains private data.
+
+Note: This function is not native OpenSSL.
+@end defun
+
+@defun ossl-pkey-get-public pkey
+Return a copy of @var{pkey} stripped by the private data.
+
+Note: This function is not native OpenSSL.
+@end defun
+
+The above functions have a generic character because they are
+independent from the choice of algorithm, see below.  For each of
+these algorithms we provide a constructor function
+@code{ossl-@var{algo}-generate-key} and a subtype predicate, named
+@code{ossl-@var{algo}-pkey-p}.  In case of RSA and DSA we also support
+a subkey check.
+
+@noindent
+Note: At the moment we do not provide the creation of DH-keys.
+
+Now the first important asymmetric algorithm is RSA.  As mentioned in
+the general introduction OpenSSL can be built without it.  The
+following functions therefore exist iff @code{(featurep 'openssl-rsa)}
+evaluates to @code{t}.
+
+@defun ossl-rsa-generate-key bits exp
+Return an RSA public key with of length @var{bits} and exponent @var{exp}.
+@end defun
+
+@defun ossl-rsa-pkey-p pkey
+Return @code{t} iff @var{pkey} is of RSA type.
+@end defun
+
+@defun ossl-rsa-subkey-p pkey1 pkey2
+Return @code{t} if @var{pkey1} is a subkey of @var{pkey2}, @code{nil}
+otherwise, i.e. if @var{pkey1} has the same public key data as
+@var{pkey2} and @var{pkey2} has all private data.
+
+Note: This function is not native OpenSSL.
+@end defun
+
+@example
+@group
+(setq rsaexmpl (ossl-rsa-generate-key 2048 3))
+  @result{} #<OpenSSL RSA private/public key, size 2048>
+(ossl-rsa-pkey-p rsaexmpl)
+  @result{} t
+(ossl-pkey-private-p rsaexmpl)
+  @result{} t
+@end group
+
+@group
+(setq rsapub (ossl-pkey-get-public rsaexmpl))
+  @result{} #<OpenSSL RSA public key, size 2048>
+(ossl-pkey-private-p rsapub)
+  @result{} nil
+(ossl-rsa-subkey-p rsapub rsaexmpl)
+  @result{} t
+@end group
+@end example
+
+
+Another important asymmetric algorithm is DSA.  The presence of DSA
+support in the underlying library can be checked by @code{(featurep
+'openssl-dsa)}.  Nonetheless, it is very unlikely to face an OpenSSL
+installation without DSA or RSA.
+
+@defun ossl-dsa-generate-key bits &optional seed
+Return a DSA public key with of length @var{bits} seeded with
+(optional) @var{seed}.
+@end defun
+
+@defun ossl-dsa-pkey-p pkey
+Return @code{t} if @var{pkey} is of DSA type, @code{nil} otherwise.
+@end defun
+
+@defun ossl-dsa-subkey-p pkey1 pkey2
+Return @code{t} if @var{pkey1} is a subkey of @var{pkey2}, @code{nil}
+otherwise, i.e. if @var{pkey1} has the same public key data as
+@var{pkey2} and @var{pkey2} has all private data.
+
+Note: This function is not native OpenSSL.
+@end defun
+
+@example
+@group
+(setq dsaexmpl (ossl-dsa-generate-key 1024))
+  @result{} #<OpenSSL DSA private/public key, size 384>
+(ossl-dsa-pkey-p dsaexmpl)
+  @result{} t
+(ossl-pkey-private-p dsaexmpl)
+  @result{} t
+@end group
+
+@group
+(setq dsapub (ossl-pkey-get-public dsaexmpl))
+  @result{} #<OpenSSL DSA public key, size 384>
+(ossl-pkey-private-p dsapub)
+  @result{} nil
+(ossl-dsa-subkey-p dsapub dsaexmpl)
+  @result{} t
+@end group
+@end example
+
+
+Elliptic curve cryptography is quite new and is possibly missing on
+many systems.  Use @code{(featurep 'openssl-ec)} to check for elliptic
+curve support.  Another particularity of the ec system is that it is
+based on a fixed set of curves which can be referred to by name.  At
+the moment we do not support creating custom curves.
+
+@defun ossl-ec-available-curves
+Return a list of builtin elliptic curves.
+@end defun
+
+@defun ossl-ec-generate-key curve
+Return a EC public key on @var{curve}.
+@var{curve} may be any symbol from @code{(ossl-ec-available-curves)}.
+
+Note: At the moment we do not support creating custom curves.
+@end defun
+
+@defun ossl-ec-pkey-p pkey
+Return @code{t} if @var{pkey} is of EC type, @code{nil} otherwise.
+@end defun
+
+@example
+@group
+(ossl-ec-available-curves)
+  @result{} (Oakley-EC2N-4 Oakley-EC2N-3 wap-wsg-idm-ecid-wtls12
+      wap-wsg-idm-ecid-wtls11 wap-wsg-idm-ecid-wtls10
+      wap-wsg-idm-ecid-wtls9 wap-wsg-idm-ecid-wtls8
+      wap-wsg-idm-ecid-wtls7 wap-wsg-idm-ecid-wtls6
+      wap-wsg-idm-ecid-wtls5 wap-wsg-idm-ecid-wtls4
+      wap-wsg-idm-ecid-wtls3 wap-wsg-idm-ecid-wtls1 c2tnb431r1
+      c2pnb368w1 c2tnb359v1 c2pnb304w1 c2pnb272w1 c2tnb239v3
+      c2tnb239v2 c2tnb239v1 c2pnb208w1 c2tnb191v3 c2tnb191v2
+      c2tnb191v1 c2pnb176v1 c2pnb163v3 c2pnb163v2 c2pnb163v1 sect571r1
+      sect571k1 sect409r1 sect409k1 sect283r1 sect283k1 sect239k1
+      sect233r1 sect233k1 sect193r2 sect193r1 sect163r2 sect163r1
+      sect163k1 sect131r2 sect131r1 sect113r2 sect113r1 prime256v1
+      prime239v3 prime239v2 prime239v1 prime192v3 prime192v2
+      prime192v1 secp521r1 secp384r1 secp256k1 secp224r1 secp224k1
+      secp192k1 secp160r2 secp160r1 secp160k1 secp128r2 secp128r1
+      secp112r2 secp112r1)
+@end group
+
+@group
+(setq ecexmpl (ossl-ec-generate-key 'secp224r1))
+  @result{} #<OpenSSL EC private/public key, size 512>
+(ossl-ec-pkey-p ecexmpl)
+  => t
+(ossl-pkey-private-p ecexmpl)
+  @result{} t
+@end group
+
+@group
+(setq ecpub (ossl-pkey-get-public ecexmpl))
+  @result{} #<OpenSSL EC public key, size 512>
+(ossl-pkey-private-p ecpub)
+  @result{} nil
+@end group
+@end example
+
+
+Finally, there is the DH key exchange.  Its presence can be checked
+by @code{(featurep 'openssl-dh)}.  At the moment we do not provide
+constructor functions.
+
+@defun ossl-dh-pkey-p pkey
+Return @code{t} if @var{pkey} is of DH type, @code{nil} otherwise.
+@end defun
+
+
+Once you have a pkey object you can use it for encryption/decryption,
+and/or signing/verification.  Talking in OpenSSL hybrid encryption and
+decryption is referred to as sealing and opening, respectively.
+
+@defun ossl-seal cipher string pkey
+Return an envelope derived from encrypting @var{string} by
+@var{cipher} under @var{pkey} with the hybrid technique.
+
+That is, create a random key/iv pair for the symmetric encryption with
+@var{cipher} and encrypt that key/iv asymmetrically with the provided
+public key.
+
+The envelope returned is a list 
+@code{(@var{encrypted_string} @var{encrypted_key} @var{encrypted_iv})}
+where
+@var{encrypted_string} is the (symmetrically) encrypted message
+@var{encrypted_key} is the (asymmetrically) encrypted random key
+@var{encrypted_iv} is the (asymmetrically) encrypted random iv
+
+Note: You probably want to put a wrapping encoder function
+(like @code{base16-encode-string}) around it, since this function
+returns binary string data.
+@end defun
+
+@defun ossl-open cipher string pkey ekey eiv
+Return the deciphered message @var{string} from an envelope obtained
+by @code{ossl-seal}.
+
+@itemize
+@item
+@var{cipher} is the cipher to use (the same as in @code{ossl-seal})
+@item
+@var{string} is the encrypted message
+@item
+@var{pkey} is the private key
+@item
+@var{ekey} is the encrypted random key
+@item
+@var{eiv} is the encrypted iv
+@end itemize
+@end defun
+
+@c  * - HYBRID
+@c  *  ossl-seal - gateway to public key hybrid (envelope) encryption
+@c  *  ossl-open - gateway to public key hybrid (envelope) decryption
+@noindent
+In the following example we reuse the keys generated above.
+
+@example
+@group
+(let ((envl
+       (ossl-seal 'AES-256-CBC "I do not want to tell" rsaexmpl)))
+  (setq str (car envl)
+        key (nth 1 envl)
+        iv (nth 2 envl))
+  (mapcar #'base16-encode-string envl))
+  @result{} ("0e6a38b28efea3ca4901b268c141d7ac23ed5f8fa598d23d9846fe3ec1
+       47278e" 
+      "167911a73b0a228b24e78bdd37197ec95b21bed3bbd62d1915d8fac791
+       7915fd49fdd9774e7906ca53ed3bf4fb20de8339e628d469a496f7351c
+       06fddda49b71c90e73e31c406cfb0f0fb7411d1c9d49842603c45415cc
+       3a8f660c728e8f05c6479d004f5068a7969294b4cc81e13dd257df37dc
+       886b11266a3ccba576396d200ebb1a3e8f7185fdbc6de40b63964562f9
+       1cbe39118a07415c030fd4c3e25bbe2a64b2ab635b2ef9a71a5ddeeaf0
+       4a73d7cd04ad334d1de04228db5a9fb9aebfa6a9dc9d76af5ec329b360
+       d1cd8da45868450a3bc5c41bba95a0ad74439f7d5edffcdf7dff09c296
+       35ae13215be1ae55f5d2b5e97d6a4d523470eef050b07193"
+      "ab458ccb46cbc092c31614e997cd176b")
+@end group
+
+@group
+(ossl-open 'AES-256-CBC str rsaexmpl key iv)
+  @result{} "I do not want to tell"
+@end group
+@end example
+
+@noindent
+The above example is nice but does not demonstrate the real power of
+hybrid encryption.  In the following example we reuse the public
+subkey @code{rsapub} of @code{rsaexmpl} from above.  Also you will
+notice that the random key/iv pair has changed and thus the resulting
+encrypted string is not the same.
+
+@example
+@group
+(let ((envl
+       (ossl-seal 'AES-256-CBC "I do not want to tell" rsapub)))
+  (setq str (car envl)
+        key (nth 1 envl)
+        iv (nth 2 envl))
+  (mapcar #'base16-encode-string envl))
+  @result{} ("93a5b3f2eb5a2eaee44805150717bb325b4e90be947591cc46b7819d3f
+       4ec284"
+      "300b9ab5a79524fdcb40fbed6bae7e9c470baa0d230f9b97c9b35de442
+       62f82b626ef7668329d34cffc3eeddf535a879e974825e984c7e045c0a
+       526b3b58453ae55926af519400f32c4aee7115088068fcb6fc75ce78c5
+       b6d61bbaf90f0c4aff1d83efd63c45c62989c29efda187bcbd94edf9f1
+       427ec8dce22cd6333e8196120285dc5bb224b9d7e9ecfb23e016475706
+       5da6f999560d010adaf0465b108b2a84989ff8bd17778b61875f633a35
+       a02c2cc1fdf3a3e50ad4a5fb7ad9a05b1a3a1818a21f3d7c71a33949f6
+       437ee64bee60e1ae92ebea43ca524b15344a7fc2712e9758b98f1b2c9d
+       c8ad3d074486f0d35fece7bf7b6ce979fa760aa7bd5854b2"
+      "6979d574e8bc10dfddefd4cb017186a2")
+@end group
+
+@group
+(ossl-open 'AES-256-CBC str rsaexmpl key iv)
+  @result{} "I do not want to tell"
+@end group
+
+@group
+;; @r{try with just the public part}
+(ossl-open 'AES-256-CBC str rsapub key iv)
+@error{} cannot open, key has no private key data
+@end group
+@end example
+
+@noindent
+Also note you cannot use DSA keys for sealing.  They are exclusively
+for signatures.
+
+
+Signing and verifying works similar to sealing and opening.  Instead
+of a cipher algorithm you need to specify a message digest algorithm.
+However, in this case the signature step requires a pkey with private
+data and the verification step can be done with only the public part
+of the key.
+
+@defun ossl-sign digest string pkey
+Return a signature obtained by signing @var{string} under @var{digest}
+with @var{pkey}.
+
+That is, hash the message @var{string} with the message digest
+@var{digest} and encrypt the result with the private key @var{pkey}.
+
+Note: Due to some relationship between the public key system and the
+message digest you cannot use every digest algorithm with every
+private key type.
+The most certain results will be achieved using
+RSA keys with RSA-* digests, DSA keys with DSA-* digests.
+
+See @code{ossl-available-digests}.
+
+Note: You probably want to put a wrapping encoder function
+(like @code{base16-encode-string}) around it, since this returns
+binary string data.
+@end defun
+
+@defun ossl-verify digest string sig pkey
+Return @code{t} iff @var{sig} is a valid signature of @var{string}
+under @var{digest} obtained by @var{pkey}.
+
+That is, hash the message @var{string} with the message digest
+@var{digest}, then decrypt the signature @var{sig} with the public key
+@var{pkey}.  Compare the results and return @code{t} iff both hashes
+are equal.
+
+@itemize
+@item
+@var{digest} is the digest to use (the same as in @code{ossl-sign})
+@item
+@var{string} is the message
+@item
+@var{sig} is the signature of message
+@item
+@var{pkey} is the public key
+@end itemize
+@end defun
+
+@c  * - SIGN
+@c  *  ossl-sign - gateway to public key signature
+@c  *  ossl-verify - gateway to public key signature verification
+@noindent
+Again we reuse the keys defined above.
+
+@example
+@group
+(progn
+  (setq sig (ossl-sign 'SHA1 "I owe you a beer" dsaexmpl))
+  (base16-encode-string sig))
+  @result{} "302d021500c2e5197d266573216e4daa85e0a7e43424d0f031021451186
+      24043517e0cd24f381d0e6c92f96198f297"
+@end group
+
+@group
+(ossl-verify 'SHA1 "I owe you a beer" sig dsapub)
+  @result{} t
+@end group
+
+@group
+;; @r{we try to fake the signed text}
+(ossl-verify 'SHA1 "I owe you 10 beer" sig dsapub)
+  @result{} nil
+@end group
+@end example
+
+Note that you cannot use all combinations of pkey and digest
+algorithm.  Suitable digests can be found in the
+@code{(ossl-available-digests)} list.  Given a digest @var{dgst} there
+must be an entry @code{RSA-@var{dgst}} in order to use an RSA key for
+signatures under @var{dgst}.  Respectively there must be an entry
+@code{DSA-@var{dgst}} for DSA key pairs and all DSA-suitable digests can
+also be used for EC keys.
+
+In order to persistently store generated keys the openssl API provides
+a simple interface to the PEM routines.  PEM is @emph{the} format for
+key pairs or public keys.
+
+@defun ossl-pem-read-public-key file
+Return a key (the public part) stored in a PEM structure from
+@var{file}.
+@end defun
+
+@defun ossl-pem-read-key file &optional password
+Return a key stored in a PEM structure from @var{file}.
+If the (private part of the) key is protected with a password
+provide (optional) @var{password}.
+@end defun
+
+@defun ossl-pem-write-public-key file pkey
+Write @var{pkey} (the public part) in a PEM structure to @var{file}.
+@end defun
+
+@defun ossl-pem-write-key file pkey &optional cipher password
+Write @var{pkey} in a PEM structure to @var{file}. The key itself is
+protected by (optional) @var{cipher} with @var{password}.
+
+@var{cipher} can be set to @code{nil} and the key will not be
+encrypted.  @var{password} is ignored in this case.
+@end defun
+
+@defun ossl-pem-public-key pkey
+Return @var{pkey} as PEM encoded string.
+@end defun
+
+@defun ossl-pem-key pkey &optional cipher password
+Return @var{pkey} as PEM encoded string.   The key itself is
+protected by (optional) @var{cipher} with @var{password}.
+
+@var{cipher} can be set to @code{nil} and the key will not be
+encrypted.  @var{password} is ignored in this case.
+@end defun
+
+@example
+@group
+(ossl-pem-write-key "/tmp/mykey.pem" dsaexmpl)
+@end group
+
+@group
+(let ((stored (ossl-pem-read-key "/tmp/mykey.pem")))
+  (ossl-verify 'SHA1 "I owe you a beer" sig stored))
+  @result{} t
+@end group
+
+@group
+(ossl-pem-public-key rsapub)
+  @result{} "-----BEGIN PUBLIC KEY-----
+MIIBIDANBgkqhkiG9w0BAQEFAAOCAQ0AMIIBCAKCAQEAtGE7JaGUsVIfLUJmzlkR
+qfB7CJjFlYU7tGmD7C1rBiGz0sjTlPwsMjwwCLP6byRvebVeDxGrxbeyZE3sSB4q
+oVbevhbwwBMY5+j/8q+3l7KbqoP9CGG40ZbEC6IOqFn8kOmliPdWUlogI1Gr4b7U
+R4F+TM6m3r3AQoxeqq+rR5kHat2mvBpxm0o8FZ2KW6ZCAkAXoA3NNCXtSUF9zA6A
+u3acUP4eiFAkS4Q6hIuZli4PzxvUugB5/ekyaa5cRzIEqIhh90mkpqjM9qpR15hk
+39qiM/SxXmLlncU534byldSgnoIse3tnia4WRBm2qK3zTr24zaBtTTXfmRJMWQwZ
+ewIBAw==
+-----END PUBLIC KEY-----
+"
+@end group
+
+@group
+(ossl-pem-public-key rsaexmpl)
+  @result{} "-----BEGIN PUBLIC KEY-----
+MIIBIDANBgkqhkiG9w0BAQEFAAOCAQ0AMIIBCAKCAQEAtGE7JaGUsVIfLUJmzlkR
+qfB7CJjFlYU7tGmD7C1rBiGz0sjTlPwsMjwwCLP6byRvebVeDxGrxbeyZE3sSB4q
+oVbevhbwwBMY5+j/8q+3l7KbqoP9CGG40ZbEC6IOqFn8kOmliPdWUlogI1Gr4b7U
+R4F+TM6m3r3AQoxeqq+rR5kHat2mvBpxm0o8FZ2KW6ZCAkAXoA3NNCXtSUF9zA6A
+u3acUP4eiFAkS4Q6hIuZli4PzxvUugB5/ekyaa5cRzIEqIhh90mkpqjM9qpR15hk
+39qiM/SxXmLlncU534byldSgnoIse3tnia4WRBm2qK3zTr24zaBtTTXfmRJMWQwZ
+ewIBAw==
+-----END PUBLIC KEY-----
+"
+@end group
+
+@group
+(ossl-pem-key rsaexmpl 'AES-256-CBC "foobar")
+  @result{} "-----BEGIN ENCRYPTED PRIVATE KEY-----
+MIIFHzBJBgkqhkiG9w0BBQ0wPDAbBgkqhkiG9w0BBQwwDgQIk4VVj28lKIgCAggA
+MB0GCWCGSAFlAwQBKgQQ0uzDwfFB2m5ZUCt8K1YSvwSCBNCcQuY1S1c7Blsm7QlH
+iHji7xWcigj6U7U6IQ0y/a6+U/ku2/IQc4I/sjsYNj1ZKBjkHxuWqVtGvKD/AB/r
+2XFYkOpg7X2SvpVXuCkHk/B7l8ifQViqwu3k8r+8jHmLuxa21xysrTLOef8LmCkg
+ePaOArDKascJngpkUtMM269owh1ZBUSmKqQqR+jnpXw+dummdlr2tA0t3Bl+899q
+e6L7sZ330XRTnzyQUuZvBpV8bV0AlaI3jlPROu56MKiUiDU0n9lvzYegWGAJjOvS
+qYW3FPY/B7MczXCFQOmg3XWXWJ/2szRQnWvuM5imhwVF4YbPO30H6KG2sRc5u4Bs
+vym71CdlD77+YEw2dQ36bgjLE2v9aFIuuqqRlbNO1wUo1D0JFrN0ivGnliA6tCQ2
+tADHeEqKeXjCk4GM+rZB9d/kx2RqTgqu+JolaO1+8lxWRMT+aLj5EPN8zHOaRhDL
+3farG89PEOUvPRzkn+18laPBJ0o9AvwYC9Bmi072Lq7XtOIH0iELxY2RyQD0PLD2
+cLdt5tkQDfuUhrUJuhh3waMDa7qe9lMGnxsmlapZn5FY1kZ6gBO79BBu9sFmsr1x
+IRDT5PJc2V+BU9fn3Vu6WM3P56x7WfUjycqpvmu7yshW8D/8KRNYbeBIAXuRKCoJ
+dRIp/c+UWSPDVb68NikRvTRvj0vVrGMsesRkl89uL6liGarGghEV9lwNDQB5XN0q
+wZ+4LXP4DZQlBK3g9Bq7rL6F3ZuxGdThjQO6IAve6MltfOIN/x/schcoE41g2y0D
+0hn8vnDkGwWKFE59qOZ7/iQOOKJisF6MjxnkhlcTvG3ev2mrSsJHdiIoN9u8Zm6o
+Xca/k7JEs3rkr5MhrjxpGznq6Z5skEWEFFGD5XlXKYsHlP5YDxVXLED1cQHKcydC
+t2uPsB/Uqj4zl/lBc0/asQ8gyZiR2Fc5DHjUkmQ/5kH4LulvVLJgCC8JRs2AutBu
+DsqfvEj8uhmCuNYlsrOGrrOo/m2HPQ1DeoJcoL+H8KQG1WjPo0bnaV0Xlf6o+IkI
+G42pDGVeNSZDc+gqbXTzHDF0snOVDO7nfJ+kWmTFpHhI8Ht5H6SaaAIcgIQcWZgZ
+vA7e54XQ6HBUARFaPdw8kXyilu3lGunacjfipCdsOaF3WxGgdPmQTfuQOqglYhlc
+v/WPjyV9WgpEaJKM2Vcwb+CiOeteKnqp9ZLdmb4fZJNP2oIlKLtQSHsmdFGEr7BP
+7hxoi/kcD9QpuC9CHn1rZC99ZwWBa+UmK5s+P8LJRfi6a8qhR3gA6H/JGZLFiW0C
+Vrmir9u33UkroKfn+JTuMZV5e+U7YNFSJhX95nbLTIx44ItyztGlE5+lHMPA+N/p
++OQM2F0kzfSZ2F1M3x3iO4VPzfEC6vNBpOOhhssSoL9ThNYlCQOVa+QemEjmVuEs
+PLluotrTI3Cetk4nanvj4HGb6KjnkU1JdQ6iKSEl2JnYWrmNNoB3N06/h/7DQpiy
+p/tevEVZQxK2cOklJrgcuNtVXe3c/9OVRKDuu3m1GstbQ4pcqijc55kuEtA0tmvn
+S5WFFj4/cVucd2K3IOHCttEfgDwVNDDzG2shBsKT1JDY4aDOBD3xe+ggstVkGmRL
+ocNNE7QyxF/GOgW9iTQr/yOp9A==
+-----END ENCRYPTED PRIVATE KEY-----
+"
+@end group
+@end example
+
+
+@node openssl SSL/TLS
+@subsection Secure Network Layers
+
+The SSL/TLS support in this API is definitely not a copy of the
+underlying libssl functions.  Instead we chose a higher level of access
+methods because for example @code{SSL_connect} does not work
+standalone, and having an elisp loop to check socket messages is
+probably not desirable.
+
+Also we chose to actually do what SSL/TLS stands for, namely to
+establish a transparent security layer on top of an existing network
+connection.  That is, you can use the usual @code{open-network-stream}+
+@code{set-process-filter} + @code{process-send-string} chain and at some
+point after the establishment of the connection you can coat that
+connection with a secure layer.  Of course, this is done transparently
+and your existing process filter or send-string commands will not notice
+the change.
+
+@defun ossl-ssl-handshake process &optional method ca cert key serverp
+Perform a handshake on the network connection @var{process}.
+
+Return a ssl-conn object, or @code{nil} if the handshake failed.
+In the latter case, most likely the remote site cannot handle
+the specified method, requires a client certificate, or cannot
+handle ssl at all.
+
+Optional argument @var{method} indicates the SSL connection method,
+it can be one of @code{tls1} which is the default, @code{ssl23},
+@code{ssl2}, or @code{ssl3}.
+
+Optional argument @var{ca} indicates a CA certificate.
+See @code{ossl-ssl-inject-ca}.
+
+Optional arguments @var{cert} and @var{key} indicate a peer
+certificate and possibly a separate key file respectively.
+See @code{ossl-ssl-inject-peer-cert}.
+
+Optional argument @var{serverp} indicates whether to perform the
+handshake as a server if non-@code{nil}, and as a client otherwise.
+Note: In case of a handshake as server it is mandatory to provide
+a valid certificate and a corresponding key.
+@end defun
+
+Currently there are no high level `@code{open-ssl-stream}' (and such)
+functions.  You have to invoke @code{open-network-stream} first and
+after establishing that connection @code{ossl-ssl-handshake} should
+be performed.
+
+Also, be sure to store the returned SSL-CONN object for later
+reference.
+
+@defun ossl-ssl-finish ssl-conn
+Finish an SSL connection @var{ssl-conn}.
+
+Note: This may also finish the network connection.
+@end defun
+
+As noted above, not all peers finish the connection after finishing
+the SS-Layer but it is highly suggested to do so.  Unpredictible
+results may occur when you keep using that connection.
+
+@defun ossl-ssl-inject-cert ssl_conn cert &optional key
+Add @var{cert} as the local certificate of @var{ssl-conn}.
+Optional argument @var{key} specifies a key file or evp-pkey,
+if @var{cert} does not contain it.
+
+Both, @var{cert} and @var{key} may be either a filename pointing
+to a PEM-encoded certificate and key respectively, or may be an
+evp-pkey object.
+@end defun
+
+@defun ossl-ssl-inject-ca ssl-conn ca
+Add @var{ca} to the pile of certificate authorities of @var{ssl-conn}.
+Also force a (re)verification of the remote peer certificate
+against @var{ca}.  Return @code{t} if the injection was successful,
+@code{nil} otherwise.
+
+@var{ca} may be either a file name pointing to a PEM-encoded
+CA certificate, or may be a directory containing a valid
+bunch of CA certificates according to OpenSSL's CA path
+layout, or may also be an evp-pkey object.
+@end defun
+
+While @code{ossl-ssl-inject-ca} may be used even after handshaking
+with the remote peer, for example to introduce a certificate authority
+to verify the remote peer's identity with hindsight, the same does not
+apply to @code{ossl-ssl-inject-peer-cert} since local peer
+verification at the remote site can only take place at handshake time.
+Regard that function as convenience function.
+
+@example
+@group
+;; @r{open a https connection to addons.mozilla.org}
+(setq p (open-network-stream "moz" "moz" "addons.mozilla.org" 443))
+  @result{} #<network connection "moz" (443 . "addons.mozilla.org") state:run>
+
+(setq m (ossl-ssl-handshake p))
+  @result{} #<OpenSSL socket layer: TLSv1 on top of 
+       #<secure network connection "moz" 
+         (443 . "addons.mozilla.org") state:run>>
+
+;; @r{Let's examine @samp{p}}
+p
+  @result{} #<secure network connection "moz"
+       (443 . "addons.mozilla.org") state:run>
+
+(ossl-ssl-finish m)
+  @result{} #<OpenSSL socket layer: dead>
+
+;; @r{Let's examine @samp{p} again}
+p
+  @result{} #<network connection "moz"
+       (443 . "addons.mozilla.org") state:exit>
+@end group
+@end example
+
+@noindent
+Offering a secure listening socket works quite similar as the
+following example shows.
+
+@example
+@group
+;; @r{build the acceptor function}
+(defun my-acceptor (proc)
+  (ossl-ssl-handshake proc 'ssl23 nil
+   "/path/to/server.cert" "/path/to/server.key" t))
+  @result{} my-acceptor
+
+;; @r{establish the listening socket}
+(open-network-server-stream "listen" "listen"
+ "localhost" 4432 'tcp #'my-acceptor)
+  @result{} #<network server accepting connections "listen"
+       (4432 . "localhost") state:run>
+@end group
+
+@group
+@r{We connect using the OpenSSL command line interface.}
+
+freundt@@hlid:~$ openssl s_client -ssl3 -connect localhost:4432 \
+  -CAfile /etc/ssl/CA/cacert.pem
+CONNECTED(00000003)
+depth=1 /C=DE/ST=Berlin/O=hlidskjalf.org/OU=local CA/CN=hlid.hli
+dskjalf.org/emailAddress=freundt@@hlidskjalf.org
+verify return:1
+depth=0 /C=DE/ST=Berlin/O=hlidskjalf.org/OU=ldap client freundt/
+CN=hlid.hlidskjalf.org/emailAddress=freundt@@hlidskjalf.org
+verify return:1
+---
+Certificate chain
+ 0 s:/C=DE/ST=Berlin/O=hlidskjalf.org/OU=ldap client freundt/CN=
+hlid.hlidskjalf.org/emailAddress=freundt@@hlidskjalf.org
+   i:/C=DE/ST=Berlin/O=hlidskjalf.org/OU=local CA/CN=hlid.hlidsk
+jalf.org/emailAddress=freundt@@hlidskjalf.org
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+MIIEQzCCAyugAwIBAgIBAzANBgkqhkiG9w0BAQUFADCBjzELMAkGA1UEBhMCREUx
+DzANBgNVBAgMBkJlcmxpbjEXMBUGA1UECgwOaGxpZHNramFsZi5vcmcxETAPBgNV
+BAsMCGxvY2FsIENBMRwwGgYDVQQDDBNobGlkLmhsaWRza2phbGYub3JnMSUwIwYJ
+KoZIhvcNAQkBFhZmcmV1bmR0QGhsaWRza2phbGYub3JnMB4XDTA2MDcxMjIxMDYy
+MloXDTA3MDcxMjIxMDYyMlowgZoxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCZXJs
+aW4xFzAVBgNVBAoMDmhsaWRza2phbGYub3JnMRwwGgYDVQQLDBNsZGFwIGNsaWVu
+dCBmcmV1bmR0MRwwGgYDVQQDDBNobGlkLmhsaWRza2phbGYub3JnMSUwIwYJKoZI
+hvcNAQkBFhZmcmV1bmR0QGhsaWRza2phbGYub3JnMIIBIjANBgkqhkiG9w0BAQEF
+AAOCAQ8AMIIBCgKCAQEA5CYPHlmyemdoAdNsiemskMm33GYBSCOx1KZEWQ1cfgf0
+vVtpwue+/Nw4UbxYvtnS4ES8pWWEx/YeRyrEtbXg9SzXLSsNTrPT35xmysL87kIN
+nm8F4xGdlFQnvHJ4/55ieUVYi5aSlQtMKOON5HWUWmmWIscNnf3KyGy1lX1mEwhW
+xFYQ01npIz9az0zdBBqhV6mMejEul2vgwqL9lQy7khmwDwzoVdyyAz7C6Nj/7E6i
+gaxad9tc8luQJdMw+E6c67Stz68Om7CWfR7IMoqIx/ag7Ycy56dI8Td5LWvZ+JUG
+KMgHcbJ2mJIjQv3fgp7pIG2McPi91DwNLZhwJheshQIDAQABo4GcMIGZMAkGA1Ud
+EwQCMAAwEQYJYIZIAYb4QgEBBAQDAgTwMAsGA1UdDwQEAwIF4DAsBglghkgBhvhC
+AQ0EHxYdT3BlblNTTCBHZW5lcmF0ZWQgQ2VydGlmaWNhdGUwHQYDVR0OBBYEFKc+
+UFGPNVlARKv02s3Agq2q/2YfMB8GA1UdIwQYMBaAFAZIDPDiOBUx1RM67GJRPh+k
+y90DMA0GCSqGSIb3DQEBBQUAA4IBAQAAr8FoMuRaP7YVcnsYVR9Vv6wbjuSlO0rk
+/CtYs5V8QGa7TsGBz+0aBCHeDKegwhEkNowcJrqSlHiLYd4o2sXMqwAyszz1CKF6
+9PpZKXlhwZP5A9Hct9R0THV98f2qNCDOTTj9zxObnMIYJW4WLxGpgPTRTiERRdt3
+VP0aC2vEKb9xblfUQNAyBZKh6bkeKJVvd9WmnUwYkwGfH1+alNIhqCkRPjv8sw31
+ivzqspr2z19mtaYUKIN2u+mddJk7oeJIWNWwpaYicPR0rz9GOmVkgxIxMQAmtLnd
+ka47rxgbVZXtINcOZCNIcvX1hntqE5ItABunG3PGnNJwnqEQEfqJ
+-----END CERTIFICATE-----
+@c subject=/C=DE/ST=Berlin/O=hlidskjalf.org/OU=ldap client freundt/
+@c CN=hlid.hlidskjalf.org/emailAddress=freundt@@hlidskjalf.org
+@c issuer=/C=DE/ST=Berlin/O=hlidskjalf.org/OU=local CA/CN=hlid.hlid
+@c skjalf.org/emailAddress=freundt@@hlidskjalf.org
+@c ---
+@c No client certificate CA names sent
+@c ---
+@c SSL handshake has read 1289 bytes and written 489 bytes
+@c ---
+@c New, TLSv1/SSLv3, Cipher is AES256-SHA
+@c Server public key is 2048 bit
+@c Compression: zlib compression
+@c Expansion: zlib compression
+@c SSL-Session:
+@c     Protocol  : SSLv3
+@c     Cipher    : AES256-SHA
+@c     Session-ID: 05818FC08CA2A2A27157B4E33A568FA2CE0453633099DB03
+@c 90C25CB0C71DBCF2
+@c     Session-ID-ctx:
+@c     Master-Key: 8D8FEE3EAF1A85BB664AE779A4A4A0F6944EAA355497E162
+@c BAF60A7CD3DEAE6633C24116CC4BAF1013F78D2BFC919199
+@c     Key-Arg   : None
+@c     PSK identity: None
+@c     PSK identity hint: None
+@c    Compression: 1 (zlib compression)
+@c     Start Time: 1155549729
+@c     Timeout   : 7200 (sec)
+@c     Verify return code: 0 (ok)
+@c ---
+@dots{}
+DONE
+@end group
+@end example
+@noindent
+which is exactly the expected output.
+
+At the moment it is @emph{not} possible to establish a server socket
+with an SSL acceptor @emph{and} connect to this with another network
+stream from within the same SXEmacs instance.  This is because the SSL
+handshake is entirely on top of the process system and the event
+stream does not know about a special treatmeant of handshakes.  In the
+above scenario both connections would block each other since the
+handshake is a multiple turn procedure with a fixed order, but the
+event loop does not know about the correct order, hence both networks
+streams would exit prematurely because of timeouts.
+
+However, the above examples are actually all you need to acquire
+secure sockets.  In order to communicate over the socket the usual
+tools can be used.  @xref{Processes}.
+
+@example
+@group
+;; @r{invoke a local postfix and negotiate a TLSv1 session}
+(let ((p (open-network-stream "smtps" "smtps" "localhost" 25)))
+  (process-send-string p "STARTTLS\r\n")
+  (ossl-ssl-handshake p)
+  (process-send-string p "EHLO foo.bar.tld\r\n")
+  (process-send-string p "QUIT\r\n"))
+  @result{} nil
+@end group
+
+@group
+@r{we look at the resulting process buffer}
+@r{TLS becomes active at the third line (reply code 250)}
+---------- Buffer: smtps ----------
+220 fluch.fresse.org ESMTP Postfix
+220 2.0.0 Ready to start TLS
+250-fluch.fresse.org
+250-PIPELINING
+250-SIZE 10240000
+250-VRFY
+250-ETRN
+250-ENHANCEDSTATUSCODES
+250-8BITMIME
+250 DSN
+221 2.0.0 Bye
+
+Process smtps exited abnormally with code 256
+@point{}
+---------- Buffer: smtps ----------
+@end group
+@end example
+
+Once a successful handshake has been done the returned ssl-conn object
+can be used to determine and tune useful things.  The following two
+functions affect the interlinkage between the secure socket and the
+ordinary network socket.
+
+@defun ossl-ssl-proselytise-process ssl-conn
+Convert the underlying process of @var{ssl-conn} into a secure
+network connection object.
+@end defun
+
+@defun ossl-ssl-unproselytise-process ssl-conn
+Convert the underlying process of @var{ssl-conn} into an ordinary
+network connection object.
+@end defun
+
+After handshaking the secure layer is transparently linked to the
+network socket automatically hence @code{ossl-ssl-proselytise-process}
+need not be called explicitly.  That is also why the buffer output in
+the above example remained readable.  In contrast
+@code{ossl-ssl-unproselytise-process} unleashes the link between
+secure socket and network stream.  Having access to the raw
+(encrypted) SSL stream may have advantages when a program is supposed
+to just forward the stream to somewhere.
+
+@example
+@group
+(let ((p (open-network-stream "smtps" "smtps" "localhost" 25)))
+  (process-send-string p "STARTTLS\r\n")
+  (let ((sock (ossl-ssl-handshake p)))
+    (ossl-ssl-unproselytise-process sock)
+    (ossl-ssl-write sock "EHLO foo.bar.tld\r\n")
+    (ossl-ssl-write sock "QUIT\r\n")))
+  @result{} nil
+@end group
+
+@group
+---------- Buffer: smtps ----------
+220 fluch.fresse.org ESMTP Postfix
+220 2.0.0 Ready to start TLS
+< < < < < < < < < <
+< raw binary data >
+> > > > > > > > > >
+
+Process smtps exited abnormally with code 256
+@point{}
+---------- Buffer: smtps ----------
+@end group
+@end example
+
+The snipped portion is a bunch of binary data.  Nonetheless, as can be
+seen in the example sending data via @code{process-send-string} will
+not work after unproselytising.  There are special I/O functions for
+this case.
+
+@defun ossl-ssl-read ssl-conn string
+Return the cleartext of @var{string} which is assumed to be a complete
+block of data sent through @var{ssl-conn}.
+@end defun
+@c does not work at the moment
+
+@defun ossl-ssl-write ssl-conn string
+Send @var{string} to the tunnel @var{ssl-conn}.
+@end defun
+
+After all, unlinking the two layers currently only works in one
+direction.  The ssl-conn object will always know its parent
+network-stream.
+
+@defun ossl-ssl-parent ssl-conn
+Return the underlying parent layer of @var{ssl-conn}.
+@end defun
+
+@noindent
+In the linked case the converse can be determined by
+@code{process-type-data}, @pxref{Processes}.
+
+
+In order to obtain information about the ciphers which protect the
+tunnel communication we provide a bunch of useful functions.  At the
+moment ssl-ciphers are automatically negotiated with the remote site
+during the handshake procedure and cannot be explicitly requested or
+set by the user.
+
+@defun ossl-ssl-cipher-version ssl-conn
+Return the protocol version of the tunnel @var{ssl-conn}.
+@end defun
+
+@defun ossl-ssl-cipher-name ssl-conn
+Return the name of the current cipher used in the tunnel @var{ssl-conn}.
+@end defun
+
+@defun ossl-ssl-cipher-names ssl-conn
+Return the names of all supported ciphers in the tunnel @var{ssl-conn}.
+@end defun
+
+@defun ossl-ssl-cipher-bits ssl-conn
+Return the number of effective bits of the current cipher
+in @var{ssl-conn}.
+@end defun
+
+@defun ossl-ssl-cipher-description ssl-conn
+Return a description of the current cipher used in the tunnel
+@var{ssl-conn}.
+@end defun
+
+
+Nowadays secure socket layers not only provide security but also
+authenticity.  While ciphers are the atoms for the former,
+certificates play the major role for the latter.  However,
+authenticity is quite optional within the SSL protocol.  That is why
+we often append the phrase ``if present'' in the documentation strings
+of the following functions.
+
+@defun ossl-ssl-cert ssl-conn
+Return the local peer's certificate of @var{ssl-conn} if present,
+@code{nil} otherwise.
+@end defun
+
+@defun ossl-ssl-peer-cert ssl-conn
+Return the remote peer's certificate of @var{ssl-conn} if present,
+@code{nil} otherwise.
+@end defun
+
+@defun ossl-ssl-peer-cert-chain ssl-conn
+Return the certificate chain of @var{ssl-conn} as a list of
+evp-pkey objects.
+@end defun
+
+@defun ossl-ssl-verify-certificate ssl-conn
+Return a verify code of @var{ssl-conn}.
+
+The result is a cons cell with the numeric verify code in the car and
+a verbose string in the cdr.
+@end defun
+
+@example
+@group
+(let* ((str (open-network-stream "th" "th" "www.thawte.com" 443))
+       (sslc (ossl-ssl-handshake str 'ssl3)))
+  (ossl-ssl-peer-cert-chain sslc)
+  @result{} (#<OpenSSL X509 Certificate iss:/C=ZA/
+        O=Thawte Consulting (Pty) Ltd./CN=Thawte SGC CA
+        sub:/C=US/O=VeriSign, Inc./OU=Class 3 Public Primary
+        Certification Authority; RSA public key, size 1024> 
+      #<OpenSSL X509 Certificate iss:/C=ZA/ST=Western Cape/
+        L=Cape Town/O=Thawte Consulting (Pty) Ltd/OU=Security/
+        CN=www.thawte.com sub:/C=ZA/O=Thawte Consulting (Pty) Ltd./
+        CN=Thawte SGC CA; RSA public key, size 1024>)
+@end group
+@end example
+
+
+Certificates which stem from one of these functions are usually
+wrapped in an evp-pkey object.  In contrast to the public-key handling
+functions above, certificates usually carry a lot more information.
+Hence evp-pkey objects with certificate data occupy an additional
+slot to store X509- and ASN1-specific data.  Nonetheless, passing
+evp-pkey objects without X509/ASN1 data will not do harm.
+
+Again, certificate specific data in an SSL connection are read-only at
+the moment.  Only the two injection functions, and the handshake
+function provide a limited form of influence.
+
+@defun ossl-x509-subject cert
+Return the certificate subject of @var{cert} (an evp-pkey object).
+
+This will return a string in LDAP syntax.
+@end defun
+
+@defun ossl-x509-issuer cert
+Return the certificate issuer of @var{cert} (an evp-pkey object),
+that is the organisation which signed the certificate.
+
+This will return a string in LDAP syntax.
+@end defun
+
+@defun ossl-x509-serial cert
+Return the certificate serial of @var{cert} (an evp-pkey object).
+@end defun
+
+@defun ossl-x509-not-before cert
+Return the certificate valid-not-before time of @var{cert}.
+@end defun
+
+@defun ossl-x509-not-after cert
+Return the certificate valid-not-after time of @var{cert}.
+@end defun
+
+@defun ossl-x509-signature-type cert
+Return the signature type of @var{cert}.
+@end defun
+
+@example
+@group
+(let ((p (open-network-stream "go" "go" "gna.org" 443))
+      (s (ossl-ssl-handshake p 'tls1)))
+  (setq c (ossl-ssl-peer-cert s)))
+  @result{} #<OpenSSL X509 Certificate iss:/ST=The Internet/
+       O=The OpenSSL Project/CN=www.openssl.org/
+       emailAddress=openssl-team@@openssl.org
+       sub:/ST=The Internet/O=The OpenSSL Project/
+       OU=Certificate Authority/CN=OpenSSL CA/
+       emailAddress=openssl-team@@openssl.org;
+       RSA public key, size 1024>
+@end group
+
+@group
+(ossl-x509-subject c)
+  @result{} "/ST=The Internet/O=The OpenSSL Project/CN=www.openssl.org/
+      emailAddress=openssl-team@@openssl.org"
+@end group
+
+@group
+(ossl-x509-issuer c)
+  @result{} "/ST=The Internet/O=The OpenSSL Project/
+      OU=Certificate Authority/CN=OpenSSL CA/
+      emailAddress=openssl-team@@openssl.org"
+@end group
+
+@group
+(ossl-x509-serial c)
+  @result{} 1
+@end group
+
+@group
+(ossl-x509-not-before c)
+  @result{} "020802062727Z"
+@end group
+
+@group
+(ossl-x509-not-after c)
+  @result{} "030802062727Z"
+@end group
+
+@group
+(ossl-x509-signature-type c)
+  @result{} none
+@end group
+@end example
+
+

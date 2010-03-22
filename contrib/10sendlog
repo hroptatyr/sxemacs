@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ "$ARCH_REVISION" = "" ]; then
+    echo "$0 called without ARCH_REVISION set. Aborting."
+    exit 1
+fi
+
+email="sxemacs-patches@sxemacs.org"
+
+echo "Sending mail to SXEmacs Patches <${email}>"
+echo "  about ${ARCH_REVISION} changes."
+
+(
+echo "From: $(tla my-id)"
+echo "Date: $(date --rfc-2822)"
+echo "Subject: [Merge-Req] ${ARCH_REVISION}"
+echo "To: SXEmacs Patches <${email}>"
+echo
+echo "Location: ${ARCH_ARCHIVE} <Gah!  My repo is at /dev/null>"
+echo
+tla cat-archive-log "${ARCH_ARCHIVE}/${ARCH_REVISION}"
+echo
+cd ${ARCH_TREE_ROOT}
+dir="${ARCH_REVISION}.changeset-$$"
+tla get-changeset "${ARCH_REVISION}" "${dir}"
+tla show-changeset --diffs "${dir}"
+rm -rf "${dir}"
+) | /usr/sbin/sendmail "${email}"
+
+exit 0

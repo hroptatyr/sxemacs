@@ -1,0 +1,249 @@
+2000-09-12  William M. Perry  <wmperry@aventail.com>
+
+	* dialog-gtk.el (popup-builtin-open-dialog): Went back to
+	using our lisp implementation of the file dialog.  Much more
+	featureful.
+
+	* ui/gtk-file-dialog.el: Reworked to use CList instead of Tree
+	elements (more like the `real' GTK file selector.
+
+2000-09-10  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-iso8859-1.el (gtk-iso8859-1): Need to actually provide
+	the feature
+
+2000-09-09  William M. Perry  <wmperry@aventail.com>
+
+	* dialog-gtk.el (popup-builtin-open-dialog): Guard against
+	calling gtk-main-quit too many times when destroying the
+	file-selection dialog.
+
+2000-09-08  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-init.el (gtk-initialize-compose): Initialize the compose
+	map like X does.
+
+2000-09-03  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-items.el (default-menubar): Include the font & size
+	menus when running under GTK.
+
+	* gtk-faces.el (x-font-regexp-*): Added variable aliases for
+	the x-font-regexp-* variables.  x-font-menu works now.
+
+	* x-font-menu.el (font-menu-set-font): When setting the font, make
+	sure we don't set the type to 'x' blithely.  This code is shared
+	with GTK now.
+
+2000-08-30  William M. Perry  <wmperry@aventail.com>
+
+	* dialog-gtk.el (popup-builtin-open-dialog): Signal 'quit' if the
+	user hits the cancel button.  This gets rid of the 'wrong type
+	argument: stringp, nil' error.
+
+2000-08-28  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-items.el (default-menubar): Disable the GTK font menu
+	item.
+
+	* dialog-gtk.el (popup-builtin-open-dialog): Reimplemented the
+	file-open dialog to use the normal GTK selector.
+
+2000-07-26  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-init.el (init-post-gtk-win): Define the mule-fonts specifier
+	tag and default fonts for it when mule is provided.  This will
+	make x-symbol.el work.
+
+2000-07-24  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gdk.el: Ditto.
+
+	* ui/gnome-widgets.el: Ditto.
+
+	* ui/gtk-widgets.el: Updated all gtk-import-function calls to pass
+	a symbol instead of a quoted string.
+
+	* ui/gtk-ffi.el (gtk-import-variable): Make gtk-import-variable
+	able to take symbols instead of just strings.  More consistent
+	with gtk-import-function this way.
+
+2000-07-22  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-init.el (init-pre-gtk-win): Did not realize I had to do lisp
+	hackery to get '-unmapped' to work.
+
+2000-07-12  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gtk-widgets.el (gtk-ctree-post-recursive): 
+	(gtk-ctree-post-recursive-to-depth): 
+	(gtk-ctree-pre-recursive): 
+	(gtk-ctree-pre-recursive-to-depth): Added wrappers around the
+	combined gtk-ctree-recurse to make things easier on GTK authors
+	porting other code.
+
+2000-07-11  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-init.el (init-gtk-win): Set gtk-initial-geometry out of
+	command-line-args-left.
+	(gtk-filter-arguments): New function to filter out only GTK/GNOME
+	approved command line arguments.
+	(init-gtk-win): Set gtk-initial-argv-list by filtering it.  This
+	way we get session management/etc from GNOME.
+
+2000-07-07  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-faces.el (gtk-init-global-faces): Make sure to pass in a GTK
+	device (any GTK device) try-font-name when initializing the global
+	faces or it gets confused and cannot find a font, so the code in
+	faces.el ends up setting device-specific faces, which are hard (or
+	at least non-obvious) for users to work around.
+
+2000-07-01  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gtk-widgets.el (GtkType): Added GtkCTree finally.
+
+	* ui/gtk-ffi.el (gtk-ffi-check-function): New function that will
+	try to call a newly defined FFI function and report on whether we
+	need to define any new marshallers for it.
+	(gtk-ffi-debug): If non-nil, then we will check ALL functions that
+	come through gtk-import-function.  All existing imported functions
+	have been checked, and a few missings ones were added.
+
+	* ui/glade.el: New file to import libglade functions.
+
+2000-06-30  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gdk.el: Added most of the GDK drawing primitives.
+
+2000-06-27  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gtk-widgets.el: Import gtk-major-version, gtk-minor-version,
+	gtk-micro-version, gtk-interface-age, and gtk-binary-age.
+
+	* ui/gtk-ffi.el (gtk-import-variable): New macro to import a
+	variable.  Needed to do it as a function, otherwise you could not
+	byte compile / dump the file in a non-windowed XEmacs.
+
+2000-06-23  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-items.el (default-menubar): Disable
+	make-frame-on-display if the function is not available.
+
+2000-06-02  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-mouse.el (gtk-init-pointers): Make sure we set a toolbar
+	pointer.  Looked kind of silly to have the 'xterm' cursor in
+	there by default.
+
+2000-06-01  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gtk-widgets.el: Imported GtkStatusbar
+
+	* ui/gtk-marshal.el (define-marshaller): All marshalling functions
+	are now static.
+	* ui/gtk-marshal.el: Now outputs a function to populate a
+	hashtable with mappings from function name -> function pointer.
+	Also emits the find_marshaller () function that looks at this
+	hashtable.
+
+2000-05-29  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gtk-ffi.el (gtk-import-function): Allow passing in of a
+	symbol for the function name, as well as a string.
+
+	* ui/gtk-widgets.el: Import the GtkSpinButton widget.
+
+2000-05-26  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gtk-ffi.el (gtk-import-function): Rewrote as a macro so that
+	teh file can be safely byte-compiled.  Argument values no longer
+	need to be quoted, and the function is not actually imported until
+	the function is called.  Should save even more on loadup time.
+	(gtk-import-function): Do not defvar `lisp-name' - put the FFI
+	object on the symbols plist.  Makes the lisp variable namespace
+	that much cleaner.
+
+	* ui/gtk-widgets.el: New uber-file containing all the GTK imported
+	functions.  Load time is significantly faster than requiring ~90
+	different (usually 5 line) .el files, and polluting the 'features'
+	variable.
+
+2000-05-23  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gtk-widget-accessors.el (define-widget-accessors): Fixed
+	bogus handling of GTkListOfString and GtkListOfObject slots.
+	These need to have the FULL type, not the fundamental type.  And
+	_POINTER was just plain wrong for them - cause beautiful crashes
+	on linux. :)
+
+	* gtk-faces.el (gtk-choose-font): New function to change fonts
+	based on a GTK font selection dialog.
+
+	* menubar-items.el (default-menubar): Only show the font/size
+	submenus when we are in an X frame.
+	(default-menubar): Show a gtk-specific item when on GTK frames.
+
+	* ui/gtk-marshal.el (define-marshaller): We need to special case
+	anything with FLOAT in the argument list or the parameters get
+	screwed up royally.
+
+2000-05-21  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gtk-file-dialog.el (gtk-file-dialog-fill-file-list): New file
+	dialog that is actually useful and much prettier than the default
+	GTK one.
+
+2000-05-20  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gtk-ffi.el (gtk-import-function): Auto-run gnome-*-get-type
+	routines as well as the gtk-*-get-type ones.
+
+	* minibuf.el (mouse-read-file-name-1): Now tries to use the new
+	builtin dialog spec ben wrote about.  Uses the GTK file selection
+	dialog.  We should be able to come up with something much sexier
+	though - the default dialog box for GTK sucks hard.
+
+2000-05-17  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-faces.el (gtk-init-device-faces): Make use of the extended
+	return values of gtk-style-info.  Set the 'highlight' face to look
+	like GTK_STATE_PRELIGHT and 'zmacs-region' to be
+	GTK_STATE_SELECTED.  Unfortunately these two faces will not
+	automatically be updated because they are not exposed to lisp
+	like Vdefault_face and friends.
+
+2000-05-16  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-faces.el (gtk-init-device-faces): Removed a whole bunch of
+	face munging that is now done down in the guts of the GtkXEmacs
+	widget.
+
+	* gnuserv.el (gnuserv-edit-files): Handle GTK devices.
+
+	* ui/gtk-ffi.el (gtk-import-function): Make this a noop if
+	noninteractive.  This allows us to compile the files during the
+	make process.
+
+2000-05-10  William M. Perry  <wmperry@aventail.com>
+
+	* dialog-gtk.el: New file implementing popup dialogs in Lisp using
+	GTK primitives.  Called from dialog-gtk.c
+
+	* dumped-lisp.el (preloaded-file-list): Make sure we load up
+	menubar-items under GTK.
+	(preloaded-file-list): Load up dialog-gtk when using GTK.
+
+2000-05-08  William M. Perry  <wmperry@aventail.com>
+
+	* ui/gtk-widget-accessors.el (define-widget-accessors): New file
+	to define C functions that go into
+	../../src/emacs-widget-accessors.c.  This is a hack to get around
+	the lack of accessor/settor functions in GTK for a LOT of things
+	that are required for full functionality (like dialogs)
+
+2000-05-07  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-faces.el (gtk-init-face-from-resources): Set the highlight
+	face as well.
+

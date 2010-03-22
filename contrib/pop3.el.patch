@@ -1,0 +1,123 @@
+--- pop3.el	2007-08-15 12:30:12.000000000 +0000
++++ pop3.el.mod	2007-08-15 12:30:30.000000000 +0000
+@@ -142,6 +142,9 @@
+ (defvar pop3-utab nil
+   "Uidl hash table.")
+ 
++(defvar pop3-stream-type nil
++  "Defined dynamically in Gnus")
++
+ ;;;###autoload
+ (defun pop3-nnmail-movemail (inbox crashbox)
+   "Function to move mail from INBOX on a pop3 server to file CRASHBOX."
+@@ -187,6 +190,9 @@
+     (message (format "Retrieving message list...%d unread" message-count))
+     ;; now get messages
+     (unwind-protect
++        (with-current-buffer
++            (get-buffer-create "*POP3 sessions*")
++          (insert (format "Message count %d\n" message-count)))
+ 	(while (<= n message-count)
+ 	  (setq msgid (car (car message-list)))
+ 	  (setq msglen (cdr (car message-list)))
+@@ -204,14 +210,23 @@
+ 		       pop3-retr-regexp
+ 		       (not (string-match pop3-retr-regexp
+ 					  (pop3-top process msgid)))))
+-	      (message (format "Ignoring message %d of %d from %s..."
+-			       n message-count pop3-mailhost))
++	      (with-current-buffer
++                    (get-buffer-create "*POP3 sessions*")
++                  (insert (format "Ignoring %S\n" msgid))
++                  (message (format "Ignoring message %d of %d from %s..."
++                                   n message-count pop3-mailhost)))
+ 	    (message (format "Retrieving message %d of %d from %s..."
+ 			     n message-count pop3-mailhost))
+ 	    (if (pop3-retr process msgid crashbuf)
+-		(setq retrieved-messages (cons msgid retrieved-messages))
+-	      (message (format "Retrieving message %d of %d from %s...ignored"
+-			       n message-count pop3-mailhost))))
++		(with-current-buffer
++                    (get-buffer-create "*POP3 sessions*")
++                  (insert (format "not ignored %S\n" msgid))
++                  (setq retrieved-messages (cons msgid retrieved-messages)))
++              (with-current-buffer
++                  (get-buffer-create "*POP3 sessions*")
++                (insert (format "ignored %S\n" msgid))
++                (message (format "Retrieving message %d of %d from %s...ignored"
++                                 n message-count pop3-mailhost)))))
+ 	  ;; deleted a whole bunch of stuff here that updates the crashbox
+ 	  ;; incrementally. This is way slow and mostly uneccessary, gnus
+ 	  ;; and others will simply slurp the whole mail buffer anyway so
+@@ -226,6 +241,8 @@
+ 	(pop3-save-uidls))
+       ;; now delete the messages we have retrieved
+       (unless (and pop3-leave-mail-on-server (null pop3-delete-retrieved-mail))
++        (with-current-buffer (get-buffer-create "*POP3 sessions*")
++          (insert (format "Messages: %S\n" retrieved-messages)))
+ 	(mapcar
+ 	 '(lambda (n)
+ 	    (message (format "Deleting message %d of %d from %s..."
+@@ -244,18 +261,36 @@
+ 	(process)
+ 	(coding-system-for-read 'binary)
+ 	(coding-system-for-write 'binary))
+-    (save-excursion
+-      (set-buffer process-buffer)
+-      (erase-buffer))
+-    (setq process
+-	  (open-network-stream "POP" process-buffer mailhost port))
+-    (setq pop3-read-point (point-min))
+-    (let ((response (pop3-read-response process t)))
+-      (setq pop3-timestamp
+-	    (substring response (or (string-match "<" response) 0)
+-		       (+ 1 (or (string-match ">" response) -1)))))
+-    process
+-    ))
++    (flet ((maybe-handshake (proc)
++             (when (featurep (and 'openssl 'openssl-ssl))
++               (unless (ossl-ssl-handshake proc 'ssl23)
++                 (error "Cannot establish TLS connection")))))
++      (save-excursion
++        (set-buffer process-buffer)
++        (erase-buffer))
++      (setq process
++            (open-network-stream "POP" process-buffer mailhost port))
++
++      (when (eq pop3-stream-type 'ssl)
++        (maybe-handshake process))
++
++      (when (process-live-p process)
++        (setq pop3-read-point (point-min))
++        (let ((response (pop3-read-response process t)))
++          (setq pop3-timestamp
++                (substring response (or (string-match "<" response) 0)
++                           (+ 1 (or (string-match ">" response) -1))))))
++
++      (when (eq pop3-stream-type 'starttls)
++        (pop3-send-command process "STLS")
++        (let ((response (pop3-read-response process t)))
++          ;; waiting for the +OK STLS
++          (unless (and response (string-match "STLS" response))
++            (error "STLS not provided on remote machine")))
++        (maybe-handshake process))
++
++      process
++      )))
+ 
+ ;; Support functions
+ 
+@@ -268,9 +303,10 @@
+ (defun pop3-send-command (process command)
+     (set-buffer (process-buffer process))
+     (goto-char (point-max))
+-;;    (if (= (aref command 0) ?P)
+-;;	(insert "PASS <omitted>\r\n")
+-;;      (insert command "\r\n"))
++    (with-current-buffer (get-buffer-create "*POP3 sessions*")
++      (if (= (aref command 0) ?P)
++          (insert "PASS <omitted>\r\n")
++        (insert command "\r\n")))
+     (setq pop3-read-point (point))
+     (goto-char (point-max))
+     (process-send-string process (concat command "\r\n"))

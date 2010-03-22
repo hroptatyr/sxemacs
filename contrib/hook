@@ -1,0 +1,192 @@
+#!/bin/bash
+#
+# arch-meta-hook - generic tla hook script
+# Copyright (C) 2004 Hans Ulrich Niedermann
+# 
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# arch-meta-hook executes hook scripts from a directory structure like:
+#
+# +- ARCH_HOOKDIR
+#  +- me@host--2004-me
+#   +- category
+#    +- category--branch
+#     +- category--branch--version
+#      +- category--branch--version--revision
+#
+# The ARCH_HOOKDIR is ~/.arch-hooks or ~/.arch-params/hooks - the
+# first directory found is used.
+#
+# In each directory from ARCH_HOOKDIR downwards, there may
+# be a directory structure like
+#
+# +- =ACTION
+#  +- 10script1
+#  +- 20script2
+#  +- 30script3
+#
+# where ACTION is the tla action performed (e.g. "commit") and the
+# ??script* may be arbitrarily named executables. However, the
+# ??script* naming scheme allows to determine the call sequence
+# easily.
+#
+# If the ARCH_HOOKDIR, archive, category, version, revision match
+# (ARCH_HOOKDIR always matches) and the =ACTION subdirectory exists,
+# all the hook scripts in the =ACTION subdirectory are called in sequence.
+#
+# Note that the more general hook scripts are called for each and
+# every action on more specialized items - e.g. hooks in ARCH_HOOKDIR are
+# called every time.
+#
+# All of these hook scripts are called with the following variables
+# set (example values given):
+#
+#    ARCH_HOOK_ACTION the tla action, e.g. commit or make-pristine
+#    ARCH_ARCHIVE     me@host--2004-me
+#    ARCH_CATEGORY    category
+#    ARCH_BRANCH      category--branch
+#    ARCH_VERSION     category--branch--version
+#    ARCH_REVISION    category--branch--version--revision
+#
+# Hook scripts must return 0 if the tla action is to succeed.
+#
+# An example script may be
+#
+# +- ARCH_HOOKDIR
+#  +- me@host--2004-me
+#   +- category
+#    +- =commit
+#     +- 50mirror
+#
+# with a simple content of
+#
+# tla archive-mirror \
+#     "$ARCH_ARCHIVE" "${ARCH_ARCHIVE}-MIRROR" \
+#     "${ARCH_CATEGORY}
+#
+# which updates only the category on the mirror of the
+# me@host--2004-me archive.
+#
+# You may even symlink these kinds of scripts...
+
+# If you want to bypass the hooks for whatever reason, do...
+# NOHOOKS=1 tla cmd
+if [ $NOHOOKS ]; then
+    echo "Bypassing hooks"
+    unset NOHOOKS
+    exit 0
+fi
+
+# Default hook directory
+ARCH_HOOKDIR="$(dirname "$0")/hooks"
+# Override hook dir if found
+for dir in \
+	"$HOME/.arch-hooks"
+do
+	if [ -d "$dir" ]; then
+		ARCH_HOOKDIR="$dir"
+		break
+	fi
+done
+
+# Set either of these if you want
+verbose=false
+# verbose=true
+
+ARCH_HOOK_ACTION="$1"
+export ARCH_HOOK_ACTION
+
+# What can't be set at all, should be set to ""
+if [ "$ARCH_REVISION" != "" ]; then
+    export ARCH_REVISION 
+
+    ARCH_ONLY_LEVEL="$(tla parse-package-name --lvl ${ARCH_REVISION})"
+    ARCH_ONLY_VERSION="$(tla parse-package-name --vsn ${ARCH_REVISION})"
+    ARCH_ONLY_BRANCH="$(tla parse-package-name --branch ${ARCH_REVISION})"
+    ARCH_ONLY_CATEGORY="$(tla parse-package-name --category ${ARCH_REVISION})"
+    export ARCH_ONLY_LEVEL ARCH_ONLY_VERSION
+    export ARCH_ONLY_BRANCH ARCH_ONLY_CATEGORY
+
+    ARCH_CATEGORY="${ARCH_ONLY_CATEGORY}"
+    ARCH_BRANCH="${ARCH_CATEGORY}--${ARCH_ONLY_BRANCH}"
+    ARCH_VERSION="${ARCH_BRANCH}--${ARCH_ONLY_VERSION}"
+    export ARCH_VERSION ARCH_BRANCH ARCH_CATEGORY
+else
+    echo "ARCH_REVISION not set!"
+    verbose=true
+fi
+
+# Debug output
+if "$verbose"; then
+    set | grep '^ARCH_'
+fi
+
+failed=0
+succeeded=0
+# Try to execute succeedingly specialized hooks
+for dir in \
+    "$ARCH_HOOKDIR" \
+    "$ARCH_ARCHIVE" \
+    "$ARCH_CATEGORY" \
+    "$ARCH_BRANCH" \
+    "$ARCH_VERSION" \
+    "$ARCH_REVISION"
+  do
+  if cd "$dir" >& /dev/null; then
+      if [ -d "=$ARCH_HOOK_ACTION" ]; then
+	  # we may have actions
+	  for hook in "=$ARCH_HOOK_ACTION/"*[^~]; do
+	      if [ -x "$hook" ]; then
+		  complete="$PWD/$hook"
+		  name="${complete#$ARCH_HOOKDIR/}"
+		  "$verbose" && \
+		      echo "Executing $ARCH_HOOK_ACTION hook script: $name"
+		  "$hook"
+		  status="$?"
+		  if [ "$status" -eq 0 ]; then
+		      "$verbose" && echo "Hook script succeeded."
+		      succeeded=$(( $succeeded + 1 ))
+		  else
+		      if ! $verbose; then
+			  echo "Hook script $ARCH_HOOK_ACTION failed: $status"
+		      else
+			  echo "Hook script failed: $status"
+			  verbose=true
+		      fi		      
+		      failed=$(( $failed + 1 ))
+		  fi
+	      fi
+	  done
+      fi
+  else
+      # no such directory
+      # then descending further doesn't make sense either
+      break
+  fi
+done
+
+# Print statistics
+if $verbose; then
+    echo "$[ $failed + $succeeded ] $ARCH_HOOK_ACTION hooks executed in total:"
+    echo "    $succeeded successful"
+    echo "    $failed failed"
+fi
+
+# Fail if any hook script failed
+if [ "$failed" -gt 0 ]; then
+    exit 1
+else
+    exit 0
+fi
