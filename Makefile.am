@@ -30,6 +30,7 @@ ACLOCAL_AMFLAGS = -I m4
 builddir = @builddir@
 srcdir = @srcdir@
 top_builddir = .
+top_build_prefix = $(top_builddir)/
 top_srcdir = @top_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@

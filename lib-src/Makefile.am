@@ -28,6 +28,7 @@ LC_ALL=C
 builddir = @builddir@
 srcdir = @srcdir@
 top_builddir = @top_builddir@
+top_build_prefix = $(top_builddir)/
 top_srcdir = @top_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@

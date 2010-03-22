@@ -25,6 +25,7 @@
 LANG=C
 LC_ALL=C
 
+top_build_prefix = $(top_builddir)/
 sxesrcdir = $(top_srcdir)/src
 
 AM_CFLAGS = -DXTSTRINGDEFINES
