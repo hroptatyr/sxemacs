@@ -37,7 +37,7 @@ elif test -d "{arch}" -a -s "{arch}/++default-version"; then
 	MAIN_ARCH_VERSION="$MAIN_VERSION--$(/bin/ls|grep -v base|sort -k1.7|tail -n1)"
 	cd "$CURDIR"
 else
-	TREE_VERSION="--22.1.11"
+	TREE_VERSION="--22.1.12"
 	ARCH_VERSION="no_arch_version"
 	MAIN_ARCH_VERSION="no_arch_version"
 fi
@@ -45,7 +45,7 @@ fi
 emacs_major_version="$(echo $TREE_VERSION|sed -e s/"^.*--"//|cut -d . -f1)"
 emacs_minor_version="$(echo $TREE_VERSION|sed -e s/"^.*--"//|cut -d . -f2)"
 emacs_beta_version="$(echo $TREE_VERSION|sed -e s/"^.*--"//|cut -d . -f3)"
-sxemacs_codename="Ferrari"
+sxemacs_codename="Fiat"
 sxemacs_arch_version="$ARCH_VERSION"
 sxemacs_main_arch_version="$MAIN_ARCH_VERSION"
 

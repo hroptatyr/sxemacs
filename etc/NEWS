@@ -20,7 +20,13 @@ in each release should look at the appropriate section of this file.
 
 
 
+* SXEmacs 22.1.11 was never released.
+
+See ChangeLog.d/ChangeLog-22.1.11 for all the changes in the
+22.1.11 dev cycle, and for why it was not released.
+
 * Changes in SXEmacs 22.1.10 (Excalibur)
+========================================
 
 ** Bugs closed in this release:
 

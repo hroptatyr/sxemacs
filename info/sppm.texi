@@ -12,7 +12,7 @@ Steve Youngs
 @end macro
 
 @macro syc
-Copyright @copyright{} 2004 - 2009 @sy{}
+Copyright @copyright{} 2004 - 2010 @sy{}
 @end macro
 
 @macro sye
@@ -20,19 +20,19 @@ Copyright @copyright{} 2004 - 2009 @sy{}
 @end macro
 
 @macro yy
-2009
+2010
 @end macro
 
 @macro cver
-22.1.11
+22.1.12
 @end macro
 
 @macro pver
-22.1.10
+22.1.11
 @end macro
 
 @macro nver
-22.1.12
+22.1.13
 @end macro
 
 
@@ -1265,7 +1265,7 @@ lead, or whoever is responsible for making releases.
 
 From time to time, at the project lead's discretion, a "version-0"
 revision will be made and tarballs created and made available on
-@uref{ftp://ftp.sxemacs.org/pub/sxemacs/, the SXEmacs FTP site}.
+@uref{http://downloads.sxemacs.org/releases/, the SXEmacs download site}.
 
 The decision as to @emph{when} to cut a release is generally
 influenced by two factors:
@@ -1911,7 +1911,7 @@ http://karma.ezunix.org/arch/2005/
 @c http://hynek.in-berlin.de/archive/
 @c Horst Burkhardt (PeanutHorst)
 @item
-http://midcom.unlogicnetworks.net/oss-vc/
+http://midcom.steveyoungs.com/oss-vc/sxemacs/
 @c Nick Granado
 @c @item
 @c http://www.heatxsink.com/2005/
