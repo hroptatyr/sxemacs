@@ -209,10 +209,10 @@ OG_ARG_WITH([quick-build],
 		SXEmacs will still work (more or less) without them.
 		Potentially dangerous if you don't know what you're
 		doing. This (1) doesn't garbage-collect after loading
-		each file during dumping[,] (2) doesn't automatically
+		each file during dumping, (2) doesn't automatically
 		rebuild the DOC file (remove it by hand to get it
-		rebuilt), (3) Removes config.h, lisp.h and associated
-		files from the dependency lists, so changes to these
+		rebuilt), (3) Removes config.h lisp.h and associated
+		files from the dependency lists so changes to these
 		files don't automatically cause all .c files
 		to be rebuilt.]),
 	[no], [No], [])
@@ -423,7 +423,7 @@ OG_OPTION_GROUP(Debugging Options)
 OG_ARG_WITH([debug],
 	AS_HELP_STRING([--with-debug],
 		[Compile with extra debugging code.
-		This will turn on: --with-assertions[,]
+		This will turn on: --with-assertions
 		and --with-memory-usage-stats.]),
 	[yes], [YES for beta; NO for release])
 
@@ -716,7 +716,7 @@ OG_OPTION_GROUP(Internationalisation options)
 
 OG_ARG_WITH([mule],
 	AS_HELP_STRING([--with-mule],
-		[Compile with Mule (MUlti-Lingual Emacs) support[,]
+		[Compile with Mule (MUlti-Lingual Emacs) support
 		needed to support non-Latin-1 (including Asian)
 		languages.]),
 	[yes], [YES])
