@@ -8,7 +8,7 @@ dnl -------------------------------------------------------------------------
 dnl Autoconf startup.
 dnl -------------------------------------------------------------------------
 
-AC_PREREQ([2.60])
+AC_PREREQ([2.62])
 AC_INIT([SXEmacs], [SXEM4CS_VERSION], [http://issues.sxemacs.org/])
 AC_CONFIG_HEADER([src/config.h])
 AC_CONFIG_SRCDIR([src/lisp.h])
