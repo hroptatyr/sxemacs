@@ -1,10 +1,13 @@
 #!/bin/sh
 
-M4_VERSION=$(m4 --version | head -1 | sed -e 's/^\(m4 \)\?(\?GNU M4)\? *//g' ) 
+# BSD's m4 probably isn't gonna cut it, use gm4 if it is available
+type gm4 >/dev/null && M4=gm4 || M4=m4
+
+M4_VERSION=$($M4 --version | head -1 | sed -e 's/^\(m4 \)\?(\?GNU M4)\? *//g' ) 
 GOOD_M4=$( echo $M4_VERSION | awk -F. '{if( ($1>1) || ( ($1==1) && ($2>4) ) || ( ($1==1) && ($2==4) && ($3>=6) )) print 1 }')
 
 if [ "$GOOD_M4" != "1" ]; then
-    echo You have m4 version $M4_VERSION. SXEmacs requires m4 version 1.4.6 in order to work correctly
+    echo You have m4 version $M4_VERSION.  SXEmacs requires m4 version 1.4.6 or later.
     exit 1
 fi
 
