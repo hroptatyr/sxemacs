@@ -131,8 +131,12 @@ AC_DEFUN([SXE_CHECK_LIBC_VERSION], [dnl
 			libc_version=`dpkg-query --showformat='${version}' --show libc6`
 			libc_version="GNU libc $libc_version (Debian)"
 		elif test -f /etc/slackware-version ; then
+                        slackver=`cat /etc/slackware-version`
 			libc_version=`/lib/libc.so.6|head -1|cut -d ' ' -f7|tr -d ,`
-			libc_version="GNU libc $libc_version (Slackware)"
+                        if test "x$libc_version" = "x"; then
+                                libc_version=`/lib64/libc.so.6|head -1|cut -d ' ' -f7|tr -d ,`
+                        fi
+			libc_version="GNU libc $libc_version ($slackver)"
 		dnl need SuSE et al checks here...
 		fi
 		dnl #### Tested on Debian, does this actually work elsewhere?  ;-)

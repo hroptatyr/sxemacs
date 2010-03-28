@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # BSD's m4 probably isn't gonna cut it, use gm4 if it is available
-type gm4 >/dev/null && M4=gm4 || M4=m4
+type gm4 >/dev/null 2>&1 && M4=gm4 || M4=m4
 
 M4_VERSION=$($M4 --version | head -1 | sed -e 's/^\(m4 \)\?(\?GNU M4)\? *//g' ) 
 GOOD_M4=$( echo $M4_VERSION | awk -F. '{if( ($1>1) || ( ($1==1) && ($2>4) ) || ( ($1==1) && ($2==4) && ($3>=6) )) print 1 }')
