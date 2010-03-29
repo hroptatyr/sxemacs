@@ -163,6 +163,23 @@ installs as glibtool and doesn't clobber your other one.
 Sometimes it helps just to copy over the libtool script manually:
 cp -a $(type -p libtool) ${top_builddir}
 
+*** ylwrap fails with sed errors
+
+Some versions of the ylwrap script provided by autotools uses commas
+as separators in sed commands. As such if your build path uses commas
+the ylwrap will fail. 
+
+Sample message (where the build path was /Users/njsf/Projects/SXEmacs/nsx-up/,,mac):
+
+/Users/njsf/Projects/SXEmacs/nsx-up/,,mac/lib-src/make-docfile --modname cl-loop -E cl-loop.doc.c ../../../modules/cl/cl-loop.c
+/bin/sh ../../../ylwrap ../../../modules/cl/cl-loop-parser.y y.tab.c cl-loop-parser.c y.tab.h cl-loop-parser.h y.output
+cl-loop-parser.output -- bison -y  -d
+sed: 1: "s,/Users/njsf/Projects/ ...": bad flag in substitute command: 'm'
+sed: 1: "s,/Users/njsf/Projects/ ...": bad flag in substitute command: 'm'
+
+The workaround is to use a path without commas in it.
+
+
 *** Missing libltdl.la (Solaris 2.8)
 
 We've had a report that missing libtool on Solaris 2.8 isn't detected

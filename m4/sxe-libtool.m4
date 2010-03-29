@@ -102,7 +102,7 @@ AC_DEFUN([SXE_CHECK_LIBLTDL], [dnl
 
 	## if the user wants to use the included libltdl, descend
 	if test -z "$with_included_ltdl" -a \
-		-d "libltdl" -a \
+		-d "${sxe_srcdir}/libltdl" -a \
 		"$with_module_support" != "no" -a \
 		"$sxe_cv_feat_libltdl" != "yes"; then
 		with_included_ltdl="yes"
@@ -114,7 +114,7 @@ AC_DEFUN([SXE_CHECK_LIBLTDL], [dnl
 		CPPFLAGS="$CPPFLAGS ${LTDLINCL}"
 		## and assume we've seen ltdl.h
 		AC_DEFINE([HAVE_LTDL_H], [1], [Whether ltdl.h is somewhere])
-	elif test -d "libltdl" -a \
+	elif test -d "${sxe_srcdir}/libltdl" -a \
 		"$with_included_ltdl" = "yes"; then
 		## the user WANTS to use the included ltdl
 		## assume we have a working ltdl lib afterwards
