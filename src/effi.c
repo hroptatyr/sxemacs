@@ -382,10 +382,13 @@ Valid foreign types are: `byte', `unsigned-byte', `char',
                 tsize = sizeof(char *);
         else if (FFI_POINTERP(type))
                 tsize = sizeof(void *);
-        else if (EQ(type, Q_c_data) ||
-		 (CONSP(type) && EQ(XCAR(type), Q_c_data)))
+        else if (EQ(type, Q_c_data))
                 tsize = sizeof(void *);
-        else if (CONSP(type) && EQ(XCAR(type), Q_function))
+        else if (CONSP(type) && EQ(XCAR(type), Q_c_data)) {
+                Lisp_Object cdsize = XCDR(type);
+                CHECK_INT(cdsize);
+                tsize = XINT(cdsize);
+        } else if (CONSP(type) && EQ(XCAR(type), Q_function))
                 tsize = sizeof(void(*));
         else if (CONSP(type) && EQ(XCAR(type), Q_array)) {
                 Lisp_Object atype = Fcar(XCDR(type));
@@ -427,6 +430,7 @@ of at least length SIZE is allocated.
 */
       (type, size))
 {
+        int cs_or_cd;
         Lisp_Object ctype;
 	Lisp_Object result = Qnil;
 	Lisp_EffiObject *ffio;
@@ -443,8 +447,9 @@ of at least length SIZE is allocated.
 	if (CONSP(ctype) && EQ(XCAR(ctype), Q_c_data) && INTP(XCDR(ctype)))
 		size = XCDR(type);
 
-        if ((EQ(ctype, Q_c_string) && (XINT(size) < 1))
-            || (!(EQ(ctype, Q_c_string) || FFI_POINTERP(ctype))
+        cs_or_cd = EQ(ctype, Q_c_string) || (EQ(ctype, Q_c_data));
+        if ((cs_or_cd && (XINT(size) < 1))
+            || (!(cs_or_cd || FFI_POINTERP(ctype))
                 && (XINT(size) < XINT(Fffi_size_of_type(type)))))
 #ifdef SXEMACS
                 signal_simple_error("storage size too small to store type",
@@ -487,31 +492,13 @@ Return non-nil if FO is an FFI object, nil otherwise.
         return (EFFIOP(fo) ? Qt : Qnil);
 }
 
-DEFUN("ffi-pointer-p", Fffi_pointer_p, 1, 1, 0, /*
-Return non-nil if FO is pointer.
+DEFUN("ffi-object-address", Fffi_object_address, 1, 1, 0, /*
+Return the address FO points to.
 */
       (fo))
 {
-	Lisp_Object real_type;
-
         CHECK_EFFIO(fo);
-	real_type = ffi_canonicalise_type(XEFFIO(fo)->type);
-        return (FFI_TPTR(real_type) ? Qt : Qnil);
-}
-
-DEFUN("ffi-pointer-address", Fffi_pointer_address, 1, 1, 0, /*
-Return the address pointed by PTR.
-*/
-      (ptr))
-{
-        if (EQ(Fffi_pointer_p(ptr), Qnil)) {
-#ifdef SXEMACS
-                signal_simple_error("FFI: not a pointer", ptr);
-#else
-                signal_error(Qinternal_error, "FFI: not a pointer", ptr);
-#endif	/* SXEMACS */
-        }
-        return make_float((long)XEFFIO(ptr)->fop.ptr);
+        return make_float((long)XEFFIO(fo)->fop.ptr);
 }
 
 DEFUN("ffi-make-pointer", Fffi_make_pointer, 1, 1, 0, /*
@@ -674,7 +661,7 @@ returned.
         GCPRO1(fo);
         fo = Fmake_ffi_object(type, Qnil);
         ffio = XEFFIO(fo);
-        ffio->fop.ptr = dlsym(RTLD_NEXT, (const char*)XSTRING_DATA(sym));
+        ffio->fop.ptr = dlsym(RTLD_DEFAULT, (const char*)XSTRING_DATA(sym));
         if (ffio->fop.ptr == NULL) {
                 UNGCPRO;
                 return Qnil;
@@ -694,7 +681,7 @@ Return dl error string.
 
 	if (LIKELY(dles != NULL)) {
 		size_t sz = strlen(dles);
-		return make_ext_string((const Bufbyte*)dles, sz, EFFI_CODING);
+		return make_ext_string((const Extbyte*)dles, sz, EFFI_CODING);
 	} else {
 		return Qnil;
 	}
@@ -726,7 +713,7 @@ This is like `ffi-bind' but for function objects.
 
         fo = Fmake_ffi_object(type, Qnil);
         ffio = XEFFIO(fo);
-        ffio->fop.fun = dlsym(RTLD_NEXT, (const char *)XSTRING_DATA(sym));
+        ffio->fop.fun = dlsym(RTLD_DEFAULT, (const char *)XSTRING_DATA(sym));
         if (ffio->fop.fun == NULL) {
 #ifdef SXEMACS
                 signal_simple_error("Can't define function", sym);
@@ -893,17 +880,7 @@ ffi_fetch_foreign(void *ptr, Lisp_Object type)
         else if (EQ(type, Q_double))
                 retval = make_float(*(double*)ptr);
         else if (EQ(type, Q_c_string)) {
-		size_t tlen;
-		tlen = strlen((char*)ptr);
-#if 0
-		/* dangerous if ptr has a non-native encoding, like UTF8 */
-                retval = make_string((const FFIBYTE*)ptr, tlen);
-#elif defined(MULE)
-		TO_INTERNAL_FORMAT(DATA, (ptr, tlen),
-				   LISP_STRING, retval, Qnil);
-#else
-		retval = make_ext_string((char*)ptr, tlen, Qbinary);
-#endif
+                retval = build_ext_string((char*)ptr, Qbinary);
         } else if (EQ(type, Q_void)) {
                 retval = Qnil;
         } else if (FFI_POINTERP(type)) {
@@ -953,7 +930,8 @@ TYPE specifies value for data to be fetched.
                                 CHECK_INT(XCDR(type));
                                 tlen = XUINT(XCDR(type));
                         }
-                        retval = make_ext_string((char*)ptr, tlen, Qbinary);
+
+                        retval = make_ext_string(ptr, tlen, Qbinary);
                 } else {
 #ifdef SXEMACS
                         signal_simple_error("Can't fetch for this type", origtype);
@@ -1888,8 +1866,7 @@ syms_of_ffi(void)
 	DEFSUBR(Fmake_ffi_object);
 	DEFSUBR(Fffi_object_p);
 	DEFSUBR(Fffi_make_pointer);
-	DEFSUBR(Fffi_pointer_p);
-	DEFSUBR(Fffi_pointer_address);
+	DEFSUBR(Fffi_object_address);
 	DEFSUBR(Fffi_object_canonical_type);
 	DEFSUBR(Fffi_object_type);
 	DEFSUBR(Fffi_object_size);
