@@ -191,17 +191,17 @@ with...
 
 ** configure
 
-*** configure on FreeBSD
+*** configure on FreeBSD, NetBSD, etc.
 
-Building SXEmacs on FreeBSD as far as we know requires the GNU Bourne
-Again SHell (bash) versions 3 or 4 - the /bin/sh supplied with FreeBSD 
-is the Almquist Shell and will not work correctly.
+Building SXEmacs on *BSD as far as we know requires the GNU Bourne
+Again SHell (bash) versions 3 or 4.
 
 bash is available for all tier 1 architectures as a binary package and 
 and for tier 2/3 as a port.
 
-To run configure successfully, simply replace `./configure ${ARGS}` 
-with `bash configure ${ARGS}` and proceed as normal.
+To run configure successfully...
+
+	CONFIG_SHELL=/path/to/bash /path/to/bash configure $options
 
 ** bdwgc and gcc and code optimisation
 
