@@ -191,7 +191,7 @@ with...
 
 ** configure
 
-*** configure on FreeBSD, NetBSD, etc.
+*** configure on FreeBSD, NetBSD, OpenBSD, etc.
 
 Building SXEmacs on *BSD as far as we know requires the GNU Bourne
 Again SHell (bash) versions 3 or 4.
@@ -201,7 +201,7 @@ and for tier 2/3 as a port.
 
 To run configure successfully...
 
-	CONFIG_SHELL=/path/to/bash /path/to/bash configure $options
+    CONFIG_SHELL=/path/to/bash $CONFIG_SHELL configure [option, ...]
 
 ** bdwgc and gcc and code optimisation
 
