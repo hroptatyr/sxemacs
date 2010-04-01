@@ -1,8 +1,7 @@
                                                   -*- mode:outline -*-
 
 At the time of this release (SXEmacs 22.1.10), SXEmacs has the
-following idiosyncrasies in addition to what is in the XEmacs
-PROBLEMS: 
+following idiosyncrasies: 
 
 * File Locations
 ================
@@ -142,12 +141,12 @@ unfortunately this has an impact on the other parts of the build
 tools.
 
 To cut it really short, here is the minimum known-to-work combination:
-- autoconf 2.60, automake 1.9.6, libtool 1.5.22, m4 1.4.6
+- autoconf 2.62, automake 1.9.6, libtool 1.5.22, m4 1.4.6
 
-In general we support (as of Dec 2007):
-- autoconf >= 2.60, including current git versions
-- automake 1.9.6, 1.10, 1.10a, and current git versions
-- libtool 1.5.N with N >= 22, libtool 2.1a (current CVS version)
+In general we support (as of April, 2010):
+- autoconf >= 2.62, including current git versions
+- automake 1.9.6, 1.10, 1.10a, 1.11.1, and current git versions
+- libtool 1.5.N with N >= 22, libtool >= 2.1a (current CVS version)
 - m4 1.4.M with M >= 6 plus current git versions
 
 Note that many libtool packages shipped with the distros (OpenSuSE,
@@ -230,6 +229,52 @@ If this still does not work out either dispense with BDWGC support or
 use a recent C compiler.  ATTOW, all GCC 4.x compilers (including SVN)
 should work.
 
+** ENT
+
+ENT is basically a conglomerate of internally and externally implemented
+arithmetics.  Hence it supports a number of libraries, some of which
+overlap in their functionality, some others do not but then break at the
+compatibility layer.
+
+One of the most likely problems is the GMP vs. MPFR issue.  In past
+times, mpfr (a multiprecision library for floats with exact rounding
+facilities) has been a part of the GMP distribution.  Later on, mpfr got
+separated from it and has been developed independently while the version
+of mpfr which ships with GMP stayed the same.  Now that scenario is
+exactly the problem.
+
+Inattentive distributions (like Fedora) still deliver packages of GMP
+with the old'n'incompatible mpfr library.  SXEmacs will disable the MPFR
+support on such systems by default (at configure time).  However, if you
+install a supported version of mpfr in parallel to the packaged ones on
+such a system SXEmacs autodetection correctly reports that a sane
+version of mpfr is available and enables it.  Nonetheless, the according
+build may fail (or the build may even succeed but calling the binary may
+fail), like this:
+
+number-mpfr.o: In function `ent_lt_BIGFR_T':
+/home/martin/src/edit/sxemacs-main/src/number-mpfr.c:661: undefined
+reference to `mpfr_less_p'
+number-mpfr.o: In function `ent_gt_BIGFR_T':
+/home/martin/src/edit/sxemacs-main/src/number-mpfr.c:671: undefined
+reference to `mpfr_greater_p'
+...
+
+Especially note that we _only_ support the standalone version of MPFR,
+and not the one distributed with GMP.
+
+Solution:
+---------
+Either:
+   Badger your distributor and demand separate packages for GMP and
+   MPFR.
+Or:
+   Remove the GMP package and install your own build -- available at
+   http://swox.com/gmp -- afterwards install your own build of mpfr (the
+   one from http://www.mpfr.org)
+
+Reconfigure and rebuild SXEmacs afterwards.
+
 
 * XEmacs Packages
 =================
@@ -248,6 +293,9 @@ here.
 ** EFS
 
 Here is the patch to make EFS work with SXEmacs:
+
+(Note: the current EFS package that XEmacs distributes has this
+patch installed) 
 
 Index: ChangeLog
 ===================================================================
@@ -385,52 +433,6 @@ diff -u -u -r1.7 dired.el
    ;; Reading with history.
    (if (>= ver 19)
 
-** ENT
-
-ENT is basically a conglomerate of internally and externally implemented
-arithmetics.  Hence it supports a number of libraries, some of which
-overlap in their functionality, some others do not but then break at the
-compatibility layer.
-
-One of the most likely problems is the GMP vs. MPFR issue.  In past
-times, mpfr (a multiprecision library for floats with exact rounding
-facilities) has been a part of the GMP distribution.  Later on, mpfr got
-separated from it and has been developed independently while the version
-of mpfr which ships with GMP stayed the same.  Now that scenario is
-exactly the problem.
-
-Inattentive distributions (like Fedora) still deliver packages of GMP
-with the old'n'incompatible mpfr library.  SXEmacs will disable the MPFR
-support on such systems by default (at configure time).  However, if you
-install a supported version of mpfr in parallel to the packaged ones on
-such a system SXEmacs autodetection correctly reports that a sane
-version of mpfr is available and enables it.  Nonetheless, the according
-build may fail (or the build may even succeed but calling the binary may
-fail), like this:
-
-number-mpfr.o: In function `ent_lt_BIGFR_T':
-/home/martin/src/edit/sxemacs-main/src/number-mpfr.c:661: undefined
-reference to `mpfr_less_p'
-number-mpfr.o: In function `ent_gt_BIGFR_T':
-/home/martin/src/edit/sxemacs-main/src/number-mpfr.c:671: undefined
-reference to `mpfr_greater_p'
-...
-
-Especially note that we _only_ support the standalone version of MPFR,
-and not the one distributed with GMP.
-
-Solution:
----------
-Either:
-   Badger your distributor and demand separate packages for GMP and
-   MPFR.
-Or:
-   Remove the GMP package and install your own build -- available at
-   http://swox.com/gmp -- afterwards install your own build of mpfr (the
-   one from http://www.mpfr.org)
-
-Reconfigure and rebuild SXEmacs afterwards.
-
 
 * Problems with running SXEmacs
 ===============================
@@ -514,6 +516,8 @@ file.  Much of it is already fixed in SXEmacs (and in XEmacs too).
 We're keeping it here for prosperity, or until somebody finds the time
 to go through it all and remove the irrelevant stuff. :-)
 
+Note: Some irrelevant stuff purged (mostly windows rubbish) 2010-04-01
+
 This file describes various problems that have been encountered
 in compiling, installing and running XEmacs.  It has been updated for
 XEmacs 21.5.
@@ -583,93 +587,10 @@ config.h to point to it.
 
 It may also work to use the GCC version of `ld' instead of the standard one.
 
-*** Excessive optimization with pgcc can break XEmacs
-
-It has been reported on some systems that compiling with -O6 can lead
-to XEmacs failures.  The workaround is to use a lower optimization
-level.  -O2 and -O4 have been tested extensively.
-
-All of this depends heavily on the version of pgcc and the version
-of libc.  Snapshots near the release of pgcc-1.0 have been tested
-extensively and no sign of breakage has been seen on systems using
-glibc-2.
-
 *** src/Makefile and lib-src/Makefile are truncated--most of the file missing.
 
 This can happen if configure uses GNU sed version 2.03.  That version
 had a bug.  GNU sed version 2.05 works properly.
-
-*** When compiling with X11, you get "undefined symbol _XtStrings".
-
-This means that you are trying to link emacs against the X11r4 version of
-libXt.a, but you have compiled either Emacs or the code in the lwlib
-subdirectory with the X11r5 header files.  That doesn't work.
-
-Remember, you can't compile lwlib for r4 and emacs for r5, or vice versa.
-They must be in sync.
-
-*** test-distrib says that the distribution has been clobbered
-or, temacs prints "Command key out of range 0-127"
-or, temacs runs and dumps xemacs, but xemacs totally fails to work.
-or, temacs gets errors dumping xemacs
-
-This can be because the .elc files have been garbled.  Do not be
-fooled by the fact that most of a .elc file is text: these are binary
-files and can contain all 256 byte values.
-
-In particular `shar' cannot be used for transmitting GNU Emacs.  It
-typically truncates "lines".  (this does not apply to GNU shar, which
-uses uuencode to encode binary files.)
-
-If you have a copy of Emacs that has been damaged in its nonprinting
-characters, you can fix them by running:
-
- make all-elc
-
-This will rebuild all the needed .elc files.
-
-** Intel Architecture General
-
-*** Don't use -O2 or -O3 with Cygwin 1.0, CodeFusion-99070 or gcc 2.7.2 on x86
-without also using `-fno-strength-reduce'.
-
-gcc will generate incorrect code otherwise.  This bug is present in at
-least 2.6.x and 2.7.[0-2].  This bug has been fixed in GCC 2.7.2.1 and
-later.  This bug is O/S independent, but is limited to x86 architectures.
-
-This problem is known to be fixed in egcs (or pgcc) 1.0 or later.
-
-Unfortunately, later releases of Cygnus-released compilers (not the
-Net-released ones) have a bug with the same `problem signature'.
-
-If you're lucky, you'll get an error while compiling that looks like:
-
-event-stream.c:3189: internal error--unrecognizable insn:
-(insn 256 14 15 (set (reg/v:SI 24)
-        (minus:SI (reg/v:SI 25)
-            (const_int 2))) -1 (insn_list 11 (nil))
-    (nil))
-    0       0 [main]
-
-If you're unlucky, your code will simply execute incorrectly.
-
-*** Don't use -O2 with gcc 2.7.2 under Intel architectures without also
-using `-fno-caller-saves'.
-
-gcc will generate incorrect code otherwise.  This bug is still
-present in gcc 2.7.2.3.  There have been no reports to indicate the
-bug is present in egcs 1.0 (or pgcc 1.0) or later.  This bug is O/S
-independent, but limited to x86 architectures.
-
-This problem is known to be fixed in egcs (or pgcc) 1.0 or later.
-
-*** `compress' and `uncompress' not found and XFree86
-
-XFree86 installs a very old version of libz.a by default ahead of where
-more modern version of libz might be installed.  This will cause problems
-when attempting to link against libMagick.  The fix is to remove the old
-libz.a in the X11 binary directory.
-
 
 ** Motif
 
@@ -877,17 +798,6 @@ Valdis.Kletnieks@vt.edu writes:
 
 
 ** SunOS/Solaris
-*** Don't use -O2 with gcc 2.8.1 and egcs 1.0 under SPARC architectures
-without also using `-fno-schedule-insns'.
-
-gcc will generate incorrect code otherwise, typically resulting in
-crashes in the function skip-syntax-backward.
-
-*** Don't use gcc-2.95.2 with -mcpu=ultrasparc on Solaris 2.6.
-
-gcc will assume a 64-bit operating system, even though you've
-merely told it to assume a 64-bit instruction set.
-
 *** Dumping error when using GNU binutils / GNU ld on a Sun.
 
 Errors similar to the following:
@@ -1018,11 +928,6 @@ The solution is to install Patch-ID# 100267-03 from Sun.
 
 See also Intel Architecture General, above.
 
-*** egcs-1.1 on Alpha Linux
-
-There have been reports of egcs-1.1 not compiling XEmacs correctly on
-Alpha Linux.  There have also been reports that egcs-1.0.3a is O.K.
-
 *** Under Linux, you get "too many arguments to function `getpgrp'".
 
 You have probably installed LessTiff under `/usr/local' and `libXm.so'
@@ -1037,12 +942,6 @@ prove enlightening.
 
 This error message has been observed with lesstif-0.75a.  It does not
 appear to cause any harm.
-
-*** xemacs: can't resolve symbol '__malloc_hook'
-
-This is a Linux problem where you've compiled the XEmacs binary on a libc
-5.4 with version higher than 5.4.19 and attempted to run the binary against
-an earlier version.  The solution is to upgrade your old library.
 
 ** IRIX
 
@@ -1275,94 +1174,6 @@ to take advantage of the keyboard map in emacskeys.sco.
 
 Note: Much of the above entry is probably not valid for XEmacs 21.0
 and later.
-
-** Windows
-
-*** XEmacs complains "No such file or directory, diff"
-
-or "ispell" or other commands that seem related to whatever you just
-tried to do.
-
-There are a large number of common (in the sense that "everyone has
-these, really") Unix utilities that are not provided with XEmacs.  The
-GNU Project's implementations are available for Windows in the the
-Cygwin distribution (http://www.cygwin.com/), which also provides a
-complete Unix emulation environment (and thus makes ports of Unix
-utilities nearly trivial).  Another implementation is that from MinGW
-(http://www.mingw.org/msys.shtml).
-
-*** Weird crashes in pdump load or shortly after pdump load.
-
-This can happen with incremental linking.  Check if you have set
-SUPPORT_EDIT_AND_CONTINUE to non-zero in config.inc, which must allow
-incremental linking to be enabled (otherwise it's disabled).  Either turn
-this off, execute `nmake -f xemacs.mak clean', or manually remove
-`temacs.exe' and `xemacs.exe'.
-
-** Cygwin
-
-See also Intel Architecture General, above.
-
-*** Signal 11 when building or running a dumped XEmacs.
-
-This appears to happen when using the traditional dumping mechanism and
-the system malloc.  Andy Piper writes:
-
-  Traditional dumping on Cygwin relies on using gmalloc (there are specific
-  hacks in our version of gmalloc to support this), I suspect using sysmalloc
-  is the problem.
-
-Try configuring with pdump or without system malloc.
-
-*** In general use etc/check_cygwin_setup.sh to trap environment problems.
-
-The script etc/check_cygwin_setup.sh will attempt to detect whether
-you have a suitable environment for building.  This script may not work
-correctly if you are using ash instead of bash (see below).
-
-*** Syntax errors running configure scripts, make failing with exit code 127
-    in inexplicable situations, etc.
-
-[[ This may be because you are using the default Cygwin shell, under old
-versions of Cygwin.  The default Cygwin shell (/bin/sh.exe) is ash, which
-appears to work in most circumstances but has some weird failure modes.
-You may need to replace the symlink with bash.exe. ]] This doesn't appear
-to affect Cygwin any longer, and /bin/sh.exe is no longer a symlink in
-any case.
-
-*** Lots of compile errors, esp. on lines containing macro definitions
-    terminated by backslashes.
-
-Your partition holding the source files is mounted binary.  It needs
-to be mounted text. (This will not screw up any binary files because
-the Cygwin utilities specify explicitly whether they want binary or
-text mode when working with source vs. binary files, which overrides
-the mount type.) To fix this, you just need to run the appropriate
-mount command once -- afterwards, the settings are remembered in the
-registry.
-
-*** Errors from make like /c:not found.
-
-Make sure you set the environment variable MAKE_MODE to UNIX in your
-.bashrc, Control Panel (Windows 2000/NT), or AUTOEXEC.BAT (Windows
-98/95).
-
-*** The info files will not build.
-
-makeinfo that ships with old versions of Cygwin doesn't work.
-Upgrade to the latest Cygwin version.
-
-*** XEmacs hangs while attempting to rebuild the .elc files.
-
-Check to make sure you're not configuring with rel-alloc.  The relocating
-allocator does not currently work under Cygwin due to bugs in Cygwin's
-mmap().
-
-*** Trying to build with X, but X11 not detected.
-
-This is usually because xmkmf is not in your path or because you are
-using the default Cygwin shell. (See above.)
-
 
 * Problems with running XEmacs
 ==============================
@@ -2538,160 +2349,6 @@ with the system compiler.  The compiler version is "Microsoft C
 version 6", SCO 4.2.0h Dev Sys Maintenance Supplement 01/06/93; Quick
 C Compiler Version 1.00.46 (Beta).  The solution is to compile with
 GCC.
-
-
-** Windows
-*** Conflicts with FSF NTEmacs
-
-Depending on how it is installed, FSF NTEmacs may setup various EMACS*
-variables in your environment.  The presence of these variables may
-cause XEmacs to fail at startup, cause you to see corrupted
-doc-strings, or cause other random problems.
-
-You should remove these variables from your environment.  These
-variables are not required to run FSF NTEmacs if you start it by
-running emacs.bat.
-
-*** XEmacs can't find my init file
-
-XEmacs looks for your init in your "home" directory -- either in
-`~/.xemacs/init.el' or `~/.emacs'.  XEmacs decides that your "home"
-directory is, in order of preference:
-	
-- The value of the HOME environment variable, if the variable exists.
-- The value of the registry entry SOFTWARE\XEmacs\XEmacs\HOME,
-  if it exists.
-- The value of the HOMEDRIVE and HOMEPATH environment variables, if
-  these variables both exist.
-- C:\.
-
-To determine what XEmacs thinks your home directory is, try opening
-a file in the `~' directory, and you should see its expansion in the
-modeline.  If this doesn't work, type ESC : (user-home-directory).
-
-*** XEmacs can't find any packages
-
-XEmacs looks for your packages in subdirectories of a directory which
-is set at compile-time (see `config.inc'), and whose default is
-`C:\Program Files\XEmacs'.  XEmacs also looks in `~/.xemacs', where
-`~' refers to your home directory (see previous entry).  The variable
-`configure-package-path' holds the actual path that was compiled into
-your copy of XEmacs.
-
-The compile-time default location can be overridden by the EMACSPACKAGEPATH
-environment variable or by the SOFTWARE\XEmacs\XEmacs\EMACSPACKAGEPATH
-registry entry.  You should check that these variables, if they exist,
-point to the actual location of your package tree.
-
-*** XEmacs doesn't die when shutting down Windows 95 or 98
-
-When shutting down Windows 95 or 98 you may see a dialog that says
-  "xemacs / You must quit this program before you quit Windows".
-It is safe to
-  "Click OK to quit the program and Windows",
-but you won't be offered a chance to save any modified XEmacs buffers.
-
-*** Key bindings
-
-The C-z, C-x, C-c, and C-v keystrokes have traditional uses in both
-emacs and Windows programs. XEmacs binds these keys to their
-traditional emacs uses, and provides Windows 3.x style bindings for
-the Cut, Copy and Paste functions.
-
-	Function	XEmacs binding
-	--------	--------------
-	Undo		C-_
-	Cut		Sh-Del
- 	Copy		C-Insert
-	Paste		Sh-Insert
-
-You can rebind keys to make XEmacs more Windows-compatible; for
-example, to bind C-z to undo:
-
-       (global-set-key [(control z)] 'undo)
-
-Rebindind C-x and C-c is trickier because by default these are prefix
-keys in XEmacs. See the "Key Bindings" node in the XEmacs manual.
-
-*** Behavior of selected regions
-
-Use the pending-del package to enable the standard Windows behavior of
-self-inserting deletes region.
-
-*** Limitations on the use of the AltGr key.
-
-In some locale and OS combinations you can't generate M-AltGr-key or
-C-M-AltGr-key sequences at all.
-
-To generate C-AltGr-key or C-M-AltGr-key sequences you must use the
-right-hand Control key and you must press it *after* AltGr.
-
-These limitations arise from fundamental problems in the way that the
-win32 API reports AltGr key events. There isn't anything that XEmacs
-can do to work round these problems that it isn't already doing.
-
-You may want to create alternative bindings if any of the standard
-XEmacs bindings require you to use some combination of Control or Meta
-and AltGr.
-
-*** Limited support for subprocesses under Windows 9x
-
-Attempting to use call-process to run a 16bit program gives a
-"Spawning child process: Exec format error". For example shell-command
-fails under Windows 95 and 98 if you use command.com or any other
-16bit program as your shell.
-
-XEmacs may incorrectly quote your call-process command if it contains
-double quotes, backslashes or spaces.
-
-start-process and functions that rely on it are supported under Windows 95,
-98 and NT. However, starting a 16bit program that requires keyboard input
-may cause XEmacs to hang or crash under Windows 95 and 98, and will leave
-the orphaned 16bit program consuming all available CPU time.
-
-Sending signals to subprocesses started by call-process or by
-start-process fails with a "Cannot send signal to process" error under
-Windows 95 and 98. As a side effect of this, quitting XEmacs while it
-is still running subprocesses causes it to crash under Windows 95 and
-98.
-
-
-** Cygwin
-*** Signal 11 when building or running a dumped XEmacs.
-
-See the section on Cygwin above, under building.
-
-*** XEmacs fails to start because cygXpm-noX4.dll was not found.
-
-Andy Piper <andy@xemacs.org> sez:
-
-    cygXpm-noX4 is part of the cygwin distribution under libraries or
-    graphics, but is not installed by default. You need to run the
-    cygwin setup again and select this package.
-
-*** Subprocesses do not work.
-
-You do not have "tty" in your CYGWIN environment variable.  This must
-be set in your autoexec.bat (win95) or the system properties (winnt)
-as it must be read before the cygwin DLL initializes.
-
-*** ^G does not work on hung subprocesses.
-
-This is a known problem. It can be remedied by defining BROKEN_SIGIO
-in src/s/cygwin.h, however this currently leads to instability in XEmacs.
-(#### is this still true?)
-
-*** Errors from make like `/c:not found' when running `M-x compile'.
-
-Make sure you set the environment variable MAKE_MODE to UNIX in your
-init file (.xemacs/init.el), Control Panel (Windows 2000/NT), or
-AUTOEXEC.BAT (Windows 98/95).
-
-*** There are no images in the toolbar buttons.
-
-You need version 4.71 of commctrl.dll which does not ship with windows
-95. You can get this by installing IE 4.0 or downloading it from the
-microsoft website.
 
 
 * Compatibility problems (with Emacs 18, GNU Emacs, or previous XEmacs/lemacs)
