@@ -1632,7 +1632,7 @@ if test $ac_cv_lib_pthread_pthread_create = yes; then
   case "`$CC -pthread 2>&1`" in
      *unrecognized\ option*) have_pthread_opt=no ;;
   esac
-  if test "$have_pthread_opt" == "yes"; then
+  if test "$have_pthread_opt" = "yes"; then
 	SXE_PREPEND(-pthread, c_switch_site)
   fi
   SXE_PREPEND(-lpthread, MM_LIBS)

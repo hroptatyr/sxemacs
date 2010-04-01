@@ -402,7 +402,7 @@ int main()
 		resvar[=user],
 		resvar[=sys],
 		resvar[=sys])
-        if test "${malloc_check}" == "" ; then
+        if test "${malloc_check}" = "" ; then
 		unset MALLOC_CHECK_
         else 
         	MALLOC_CHECK_=${malloc_check}
