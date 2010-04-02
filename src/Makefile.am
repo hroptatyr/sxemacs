@@ -61,7 +61,18 @@ bin_PROGRAMS = sxemacs
 bin_SCRIPTS = sxemacs.dmp
 archlib_DATA = config.values DOC
 
-pdumplibs = libsxecore.a libsxeui.a libsxeevents.a libent.a libmm.a libsxemem.a
+pdumplibs = libsxecore.a libsxeui.a libsxeevents.a libent.a libsxemem.a
+nodumplibs=
+
+SUBDIRS=
+sxe_subdirs=
+
+# @FIXME@ Should probably be conditional on whether we really have media
+# things or not :-)
+AM_LDFLAGS += -L$(builddir)/media
+libmm_a_ldflags = -lmm
+sxe_subdirs += media
+
 if NEED_LIBMULE
 pdumplibs += libmule.a
 endif
@@ -69,13 +80,16 @@ if NEED_LIBSXEDB
 pdumplibs += libsxedb.a
 endif
 
-nodumplibs = libcruft.a
+nodumplibs += libcruft.a
 if USE_MEMALLOC
 nodumplibs += libmemalloc.a
 endif
 if DESCEND_LWLIB
 nodumplibs += libsxeX.a
 endif
+
+SUBDIRS += $(sxe_subdirs)
+
 noinst_LIBRARIES = $(pdumplibs) $(nodumplibs)
 
 acgen_headers = config.h sxe-paths.h
@@ -84,7 +98,6 @@ header_HEADERS = $(acgen_headers)		\
 	$(libsxeui_a_headers)			\
 	$(libent_a_headers)			\
 	$(libmule_a_headers)			\
-	$(libmm_a_headers)			\
 	$(libmemalloc_a_headers)		\
 	$(libsxeevents_a_headers)		\
 	emodules-ng.h
@@ -261,28 +274,6 @@ libmule_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_CFLAGS)
 libmule_a_LIBADD = $(libmule_objs)
 libmule_a_DEPENDENCIES = $(libmule_a_LIBADD)
 all_sources += $(libmule_a_sources) $(libmule_objs:.o=.c)
-
-libmm_a_headers = media.h sound.h \
-	media-ffmpeg.h media-internal.h	media-mad.h media-sndfile.h \
-	media-sox.h media-magic.h \
-	sound-alsa.h sound-ao.h sound-arts.h sound-esd.h \
-	sound-jack.h sound-nas.h sound-oss.h sound-pulse.h
-## what about these?: nativesound.h sound-sunplay.h libsst.h libst.h
-libmm_a_sources = \
-	media.c sound.c
-libmm_a_SOURCES = $(libmm_a_headers) $(libmm_a_sources)
-EXTRA_libmm_a_SOURCES = \
-	media-ffmpeg.c media-internal.c media-mad.c media-sndfile.c \
-	media-sox.c media-magic.c \
-	sound-alsa.c sound-ao.c sound-arts.c sound-esd.c \
-	sound-jack.c sound-nas.c sound-oss.c sound-pulse.c \
-	dgif_lib.c gif_io.c
-libmm_a_CFLAGS = $(AM_CFLAGS) -Wall
-libmm_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_system) $(MM_CPPFLAGS) $(X_CFLAGS) 
-libmm_a_LIBADD = $(libmm_objs)
-libmm_a_DEPENDENCIES = $(libmm_a_LIBADD)
-libmm_a_ldflags = $(MM_LIBS)
-all_sources += $(libmm_a_sources) $(libmm_objs:.o=.c)
 
 libsxedb_a_headers = database.h eldap.h postgresql.h
 libsxedb_a_sources =

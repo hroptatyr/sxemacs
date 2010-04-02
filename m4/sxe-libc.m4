@@ -174,7 +174,7 @@ libc_file_we_use=`$LDD ./conftest | grep libc | sed -e "s/.*=>\(.*\) .*$/\1/"`],
 		)
 		;;
 
-	powerpc-apple-darwin*)
+	*-apple-darwin*)
 		dnl MacOS guys, does this work?
 		libc_version="`$LDD /usr/lib/libc.dylib | head -n1 | sed -e 's/.*current version[ ]*\([0-9.]*\).*$/\1/'`"
 		;;
