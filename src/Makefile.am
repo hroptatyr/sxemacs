@@ -376,7 +376,7 @@ DOC: $(SXEMACS) $(bldlispdir)/auto.stamp
 		$(BATCH) -nd  -l $(sxelispdir)/make-docfile.el -- \
 			-o $(bldsrcdir)/DOC -d $(sxesrcdir) \
 			-i $(sxe_srcdir)/site-packages \
-			$(sxesrcdir)/*.c $(sxeemoddir)/*/*.c; \
+			$(sxesrcdir)/*.c $(sxesrcdir)/*/*.c $(sxeemoddir)/*/*.c; \
 		touch $@; \
 	fi
 
