@@ -77,7 +77,9 @@ if NEED_LIBMULE
 pdumplibs += libmule.a
 endif
 if NEED_LIBSXEDB
-pdumplibs += libsxedb.a
+sxe_subdirs += sxedb
+AM_LDFLAGS += -L$(builddir)/sxedb
+libsxedb_a_ldflags = -lsxedb
 endif
 
 nodumplibs += libcruft.a
@@ -275,16 +277,6 @@ libmule_a_LIBADD = $(libmule_objs)
 libmule_a_DEPENDENCIES = $(libmule_a_LIBADD)
 all_sources += $(libmule_a_sources) $(libmule_objs:.o=.c)
 
-libsxedb_a_headers = database.h eldap.h postgresql.h
-libsxedb_a_sources =
-libsxedb_a_SOURCES = $(libsxedb_a_headers) $(libsxedb_a_sources)
-EXTRA_libsxedb_a_SOURCES = \
-	database.c eldap.c postgresql.c
-libsxedb_a_CPPFLAGS = $(AM_CPPFLAGS) $(DB_CPPFLAGS) $(OPENSSL_CPPFLAGS)
-libsxedb_a_LIBADD = $(libsxedb_objs)
-libsxedb_a_DEPENDENCIES = $(libsxedb_a_LIBADD)
-libsxedb_a_ldflags = $(DB_LDFLAGS) $(DB_LIBS)
-all_sources += $(libsxedb_a_sources) $(libsxedb_objs:.o=.c)
 
 libmemalloc_a_headers = 
 libmemalloc_a_sources =
