@@ -77,8 +77,8 @@ if NEED_LIBMULE
 pdumplibs += libmule.a
 endif
 if NEED_LIBSXEDB
-sxe_subdirs += sxedb
-AM_LDFLAGS += -L$(builddir)/sxedb
+sxe_subdirs += database
+AM_LDFLAGS += -L$(builddir)/database
 libsxedb_a_ldflags = -lsxedb
 endif
 
