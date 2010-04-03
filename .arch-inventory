@@ -24,3 +24,4 @@ precious ^(libtool)$
 precious ^sxemacs\.pc$
 precious ^cpuid$
 precious ^libltdl$
+precious ^lock$
