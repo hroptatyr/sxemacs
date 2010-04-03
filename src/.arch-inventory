@@ -27,7 +27,6 @@ precious ^(libcruft\.l?a)$
 precious ^(libdb\.l?a)$
 precious ^(libent\.l?a)$
 precious ^(libmemalloc\.l?a)$
-precious ^(libmm\.l?a)$
 precious ^(libmule\.l?a)$
 precious ^(libsxeX\.l?a)$
 precious ^(libsxecore\.l?a)$
@@ -38,5 +37,4 @@ precious ^(\.deps)$
 precious ^(\.libs)$
 precious ^(DOC)$
 precious ^(config\.h\.in)$
-precious ^(libsxedb\.a)$
 precious ^(stamp-h1)$
