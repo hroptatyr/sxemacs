@@ -104,47 +104,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 # include <values.h>
 #endif	/* HAVE_VALUES_H */
 
-#include "ent-optable.h"
-#include "ent-nullary-op.h"
-#include "ent-unary-op.h"
-#include "ent-binary-op.h"
-#include "ent-unary-rel.h"
-#include "ent-binary-rel.h"
-#include "ent-lift.h"
+#include "ent/ent-optable.h"
+#include "ent/ent-nullary-op.h"
+#include "ent/ent-unary-op.h"
+#include "ent/ent-binary-op.h"
+#include "ent/ent-unary-rel.h"
+#include "ent/ent-binary-rel.h"
+#include "ent/ent-lift.h"
 
 /* ordinary (small) integers */
-#include "ent-int.h"
+#include "ent/ent-int.h"
 /* ordinary floats */
 #ifdef HAVE_FPFLOAT
-# include "ent-float.h"
+# include "ent/ent-float.h"
 #endif	/* HAVE_FPFLOAT */
 
-#include "ent-indef.h"
+#include "ent/ent-indef.h"
 
 /* Load the library definitions */
 #if defined HAVE_GMP && defined WITH_GMP
-# include "ent-gmp.h"
+# include "ent/ent-gmp.h"
 #elif defined HAVE_BSDMP && defined WITH_MP
-# include "ent-mp.h"
+# include "ent/ent-mp.h"
 #endif
 #if defined HAVE_MPFR && defined WITH_MPFR
-# include "ent-mpfr.h"
+# include "ent/ent-mpfr.h"
 #endif
 #if defined HAVE_MPC && defined WITH_MPC
-# include "ent-mpc.h"
+# include "ent/ent-mpc.h"
 #elif defined HAVE_PSEUC && defined WITH_PSEUC 
-# include "ent-pseumpc.h"
+# include "ent/ent-pseumpc.h"
 #endif
 #if defined HAVE_ECM && defined WITH_ECM
-# include "ent-ecm.h"
+# include "ent/ent-ecm.h"
 #endif
 
 /* now maybe include those pseudo implementations */
 #if defined HAVE_PSEUG && defined WITH_PSEUG
-# include "ent-gaussian.h"
+# include "ent/ent-gaussian.h"
 #endif
 #if defined HAVE_QUATERN && defined WITH_QUATERN
-# include "ent-quatern.h"
+# include "ent/ent-quatern.h"
 #endif
 
 

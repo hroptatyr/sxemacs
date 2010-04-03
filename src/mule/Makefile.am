@@ -1,4 +1,4 @@
-## SXEmacs - database Makefile.am
+## SXEmacs - Mule Makefile.am
 
 ## Copyright (C) 2010 Steve Youngs
 
@@ -46,20 +46,23 @@ TAGS_DEPENDENCIES = $(ETAGS)
 
 all_sources=
 
-libsxedb_a_headers = database.h eldap.h postgresql.h
-libsxedb_a_sources =
-libsxedb_a_SOURCES = $(libsxedb_a_headers) $(libsxedb_a_sources)
-EXTRA_libsxedb_a_SOURCES = \
-	database.c eldap.c postgresql.c
-libsxedb_a_CPPFLAGS = $(AM_CPPFLAGS) $(DB_CPPFLAGS) $(OPENSSL_CPPFLAGS)
-libsxedb_a_LIBADD = $(libsxedb_objs)
-libsxedb_a_DEPENDENCIES = $(libsxedb_a_LIBADD)
-libsxedb_a_ldflags = $(DB_LDFLAGS) $(DB_LIBS)
-all_sources += $(libsxedb_a_sources) $(libsxedb_objs:.o=.c)
+libmule_a_headers = \
+	file-coding.h mule-ccl.h mule-charset.h
+libmule_a_sources =
+libmule_a_SOURCES = $(libmule_a_headers) $(libmule_a_sources)
+EXTRA_libmule_a_SOURCES =						\
+	file-coding.c mule.c mule-canna.c mule-ccl.c mule-charset.c	\
+	mule-wnnfns.c							\
+	input-method-xlib.c input-method-motif.c
+libmule_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_CFLAGS)
+libmule_a_LIBADD = $(libmule_objs)
+libmule_a_DEPENDENCIES = $(libmule_a_LIBADD)
+all_sources += $(libmule_a_sources) $(libmule_objs:.o=.c)
 
-header_HEADERS= $(acgen_headers) $(libsxedb_a_headers)
 
-noinst_LIBRARIES=libsxedb.a
+header_HEADERS= $(acgen_headers) $(libmule_a_headers)
+
+noinst_LIBRARIES=libmule.a
 
 # 
 # Help the SXEmacs developers get nice post-processed source files

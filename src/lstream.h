@@ -280,7 +280,7 @@ Lstream_ungetc(lstream_t stream, int c)
 #ifdef MULE
 
 #ifndef BYTE_ASCII_P
-#include "mule-charset.h"
+#include "mule/mule-charset.h"
 #endif
 
 extern_inline Emchar Lstream_get_emchar(lstream_t stream);

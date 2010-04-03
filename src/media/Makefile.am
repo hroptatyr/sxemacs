@@ -68,6 +68,8 @@ libmm_a_DEPENDENCIES = $(libmm_a_LIBADD)
 libmm_a_ldflags = $(MM_LIBS)
 all_sources += $(libmm_a_sources) $(libmm_objs:.o=.c)
 
+header_HEADERS= $(acgen_headers) $(libmm_a_headers)
+
 noinst_LIBRARIES=libmm.a
 
 

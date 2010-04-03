@@ -1,4 +1,4 @@
-## SXEmacs - database Makefile.am
+## SXEmacs - Ent Makefile.am
 
 ## Copyright (C) 2010 Steve Youngs
 
@@ -46,20 +46,33 @@ TAGS_DEPENDENCIES = $(ETAGS)
 
 all_sources=
 
-libsxedb_a_headers = database.h eldap.h postgresql.h
-libsxedb_a_sources =
-libsxedb_a_SOURCES = $(libsxedb_a_headers) $(libsxedb_a_sources)
-EXTRA_libsxedb_a_SOURCES = \
-	database.c eldap.c postgresql.c
-libsxedb_a_CPPFLAGS = $(AM_CPPFLAGS) $(DB_CPPFLAGS) $(OPENSSL_CPPFLAGS)
-libsxedb_a_LIBADD = $(libsxedb_objs)
-libsxedb_a_DEPENDENCIES = $(libsxedb_a_LIBADD)
-libsxedb_a_ldflags = $(DB_LDFLAGS) $(DB_LIBS)
-all_sources += $(libsxedb_a_sources) $(libsxedb_objs:.o=.c)
+libent_a_headers = \
+	ent.h ent-int.h ent-float.h ent-indef.h ent-inf.h \
+	ent-ecm.h ent-gaussian.h ent-gmp.h ent-mpc.h \
+	ent-mpfr.h ent-pseumpc.h ent-quatern.h \
+	ent-strflt.h \
+	ent-nullary-op.h ent-unary-op.h ent-binary-op.h \
+	ent-unary-rel.h ent-binary-rel.h ent-lift.h \
+	ent-optable.h
+libent_a_sources = \
+	ent.c ent-int.c ent-float.c ent-indef.c floatfns.c \
+	ent-nullary-op.c ent-unary-op.c ent-binary-op.c \
+	ent-unary-rel.c ent-binary-rel.c ent-lift.c
+libent_a_SOURCES = $(libent_a_headers) $(libent_a_sources)
+EXTRA_libent_a_SOURCES = \
+	ent-ecm.c  ent-gaussian.c \
+	ent-gmp.c ent-mpc.c ent-mpfr.c ent-pseumpc.c \
+	ent-quatern.c
+libent_a_CPPFLAGS = $(AM_CPPFLAGS) $(ENT_CPPFLAGS)
+libent_a_LIBADD = $(libent_objs)
+libent_a_DEPENDENCIES = $(libent_a_LIBADD)
+libent_a_ldflags = $(ENT_LIBS)
+all_sources += $(libent_a_sources) $(libent_objs:.o=.c)
 
-header_HEADERS= $(acgen_headers) $(libsxedb_a_headers)
+header_HEADERS = $(acgen_headers) $(libent_a_headers)
 
-noinst_LIBRARIES=libsxedb.a
+
+noinst_LIBRARIES=libent.a
 
 # 
 # Help the SXEmacs developers get nice post-processed source files

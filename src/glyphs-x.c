@@ -75,7 +75,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <setjmp.h>
 
 #ifdef FILE_CODING
-#include "file-coding.h"
+#include "mule/file-coding.h"
 #endif
 
 #ifdef LWLIB_WIDGETS_MOTIF

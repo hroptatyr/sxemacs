@@ -2826,7 +2826,7 @@ void staticpro_nodump(Lisp_Object *);
 /* allocation goodies */
 #include "opaque.h"
 /* for size computation */
-#include "ent.h"
+#include "ent/ent.h"
 
 /* also generally useful if you want to avoid arbitrary size limits
    but don't need a full dynamic array.  Assumes that BASEVAR points

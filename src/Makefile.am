@@ -61,7 +61,7 @@ bin_PROGRAMS = sxemacs
 bin_SCRIPTS = sxemacs.dmp
 archlib_DATA = config.values DOC
 
-pdumplibs = libsxecore.a libsxeui.a libsxeevents.a libent.a libsxemem.a
+pdumplibs = libsxecore.a libsxeui.a libsxeevents.a libsxemem.a
 nodumplibs=
 
 SUBDIRS=
@@ -73,8 +73,16 @@ AM_LDFLAGS += -L$(builddir)/media
 libmm_a_ldflags = -lmm
 sxe_subdirs += media
 
+# @FIXME@ Should probably be conditional on whether we really have media
+# things or not :-)
+AM_LDFLAGS += -L$(builddir)/ent
+libent_a_ldflags = -lent
+sxe_subdirs += ent
+
 if NEED_LIBMULE
-pdumplibs += libmule.a
+AM_LDFLAGS += -L$(builddir)/mule
+libmule_a_ldflags = -lmule
+sxe_subdirs += mule
 endif
 if NEED_LIBSXEDB
 sxe_subdirs += database
@@ -98,8 +106,6 @@ acgen_headers = config.h sxe-paths.h
 header_HEADERS = $(acgen_headers)		\
 	$(libsxecore_a_headers)			\
 	$(libsxeui_a_headers)			\
-	$(libent_a_headers)			\
-	$(libmule_a_headers)			\
 	$(libmemalloc_a_headers)		\
 	$(libsxeevents_a_headers)		\
 	emodules-ng.h
@@ -137,7 +143,7 @@ sxemacs_LDFLAGS = $(AM_LDFLAGS) $(start_flags)
 #sxemacs_LDFLAGS += -Wl,-rpath,$(abs_top_builddir)/lwlib/$(LT_OBJDIR)
 sxemacs_LDADD = $(sxemacs_lddep) $(OPENSSL_LIBS)
 sxemacs_LDADD +=							\
-	$(libsxecore_a_ldflags)						\
+	$(libsxecore_a_ldflags)	$(libmule_a_ldflags)			\
 	$(libent_a_ldflags) $(libmm_a_ldflags) $(libsxedb_a_ldflags)	\
 	$(ld_switch_all) $(ld_libs_all) $(lib_gcc) $(FFI_LIBS)\
 	$(LIBLTDL)
@@ -240,43 +246,6 @@ libsxeui_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_system) $(X_CFLAGS)
 libsxeui_a_LIBADD = $(libsxeui_objs)
 libsxeui_a_DEPENDENCIES = $(libsxeui_a_LIBADD)
 all_sources += $(libsxeui_a_sources) $(libsxeui_objs:.o=.c)
-
-libent_a_headers = \
-	ent.h ent-int.h ent-float.h ent-indef.h ent-inf.h \
-	ent-ecm.h ent-gaussian.h ent-gmp.h ent-mpc.h \
-	ent-mpfr.h ent-pseumpc.h ent-quatern.h \
-	ent-strflt.h \
-	ent-nullary-op.h ent-unary-op.h ent-binary-op.h \
-	ent-unary-rel.h ent-binary-rel.h ent-lift.h \
-	ent-optable.h
-libent_a_sources = \
-	ent.c ent-int.c ent-float.c ent-indef.c floatfns.c \
-	ent-nullary-op.c ent-unary-op.c ent-binary-op.c \
-	ent-unary-rel.c ent-binary-rel.c ent-lift.c
-libent_a_SOURCES = $(libent_a_headers) $(libent_a_sources)
-EXTRA_libent_a_SOURCES = \
-	ent-ecm.c  ent-gaussian.c \
-	ent-gmp.c ent-mpc.c ent-mpfr.c ent-pseumpc.c \
-	ent-quatern.c
-libent_a_CPPFLAGS = $(AM_CPPFLAGS) $(ENT_CPPFLAGS)
-libent_a_LIBADD = $(libent_objs)
-libent_a_DEPENDENCIES = $(libent_a_LIBADD)
-libent_a_ldflags = $(ENT_LIBS)
-all_sources += $(libent_a_sources) $(libent_objs:.o=.c)
-
-libmule_a_headers = \
-	file-coding.h mule-ccl.h mule-charset.h
-libmule_a_sources =
-libmule_a_SOURCES = $(libmule_a_headers) $(libmule_a_sources)
-EXTRA_libmule_a_SOURCES =						\
-	file-coding.c mule.c mule-canna.c mule-ccl.c mule-charset.c	\
-	mule-wnnfns.c							\
-	input-method-xlib.c input-method-motif.c
-libmule_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_CFLAGS)
-libmule_a_LIBADD = $(libmule_objs)
-libmule_a_DEPENDENCIES = $(libmule_a_LIBADD)
-all_sources += $(libmule_a_sources) $(libmule_objs:.o=.c)
-
 
 libmemalloc_a_headers = 
 libmemalloc_a_sources =

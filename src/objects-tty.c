@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "objects-tty.h"
 #ifdef MULE
 #include "device.h"
-#include "mule-charset.h"
+#include "mule/mule-charset.h"
 #endif
 #include "skiplist.h"
 

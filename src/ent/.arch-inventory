@@ -4,5 +4,5 @@ precious ^(GNUmakefile)$
 precious ^(depend)$
 precious ^(\.deps)$
 precious ^(\.libs)$
-precious ^(libsxedb\.l?a)$
+precious ^(libent\.l?a)$
 precious ^(.*\.o)$

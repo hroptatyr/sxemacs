@@ -79,7 +79,7 @@ typedef unsigned long md5_uint32;
 #include "buffer.h"
 #include "lstream.h"
 #ifdef FILE_CODING
-# include "file-coding.h"
+# include "mule/file-coding.h"
 #endif
 /* Structure to save state of computation between the single steps.  */
     struct md5_ctx {

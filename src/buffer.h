@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #define INCLUDED_buffer_h_
 
 #ifdef MULE
-#include "mule-charset.h"
+#include "mule/mule-charset.h"
 #endif
 
 #include "casetab.h"
