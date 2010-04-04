@@ -39,7 +39,7 @@
 
 #include "config.h"
 #include "sxemacs.h"
-#include "ent.h"
+#include "ent/ent.h"
 #include "ase.h"
 #ifdef EMOD_ASE_MONOMOD
 #include "ase-cartesian.h"

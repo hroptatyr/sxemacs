@@ -39,7 +39,7 @@
 
 #include "config.h"
 #include "sxemacs.h"
-#include "ent.h"
+#include "ent/ent.h"
 #include "ase-resclass.h"
 
 #define EMOD_ASE_DEBUG_RESC(args...)	EMOD_ASE_DEBUG("[RESC]: " args)

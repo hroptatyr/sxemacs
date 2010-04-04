@@ -105,7 +105,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 
 #ifdef WITH_NUMBER_TYPES
-#include "ent.h"
+#include "ent/ent.h"
 #endif
 
 #ifdef HAVE_LIBFFI
