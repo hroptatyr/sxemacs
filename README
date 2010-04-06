@@ -1,0 +1,42 @@
+This directory tree holds version 22.1 of SXEmacs, the extensible,
+customizable, self-documenting real-time display editor.
+
+See the file `etc/NEWS' for information on new features and other
+user-visible changes since the last version of SXEmacs.
+
+The file `INSTALL' in this directory says how to build SXEmacs.
+
+The file `PROBLEMS' contains information on many common problems that
+occur in building, installing and running SXEmacs.
+
+The file 'README.packages' will guide you in the installation of
+(essential) add on packages.
+
+The file `configure' is a shell script to acclimate SXEmacs to the
+oddities of your processor and operating system.  It will create a
+file named `Makefile' (a script for the `make' program), which helps
+automate the process of building and installing SXEmacs.  See INSTALL
+for more detailed information.
+
+The file `configure.ac' is the input used by the autoconf program to
+construct the `configure' script.
+
+The file `Makefile.in' is a template used by `configure' to create
+`Makefile'.
+
+There are several subdirectories:
+
+`src' holds the C code for SXEmacs (the SXXEmacs Lisp interpreter and its
+    primitives, the redisplay code, and some basic editing functions).
+`lisp' holds the Emacs Lisp code for SXEmacs (most everything else).
+`lib-src' holds the source code for some utility programs for use by
+    or with SXEmacs, like movemail and etags.
+`etc' holds miscellaneous architecture-independent data files
+    SXEmacs uses, like the tutorial text and the Zippy the Pinhead quote
+    database.  The contents of the `lisp', `info' and `man'
+    subdirectories are architecture-independent too.
+`lwlib' holds the C code for the toolkit objects used by SXEmacs.
+
+`info' holds the Info documentation tree for SXEmacs.
+`man' holds the source code for the SXEmacs info documentation tree.
+

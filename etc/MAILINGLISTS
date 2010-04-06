@@ -1,0 +1,62 @@
+
+	SXEmacs Electronic Mailing Lists.  Last Modified: 2006-12-05
+
+SXEmacs has its own mailing lists which are distinct from the XEmacs and
+the FSF GNU Emacs mailing lists and newsgroups.  The mailing lists are: 
+
+sxemacs-devel@sxemacs.org
+
+  sxemacs-devel is a list for bug reports and general
+  communication about development versions of SXEmacs.
+
+sxemacs-patches@sxemacs.org
+
+  sxemacs-patches is a list for submission of patches to the
+  SXEmacs distribution.
+
+sxemacs-builds@sxemacs.org
+
+  sxemacs-builds is a list for the submission of "build reports".  See
+  `C-h f build-rpt'.
+
+Subscriptions:
+-------------
+Subscription to all the lists is accomplished by sending an email
+message to LISTNAME-request@sxemacs.org with `subscribe' (without the
+quotes) as the BODY of the message.
+
+To unsubscribe, send an email to LISTNAME-request@sxemacs.org with
+`unsubscribe' (without the quotes) as the BODY of the message.
+
+List Archives:
+-------------
+A browsable archive of these lists is available at
+http://www.sxemacs.org/list-archives/html/LISTNAME/
+
+Problems:
+--------
+Any comments, questions, or complaints about the lists should be
+brought to the attention of the SXEmacs Mailing List Owner
+<LISTNAME-owner@sxemacs.org>.
+
+SPAM:
+----
+It's a horrible problem, world wide.  The SXEmacs mailing lists have
+not gone unnoticed by Mr Inconsiderate Spammer.  In an attempt to
+reduce spam hitting our mailing lists, we've been forced to make the
+lists all "member only".  This means that only subscribers can post to
+the lists.
+
+Inconvenient?  Yes, it is somewhat (especially for the list moderator),
+but the upside is that since we switched to a "member only" policy the
+lists have been virtually spam free.
+
+-----------------------------------------------------------------------
+
+The SXEmacs project is separate from and not managed by the XEmacs project
+or the GNU project.
+
+Please do NOT send messages about problems with SXEmacs to either the
+FSF GNU Emacs newsgroups and mailing lists or the XEmacs lists and
+newsgroups.
+

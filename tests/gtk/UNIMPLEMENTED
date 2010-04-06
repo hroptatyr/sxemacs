@@ -1,0 +1,12 @@
+This is a list of all the tests from GTK+ 1.2.8 that are not implemented.
+
+item factory	  -- Widget is not supported (useless with XEmacs menubar construction code)
+rc file		  -- Function not imported
+test idle	  -- XEmacs already has this functionality, no need to export GTK equivalent
+cursors		  -- No converter from glyph to GdkCursor defined
+saved position
+shapes
+
+layout
+modal window
+tree

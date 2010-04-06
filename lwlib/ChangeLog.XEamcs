@@ -1,0 +1,910 @@
+2004-12-05  Vin Shelton <acs@xemacs.org>
+
+	* XEmacs 21.4.16 is released
+
+2004-04-23  Jerry James  <james@xemacs.org>
+
+	* xlwradio.c (RadioExpose): Do not blindly copy one GC over
+	another.  It messes up the ref counts and is wrong for radio
+	buttons in any case.
+
+2004-02-02  Vin Shelton <acs@xemacs.org>
+
+	* XEmacs 21.4.15 is released
+
+2003-09-03  Vin Shelton <acs@xemacs.org>
+
+	* XEmacs 21.4.14 is released
+
+2003-05-25  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.4.13 is released
+
+2003-01-31  Martin Buchholz  <martin@xemacs.org>
+
+	* lwlib-Xm.c (xm_update_progress): 
+	Don't define unless LWLIB_WIDGETS_MOTIF.
+
+2003-02-13  Martin Buchholz  <martin@xemacs.org>
+
+	* xlwmenu.c (xlwMenuClassRec):
+	Use symbolic name `XtExposeCompressMaximal' instead of `TRUE'.
+
+2003-01-15  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.12 "Portable Code" is released.
+
+2003-01-14  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lwlib-Xm.c (): Don't reference xm_update_progress
+	--without-widgets.  Thanks Martin Buchholz <martin@xemacs.org>.
+
+2003-01-03  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.11 "Native Windows TTY Support" is released.
+
+2002-11-02  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.10 "Military Intelligence" is released.
+
+2002-08-23  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.9 "Informed Management" is released.
+
+2002-06-07  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xm.c: (xm_safe_update_label): new function. Call
+	xm_update_label if the class is appropriate.
+	(make_menu_in_widget): use it.
+	(update_one_menu_entry): ditto.
+	(xm_update_one_widget): ditto.
+
+2002-08-14  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lwlib-Xm.c: revert Darryl's patch in favor of Andy's.
+	
+2002-07-17  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lwlib-utils.c (XtApplyUntilToWidgets):
+	* xlwmenu.c (close_to_reference_time):
+	Fix warnings.
+
+2002-05-14  Darryl Okahata  <darrylo@xemacs.org>
+
+	* lwlib-Xm.c: prevent non-label widgets from being treated as
+	labels and having their "labels" updated.
+
+2002-05-09  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.8 "Honest Recruiter" is released.
+
+2002-05-04  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.7 "Economic Science" is released.
+
+2002-02-13  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lwlib-Xm.c (make_dialog): Fix XmProcessTraversal crash.
+
+2001-12-19  Valdis Kletnieks  <Valdis.Kletnieks@vt.edu>
+
+	* xlwscrollbar.c: Fix Xt translations comment.
+	
+2001-12-17  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.6 "Common Lisp" is released.
+
+2001-10-23  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.5 "Civil Service" is released.
+
+2001-10-02  Darryl Okahata  <darrylo@sonic.net>
+
+	* If HAVE_XMU was not defined (xmu was not being used), xlwgcs.c
+	was still referencing xmu functions.
+
+2001-04-08  Danny Colascione  <qtmstr@optonline.net>
+
+	* lwlib-Xlw.c:
+	xlwtabs.c:
+	xlwtabs.h:
+	Force buffer-tab highlight update when moving the buffer, avoiding
+	an ugly black border, used for keyboard focus indication, on a
+	widget that can never have keyboard focus, the buffer tab.
+
+2001-07-26  Andy Piper  <andy@xemacs.org>
+
+	Fix progress gauge flashing under OpenMotif:
+
+	* lwlib-Xm.c (xm_update_progress): new function. Set Scale height
+	and width from normal height and width.
+	* lwlib-Xm.c (xm_create_progress): ditto.
+	* lwlib-Xm.c (xm_update_one_widget): call xm_update_progress.
+	* lwlib.c (lw_get_value_arg): new function. Return an argument
+	based on its name.
+	* lwlib.h: declare it.
+
+2001-07-28  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.4 "Artificial Intelligence" is released.
+
+2001-05-17  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.3 "Academic Rigor" is released.
+
+2001-05-10  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.2 "Developer-Friendly Unix APIs" is released.
+
+2001-04-25  Ben Wing  <ben@xemacs.org>
+
+	* lwlib-utils.c (destroy_all_children): fix warning reported by
+	Isaac Hollander <ysh@mindspring.com>.
+
+2001-04-19  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.1 "Copyleft" is released.
+
+2001-04-16  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.4.0 "Solid Vapor" is released.
+
+2001-04-14  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* XEmacs 21.2.47 "Zephir" is released.
+
+2001-03-30  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* ChangeLog: Restore logs lost in the GTK merge.
+
+2001-03-21  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.46 "Urania" is released.
+
+2001-03-15  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* xlwradio.c: Revert gratuitous whitespace changes from GTK merge.
+
+2001-02-23  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.45 "Thelxepeia" is released.
+
+2001-02-16  Raymond Toy  <toy@rtp.ericsson.se>
+
+	* lwlib-Xaw.c: Always include ATHENA_AsciiText_h_ to get the
+	text-field widget.
+	(xaw_creation_table): Always include the text-field widget
+
+2001-02-08  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.44 "Thalia" is released.
+
+2001-02-06  Martin Buchholz  <martin@xemacs.org>
+
+	* xlwgauge.c:
+	* xlwgcs.c:
+	* xlwgcs.c (XtAllocateGC): Fix typo for X11R4.
+	* xlwgcs.h:
+	* xlwradio.c (RadioExpose):
+	* xlwcheckbox.c:
+	Remove use of BSD-specific types.
+	s/u_(char|short|int_long)/unsigned $1/g
+
+2001-02-05  Martin Buchholz  <martin@xemacs.org>
+
+	* lwlib-Xm.c (xm_update_one_value):
+	Obey the man page; use XtFree instead of free.
+
+2001-02-02  Martin Buchholz  <martin@xemacs.org>
+
+	* config.h.in: Use "..." to include config.h
+
+2001-01-26  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.43 "Terspichore" is released.
+
+2001-01-20  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.42 "Poseidon" is released.
+
+2001-01-17  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.41 "Polyhymnia" is released.
+
+2001-01-08  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.40 is released.
+
+2001-01-06  Martin Buchholz  <martin@xemacs.org>
+
+	* lwlib-Xaw.c (xaw_creation_table): Make const.
+	* lwlib-Xaw.h (xaw_creation_table): Make const.
+	* lwlib-Xlw.c (xlw_creation_table): Make const.
+	* lwlib-Xlw.h (xlw_creation_table): Make const.
+	* lwlib-Xm.c (xm_creation_table): Make const.
+	* lwlib-Xm.h (xm_creation_table): Make const.
+	* lwlib.c (find_in_table): Use const.
+
+2001-01-02  Andy Piper  <andy@xemacs.org>
+
+	* lwlib.h (_widget_args): add args_changed. Necessary because we
+	reference count args.
+
+	* lwlib.c (lw_add_widget_value_arg): set args_changed flag.
+	(merge_widget_value_args): mark as changed if args_changed is
+	true.
+	(update_all_widget_values): reset args_changed.
+	(initialize_widget_instance): ditto.
+
+2000-12-31  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.39 is released.
+
+2000-12-30  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c: remove assertion definitions and put them in
+	lwlib-internal.h. This has the effect of enabling assertions which
+	should have been done from the very start.
+	(TabsShuffleRows): fix duff assertion.
+	(PreferredSize3): use dimensions throughout.
+	(PreferredSize2): ditto.
+	(TabLayout): ditto.
+	(DrawFrame): be clever about the enclosing frame if the child
+	height is 0.
+	(TabsResize): don't configure children that are no visible
+	anyway. Make sure geometry calculations don't end up negative.
+
+	* lwlib-internal.h: put in assertion definitions.
+
+2000-12-05  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.38 is released.
+
+2000-11-30  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xm.c (xm_update_label): Hack to stop %_ labels until
+	someone fixes it properly.
+
+2000-11-24  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabsP.h: add visible flag, realRows and remove displayChildren.
+
+	* xlwtabs.c (TabVisible): new macro. Consults visible flag.
+	(TabsInit): remove displayChildren, add realRows.
+	(TabsConstraintInitialize): ditto.
+	(TabsResize): ditto.
+	(TabsGeometryManager): ditto.
+	(TabsChangeManaged): ditto.
+	(TabsSelect): ditto.
+	(TabsPage): ditto.
+	(TabsHighlight): ditto.
+	(DrawTabs): ditto.
+	(TabLayout): Caclulate rows for all children and whether they
+	should be visible or not..
+	(TabsShuffleRows): shuffle rows based on both real and displayed
+	rows. Adjust visibility of all children.
+	(PreferredSize): ditto.
+
+2000-11-19  Martin Buchholz  <martin@xemacs.org>
+
+	* xlwtabs.c (TabsResize): Don't delete `tab', mark unused instead.
+
+2000-11-18  Martin Buchholz  <martin@xemacs.org>
+
+	* xlwmenu.c (make_windows_if_needed): 
+	(XlwMenuRealize): 
+	The proper type for `mask' is `unsigned long', not `int'.
+
+2000-11-18  Martin Buchholz  <martin@xemacs.org>
+
+	* xlwtabs.c (defaultAccelerators): Add #### to unused var.
+	(TabsResize): Remove unused var.
+	* xlwmenu.c (XlwMenuInitialize): Remove unused vars.
+	* lwlib-Xlw.c (xlw_update_one_widget): Add #### for probable bug.
+
+2000-11-14  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.37 is released.
+
+2000-11-02  Stephen J. Turnbull  <stephen@xemacs.org>
+
+	* lwlib.h: Typo fixes and tiny clarifications.
+
+2000-10-04  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.36 is released.
+
+2000-09-21  Andy Piper  <andy@xemacs.org>
+
+	* lwlib.h: declare copy_widget_value_tree.
+
+	* lwlib.c (copy_widget_value_tree): make non-static.
+
+2000-09-19  Martin Buchholz  <martin@xemacs.org>
+
+	* *: Spelling mega-patch
+
+2000-09-16  Martin Buchholz  <martin@xemacs.org>
+
+	* lwlib.c (ascii_strcasecmp): New.
+	* lwlib.c (find_in_table): Use ascii_strcasecmp.
+	Avoid using non-standard non-portable strcasecmp.
+
+2000-08-02  Stephen J. Turnbull <stephen@xemacs.org>
+
+	* xlwmenu.c (XlwMenuInitialize): make comment on algorithm for
+	setting fontList match code.  Suggest using same algorithm for
+	X Font Set resources in native lw code.
+
+2000-07-30  Ben Wing  <ben@xemacs.org>
+
+	* lwlib-Xaw.c (xaw_update_one_widget):
+	Remove accelerator specs from buttons, since Athena doesn't handle
+	them.
+	
+	* lwlib.c (lw_remove_accelerator_spec):
+	* lwlib.h:
+	Define function and prototype to do this.
+
+2000-07-15  Ben Wing  <ben@xemacs.org>
+
+	* xlwradioP.h:
+	Remove duplicate definition of streq().
+
+2000-07-19  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.35 is released.
+
+2000-07-09  Martin Buchholz  <martin@xemacs.org>
+
+	* xlwcheckbox.c:
+	* xlwgauge.h:
+	* xlwgaugeP.h:
+	* xlwradio.h:
+	* xlwradioP.h:
+	* xlwgauge.c:
+	* config.h.in:
+	* xlwradio.c:
+	* lwlib-Xaw.c:
+	Replace SMART_INCLUDE with a dumber, but more reliable method.
+
+	* xlwmenu.c (parameterize_string): Fix C++ compilation warnings.
+
+2000-06-10  Ben Wing  <ben@xemacs.org>
+
+	* lwlib-Xaw.c (xaw_create_label): add sanity check on arg limit.
+	(xaw_update_one_value): fix crash due to incorrect arg count.
+
+2000-05-28  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.34 is released.
+
+2000-05-01  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.33 is released.
+
+2000-04-19  Martin Buchholz  <martin@xemacs.org>
+
+	* lwlib.c (lw_destroy_everything): Always use full ANSI prototypes.
+	* lwlib.c (lw_destroy_all_pop_ups): Always use full ANSI prototypes.
+
+2000-04-12  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xaw.c (xaw_update_one_widget): no-op for text widgets.
+	(xaw_update_one_value): Get strings safely.
+	(xaw_create_text_field): add some extra properties.
+
+2000-04-05  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xaw.c (lw_xaw_widget_p): include asciiTextWidgetClass as
+	an athena widget.
+
+2000-04-05  Andy Piper  <andy@xemacs.org>
+
+	* xlwradio.c (RadioSetValues): resize if position information has
+	changed.
+
+	* lwlib-Xm.c (xm_create_text_field): text fields should be enabled
+	even if there is no callback.
+	* lwlib-Xaw.c (xaw_create_text_field): ditto.
+
+2000-04-03  Andy Piper  <andy@xemacs.org>
+
+	* lwlib.c (merge_widget_value_args): only merge when the two args
+	are actually different.
+
+2000-03-21  Didier Verna  <didier@xemacs.org>
+
+	* config.h.in: move INCLUDE_GLUE_1 and INCLUDE_GLUE_2 to
+	src/config.h.in.
+	* config.h.in (ATHENA_INCLUDE): use the `SMART_INCLUDE' macro.
+
+2000-03-20  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.32 is released.
+
+2000-03-14  Ben Wing  <ben@xemacs.org>
+
+	* xlwmenu.c (massage_resource_name): Handle %_ and %%.
+
+2000-02-20  Gunnar Evermann  <ge204@eng.cam.ac.uk>
+
+	* xlwscrollbar.c (get_gc): Always check for XmUNSPECIFIED_PIXMAP
+	even if we are only 'compatible' with the Motif resources.
+	(XmUNSPECIFIED_PIXMAP): Define unconditionally.
+
+2000-02-23  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.31 is released.
+
+2000-02-22  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xm.c (xm_update_one_widget): set widget args last in case
+	anything messes with them in the meantime.
+	* lwlib-Xlw.c (xlw_update_one_widget): ditto.
+	* lwlib-Xaw.c (xaw_update_one_widget): ditto.
+
+2000-02-21  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.30 is released.
+
+2000-02-21  Andy Piper  <andy@xemacs.org>
+
+	* lwlib.c (merge_widget_value_args): don't delete the args before
+	copying, lw_copy_widget_value_args will do this for us if
+	necessary.
+	(lw_add_widget_value_arg): Allow existing args to be replaced.
+	(free_widget_value_args): Set args to 0 rather than 0xdeadbeef,
+	reference couting works better that way.
+	(lw_copy_widget_value_args): Do the right thing.
+
+	* lwlib-Xm.c (xm_create_progress): Make sensitive as this looks
+	much better.
+	* lwlib-Xaw.c (xaw_create_progress): ditto.
+
+2000-02-12  Jan Vroonhof  <vroonhof@math.ethz.ch>
+
+	* xlwmenu.h (XmUNSPECIFIED_PIXMAP): Define this if we are using Motif
+	compatible resource names.
+
+	* xlwmenu.c (make_shadow_gcs): Always check for XmUNSPECIFIED_PIXMAP
+	even if we are only 'compatible' with the Motif resources.
+
+2000-02-15  Andy Piper  <andy@xemacs.org>
+
+	* xlwgauge.c (GaugeExpose): remove shadows.
+
+2000-02-16  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.29 is released.
+
+2000-02-09  Valdis Kletnieks  <Valdis.Kletnieks@vt.edu>
+
+	* config.h.in (ATHENA_INCLUDE): Workaround bugs in both xlc and
+	old gccs.
+
+2000-02-07  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.28 is released.
+
+2000-01-25  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c (TabsChangeManaged): Make sure we unmanage the hilight
+	widget as well.
+
+2000-01-28  Martin Buchholz  <martin@xemacs.org>
+
+	* xlwgauge.c (GaugeConvert): bcopy ==> memcpy
+
+2000-01-24  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c (XawTabsSetTop): Unhighlight before changing the
+	stacking order.
+	(XawTabsSetHighlight): Don't unhighlight here.
+
+2000-01-22  Martin Buchholz  <martin@xemacs.org>
+
+	* *.h: Use consistent C-standards-approved guard macro names.
+
+2000-01-18  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.27 is released.
+
+2000-01-15  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xlw.c (lw_update_one_widget): make sure global
+	properties gets set.
+
+2000-01-07  Martin Buchholz  <martin@xemacs.org>
+
+	* config.h.in (ATHENA_INCLUDE): CPP trickery to make old cpps happy.
+	This extends support for gcc 2.6 (e.g. on BSD/OS 2.0)
+
+	* lwlib.c: Fix up memset calls.
+
+	* lwlib-Xm.c (xm_update_text): Warning suppression.
+	(xm_update_text_field): Warning suppression.
+
+2000-01-03  Martin Buchholz  <martin@xemacs.org>
+
+	* lwlib-Xaw.c (xaw_update_one_widget): Emergency fix for this crash:
+	(yes-or-no-p-dialog-box "Yes or No")
+
+1999-12-31  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.26 is released.
+
+1999-12-29  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c (TabsHighlight): use displayChildren for highlighting
+	not num_children.
+	(TabsPage): ditto.
+
+1999-12-24  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.25 is released.
+
+1999-12-23  Andy Piper  <andy@xemacs.org>
+
+	* lwlib.c (lw_copy_widget_value_args): don't create empty
+	widget_args just because someone might use them later. This makes
+	all widgets look like they've changed.
+
+1999-12-22  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c: Fix for X11R5 from Damon Lipparelli
+	<lipp@primus.com>.
+
+1999-12-21  Martin Buchholz  <martin@xemacs.org>
+
+	* xlwscrollbar.c (seg_pixel_sizes): ((expr)) ==> (expr)
+
+1999-12-12  Daniel Pittman  <daniel@danann.net>
+
+	* lwlib-Xaw.c:
+	* xlwcheckbox.c:
+	* xlwgauge.h:
+	* xlwgaugeP.h:
+	* xlwradio.c:
+	* xlwradio.h:
+	* xlwradioP.h:
+	Clean up Athena widget support:
+	- Athena headers now use dynamic include paths.
+
+1999-12-08  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c: sync with Tabs 2.2.
+	* xlwtabP.h: ditto.
+
+1999-12-14  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.24 is released.
+
+1999-12-14  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c (TabsResize): reset need_layout so that we don't go
+	into infloop death.
+
+1999-12-14  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c (TabsSetValues): re-allocate GCs if font has changed.
+
+1999-12-13  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c (TabsResize): We need to expose the tabs after
+	clearing the window they are in.
+
+1999-12-08  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c: sync with Tabs 2.1.
+
+1999-12-07  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xlw.c (lw_lucid_widget_p): make sure we pick up the
+	clip-window as well.
+
+1999-12-07  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.23 is released.
+
+1999-12-05  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c: back up to previous rev to make syncing easier. Fix
+	gcc moans.
+
+	* lwlib-Xaw.c (xaw_update_one_widget): use XtIsSubclass.
+
+1999-11-29  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.22 is released
+
+1999-11-28  Martin Buchholz <martin@xemacs.org>
+
+	* XEmacs 21.2.21 is released.
+
+1999-11-26  Martin Buchholz  <martin@xemacs.org>
+
+	* xlwtabs.c: Remove unused variables.  Fix warnings.
+
+1999-11-10  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.20 is released
+
+1999-09-09  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c: updated tabs widget from Ed Falk.
+	* xlwtabs.h: ditto.
+	* xlwtabsP.h: ditto.
+
+1999-09-22  Martin Buchholz  <martin@xemacs.org>
+
+	* lwlib-internal.h:
+	* lwlib-utils.h:
+	Move declaration of destroy_all_children from lwlib-internal.h to
+	lwlib-utils.h, where it belongs.
+
+1999-09-21  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xm.c (xm_update_label): don't clobber pixmap type labels
+ 	with text.
+
+1999-09-22  Martin Buchholz  <martin@xemacs.org>
+
+	* xlwtabs.c: Fix C++ compilability.
+
+1999-09-18  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c: Put in tabs sync because clipping should fix useability
+ 	problems.
+
+1999-09-13  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c: Back out tabs sync because of reported useability
+ 	problems.
+
+1999-09-09  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c: updated tabs widget from Ed Falk.
+	* xlwtabs.h: ditto.
+	* xlwtabsP.h: ditto.
+	* xlwgcs.c: ditto.
+	* xlwgcs.h: ditto.
+
+1999-09-03  Martin Buchholz  <martin@xemacs.org>
+
+	* xlwgauge.c: Ansify.
+	Include <stdlib.h> to get prototype for atoi().
+	(GaugeSelect): Call GaugeExpose with the right number of args.
+	(GaugeLoseSel): Call GaugeExpose with the right number of args.
+	(GaugeConvert): This is a XtConvertSelectionProc,
+	so 5th parameter must be of type XtPointer, not XPointer.
+	(GaugeGetValue): This is a XtTimerCallbackProc,
+	so 2nd parameter must be of type XtIntervalId *, not XtIntervalId.
+
+
+1999-09-01  Martin Buchholz  <martin@xemacs.org>
+
+	* lwlib.c (free_widget_value_contents): Use proper type for cast.
+
+	* xlwradio.c: Use function prototypes everywhere.
+	* xlwcheckbox.c:
+	* xlwradio.c:
+	* xlwradioP.h: Move declarations of non-static functions defined
+	in xlwradio.c into xlwradioP.h.
+
+1999-09-02  Andy Piper  <andy@xemacs.org>
+
+	* xlwgcs.c: include xmu.h
+
+1999-09-01  Andy Piper  <andy@xemacs.org>
+
+	* xlwgauge.c: rearrange headers yet again.
+	* xlwcheckbox.c: ditto.
+	* xlwradio.c: ditto.
+	* xlwtabs.c: ditto.
+
+1999-09-01  Andy Piper  <andy@xemacs.org>
+
+	* xlwgauge.c: use xmu.h
+	* xlwcheckbox.c: ditto.
+	* xlwradio.c: ditto.
+
+1999-08-31  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c:
+	* xlwgcs.c:
+	* xlwradio.c:
+	* xlwcheckbox.c:
+	* xlwgauge.c: Fix for losing systems without Xmu.
+
+1999-08-31  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xm.c (xm_update_one_widget): fix for AIX compiler lossage.
+
+1999-08-30  Andy Piper  <andy@xemacs.org>
+
+	* lwlib.c (free_widget_value_contents): be more precise about
+ 	freeing user defined args.
+
+	* lwlib-Xaw.c (xaw_update_one_widget): make sure we use val not
+ 	its contents for hierarchies one deep.
+
+1999-08-29  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c: temporary fixes pending a new release.
+	* xlwtabsP.h: ditto.
+
+	* lwlib-Xm.c (xm_update_one_widget): update user defined args.
+	(xm_create_label): set args after creation as well as before.
+
+	* lwlib-Xlw.c (xlw_create_tab_control): orient tabs horizontally.
+	(xlw_update_tab_control): actually update the children rather than
+ 	the parent.
+
+	* lwlib-Xaw.c (xaw_update_one_widget): update user defined args.
+	(xaw_create_label): set args after creation as well as before.
+
+1999-08-23  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xm.c (xm_update_label): don't concatenate value to itself.
+
+	* lwlib-Xm.c (xm_create_label_field): new function for creating labels.
+	(xm_creation_table): use it.
+
+	* lwlib-Xaw.c (xaw_create_label_field): new function for creating labels.
+	(xaw_creation_table): use it.
+
+1999-08-16  Andy Piper  <andy@xemacs.org>
+
+	* lwlib.h: declare free_widget_value_tree.
+
+	* lwlib.c (free_widget_value_tree): make non-static.
+
+	* lwlib-Xm.c (xm_update_label): free val_string when updating.
+
+1999-08-04  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xm.c (mark_dead_instance_destroyed): change so that its
+ 	defined for widgets.
+	(xm_nosel_callback): ditto.
+
+	* xlwtabsP.h: sync with 1.5.
+
+	* xlwtabs.c: sync with 1.18.
+
+1999-07-28  Andy Piper  <andy@xemacs.org>
+
+	* xlwtabs.c: new lucid tabs widget from Ed Falk.
+	* xlwtabs.h: ditto.
+	* xlwtabsP.h: ditto.
+	* xlwgcs.c: GC manipulation for tab widgets.
+	* xlwgcs.h: ditto.
+
+	* xlwgauge.c: new athena gauge widget from Ed Falk.
+	* xlwgauge.h: ditto.
+	* xlwgaugeP.h: ditto.
+
+	* xlwradio.c: new athena radio widget from Ed Falk.
+	* xlwradio.h: ditto.
+	* xlwradioP.h: ditto.
+
+	* xlwcheckbox.c: new athena checkbox widget from Ed Falk.
+	* xlwcheckbox.h: ditto.
+	* xlwcheckboxP.h: ditto.
+
+	* lwlib-utils.c (destroy_all_children): moved from lwlib-Xm.c.
+
+	* lwlib-internal.h: declare destroy_all_children.
+
+	* lwlib-config.c: add widget checks.
+
+	* lwlib-Xm.h: declare xm_create_label;
+
+	* lwlib-Xm.c (destroy_all_children): move to lwlib-utils.c.
+	(xm_update_label): enable for widgets.
+	(xm_update_one_widget): ditto.
+	(xm_create_button): rename in line with lwlib-Xaw.c
+	(xm_create_progress): ditto.
+	(xm_create_text_field): ditto.
+	(xm_create_combo_box): ditto.
+	(xm_create_label): new function.
+	(xm_creation_table): rename widget creation functions.
+	(xm_destroy_instance): enable for widgets.
+	(xm_generic_callback): ditto.
+	(xm_generic_callback): ditto.
+
+	* lwlib-Xlw.c (xlw_tab_control_callback): new function. a special
+ 	callback that calls the correct function depending on what tab is
+ 	selected.
+	(xlw_create_tab_control): new function.
+	(build_tabs_in_widget): new function. puts tabs in a tab widget,
+ 	uses Xaw or Xm depending on how XEmacs was compiled.
+	(xlw_update_tab_control): update the resources for each
+ 	tab. optionally rebuild the contents of the tab widget.
+	(xlw_creation_table): add tab widget creation function.
+	(lw_lucid_widget_p): add tab widget.
+	(xlw_update_one_widget): ditto.
+
+	* lwlib-Xaw.h: declare xaw_create_label;
+
+	* lwlib-Xaw.c (lw_xaw_widget_p): add widgets classes.
+	(xaw_update_one_widget): ditto.
+	(xaw_update_one_value): add code from the Xm version.
+	(xaw_generic_callback): add Xm hack for setting command
+ 	states. beef up lookup of call data.
+	(xaw_create_button): new function.
+	(xaw_create_label): new function for use by tab widget.
+	(xaw_create_progress): new function.
+	(xaw_create_text_field): new function.
+	(xaw_creation_table): add new widget type creation functions.
+
+	* Makefile.in.in: add dependencies for new lw widgets.
+
+1999-07-30  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.19 is released
+
+1999-07-13  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.18 is released
+
+1999-07-05  Didier Verna  <didier@xemacs.org>
+
+	* lwlib-Xm.c (xm_update_one_widget): add missing #ifdefs around
+	call to xm_update_label.
+
+1999-06-28  Andy Piper  <andy@xemacs.org>
+
+	* lwlib-Xm.c: unconditionally enable text field & list code.
+	(make_progress): new function. creates a slider.
+	(make_text_field): new function. creates an edit field.
+	(make_combo_box): new function. creates a combo box.
+	(xm_creation_table): add new widget functions.
+
+1999-06-25  Andy Piper  <andy@xemacs.org>
+
+	* lwlib.h (_widget_value): add arglist slots.
+	declare new functions.
+
+	* lwlib.c (free_widget_value_contents): handle arglists when
+ 	freeing.
+	(lw_add_value_args_to_args): new function. add arglist entries
+ 	from a widget_value structure.
+
+	* lwlib-Xm.c (make_button): new function, create a motif button
+ 	for display in a buffer as a glyph.
+	(xm_creation_table): add make_button.
+
+1999-06-22  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.17 is released
+
+1999-06-11  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.16 is released
+
+1999-06-04  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.15 is released
+
+1999-05-17  Jerry James  <jerry@cs.ucsb.edu>
+
+	* xlwmenu.c (make_shadow_gcs): Test bottom_shadow_pixmap before
+	using it.
+
+1999-05-14  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.14 is released
+
+1999-03-12  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.13 is released
+
+1999-03-05  XEmacs Build Bot <builds@cvs.xemacs.org>
+
+	* XEmacs 21.2.12 is released
+
+1999-02-18  Martin Buchholz  <martin@xemacs.org>
+
+	* lwlib/xlwmenu.c (massage_resource_name): Fix compiler warning
+	- Have to toupper ((int) (unsigned char) x) to be portable.

@@ -1,0 +1,868 @@
+2000-10-03  William M. Perry  <wmperry@aventail.com>
+
+	* objects-gtk.c (gtk_font_instance_truename): Make sure we get the
+	fully expanded version of the font.
+
+	* device-gtk.c (convert_font): Ditto.
+
+	* gtk-xemacs.c (convert_font): Tell __get_gtk_font_truename to not
+	expand wildcards.
+
+	* objects-gtk.c (__get_gtk_font_truename): Use the internal
+	name-list in a GdkFont structure to find the truename of the
+	font.  This protects us from crashing if we get a FontSet
+	instead of a Font.
+
+	(__get_gtk_font_truename): Accept new argument 'expandp' for
+	whether to return the FULL font name or the wildcarded version.
+
+2000-09-21  William M. Perry  <wmperry@aventail.com>
+
+	* device-gtk.c (Fgtk_init): Moved calls to gtk_init or gnome_init
+	to separate function, and expose it to lisp.  It is now possible
+	to create GTK applications from batch mode.
+	(gtk_init_device): Use the new function.
+
+2000-09-12  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-glue.c (gdk_event_to_emacs_event): Special case double
+	and triple clicks when converting events to lisp objects.
+	This allows something like GtkCList to treat double-clicks
+	differently in the 'select_row' signal.
+
+2000-09-11  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-gtk.c (menu_create_menubar): Set a special name for
+	GtkMenuItems directly in the menubar.
+
+2000-09-10  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-xemacs.c (gtk_xemacs_size_request): Deal with frame
+	being NULL.
+
+	* gtk-xemacs.c (gtk_xemacs_size_allocate): Ditto.
+
+2000-09-09  William M. Perry  <wmperry@aventail.com>
+
+	* sound.c (init_native_sound): Enable sound for GTK devices.
+
+	* device-gtk.c (gtk_init_device): Attempt to load a default
+	gtkrc file from the data directory.  This way we can enable
+	the default face font handling in gtk-faces.el but not screw
+	the majority of users with a proportional font by default.
+
+	* device-gtk.c (gtk_init_device): Attempt to load
+	~/.xemacs/gtk-options.el when GTK devices are created.  This
+	allows for setting a persistent geometry without requiring GNOME.
+
+	* gtk-xemacs.c (gtk_xemacs_style_set): Deal with NULL frame.
+
+	* device-gtk.c (gtk_init_device): Make app_shell a GtkXEmacs
+	widget so that style information is retrieved correctly.
+
+	* menubar-gtk.c (gtk_xemacs_menubar_get_type): New subclass of
+	GtkMenuBar that always requests the same width as the text
+	widget.  This fixes the spurious frame resizes when there were too
+	many menu items to display in the desired width.
+	(create_menubar_widget): Use the new subclass.
+
+2000-09-08  William M. Perry  <wmperry@aventail.com>
+
+	* device-gtk.c (Fgtk_keysym_on_keyboard_p): Ported function from
+	the X side of things.
+
+	* device-gtk.c (gtk_mark_device): Make sure that we mark the
+	keysym hashtable or things go boom.
+
+2000-09-07  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-gtk.c (gtk_update_frame_menubars): Don't actually
+	update the menubars if the menu is up.  This fixes the weird
+	problem where if you had a menu up and 'message' was called
+	(this happens a lot with the 'customize' menu), the menu would
+	disappear.  This is because XEmacs is fairly lame about when
+	it updates the menus - the message logging code eventually
+	does a (save-excursion (set-buffer " *Message Log*") ...).
+	The set-buffer caused magic variable current-menubar to be
+	evaluated, which calls gtk_update_frame_menubars, which would
+	nuke the menus.  Gack.
+
+2000-09-06  William M. Perry  <wmperry@aventail.com>
+
+	* event-gtk.c (gtk_event_to_emacs_event): Reworked how we handle
+	removing the shift modifier of normal keys (a & A, etc) to be more
+	like MS-windows.  This makes everything work pretty happily with
+	query-replace and apropos now.
+
+2000-09-05  William M. Perry  <wmperry@aventail.com>
+
+	* select-gtk.c (emacs_gtk_selection_received): Signal a fake
+	event here so that the event loop will wake up.  Should fix
+	the strange pause seen when pasting.
+
+	* select-gtk.c (Fgtk_get_clipboard): Signal an error if no
+	selections are available.  This is more meaningful than 'insert'
+	throwing an error when it gets 'nil'.
+
+	* select-gtk.c (emacs_gtk_selection_received): Don't bother
+	checking whether the data returned as the selection is a string.
+	If it is not, we convert it to binary data anyway.  This fixes the
+	bug where you could not paste between two separate XEmacs
+	instances w/mule enabled (it sends selections as COMPOUND_TEXT).
+
+	* device-gtk.c (Fgtk_style_info): Return the default font name as
+	part of the style info.
+
+	* menubar-gtk.c (__generic_button_callback): make sure that we
+	provide a channel for our menu events.  This fixes things like
+	get-dialog-box-response that rely on event-channel !nilp
+
+2000-09-05  William M. Perry  <wmperry@aventail.com>
+
+	* glyphs-gtk.c (__downcase): Actually return the downcased string!
+	 Thanks to Michael Altenhofen <Michael.Altenhofen@sap.com> for
+	spotting this.
+
+2000-09-05  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-gtk.c (gtk_popup_menu): Make sure we call
+	__activate_menu correctly if the menu is dynamic.  This fixes
+	popup menus with :filter effects.
+
+2000-09-01  William M. Perry  <wmperry@aventail.com>
+
+	* gpmevent.c, gpmevent.h: Updated to the latest XEmacs 21.2
+	version of gpmevent.c.  This means that GPM support works
+	with GTK now.
+
+	* console-tty.c, console-tty.h: Removed old GPM support.
+
+	* device-tty.c, emacs.c, event-Xt.c: Ditto.
+
+	* event-unixoid.c, frame-tty.c: Ditto.
+
+2000-08-30  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-xemacs.c (smash_scrollbar_specifiers): Don't bother looking
+	for nextstep themed scrollbars - didn't work anyway.
+
+	* glade.c (Fglade_xml_textdomain): deal with old versions of Glade
+	that use 'textdomain' instead of 'txtdomain' in the structure.
+
+	* menubar-gtk.c (gtk_popup_menu): use gtk_widget_show instead of
+	gtk_widget_show_all so that the magic `space-saver' menu item does
+	not get shown on popups.
+
+2000-08-27  William M. Perry  <wmperry@aventail.com>
+
+	* scrollbar-gtk.c (gtk_update_scrollbar_instance_status): Fiddle
+	with scrollbar_values -> GtkAdjustment conversion and scrolling up
+	with the arrows works correctly now.
+
+	* event-gtk.c (gtk_event_to_emacs_event): Fixed the shifted key
+	lossage (pc-select works now).
+
+2000-08-11  William M. Perry  <wmperry@aventail.com>
+
+	* scrollbar-gtk.c (scrollbar_cb): Need to make sure we look at the
+	appropriate scrollbar instances from the mirror.  Was looking only
+	at the vertical scrollbar instance.  Don't know if this has
+	anything to do with the weird scrolling behaviour, but it is worth
+	a shot.
+
+2000-07-26  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-gtk.c (run_menubar_hook): New function that runs
+	activate-menubar-hook if the menu shell it was invoked by is
+	currently inactive.
+	(create_menubar_widget): Hook up the button-press-event to
+	run_menubar_hook to cater to broken packages.
+
+2000-07-22  William M. Perry  <wmperry@aventail.com>
+
+	* frame-gtk.c (gtk_popup_frame): When the window is supposed to be
+	initially unmapped, we need to make sure we realize the text
+	widget (to avoid lossage in redisplay assuming there is a valid
+	window), but NOT show it.
+
+2000-07-12  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-gtk.c (__kill_stupid_gtk_timer): New function to kill
+	the timer on a GtkMenuItem widget.  This timer and its callback
+	appear to be what was causing heavily filtered menus (like
+	customize and other things under 'options') to crash.  The GTK
+	code installs a timer when the user is moving the mouse around to
+	scan menus.  Submenus are only popped up when this timer expires.
+	But if the filters are constantly running and creating/destroying
+	submenus, then you can blow up when they unconditionally check
+	GTK_WIDGET_FLAGS(menu_item->submenu), when submenu is NULL.
+
+2000-07-11  William M. Perry  <wmperry@aventail.com>
+
+	* device-gtk.c (gtk_init_device): Can now pass the entire argv
+	array that is in gtk-initial-argv-list, since gtk-init filters out
+	unknown options that may cause GTK to puke for us.  This means
+	that GNOME session management works now.
+
+	* frame-gtk.c (gnome_parse_geometry): Ripped this out of the GNOME
+	libraries to parse geometry settings, in case the user did not
+	compile with GNOME.
+	(gtk_initialize_frame_size): If gtk_initial_geometry is !NILP,
+	then try to parse it and use that.  If the geometry cannot be
+	parsed, fall back to using 80x30.
+
+	* device-gtk.c (Vgtk_initial_geometry): New variable exposed to
+	lisp holding the desired geometry of initial frames.
+
+2000-07-09  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (Fgtk_call_function): Outlined possible `enhancement'
+	if someone calls gtk-call-function with too few arguments.  After
+	I implemented it I realized it was probably a bad idea, so I
+	commented it out.  Maybe for the future...
+
+	* menubar-gtk.c (menu_convert): Can now pass in a GtkWidget to
+	reuse.  It detaches submenus, cleans up any GCPROs on it, and
+	attaches a new submenu.  All done in an effort to stop the menubar
+	flickering.
+	(menu_create_menubar): No longer willy-nilly deletes all of the
+	items in the top-level menubar.  We now check to see if the widget
+	already existing at the desired position has the same label as
+	this menu.  If it does, we pass it in to menu_convert.  This
+	drastically reduces the flickering menu problem that most people
+	have been seeing (try speedbar now).
+
+2000-07-04  William M. Perry  <wmperry@aventail.com>
+
+	* event-gtk.c (gtk_event_to_emacs_event): If FRAME is NULL, then
+	default to the selected frame on Vdefault_gtk_device.  This will
+	only happen when being called from gtk-glue.c
+
+	* ui-gtk.c (gtk_type_to_lisp): Properly convert GTK_TYPE_GDK_EVENT
+	objects to lisp events.
+
+	* event-gtk.c (gtk_event_to_emacs_event): Made this non-static so
+	that gtk-glue.c can use it.
+
+	* gtk-glue.c (gdk_event_to_emacs_event): New function to convert a
+	GDK event into something sensible for lisp.  Just uses
+	gtk_event_to_emacs_event() from event-gtk.c to avoid code
+	duplication.  Not perfect (the channel is set to the selected
+	frame, not the GtkObject it actually happened on).
+
+	* event-gtk.c (gtk_event_to_emacs_event): Finally fixed the weird
+	selection problem where if you released the mouse button over the
+	root window, XEmacs would get confused and still think the
+	selection was going on.
+
+	* ui-gtk.c (Fgtk_describe_type): New function to return the
+	signals and magic properties of an object given its name or type
+	identifier.
+
+2000-07-03  William M. Perry  <wmperry@aventail.com>
+
+	* ui-byhand.c (Fgtk_ctree_recurse): New function gtk-ctree-recurse
+	that encompasses gtk_ctree_post_recursive,
+	gtk_ctree_pre_recursive, gtk_ctree_post_recursive_to_depth, and
+	gtk_ctree_pre_recursive_to_depth.  All hail lisp bindings with
+	variable number of arguments.
+	(Fgtk_ctree_recurse): Allow nil for the node.
+
+	* ui-gtk.c (emacs_gtk_boxed_equality): New function for comparing
+	two GtkBoxed objects.  This is needed because there is no way to
+	store a `user_data' or equivalent on them, so we cannot resurrect
+	it like a GtkObject so we always get the same Lisp_Object.  This
+	allows callbacks to use `equal' on two GtkBoxed types and get sane
+	results.
+	(emacs_gtk_boxed_hash): New function for hashing GtkBoxed
+	objects.
+
+2000-07-01  William M. Perry  <wmperry@aventail.com>
+
+	* glade.c: New file to implement glue code for libglade. 
+
+2000-06-30  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (lisp_to_gtk_type): Know how to deal with
+	GTK_TYPE_GDK_GC.
+
+	* gtk-glue.c: Need to defien a GTK type for GdkGC so that we can
+	import all the GDK drawing primitives.
+	(face_to_gc): New function to convert a face object to a GC.
+
+2000-06-27  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (Fgtk_import_variable_internal): Renamed to -internal.
+
+2000-06-25  Vladimir Vukicevic <vladimir@helixcode.com>
+
+	* frame-gtk.c (gtk_set_initial_frame_size): Added in a call to
+	gtk_window_set_policy so that you can resize the window down below
+	the minimum size of the menubar.
+
+2000-06-23  William M. Perry  <wmperry@aventail.com>
+
+	* emacs.c (Fkill_emacs): Make sure we clean up the .saves* files
+	on normal exit.
+
+2000-06-13  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-gtk.c (__activate_filtermenu): Put in some of the same
+	protections for filter menus that the normal menus have for widget
+	deletion and selected menu items, etc.
+
+2000-06-12  William M. Perry  <wmperry@aventail.com>
+
+	* scrollbar-gtk.c (gtk_create_scrollbar_instance): hide a
+	scrollbar widget until we are absolutely sure we need to see it.
+	Fixes the problem we were seeing with mouse-avoidance-mode causing
+	severe scrollbar breakage.
+	(update_one_widget_scrollbar_pointer): Move the call to
+	gtk_widget_realize() here instead of in the upper code.  Isolates
+	the dependency-on-having-a-window logic.
+
+	* gtk-xemacs.c (smash_scrollbar_specifiers): When setting the
+	scrollbar specifiers, need to take the x/y thickness of the border
+	into account.  Horizontal scrollbar placement is much much nicer
+	now.  Some themes would cause them to get positioned partially on
+	top of the modeline.
+
+2000-06-08  William M. Perry  <wmperry@aventail.com>
+
+	* console.c (select_console_1): Duh, forgot to put in an 'else'
+	statement, so Vwindow_system was getting set to Qnil all the
+	time.  *sigh*.
+
+2000-06-02  William M. Perry  <wmperry@aventail.com>
+
+	* glyphs-gtk.c (gtk_xpm_instantiate): Do not allow pixmaps to be
+	instantiated as pointers under GTK.  The pixmap and cursor
+	routines under GDK do not expose enough information to let use do
+	the same magic that glyphs-x.c does.  *sigh*
+
+	* ui-byhand.c (Fgtk_toolbar_insert_item): Hand-rolled function.
+	(Fgtk_toolbar_prepend_item): Ditto.
+	(generic_toolbar_insert_item): Utility function to take care of
+	all the common code for the Fgtk_toolbar_*_item functions.
+
+2000-06-01  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-glue.c (face_to_style): DOH!  You should only load it if
+	IMAGE_INSTANCEP, not !IMAGE_INSTANCEP you doofus.
+
+	* ui-byhand.c (Fgtk_toolbar_append_item): Hand-rolled function.
+
+	* ui-gtk.c (Fgtk_import_function_internal): No longer need to use
+	dll_function() to get the marshallers.  They are now stored in a
+	hashtable.  Lookups should be a bit quicker, and it will work on
+	platforms where you cannot do a dll_open (NULL) to look at your
+	own symbol table.
+
+2000-05-31  William M. Perry  <wmperry@aventail.com>
+
+	* select-gtk.c (emacs_gtk_selection_handle): Better MULE string
+	handling.
+
+	* gtk-xemacs.c (gtk_xemacs_realize): Make sure we set the style on
+	the widget from the realize function.  Otherwise for some themes
+	the color slots are not allocated yet, and we end up with icky
+	looking colors for things like the modeline/toolbar.
+
+	* select-gtk.c (Fgtk_get_clipboard): If we cannot get the
+	selection from anyone, return the last selection we received.
+	This make us work more like the X selection behaviour with
+	cutbuffers enabled.
+
+2000-05-30  William M. Perry  <wmperry@aventail.com>
+
+	* ui-byhand.c: Removed definitions of gtk-clist-prepend,
+	gtk-clist-append, and gtk-clist-insert.
+
+	* ui-gtk.c (lisp_to_gtk_type): Use it.
+
+	* gtk-glue.c (face_to_style): Routine to convert from faces to
+	GtkStyle
+
+	* menubar-gtk.c (gtk_popup_menu): Honor popup_up_p here.
+	(popdown_menu_cb): and here.
+
+2000-05-29  William M. Perry  <wmperry@aventail.com>
+
+	* frame-gtk.c (gtk_popup_frame): Do not show the widgets if we
+	were told to be initially unmapped.
+	(gtk_init_frame_1): Remember whether we were told to be initially
+	unmapped.  Balloon help looks a little better now.
+
+2000-05-28  William M. Perry  <wmperry@aventail.com>
+
+	* redisplay-gtk.c (gtk_output_string): Fixed multi-dimensional
+	text run drawing.  gdk_draw_text does too much, by dividing the
+	length by 2.  So we fake them out my multiplying the length by the
+	dimension of the text.  This will do the right thing for
+	single-dimension runs as well of course.
+
+2000-05-26  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (get_enumeration): Utility function that does its best
+	to import unknown enumeration types.
+
+	* glyphs-gtk.c (resource_symbol_to_type): Fixed pointer
+	instantiation.
+
+	* gtk-xemacs.c (FROB_FACE): Make sure to pass the device to
+	Fmake_image_instance or the initial background pixmaps would not
+	show up.
+
+2000-05-25  William M. Perry  <wmperry@aventail.com>
+
+	* device-gtk.c (gtk_init_device): Call gnome_init if available.
+
+	* menubar-gtk.c (create_menubar_widget): Use gnome_app_set_menus
+	instead of dealing with all the handlebox/menu crap ourselves.
+
+	* frame-gtk.c (gtk_create_widgets): Use GnomeApp if it is
+	available.  Looks much sexier. :)
+
+	* glyphs-gtk.c (gtk_resource_instantiate): New image instantiator
+	gtk-resource, similar to the mswindows-resource stuff.  This
+	allows you to get to the stock cursors defined in GDK.  May
+	eventually allow you access to things like stock gnome pixmaps,
+	not sure.
+
+	* frame-gtk.c (gtk_set_frame_pointer): Actually handle setting the
+	frame cursor.
+
+	* redisplay-gtk.c (gdk_draw_bitmap): New function to output a
+	bitmap using XCopyPlane instead of XCopyArea.
+	(gtk_output_gdk_pixmap): Use it when PIXMAP_DEPTH == 0.  This
+	means bitmaps look correct now.
+
+2000-05-24  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (flags_to_list): New function to convert a GtkFlags
+	argument to a list of symbols.
+	(gtk_type_to_lisp): Use it for converting from a flag.
+
+2000-05-23  William M. Perry  <wmperry@aventail.com>
+
+	* frame-gtk.c (gtk_set_frame_position): Do not use
+	gtk_window_reposition - this apparently does not exist in some
+	versions of GTK 1.2
+
+	* gtk-glue.c (xemacs_gtklist_to_list): Don't call g_list_foreach
+	on a NULL list, just in case.
+
+	* redisplay-gtk.c (gtk_text_width_single_run): Use gdk_text_width
+	instead of gdk_text_measure.  Proportional fonts appear to work
+	now.
+
+	* objects-gtk.c (gtk_initialize_font_instance): Use X specific
+	crap lifted from objects-x.c to figure out proportionality of a
+	font, and better location of the default character.
+
+2000-05-22  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (enum_to_symbol): Routine to convert an enum to a lisp
+	symbol.  We now return this instead of an integer for GtkFlags or
+	GtkEnum types.
+	(lisp_to_flag): Routine to convert from a symbol or list of
+	symbols to a GtkEnum or GtkFlags type.
+	(lisp_to_gtk_type): Use it exclusively.  No more sending integers
+	to functions.
+	(import_gtk_enumeration_internal): Do not import the GTK_FOO_BAR
+	flags/enums into the lisp namespace.  We now store mappings from
+	symbol names (both the 'real' and nickname fields) to the actual
+	internal values.  Much more lispy way of doing things.
+
+	* menubar-gtk.c (__maybe_destroy): If we delete the menu item that
+	was 'active' when the menu was cancelled, GTK gets upset because
+	it tries to remove the focus rectangle from a (now) dead widget.
+	This widget will eventually get killed because it will not be
+	`precious' the next time the window is shown, because it is
+	unselectable.
+
+	* frame-gtk.c (delete_event_cb): Signal a fake event to make the
+	event loop wake up and notice we've been destroyed.
+
+2000-05-20  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (object_putprop): Allow `put'ing of arbitrary slots on
+	gtk objects.  This will be useful for tacking lisp shit onto
+	composite widgets, etc.
+	(object_getprop): Ditto for `get'ing.
+
+	* frame-gtk.c (gtk_set_initial_frame_size): Don't delay when
+	changing the frame size, or creating initially unmapped frames is
+	screwed up.  This showed up when trying to use the cheesy XEmacs
+	file selector dialog implemented using frames.
+
+	* ui-byhand.c: Removed a lot of functions that can now be imported
+	directly by gtk-import-function using the
+	Gtk(Array|List)Of(String|Object) types.
+
+	* ui-gtk.c (type_to_marshaller_type): Deal with new array/list
+	types.
+	(Fgtk_call_function): Need to free array and list storage after
+	calling functions.
+	(lisp_to_gtk_type): Deal with the new list and array types when
+	converting to GTK types.
+
+	* gtk-glue.c: New file to deal with lists of strings or
+	GtkObjects.  Defines new types GtkArrayOf, GtkListOf,
+	GtkArrayOfString, GtkListOfString, and GtkListOfObject.
+	(xemacs_list_to_array): Convert from a lisp list to a GtkArrayOf
+	of items.
+	(xemacs_list_to_list): Convert from a lisp list to a GtkListOf of
+	items.
+
+	* dialog.c (Fpopup_dialog_box): Don't crap out if the car of
+	dbox_desc is not a string... this allows us to follow ben's
+	system/native dialog box specification.
+
+2000-05-19  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (lisp_to_gtk_type): Can now convert to GDK colors.  Can
+	deal with color specifiers or instances.
+	(lisp_to_gtk_type): Can now convert to GDK fonts.  Can deal with
+	face names, actual faces, font specifiers, or font instances.
+
+2000-05-18  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-xemacs.c (smash_scrollbar_specifiers): Function that
+	attempts to set the scrollbar width/height correctly, but does not
+	do a very good job.  Commented out for now.
+
+	* redisplay-gtk.c (gtk_output_vertical_divider): Got rid of lots
+	of useless code, since we ended up just calling gtk_output_shadows
+	anyway.
+	(gtk_output_vertical_divider): Make sure we fill the rectangle
+	completely, otherwise the transparent background shows thru.
+
+	* menubar-gtk.c: Don't nuke menus all the time... should speed up
+	submenu traversal a bit, and save on the GtkMenuItem creation.
+
+	* device-gtk.c (Fgtk_style_info): Return a list of all the
+	pixmaps, not just GTK_STATE_NORMAL.
+
+	* menubar-gtk.c (menu_descriptor_to_widget_1): Better menu labels
+	with keybindings.
+
+	* frame-gtk.c (gtk_set_frame_size): This function actually works
+	now.
+	(gtk_set_initial_frame_size): Better default sizing method.
+
+	* event-gtk.c (init_event_gtk_late): Push an error trap handler so
+	that XEmacs won't abort at the drop of a hat on X errors.  We
+	could get X specific here and override the default GDK XError and
+	XIOError handlers to be more like those in device-x.c.  Not sure
+	if that is worth it or not - you would at least get information
+	that an error occurred.
+
+	* scrollbar-gtk.c (gtk_update_scrollbar_instance_status): Don't
+	always call gtk_widget_set_usize because that causes the widget to
+	redraw itself, which can cause some annoying flicker.
+	(gtk_update_scrollbar_instance_status): Don't always move it
+	either, because that can cause the GtkFixed container to get a
+	resize event.
+	(update_one_widget_scrollbar_pointer): Try to set the cursor 
+
+2000-05-17  William M. Perry  <wmperry@aventail.com>
+
+	* device-gtk.c (Fgtk_style_info): Back to taking only 1 argument -
+	the device.
+	(Fgtk_style_info): Now returns ALL of the information about
+	colors.  Returns a list of colors instead of just the one
+	associated with GTK_STATE_NORMAL.
+
+2000-05-16  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-xemacs.c (smash_face_fallbacks): New function to reset the
+	gtk-specific fallbacks on various face specifiers.  This means
+	that if the user has not changed the face, when a theme or style
+	is changed, the faces will automatically change as well.
+	(gtk_xemacs_style_set): Call it.
+
+	* toolbar-gtk.c (get_toolbar_gc): Swap the fg/bg of the toolbar
+	face when getting the GC.  It looks better this way.
+
+	* gtk-xemacs.c (gtk_xemacs_style_set): Override the style-set
+	method so that we can nuke the pixmaps again.
+	(__nuke_background_items): Moved the voodoo out into its own
+	function so that it can be called from both style_set and
+	realize.
+
+	* console-gtk.h (struct gtk_frame): Removed hardcoded GCs ala X.
+
+	* toolbar-gtk.c (get_toolbar_gc): New function that dynamically
+	creates a GC from the `toolbar' face.
+	(gtk_draw_blank_toolbar_button): Use it instead of the hardcoded
+	GC.
+	(gtk_output_toolbar_button): Ditto.
+	(gtk_output_toolbar): Ditto.
+
+	* event-gtk.c (gtk_check_for_quit_char): Quit handling actually
+	works now.  Feh!
+
+	* device-gtk.c (gtk_device_init_x_specific_cruft): New function
+	that gets the socket we are listening to the X server on so that
+	the SIGIO lossage works correctly for GTK devices.
+	(gtk_init_device): Call it at device creation time.
+
+2000-05-15  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (__internal_callback_marshal): We now correctly handle
+	the 'data' argument.  This is an arbitrary lisp object passed to
+	the callback routine as its last argument.
+
+2000-05-14  William M. Perry  <wmperry@aventail.com>
+
+	* event-gtk.c (gtk_event_to_emacs_event): Needed to reinstate the
+	magic to NOT differentiate betwen ! and shift-!.  *sigh*
+
+	* ui-gtk.c (lisp_to_gtk_type): Allow 'nil' for string types so
+	that we can pass NULL to gtk-frame-new.
+
+2000-05-13  William M. Perry  <wmperry@aventail.com>
+
+	* gtk-xemacs.c (gtk_xemacs_size_request): Needed to override the
+	size_request method to get frame sizing correct.  Whoo hoo!
+	(gtk_xemacs_realize): Don't set the background on the GtkXEmacs
+	window - this reduces the flicker even more.
+
+	* device-gtk.c (gtk_init_device): Don't use shared memory under
+	FreeBSD - it is apparently flaky as hell and causes lots of themes
+	to crash and burn quite prettily.
+
+	* gtk-xemacs.c (gtk_xemacs_realize): Added new widget method that
+	makes sure to nuke the background pixmap of the XEmacs text area
+	and its parent (the GtkWindow it is contained in).  This fixes the
+	flashing you would see with themes/styles that define a background
+	pixmap.
+
+2000-05-12  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-gtk.c (gtk_update_frame_menubar_internal): Duh, should
+	actually pay attention to menubar_will_be_visible instead of just
+	calling gtk_widget_show_all in both branches. :)
+
+2000-05-11  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-gtk.c (vars_of_menubar_gtk): New variable
+	menubar-dockable-p that controls whether to use the GtkHandleBox
+	or not.
+
+	* select-gtk.c: Implemented all of the selection callbacks for GTK
+
+	* frame-gtk.c (resize_event_cb): Force a redisplay when the frame
+	is resized.
+
+	* event-gtk.c (gtk_event_to_emacs_event): When we are doing our
+	hackery to make sure we don't see button events inside the
+	scrollbar, make sure we correctly forward events that did not
+	happen over ANY widget, otherwise selection gets royally screwed
+	and thinks you still have the mouse button down.
+
+	* redisplay-gtk.c (gtk_output_string): Don't bother calling
+	gdk_draw_text_wc - I misunderstood what XDrawString16 did -
+	gdk_draw_text encapsulates this nicely for us.
+
+2000-05-10  William M. Perry  <wmperry@aventail.com>
+
+	* menubar-gtk.c: Changed how the menubar is created and managed.
+	We no longer create and destroy it at will.  Only one GtkMenuBar
+	is ever created, and the children are just added/removed from it.
+	Much less flickering when switching buffers - cleaner in general.
+	(create_menubar_widget): Wheee - menubars are now detachable.
+
+	* ui-gtk.c (Fgtk_import_function_internal): Don't drop everything
+	down to its fundamental type just yet - we need to know specifics
+	about boxed types.
+	(object_putprop): Duh, actually SET the property.
+	(Fgtk_fundamental_type): New function that does the obvious.
+	(Fgtk_object_type): New function that does the obvious.
+	(lisp_to_gtk_type): Implement glyph handling!  GtkPixmap works!
+
+	* ui-byhand.c (Fgtk_pixmap_get): Implemented by hand.  *sigh*
+
+	* dialog-gtk.c: Call into lisp to do dialog boxes.
+
+2000-05-08  William M. Perry  <wmperry@aventail.com>
+
+	* make-src-depend (PrintPatternDeps): Make sure we generate the
+	xx-gtk.* dependencies.
+
+	* depend: Regenerated 
+
+	* make-src-depend: Handle inclusion of .c files.
+
+	* Makefile.in.in (extra_doc_files): Need to include ui-byhand.c
+	here as well.
+
+	* ui-gtk.c (type_to_marshaller_type): Don't abort if we don't know
+	about the marshaller.  Just return Qnil and let the caller figure
+	it out.
+	(Fgtk_import_function_internal): Deal with new return value of
+	Qnil for error signalling from type_to_marshaller_type().
+	(lisp_to_gtk_type): Half-assed implementation of dealing with
+	callbacks.
+	(gtk_type_to_lisp): Ditto.
+
+	* ui-byhand.c: New file that hand-codes some annoying functions in
+	Gtk.  *sigh*
+
+	* emacs-widget-accessors.c (Fgtk_adjustment_lower): New
+	auto-generated file that spits out all the widget slot accessor
+	functions.
+
+	* ui-gtk.c (Fgtk_signal_connect_internal): Holy shit, signals work!
+	(lisp_to_gtk_type): Allow ints to be passed in as arguments to
+	functions that expect floats, otherwise you have to write stupid
+	code like 9.0 instead of just passing in '9'.
+
+2000-05-07  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (gtk_type_to_lisp): Return Qnil if we get a NULL
+	pointer/object/boxed.
+	(lisp_to_gtk_type): Allow Qnil to be passed in to mean a NULL
+	pointer/object/boxed.
+
+	* event-gtk.c (gtk_event_to_emacs_event): Make sure a button press
+	focuses on the text widget, otherwise if someone packs a widget
+	into the container from lisp, we end up not getting keyboard focus
+	quite a bit.  Eek.
+
+	* frame-gtk.c (gtk_create_widgets): Set the name of the xemacs
+	shell so we can control sylte issues from .gtkrc
+	(gtk_set_initial_frame_size): Set the default size of the frame
+	correctly.
+	(gtk_create_widgets): Expose the frame shell and container widgets
+	to lisp.
+
+	* emacs-marshals.c: Added a whole shitload of marshallers - don't
+	edit this file by hand if you need to add one.  Check out
+	../lisp/ui/gtk-marshal.el for a script that auto-generates them
+	for you.
+
+2000-05-05  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (describe_gtk_arg): Debugging function to spit out
+	human-readable version a GtkArg.
+	(lisp_to_gtk_type): Made this function much more sane.
+	(Fgtk_call_function): New function to allow calling generic
+	functions from DLLs in lisp.
+	(CONVERT_RETVAL): New macro (ugh) to convert a pointer that the
+	return value filled in back into a valid GtkArg.
+	(Fgtk_call_function): This actually works now!  Scary stuff.
+
+2000-05-04  William M. Perry  <wmperry@aventail.com>
+
+	* ui-gtk.c (Fgtk_import_type): New function to import a GtkType
+	into the XEmacs namespace.  For starters this only fully imports
+	enumerations and flags.  Importing a GtkObject or subclass results
+	in getting a list back of possible signals and argument lists.
+
+	* scrollbar-gtk.c (gtk_create_scrollbar_instance): Fixed some
+	compiler warnings.
+	(scrollbar_cb): Aha!  Thanks to the magic of reading the
+	gtkrange.c source code, we now have better behaving scrollbars.
+	Clicking in the trough/end arrows now works correctly instead of
+	the semi-hackish way it did earlier today.
+
+	* ui-gtk.c (Fgtk_define_enumeration): New function that can 
+
+	* scrollbar-gtk.c (scrollbar_cb): Combined the horizontal and
+	vertical scrolling callbacks.  Differentiate between them by
+	user_data. 
+	(scrollbar_cb): Don't bother trying to figure out whether this is
+	a line-by-line or page-wide scrolling operation.  Just go by what
+	is in the value of the adjustment and issue a scrollbar_*_drag
+	event.  This is not 100% correct, but it at least gets it
+	working.  Doing it 'right' might not be possible with standard Gtk
+	scrollbars.
+	(scrollbar_drag_hack_cb): New function to set
+	vertical_drag_in_progress and inhibit_slider_change when we might
+	be starting a drag in the scrollbar.
+	(gtk_update_scrollbar_instance_status): Better setting of the
+	adjustment variables.  Scrolling by pages (clicking in the trough)
+	works now.  Line-by-line seems to work too.
+
+2000-05-03  William M. Perry  <wmperry@aventail.com>
+
+	* scrollbar-gtk.c (gtk_update_scrollbar_instance_status): Got the
+	thumb sizing correct finally.  Thanks to scrollbar-msw.c for
+	showing how to do it sanely - scrollbar-x.c is a mess.
+
+	* window.c (specifier_vars_of_window): Added GTK specific fallback
+	for Vvertical_divider_line_width.
+
+	* toolbar.c (specifier_vars_of_toolbar): Handle specifier
+	fallbacks for GTK toolbars.
+
+	* gui-gtk.c (button_item_to_widget): Compiles under Gtk at least -
+	more than likely completely broken.
+
+	* glyphs-gtk.c (write_lisp_string_to_temp_file): Resurrected this
+	blasphemous function to deal with XPMs.
+	(gtk_xpm_instantiate): Now writes the XPM to a temp file, since
+	GTK cannot deal with XPMs from memory.  Lame, but not fixable for
+	gtk 1.2 - maybe for 1.4.
+	(gtk_xpm_instantiate): Transparency works now.
+
+	* gccache-gtk.c (gc_cache_lookup): Made non-hash based code
+	compile.  It is not used, but what the hell.
+
+	* faces.c (complex_vars_of_faces): Do GTK specific mucking about
+	with face property fallbacks (fonts and colors)
+
+	* events.c (event_equal): Added special case for GTK.
+	(event_hash): Added special case for GTK.
+	(format_event_object): Added special case for GTK events.
+
+	* event-gtk.c (event_name): Use gtk_event_name helper function
+	here.
+	(handle_focus_event_1): Got rid of gtk-redisplay-hack variable and
+	usage.
+
+	* device.c (delete_device_internal): Delete 'popup' frames under
+	Gtk as well as X.  Should this happen for HAVE_MSWINDOWS as well?
+
+	* console.c (select_console_1): Make sure we set Vwindow_system
+	like all the others.
+
+	* frame-gtk.c (gtk_update_frame_external_traits): Added comments
+	about why I didn't implement some portions of this function.
+
+	* redisplay-gtk.c (gtk_output_string): Fixed the bizarre redisplay
+	problem where all the default text would be drawn twice - once
+	with the normal background colour, and once with the text-cursor
+	background.  This was caused by a stupid typo and using the wrong
+	GdkGC in the second call to gdk_draw_text_image... basically no
+	clipping was being done on the image, so the whole thing was
+	redrawn.
+	(gtk_output_string): Call gdk_draw_text if we have a background
+	pixmap, otherwise things look REALLY weird.
+	(gtk_clear_region): Had a misplaced brace that caused the non-text
+	area of a frame not to get the correct background.
+
+2000-05-02  William M. Perry  <wmperry@aventail.com>
+
+	* glyphs-gtk.c (gtk_xpm_instantiate): Need to write pixmaps to a
+	temp file and then read with gdk_pixmap_create_from_xpm () - there
+	is no way to read from a memory buffer (yet - I might write one
+	for Gtk 1.4)
+
+	* glyphs.c: Don't include xpm.h when building with Gtk.
+	(pixmap_to_lisp_data): Alternate implementation for Gtk.
+
+	* device-gtk.c (gtk_init_device): Call gdk_imlib_init if
+	available, otherwise the 'Pixmap' theme engine doesn't work.
+	Losers.
+
+	* glyphs-gtk.c (gtk_xpm_instantiate): Now at least tries to
+	instantiate XPM images.
+	(init_image_instance_from_gdk_pixmap): Utility function to create
+	a glyph from an existing GdkPixmap.
+
+	* device-gtk.c (Fgtk_style_info): Attempt to expose the background
+	pixmaps from a Gtk style.
+

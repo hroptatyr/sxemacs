@@ -1,0 +1,118 @@
+@comment  node-name,  next,  previous,  up
+@node Search and Replace, , Select and Move, Top
+@chapter Searching and Replacing
+@cindex searching
+@cindex replace
+@vindex case-fold-search
+
+   Emacs provides commands for searching for occurrences of a particular
+string. The search is incremental i.e. it begins even before you
+complete typing the whole string. All searches in Emacs ignore the case
+of the text they are searching, i.e. if you are searching for "String",
+then "string" will also be one of the selections. If you want a case
+sensitive search select the @b{Case Sensitive Search} from the
+@b{Option} menu. You can also set the variable @code{case-fold-search} to
+@code{nil} for making searches case-sensitive. For information on setting
+variables, @xref{Setting Variables}. The two commands for searching for
+strings in SXEmacs are:
+
+@table @kbd
+@item C-s
+@findex isearch-forward
+@kindex C-s
+This command will prompt you for a string to search :
+
+@example
+I-search:
+@end example
+
+@noindent
+If you type "myname" as the string to be searched, then Emacs will start
+searching for "m", "my", "myn", etc as you go on typing the whole
+string in the forward direction. The cursor will be on the matching
+string which has been found so far. If you find the correct match just
+hit @key{RET} or type @kbd{C-f} or @kbd{C-b} to set the cursor's
+position. If you find a matching string "myname" but you were looking
+for a different occurrence of it, use @kbd{C-s} again. If the search is
+unable to find the string, it will give you an error message.
+
+@item C-r
+@findex isearch-backward
+@kindex C-r
+This command will perform an incremental search in the backward
+direction. It will prompt you for a string name:
+
+@example
+I-search backward:
+@end example
+
+@noindent
+After you start typing the string name, it will search for the string in
+the same fashion as it does for @kbd{C-s} except that it will search in
+the backward direction. If it cannot find the string name, it will give
+you an error message.
+@end table
+
+   If you make a mistake while typing the string names when you use the
+above commands, you can use the @key{DEL} key to erase characters. Each
+@key{DEL} will erase the last character. At any time if you want to quit
+the search, just type @kbd{C-g}.
+
+   To do a non-incremental search i.e. to start the search only after
+you have typed the whole string you can use the following commands:
+
+@table @kbd
+@item C-s RET @dfn{string} RET
+This command will search for the specified string in the forward
+direction and will give an error message if the string is not found.
+
+@item C-r RET @dfn{string} RET
+This command will search for the specified string in the backward
+direction.
+@end table
+
+  For information on how Emacs searches for words and regular
+expressions, @xref{Search,,,sxemacs,SXEmacs User's Manual}.
+
+  To replace all occurrences of a string in Emacs, you can use the
+following command:
+@findex replace-string
+@example
+M-x replace-string
+@end example
+
+@noindent
+After you type @kbd{M-x replace-string}, you will be prompted for a
+string name to replace:
+
+@example
+Replace string:
+@end example
+
+@noindent
+After you type in a string name, for example "FOO" and press @key{RET},
+you will see another prompt:
+
+@example
+Replace string FOO with:
+@end example
+
+@noindent
+Now type the string which you want to replace "FOO" with and press
+@key{RET}. After all the occurrences are replaced you will see the
+message "Done" in the echo area.  If you want only some occurrences of
+the string to be replaced, use @kbd{M-x query-replace RET <string> RET
+<newstring> RET}. For more information, @xref{Query
+Replace,,,sxemacs,SXEmacs User's Manual}.
+
+   SXEmacs also provides a utility for checking spellings. Use @kbd{M-x
+ispell-buffer} to check for spellings in the whole buffer. You can also
+check the spelling of a word or a region. You can use menus to
+check for spellings:
+
+@noindent
+Evaluate the expression @code{(load "big-menubar")}. To evaluate this
+expression you need to hit the @key{META} or the @key{ESC} key twice and
+type in the expression in the echo area before hitting @key{RET}. You
+will get an extensive menubar. Select the @b{Spell Check} menu item from
+the @b{Utilities} menu for checking spellings.
