@@ -25,3 +25,4 @@ src/config.h.in
 ++*
 =*
 sxemacs_version.m4
+*.info*
