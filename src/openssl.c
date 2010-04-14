@@ -359,7 +359,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 
 #ifdef HAVE_POSTGRESQL
-#include "postgresql.h"
+#include "database/postgresql.h"
 #endif
 
 #define OSSL_CODING Qbinary
