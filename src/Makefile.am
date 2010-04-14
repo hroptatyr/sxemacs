@@ -87,7 +87,7 @@ endif
 if NEED_LIBSXEDB
 sxe_subdirs += database
 AM_LDFLAGS += -L$(builddir)/database
-libsxedb_a_ldflags = -lsxedb
+libsxedb_a_ldflags = -lsxedb $(DB_LDFLAGS) $(DB_LIBS)
 endif
 
 nodumplibs += libcruft.a
@@ -145,7 +145,7 @@ sxemacs_LDADD = $(sxemacs_lddep) $(OPENSSL_LIBS)
 sxemacs_LDADD +=							\
 	$(libsxecore_a_ldflags)	$(libmule_a_ldflags)			\
 	$(libent_a_ldflags) $(libmm_a_ldflags) $(libsxedb_a_ldflags)	\
-	$(ld_switch_all) $(ld_libs_all) $(lib_gcc) $(FFI_LIBS)\
+	$(ld_switch_all) $(ld_libs_all) $(lib_gcc) $(FFI_LIBS)		\
 	$(LIBLTDL)
 if WITH_BDWGC
 sxemacs_CPPFLAGS += $(BDWGC_CPPFLAGS)
