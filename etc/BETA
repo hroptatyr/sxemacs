@@ -1,0 +1,598 @@
+				-*- mode:outline -*-
+
+* Introduction
+==============
+
+You are running a potentially unstable version of SXEmacs.  Please do
+not report problems with Beta SXEmacs to comp.emacs.xemacs.  Report
+them to <sxemacs-devel@sxemacs.org>, preferably with 
+'M-x report-sxemacs-bug RET'. 
+
+** Mailing Lists
+================
+
+*** SXEmacs Devel Mailing List <sxemacs-devel@sxemacs.org>
+----------------------------------------------------------
+
+If you are not subscribed to the SXEmacs Devel list you should be.
+Currently all discussion of development issues, including bug reports
+and coding discussion, takes place on the SXEmacs Devel mailing list.
+Only patches and administrative actions regarding patches are sent
+elsewhere (to the SXEmacs Patches list).
+
+*** SXEmacs Patches Mailing List <sxemacs-patches@sxemacs.org>
+--------------------------------------------------------------
+
+SXEmacs Patches records proposed changes to SXEmacs, and their
+disposition.  It is open subscription, and all patches that are
+seriously proposed for inclusion in SXEmacs should be posted here.  You
+can follow progress of your patch by subscribing to the mailing list
+or in the archives.  You will be notified of the outcome of your
+patch, whether it will be merged into the main code base or rejected.
+If the latter, an explanation will be given also.
+
+*** SXEmacs Builds Mailing List <sxemacs-builds@sxemacs.org>
+------------------------------------------------------------
+
+The SXEmacs Builds list is where build reports (M-x build-rpt) are
+sent.  Discussion, although not banned, is encouraged to occur on the
+devel list.
+
+*** List Administrivia
+----------------------
+
+In the descriptions below, the word LIST (all uppercase) is a
+variable.  Substitute "devel", "patches", or "builds" as appropriate.
+
+The SXEmacs mailing lists are managed by the Mailman mailing list
+package, and the usual Mailman commands work.  Do not send mailing
+list requests to the main address (<sxemacs-LIST@sxemacs.org>), always
+send them to <sxemacs-LIST-request@sxemacs.org>.  If you have problems
+with the list itself, they should be brought to the attention of the
+SXEmacs Mailing List Owner <sxemacs-LIST-owner@sxemacs.org>.  All
+public mailing lists are archived.  The URL is
+
+	     http://www.sxemacs.org/list-archives/html/sxemacs-LIST
+
+Note that the sxemacs-LIST-admin address is used internally by the
+Mailman software; it is NOT a synonym for sxemacs-LIST-request.
+
+*** Managing your subscription via the Web
+------------------------------------------
+
+Subscription, unsubscription, and options (such as digests and
+temporarily suspending delivery) can be accomplished via the web
+interface at <http://www.sxemacs.org/mailman/listinfo/sxemacs-LIST>.
+
+*** Subscribing by e-mail
+-------------------------
+
+Send an email message to <sxemacs-LIST-request@sxemacs.org> with
+`subscribe' (without the quotes) as the BODY of the message.
+
+*** Unsubscribing by e-mail
+---------------------------
+
+Send an email message to <sxemacs-LIST-request@sxemacs.org> with
+`unsubscribe' (without the quotes) as the BODY of the message.
+
+** Beta Release Schedule
+========================
+
+To be done.
+
+** Reporting Problems
+=====================
+
+The best way to get problems fixed in SXEmacs is to submit good problem
+reports, 'M-x report-sxemacs-bug RET' will help you do this (assuming
+you have a usable SXEmacs).  Since this is beta software, problems are
+certain to exist.  Please read through all of part II of the SXEmacs
+FAQ for an overview of problem reporting.  Other items which are most
+important are:
+
+1.  Do not submit C stack backtraces without line numbers.  Since it
+    is possible to compile optimized with debug information with GCC
+    it is never a good idea to compile SXEmacs without the -g flag.
+    SXEmacs runs on a variety of platforms, and often it is not
+    possible to recreate problems which afflict a specific platform.
+    The line numbers in the C stack backtrace help isolate where the
+    problem is actually occurring.
+ 
+2.  Attempt to recreate the problem starting with an invocation of
+    SXEmacs with `sxemacs -no-autoloads'.  Quite often, problems are
+    due to package interdependencies, and the like.  An actual bug
+    in SXEmacs should be reproducible in a default configuration
+    without loading any special packages (or the one or two specific
+    packages that cause the bug to appear).  If you have trouble
+    getting anything to work at all with the above invocation, use
+    `sxemacs -vanilla' instead.  If you need to load your user init
+    file or the site file to get the problem to occur, then it has
+    something to do with them, and you should try to isolate the
+    issue in those files.
+
+3.  A picture can be worth a thousand words.  When reporting an unusual
+    display, it is generally best to capture the problem in a screen
+    dump and include that with the problem report.  The easiest way to
+    get a screen dump is to use the xv program and its grab function.
+    MIME is the preferred method for making the image attachments.
+
+** Getting the Source
+=====================
+
+See the file DISTRIB in this directory.  Or, inside SXEmacs, do `C-h
+C-d'. 
+
+* Compiling Beta SXEmacs
+========================
+
+SXEmacs can be built inside or outside the source tree.  The thing to
+remember if you are building outside the source tree is that if
+configure is further away than ../ you'll have to use the
+`--srcdir=DIR' option.
+
+Some of the maintainers build in a subdirectory of the top level
+source tree.  Usually naming their build directory something like
+`=build'.  The `=' prefix will allow the directory to not get in the
+way of the version control system (GNU/arch (tla)).
+
+cd to the top level of your build tree and run the autogen.sh script
+found in the top level source tree:
+
+  ../autogen.sh
+
+This will generate, among other things, the Makefile.in files and the
+configure script. (note that you can omit this step if you are
+building from a tarball release)
+
+
+Next, issue an appropriate configure command.  One developer uses the
+following at the time of this writing:
+
+  ../configure \
+	--prefix=/usr                    \
+	--with-ent=all                   \
+	--with-ase=all                   \
+	--with-scrollbars=athena         \
+	--with-openssl                   \
+	--with-clash-detection           \
+	--with-pop                       \
+	--without-gpm                    \
+	--with-experimental-features=all \
+	CFLAGS='-ggdb3 -O3 -march=athlon-xp -mtune=athlon-xp'
+
+
+Part of the configure output is a summary that looks something
+like the following.  (this summary is also available as the file
+'Installation' in the top directory of your build tree, and via
+the command 'M-x describe-installation RET').
+
+uname -a: Linux bastard 2.6.26-rc1-00279-g28a4acb #10 PREEMPT Fri May 9 13:44:13 EST 2008 i686 AuthenticAMD AMD Athlon(TM) XP 2600+ GNU/Linux
+
+../configure  '--prefix=/usr' '--with-ent=all' '--with-ase=all' '--with-scrollbars=athena' '--with-openssl' '--with-clash-detection' '--with-pop' '--without-gpm' '--with-experimental-features=all' 'CFLAGS=-ggdb3 -O3 -march=athlon-xp -mtune=athlon-xp' --enable-ltdl-install=no
+
+
+SXEmacs steve@sxemacs.org--2008/sxemacs--main--22.1.9--patch-141 "Edsel" configured for `athlon-pc-linux-gnu'.
+
+
+Compilation Environment and Installation Defaults:
+  Source code location:              /usr/src/sxemacs/sxemacs--main--22.1.9
+  Installation prefix:               /usr
+  Arch-dependent files go to:        /usr/lib/sxemacs-22.1.9/athlon-pc-linux-gnu
+  Core emodules go to:               /usr/lib/sxemacs-22.1.9/athlon-pc-linux-gnu/modules
+  Core lisp files go to:             /usr/share/sxemacs-22.1.9/lisp
+  Additional external data goes to:  /usr/share/sxemacs-22.1.9/etc
+  Operating system description file: `s/linux.h'
+  Not using any machine description file
+  Compiler version:                  gcc (Bastard Compiler Collection) 4.4.0 20080511 (experimental)
+    - GCC specs file:                specs.
+    - Compiler command:              gcc -std=gnu99 -fgnu89-inline -ggdb3 -O3 -march=athlon-xp -mtune=athlon-xp
+    - Global CPPFLAGS:                 -I/usr/include
+    - Global LDFLAGS:                 -Wl,--export-dynamic  -L/usr/lib -lbind
+  libc version:                      2.7.90...
+  Relocating allocator for buffers:  yes
+  GNU version of malloc:             yes
+    - Using Doug Lea's new malloc from the Linux C Library.
+
+Build Options:
+  Runtime behaviour:
+    - Value of $prefix is compiled into the binary.
+
+    - Module search path:
+       /usr/src/sxemacs/.sxemacs/athlon-pc-linux-gnu/modules
+       /usr/lib/sxemacs/athlon-pc-linux-gnu/site-modules
+       /usr/lib/sxemacs-22.1.9/athlon-pc-linux-gnu/modules
+
+    - Package search path:
+       ~/.sxemacs/site-packages
+       ~/.sxemacs/xemacs-packages
+       ~/.sxemacs/mule-packages
+       ~/.sxemacs/sxemacs-packages
+       
+       /usr/share/sxemacs/site-packages
+       /usr/share/sxemacs/xemacs-packages
+       /usr/share/sxemacs/mule-packages
+       /usr/share/sxemacs/sxemacs-packages
+
+Debugging options:
+  Runtime Error Checking:
+    Enabled Runtime Error Checking:  extents types gc malloc byte_code bufpos glyphs
+      - extents (checks on extents)
+      - types (checks on types)
+      - gc (checks on garbage collection)
+      - malloc (checks on memory allocation)
+      - byte_code (checks on byte compiled code)
+      - bufpos (checks on buffer position)
+      - glyphs (checks on glyph data)
+    Disabled Runtime Error Checking: None.
+    WARNING: ---------------------------------------------------------
+    WARNING: SXEmacs will run noticeably more slowly as a result.
+    WARNING: Error checking is on by default for SXEmacs beta releases.
+    WARNING: ---------------------------------------------------------
+
+Internals:
+  How to link external libraries:  dynamic
+  Foreign Function Interface:
+    Compiling in support for FFI.
+  Enhanced Number Types:
+    Enabled Enhanced Number Types:  int fpfloat indef gmp mpfr mpc pseug quatern ecm
+      - int (native integer arithmetics)
+      - fpfloat (native fixed precision floats)
+      - indef (native abstract indefinites)
+      + mpz (Arbitrary precision integers)
+        (X) GMP (GNU multiprecision library)
+      - MPFR (Multiprecision Floats with correct Rounding)
+      + complex (Complex numbers as in C/R)
+        (X) MPC (Multiprecision Complex numbers (C/R))
+        ( ) pseudoC (native Complex Numbers (C/R)) available but omitted
+      - pseudoG (native Gaussian Numbers (Z+Z))
+      - Quaternions (native Quaternions (Z+Z+Z+Z))
+      - ECM (factorisations per Elliptic Curve Method)
+    Omitted Enhanced Number Types:  pseuc
+    Disabled Enhanced Number Types: None.
+  Experimental Features:
+    Enabled Experimental Features:  bdwgc compre asyneq
+      - bdwgc (the Boehm-Demers-Weiser collector)
+      - compre (exhaustive caching of compiled regexps)
+      - asyneq (asynchronous event queues)
+    Disabled Experimental Features: None.
+
+Window System:
+  Compiling in support for the X window system:
+    - X Windows headers location:                 /usr/X11/include
+    - X Windows libraries location:               /usr/X11/lib
+    - Xau (X authority) not available.
+    - Handling WM_COMMAND properly.
+  Compiling in support for the Athena widget set:
+    - Athena headers location:                    X11/neXtaw
+    - Athena library to link:                     neXtaw
+  Using Lucid menubars.
+  Using Athena scrollbars.
+  Using Athena dialog boxes.
+  Using Athena native widgets.
+  Support for toolbars.
+
+TTY:
+  Compiling in support for ncurses.
+
+Databases:
+  File-based Databases:
+    Enabled File-based Databases:  berkdb gdbm
+      - berkdb (Berkeley DB support)
+      - gdbm (GNU DBM support)
+    Disabled File-based Databases:  dbm*
+  Compiling in support for further database interfaces:
+    - PostgreSQL (V7 bindings).
+
+Media:
+  Image Formats:
+    Enabled Image Formats:  gif xpm png jpeg tiff xface
+      - GIF (GIF image format)
+      - XPM (X PixMap image format)
+      - PNG (Portable Network Graphic format)
+      - JPEG (jpeg image format)
+      - TIFF (TIFF image format)
+      - xface (base64 encoded xbm)
+    Disabled Image Formats: None.
+  Audio Outputs:
+    Enabled Audio Outputs:  alsa ao oss pulse
+      - ALSA (kernel-based linux sound standard)
+      - ao (generic audio output layer)
+      - OSS (Open Sound System)
+      - PulseAudio (versatile audio server)
+    Disabled Audio Outputs:  arts* esd* jack* nas*
+  Media Stream Handlers:
+    Enabled Media Stream Handlers:  ffmpeg internal mad sndfile sox magic
+      - FFmpeg (media streams handled by ffmpeg)
+      - internal (media streams handled internally)
+      - Mad (media streams handled by mad)
+      - sndfile (media streams handled by sndfile)
+      - SoX (media streams handled by sox)
+      - magic (file/libmagic support)
+    Disabled Media Stream Handlers: None.
+
+Cryptography:
+  Compiling in support for OpenSSL ciphers and digests.
+    - Submodules: RAND MD HMAC CIPHER HYBRID SIGN RSA DSA EC DH PEM SSL
+
+Internationalization:
+  Compiling in support for Mule (multi-lingual Emacs).
+  Compiling in support for XIM (X11R5+ I18N input method).
+    - Using raw Xlib to provide XIM support.
+
+Mail:
+  Compiling in support for POP mail retrieval.
+  Compiling in support for "file" mail spool file locking method.
+
+Modules:
+  Dynamic Shared Object Modules:
+    Enabled Dynamic Shared Object Modules:  ase cl
+      - ase (algebraic structures)
+      - cl (fast Common Lisp implementation)
+    Disabled Dynamic Shared Object Modules: None.
+  Static Modules:
+    Enabled Static Modules: None.
+    Disabled Static Modules:  ase cl
+
+Other Features:
+  Inhibiting IPv6 canonicalization at startup.
+  Using the new portable dumper.
+  Compiling in support for extra debugging code.
+
+Footnotes:
+  + means not requested but enabled
+  * means requested but disabled
+
+No bogus options. Have a nice build :)
+
+
+
+Then...
+
+$ make build-report
+
+...and you should have a working SXEmacs.  You may install via the
+normal `make install'.
+
+Note to distro packagers:  This release of SXEmacs supports the
+DESTDIR Makefile variable for installing to a packaging tmp root.
+
+After you have verified that you have a functional editor, fire up
+your favorite mail program and send a build report to
+<sxemacs-builds@sxemacs.org>.
+
+Preferably this is best done from SXEmacs, following these simple steps:
+
+M-x customize-group RET build-rpt RET
+M-x build-rpt RET
+
+
+* Packages
+==========
+
+[Note: these instructions have been partly updated, but not carefully
+reviewed in some time.  Caveat tester.]
+
+Starting with XEmacs 21.1, much of the functionality of XEmacs has
+been unbundled into "the packages."  For more information about the
+package system, see the Info nodes on Packages (in the XEmacs User
+Manual) and on Packaging (in the Lisp Reference).
+
+When bootstrapping SXEmacs, you may need to manually install some
+packages (at least sxemacs-base and efs).  These packages are available
+by FTP at <ftp://ftp.xemacs.org/pub/xemacs/packages/>.
+
+That last paragraph only applies if you do _NOT_ have FFI enabled in
+your SXEmacs, or you don't have libcurl.so installed on your system.
+
+** Binary package installation
+==============================
+
+Prerequisite:  XEmacs 21.0-b1.
+
+Binary packages are complete entities that can be untarred at the top
+level of an XEmacs package hierarchy and work at runtime.  To install files
+in this directory, run the command `M-x package-admin-add-binary-package'
+and fill in appropriate values to the prompts.
+
+Hmm, that's a bit, erm, old fashioned.  Sane people will simply select
+a package mirror site and use PUI...
+
+From the menus:
+
+  Tools->Packages->Set Download Site-><pick>
+
+Then just... M-x pui-list-packages
+
+Or if you do not have any packages installed yet, M-x pui-bootstrap
+
+** Building SXEmacs and XEmacs packages from scratch
+====================================================
+
+To build everything completely from scratch isn't hard, just time
+consuming. 
+
+*** Step 1 - grab the sources (core and packages)
+
+$ cvs -d :pserver:cvs@cvs.xemacs.org:/pack/xemacscvs login
+ [password: "cvs" (sans quotes)]
+
+$ cvs -d :pserver:cvs@cvs.xemacs.org:/pack/xemacscvs co packages
+
+That gets you all the XEmacs packages.
+
+$ tla register-archive http://arch.sxemacs.org/2008
+
+$ tla get steve@sxemacs.org--2006/sxemacs--main--22.1.9 sxemacs
+
+That puts a copy of the latest SXEmacs sources into $PWD/sxemacs/
+
+*** Step 2 - build SXEmacs
+
+$ cd sxemacs
+$ ./autogen.sh  (not necessary for tarball releases)
+$ ./configure [options...]
+$ make
+
+(use `make build-report' if you are planning to send in a build report
+via `M-x build-rpt')
+
+And optionally:
+
+$ make install 2>&1 | tee ,,make-install.out
+
+
+*** Step 3 - build and install the packages
+
+$ cd packages
+$ cp Local.rules.template Local.rules
+
+Then edit Local.rules to suit your needs/environment
+see: (Info-goto-node "(sxemacs)Local.rules file") for details about
+this file.
+
+You'll most likely want to make the following changes to Local.rules:
+
+  XEMACS_BINARY = sxemacs
+  XEMACS_INSTALLED_PACKAGES_ROOT = /usr/local/share/sxemacs
+  BATCH = $(VANILLA) -batch -eval '(setq stack-trace-on-error t)' -l build-rpt
+
+And then:
+
+$ make install
+
+* Improving SXEmacs
+===================
+
+** Creating patches for submission
+==================================
+
+First, go read...
+
+  (Info-goto-node "(sppm)Patches")
+
+All patches to SXEmacs that are seriously proposed for inclusion (eg,
+bug fixes) should be mailed to <sxemacs-patches@sxemacs.org>.  Each
+patch will be reviewed by the SXEmacs team, and will be acknowledged and
+added to the distribution, or rejected with an explanation.  Progress of
+the patch is tracked on the SXEmacs Patches mailing list, which is open
+subscription.  If a patch is simply intended to facilitate discussion,
+send it to the SXEmacs Devel <sxemacs-devel@sxemacs.org> list instead, a
+Cc to SXEmacs Patches is optional, but doesn't hurt.
+
+The best way to go about getting your patches included into the
+SXEmacs code base is to create your own GNU/arch branch of SXEmacs and
+send your commit logs/merge requests to sxemacs-patches@sxemacs.org.
+This can easily be set up via tla hooks.
+
+The rest of this section applies to the XEmacs packages.
+
+Patches to XEmacs Lisp packages should be sent to the maintainer of
+the package.  If the maintainer is listed as `XEmacs Development Team'
+patches should be sent to <xemacs-patches@xemacs.org>.
+
+The command...
+
+  C-u M-x package-get-info RET PKG_NAME RET maintainer RET
+
+...will put the PKG_NAME's package maintainer's name and email address
+at point in the current buffer.
+
+Emailed patches should preferably be sent in MIME format and quoted
+printable encoding (if necessary).
+
+The simplest way to create well-formed patches is to use CVS and
+Didier Verna's Patcher library (available as patcher.el in the
+xemacs-devel package).  Patcher is new and requires some setup, but
+most of the core developers are now using it for their own patches.
+Patcher also can be configured to create patches for several projects,
+and recognize the project from the directory it is invoked in.  This
+makes it a useful general tool (as long as XEmacs-style patches are
+accepted at your other projects, which is likely since they conform to
+the GNU standards).
+
+When making patches by hand, please use the `-u' option.  Using
+ordinary (context-free) diffs are notoriously prone to error, since
+line numbers tend to change when others make changes to the same
+source file.
+
+An example of the `diff' usage:
+
+$ diff -u OLDFILE NEWFILE
+
+Each patch should be accompanied by an update to the appropriate
+ChangeLog file.  Guidelines for writing ChangeLog entries is governed
+by the GNU coding standards.  Please see
+<http://www.gnu.org/prep/standards_toc.html>   [Change Logs section]
+for details.
+
+Do not submit context diffs (either -c or -u) of ChangeLogs.  Because
+of the "stack" nature of ChangeLogs (new entries are always pushed on
+the top), context diffs will fail to apply more often than they
+succeed.  Simply cutting and pasting the entry from an Emacs buffer to
+the mail buffer (beware of tab expansion!) is probably easiest.  The
+Patcher library also will set up your ChangeLogs for you, and copy
+them to the mail.  Context-less unified diffs (-U 0) are also
+acceptable.
+
+*** Patch discussion etiquette
+-------------------------------
+
+If you intend a patch for _application_ to the sources as is, _always_
+post it to sxemacs-patches, even if there are minor points you would
+like to have discussed by others.  Not doing so will resulting in
+patches getting "lost".  If you expect that the patch will not be
+acceptable, but are using it to stimulate discussion, then don't post
+to sxemacs-patches.  Intermediate cases are up to your judgment;
+unless you're sure you'll follow up with a "real" patch, better to err
+on the side of posting to sxemacs-patches.
+
+** Large contributions
+======================
+
+Perhaps you have a whole new mode, or a major synchronization with
+upstream for a neglected package, or a synchronization with GNU Emacs
+you would like to contribute.  We welcome such contributions, but they
+are likely to be relatively controversial, generate more comments and
+requests for revision, and take longer to integrate.  Please be
+patient with the process.
+
+*** Syncing with GNU Emacs and/or XEmacs
+----------------------------------------
+
+Syncing with GNU Emacs and XEmacs is an important activity.  Although
+each version has its advantages and areas of concentration, it is very
+desirable that common functionality share specifications and APIs.
+When porting GNU code to SXEmacs, the following points should be given
+special attention:
+
+  o Recent GNU Emacsen cannot be built without Mule, but SXEmacs can.
+    Make sure your changes do not assume the presence of Mule.
+
+  o GNU Emacs nomenclature often differs from that of SXEmacs.
+    Sometimes syncing the names is desirable, other times not.
+
+  o GNU Emacs functionality often differs from that of SXEmacs.
+    Syncing functionality is often controversial.
+
+It is important that you let other developers know that
+synchronization has taken place, to what degree, and when.  For this
+purpose, we use comments of the form
+
+/* Synched up with: FSF 21.3 by Steve Youngs */
+
+/* Synched up with: XEmacs 21.4.15 by Steve Youngs */
+
+in the source file itself, as the last element of the prefatory
+material (copyright notice and commentary).  Obviously the comment
+marker needs to be changed to leading semicolons for Lisp, but
+otherwise the format is the same.
+
+Rather than dates we use the version of GNU Emacs to sync to.  If the
+synchronization is partial, add a new comment describing what has
+actually been synched, leaving the description of the last full sync
+in place.  At each full sync, remove all previous synchronization
+comments.
+
+This applies to Lisp that we have broken out into packages, but
+remains in the GNU Emacs core, as well to core Lisp in XEmacs.

@@ -1,0 +1,145 @@
+
+@node M-x, Help, Minibuffer, Top
+@chapter Running Commands by Name
+
+  The Emacs commands that are used often or that must be quick to type are
+bound to keys---short sequences of characters---for convenient use.  Other
+Emacs commands that are used more rarely are not bound to keys; to run
+them, you must refer to them by name.
+
+  A command name consists, by convention, of one or more words,
+separated by hyphens: for example, @code{auto-fill-mode} or
+@code{manual-entry}.  The use of English words makes the command name
+easier to remember than a key made up of obscure characters, even though
+it results in more characters to type.  You can run any command by name,
+even if it can be run by keys as well. 
+
+@kindex M-x
+@cindex minibuffer
+ To run a command by name, start with @kbd{M-x}, then type the
+command name, and finish with @key{RET}.  @kbd{M-x} uses the minibuffer
+to read the command name.  @key{RET} exits the minibuffer and runs the
+command.
+
+  Emacs uses the minibuffer for reading input for many different purposes;
+on this occasion, the string @samp{M-x} is displayed at the beginning of
+the minibuffer as a @dfn{prompt} to remind you that your input should be
+the name of a command to be run.  @xref{Minibuffer}, for full information
+on the features of the minibuffer.
+
+  You can use completion to enter a command name.  For example, to
+invoke the command @code{forward-char}, type:
+
+@example
+M-x forward-char @key{RET}
+@end example
+or
+@example
+M-x fo @key{TAB} c @key{RET}
+@end example
+
+@noindent
+After you type in @code{M-x fo TAB} emacs will give you a possible list of 
+completions from which you can choose. Note that @code{forward-char} is the 
+same command that you invoke with the key @kbd{C-f}.  You can call any 
+command (interactively callable function) defined in Emacs by its name 
+using @kbd{M-x} regardless of whether or not any keys are bound to it.
+
+  If you type @kbd{C-g} while Emacs reads the command name, you cancel
+the @kbd{M-x} command and get out of the minibuffer, ending up at top level.
+
+  To pass a numeric argument to a command you are invoking with
+@kbd{M-x}, specify the numeric argument before the @kbd{M-x}.  @kbd{M-x}
+passes the argument along to the function that it calls.  The argument
+value appears in the prompt while the command name is being read.
+
+@findex interactive
+You can use the command @code{M-x interactive} to specify a way of
+parsing arguments for interactive use of a function.  For example, write:
+
+@example
+  (defun foo (arg) "Doc string" (interactive "p") ...use arg...)
+@end example
+
+to make @code{arg} be the prefix argument when @code{foo} is called as a
+command.  The call to @code{interactive} is actually a declaration
+rather than a function; it tells @code{call-interactively} how to read
+arguments to pass to the function.  When actually called, @code{interactive}
+returns @code{nil}.
+
+The argument of @var{interactive} is usually a string containing a code
+letter followed by a prompt.  Some code letters do not use I/O to get
+the argument and do not need prompts.  To prompt for multiple arguments,
+you must provide a code letter, its prompt, a newline, and another code
+letter, and so forth.  If the argument is not a string, it is evaluated 
+to get a list of arguments to pass to the function.  If you do not provide an
+argument to @code{interactive}, no arguments are passed when calling
+interactively.
+
+Available code letters are:
+
+@table @code
+@item a
+Function name: symbol with a function definition
+@item b
+Name of existing buffer
+@item B
+Name of buffer, possibly nonexistent
+@item c
+Character
+@item C
+Command name: symbol with interactive function definition
+@item d
+Value of point as number (does not do I/O)
+@item D
+Directory name
+@item e
+Last mouse event
+@item f
+Existing file name
+@item F
+Possibly nonexistent file name
+@item k
+Key sequence (string)
+@item m
+Value of mark as number (does not do I/O)
+@item n
+Number read using minibuffer
+@item N
+Prefix arg converted to number, or if none, do like code @code{n}
+@item p
+Prefix arg converted to number (does not do I/O)
+@item P
+Prefix arg in raw form (does not do I/O)
+@item r
+Region: point and mark as two numeric arguments, smallest first (does
+not do I/O)
+@item s
+Any string
+@item S
+Any symbol
+@item v
+Variable name: symbol that is @code{user-variable-p}
+@item x
+Lisp expression read but not evaluated
+@item X
+Lisp expression read and evaluated
+@end table
+
+In addition, if the string begins with @samp{*}, an error is
+signaled if the buffer is read-only.  This happens before reading any
+arguments.  If the string begins with @samp{@@}, the window the mouse is
+over is selected before anything else is done.  You may use both
+@samp{@@} and @samp{*}; they are processed in the order that they appear.
+
+Normally, when describing a command that is run by name, we omit the
+@key{RET} that is needed to terminate the name.  Thus we may refer to
+@kbd{M-x auto-fill-mode} rather than @kbd{M-x auto-fill-mode} @key{RET}.
+We mention the @key{RET} only when it is necessary to emphasize its
+presence, for example, when describing a sequence of input that contains
+a command name and arguments that follow it.
+
+@findex execute-extended-command
+  @kbd{M-x} is defined to run the command @code{execute-extended-command},
+which is responsible for reading the name of another command and invoking
+it.

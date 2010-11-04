@@ -1,0 +1,9 @@
+# Force the window background to be the same as the default face background:
+# white.
+
+style "default_background"
+{
+	bg[NORMAL] = { 1.0, 1.0, 1.0 }
+}
+
+class "GtkXEmacs" style "default_background"

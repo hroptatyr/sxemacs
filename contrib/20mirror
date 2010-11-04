@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# I recommend you either
+# a) Run in the background and redirect input and output
+# b) Do neither of that.
+#
+# Do `b' because (S)XEmacs has a problem with the hooks otherwise.
+
+
+echo "Mirroring ${ARCH_BRANCH} in ${ARCH_ARCHIVE}"
+
+tla archive-mirror \
+    "${ARCH_ARCHIVE}" "${ARCH_ARCHIVE}-MIRROR" \
+    "${ARCH_CATEGORY}"
+
+if [ $? -ne 0 ]; then
+    echo "Mirroring failed!!"
+    exit 1
+else
+    echo "Mirroring finished sucessfully."
+    exit 0
+fi
+

@@ -1,0 +1,5 @@
+precious ^(custom-(load|defines)\.el)$
+precious ^(auto-autoloads\.el)$
+precious ^(.*\.elc)$
+precious ^(Makefile)$
+precious ^(Makefile.in)$

@@ -1,0 +1,8 @@
+precious ^(Makefile\.in)$
+precious ^(Makefile)$
+precious ^(GNUmakefile)$
+precious ^(depend)$
+precious ^(\.deps)$
+precious ^(\.libs)$
+precious ^(libsxeui\.l?a)$
+precious ^(.*\.o)$
