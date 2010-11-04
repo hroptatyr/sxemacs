@@ -16,10 +16,9 @@
 \#*#
 *.o
 *.a
-*.s
 *.i
 
-## autotools
+## autogen.sh generated
 aclocal.m4
 autom4te.cache
 compile
@@ -28,8 +27,8 @@ config.guess
 configfsf.guess
 config.sub
 configfsf.sub
-depcomp
-install-sh
+config.log
+config.status
 libltdl
 ltmain.sh
 m4/argz.m4
@@ -40,11 +39,62 @@ m4/ltsugar.m4
 m4/ltversion.m4
 m4/lt~obsolete.m4
 missing
-Makefile.in
-src/config.h.in
-sxemacs_version.m4
+depcomp
+install-sh
 texinfo.tex
 ylwrap
+Makefile.in
+sxemacs_version.m4
+src/config.h.in
+
+## configure generated
+.deps
+.dbxrc
+.gdbinit
+.sxemacs.source.tree
+cpuid
+etc/sxemacs.desktop
+Installation
+libtool
+Makefile
+src/config.h
+src/stamp-h1
+src/sxe-paths.h
+sxemacs.pc
+
+## build generated
+.libs
+*.stamp
+*.lo
+*.la
+*.doc.c
+config.values
+DOC
+dump-id.c
+sheap-adjust.h
+sxemacs
+sxemacs.dmp
+Emacs.ad.h
+ctags2
+etags
+fakemail
+gnuclient
+gnuserv
+hexl
+make-docfile
+make-dump-id
+make-path
+mmencode
+movemail
+ootags
+profile
+sorted-doc
+wakeup
+yow
+stage?
+cl-loop-parser.*
+tags
+TAGS
 
 ## Docs
 *.html
@@ -56,8 +106,14 @@ ylwrap
 auto-autoloads.el
 custom-load.el
 custom-defines.el
+finder-inf.el
 
 ## Because I'm so used to arch (tla)
 ,,*
 ++*
 =build
+
+## Exceptions
+!cl-loop-parser.y
+!etc/tests/external-widget/Makefile
+!tests/tooltalk/Makefile
