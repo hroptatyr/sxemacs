@@ -1,4 +1,0 @@
-precious ^(Makefile\.in)$
-precious ^(Makefile)$
-precious ^(auto-autoloads\.elc?)$
-precious ^(custom-(load|defines)\.elc?)$

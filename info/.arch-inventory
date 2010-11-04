@@ -1,6 +1,0 @@
-precious \.info[-0-9]*$
-precious ^(.*\.dvi)$
-precious ^(.*\.ps)$
-precious ^(.*\.pdf)$
-precious ^(Makefile\.in)$
-precious ^(Makefile)$

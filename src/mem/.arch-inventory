@@ -1,9 +1,0 @@
-precious ^(Makefile\.in)$
-precious ^(Makefile)$
-precious ^(GNUmakefile)$
-precious ^(depend)$
-precious ^(\.deps)$
-precious ^(\.libs)$
-precious ^(libmemalloc\.l?a)$
-precious ^(libsxemem\.l?a)$
-precious ^(.*\.o)$

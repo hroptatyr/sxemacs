@@ -281,8 +281,7 @@ Lisp_Object Vemacs_major_version;
 Lisp_Object Vemacs_minor_version;
 Lisp_Object Vemacs_patch_level;
 Lisp_Object Vemacs_beta_version;
-Lisp_Object Vsxemacs_arch_version;
-Lisp_Object Vsxemacs_main_arch_version;
+Lisp_Object Vsxemacs_git_version;
 Lisp_Object Vsxemacs_codename;
 #ifdef INFODOCK
 Lisp_Object Vinfodock_major_version;
@@ -3447,20 +3446,12 @@ earlier than 20.3.
 	Vemacs_beta_version = Qnil;
 #endif
 
-	DEFVAR_LISP("sxemacs-arch-version", &Vsxemacs_arch_version /*
-This is the fully qualified GNU/arch revision name of this SXEmacs.
+	DEFVAR_LISP("sxemacs-git-version", &Vsxemacs_git_version /*
+This revision name of this SXEmacs.
 Warning: this variable does not exist in FSF Emacs or XEmacs.
 								   */ );
 
-	Vsxemacs_arch_version = build_string(SXEMACS_ARCH_VERSION);
-
-	DEFVAR_LISP("sxemacs-main-arch-version", &Vsxemacs_main_arch_version /*
-This is the fully qualified GNU/arch revision name of the main branch closest
-to this SXEmacs.
-Warning: this variable does not exist in FSF Emacs or XEmacs.
-								   */ );
-
-	Vsxemacs_main_arch_version = build_string(SXEMACS_MAIN_ARCH_VERSION);
+	Vsxemacs_git_version = build_string(SXEMACS_GIT_VERSION);
 
 #ifdef INFODOCK
 	DEFVAR_LISP("infodock-major-version", &Vinfodock_major_version /*

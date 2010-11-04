@@ -419,5 +419,8 @@ the resulting string may be narrower than END-COLUMN."
 
 (make-obsolete 'function-called-at-point 'function-at-point)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; Arch Version stuff
+(make-obsolete-variable 'sxemacs-arch-version 'sxemacs-git-version "22.1.13")
+
 (provide 'obsolete)
 ;;; obsolete.el ends here

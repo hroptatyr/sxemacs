@@ -1,3 +1,0 @@
-precious ^(Makefile\.in)$
-precious ^(Makefile)$
-precious ^(sxemacs.desktop)$

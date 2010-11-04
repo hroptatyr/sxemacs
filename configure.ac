@@ -67,7 +67,7 @@ AC_COPYRIGHT(
 ### 	config.status is removed.
 ])
 
-AC_REVISION([SXEM4CS_ARCH_VERSION])
+AC_REVISION([SXEM4CS_GIT_VERSION])
 
 
 dnl Build Options
@@ -819,7 +819,7 @@ SXE_EXPLORE_BUILD_ENVIRONMENT
 dnl ----------------------------------------
 dnl Find out which version of SXEmacs this is
 dnl ----------------------------------------
-AC_CHECK_PROG([have_tla], [tla], [yes], [no])
+AC_CHECK_PROG([have_git], [git], [yes], [no])
 AC_MSG_CHECKING([for SXEmacs version])
 AC_MSG_RESULT([SXEmacs SXEM4CS_VERSION])
 dnl Must do the following first to determine verbosity for AC_DEFINE
@@ -833,25 +833,16 @@ fi
 AC_MSG_CHECKING([for SXEmacs patchlevel])
 CURDIR=$(pwd)
 cd "$sxe_srcdir"
-if test "$have_tla" = "yes"; then
-	sxemacs_arch_version="$(tla logs -f 2>/dev/null|tail -n1)"
+if test "$have_git" = "yes"; then
+	sxemacs_git_version="$(git describe)"
 fi
-if test -z "$sxemacs_arch_version" ; then
-	sxemacs_arch_version="[]SXEM4CS_ARCH_VERSION[]"
+if test -z "$sxemacs_git_version" ; then
+	sxemacs_git_version="[]SXEM4CS_GIT_VERSION[]"
 fi
-AC_MSG_RESULT([$sxemacs_arch_version])
-version="$sxemacs_arch_version"
-AC_MSG_CHECKING([for last main branch SXEmacs patchlevel sync])
-if test "$have_tla" = "yes"; then
-	sxemacs_main_version="$(tla log-versions 2>/dev/null|grep -- '--main--' 2>/dev/null|tail -n1)"
-	sxemacs_main_arch_version="$(tla logs -f $sxemacs_main_version 2>/dev/null|tail -n1)"
-fi
-if test -z "$sxemacs_main_arch_version" ; then
-	sxemacs_main_arch_version="[]SXEM4CS_MAIN_ARCH_VERSION[]"
-fi
+AC_MSG_RESULT([$sxemacs_git_version])
+version="$sxemacs_git_version"
 cd "$CURDIR"
-AC_MSG_RESULT([$sxemacs_main_arch_version])
-main_version="$sxemacs_arch_version"
+main_version="$sxemacs_git_version"
 AC_DEFINE_UNQUOTED([EMACS_MAJOR_VERSION], [SXEM4CS_MAJOR_VERSION], [Description here!])
 AC_DEFINE_UNQUOTED([EMACS_MINOR_VERSION], [SXEM4CS_MINOR_VERSION], [Description here!])
 old_version=[]SXEM4CS_VERSION[]
@@ -869,8 +860,7 @@ if test -n "[]SXEM4CS_BETA_VERSION[]"; then
 fi
 AC_DEFINE_UNQUOTED([SXEMACS_CODENAME], ["[]SXEM4CS_CODENAME[]"], [Description here!])
 AC_DEFINE_UNQUOTED([EMACS_VERSION], ["$version"], [Description here!])
-AC_DEFINE_UNQUOTED([SXEMACS_MAIN_ARCH_VERSION], ["$sxemacs_main_arch_version"], [Description here!])
-AC_DEFINE_UNQUOTED([SXEMACS_ARCH_VERSION], ["$sxemacs_arch_version"],
+AC_DEFINE_UNQUOTED([SXEMACS_GIT_VERSION], ["$sxemacs_git_version"],
 	[Description here!])
 
 PROGNAME=sxemacs

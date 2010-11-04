@@ -1,8 +1,0 @@
-precious ^(Makefile\.in)$
-precious ^(Makefile)$
-precious ^(GNUmakefile)$
-precious ^(depend)$
-precious ^(\.deps)$
-precious ^(\.libs)$
-precious ^(libsxeevents\.l?a)$
-precious ^(.*\.o)$

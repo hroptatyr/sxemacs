@@ -1,6 +1,0 @@
-precious ^(Makefile\.in)$
-precious ^(Makefile)$
-precious ^(eldap\.ell)$
-precious ^(eldap_i\.c)$
-precious ^(\.deps)$
-precious ^(.*-.*\.o)$

@@ -1,2 +1,0 @@
-precious ^(Makefile\.in)$
-precious \.info[-0-9]*$

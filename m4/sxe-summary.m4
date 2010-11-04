@@ -14,13 +14,8 @@ AC_DEFUN([SXE_SUMMARY], [dnl
 (
 echo "
 
-SXEmacs $sxemacs_arch_version \"[]CODENAME[]\" configured for \`$ac_cv_build'.
+SXEmacs $sxemacs_git_version \"[]CODENAME[]\" configured for \`$ac_cv_build'.
 "
-if test "$sxemacs_arch_version" != "$sxemacs_main_arch_version"
-then
-echo "(Last sync with sxemacs main: $sxemacs_main_arch_version)
-"
-fi
 echo "
 Compilation Environment and Installation Defaults:"
 echo "  Source code location:              $sxe_srcdir"

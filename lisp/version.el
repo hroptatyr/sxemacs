@@ -34,7 +34,7 @@
   "Non-nil when this is a test (beta) version of XEmacs.
 Warning, this variable did not exist in XEmacs versions prior to 20.3")
 
-(defconst emacs-version sxemacs-arch-version
+(defconst emacs-version (concat "SXEmacs: " sxemacs-git-version)
   "Version numbers of this version of XEmacs.")
 
 ;; Sadly, our `emacs-version' causes a problem for Dired.  This is because
@@ -80,9 +80,9 @@ to the system configuration; look at `system-configuration' instead."
   (interactive "p")
   (save-match-data
     (let ((version-string
-	   (format
+	   (format 
 	    "SXEmacs: %s, built %s on %s"
-	    sxemacs-arch-version
+	    sxemacs-git-version
 	    emacs-build-time
 	    emacs-build-system)))
       (cond
