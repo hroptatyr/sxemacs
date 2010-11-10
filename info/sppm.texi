@@ -11,6 +11,10 @@
 Steve Youngs
 @end macro
 
+@macro s
+Steve
+@end macro
+
 @macro syc
 Copyright @copyright{} 2004 - 2010 @sy{}
 @end macro
@@ -24,20 +28,16 @@ Copyright @copyright{} 2004 - 2010 @sy{}
 @end macro
 
 @macro cver
-22.1.12
-@end macro
-
-@macro pver
-22.1.11
+22.1.13
 @end macro
 
 @macro nver
-22.1.13
+22.1.14
 @end macro
 
 
 @set EDITION First
-@set UPDATED August 19, 2007
+@set UPDATED November 6, 2010
 
 @c Things would be a lot easier if everything supported the `@copying'
 @c command, I wouldn't have to put in these conditionals.  --SY.
@@ -754,7 +754,7 @@ Generally, inline functions are preferable to macros resembling functions.
 Macros with multiple statements should be enclosed in a do - while block:
 
 @smallexample
-#define macrofun(a,b,c)			\
+#define macrofun(a,b,c) 			\
 	do @{					\
 		if (a == 5)			\
 			do_this(b,c);		\
@@ -906,14 +906,10 @@ go into the @dfn{types} section of @file{lisp.h}.
 @cindex patch
 
 Ideally, the best way to get your patches into the SXEmacs code base is
-to set up your own tla repo for SXEmacs and create a new branch.  You
-can then send your merge requests to the
-@email{sxemacs-patches@@sxemacs.org, SXEmacs Patches} mailing list.
-
-You can even automate the process of sending patches by using 
-@dfn{tla hooks}.  Take a look in our @file{contrib} directory for a
-master hook script plus some example sub-scripts.  The @file{README}
-file there explains it.
+to have @s{} fetch them directly from your git repo.  If, for any
+reason you are not able to set up a repository with read-only access
+for (at least) @s{}, that doesn't mean that you can't still contribute
+your patches and code.
 
 There are a number of different situations and circumstances that you
 may find yourself in with regards to contributing to the SXEmacs
@@ -930,194 +926,244 @@ The diff is always in @dfn{unified} format
 @end enumerate
 
 @menu
-* Mirrored branch::             Your own branch of the main repo.
-* Non-mirrored branch::         As above, but it isn't mirrored anywhere.
-* Non-branched repo::           A copy of the main repo, not branched or
-                                mirrored.
+* Publicly Accessible Repo::    A git repo that others have read
+                                access to.
+* Private Repo::                A git repo that nobody, but you, has
+                                access to.
 * Vanilla sources (no repo)::   Just the source tree that isn't under
-                                arch control.
+                                git control.
 @end menu
 
-@node Mirrored branch, Non-mirrored branch, Patches, Patches
+@node Publicly Accessible Repo, Private Repo, Patches, Patches
 @comment  node-name,  next,  previous,  up
-@chapter Mirrored branch
+@chapter Publicly Accessible Repo
 @cindex patches
 @cindex contributions
 @cindex diff
 @cindex patch
 
-Are you in the right place?  You have set up your own branch of the
-SXEmacs arch repository, something like:
-@dfn{sxemacs--yourname--@cver{}}.  And your repository is mirrored
-somewhere that is accessible to at least the SXEmacs Project Lead
-(@sy{}). 
+Are you in the right place?  You cloned the SXEmacs sources with
+@code{git clone http://git.sxemacs.org/sxemacs}, and you are able to
+push your working copy to a remote repo that is accessible for git
+read operations by other people (even if @dfn{other people} means only
+@s{}).
 
 Yes?  OK, great, read on.
 
-The first thing you want to do, if you haven't already is to set up some
-tla hooks to make life much easier.  I highly recommend the hook
-scripts you'll find in our @file{contrib} directory.  The
-@file{README} there explains it all.
+Your workflow should run something along these lines@dots{}
 
-Now all you need is to combine @file{hook} with a couple of
-tiny shell scripts.  These are the ones that I use@dots{}
+@enumerate
+@item
+@code{git pull} from your master branch to sync up with the main
+SXEmacs repo.
+@item
+@code{git checkout -b mybugfix} to create and checkout a new branch.
+You can call it whatever you like, just as long as @emph{you} know
+what it's about. (Yeah, we recommend that you do all your work on
+branches and keep your master branch as pristine as possible).
+@item
+hack hack edit edit fix fix hack
+@item
+Test!  If all is good, proceed.  If not, return to the previous step.
+@item
+Depending on how you like to deal with change logs, and if the changes
+were small and trivial or detailed and large:
 
-For automatic mirroring:
+@itemize @bullet
+@item
+@code{git commit -sam "Summary of changes"}  For use with small quick
+changes that don't really warrant verbose logs to document them.
+@item
+@code{git commit -sa}  This form will fire up an editor for you to
+write your change logs in@footnote{You can set which editor to use
+with @code{git config --global core.editor my_fav_editor}. @s{} has
+his set to a shell function called @dfn{edit} which fires up gnuclient
+if SXEmacs is running, or SXEmacs if not.}.
+@item
+@code{git commit -saF mylogfile}  Use this form for the times when you
+have logged your changes as you went to the file @file{mylogfile}.
+@end itemize
+
+Please take note, that whichever commit command you use, to
+@emph{always} use the @code{-s} option to add a @dfn{Signed-off-by}
+entry to the log.  This will indicate that you played some role in
+getting the patch into the code base, and, perhaps more importantly,
+you had permission to do so@footnote{There might be
+licencing/copyright things to be aware of, especially in the case of
+working on SXEmacs either for your employer, or during your employer's
+time.}.
+
+For patches that you're submitting to the main SXEmacs code base that
+have originated from somebody else (maybe you have a small team of
+sub-developers working for you), the @dfn{Signed-off-by} entry also
+indicates that you have reviewed, tested, and approved the patch.  And
+also, the original author has permission to submit it.
+@item
+@code{git checkout master}  To flip back to your master branch.
+@item
+@code{git merge --no-ff mybugfix}  To merge the changes from the
+@dfn{mybugfix} branch into master.  The @code{--no-ff} forces git to
+create a new commit object even if a fast-forward could have been used
+to carry out the merge.
+
+At this point everything that was in the @dfn{mybugfix} branch is now
+in your master branch, so you no longer need it. You can safely delete
+it with @code{git branch -d mybugfix}.
+@item
+@code{git push myremote master}  To push the changes to your publicly
+accessible repo, @dfn{myremote}.
+@end enumerate
+
+@subheading Patch Submission
+
+At this point, your changes are ready for @s{} to pull into the
+main SXEmacs code base.  All you need to do is let him know, and you
+can easily do that with the following 2 git commands:
+
+@enumerate
+@item
+@code{git format-patch --add-header="X-Git-Repo: REPO-URL" \@*
+@indent
+--subject-prefix="P-Req" --numbered -o DIR origin}
+@item
+@code{git send-email \@*
+@indent
+--to="SXEmacs Patches <sxemacs-patches@@sxemacs.org>" \@*
+@indent
+--from="$(git config user.name) <$(git config user.email)>" DIR}
+@end enumerate
+
+@subheading Automation
+
+Those last two commands, @code{format-patch} and @code{send-email} are
+fairly long and hairy.  You'd no doubt have trouble remembering them.
+But, never fear, git has a few tricks up her sleave to make your life
+easier.
+
+@subsection Automating with Hooks
+
+If you are lucky enough to @emph{NOT} be using github@footnote{github
+is great and may be the ideal solution for you to host your repo
+somewhere, but it is inflexible in that you get no shell access, you
+can't set up custom hooks, and you are very limited in what git config
+settings you can tweak.} to host your publicly accessible repo you can
+set up a @dfn{post-receive} hook to automatically send your pull
+requests to the SXEmacs mailing list when you push to it.
+
+@subsubsection Setting Up The post-receive Hook
+
+Remember: This hook runs from your publicly accessible repo (your
+remote), and @emph{NOT} from your local working directory.  It is
+called after you push to your remote.
+
+Jump over to your remote now and follow these steps
+
+@enumerate
+@item
+Take a look in the file
+@file{hooks/post-receive.sample}.  At the bottom of that file there is
+a commented line, that when uncommented would call another script,
+@file{post-receive-email}.  Check that the path is correct, and
+uncomment it.
+@item
+Rename @file{hooks/post-receive.sample} to @file{hooks/post-receive}
+@item
+Tweak the remote's config with@dots{}
 
 @smallexample
-#!/bin/bash
-
-echo "Mirroring $@{ARCH_BRANCH@} in $@{ARCH_ARCHIVE@}"
-
-tla archive-mirror \
-    "$@{ARCH_ARCHIVE@}" "$@{ARCH_ARCHIVE@}-MIRROR" \
-    "$@{ARCH_CATEGORY@}" 
-
-exit 0
+git config hooks.mailinglist \
+    "SXEmacs Patches <sxemacs-patches@@sxemacs.org>"
+git config hooks.envelopesender "Your Name <your@@email>"
+git config hooks.emailprefix "[P-Req] "
+git config hooks.showrev "git show -C %s; echo"
 @end smallexample
+@item
+@code{echo "Your Name's SXEmacs Repo" > description}
+@end enumerate
 
-For sending commit logs/merge requests:
+Take note that the SXEmacs mailing lists will funnel any post from
+non-subscribers into the moderation queue.  So make sure that the
+address you set @dfn{hooks.envelopesender} to is subscribed to the
+patches list.
+
+@subsection Automating with Aliases
+
+Git allows you to define aliases that will let you do all kinds of
+funky things.  Remember those hairy @code{format-patch} and
+@code{send-email} commands?
+
 @smallexample
-#!/bin/bash
+git config alias.sxe-fp 'format-patch --add-header="X-Git-Repo: REPO-URL" \
+    --subject-prefix="P-Req" --numbered'
 
-if [ "$ARCH_REVISION" = "" ]; then
-    echo "$0 called without ARCH_REVISION set. Aborting."
-    exit 1
-fi
-
-email="sxemacs-patches@@sxemacs.org"
-
-# This is where _other_ people access your repo.
-location=http://your.archive.mirror/
-
-echo "Sending mail to SXEmacs Patches <$@{email@}>"
-echo "  about $@{ARCH_REVISION@} changes."
-
-# We may want to start that as a background process if it starts to
-# take too long...
-(
-echo "From: $(tla my-id)"
-echo "Date: $(date --rfc-822)"
-echo "Subject: [Merge Req] Summary for $@{ARCH_REVISION@}"
-echo "To: SXEmacs Patches <$@{email@}>"
-echo
-echo "Location: $@{ARCH_ARCHIVE@} $@{location@}"
-echo
-tla cat-archive-log "$@{ARCH_ARCHIVE@}/$@{ARCH_REVISION@}"
-echo
-cd $@{ARCH_TREE_ROOT@}
-dir="$@{ARCH_REVISION@}.changeset-$$"
-tla get-changeset "$@{ARCH_REVISION@}" "$@{dir@}"
-tla show-changeset --diffs "$@{dir@}"
-rm -rf "$@{dir@}"
-) | /usr/sbin/sendmail "$@{email@}"
-
-exit 0
+git config alias.sxe-sm 'send-email \
+    --to="SXEmacs Patches <sxemacs-patches@@sxemacs.org>" \
+    --from="$(git config user.name) <$(git config user.email)>"'
 @end smallexample
 
-With all that in place, getting patches in front of the SXEmacs
-developers is a snap.
+With those 2 aliases set you can get your pull requests in by
+doing@dots{}
 
-@enumerate
-@item
-@code{tla star-merge MAIN_SXEmacs_REPO} (to make sure you are working
-with up to date sources).
-@item
-@code{tla commit -s "sync up to mainline"}
-@item
-@code{tla make-log}
-@item
-hack hack hack hack
-@item
-edit the log
-@item
-@code{tla commit}
-@end enumerate
+@code{git sxe-fp -o DIR origin && git sxe-sm DIR}
 
-BTW, if you've gone to this much effort to set things up, you @emph{are}
-subscribed to the sxemacs-patches and sxemacs-devel mailing lists aren't
-you? :-)
+@subsection Making Life Even Easier with git config
 
+You can make your life even easier by having git store things in its
+config.  In this case, you can store those @code{format-patch} and
+@code{send-email} command line options in the repo's config@dots{}
 
-@node Non-mirrored branch, Non-branched repo, Mirrored branch, Patches
+@smallexample
+git config format.headers "X-Git-Repo: YOUR-REMOTE-URL"
+git config format.subjectprefix "P-Req"
+git config format.numbered true
+
+git config sendemail.to \
+    "SXEmacs Patches <sxemacs-patches@@sxemacs.org>"
+git config sendemail.from "Your Name <your@@email>"
+@end smallexample
+
+With those settings, the commands: @code{git format-patch -o DIR
+origin}, and @code{git send-email DIR} are now equivalent of the
+original long hairy ones mentioned further up.
+
+Be careful when setting up aliases and config settings that you only
+make them global if you absolutely have to.  All the ones I've shown
+here have been repo-specific.
+
+@node Private Repo, Vanilla sources (no repo), Publicly Accessible Repo, Patches
 @comment  node-name,  next,  previous,  up
-@chapter Non-mirrored branch
+@chapter Private Repo
 @cindex patches
 @cindex contributions
 @cindex diff
 @cindex patch
 
-Are you in the right place?  You have set up your own branch of the
-SXEmacs arch repository, something like:
-@dfn{sxemacs--yourname--@cver{}}.  But your repository is @emph{not}
-mirrored anywhere that is accessible to at least the SXEmacs Project
-Lead (@sy{}).
+Are you in the right place?  You have cloned the main SXEmacs repo,
+but for whatever reasons, you are unable to set up a remote repo that
+@s{} can access.
 
 Yes?  OK, great, read on.
 
-Firstly, if you can mirror your archive, please do so.  It will make
-things so much easier for everyone.  We do understand that there may be
-some valid reasons why you can't mirror, hence, this section.
+Firstly, if you can set up an accessible remote repo, please do so.  It
+will make things so much easier for everyone.  We do understand that
+there may be some valid reasons why you can't, hence, this section.
 
-This section differs from the previous only in that because you have no
-mirror the SXEmacs developers can't pull in your changesets.  You will
-have to send them to the patches mailing list yourself.
+This section differs from the previous only in that because you have
+no accessible remote, the SXEmacs developers can't pull in your
+changesets directly from you.  Instead, once your patch hits the
+mailing list and is approved, it will be applied manually to the
+SXEmacs code base.
 
-To create a changeset that you can send as a MIME attachment to the
-mailing list, take these steps after you have committed your changes to
-your repo:
+The steps you take to get your patch to the list are almost identical
+to those in the previous section, except you won't push anything
+anywhere, and you'd not be using a post-receive hook.
 
-@enumerate
-@item
-@code{tla get-changeset patch-n} (@dfn{patch-n} is the patch number you
-just committed)
-When that finishes you will find a new directory in your WD, it will be
-named something like @file{sxemacs--yourname--@cver{}--patch-1.patches}.
-@item
-tar/gz that directory
-@item
-Send the @file{file.tar.gz} as a MIME attachment to the
-@email{sxemacs-patches@@sxemacs.org, SXEmacs Patches} mailing list.
-@end enumerate
+You could, in theory, use a post-commit hook, but I'd not recommend
+it.  Think about the situation where you are working on something
+fairly big.  You'd most likely commit several times before you have
+things ready for us.
 
-
-@node Non-branched repo, Vanilla sources (no repo), Non-mirrored branch, Patches
-@comment  node-name,  next,  previous,  up
-@chapter Non-branched repo
-@cindex patches
-@cindex contributions
-@cindex diff
-@cindex patch
-
-Are you in the right place?  You did something like:
-@code{tla get steve@@sxemacs.org--@yy{}/sxemacs--main--@cver{} sxemacs}
-But for whatever reason you haven't made your own branch of the repo
-(perhaps you don't wish to become a regular contributor, which is
-totally cool, BTW).
-
-Yes?  OK, great, read on.
-
-If this is the right section for you then you need not worry about
-setting up any tla hooks or stuff like that.  Why?  Because you won't be
-committing anything.
-
-Your hacking cycle will look something like this:
-
-@enumerate
-@item
-@code{tla update}
-@item
-@code{tla make-log}
-@item
-hack hack hack
-@item
-edit the log
-@item
-send the log and the output from @code{tla changes --diffs} to the
-@email{sxemacs-patches@@sxemacs.org, SXEmacs Patches} mailing list.
-@end enumerate
-
-@node Vanilla sources (no repo),, Non-branched repo, Patches
+@node Vanilla sources (no repo),, Private Repo, Patches
 @comment  node-name,  next,  previous,  up
 @chapter Vanilla sources (no repo)
 @cindex patches
@@ -1126,7 +1172,7 @@ send the log and the output from @code{tla changes --diffs} to the
 @cindex patch
 
 Are you in the right place?  All you have is a SXEmacs source tarball
-and you don't have @file{tla} installed.
+and you don't have @file{git} installed.
 
 Yes?  OK, great, read on.
 
@@ -1206,7 +1252,7 @@ feature request that is more than 48 hours old and hasn't been
 acknowledged, it is @strong{YOUR} responsibility to do something about
 it.
 
-A feature requests on our @uref{http://issues.sxemacs.org/, Issue
+A feature request on our @uref{http://issues.sxemacs.org/, Issue
 Tracker} is a issue that has the @dfn{FeatReq} flag set and the
 severity set to @dfn{enhancement}.
 
@@ -1263,8 +1309,8 @@ lead, or whoever is responsible for making releases.
 @chapter Making Releases
 @cindex release
 
-From time to time, at the project lead's discretion, a "version-0"
-revision will be made and tarballs created and made available on
+From time to time, at the project lead's discretion, a release
+will be made and tarballs created and made available on
 @uref{http://downloads.sxemacs.org/releases/, the SXEmacs download site}.
 
 The decision as to @emph{when} to cut a release is generally
@@ -1296,79 +1342,81 @@ Update @file{sxemacs.texi} at@dots{}
 It corresponds to:
   version-string
 @end quotation
+@item
+Update the codename and version in @file{autogen.sh}
+@item
+Update the versioning macros in this document.
 @end itemize
 @item
-Seal the achive...
+Commit those updates.
 
-@code{tla commit --seal}
+@code{git commit -sam "SXEmacs v@nver{} is released!"}
+@item
+Create a new tag which will be the version number of this release.
+
+@code{git tag -s v@nver{} -m "SXEmacs v@nver{}"}
+@item
+Push it to the public repo.
+
+@code{git push --tags origin master}
 @item
 Prepare tarball:
 
 (in the release working directory)
 
-@example
-tla export /tmp/sxemacs-@cver{}
-@end example
+@smallexample
+git archive --format=tar \
+    --prefix=sxemacs-@nver{}/ HEAD | \
+    (cd ~/upload && tar xf -)
+@end smallexample
 
 @item
 Clean out the working directory and do autotool preparations.
 
-@example
-HAMMER=BHFH ./autogen.sh
-@end example
+@smallexample
+HAMMER=1 ./autogen.sh
+@end smallexample
 
 @item
 Copy the autotool files to the exported tree
 
-@example
-for f in $(tla inventory -p); do
-    cp -va $@{f@} /tmp/sxemacs-@cver{}/$@{f@}
-done &&
-cp -va libltdl /tmp/sxemacs-@cver{}
-@end example
+@smallexample
+mkdir -v ~/upload/sxemacs-@nver{}/libltdl &&
+for f in $(git ls-files --others -i --exclude-standard); do
+    cp -va $@{f@} ~/upload/sxemacs-@nver{}/$@{f@}
+done
+@end smallexample
 
 @item
 Add a ChangeLog
 
-@example
-tla changelog --untagged > /tmp/sxemacs-@cver{}/ChangeLog
-@end example
+@smallexample
+git log --stat v@cver{}..v@nver{} > /tmp/sxemacs-@nver{}/ChangeLog
+@end smallexample
 
 @item
 Create the tarball:
 
-@example
-cd /tmp
-tar --create --owner=0 --group=0 --gzip --file \
-  ~/upload/sxemacs-@cver{}.tar.gz sxemacs-@cver{}
-@end example
-
-@item
-Create md5:
-
-@example
+@smallexample
 cd ~/upload
-md5sum sxemacs-@cver{}.tar.gz > sxemacs-@cver{}.tar.gz.md5
-@end example
-
+for type in bz2 gz lzma xz; do
+    tar --create --owner=0 --group=0 --auto-compress --file \
+        sxemacs-@nver{}.tar.$@{type@} sxemacs-@nver{}
+    md5sum sxemacs-@nver{}.tar.$@{type@} > sxemacs-@nver{}.tar.$@{type@}.md5
+    gpg --detach-sign --armor \
+      --output sxemacs-@nver{}.tar.$@{type@}.asc sxemacs-@nver{}.tar.$@{type@}
+done
+@end smallexample
 @item
-create gpg sig:
-
-@example
-gpg --detach-sign --armor \
-  --output sxemacs-@cver{}.tar.gz.asc sxemacs-@cver{}.tar.gz
-@end example
-
-@item
+@c replace this with the appropriate git magic
 Create a diff against the previous version.
-
 @itemize
 @item
 Unpack the previous release's tarball
 @item
 @example
-diff -urNp sxemacs-@pver{} sxemacs-@cver{} > sxemacs-@pver{}-@cver{}.diff
-gzip sxemacs-@pver{}-@cver{}.diff
+diff -urNp sxemacs-@cver{} sxemacs-@nver{} > sxemacs-@cver{}-@nver{}.diff
+gzip sxemacs-@cver{}-@nver{}.diff
 @end example
 @end itemize
 
@@ -1384,7 +1432,7 @@ Move the tarball, diff, GnuPG sigs, and md5sums to
 @item
 Rename the @file{LATEST-IS-foo} file.
 @example
-mv LATEST-IS-@pver{} LATEST-IS-@cver{}
+mv LATEST-IS-@cver{} LATEST-IS-@nver{}
 @end example
 
 @item
@@ -1394,7 +1442,7 @@ Update www.sxemacs.org:
 @item
 Update @file{download.html}
 @item
-Add @file{ChangeLog-@cver{}} to the website
+Add @file{ChangeLog-@nver{}} to the website
 @item
 Update @file{index.html}
 @end itemize
@@ -1407,26 +1455,8 @@ SXEmacs Devel} and comp.emacs.xemacs.
 Make a new release and  announcement on Freshmeat (our FM id: 52281) 
 
 @item
-Create next version:
-
-@example
-tla tag -S sxemacs--main--@cver{}--version-0 sxemacs--main--@nver{}
-
-tla get sxemacs--main--@nver{} /path/to/WDs/sxemacs--main--@nver{}
-
-tla changelog --dir /path/to/WDs/sxemacs--main--@nver{} --untagged \
-  steve@@sxemacs.org--@yy{}/sxemacs--main--@cver{} > \
-  ./ChangeLog.d/ChangeLog-@cver{}
-
-tla add ChangeLog.d/ChangeLog-@cver{}
-@end example
-
-@item
-Update the codename in @file{autogen.sh}
-@item
-Update the versioning macros in this document.
-@item
-Commit the first patch to the next version.
+Commit the first patch to the next version, which would be adding a
+@file{ChangeLog.d/ChangeLog-@nver} 
 @end itemize
 
 
@@ -1570,357 +1600,104 @@ but he isn't an immovable force, his mind can be changed and he
 @cindex version control
 @cindex arch
 @cindex tla
+@cindex git
 
-The SXEmacs Project keeps control of its sources with GNU/arch (tla).
+The SXEmacs Project keeps control of its sources with git.
 The main repository is that of the Project Lead (@sy{}).  It is
 located at:
 
 @smallexample
-  http://arch.sxemacs.org/@yy{}/
+  http://git.sxemacs.org/sxemacs
 @end smallexample
 
-To ``check out'' a copy of SXEmacs from Steve's repo, take the following
-steps (this assumes that you have tla installed/configured):
-
-@enumerate
-@item
-@code{tla register-archive http://arch.sxemacs.org/@yy{}}
-@item
-@code{tla get steve@@sxemacs.org--@yy{}/sxemacs--main--@cver{} sxemacs}
-@end enumerate
-
-That will put a copy of the latest SXEmacs sources into
-@file{$PWD/sxemacs}.
-
-@subheading Making Your Own Branch
-The best for all concerned is for all active developers to have their
-own branch of the SXEmacs repo.  What follows is how to set up your
-own branch of the SXEmacs source repo.
-
-I'll start from the point where you have compiled tla and have it
-somewhere in your $PATH.
-
-@enumerate 1
-@item
-Introduce yourself to tla:
-
-@example
-$ tla my-id "Joe User <juser@@email.addy>" RET
-@end example
-
-The value you give to `tla my-id' is used in logs and stuff like that.
-It @emph{must} be enclosed in quotes.  You can check its value by
-running the command again without giving it any value...
-
-@example
-$ tla my-id RET
-@end example
-
-@item
-Create an archive which will be home to @emph{your} repo:
-
-@example
-$ tla make-archive --tla --signed juser@@email.addy--@yy{} \
-    /path/to/archives/@yy{}/ RET
-@end example
-
-The @option{--signed} option is to make your archive a @dfn{signed} one. (see
-2a for dealing with GnuPG and tla) This means you'll be GnuPG signing
-all commits to your repo.  If you don't have GnuPG set up or you don't
-want a signed archive, omit this option to make-archive.  (All of @sy{}'
-archives are signed).
-
-It isn't mandatory to have a @dfn{dated} archive name (the @option{--@yy{}}
-part of @dfn{juser@@email.addy---@yy{}}), but I use that semantic for my
-archives to keep things neat and tidy.  One of the SXEmacs developers
-has an archive name of: @dfn{hroptatyr@@sxemacs.org--sxemacs}, which is
-just as valid.
-
-The location, @file{/path/to/archives/@yy{}/} is somewhere that is writable
-to @emph{you}.  Nobody else needs to have access to this directory (not
-even read only access) so it could easily be in your $HOME.  Setting
-up a @dfn{mirror} that @emph{is} readable to the outside world (ie, where @sy{} can
-reach it) is the subject of the step 3. 
-
-The thing to remember about this path is that @file{archives} @emph{MUST}
-exist and @file{@yy{}} @emph{MUST NOT} exist.
-
-@enumerate a
-@item
-Setting up tla to work with GnuPG (skip this if your archive isn't
-signed or you don't wish to verify signed patchsets):
-
-@example
-$ mkdir ~/.arch-params/signing RET
-
-$ echo "gpg --clearsign" > ~/.arch-params/signing/\=default RET
-
-$ echo "gpg --verify-files -" > \
-   ~/.arch-params/signing/\=default.check RET
-@end example
-
-From this point, every commit action will require you to enter your
-GnuPG passphrase, you may want to look into a @dfn{passphrase agent}.
-@end enumerate
-
-@item
-Mirroring your archive so others (at least, Steve) can reach it:
-
-@example
-$ tla make-archive --tla --signed --listing --mirror \
-   juser@@email.addy--@yy{} \
-   /path/to/internet/accessible/archives/@yy{}/ RET
-@end example
-
-See step 2 for explanation of @option{--signed} here.
-
-The @option{--listing} option enables creating some @file{.listing} files
-in your mirror'd repos.  It makes retrieval of your repo possible via
-HTTP without needing stuff like WebDAV.  Basically, don't worry about
-it, but @dfn{DON'T FORGET} to use this option.
-
-The @option{--mirror} option means that this archive is a mirror of the
-@dfn{juser@@email.addy---@yy{}} archive.  Its name will actually be
-@dfn{juser@@email.addy---@yy{}-MIRROR}.  That leads me to the name...
-
-You @dfn{MUST} use the exact name you used in step 2.
-
-The path, @file{/path/to/internet/accessible/archives/@yy{}/} is the
-path for @emph{you} to write to the mirror.  It @emph{isn't} the path
-for others to read from it.  An example...
-
-@example
-My repo is accessible to the world at:
-http://arch.sxemacs.org/@yy{}/  
-
-but @emph{I} write to it via:
-sftp://youngs@@arch.sxemacs.org/home/youngs/arch/SXEmacs/@yy{}/
-@end example
-
-The same applies to this path as for the one in step 2... @file{archives}
-@emph{MUST} exist and @file{@yy{}} @emph{MUST NOT} exist.  Also, the path
-you give here @emph{CANNOT} be the same path as the one in step 2.
-
-@item
-Making an archive your default one:
-
-@example
-$ tla my-default-archive juser@@email.addy--@yy{} RET
-@end example
-
-This sets the archive to where new repo's (your branch of SXEmacs)
-will go.  You can check what it is set to at any time with
-
-@example
-$ tla my-default-archive RET
-@end example
-
-Your default archive is the archive that is used for any tla
-operation that you do outside of any working directory and you
-don't specify an archive to use.
-
-@item
-Registering my (Steve's) archive so you can access it:
-
-@example
-$ tla register-archive http://arch.sxemacs.org/@yy{}/ RET
-@end example
-
-This tells your tla where and how to find my archive.
-
-@item
-Tagging against my (Steve's) repo and creating your branch:
-
-@example
-$ tla tag -S \
-   steve@@sxemacs.org--@yy{}/sxemacs--main--@cver{}--patch-1 \
-   sxemacs--branchname--@cver{} RET
-@end example
-
-The `-S' option causes tla to create any needed categories, branches,
-or versions in your archive.
-
-It's always best to tag against the latest revision of any repo, and
-one way to find the latest revision is:
-
-@example
-$ tla abrowse steve@@sxemacs.org--@yy{} RET
-@end example
-
-@enumerate a
-@item
-A note about branch names:
-
-In reality, the name you use for your branch can be anything.  But
-here are some @dfn{don'ts} for SXEmacs branches...
-
-@itemize
-@item
-DON'T use anything vulgar.  I won't ever merge in anything
-from `sxemacs---fuckyou---@cver{}'.
-
-@item
-DON'T use anything that could be misleading.  In other
-words, don't call your branch `sxemacs---voice---@cver{}'
-unless you are working on some kind of voice or speech
-interface to SXEmacs.
-
-@item
-DON'T use anything that could make people think your branch
-is the main development branch.  For example, don't use any
-of these names:
-
-@example      
-dev, devo, devel, develop, development, main,
-mainline, stable.
-@end example
-@end itemize
-
-The easiest thing to do... use your name, or if you are working on
-something long-term, use a description of it.
-@end enumerate
-
-@item
-Getting a working directory of your branch:
-
-@example
-$ tla get sxemacs--branchname--@cver{} sxemacs-branchname RET
-@end example
-
-That will put a copy of @emph{your} branch in
-@file{$PWD/sxemacs-branchname/}. 
-     
-@item
-Updating the contents of your mirror:
-
-@example
-$ tla archive-mirror RET
-@end example
-
-This synchs your mirror archive to your main archive and makes the
-changes you've made to your archive accessible to the rest of the
-world.
-@end enumerate
-
-Once you're set up, you might have a hacking cycle a bit like this:
-
-@itemize
-@item
-synch to my repo so you are working from up to date sources
-
-@example
-$ cd $WD (working directory)
-
-$ tla star-merge \
-   steve@@sxemacs.org--@yy{}/sxemacs--main--@cver{} RET
-
-$ tla commit -s "synch up with the mainline" RET
-@end example
-
-@item 
-create a new log file for documenting the changes you are about to
-make:
-
-@example
-$ tla make-log RET
-@end example
-
-This creates a blank log file.  Think of it as a ChangeLog file, but
-it is only for changes in this particular changeset.  Update the log
-as you go, or all at once at the end.  It doesn't matter, just do
-whatever is comfortable for you.
-
-Steve's log file tips:
-
-@itemize
-@item
-log as you go
-
-@item
-be as verbose as you can
-@end itemize
-
-@item
-hack hack hack (which obviously includes testing)
-        
-@item
-finish up the log
-
-@item
-commit your changes
-
-@example
-$ tla commit RET
-@end example
-
-@item
-synch up your mirror
-
-@example
-$ tla archive-mirror RET
-@end example
-
-@item
-send a commit log/merge request to sxemacs-patches@@sxemacs.org
-
-Creating and Sending the commit log/merge request:
-
-@example
-$ tla cat-log patch-n > /tmp/merge-mail RET
-
-$ tla get-changeset patch-n ,,foo-changes RET
-
-$ tla show-changeset --diffs ,,foo-changes >> /tmp/merge-mail
-
-$ mail -s "[merge-req] $(tla logs -f|tail -n1)" \
-   sxemacs-patches@@sxemacs.org < /tmp/merge-mail RET
-
-$ rm -rf ,,foo-changes RET
-@end example
-@end itemize
-
-BTW, a lot of these seemingly mundane tasks can be automated via tla
-hooks. 
+Checking out a copy of SXEmacs is as easy as:
+
+@smallexample
+  git clone http://git.sxemacs.org/sxemacs
+@end smallexample
+
+@subheading Setting Up Your Own git Repo
+
+You only need to read this section if you are able to host a publicly
+accessible repo somewhere.
+
+Getting everything set up is really very easy.  I think you'll be
+quite surprised if you haven't done this sort of thing before.  In the
+examples below I'm assuming that you have shell access to your remote
+host via ssh@dots{}
+
+@smallexample
+user@@localhost ~ $ ssh user@@your.host
+user@@host ~ $ mkdir -v sxemacs
+user@@host ~ $ cd !$
+user@@host ~/sxemacs $ git init --bare
+user@@host ~/sxemacs $ echo @dfn{Your Name's SXEmacs Repo} > description
+user@@host ~/sxemacs $ exit
+user@@localhost ~ $ git clone http://git.sxemacs.org/sxemacs
+user@@localhost ~ $ cd sxemacs
+user@@localhost ~/sxemacs $ git remote add myremote \
+    ssh://user@@your.host/~/sxemacs
+@end smallexample
+
+And that's it!  Told you it was easy, didn't I?  All you have to do
+now is push your local copy to your remote@dots{}
+
+@smallexample
+git push myremote master
+@end smallexample
 
 @subheading Other Developers' Repositories
 
 Some of these repos may not be publicly accessible or may not be
 accessible 24/7.
 
-@itemize @bullet
+No, there's nothing here yet.  We've only just moved to git and the
+main SXEmacs developers haven't set up their repos.
+@c @itemize @bullet
 @c Sebastian
-@item
-http://www.math.tu-berlin.de/~freundt/archives/sxemacs/
+@c @item
+@c http://www.math.tu-berlin.de/~freundt/archives/sxemacs/
 @c Nelson
-@item
-http://sxemacs.homeip.net:4080/njsf-arch/sxemacs/2007/
+@c @item
+@c http://sxemacs.homeip.net:4080/njsf-arch/sxemacs/2007/
 @c Evgeny
-@item
-http://arch.xwem.org/2006/
+@c @item
+@c http://arch.xwem.org/2006/
 @c Norbert
-@item
-http://arafel.viteno.net:33080/arch/sxemacs/
+@c @item
+@c http://arafel.viteno.net:33080/arch/sxemacs/
 @c Martin Kühl
-@item
-http://www.informatik.uni-bremen.de/~mkhl/sxemacs-mirror/
+@c @item
+@c http://www.informatik.uni-bremen.de/~mkhl/sxemacs-mirror/
 @c Alexey Mikhailov (karma)
-@item
-http://karma.ezunix.org/arch/2005/
+@c @item
+@c http://karma.ezunix.org/arch/2005/
 @c Hynek
 @c @item
 @c http://hynek.in-berlin.de/archive/
 @c Horst Burkhardt (PeanutHorst)
-@item
-http://midcom.steveyoungs.com/oss-vc/sxemacs/
+@c @item
+@c http://midcom.steveyoungs.com/oss-vc/sxemacs/
 @c Nick Granado
 @c @item
 @c http://www.heatxsink.com/2005/
-@end itemize
+@c @end itemize
 
 And of course the main repo (Steve's) is at:
 
-http://arch.sxemacs.org/@yy{}/
+http://git.sxemacs.org/sxemacs
+http://git.sxemacs.org/website  (our website is under git too)
 
+@subheading The Old tla Repo
+
+The old tla repos at http://arch.sxemacs.org/@yy{} still exist, and
+will remain forever.  If you ever need anything from them just install
+@code{tla} and leech them with that.
+
+The reason we are keeping the around indefinitely is because the move
+to git meant a loss of history.  There are tools available for
+converting a arch repo to git, but they failed to work in our case
+because of the cached revisions in our repos.
 
 @node Concept Index,, Version Control, Top
 @unnumbered Concept Index
