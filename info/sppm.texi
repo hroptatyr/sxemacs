@@ -1037,7 +1037,7 @@ can easily do that with the following 2 git commands:
 
 Those last two commands, @code{format-patch} and @code{send-email} are
 fairly long and hairy.  You'd no doubt have trouble remembering them.
-But, never fear, git has a few tricks up her sleave to make your life
+But, never fear, git has a few tricks up her sleeve to make your life
 easier.
 
 @subsection Automating with Hooks
