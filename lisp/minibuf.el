@@ -2184,8 +2184,13 @@ whether it is a file(/result) or a directory (/result/)."
   (case (device-type)
     ;; #### Evil device-type dependency
     ((x gtk)
+<<<<<<< HEAD
      (if-boundp 'x-read-color-completion-table
 	 x-read-color-completion-table
+=======
+     (if-fboundp #'x-read-color-completion-table
+	 (x-read-color-completion-table)
+>>>>>>> origin/master
        (let ((rgb-file (locate-file "rgb.txt" x-library-search-path))
 	     clist color p)
 	 (if (not rgb-file)

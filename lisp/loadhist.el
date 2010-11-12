@@ -35,6 +35,7 @@
 ;; load-history is a list of entries that look like this:
 ;; ("outline" outline-regexp ... (require . wid-edit) ... (provide . outline) ...)
 
+<<<<<<< HEAD
 (defun symbol-file (sym)
   "Return the input source from which SYM was loaded.
 This is a file name, or nil if the source was a buffer with no associated file."
@@ -42,6 +43,61 @@ This is a file name, or nil if the source was a buffer with no associated file."
   (dolist (entry load-history)
     (when (memq sym (cdr entry))
       (return (car entry)))))
+=======
+;; XEmacs; this function is in subr.el in GNU, and does not deal with
+;; built-in symbols.
+(defun* symbol-file (sym &optional type)
+  "Return the input source from which SYM was loaded.
+This is a file name, or nil if the source was a buffer with no associated file.
+
+If TYPE is nil or omitted, any kind of definition is acceptable.
+If TYPE is `defun', then function, subr, special form or macro definitions
+are acceptable.
+If TYPE is `defvar', then variable definitions are acceptable.
+
+`defface' specifies a face definition only, and for the moment, it won't
+return faces created with `make-face' or `copy-face', just those created
+with `defface' and `custom-declare-face'."
+  (interactive "SFind source file for symbol: ") ; XEmacs
+  (let (built-in-file autoload-cons symbol-details)
+    (cond ((and (eq 'autoload
+                    (car-safe
+                     (setq autoload-cons
+                           (and (fboundp sym) (symbol-function sym)))))
+                (or (and (or (null type) (eq 'defvar type))
+                         (eq (fifth autoload-cons) 'keymap))
+                    (and (or (null type) (eq 'defun type))
+                         (memq (fifth autoload-cons) '(nil macro)))))
+           (return-from symbol-file (locate-library (second autoload-cons))))
+          ((eq 'defvar type)
+           ;; Load history entries corresponding to variables are just
+           ;; symbols.
+           (dolist (entry load-history)
+             (when (memq sym (cdr entry))
+               (return-from symbol-file (car entry)))))
+           ((not (null type))
+            ;; Non-variables have the type stored as the car of the entry. 
+            (dolist (entry load-history)
+              (when (and (setq symbol-details (rassq sym (cdr entry)))
+                         (eq type (car symbol-details)))
+                (return-from symbol-file (car entry)))))
+          (t
+           ;; If TYPE hasn't been specified, we need to check both for
+           ;; variables and other symbols.
+           (dolist (entry load-history)
+             (when (or (memq sym (cdr entry))
+                       (rassq sym (cdr entry)))
+               (return-from symbol-file (car entry))))))
+    (when (setq built-in-file (built-in-symbol-file sym type))
+      (if (equal built-in-file (file-truename built-in-file))
+          ;; Probably a full path name:
+          built-in-file
+        ;; This is a bit heuristic, but shouldn't realistically be a
+        ;; problem:
+        (if (string-match "\.elc?$" built-in-file)
+            (concat lisp-directory built-in-file)
+          (concat source-directory "/src/" built-in-file))))))
+>>>>>>> origin/master
 
 (defun feature-symbols (feature)
   "Return the file and list of symbols associated with a given FEATURE."

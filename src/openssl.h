@@ -41,7 +41,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifndef OPENSSL_NO_EC
 #include <openssl/ec.h>
+<<<<<<< HEAD
 #include <openssl/ecdh.h>
+=======
+#endif
+
+#ifndef OPENSSL_NO_ECDH
+#include <openssl/ecdh.h>
+#endif
+
+#ifndef OPENSSL_NO_ECDSA
+>>>>>>> origin/master
 #include <openssl/ecdsa.h>
 #endif
 

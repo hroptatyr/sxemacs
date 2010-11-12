@@ -54,7 +54,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <Xm/Xm.h>
 #endif
 #include "lstream.h"
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #include "events-mod.h"
@@ -1465,7 +1469,28 @@ x_event_to_emacs_event(XEvent * x_event, Lisp_Event * emacs_event)
 							   Mode_switch_p
 							   ? 3 : 1);
 				if (top && bot && top != bot) {
+<<<<<<< HEAD
 					modifiers &= ~XEMACS_MOD_SHIFT;
+=======
+					switch(top) {
+					case 0x1008fe01:
+					case 0x1008fe02:
+					case 0x1008fe03:
+					case 0x1008fe04:
+					case 0x1008fe05:
+					case 0x1008fe06:
+					case 0x1008fe07:
+					case 0x1008fe08:
+					case 0x1008fe09:
+					case 0x1008fe0a:
+					case 0x1008fe0b:
+					case 0x1008fe0c:
+						break;
+					default:
+						modifiers &= ~XEMACS_MOD_SHIFT;
+						break;
+					}
+>>>>>>> origin/master
 				}
 			}
 			emacs_event->event_type = key_press_event;

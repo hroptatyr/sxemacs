@@ -364,7 +364,11 @@ DEFUN("init-workers", Finit_workers, 1, 1, 0, /*
 Initialise NUMBER-OF-WORKERS worker threads.
 If called repeatedly this function does NOT add more workers
 use `add-workers' instead.
+<<<<<<< HEAD
 					      */
+=======
+*/
+>>>>>>> origin/master
       (number_of_workers))
 {
 	CHECK_NATNUM(number_of_workers);
@@ -377,7 +381,11 @@ use `add-workers' instead.
 
 DEFUN("add-workers", Fadd_workers, 1, 1, 0, /*
 Add NUMBER-OF-WORKERS worker threads.
+<<<<<<< HEAD
 					    */
+=======
+*/
+>>>>>>> origin/master
       (number_of_workers))
 {
 	CHECK_NATNUM(number_of_workers);
@@ -389,7 +397,11 @@ DEFUN("remove-workers", Fremove_workers, 0, 1, 0, /*
 Stop NUMBER-OF-WORKERS worker threads.  By default stop all.
 Depending on whether there are busy this operation may block the
 main execution loop until all worker threads are non-busy.
+<<<<<<< HEAD
 						  */
+=======
+*/
+>>>>>>> origin/master
       (number_of_workers))
 {
 	Lisp_Object job = Qnil;
@@ -415,7 +427,11 @@ main execution loop until all worker threads are non-busy.
 
 DEFUN("trigger-workers", Ftrigger_workers, 0, 0, 0, /*
 Trigger all worker threads.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	eq_queue_trigger_all(delegate_eq);
@@ -425,7 +441,11 @@ Trigger all worker threads.
 DEFUN("running-workers", Frunning_workers, 0, 0, 0, /*
 Return the number of currently running worker threads,
 the main thread excluded.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return make_int(dllist_get_size(workers)-1);

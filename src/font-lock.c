@@ -681,8 +681,14 @@ and the function `syntactically-sectionize', which will map a function
 over each syntactic context in a region.
 
 WARNING: this may alter match-data.
+<<<<<<< HEAD
 									 */
       (buffer)) {
+=======
+*/
+      (buffer))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	struct buffer *buf = decode_buffer(buffer, 0);
 	find_context(buf, BUF_PT(buf));
@@ -693,7 +699,11 @@ DEFUN("buffer-syntactic-context-depth", Fbuffer_syntactic_context_depth, 0, 1, 0
 Return the depth within all parenthesis-syntax delimiters at point.
 If BUFFER is nil or omitted, the current buffer is assumed.
 WARNING: this may alter match-data.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	/* This function can GC */
@@ -711,7 +721,11 @@ depth (as returned by the functions `buffer-syntactic-context' and
 current buffer will be set to BUFFER.
 
 WARNING: this may alter match-data.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (function, start, end, buffer))
 {
 	/* This function can GC */

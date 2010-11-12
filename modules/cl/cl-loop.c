@@ -1574,7 +1574,11 @@ cl_loop_perform(cl_loop_sentence_t *lsen)
 /* ###autoload */
 DEFUN("cl:loop-sentence", Fcl_loop_sentence, 0, UNEVALLED, 0, /*
 The Common Lisp loop macro.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	Lisp_Object loop_sentence = cl_loop_make_sentence();
@@ -1594,7 +1598,11 @@ The Common Lisp loop macro.
 
 DEFUN("cl:loop*", Fcl_loopX, 1, 1, 0, /*
 Execute LOOP-SENTENCE.
+<<<<<<< HEAD
 						  */
+=======
+*/
+>>>>>>> origin/master
       (loop_sentence))
 {
 	Lisp_Object result = Qnil;
@@ -1612,7 +1620,11 @@ Execute LOOP-SENTENCE.
 
 DEFUN("cl:loop", Fcl_loop, 0, UNEVALLED, 0, /*
 The Common Lisp loop macro.
+<<<<<<< HEAD
 						       */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	Lisp_Object loop_sentence = Qnil;
@@ -1642,7 +1654,11 @@ The Common Lisp loop macro.
 DEFUN("cl:do", Fcl_do, 2, UNEVALLED, 0, /*
 The Common Lisp `do' loop.
 Format is: (do ((VAR INIT [STEP])...) (END-TEST [RESULT...]) BODY...)
+<<<<<<< HEAD
 						   */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -1675,7 +1691,11 @@ Format is: (do ((VAR INIT [STEP])...) (END-TEST [RESULT...]) BODY...)
 DEFUN("cl:do*", Fcl_doX, 2, UNEVALLED, 0, /*
 The Common Lisp `do' loop.
 Format is: (do* ((VAR INIT [STEP])...) (END-TEST [RESULT...]) BODY...)
+<<<<<<< HEAD
 						     */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -1709,7 +1729,11 @@ Format is: (do* ((VAR INIT [STEP])...) (END-TEST [RESULT...]) BODY...)
 DEFUN("cl:dotimes", Fcl_dotimes, 1, UNEVALLED, 0, /*
 The Common Lisp `dotimes' loop.
 Format is: (dotimes (VAR COUNT [RESULT]) BODY...)
+<<<<<<< HEAD
 							     */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -1751,7 +1775,11 @@ Format is: (dotimes (VAR COUNT [RESULT]) BODY...)
 DEFUN("cl:dolist", Fcl_dolist, 1, UNEVALLED, 0, /*
 The Common Lisp `dolist' loop.
 Format is: (dolist (VAR LIST [RESULT]) BODY...)
+<<<<<<< HEAD
 							     */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -1801,7 +1829,11 @@ extern Lisp_Object check_obarray(Lisp_Object obarray);
 DEFUN("cl:do-symbols", Fcl_do_symbols, 1, UNEVALLED, 0, /*
 The Common Lisp `dolist' loop.
 Format is: (do-symbols (VAR [OBARRAY [RESULT]]) BODY...)
+<<<<<<< HEAD
 							     */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -1859,7 +1891,11 @@ Format is: (do-symbols (VAR [OBARRAY [RESULT]]) BODY...)
 DEFUN("cl:do-all-symbols", Fcl_do_all_symbols, 1, UNEVALLED, 0, /*
 The Common Lisp `dolist' loop.
 Format is: (do-all-symbols (VAR [RESULT]) BODY...)
+<<<<<<< HEAD
 									   */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */

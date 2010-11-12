@@ -27,7 +27,10 @@ precious ^(libcruft\.l?a)$
 precious ^(libdb\.l?a)$
 precious ^(libent\.l?a)$
 precious ^(libmemalloc\.l?a)$
+<<<<<<< HEAD
 precious ^(libmm\.l?a)$
+=======
+>>>>>>> origin/master
 precious ^(libmule\.l?a)$
 precious ^(libsxeX\.l?a)$
 precious ^(libsxecore\.l?a)$
@@ -38,5 +41,8 @@ precious ^(\.deps)$
 precious ^(\.libs)$
 precious ^(DOC)$
 precious ^(config\.h\.in)$
+<<<<<<< HEAD
 precious ^(libsxedb\.a)$
+=======
+>>>>>>> origin/master
 precious ^(stamp-h1)$

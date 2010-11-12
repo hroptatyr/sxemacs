@@ -1048,7 +1048,11 @@ second arg defines if the data should be treated as a buffer or
 a filename transfer (set to nil for buffer transfer),
 and the third argument is a list of data strings.
 WARNING: can only handle plain/text and file: transfers!
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (event, dragtype, dragdata))
 {
 	if (EVENTP(event)) {
@@ -2092,7 +2096,11 @@ Get the ID of the X11 window.
 This gives us a chance to manipulate the Emacs window from within a
 different program.  Since the ID is an unsigned long, we return it as
 a string.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	char str[255];

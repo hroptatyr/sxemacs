@@ -689,7 +689,11 @@ DEFUN("set-default-gutter-position", Fset_default_gutter_position, 1, 1, 0,	/*
 Set the position that the `default-gutter' will be displayed at.
 Valid positions are 'top, 'bottom, 'left and 'right.
 See `default-gutter-position'.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (position))
 {
 	enum gutter_pos cur = decode_gutter_position(Vdefault_gutter_position);
@@ -731,7 +735,11 @@ DEFUN("default-gutter-position", Fdefault_gutter_position, 0, 0, 0,	/*
 Return the position that the `default-gutter' will be displayed at.
 The `default-gutter' will only be displayed here if the corresponding
 position-specific gutter specifier does not provide a value.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Vdefault_gutter_position;
@@ -741,7 +749,11 @@ DEFUN("gutter-pixel-width", Fgutter_pixel_width, 0, 2, 0,	/*
 Return the pixel width of the gutter at POS in LOCALE.
 POS defaults to the default gutter position. LOCALE defaults to
 the current window.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (pos, locale))
 {
 	int x, y, width, height;
@@ -762,7 +774,11 @@ DEFUN("gutter-pixel-height", Fgutter_pixel_height, 0, 2, 0,	/*
 Return the pixel height of the gutter at POS in LOCALE.
 POS defaults to the default gutter position. LOCALE defaults to
 the current window.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (pos, locale))
 {
 	int x, y, width, height;
@@ -814,7 +830,11 @@ Return non-nil if OBJECT is a gutter specifier.
 
 See `make-gutter-specifier' for a description of possible gutter
 instantiators.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return GUTTER_SPECIFIERP(object) ? Qt : Qnil;
@@ -946,7 +966,11 @@ Return non-nil if OBJECT is a gutter-size specifier.
 
 See `make-gutter-size-specifier' for a description of possible gutter-size
 instantiators.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return GUTTER_SIZE_SPECIFIERP(object) ? Qt : Qnil;
@@ -984,7 +1008,11 @@ Return non-nil if OBJECT is a gutter-visible specifier.
 
 See `make-gutter-visible-specifier' for a description of possible
 gutter-visible instantiators.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return GUTTER_VISIBLE_SPECIFIERP(object) ? Qt : Qnil;
@@ -992,7 +1020,11 @@ gutter-visible instantiators.
 
 DEFUN("redisplay-gutter-area", Fredisplay_gutter_area, 0, 0, 0,	/*
 Ensure that all gutters are correctly showing their gutter specifier.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	Lisp_Object devcons, concons;

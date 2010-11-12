@@ -797,7 +797,11 @@ All entries in it are nil, meaning "command undefined".
 Optional argument NAME specifies a name to assign to the keymap,
 as in `set-keymap-name'.  This name is only a debugging convenience;
 it is not used except when printing the keymap.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (name))
 {
 	Lisp_Object keymap = make_keymap(60);
@@ -816,7 +820,11 @@ entries).  As keymaps dynamically resize, this distinction is not great.
 Optional argument NAME specifies a name to assign to the keymap,
 as in `set-keymap-name'.  This name is only a debugging convenience;
 it is not used except when printing the keymap.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (name))
 {
 	Lisp_Object keymap = make_keymap(8);
@@ -830,7 +838,11 @@ Return the `parent' keymaps of KEYMAP, or nil.
 The parents of a keymap are searched for keybindings when a key sequence
 isn't bound in this one.  `(current-global-map)' is the default parent
 of all keymaps.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (keymap))
 {
 	keymap = get_keymap(keymap, 1, 1);
@@ -848,7 +860,11 @@ Set the `parent' keymaps of KEYMAP to PARENTS.
 The parents of a keymap are searched for keybindings when a key sequence
 isn't bound in this one.  `(current-global-map)' is the default parent
 of all keymaps.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (keymap, parents))
 {
 	/* This function can GC */
@@ -885,7 +901,11 @@ DEFUN("set-keymap-name", Fset_keymap_name, 2, 2, 0,	/*
 Set the `name' of the KEYMAP to NEW-NAME.
 The name is only a debugging convenience; it is not used except
 when printing the keymap.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (keymap, new_name))
 {
 	keymap = get_keymap(keymap, 1, 1);
@@ -898,7 +918,11 @@ DEFUN("keymap-name", Fkeymap_name, 1, 1, 0,	/*
 Return the `name' of KEYMAP.
 The name is only a debugging convenience; it is not used except
 when printing the keymap.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (keymap))
 {
 	keymap = get_keymap(keymap, 1, 1);
@@ -910,7 +934,11 @@ DEFUN("set-keymap-prompt", Fset_keymap_prompt, 2, 2, 0,	/*
 Set the `prompt' of KEYMAP to string NEW-PROMPT, or `nil'
 if no prompt is desired.  The prompt is shown in the echo-area
 when reading a key-sequence to be looked-up in this keymap.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (keymap, new_prompt))
 {
 	keymap = get_keymap(keymap, 1, 1);
@@ -932,7 +960,11 @@ DEFUN("keymap-prompt", Fkeymap_prompt, 1, 2, 0,	/*
 Return the `prompt' of KEYMAP.
 If non-nil, the prompt is shown in the echo-area
 when reading a key-sequence to be looked-up in this keymap.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (keymap, use_inherited))
 {
 	/* This function can GC */
@@ -953,7 +985,11 @@ if no default is desired.  The default-binding is returned when
 no other binding for a key-sequence is found in the keymap.
 If a keymap has a non-nil default-binding, neither the keymap's
 parents nor the current global map are searched for key bindings.
+<<<<<<< HEAD
 									  */
+=======
+*/
+>>>>>>> origin/master
       (keymap, command))
 {
 	/* This function can GC */
@@ -969,7 +1005,11 @@ The default-binding is returned when no other binding for a key-sequence
 is found in the keymap.
 If a keymap has a non-nil default-binding, neither the keymap's
 parents nor the current global map are searched for key bindings.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (keymap))
 {
 	/* This function can GC */
@@ -980,7 +1020,11 @@ parents nor the current global map are searched for key bindings.
 DEFUN("keymapp", Fkeymapp, 1, 1, 0,	/*
 Return t if OBJECT is a keymap object.
 The keymap may be autoloaded first if necessary.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	/* This function can GC */
@@ -1181,7 +1225,11 @@ Return a copy of the keymap KEYMAP.
 The copy starts out with the same definitions of KEYMAP,
 but changing either the copy or KEYMAP does not affect the other.
 Any key definitions that are subkeymaps are recursively copied.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (keymap))
 {
 	/* This function can GC */
@@ -1213,7 +1261,11 @@ static int keymap_fullness(Lisp_Object keymap)
 
 DEFUN("keymap-fullness", Fkeymap_fullness, 1, 1, 0,	/*
 Return the number of bindings in the keymap.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (keymap))
 {
 	/* This function can GC */
@@ -1819,7 +1871,11 @@ DEFUN("event-matches-key-specifier-p", Fevent_matches_key_specifier_p, 2, 2, 0,	
 Return non-nil if EVENT matches KEY-SPECIFIER.
 This can be useful, e.g., to determine if the user pressed `help-char' or
 `quit-char'.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (event, key_specifier))
 {
 	CHECK_LIVE_EVENT(event);
@@ -2036,8 +2092,14 @@ it is possible to redefine only one of those sequences like so:
 Of course, all of this applies only when running under a window system.  If
 you're talking to SXEmacs through a TTY connection, you don't get any of
 these features.
+<<<<<<< HEAD
 						 */
       (keymap, keys, def)) {
+=======
+*/
+      (keymap, keys, def))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	int idx;
 	int metized = 0;
@@ -2385,8 +2447,14 @@ A number is returned if KEYS is "too long"; that is, the leading
 characters fail to be a valid sequence of prefix characters in KEYMAP.
 The number is how many key strokes at the front of KEYS it takes to
 reach a non-prefix command.
+<<<<<<< HEAD
 						 */
       (keymap, keys, accept_default)) {
+=======
+*/
+      (keymap, keys, accept_default))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	if (VECTORP(keys))
 		return lookup_keys(keymap,
@@ -2704,7 +2772,11 @@ EVENT-OR-KEYS controls which keymaps will be listed.
 If EVENT-OR-KEYS is a mouse event (or a vector whose last element is a
 mouse event), the keymaps for that mouse event will be listed (see
 `key-binding').  Otherwise, the keymaps for key presses will be listed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (event_or_keys))
 {
 	/* This function can GC */
@@ -2752,8 +2824,14 @@ apply to toolbar clicks);
 
 Note that if `overriding-local-map' or `overriding-terminal-local-map'
 is non-nil, *only* those two maps and the current global map are searched.
+<<<<<<< HEAD
 						 */
       (keys, accept_default)) {
+=======
+*/
+      (keys, accept_default))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	int i;
 	Lisp_Object maps[100];
@@ -2864,7 +2942,11 @@ munging_key_map_event_binding(Lisp_Object event0,
 
 DEFUN("use-global-map", Fuse_global_map, 1, 1, 0,	/*
 Select KEYMAP as the global keymap.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (keymap))
 {
 	/* This function can GC */
@@ -2877,7 +2959,11 @@ DEFUN("use-local-map", Fuse_local_map, 1, 2, 0,	/*
 Select KEYMAP as the local keymap in BUFFER.
 If KEYMAP is nil, that means no local keymap.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (keymap, buffer))
 {
 	/* This function can GC */
@@ -2893,7 +2979,11 @@ If BUFFER is nil, the current buffer is assumed.
 DEFUN("current-local-map", Fcurrent_local_map, 0, 1, 0,	/*
 Return BUFFER's local keymap, or nil if it has none.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 0);
@@ -2902,7 +2992,11 @@ If BUFFER is nil, the current buffer is assumed.
 
 DEFUN("current-global-map", Fcurrent_global_map, 0, 0, 0,	/*
 Return the current global keymap.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Vcurrent_global_map;
@@ -3141,7 +3235,11 @@ If the optional third argument SORT-FIRST is non-nil, then the elements of
 the keymap will be passed to the mapper function in a canonical order.
 Otherwise, they will be passed in hash (that is, random) order, which is
 faster.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (function, keymap, sort_first))
 {
 	/* This function can GC */
@@ -3245,8 +3343,14 @@ KEYS starting from KEYMAP gets you to MAP.  These elements are ordered
 so that the KEYS increase in length.  The first element is ([] . KEYMAP).
 An optional argument PREFIX, if non-nil, should be a key sequence;
 then the value includes only maps for prefixes that start with PREFIX.
+<<<<<<< HEAD
 								 */
       (keymap, prefix)) {
+=======
+*/
+      (keymap, prefix))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	struct gcpro gcpro1, gcpro2, gcpro3, gcpro4;
 	Lisp_Object accessible_keymaps = Qnil;
@@ -3315,7 +3419,11 @@ DEFUN("key-description", Fkey_description, 1, 1, 0,	/*
 Return a pretty description of key-sequence KEYS.
 Control characters turn into "C-foo" sequences, meta into "M-foo",
 spaces are put between sequence elements, etc...
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (keys))
 {
 	if (CHAR_OR_CHAR_INTP(keys) || CONSP(keys) || SYMBOLP(keys)
@@ -3358,7 +3466,11 @@ Return a pretty description of command character KEY.
 Control characters turn into C-whatever, etc.
 This differs from `text-char-description' in that it returns a description
 of a key read from the user rather than a character from a buffer.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (key))
 {
 	if (SYMBOLP(key))
@@ -3450,7 +3562,11 @@ Unprintable characters turn into "^char" or \\NNN, depending on the value
 of the `ctl-arrow' variable.
 This differs from `single-key-description' in that it returns a description
 of a character from a buffer rather than a key read from the user.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (chr))
 {
 	Bufbyte buf[200];
@@ -3533,7 +3649,11 @@ sequences.
 If optional 4th arg NOINDIRECT is non-nil, don't follow indirections
 to other keymaps or slots.  This makes it possible to search for an
 indirect definition itself.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (definition, keymaps, firstonly, noindirect, event_or_keys))
 {
 	/* This function can GC */
@@ -3877,8 +3997,14 @@ of map; if a binding is present in any shadowing map, it is not printed.
 Fourth argument PREFIX, if non-nil, should be a key sequence;
 only bindings which start with that key sequence will be printed.
 Fifth argument MOUSE-ONLY-P says to only print bindings for mouse clicks.
+<<<<<<< HEAD
 										 */
       (map, all, shadow, prefix, mouse_only_p)) {
+=======
+*/
+      (map, all, shadow, prefix, mouse_only_p))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 
 	/* #### At some point, this function should be changed to accept a

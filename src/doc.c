@@ -34,12 +34,118 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 Lisp_Object Vinternal_doc_file_name;
 Lisp_Object Vinternal_doc_fd;
 
+<<<<<<< HEAD
 Lisp_Object QSsubstitute;
+=======
+Lisp_Object QSsubstitute, Qdefvar;
+>>>>>>> origin/master
 
 #ifdef WITH_PDUMP
 extern unsigned int dump_id;
 #endif
 
+<<<<<<< HEAD
+=======
+/* Work out what source file a function or variable came from, taking the
+   information from the documentation file. */
+
+static Lisp_Object extract_object_file_name (int fd, EMACS_INT doc_pos,
+                                             SBufbyte *name_nonreloc,
+                                             Lisp_Object name_reloc,
+                                             int standard_doc_file)
+{
+        Bufbyte buf[DOC_MAX_FILENAME_LENGTH+1];
+        Bufbyte *buffer = buf;
+        int buffer_size = sizeof (buf) - 1, space_left;
+        Bufbyte *from, *to;
+        REGISTER Bufbyte *p = buffer;
+        Lisp_Object return_me;
+        EMACS_INT position, seenS = 0;
+
+        position = doc_pos > buffer_size  ? 
+                doc_pos - buffer_size : 0; 
+
+        if (0 > lseek (fd, position, 0)) {
+                if (name_nonreloc)
+                        name_reloc = build_string (name_nonreloc);
+                return_me = list3 (build_string
+                                   ("Position out of range in doc string file"),
+                                   name_reloc, make_int (position));
+                goto done;
+        }
+
+        space_left = buffer_size - (p - buffer);
+        while (space_left > 0) {
+                int nread;
+
+                nread = read (fd, p, space_left);
+                if (nread < 0) {
+                        return_me
+                                = list1 (build_string
+                                         ("Read error on documentation file"));
+                        goto done;
+                }
+
+                p[nread] = 0;
+
+                if (!nread)
+                        break;
+
+                p += nread;
+                space_left = buffer_size - (p - buffer);
+        }
+
+        /* First, search backward for the "\037S" that marks the beginning
+           of the file name, then search forward from that to the newline or
+           to the end of the buffer. */
+        from = p; 
+
+        while (from > buf) {
+                --from;
+                if (seenS) {
+                        if ('\037' == *from) {
+
+                                /* Got a file name; adjust `from' to point
+                                   to it, break out of the loop.  */
+                                from += 2;
+                                break; 
+                        }
+                }
+                /* Is *from 'S' ? */
+                seenS = ('S' == *from);
+        }
+
+        if (buf == from) {
+                /* We've scanned back to the beginning of the buffer without
+                   hitting the file name. Either the file name plus the
+                   symbol name is longer than DOC_MAX_FILENAME_LENGTH--which
+                   shouldn't happen, because it'll trigger an assertion
+                   failure in make-docfile, the DOC file is corrupt, or it
+                   was produced by a version of make-docfile that doesn't
+                   store the file name with the symbol name and
+                   docstring.  */ 
+                return_me = list1 (build_string
+                                   ("Object file name not stored in doc file"));
+                goto done;
+        }
+
+        to = from;
+        /* Search for the end of the file name. */
+        while (++to < p) {
+                if ('\n' == *to || '\037' == *to) {
+                        break;
+                }
+        }
+
+        /* Don't require the file name to end in a newline. */
+        return_me = make_string (from, to - from);
+
+done:
+
+        return return_me;
+}
+
+>>>>>>> origin/master
 /* Read and return doc string from open file descriptor FD
    at position POSITION.  Does not close the file.  Returns
    string; or if error, returns a cons holding the error
@@ -274,11 +380,194 @@ Lisp_Object read_doc_string(Lisp_Object filepos)
 	return Fread(string);
 }
 
+<<<<<<< HEAD
+=======
+static Lisp_Object get_object_file_name (Lisp_Object filepos) {
+        REGISTER int fd = -1;
+        REGISTER SBufbyte *name_nonreloc = 0;
+        EMACS_INT position;
+        Lisp_Object file, tem;
+        Lisp_Object name_reloc = Qnil;
+        int standard_doc_file = 0;
+
+        if (INTP (filepos)) {
+                file = Vinternal_doc_file_name;
+                standard_doc_file = 1;
+                position = XINT (filepos);
+		if ( INTP(Vinternal_doc_fd) )
+			fd = XINT(Vinternal_doc_fd);
+		else
+			fd = -2;
+        } else if (CONSP (filepos) && INTP (XCDR (filepos))) {
+                file = XCAR (filepos);
+                position = XINT (XCDR (filepos));
+                if (position < 0)
+                        position = - position;
+        } else return Qnil;
+
+        if (!STRINGP (file))
+                return Qnil;
+
+        /* Put the file name in NAME as a C string.
+           If it is relative, combine it with Vdoc_directory.  */
+
+        tem = Ffile_name_absolute_p (file);
+        if (NILP (tem)) {
+                Bytecount minsize;
+                /* XEmacs: Move this check here.  OK if called during loadup to
+                   load byte code instructions. */
+                if (!STRINGP (Vdoc_directory))
+                        return Qnil;
+
+                minsize = XSTRING_LENGTH (Vdoc_directory);
+                /* sizeof ("../lib-src/") == 12 */
+                if (minsize < 12)
+                        minsize = 12;
+                name_nonreloc = alloca_array (SBufbyte,
+                                              minsize +
+                                              XSTRING_LENGTH (file) + 8);
+                string_join (name_nonreloc, Vdoc_directory, file);
+        } else name_reloc = file;
+
+        if (fd < 0) {
+                int ofd;
+
+                if (purify_flag) {
+                        /* sizeof ("../lib-src/") == 12 */
+                        name_nonreloc 
+                                = alloca_array (SBufbyte,
+                                                12 + XSTRING_LENGTH (file) + 8);
+                        /* Preparing to dump; DOC file is probably not
+                           installed.  So check in ../lib-src. */
+
+                        strcpy (name_nonreloc, "../lib-src/");
+                        strcat (name_nonreloc, (char *)XSTRING_DATA (file));
+
+                        fd = open (name_nonreloc, O_RDONLY | OPEN_BINARY, 0);
+                }
+
+                ofd = open (name_nonreloc ? name_nonreloc :
+                            (char *)XSTRING_DATA (name_reloc),
+                            O_RDONLY | OPEN_BINARY, 0);
+
+                if (fd == -2)
+                        Vinternal_doc_fd = make_int (ofd);
+                fd = ofd;
+        }
+        if (fd < 0) {
+                report_file_error ("Cannot open doc string file",
+                                   name_nonreloc ?
+                                   build_string (name_nonreloc) :
+                                   name_reloc);
+        }
+
+        tem = extract_object_file_name (fd, position, name_nonreloc, name_reloc,
+                                        standard_doc_file);
+        if (!INTP(Vinternal_doc_fd) || (fd != XINT(Vinternal_doc_fd))) {
+                Vinternal_doc_fd = make_int(-2);
+		close(fd);
+	} else
+		lseek(fd,0,0);
+
+        if (!STRINGP (tem))
+                signal_error (Qinvalid_byte_code, tem);
+
+        return tem;
+}
+
+
+static void
+weird_doc(Lisp_Object sym, const char *weirdness, const char *type, int pos)
+{
+	if (!strcmp(weirdness, GETTEXT("duplicate")))
+		return;
+	message("Note: Strange doc (%s) for %s %s @ %d",
+		weirdness, type, string_data(XSYMBOL(sym)->name), pos);
+}
+
+DEFUN ("built-in-symbol-file", Fbuilt_in_symbol_file, 1, 2, 0, /*
+Return the C source file built-in symbol SYM comes from. 
+Don't use this.  Use the more general `symbol-file' (q.v.) instead. 
+
+If TYPE is nil or omitted, any kind of definition is acceptable. 
+If TYPE is `defun', then function, subr, special form or macro definitions
+are acceptable.
+If TYPE is `defvar', then variable definitions are acceptable.
+*/
+       (symbol, type))
+{
+        /* This function can GC */
+        Lisp_Object fun;
+        Lisp_Object filename = Qnil;
+
+        if (EQ(Ffboundp(symbol), Qt) && (EQ(type, Qnil) || EQ(type, Qdefun))) {
+                fun = Findirect_function (symbol);
+
+                if (SUBRP (fun) || (CONSP(fun) && (EQ (Qmacro, Fcar_safe (fun)))
+                                    && (fun = Fcdr_safe (fun), SUBRP (fun)))) {
+                        if (XSUBR (fun)->doc == 0)
+                                return Qnil;
+
+                        if ((EMACS_INT) XSUBR (fun)->doc >= 0) {
+                                weird_doc
+                                        (symbol,
+                                         "No file info available for function",
+                                         GETTEXT("function"), 0);
+                                return Qnil;
+                        } else {
+                                filename = get_object_file_name 
+                                        (make_int (-
+                                                   (EMACS_INT)
+                                                   XSUBR (fun)->doc));
+                                return filename;
+                        }
+                }
+
+                if (COMPILED_FUNCTIONP (fun)
+                    || (CONSP(fun) && (EQ (Qmacro, Fcar_safe (fun)))
+                        && (fun = Fcdr_safe (fun),
+                            COMPILED_FUNCTIONP (fun)))) {
+                        Lisp_Object tem;
+                        Lisp_Compiled_Function *f = XCOMPILED_FUNCTION (fun);
+
+                        if (! (f->flags.documentationp))
+                                return Qnil;
+                        tem = compiled_function_documentation (f);
+                        if (NATNUMP (tem) || CONSP (tem)) {
+                                filename = get_object_file_name (tem);
+                                return filename;
+                        }
+                }
+        }
+
+        if (EQ(Fboundp(symbol), Qt) && (EQ(type, Qnil) || EQ(type, Qdefvar))) {
+                Lisp_Object doc_offset
+                        = Fget (symbol, Qvariable_documentation, Qnil);
+
+                if (!NILP(doc_offset)) {
+                        if (INTP(doc_offset)) {
+                                filename = get_object_file_name 
+                                        (XINT (doc_offset) > 0 ? doc_offset
+                                         : make_int (- XINT (doc_offset)));
+                        } else if (CONSP(doc_offset)) {
+                                filename = get_object_file_name(doc_offset);
+                        }
+                        return filename;
+                }
+        }
+        return Qnil;
+}
+
+>>>>>>> origin/master
 DEFUN("documentation", Fdocumentation, 1, 2, 0,	/*
 Return the documentation string of FUNCTION.
 Unless a non-nil second argument RAW is given, the
 string is passed through `substitute-command-keys'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (function, raw))
 {
 	/* This function can GC */
@@ -368,8 +657,14 @@ This is like `get', but it can refer to strings stored in the
 `doc-directory/DOC' file; and if the value is a string, it is passed
 through `substitute-command-keys'.  A non-nil third argument avoids this
 translation.
+<<<<<<< HEAD
 									 */
       (symbol, prop, raw)) {
+=======
+*/
+      (symbol, prop, raw))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	REGISTER Lisp_Object doc = Qnil;
 #ifdef I18N3
@@ -400,6 +695,7 @@ translation.
 	return doc;
 }
 
+<<<<<<< HEAD
 static void
 weird_doc(Lisp_Object sym, const char *weirdness, const char *type, int pos)
 {
@@ -408,6 +704,8 @@ weird_doc(Lisp_Object sym, const char *weirdness, const char *type, int pos)
 	message("Note: Strange doc (%s) for %s %s @ %d",
 		weirdness, type, string_data(XSYMBOL(sym)->name), pos);
 }
+=======
+>>>>>>> origin/master
 
 DEFUN("Snarf-documentation", Fsnarf_documentation, 1, 1, 0,	/*
 Used during Emacs initialization, before dumping runnable Emacs,
@@ -416,7 +714,11 @@ record them in function definitions.
 One arg, FILENAME, a string which does not include a directory.
 The file is written to `../lib-src', and later found in `exec-directory'
 when doc strings are referred to in the dumped Emacs.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* !!#### This function has not been Mule-ized */
@@ -737,7 +1039,11 @@ static int verify_doc_mapper(Lisp_Object sym, void *arg)
 DEFUN("Verify-documentation", Fverify_documentation, 0, 0, 0,	/*
 Used to make sure everything went well with Snarf-documentation.
 Writes to stderr if not.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	Lisp_Object closure = Fcons(Qnil, Qnil);
@@ -763,7 +1069,11 @@ Substrings of the form \\=\\<MAPVAR> specify to use the value of MAPVAR
 as the keymap for future \\=\\[COMMAND] substrings.
 \\=\\= quotes the following character and is discarded;
 thus, \\=\\=\\=\\= puts \\=\\= into the output, and \\=\\=\\=\\[ puts \\=\\[ into the output.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (string)) 
 {
 	/* This function can GC */
@@ -996,6 +1306,12 @@ void syms_of_doc(void)
 	DEFSUBR(Fsnarf_documentation);
 	DEFSUBR(Fverify_documentation);
 	DEFSUBR(Fsubstitute_command_keys);
+<<<<<<< HEAD
+=======
+        DEFSUBR(Fbuilt_in_symbol_file);
+
+        DEFSYMBOL (Qdefvar);
+>>>>>>> origin/master
 }
 
 void vars_of_doc(void)

@@ -39,7 +39,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #define DATA_START ({ extern int data_start; (char *) &data_start; })
 
 /* GNU now always uses the ELF format.  */
+<<<<<<< HEAD
 #define UNEXEC "unexelf.o"
+=======
+/*
+ * everything is pdump now. --SY
+ * #define UNEXEC "unexelf.o"
+ */
+#undef UNEXEC
+>>>>>>> origin/master
 
 /* Some losing code fails to include this and then assumes
    that because it is braindead that O_RDONLY==0.  */

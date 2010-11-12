@@ -251,8 +251,14 @@ values greater than (frame-width).
 Whether the line is visible (if `selective-display' is t) has no effect;
 however, ^M is treated as end of line when `selective-display' is t.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 							 */
       (buffer)) {
+=======
+*/
+      (buffer))
+{
+>>>>>>> origin/master
 	return make_int(current_column(decode_buffer(buffer, 0)));
 }
 
@@ -261,8 +267,14 @@ Indent from point with tabs and spaces until COLUMN is reached.
 Optional second argument MINIMUM says always do at least MINIMUM spaces
 even if that goes past COLUMN; by default, MINIMUM is zero.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 								 */
       (column, minimum, buffer)) {
+=======
+*/
+      (column, minimum, buffer))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	int mincol;
 	int fromcol;
@@ -347,7 +359,11 @@ DEFUN("current-indentation", Fcurrent_indentation, 0, 1, 0,	/*
 Return the indentation of the current line.
 This is the horizontal position of the character
 following any initial whitespace.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -378,8 +394,14 @@ Any other non-nil value means the same, plus if the line is too short to
 reach column COLUMN, then add spaces/tabs to get there.
 
 Returns the actual column that it moved to.
+<<<<<<< HEAD
 							 */
       (column, force, buffer)) {
+=======
+*/
+      (column, force, buffer))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Bufpos pos;
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -736,8 +758,14 @@ motion of zero lines returns the height of the current line.
 Note that `vertical-motion' sets WINDOW's buffer's point, not
 WINDOW's point. (This differs from FSF Emacs, which buggily always
 sets current buffer's point, regardless of WINDOW.)
+<<<<<<< HEAD
 							 */
       (lines, window, pixels)) {
+=======
+*/
+      (lines, window, pixels))
+{
+>>>>>>> origin/master
 	return vertical_motion_1(lines, window, !NILP(pixels));
 }
 
@@ -853,7 +881,11 @@ less than zero indicates that the motion should be no more
 than PIXELS.  A value greater than zero indicates that the
 motion should be at least PIXELS.  Any other value indicates
 that the motion should be as close as possible to PIXELS.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (pixels, window, how))
 {
 	Bufpos bufpos;

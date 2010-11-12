@@ -3869,7 +3869,11 @@ requires a `different separator'.
   '\("the" "inverse" "of" "#'split-string"\) '(" " "_" "-" "."\)\)
   => "the inverse_of-#'split-string."
 
+<<<<<<< HEAD
 				     */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 /* this is just one, huuuuge case distinctor */
@@ -4078,7 +4082,11 @@ Between each pair of results, insert SEPARATOR.
 Each result, and SEPARATOR, should be strings.  Thus, using " " as SEPARATOR
 results in spaces between the values returned by FUNCTION.  SEQUENCE itself
 may be a list, a vector, a dllist, a bit vector, or a string.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (function, sequence, separator))
 {
 	EMACS_INT len = XINT(Flength(sequence));
@@ -4110,8 +4118,14 @@ DEFUN("mapcar", Fmapcar, 2, 2, 0,	/*
 Apply FUNCTION to each element of SEQUENCE; return a list of the results.
 The result is a list of the same length as SEQUENCE.
 SEQUENCE may be a list, a vector, a dllist, a bit vector, or a string.
+<<<<<<< HEAD
 					 */
       (function, sequence)) {
+=======
+*/
+      (function, sequence))
+{
+>>>>>>> origin/master
 	size_t len = XINT(Flength(sequence));
 	Lisp_Object *args = NULL;
         Lisp_Object result;
@@ -4130,7 +4144,11 @@ DEFUN("mapdllist", Fmapdllist, 2, 2, 0,	/*
 Apply FUNCTION to each element of SEQUENCE; return a dllist of the results.
 The result is a list of the same length as SEQUENCE.
 SEQUENCE may be a list, a vector, a dllist, a bit vector, or a string.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (function, sequence)) 
 {
 	size_t len = XINT(Flength(sequence));
@@ -4151,8 +4169,14 @@ DEFUN("mapvector", Fmapvector, 2, 2, 0,	/*
 Apply FUNCTION to each element of SEQUENCE; return a vector of the results.
 The result is a vector of the same length as SEQUENCE.
 SEQUENCE may be a list, a vector, a dllist, a bit vector, or a string.
+<<<<<<< HEAD
 					 */
       (function, sequence)) {
+=======
+*/
+      (function, sequence))
+{
+>>>>>>> origin/master
 	size_t len = XINT(Flength(sequence));
 	Lisp_Object result = make_vector(len, Qnil);
 	struct gcpro gcpro1;
@@ -4172,7 +4196,11 @@ which is more efficient if you do not use the results.
 
 The difference between this and `mapc' is that `mapc' supports all
 the spiffy Common Lisp arguments.  You should normally use `mapc'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (function, sequence))
 {
 	mapcar1(XINT(Flength(sequence)), 0, function, sequence);
@@ -4194,7 +4222,11 @@ if the function yields `nil' or 0 the current bit is set to 0,
 if the function yields anything else, the bit is set to 1.
 Similarly in the string case any non-char result of FUNCTION sets
 the currently processed character to ^@ (octal value: 000).
+<<<<<<< HEAD
 					      */
+=======
+*/
+>>>>>>> origin/master
       (function, sequence))
 {
 	if (0);

@@ -139,8 +139,14 @@ to be deactivated when it completes; that is, `zmacs-region-stays' will be
 set to t when the command exits successfully.
 You may use any of `@', `*' and `_' at the beginning of the string;
 they are processed in the order that they appear.
+<<<<<<< HEAD
 							 */
       (args)) {
+=======
+*/
+      (args))
+{
+>>>>>>> origin/master
 	return Qnil;
 }
 
@@ -149,7 +155,11 @@ they are processed in the order that they appear.
 /* #### Move it to another file! */
 DEFUN("quote-maybe", Fquote_maybe, 1, 1, 0,	/*
 Quote EXPR if it is not self quoting.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (expr))
 {
 	return ((NILP(expr)
@@ -227,7 +237,11 @@ the minibuffer.
 
 The argument KEYS specifies the value to use instead of (this-command-keys)
 when reading the arguments.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (function, record_flag, keys))
 {
 	/* This function can GC */
@@ -980,7 +994,11 @@ DEFUN("prefix-numeric-value", Fprefix_numeric_value, 1, 1, 0,	/*
 Return numeric meaning of raw prefix argument RAW.
 A raw prefix argument is what you get from `(interactive "P")'.
 Its numeric meaning is what you would get from `(interactive "p")'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (raw))
 {
 	if (NILP(raw))

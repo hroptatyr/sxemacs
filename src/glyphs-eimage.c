@@ -71,7 +71,11 @@ extern "C" {
 # include <setjmp.h>
 #endif	/* PNG */
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #ifdef HAVE_FFI

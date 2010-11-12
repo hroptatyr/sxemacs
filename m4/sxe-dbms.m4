@@ -7,8 +7,14 @@ AC_DEFUN([_SXE_CHECK_POSTGRESQL], [dnl
 
 	## compute pgsql specific compiler/linker flags
 	PGSQL_CPPFLAGS="-I$pgsql_incdir"
+<<<<<<< HEAD
 	PGSQL_LDFLAGS="-L$pgsql_libdir"
 	PGSQL_LIBS="-lpq $pgsql_libs"
+=======
+	PGSQL_LDFLAGS="-L$pgsql_libdir ${pgsql_ldflags}"
+	## do not add pgsql_libs here, as they concern the server only
+	PGSQL_LIBS="-lpq"
+>>>>>>> origin/master
 
 	## backup values for excursion
 	SXE_DUMP_LIBS
@@ -53,6 +59,10 @@ AC_DEFUN([_SXE_CHECK_POSTGRESQL], [dnl
 		"$ac_cv_lib_pq_PQconnectdb" = "yes"; then
 		have_postgresql="yes"
 		AC_DEFINE([HAVE_POSTGRESQL], [1], [Description here!])
+<<<<<<< HEAD
+=======
+		## keep the DB_* vars
+>>>>>>> origin/master
 	else
 		have_postgresql="no"
 		## restore all values of the DB_* vars
@@ -72,6 +82,7 @@ AC_DEFUN([SXE_CHECK_POSTGRESQL], [dnl
 
 	if test "$have_pg_config" = "yes"; then
 		AC_PATH_PROG([PG_CONFIG], [pg_config], [:])
+<<<<<<< HEAD
 		pgsql_incdir=$($PG_CONFIG --includedir)
 		pgsql_libdir=$($PG_CONFIG --libdir)
 
@@ -79,6 +90,16 @@ AC_DEFUN([SXE_CHECK_POSTGRESQL], [dnl
 			pgsql_libs="$($PG_CONFIG --ldflags) $($PG_CONFIG --libs)"
 		elif test -f "$pgsql_libdir/libpq.so"; then
 			pgsql_libs=$($LDD $pgsql_libdir/libpq.so | \
+=======
+		pgsql_incdir=$(${PG_CONFIG} --includedir)
+		pgsql_libdir=$(${PG_CONFIG} --libdir)
+		pgsql_ldflags=$(${PG_CONFIG} --ldflags)
+
+		if test -n "${PG_CONFIG}" -a -f "${PG_CONFIG}"; then
+			pgsql_libs="$(${PG_CONFIG} --libs)"
+		elif test -f "${pgsql_libdir}/libpq.so"; then
+			pgsql_libs=$(${LDD} ${pgsql_libdir}/libpq.so | \
+>>>>>>> origin/master
 				grep "=> /" | grep -v "=> /lib" | \
 				sed -e "s,.*/lib\(.*\)\.so.*,-l\1," | \
 				tr "\n" " ")
@@ -86,7 +107,11 @@ AC_DEFUN([SXE_CHECK_POSTGRESQL], [dnl
 			## doesnt matter otherwise
 			pgsql_libs=""
 		fi
+<<<<<<< HEAD
 		if test "$have_openssl" = "no" -a -n "$(echo $pgsql_libs | grep ssl)"; then
+=======
+		if test "$have_openssl" = "no" -a -n "$(echo ${pgsql_libs} | grep ssl)"; then
+>>>>>>> origin/master
 			if test "$with_openssl" = "no"; then
 				AC_MSG_WARN([Your PostgreSQL seems to require OpenSSL.])
 				AC_MSG_WARN([Sadly OpenSSL is not available or is misconfigured,])

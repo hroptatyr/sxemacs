@@ -301,7 +301,12 @@ which more-or-less shadow %s's corresponding tables."
 		    (format "runs the hook `%s'" hook)
 		    ", as the final step\nduring initialization.")))
 
+<<<<<<< HEAD
     (unless (string-match #r"\\[{[]" docstring)
+=======
+    (unless (or (string-match (regexp-quote "\\{") docstring)
+                (string-match (regexp-quote "\\[") docstring))
+>>>>>>> origin/master
       ;; And don't forget to put the mode's keymap.
       (setq docstring (concat docstring "\n\n\\{" (symbol-name map) "}")))
 

@@ -87,10 +87,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* This machine requires completely different unexec code
    which lives in a separate file.  Specify the file name.  */
 
+<<<<<<< HEAD
 #ifdef UNEXEC
 #undef UNEXEC
 #endif
 #define UNEXEC "unexelfsgi.o"
+=======
+/*
+ * everything is pdump now. --SY
+ * #ifdef UNEXEC
+ * #undef UNEXEC
+ * #endif
+ * #define UNEXEC "unexelfsgi.o"
+ */
+#undef UNEXEC
+>>>>>>> origin/master
 
 #define TEXT_START 0x400000
 #define DATA_START 0x10000000

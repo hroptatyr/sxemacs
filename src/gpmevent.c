@@ -102,7 +102,11 @@ static int get_process_infd(Lisp_Process * p)
 DEFUN("receive-gpm-event", Freceive_gpm_event, 0, 2, 0,	/*
 Run GPM_GetEvent().
 This function is the process handler for the GPM connection.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (process, string))
 {
 	Gpm_Event ev;
@@ -475,7 +479,11 @@ static void hook_console_methods_once(void)
 
 DEFUN("gpm-enabled-p", Fgpm_enabled_p, 0, 1, 0,	/*
 Return non-nil if GPM mouse support is currently enabled on DEVICE.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	char *console_name = ttyname(DEVICE_INFD(decode_device(device)));
@@ -504,7 +512,11 @@ Return non-nil if GPM mouse support is currently enabled on DEVICE.
 
 DEFUN("gpm-enable", Fgpm_enable, 0, 2, 0,	/*
 Toggle accepting of GPM mouse events.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (device, arg))
 {
 	Gpm_Connect conn;

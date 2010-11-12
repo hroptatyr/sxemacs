@@ -56,9 +56,15 @@ static void initialize_dll_cache(void)
 }
 
 DEFUN("dll-load", Fdll_load, 1, 1, 0,	/*
+<<<<<<< HEAD
 					   Load a shared library DLL into XEmacs.  No initialization routines are required.
 					   This is for loading dependency DLLs into XEmacs.
 					 */
+=======
+Load a shared library DLL into XEmacs.  No initialization routines are required.
+This is for loading dependency DLLs into XEmacs.
+*/
+>>>>>>> origin/master
       (dll))
 {
 	dll_handle h;
@@ -480,8 +486,13 @@ static void __dll_mapper(gpointer key, gpointer value, gpointer user_data)
 }
 
 DEFUN("gtk-import-variable-internal", Fgtk_import_variable_internal, 2, 2, 0,	/*
+<<<<<<< HEAD
 										   Import a variable into the XEmacs namespace.
 										 */
+=======
+Import a variable into the XEmacs namespace.
+*/
+>>>>>>> origin/master
       (type, name))
 {
 	void *var = NULL;
@@ -523,8 +534,13 @@ DEFUN("gtk-import-variable-internal", Fgtk_import_variable_internal, 2, 2, 0,	/*
 }
 
 DEFUN("gtk-import-function-internal", Fgtk_import_function_internal, 2, 3, 0,	/*
+<<<<<<< HEAD
 										   Import a function into the XEmacs namespace.
 										 */
+=======
+Import a function into the XEmacs namespace.
+*/
+>>>>>>> origin/master
       (rettype, name, args))
 {
 	Lisp_Object rval = Qnil;
@@ -643,8 +659,13 @@ DEFUN("gtk-import-function-internal", Fgtk_import_function_internal, 2, 3, 0,	/*
 }
 
 DEFUN("gtk-call-function", Fgtk_call_function, 1, 2, 0,	/*
+<<<<<<< HEAD
 							   Call an external function.
 							 */
+=======
+Call an external function.
+*/
+>>>>>>> origin/master
       (func, args))
 {
 	GtkArg the_args[MAX_GTK_ARGS];
@@ -1003,7 +1024,11 @@ __internal_callback_marshal(GtkObject * obj, gpointer data, guint n_args,
 }
 
 DEFUN("gtk-signal-connect", Fgtk_signal_connect, 3, 6, 0,	/*
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (obj, name, func, cb_data, object_signal, after_p))
 {
 	int c_after;
@@ -1139,9 +1164,15 @@ Lisp_Object build_gtk_boxed(void *obj, GtkType t)
 
 /* Type manipulation */
 DEFUN("gtk-fundamental-type", Fgtk_fundamental_type, 1, 1, 0,	/*
+<<<<<<< HEAD
 								   Load a shared library DLL into XEmacs.  No initialization routines are required.
 								   This is for loading dependency DLLs into XEmacs.
 								 */
+=======
+Load a shared library DLL into XEmacs.  No initialization routines are required.
+This is for loading dependency DLLs into XEmacs.
+*/
+>>>>>>> origin/master
       (type))
 {
 	GtkType t;
@@ -1160,8 +1191,13 @@ DEFUN("gtk-fundamental-type", Fgtk_fundamental_type, 1, 1, 0,	/*
 }
 
 DEFUN("gtk-object-type", Fgtk_object_type, 1, 1, 0,	/*
+<<<<<<< HEAD
 							   Return the GtkType of OBJECT.
 							 */
+=======
+Return the GtkType of OBJECT.
+*/
+>>>>>>> origin/master
       (object))
 {
 	CHECK_GTK_OBJECT(object);
@@ -1169,10 +1205,17 @@ DEFUN("gtk-object-type", Fgtk_object_type, 1, 1, 0,	/*
 }
 
 DEFUN("gtk-describe-type", Fgtk_describe_type, 1, 1, 0,	/*
+<<<<<<< HEAD
 							   Returns a cons of two lists describing the Gtk object TYPE.
 							   The car is a list of all the signals that it will emit.
 							   The cdr is a list of all the magic properties it has.
 							 */
+=======
+Returns a cons of two lists describing the Gtk object TYPE.
+The car is a list of all the signals that it will emit.
+The cdr is a list of all the magic properties it has.
+*/
+>>>>>>> origin/master
       (type))
 {
 	Lisp_Object rval, signals, props;

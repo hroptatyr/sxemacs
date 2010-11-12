@@ -133,7 +133,11 @@ DEFINE_BASIC_LRECORD_SEQUENCE_IMPLEMENTATION("bit-vector", bit_vector,
 
 DEFUN("identity", Fidentity, 1, 1, 0,	/*
 Return the argument unchanged.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (arg))
 {
 	return arg;
@@ -153,7 +157,11 @@ case the range of possible values is extended.
 
 With argument t, set the random number seed from the 
 current time and pid.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (limit))
 {
 	EMACS_INT val;
@@ -200,7 +208,11 @@ current time and pid.
 #if defined(WITH_GMP) && defined(HAVE_MPZ)
 DEFUN("randomb", Frandomb, 1, 1, 0,	/*
 Return a uniform pseudo-random number in the range [0, 2^LIMIT).
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (limit))
 {
 	bigz bz;
@@ -265,7 +277,11 @@ void check_losing_bytecode(const char *function, Lisp_Object seq)
 
 DEFUN("length", Flength, 1, 1, 0,	/*
 Return the length of vector, bit vector, list or string SEQUENCE.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (sequence))
 {
 #if 1
@@ -317,7 +333,11 @@ Return the length of a list, but avoid error or infinite loop.
 This function never gets an error.  If LIST is not really a list,
 it returns 0.  If LIST is circular, it returns a finite value
 which is at least the number of distinct elements.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (list))
 {
 	Lisp_Object hare, tortoise;
@@ -342,8 +362,14 @@ Case is significant.  Text properties are ignored.
 strings, but this is not the case under FSF Emacs 19.  In FSF Emacs 20
 `equal' is the same as in SXEmacs, in that respect.)
 Symbols are also allowed; their print names are used instead.
+<<<<<<< HEAD
 						 */
       (string1, string2)) {
+=======
+*/
+      (string1, string2))
+{
+>>>>>>> origin/master
 	Bytecount len;
 	Lisp_String *p1, *p2;
 
@@ -386,7 +412,11 @@ Unicode is a good first step towards solving this problem.  In fact,
 it is quite likely that a collation table exists (or will exist) for
 Unicode.  When Unicode support is added to SXEmacs/Mule, this problem
 may be solved.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (string1, string2))
 {
 	Lisp_String *p1, *p2;
@@ -480,7 +510,11 @@ Unicode is a good first step towards solving this problem.  In fact,
 it is quite likely that a collation table exists (or will exist) for
 Unicode.  When Unicode support is added to SXEmacs/Mule, this problem
 may be solved.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (string1, string2))
 {
 	return Fstring_lessp(string2, string1);
@@ -490,7 +524,11 @@ DEFUN("string-modified-tick", Fstring_modified_tick, 1, 1, 0,	/*
 Return STRING's tick counter, incremented for each change to the string.
 Each string has a tick counter which is incremented each time the contents
 of the string are changed (e.g. with `aset').  It wraps around occasionally.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (string))
 {
 	Lisp_String *s;
@@ -567,7 +605,11 @@ The result is a list whose elements are the elements of all the arguments.
 Each argument may be a list, vector, bit vector, or string.
 The last argument is not copied, just used as the tail of the new list.
 Also see: `nconc'.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	return concat(nargs, args, c_cons, 1);
@@ -582,7 +624,11 @@ As of XEmacs 21.0, this function does NOT accept individual integers
 as arguments.  Old code that relies on, for example, (concat "foo" 50)
 returning "foo50" will fail.  To fix such code, either apply
 `int-to-string' to the integer argument, or use `format'.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	return concat(nargs, args, c_string, 0);
@@ -592,7 +638,11 @@ DEFUN("vconcat", Fvconcat, 0, MANY, 0,	/*
 Concatenate all the arguments and make the result a vector.
 The result is a vector whose elements are the elements of all the arguments.
 Each argument may be a list, vector, bit vector, or string.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	return concat(nargs, args, c_vector, 0);
@@ -602,7 +652,11 @@ DEFUN("bvconcat", Fbvconcat, 0, MANY, 0,	/*
 Concatenate all the arguments and make the result a bit vector.
 The result is a bit vector whose elements are the elements of all the
 arguments.  Each argument may be a list, vector, bit vector, or string.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	return concat(nargs, args, c_bit_vector, 0);
@@ -637,8 +691,14 @@ DEFUN("copy-list", Fcopy_list, 1, 1, 0,	/*
 Return a copy of list LIST, which may be a dotted list.
 The elements of LIST are not copied; they are shared
 with the original.
+<<<<<<< HEAD
 					 */
       (list)) {
+=======
+*/
+      (list))
+{
+>>>>>>> origin/master
       again:
 	if (NILP(list))
 		return list;
@@ -653,7 +713,11 @@ DEFUN("copy-sequence", Fcopy_sequence, 1, 1, 0,	/*
 Return a copy of list, dllist, vector, bit vector or string SEQUENCE.
 The elements of a list or vector are not copied; they are shared
 with the original. SEQUENCE may be a dotted list.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (sequence))
 {
       again:
@@ -932,7 +996,11 @@ but does not share the alist structure with ALIST.
 The objects mapped (cars and cdrs of elements of the alist)
 are shared, however.
 Elements of ALIST that are not conses are also shared.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (alist))
 {
 	Lisp_Object tail;
@@ -957,7 +1025,11 @@ The argument is copied, and any lists contained within it are copied
 recursively.  Circularities and shared substructures are not preserved.
 Second arg VECP causes vectors to be copied, too.  Strings and bit vectors
 are not copied.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (arg, vecp))
 {
 	return safe_copy_tree(arg, vecp, 0);
@@ -1002,7 +1074,11 @@ Return the substring of STRING starting at START and ending before END.
 END may be nil or omitted; then the substring runs to the end of STRING.
 If START or END is negative, it counts from the end.
 Relevant parts of the string-extent-data are copied to the new string.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (string, start, end)) 
 {
 	Charcount ccstart, ccend;
@@ -1030,7 +1106,11 @@ If START or END is negative, it counts from the end.
 The returned subsequence is always of the same type as SEQUENCE.
 If SEQUENCE is a string, relevant parts of the string-extent-data
 are copied to the new string.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (sequence, start, end))
 {
 	EMACS_INT len, s, e;
@@ -1096,7 +1176,11 @@ are copied to the new string.
 
 DEFUN("nthcdr", Fnthcdr, 2, 2, 0,	/*
 Take cdr N times on LIST, and return the result.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (n, list))
 {
 	REGISTER size_t i;
@@ -1118,7 +1202,11 @@ Take cdr N times on LIST, and return the result.
 DEFUN("nth", Fnth, 2, 2, 0,	/*
 Return the Nth element of LIST.
 N counts from zero.  If LIST is not that long, nil is returned.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (n, list))
 {
 	return Fcar(Fnthcdr(n, list));
@@ -1126,7 +1214,11 @@ N counts from zero.  If LIST is not that long, nil is returned.
 
 DEFUN("elt", Felt, 2, 2, 0,	/*
 Return element of SEQUENCE at index N.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (sequence, n))
 {
 retry:
@@ -1236,7 +1328,11 @@ LIST may be a dotted list, but not a circular list.
 Optional argument N must be a non-negative integer.
 If N is zero, then the atom that terminates the list is returned.
 If N is greater than the length of LIST, then LIST itself is returned.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (list, n))
 {
 	EMACS_INT int_n, count;
@@ -1274,7 +1370,11 @@ If N is greater than the length of LIST, then LIST itself is returned.
 DEFUN("nbutlast", Fnbutlast, 1, 2, 0,	/*
 Modify LIST to remove the last N (default 1) elements.
 If LIST has N or fewer elements, nil is returned and LIST is unmodified.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (list, n))
 {
 	EMACS_INT int_n;
@@ -1307,7 +1407,11 @@ If LIST has N or fewer elements, nil is returned and LIST is unmodified.
 DEFUN("butlast", Fbutlast, 1, 2, 0,	/*
 Return a copy of LIST with the last N (default 1) elements removed.
 If LIST has N or fewer elements, nil is returned.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (list, n))
 {
 	EMACS_INT int_n;
@@ -1339,7 +1443,11 @@ If LIST has N or fewer elements, nil is returned.
 DEFUN("member", Fmember, 2, 2, 0,	/*
 Return non-nil if ELT is an element of LIST.  Comparison done with `equal'.
 The value is actually the tail of LIST whose car is ELT.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (elt, list))
 {
 	EXTERNAL_LIST_LOOP_3(list_elt, list, tail) {
@@ -1354,7 +1462,11 @@ Return non-nil if ELT is an element of LIST.  Comparison done with `old-equal'.
 The value is actually the tail of LIST whose car is ELT.
 This function is provided only for byte-code compatibility with v19.
 Do not use it.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (elt, list))
 {
 	EXTERNAL_LIST_LOOP_3(list_elt, list, tail) {
@@ -1367,7 +1479,11 @@ Do not use it.
 DEFUN("memq", Fmemq, 2, 2, 0,	/*
 Return non-nil if ELT is an element of LIST.  Comparison done with `eq'.
 The value is actually the tail of LIST whose car is ELT.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (elt, list))
 {
 	EXTERNAL_LIST_LOOP_3(list_elt, list, tail) {
@@ -1382,7 +1498,11 @@ Return non-nil if ELT is an element of LIST.  Comparison done with `old-eq'.
 The value is actually the tail of LIST whose car is ELT.
 This function is provided only for byte-code compatibility with v19.
 Do not use it.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (elt, list))
 {
 	EXTERNAL_LIST_LOOP_3(list_elt, list, tail) {
@@ -1404,7 +1524,11 @@ Lisp_Object memq_no_quit(Lisp_Object elt, Lisp_Object list)
 DEFUN("assoc", Fassoc, 2, 2, 0,	/*
 Return non-nil if KEY is `equal' to the car of an element of ALIST.
 The value is actually the element of ALIST whose car equals KEY.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (key, alist))
 {
 	/* This function can GC. */
@@ -1418,7 +1542,11 @@ The value is actually the element of ALIST whose car equals KEY.
 DEFUN("old-assoc", Fold_assoc, 2, 2, 0,	/*
 Return non-nil if KEY is `old-equal' to the car of an element of ALIST.
 The value is actually the element of ALIST whose car equals KEY.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (key, alist))
 {
 	/* This function can GC. */
@@ -1440,7 +1568,11 @@ DEFUN("assq", Fassq, 2, 2, 0,	/*
 Return non-nil if KEY is `eq' to the car of an element of ALIST.
 The value is actually the element of ALIST whose car is KEY.
 Elements of ALIST that are not conses are ignored.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (key, alist))
 {
 	EXTERNAL_ALIST_LOOP_4(elt, elt_car, elt_cdr, alist) {
@@ -1456,7 +1588,11 @@ The value is actually the element of ALIST whose car is KEY.
 Elements of ALIST that are not conses are ignored.
 This function is provided only for byte-code compatibility with v19.
 Do not use it.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (key, alist))
 {
 	EXTERNAL_ALIST_LOOP_4(elt, elt_car, elt_cdr, alist) {
@@ -1483,7 +1619,11 @@ Lisp_Object assq_no_quit(Lisp_Object key, Lisp_Object alist)
 DEFUN("rassoc", Frassoc, 2, 2, 0,	/*
 Return non-nil if VALUE is `equal' to the cdr of an element of ALIST.
 The value is actually the element of ALIST whose cdr equals VALUE.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (value, alist))
 {
 	EXTERNAL_ALIST_LOOP_4(elt, elt_car, elt_cdr, alist) {
@@ -1496,7 +1636,11 @@ The value is actually the element of ALIST whose cdr equals VALUE.
 DEFUN("old-rassoc", Fold_rassoc, 2, 2, 0,	/*
 Return non-nil if VALUE is `old-equal' to the cdr of an element of ALIST.
 The value is actually the element of ALIST whose cdr equals VALUE.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (value, alist))
 {
 	EXTERNAL_ALIST_LOOP_4(elt, elt_car, elt_cdr, alist) {
@@ -1509,7 +1653,11 @@ The value is actually the element of ALIST whose cdr equals VALUE.
 DEFUN("rassq", Frassq, 2, 2, 0,	/*
 Return non-nil if VALUE is `eq' to the cdr of an element of ALIST.
 The value is actually the element of ALIST whose cdr is VALUE.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (value, alist))
 {
 	EXTERNAL_ALIST_LOOP_4(elt, elt_car, elt_cdr, alist) {
@@ -1522,7 +1670,11 @@ The value is actually the element of ALIST whose cdr is VALUE.
 DEFUN("old-rassq", Fold_rassq, 2, 2, 0,	/*
 Return non-nil if VALUE is `old-eq' to the cdr of an element of ALIST.
 The value is actually the element of ALIST whose cdr is VALUE.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (value, alist))
 {
 	EXTERNAL_ALIST_LOOP_4(elt, elt_car, elt_cdr, alist) {
@@ -1551,8 +1703,14 @@ If the first member of LIST is ELT, there is no way to remove it by side
 effect; therefore, write `(setq foo (delete element foo))' to be sure
 of changing the value of `foo'.
 Also see: `remove'.
+<<<<<<< HEAD
 					 */
       (elt, list)) {
+=======
+*/
+      (elt, list))
+{
+>>>>>>> origin/master
 	EXTERNAL_LIST_LOOP_DELETE_IF(list_elt, list,
 				     (internal_equal(elt, list_elt, 0)));
 	return list;
@@ -1564,8 +1722,14 @@ The modified LIST is returned.  Comparison is done with `old-equal'.
 If the first member of LIST is ELT, there is no way to remove it by side
 effect; therefore, write `(setq foo (old-delete element foo))' to be sure
 of changing the value of `foo'.
+<<<<<<< HEAD
 						 */
       (elt, list)) {
+=======
+*/
+      (elt, list))
+{
+>>>>>>> origin/master
 	EXTERNAL_LIST_LOOP_DELETE_IF(list_elt, list,
 				     (internal_old_equal(elt, list_elt, 0)));
 	return list;
@@ -1577,8 +1741,14 @@ The modified LIST is returned.  Comparison is done with `eq'.
 If the first member of LIST is ELT, there is no way to remove it by side
 effect; therefore, write `(setq foo (delq element foo))' to be sure of
 changing the value of `foo'.
+<<<<<<< HEAD
 				 */
       (elt, list)) {
+=======
+*/
+      (elt, list))
+{
+>>>>>>> origin/master
 	EXTERNAL_LIST_LOOP_DELETE_IF(list_elt, list,
 				     (EQ_WITH_EBOLA_NOTICE(elt, list_elt)));
 	return list;
@@ -1590,8 +1760,14 @@ The modified LIST is returned.  Comparison is done with `old-eq'.
 If the first member of LIST is ELT, there is no way to remove it by side
 effect; therefore, write `(setq foo (old-delq element foo))' to be sure of
 changing the value of `foo'.
+<<<<<<< HEAD
 					 */
       (elt, list)) {
+=======
+*/
+      (elt, list))
+{
+>>>>>>> origin/master
 	EXTERNAL_LIST_LOOP_DELETE_IF(list_elt, list,
 				     (HACKEQ_UNSAFE(elt, list_elt)));
 	return list;
@@ -1643,8 +1819,14 @@ The modified ALIST is returned.  If the first member of ALIST has a car
 that is `equal' to KEY, there is no way to remove it by side effect;
 therefore, write `(setq foo (remassoc key foo))' to be sure of changing
 the value of `foo'.
+<<<<<<< HEAD
 					 */
       (key, alist)) {
+=======
+*/
+      (key, alist))
+{
+>>>>>>> origin/master
 	EXTERNAL_LIST_LOOP_DELETE_IF(elt, alist,
 				     (CONSP(elt) &&
 				      internal_equal(key, XCAR(elt), 0)));
@@ -1664,8 +1846,14 @@ The modified ALIST is returned.  If the first member of ALIST has a car
 that is `eq' to KEY, there is no way to remove it by side effect;
 therefore, write `(setq foo (remassq key foo))' to be sure of changing
 the value of `foo'.
+<<<<<<< HEAD
 					 */
       (key, alist)) {
+=======
+*/
+      (key, alist))
+{
+>>>>>>> origin/master
 	EXTERNAL_LIST_LOOP_DELETE_IF(elt, alist,
 				     (CONSP(elt) &&
 				      EQ_WITH_EBOLA_NOTICE(key, XCAR(elt))));
@@ -1688,8 +1876,14 @@ The modified ALIST is returned.  If the first member of ALIST has a car
 that is `equal' to VALUE, there is no way to remove it by side effect;
 therefore, write `(setq foo (remrassoc value foo))' to be sure of changing
 the value of `foo'.
+<<<<<<< HEAD
 					 */
       (value, alist)) {
+=======
+*/
+      (value, alist))
+{
+>>>>>>> origin/master
 	EXTERNAL_LIST_LOOP_DELETE_IF(elt, alist,
 				     (CONSP(elt) &&
 				      internal_equal(value, XCDR(elt), 0)));
@@ -1702,8 +1896,14 @@ The modified ALIST is returned.  If the first member of ALIST has a car
 that is `eq' to VALUE, there is no way to remove it by side effect;
 therefore, write `(setq foo (remrassq value foo))' to be sure of changing
 the value of `foo'.
+<<<<<<< HEAD
 					 */
       (value, alist)) {
+=======
+*/
+      (value, alist))
+{
+>>>>>>> origin/master
 	EXTERNAL_LIST_LOOP_DELETE_IF(elt, alist,
 				     (CONSP(elt) &&
 				      EQ_WITH_EBOLA_NOTICE(value, XCDR(elt))));
@@ -1723,7 +1923,11 @@ DEFUN("nreverse", Fnreverse, 1, 1, 0,	/*
 Reverse LIST by destructively modifying cdr pointers.
 Return the beginning of the reversed list.
 Also see: `reverse'.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (list))
 {
 	struct gcpro gcpro1, gcpro2;
@@ -1747,7 +1951,11 @@ Also see: `reverse'.
 DEFUN("reverse", Freverse, 1, 1, 0,	/*
 Reverse LIST, copying.  Return the beginning of the reversed list.
 See also the function `nreverse', which is used more often.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (list))
 {
 	Lisp_Object reversed_list = Qnil;
@@ -1813,7 +2021,11 @@ Sort LIST, stably, comparing elements using PREDICATE.
 Returns the sorted list.  LIST is modified by side effects.
 PREDICATE is called with two elements of LIST, and should return T
 if the first element is "less" than the second.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (list, predicate))
 {
 	return list_sort(list, predicate, merge_pred_function);
@@ -1983,7 +2195,11 @@ If optional arg NIL-MEANS-NOT-PRESENT is non-nil, then a property with
 a nil value is ignored.  This feature is a virus that has infected
 old Lisp implementations, but should not be used except for backward
 compatibility.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (a, b, nil_means_not_present))
 {
 	return (plists_differ(a, b, !NILP(nil_means_not_present), 0, -1)
@@ -2000,7 +2216,11 @@ If optional arg NIL-MEANS-NOT-PRESENT is non-nil, then a property with
 a nil value is ignored.  This feature is a virus that has infected
 old Lisp implementations, but should not be used except for backward
 compatibility.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (a, b, nil_means_not_present))
 {
 	return (plists_differ(a, b, !NILP(nil_means_not_present), 0, 1)
@@ -2019,7 +2239,11 @@ If optional arg NIL-MEANS-NOT-PRESENT is non-nil, then a property with
 a nil value is ignored.  This feature is a virus that has infected
 old Lisp implementations, but should not be used except for backward
 compatibility.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (a, b, nil_means_not_present))
 {
 	return (plists_differ(a, b, !NILP(nil_means_not_present), 1, -1)
@@ -2038,7 +2262,11 @@ If optional arg NIL-MEANS-NOT-PRESENT is non-nil, then a property with
 a nil value is ignored.  This feature is a virus that has infected
 old Lisp implementations, but should not be used except for backward
 compatibility.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (a, b, nil_means_not_present))
 {
 	return (plists_differ(a, b, !NILP(nil_means_not_present), 1, 1)
@@ -2326,7 +2554,11 @@ PLIST is a property list, which is a list of the form
 PROPERTY is usually a symbol.
 This function returns the value corresponding to the PROPERTY,
 or DEFAULT if PROPERTY is not one of the properties on the list.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (plist, property, default_))
 {
 	Lisp_Object value = external_plist_get(&plist, property, 0, ERROR_ME);
@@ -2342,8 +2574,14 @@ If PROPERTY is already a property on the list, its value is set to VALUE,
 otherwise the new PROPERTY VALUE pair is added.
 The new plist is returned; use `(setq x (plist-put x property value))'
 to be sure to use the new value.  PLIST is modified by side effect.
+<<<<<<< HEAD
 					 */
       (plist, property, value)) {
+=======
+*/
+      (plist, property, value))
+{
+>>>>>>> origin/master
 	external_plist_put(&plist, property, value, 0, ERROR_ME);
 	return plist;
 }
@@ -2355,15 +2593,25 @@ PLIST is a property list, which is a list of the form
 PROPERTY is usually a symbol.
 The new plist is returned; use `(setq x (plist-remprop x property))'
 to be sure to use the new value.  PLIST is modified by side effect.
+<<<<<<< HEAD
 						 */
       (plist, property)) {
+=======
+*/
+      (plist, property))
+{
+>>>>>>> origin/master
 	external_remprop(&plist, property, 0, ERROR_ME);
 	return plist;
 }
 
 DEFUN("plist-member", Fplist_member, 2, 2, 0,	/*
 Return t if PROPERTY has a value specified in PLIST.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (plist, property))
 {
 	Lisp_Object value = Fplist_get(plist, property, Qunbound);
@@ -2373,7 +2621,11 @@ Return t if PROPERTY has a value specified in PLIST.
 DEFUN("check-valid-plist", Fcheck_valid_plist, 1, 1, 0,	/*
 Given a plist, signal an error if there is anything wrong with it.
 This means that it's a malformed or circular plist.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (plist))
 {
 	Lisp_Object *tortoise;
@@ -2398,8 +2650,14 @@ DEFUN("valid-plist-p", Fvalid_plist_p, 1, 1, 0,	/*
 Given a plist, return non-nil if its format is correct.
 If it returns nil, `check-valid-plist' will signal an error when given
 the plist; that means it's a malformed or circular plist.
+<<<<<<< HEAD
 						 */
       (plist)) {
+=======
+*/
+      (plist))
+{
+>>>>>>> origin/master
 	Lisp_Object *tortoise;
 	Lisp_Object *hare;
 
@@ -2429,7 +2687,11 @@ compatibility.
 The new plist is returned.  If NIL-MEANS-NOT-PRESENT is given, the
 return value may not be EQ to the passed-in value, so make sure to
 `setq' the value back into where it came from.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (plist, nil_means_not_present))
 {
 	Lisp_Object head = plist;
@@ -2466,7 +2728,11 @@ properties is done using `equal' instead of `eq'.
 PROPERTY is usually a symbol.
 This function returns the value corresponding to PROPERTY,
 or DEFAULT if PROPERTY is not one of the properties on the list.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (lax_plist, property, default_))
 {
 	Lisp_Object value =
@@ -2484,8 +2750,14 @@ If PROPERTY is already a property on the list, its value is set to
 VALUE, otherwise the new PROPERTY VALUE pair is added.
 The new plist is returned; use `(setq x (lax-plist-put x property value))'
 to be sure to use the new value.  LAX-PLIST is modified by side effect.
+<<<<<<< HEAD
 						 */
       (lax_plist, property, value)) {
+=======
+*/
+      (lax_plist, property, value))
+{
+>>>>>>> origin/master
 	external_plist_put(&lax_plist, property, value, 1, ERROR_ME);
 	return lax_plist;
 }
@@ -2498,8 +2770,14 @@ properties is done using `equal' instead of `eq'.
 PROPERTY is usually a symbol.
 The new plist is returned; use `(setq x (lax-plist-remprop x property))'
 to be sure to use the new value.  LAX-PLIST is modified by side effect.
+<<<<<<< HEAD
 							 */
       (lax_plist, property)) {
+=======
+*/
+      (lax_plist, property))
+{
+>>>>>>> origin/master
 	external_remprop(&lax_plist, property, 1, ERROR_ME);
 	return lax_plist;
 }
@@ -2509,7 +2787,11 @@ Return t if PROPERTY has a value specified in LAX-PLIST.
 LAX-PLIST is a lax property list, which is a list of the form
 \(PROPERTY1 VALUE1 PROPERTY2 VALUE2...), where comparisons between
 properties is done using `equal' instead of `eq'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (lax_plist, property))
 {
 	return UNBOUNDP(Flax_plist_get(lax_plist, property, Qunbound)) ? Qnil :
@@ -2528,7 +2810,11 @@ compatibility.
 The new plist is returned.  If NIL-MEANS-NOT-PRESENT is given, the
 return value may not be EQ to the passed-in value, so make sure to
 `setq' the value back into where it came from.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (lax_plist, nil_means_not_present))
 {
 	Lisp_Object head = lax_plist;
@@ -2571,7 +2857,11 @@ into
 
 The original alist is destroyed in the process of constructing the plist.
 See also `alist-to-plist'.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (alist))
 {
 	Lisp_Object head = alist;
@@ -2595,7 +2885,11 @@ This is the last VALUE stored with `(put OBJECT PROPERTY VALUE)'.
 If there is no such property, return optional third arg DEFAULT
 \(which defaults to `nil').  OBJECT can be a symbol, string, extent,
 face, or glyph.  See also `put', `remprop', and `object-plist'.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object, property, default_))
 {
 	/* Various places in emacs call Fget() and expect it not to quit,
@@ -2620,7 +2914,11 @@ For a string, no properties currently have predefined meanings.
 For the predefined properties for extents, see `set-extent-property'.
 For the predefined properties for faces, see `set-face-property'.
 See also `get', `remprop', and `object-plist'.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object, property, value))
 {
 	CHECK_LISP_WRITEABLE(object);
@@ -2642,7 +2940,11 @@ Remove, from OBJECT's property list, PROPERTY and its corresponding value.
 OBJECT can be a symbol, string, extent, face, or glyph.  Return non-nil
 if the property list was actually modified (i.e. if PROPERTY was present
 in the property list).  See also `get', `put', and `object-plist'.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object, property))
 {
 	int ret = 0;
@@ -2669,8 +2971,14 @@ For a symbol, this is equivalent to `symbol-plist'.
 OBJECT can be a symbol, string, extent, face, or glyph.
 Do not modify the returned property list directly;
 this may or may not have the desired effects.  Use `put' instead.
+<<<<<<< HEAD
 						 */
       (object)) {
+=======
+*/
+      (object))
+{
+>>>>>>> origin/master
 	if (LRECORDP(object) && XRECORD_LHEADER_IMPLEMENTATION(object)->plist)
 		return XRECORD_LHEADER_IMPLEMENTATION(object)->plist(object);
 	else
@@ -2760,7 +3068,11 @@ They must have the same data type.
 Conses are compared by comparing the cars and the cdrs.
 Vectors and strings are compared element by element.
 Numbers are compared by value.  Symbols must match exactly.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object1, object2))
 {
 	return internal_equal(object1, object2, 0) ? Qt : Qnil;
@@ -2774,15 +3086,25 @@ this is known as the "char-int confoundance disease." See `eq' and
 `old-eq'.)
 This function is provided only for byte-code compatibility with v19.
 Do not use it.
+<<<<<<< HEAD
 					 */
       (object1, object2)) {
+=======
+*/
+      (object1, object2))
+{
+>>>>>>> origin/master
 	return internal_old_equal(object1, object2, 0) ? Qt : Qnil;
 }
 
 DEFUN("fillarray", Ffillarray, 2, 2, 0,	/*
 Destructively modify ARRAY by replacing each element with ITEM.
 ARRAY is a vector, bit vector, or string.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (array, item))
 {
       retry:
@@ -2876,7 +3198,11 @@ Also see: `append'.
 If the first argument is nil, there is no way to modify it by side
 effect; therefore, write `(setq foo (nconc foo list))' to be sure of
 changing the value of `foo'.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	int argnum = 0;
@@ -2952,7 +3278,11 @@ Destructively replace the list OLD with NEW.
 This is like (copy-sequence NEW) except that it reuses the
 conses in OLD as much as possible.  If OLD and NEW are the same
 length, no consing will take place.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (old, new))
 {
 	Lisp_Object tail, oldtail = old, prevoldtail = Qnil;
@@ -3004,7 +3334,11 @@ shortened list, containing only those averages which are available.
 
 On some systems, this won't work due to permissions on /dev/kmem,
 in which case you can't use this.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (use_floats))
 {
 	double load_ave[3];
@@ -3065,8 +3399,14 @@ NOTE: The advanced arguments of this function (anything other than a
 symbol) are not yet supported by FSF Emacs.  If you feel they are useful
 for supporting multiple Emacs variants, lobby Richard Stallman at
 <bug-gnu-emacs@gnu.org>.
+<<<<<<< HEAD
 					 */
       (fexp)) {
+=======
+*/
+      (fexp))
+{
+>>>>>>> origin/master
 #ifndef FEATUREP_SYNTAX
 	CHECK_SYMBOL(fexp);
 	return NILP(Fmemq(fexp, Vfeatures)) ? Qnil : Qt;
@@ -3124,7 +3464,11 @@ for supporting multiple Emacs variants, lobby Richard Stallman at
 DEFUN("provide", Fprovide, 1, 1, 0,	/*
 Announce that FEATURE is a feature of the current Emacs.
 This function updates the value of the variable `features'.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (feature))
 {
 	Lisp_Object tem;
@@ -3144,7 +3488,11 @@ If feature FEATURE is not loaded, load it from FILENAME.
 If FEATURE is not a member of the list `features', then the feature
 is not loaded; so load the file FILENAME.
 If FILENAME is omitted, the printname of FEATURE is used as the file name.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (feature, filename))
 {
 	Lisp_Object tem;
@@ -3179,7 +3527,11 @@ If FILENAME is omitted, the printname of FEATURE is used as the file name.
 
 DEFUN("revoke", Frevoke, 1, 1, 0,	/*
 Announce that FEATURE is no longer a feature of the current Emacs.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (feature))
 {
 	CHECK_SYMBOL(feature);
@@ -3414,7 +3766,11 @@ Base64-encode the region between START and END.
 Return the length of the encoded text.
 Optional third argument NO-LINE-BREAK means do not break long lines
 into shorter lines.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (start, end, no_line_break))
 {
 	Bufbyte *encoded;
@@ -3466,7 +3822,11 @@ DEFUN("base64-encode-string", Fbase64_encode_string, 1, 2, 0,	/*
 Base64 encode STRING and return the result.
 Optional argument NO-LINE-BREAK means do not break long lines
 into shorter lines.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (string, no_line_break))
 {
 	Charcount allength, length;
@@ -3499,7 +3859,11 @@ Base64-decode the region between START and END.
 Return the length of the decoded text.
 If the region can't be decoded, return nil and don't modify the buffer.
 Characters out of the base64 alphabet are ignored.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (start, end))
 {
 	struct buffer *buf = current_buffer;
@@ -3545,7 +3909,11 @@ Characters out of the base64 alphabet are ignored.
 DEFUN("base64-decode-string", Fbase64_decode_string, 1, 1, 0,	/*
 Base64-decode STRING and return the result.
 Characters out of the base64 alphabet are ignored.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (string))
 {
 	Bufbyte *decoded;
@@ -3631,7 +3999,11 @@ DEFUN("base16-encode-string", Fbase16_encode_string, 1, 1, 0, /*
 Base16 encode (i.e. hex dump) STRING and return the result.
 Optional argument NO-LINE-BREAK means do not break long lines
 into shorter lines.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (string))
 {
 	Charcount length;
@@ -3658,7 +4030,11 @@ into shorter lines.
 DEFUN("base16-decode-string", Fbase16_decode_string, 1, 1, 0, /*
 Base16-decode (i.e. read hex data from) STRING and return the result.
 Characters out of the base16 alphabet are ignored.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (string))
 {
 	Bufbyte *decoded;
@@ -3689,7 +4065,11 @@ Characters out of the base16 alphabet are ignored.
 Lisp_Object Qyes_or_no_p;
 
 DEFUN("foobar", Ffoobar, 2, 2, 0, /*
+<<<<<<< HEAD
 				   */
+=======
+*/
+>>>>>>> origin/master
       (n, b))
 {
 	return make_int(__nbits_right_of(XINT(n), XINT(b)));

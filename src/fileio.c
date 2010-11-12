@@ -33,7 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "sysdep.h"
 #include "window.h"		/* minibuf_level */
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #ifdef HAVE_LIBGEN_H		/* Must come before sysfile.h */
@@ -312,7 +316,11 @@ but we still do run any other handlers.  This lets handlers
 use the standard functions without calling themselves recursively.
 
 Otherwise, OPERATION is the name of a funcall'able function.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (filename, operation))
 {
 	/* This function does not GC */
@@ -377,7 +385,11 @@ Return the directory component in file name FILENAME.
 Return nil if FILENAME does not include a directory.
 Otherwise return a directory spec.
 Given a Unix syntax file name, returns a string ending in slash.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC.  GC checked 2000-07-28 ben */
@@ -414,7 +426,11 @@ Return file name FILENAME sans its directory.
 For example, in a Unix-syntax file name,
 this is everything after the last slash,
 or the entire name if it contains no slash.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC.  GC checked 2000-07-28 ben */
@@ -482,7 +498,11 @@ For example, in a Unix-syntax file name,
 this is everything after the last slash,
 or the entire name if it contains no slash.
 It ignores trailing slash.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (filename, extension))
 {
 	/* This function can GC.  GC checked 2000-07-28 ben */
@@ -545,7 +565,11 @@ Return nil if FILENAME does not include a directory.
 Otherwise return a directory spec.
 Given a Unix syntax file name, returns a string ending in slash.
 It ignores the trailing slash in FILENAME.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC.  GC checked 2000-07-28 ben */
@@ -558,8 +582,13 @@ It ignores the trailing slash in FILENAME.
 	   call the corresponding file handler.  */
 	handler = Ffind_file_name_handler(filename, Qfile_dirname);
 	if (!NILP(handler))
+<<<<<<< HEAD
 		return call2_check_string(handler, Qfile_dirname,
 					  filename);
+=======
+		return call2_check_string_or_nil(handler, Qfile_dirname,
+						 filename);
+>>>>>>> origin/master
 
 	beg = XSTRING_DATA(filename);
 	end = p = beg + XSTRING_LENGTH(filename);
@@ -585,7 +614,11 @@ If FILENAME is a directly usable file itself, return
 \(file-name-directory FILENAME).
 The `call-process' and `start-process' functions use this function to
 get a current directory to run processes in.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC.  GC checked 2000-07-28 ben */
@@ -629,7 +662,11 @@ The result can be used as the value of `default-directory'
 or passed as second argument to `expand-file-name'.
 For a Unix-syntax file name, just appends a slash,
 except for (file-name-as-directory \"\") => \"./\".
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC.  GC checked 2000-07-28 ben */
@@ -676,7 +713,11 @@ This is the name of the file that holds the data for the directory.
 This operation exists because a directory is also a file, but its name as
 a directory is different from its name as a file.
 In Unix-syntax, this function just removes the final slash.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (directory))
 {
 	/* This function can GC.  GC checked 2000-07-28 ben */
@@ -719,7 +760,11 @@ danger of generating a name being used by another process.
 In addition, this function makes an attempt to choose a name that
 does not specify an existing file.  To make this work, PREFIX should
 be an absolute file name.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (prefix))
 {
 	static const char tbl[64] = {
@@ -820,7 +865,11 @@ file names in the file system.
 An initial `~/' expands to your home directory.
 An initial `~USER/' expands to USER's home directory.
 See also the function `substitute-in-file-name'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (name, default_directory))
 {
 	/* This function can GC.  GC-checked 2000-11-18 */
@@ -1074,8 +1123,14 @@ Second arg DEFAULT is directory to start with if FILENAME is relative
 the current buffer's value of `default-directory' is used.
 No component of the resulting pathname will be a symbolic link, as
 in the realpath() function.
+<<<<<<< HEAD
 						 */
       (filename, default_)) {
+=======
+*/
+      (filename, default_))
+{
+>>>>>>> origin/master
 	/* This function can GC.  GC checked 2000-07-28 ben. */
 	Lisp_Object expanded_name;
 	struct gcpro gcpro1;
@@ -1222,8 +1277,14 @@ the value of that variable.  The variable name should be terminated
 with a character, not a letter, digit or underscore; otherwise, enclose
 the entire variable name in braces.
 If `/~' appears, all of FILENAME through that `/' is discarded.
+<<<<<<< HEAD
 									 */
       (filename)) {
+=======
+*/
+      (filename))
+{
+>>>>>>> origin/master
 	/* This function can GC.  GC checked 2000-07-28 ben. */
 	Bufbyte *nm;
 
@@ -1458,7 +1519,11 @@ This is what happens in interactive use with M-x.
 Fourth arg KEEP-TIME non-nil means give the new file the same
 last-modified time as the old one.  (This works on only some systems.)
 A prefix arg makes KEEP-TIME non-nil.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (filename, newname, ok_if_already_exists, keep_time))
 {
 	/* This function can call Lisp.  GC checked 2000-07-28 ben */
@@ -1596,7 +1661,11 @@ A prefix arg makes KEEP-TIME non-nil.
 
 DEFUN("make-directory-internal", Fmake_directory_internal, 1, 1, 0,	/*
 Create a directory.  One argument, a file name string.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (dirname_))
 {
 	/* This function can GC.  GC checked 1997.04.06. */
@@ -1634,7 +1703,11 @@ Create a directory.  One argument, a file name string.
 
 DEFUN("delete-directory", Fdelete_directory, 1, 1, "FDelete directory: ",	/*
 Delete a directory.  One argument, a file name or directory name string.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (dirname_))
 {
 	/* This function can GC.  GC checked 1997.04.06. */
@@ -1661,7 +1734,11 @@ Delete a directory.  One argument, a file name or directory name string.
 DEFUN("delete-file", Fdelete_file, 1, 1, "fDelete file: ",	/*
 Delete the file named FILENAME (a string).
 If FILENAME has multiple names, it continues to exist with the other names.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC.  GC checked 1997.04.06. */
@@ -1704,7 +1781,11 @@ Signals a `file-already-exists' error if a file NEWNAME already exists
 unless optional third argument OK-IF-ALREADY-EXISTS is non-nil.
 A number as third arg means request confirmation if NEWNAME already exists.
 This is what happens in interactive use with M-x.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (filename, newname, ok_if_already_exists))
 {
 	/* This function can GC.  GC checked 1997.04.06. */
@@ -1778,7 +1859,11 @@ Signals a `file-already-exists' error if a file NEWNAME already exists
 unless optional third argument OK-IF-ALREADY-EXISTS is non-nil.
 A number as third arg means request confirmation if NEWNAME already exists.
 This is what happens in interactive use with M-x.
+<<<<<<< HEAD
 													 */
+=======
+*/
+>>>>>>> origin/master
       (filename, newname, ok_if_already_exists))
 {
 	/* This function can GC.  GC checked 1997.04.06. */
@@ -1831,7 +1916,11 @@ Signals a `file-already-exists' error if a file LINKNAME already exists
 unless optional third argument OK-IF-ALREADY-EXISTS is non-nil.
 A number as third arg means request confirmation if LINKNAME already exists.
 This happens for interactive use with M-x.
+<<<<<<< HEAD
 																 */
+=======
+*/
+>>>>>>> origin/master
       (filename, linkname, ok_if_already_exists))
 {
 	/* This function can GC.  GC checked 1997.06.04. */
@@ -1886,7 +1975,11 @@ This happens for interactive use with M-x.
 
 DEFUN("sysnetunam", Fsysnetunam, 2, 2, 0,	/*
 Open a network connection to PATH using LOGIN as the login string.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (path, login))
 {
 	int netresult;
@@ -1911,7 +2004,11 @@ Open a network connection to PATH using LOGIN as the login string.
 DEFUN("file-name-absolute-p", Ffile_name_absolute_p, 1, 1, 0,	/*
 Return t if file FILENAME specifies an absolute path name.
 On Unix, this is a name starting with a `/' or a `~'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function does not GC */
@@ -1956,7 +2053,11 @@ static int check_writable(const char *filename)
 DEFUN("file-exists-p", Ffile_exists_p, 1, 1, 0,	/*
 Return t if file FILENAME exists.  (This does not mean you can read it.)
 See also `file-readable-p' and `file-attributes'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can call lisp; GC checked 2000-07-11 ben */
@@ -1983,7 +2084,11 @@ See also `file-readable-p' and `file-attributes'.
 DEFUN("file-executable-p", Ffile_executable_p, 1, 1, 0,	/*
 Return t if FILENAME can be executed by you.
 For a directory, this means you can access files in that directory.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC.  GC checked 07-11-2000 ben. */
@@ -2008,7 +2113,11 @@ For a directory, this means you can access files in that directory.
 DEFUN("file-readable-p", Ffile_readable_p, 1, 1, 0,	/*
 Return t if file FILENAME exists and you can read it.
 See also `file-exists-p' and `file-attributes'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC */
@@ -2042,7 +2151,11 @@ See also `file-exists-p' and `file-attributes'.
    on the RT/PC.  */
 DEFUN("file-writable-p", Ffile_writable_p, 1, 1, 0,	/*
 Return t if file FILENAME can be written or created by you.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC.  GC checked 1997.04.10. */
@@ -2078,7 +2191,11 @@ DEFUN("file-symlink-p", Ffile_symlink_p, 1, 1, 0,	/*
 Return non-nil if file FILENAME is the name of a symbolic link.
 The value is the name of the file to which it is linked.
 Otherwise returns nil.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC.  GC checked 1997.04.10. */
@@ -2132,8 +2249,14 @@ DEFUN("file-directory-p", Ffile_directory_p, 1, 1, 0,	/*
 Return t if file FILENAME is the name of a directory as a file.
 A directory name spec may be given instead; then the value is t
 if the directory so specified exists and really is a directory.
+<<<<<<< HEAD
 							 */
       (filename)) {
+=======
+*/
+      (filename))
+{
+>>>>>>> origin/master
 	/* This function can GC.  GC checked 1997.04.10. */
 	Lisp_Object abspath;
 	struct stat st;
@@ -2164,8 +2287,14 @@ directory as a buffer's current directory, this predicate must return true.
 A directory name spec may be given instead; then the value is t
 if the directory so specified exists and really is a readable and
 searchable directory.
+<<<<<<< HEAD
 										 */
       (filename)) {
+=======
+*/
+      (filename))
+{
+>>>>>>> origin/master
 	/* This function can GC.  GC checked 1997.04.10. */
 	Lisp_Object handler;
 
@@ -2185,7 +2314,11 @@ searchable directory.
 DEFUN("file-regular-p", Ffile_regular_p, 1, 1, 0,	/*
 Return t if file FILENAME is the name of a regular file.
 This is the sort of file that holds an ordinary stream of data bytes.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC.  GC checked 1997.04.10. */
@@ -2213,7 +2346,11 @@ This is the sort of file that holds an ordinary stream of data bytes.
 
 DEFUN("file-modes", Ffile_modes, 1, 1, 0,	/*
 Return mode bits of file named FILENAME, as an integer.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC.  GC checked 1997.04.10. */
@@ -2244,7 +2381,11 @@ Return mode bits of file named FILENAME, as an integer.
 DEFUN("set-file-modes", Fset_file_modes, 2, 2, 0,	/*
 Set mode bits of file named FILENAME to MODE (an integer).
 Only the 12 low bits of MODE are used.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (filename, mode))
 {
 	/* This function can GC.  GC checked 1997.04.10. */
@@ -2278,8 +2419,14 @@ The argument MODE should be an integer; if a bit in MODE is 1,
 subsequently created files will not have the permission corresponding
 to that bit enabled.  Only the low 9 bits are used.
 This setting is inherited by subprocesses.
+<<<<<<< HEAD
 									 */
       (mode)) {
+=======
+*/
+      (mode))
+{
+>>>>>>> origin/master
 	CHECK_INT(mode);
 
 	umask((~XINT(mode)) & 0777);
@@ -2292,7 +2439,11 @@ Return the default file protection for created files.
 The umask value determines which permissions are enabled in newly
 created files.  If a permission's bit in the umask is 1, subsequently
 created files will not have that permission enabled.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	int mode;
@@ -2305,7 +2456,11 @@ created files will not have that permission enabled.
 
 DEFUN("unix-sync", Funix_sync, 0, 0, "",	/*
 Tell Unix to finish all pending disk updates.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	sync();
@@ -2316,8 +2471,14 @@ DEFUN("file-newer-than-file-p", Ffile_newer_than_file_p, 2, 2, 0,	/*
 Return t if file FILE1 is newer than file FILE2.
 If FILE1 does not exist, the answer is nil;
 otherwise, if FILE2 does not exist, the answer is t.
+<<<<<<< HEAD
 									 */
       (file1, file2)) {
+=======
+*/
+      (file1, file2))
+{
+>>>>>>> origin/master
 	/* This function can GC.  GC checked 1997.04.10. */
 	Lisp_Object abspath1, abspath2;
 	struct stat st;
@@ -2376,7 +2537,11 @@ if CODESYS specifies automatic encoding detection or end-of-line detection.
 
 Currently START and END refer to byte positions (as opposed to character
 positions), even in Mule. (Fixing this is very difficult.)
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (filename, visit, start, end, replace, codesys, used_codesys))
 {
 	/* This function can call lisp */
@@ -2815,8 +2980,14 @@ As a special kludge to support auto-saving, when START is nil START and
 END are set to the beginning and end, respectively, of the buffer,
 regardless of any restrictions.  Don't use this feature.  It is documented
 here because write-region handler writers need to be aware of it.
+<<<<<<< HEAD
 												 */
       (start, end, filename, append, visit, lockname, codesys)) {
+=======
+*/
+      (start, end, filename, append, visit, lockname, codesys))
+{
+>>>>>>> origin/master
 	/* This function can call lisp.  GC checked 2000-07-28 ben */
 	int desc;
 	int failure;
@@ -3094,7 +3265,11 @@ here because write-region handler writers need to be aware of it.
    intelligently. */
 DEFUN("car-less-than-car", Fcar_less_than_car, 2, 2, 0,	/*
 Return t if (car A) is numerically less than (car B).
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (a, b))
 {
 	if (ent_binrel(ASE_BINARY_REL_LESSP, Fcar(a), Fcar(b)))
@@ -3107,7 +3282,11 @@ Return t if (car A) is numerically less than (car B).
    wrote the above comment. */
 DEFUN("cdr-less-than-cdr", Fcdr_less_than_cdr, 2, 2, 0,	/*
 Return t if (cdr A) is numerically less than (cdr B).
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (a, b))
 {
 	if (ent_binrel(ASE_BINARY_REL_LESSP, Fcdr(a), Fcdr(b)))
@@ -3258,7 +3437,11 @@ a_write(Lisp_Object outstream, Lisp_Object instream, int pos,
 DEFUN("verify-visited-file-modtime", Fverify_visited_file_modtime, 1, 1, 0,	/*
 Return t if last mod time of BUFFER's visited file matches what BUFFER records.
 This means that the file has not been changed since it was visited or saved.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	/* This function can call lisp; GC checked 2000-07-11 ben */
@@ -3301,7 +3484,11 @@ This means that the file has not been changed since it was visited or saved.
 DEFUN("clear-visited-file-modtime", Fclear_visited_file_modtime, 0, 0, 0,	/*
 Clear out records of last mod time of visited file.
 Next attempt to save will certainly not complain of a discrepancy.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	current_buffer->modtime = 0;
@@ -3312,7 +3499,11 @@ DEFUN("visited-file-modtime", Fvisited_file_modtime, 0, 0, 0,	/*
 Return the current buffer's recorded visited file modification time.
 The value is a list of the form (HIGH . LOW), like the time values
 that `file-attributes' returns.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return time_to_lisp((time_t) current_buffer->modtime);
@@ -3325,7 +3516,11 @@ or if the file itself has been changed for some known benign reason.
 An argument specifies the modification time value to use
 \(instead of that of the visited file), in the form of a list
 \(HIGH . LOW) or (HIGH LOW).
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (time_list))
 {
 	/* This function can call lisp */
@@ -3463,8 +3658,14 @@ Normally we run the normal hook `auto-save-hook' before saving.
 
 Non-nil first argument means do not print any message if successful.
 Non-nil second argument means save only current buffer.
+<<<<<<< HEAD
 						 */
       (no_message, current_only)) {
+=======
+*/
+      (no_message, current_only))
+{
+>>>>>>> origin/master
 	/* This function can call lisp */
 	struct buffer *b;
 	Lisp_Object tail, buf;
@@ -3705,7 +3906,11 @@ Non-nil second argument means save only current buffer.
 DEFUN("set-buffer-auto-saved", Fset_buffer_auto_saved, 0, 0, 0,	/*
 Mark current buffer as auto-saved with its current text.
 No auto-save file will be written until the buffer changes again.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	current_buffer->auto_save_modified = BUF_MODIFF(current_buffer);
@@ -3716,7 +3921,11 @@ No auto-save file will be written until the buffer changes again.
 
 DEFUN("clear-buffer-auto-save-failure", Fclear_buffer_auto_save_failure, 0, 0, 0,	/*
 Clear any record of a recent auto-save failure in the current buffer.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	current_buffer->auto_save_failure_time = -1;
@@ -3725,7 +3934,11 @@ Clear any record of a recent auto-save failure in the current buffer.
 
 DEFUN("recent-auto-save-p", Frecent_auto_save_p, 0, 0, 0,	/*
 Return t if buffer has been auto-saved since last read in or saved.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return (BUF_SAVE_MODIFF(current_buffer) <

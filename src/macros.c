@@ -54,8 +54,14 @@ Use \\[end-kbd-macro] to finish recording and make the macro available.
 Use \\[name-last-kbd-macro] to give it a permanent name.
 Non-nil arg (prefix arg) means append to last macro defined;
 This begins by re-executing that macro as if you typed it again.
+<<<<<<< HEAD
 							 */
       (append)) {
+=======
+*/
+      (append))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	struct console *con = XCONSOLE(Vselected_console);
 	if (!NILP(con->defining_kbd_macro))
@@ -91,7 +97,11 @@ under that name.
 With numeric arg, repeat macro now that many times,
 counting the definition just completed as the first repetition.
 An argument of zero means repeat until error.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (arg))
 {
 	/* This function can GC */
@@ -136,7 +146,11 @@ An argument of zero means repeat until error.
    needed.  #### Try to avoid it, somehow!  */
 DEFUN("zap-last-kbd-macro-event", Fzap_last_kbd_macro_event, 0, 0, 0,	/*
 Don't look at this lest you vomit or spontaneously combust.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	struct console *con = XCONSOLE(Vselected_console);
@@ -197,7 +211,11 @@ void finalize_kbd_macro_chars(struct console *con)
 
 DEFUN("cancel-kbd-macro-events", Fcancel_kbd_macro_events, 0, 0, 0,	/*
 Cancel the events added to a keyboard macro for this command.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	struct console *con = XCONSOLE(Vselected_console);
@@ -214,7 +232,11 @@ A prefix argument serves as a repeat count.  Zero means repeat until error.
 
 To make a macro permanent so you can call it even after
 defining others, use \\[name-last-kbd-macro].
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (prefix))
 {
 	/* This function can GC */
@@ -247,7 +269,11 @@ DEFUN("execute-kbd-macro", Fexecute_kbd_macro, 1, 2, 0,	/*
 Execute MACRO as string of editor command characters.
 If MACRO is a symbol, its function definition is used.
 COUNT is a repeat count, or nil for once, or 0 for infinite loop.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (macro, count))
 {
 	/* This function can GC */

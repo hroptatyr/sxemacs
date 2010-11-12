@@ -59,7 +59,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "window.h"
 #include "line-number.h"
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #include "sysfile.h"
@@ -8607,7 +8611,11 @@ pixel_to_glyph_translation(struct frame *f, int x_coord, int y_coord,
 
 DEFUN("redisplay-echo-area", Fredisplay_echo_area, 0, 0, 0,	/*
 Ensure that all minibuffers are correctly showing the echo area.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	Lisp_Object devcons, concons;
@@ -8657,7 +8665,11 @@ FRAME defaults to the selected frame if omitted.
 Normally, redisplay is preempted as normal if input arrives.  However,
 if optional second arg NO-PREEMPT is non-nil, redisplay will not stop for
 input and is guaranteed to proceed to completion.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame, no_preempt))
 {
 	struct frame *f = decode_frame(frame);
@@ -8687,7 +8699,11 @@ FRAME defaults to the selected frame if omitted.
 Normally, redisplay is preempted as normal if input arrives.  However,
 if optional second arg NO-PREEMPT is non-nil, redisplay will not stop for
 input and is guaranteed to proceed to completion.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (frame, no_preempt))
 {
 	struct frame *f = decode_frame(frame);
@@ -8719,7 +8735,11 @@ DEVICE defaults to the selected device if omitted.
 Normally, redisplay is preempted as normal if input arrives.  However,
 if optional second arg NO-PREEMPT is non-nil, redisplay will not stop for
 input and is guaranteed to proceed to completion.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (device, no_preempt))
 {
 	struct device *d = decode_device(device);
@@ -8752,7 +8772,11 @@ DEVICE defaults to the selected device if omitted.
 Normally, redisplay is preempted as normal if input arrives.  However,
 if optional second arg NO-PREEMPT is non-nil, redisplay will not stop for
 input and is guaranteed to proceed to completion.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device, no_preempt))
 {
 	struct device *d = decode_device(device);
@@ -8778,7 +8802,11 @@ input and is guaranteed to proceed to completion.
 DEFUN("redraw-modeline", Fredraw_modeline, 0, 1, 0,	/*
 Force the modeline of the current buffer to be redisplayed.
 With optional non-nil ALL, force redisplay of all modelines.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (all))
 {
 	MARK_MODELINE_CHANGED;
@@ -8788,7 +8816,11 @@ With optional non-nil ALL, force redisplay of all modelines.
 DEFUN("force-cursor-redisplay", Fforce_cursor_redisplay, 0, 1, 0,	/*
 Force an immediate update of the cursor on FRAME.
 FRAME defaults to the selected frame if omitted.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	redisplay_redraw_cursor(decode_frame(frame), 1);

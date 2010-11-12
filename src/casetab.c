@@ -109,7 +109,11 @@ static Lisp_Object allocate_case_table(void)
 DEFUN("case-table-p", Fcase_table_p, 1, 1, 0,	/*
 Return t if OBJECT is a case table.
 See `set-case-table' for more information on these data structures.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	if (CASE_TABLEP(object))
@@ -164,7 +168,11 @@ DEFUN("get-case-table", Fget_case_table, 3, 3, 0,	/*
 Return CHAR-CASE version of CHARACTER in CASE-TABLE.
 
 CHAR-CASE is either downcase or upcase.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (char_case, character, case_table))
 {
 	CHECK_CHAR(character);
@@ -187,7 +195,11 @@ Set CHAR-CASE version of CHARACTER to be VALUE in CASE-TABLE.
 
 CHAR-CASE is either downcase or upcase.
 See also `put-case-table-pair'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (char_case, character, value, case_table))
 {
 	CHECK_CHAR(character);
@@ -225,7 +237,11 @@ See also `put-case-table-pair'.
 DEFUN("put-case-table-pair", Fput_case_table_pair, 3, 3, 0,	/*
 Make UC and LC a pair of inter-case-converting letters in CASE-TABLE.
 UC is an uppercase character and LC is a downcase character.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (uc, lc, case_table))
 {
 	CHECK_CHAR(uc);
@@ -246,7 +262,11 @@ UC is an uppercase character and LC is a downcase character.
 
 DEFUN("copy-case-table", Fcopy_case_table, 1, 1, 0,	/*
 Return a new case table which is a copy of CASE-TABLE
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (case_table))
 {
 	Lisp_Object new_obj;
@@ -266,7 +286,11 @@ Return a new case table which is a copy of CASE-TABLE
 
 DEFUN("current-case-table", Fcurrent_case_table, 0, 1, 0,	/*
 Return the case table of BUFFER, which defaults to the current buffer.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -277,7 +301,11 @@ Return the case table of BUFFER, which defaults to the current buffer.
 DEFUN("standard-case-table", Fstandard_case_table, 0, 0, 0,	/*
 Return the standard case table.
 This is the one used for new buffers.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Vstandard_case_table;
@@ -285,6 +313,7 @@ This is the one used for new buffers.
 
 static Lisp_Object set_case_table(Lisp_Object table, int standard);
 
+<<<<<<< HEAD
 DEFUN("set-case-table", Fset_case_table, 1, 1, 0,	/*
 Select CASE-TABLE as the new case table for the current buffer.
 A case table is a case-table object or list
@@ -306,6 +335,30 @@ in which case it is deduced from CANONICALIZE.
 See also `get-case-table', `put-case-table' and `put-case-table-pair'.
 							 */
       (case_table)) {
+=======
+DEFUN("set-case-table", Fset_case_table, 1, 1, 0, /*
+Select CASE-TABLE as the new case table for the current buffer.
+A case table is a case-table object or list
+DOWNCASE UPCASE CANONICALIZE EQUIVALENCES
+where each element is either nil or a string of length 256.
+The latter is provided for backward-compatibility.
+DOWNCASE maps each character to its lower-case equivalent.
+UPCASE maps each character to its upper-case equivalent,
+if lower and upper case characters are in 1-1 correspondence,
+you may use nil and the upcase table will be deduced from DOWNCASE.
+CANONICALIZE maps each character to a canonical equivalent,
+any two characters that are related by case-conversion have the same
+canonical equivalent character, it may be nil, in which case it is
+deduced from DOWNCASE and UPCASE.
+EQUIVALENCES is a map that cyclicly permutes each equivalence class
+of characters with the same canonical equivalent it may be nil,
+in which case it is deduced from CANONICALIZE.
+
+See also `get-case-table', `put-case-table' and `put-case-table-pair'.
+*/
+      (case_table))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	return set_case_table(case_table, 0);
 }
@@ -313,7 +366,11 @@ See also `get-case-table', `put-case-table' and `put-case-table-pair'.
 DEFUN("set-standard-case-table", Fset_standard_case_table, 1, 1, 0,	/*
 Select CASE-TABLE as the new standard case table for new buffers.
 See `set-case-table' for more info on case tables.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (case_table))
 {
 	/* This function can GC */

@@ -99,7 +99,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "worker-asyneq.h"
 #endif
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #include <errno.h>
@@ -880,7 +884,11 @@ int detect_input_pending(void)
 DEFUN("input-pending-p", Finput_pending_p, 0, 0, 0,	/*
 Return t if command input is currently available with no waiting.
 Actually, the value is nil only if we can be sure that no input is available.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return detect_input_pending()? Qt : Qnil;
@@ -1347,7 +1355,11 @@ running Lisp code, use `add-async-timeout'.
 WARNING: if you are thinking of calling add-timeout from inside of a
 callback function as a way of resignalling a timeout, think again.  There
 is a race condition.  That's why the RESIGNAL argument exists.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (secs, function, object, resignal))
 {
 	unsigned long msecs = lisp_number_to_milliseconds(secs, 0);
@@ -1370,7 +1382,11 @@ will happen.
 
 It will not work to call this function on an id number returned by
 `add-async-timeout'.  Use `disable-async-timeout' for that.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (id))
 {
 	CHECK_INT(id);
@@ -1427,7 +1443,11 @@ to nil.
 WARNING: if you are thinking of calling `add-async-timeout' from inside of a
 callback function as a way of resignalling a timeout, think again.  There
 is a race condition.  That's why the RESIGNAL argument exists.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (secs, function, object, resignal))
 {
 	unsigned long msecs = lisp_number_to_milliseconds(secs, 0);
@@ -1450,7 +1470,11 @@ will happen.
 
 It will not work to call this function on an id number returned by
 `add-timeout'.  Use `disable-timeout' for that.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (id))
 {
 	CHECK_INT(id);
@@ -1515,7 +1539,11 @@ When this event is dispatched, FUNCTION (which should be a function
 of one argument) will be called with OBJECT as its argument.
 See `next-event' for a description of event types and how events
 are received.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (function, object))
 {
 	Lisp_Object event = Fmake_event(Qnil, Qnil);
@@ -2006,8 +2034,14 @@ The returned event will be one of the following types:
    happened (such as a focus-change notification) that must be handled
    synchronously with other events.  `dispatch-event' knows what to do with
    these events.
+<<<<<<< HEAD
 						*/
       (event, prompt)) {
+=======
+*/
+      (event, prompt))
+{
+>>>>>>> origin/master
 	/* This function can call lisp */
 	/* #### We start out using the selected console before an event
 	   is received, for echoing the partially completed command.
@@ -2278,8 +2312,14 @@ function is provided as a convenience; it is roughly equivalent to the lisp code
     (dispatch-event event))
 
 but it also makes a provision for displaying keystrokes in the echo area.
+<<<<<<< HEAD
 								 */
       (event, prompt)) {
+=======
+*/
+      (event, prompt))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	struct gcpro gcpro1;
 	GCPRO1(event);
@@ -2303,7 +2343,11 @@ widgets. Normally these are redisplayed through a native window-system
 event encoded as magic event, rather than by the redisplay code.  This
 function does not call redisplay or do any of the other things that
 `next-event' does.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	/* This function can GC */
@@ -2356,7 +2400,11 @@ Discard any pending "user" events.
 Also cancel any kbd macro being defined.
 A user event is a key press, button press, button release, or
 "misc-user" event (menu selection or scrollbar action).
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	/* This throws away user-input on the queue, but doesn't process any
@@ -2490,7 +2538,11 @@ part of a second.
 If the third arg is non-nil, it is a number of milliseconds that is added
 to the second arg.  (This exists only for compatibility.)
 Return non-nil iff we received any output before the timeout expired.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (process, timeout_secs, timeout_msecs))
 {
 	/* This function can GC */
@@ -2631,7 +2683,11 @@ SECONDS may be a float, allowing pauses for fractional parts of a second.
 
 It is recommended that you never call sleep-for from inside of a process
 filter function or timer event (either synchronous or asynchronous).
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (seconds))
 {
 	/* This function can GC */
@@ -2713,8 +2769,14 @@ Value is t if waited the full time with no input arriving.
 
 If sit-for is called from within a process filter function or timer
 event (either synchronous or asynchronous) it will return immediately.
+<<<<<<< HEAD
 					 */
       (seconds, nodisplay)) {
+=======
+*/
+      (seconds, nodisplay))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	unsigned long msecs = lisp_number_to_milliseconds(seconds, 1);
 	Lisp_Object event, result;
@@ -3341,8 +3403,14 @@ Change number of events stored using `set-recent-keys-ring-size'.
 
 This copies the event objects into a new vector; it is safe to keep and
 modify them.
+<<<<<<< HEAD
 						 */
       (number)) {
+=======
+*/
+      (number))
+{
+>>>>>>> origin/master
 	struct gcpro gcpro1;
 	Lisp_Object val = Qnil;
 	int nwanted;
@@ -3400,7 +3468,11 @@ modify them.
 
 DEFUN("recent-keys-ring-size", Frecent_keys_ring_size, 0, 0, 0,	/*
 The maximum number of events `recent-keys' can return.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return make_int(recent_keys_ring_size);
@@ -3408,7 +3480,11 @@ The maximum number of events `recent-keys' can return.
 
 DEFUN("set-recent-keys-ring-size", Fset_recent_keys_ring_size, 1, 1, 0,	/*
 Set the maximum number of events to be stored internally.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (size))
 {
 	Lisp_Object new_vector = Qnil;
@@ -4035,7 +4111,11 @@ Process events cause the subprocess's output to be read and acted upon
 appropriately (see `start-process').
 
 Magic events are handled as necessary.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (event))
 {
 	/* This function can GC */
@@ -4383,8 +4463,14 @@ related function.
 `read-key-sequence' checks `function-key-map' for function key
 sequences, where they wouldn't conflict with ordinary bindings.
 See `function-key-map' for more details.
+<<<<<<< HEAD
 							 */
       (prompt, continue_echo, dont_downcase_last)) {
+=======
+*/
+      (prompt, continue_echo, dont_downcase_last))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	struct console *con = XCONSOLE(Vselected_console);	/* #### correct?
 								   Probably not -- see
@@ -4444,8 +4530,14 @@ DEFUN("this-command-keys", Fthis_command_keys, 0, 0, 0,	/*
 Return a vector of the keyboard or mouse button events that were used
 to invoke this command.  This copies the vector and the events; it is safe
 to keep and modify them.
+<<<<<<< HEAD
 							 */
       ()) {
+=======
+*/
+      ())
+{
+>>>>>>> origin/master
 	Lisp_Object event;
 	Lisp_Object result;
 	int len;
@@ -4474,7 +4566,11 @@ That is not right.
 Calling this function directs the translated event to replace
 the original event, so that only one version of the event actually
 appears in the echo area and in the value of `this-command-keys'.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	/* #### I don't understand this at all, so currently it does nothing.
@@ -4512,7 +4608,11 @@ static void dribble_out_event(Lisp_Object event)
 DEFUN("open-dribble-file", Fopen_dribble_file, 1, 1, "FOpen dribble file: ",	/*
 Start writing all keyboard characters to a dribble file called FILENAME.
 If FILENAME is nil, close any open dribble file.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC */
@@ -4546,7 +4646,11 @@ If FILENAME is nil, close any open dribble file.
 DEFUN("current-event-timestamp", Fcurrent_event_timestamp, 0, 1, 0,	/*
 Return the current event timestamp of the window system associated with CONSOLE.
 CONSOLE defaults to the selected console if omitted.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	struct console *c = decode_console(console);

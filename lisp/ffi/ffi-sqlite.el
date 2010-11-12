@@ -1,6 +1,10 @@
 ;;; ffi-sqlite.el --- FFI for sqlite3.
 
+<<<<<<< HEAD
 ;; Copyright (C) 2008 by Zajcev Evegny.
+=======
+;; Copyright (C) 2008 by Zajcev Evgeny.
+>>>>>>> origin/master
 
 ;; Author: Zajcev Evgeny <zevlg@yandex.ru>
 ;; Created: Sat Nov 22 01:08:31 2008

@@ -46,8 +46,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "sysproc.h"		/* for select() */
 
 #ifdef MULE
+<<<<<<< HEAD
 #include "mule-ccl.h"
 #include "file-coding.h"	/* for CCL conversion */
+=======
+#include "mule/mule-ccl.h"
+#include "mule/file-coding.h"	/* for CCL conversion */
+>>>>>>> origin/master
 #endif
 
 #ifdef HAVE_POLL

@@ -67,6 +67,11 @@ in dumped-lisp.el and is not itself listed.")
 				;  `emacs-user-extension-dir'
 	"lisp-initd"
 	"misc"
+<<<<<<< HEAD
+=======
+	"loadhist"		; Must be dumped before loaddefs is loaded
+				; Used by help. 
+>>>>>>> origin/master
 	;; (pureload "profile")
 	(unless-feature mule "help-nomule")
 	"help"
@@ -258,6 +263,9 @@ in dumped-lisp.el and is not itself listed.")
 ;;	(when-feature sparcworks "sun-eos-debugger")
 ;;	(when-feature sparcworks "sun-eos-debugger-extra")
 ;;	(when-feature sparcworks "sun-eos-menubar")
+<<<<<<< HEAD
 	"loadhist"		; Must be dumped before loaddefs is loaded
+=======
+>>>>>>> origin/master
 	"loaddefs"		; <=== autoloads get loaded here
 ))

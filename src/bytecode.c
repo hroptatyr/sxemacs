@@ -1910,7 +1910,11 @@ DEFINE_BASIC_LRECORD_IMPLEMENTATION("compiled-function", compiled_function,
 
 DEFUN("compiled-function-p", Fcompiled_function_p, 1, 1, 0,	/*
 Return t if OBJECT is a byte-compiled function object.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return COMPILED_FUNCTIONP(object) ? Qt : Qnil;
@@ -2100,7 +2104,11 @@ set_compiled_function_documentation(Lisp_Compiled_Function * f,
 
 DEFUN("compiled-function-arglist", Fcompiled_function_arglist, 1, 1, 0,	/*
 Return the argument list of the compiled-function object FUNCTION.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	CHECK_COMPILED_FUNCTION(function);
@@ -2109,7 +2117,11 @@ Return the argument list of the compiled-function object FUNCTION.
 
 DEFUN("compiled-function-instructions", Fcompiled_function_instructions, 1, 1, 0,	/*
 Return the byte-opcode string of the compiled-function object FUNCTION.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	CHECK_COMPILED_FUNCTION(function);
@@ -2118,7 +2130,11 @@ Return the byte-opcode string of the compiled-function object FUNCTION.
 
 DEFUN("compiled-function-constants", Fcompiled_function_constants, 1, 1, 0,	/*
 Return the constants vector of the compiled-function object FUNCTION.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	CHECK_COMPILED_FUNCTION(function);
@@ -2127,7 +2143,11 @@ Return the constants vector of the compiled-function object FUNCTION.
 
 DEFUN("compiled-function-stack-depth", Fcompiled_function_stack_depth, 1, 1, 0,	/*
 Return the maximum stack depth of the compiled-function object FUNCTION.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	CHECK_COMPILED_FUNCTION(function);
@@ -2140,7 +2160,11 @@ DEFUN("compiled-function-doc-string", Fcompiled_function_doc_string, 1, 1, 0,	/*
 Return the doc string of the compiled-function object FUNCTION, if available.
 Functions that had their doc strings snarfed into the DOC file will have
 an integer returned instead of a string.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	CHECK_COMPILED_FUNCTION(function);
@@ -2151,7 +2175,11 @@ DEFUN("compiled-function-interactive", Fcompiled_function_interactive, 1, 1, 0,	
 Return the interactive spec of the compiled-function object FUNCTION, or nil.
 If non-nil, the return value will be a list whose first element is
 `interactive' and whose second element is the interactive spec.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	CHECK_COMPILED_FUNCTION(function);
@@ -2183,7 +2211,11 @@ a `load'.
 DEFUN("compiled-function-domain", Fcompiled_function_domain, 1, 1, 0,	/*
 Return the domain of the compiled-function object FUNCTION, or nil.
 This is only meaningful if I18N3 was enabled when emacs was compiled.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	CHECK_COMPILED_FUNCTION(function);
@@ -2194,7 +2226,11 @@ This is only meaningful if I18N3 was enabled when emacs was compiled.
 
 DEFUN("fetch-bytecode", Ffetch_bytecode, 1, 1, 0,	/*
 If the byte code for compiled function FUNCTION is lazy-loaded, fetch it now.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	Lisp_Compiled_Function *f;
@@ -2222,7 +2258,11 @@ If the byte code for compiled function FUNCTION is lazy-loaded, fetch it now.
 
 DEFUN("optimize-compiled-function", Foptimize_compiled_function, 1, 1, 0,	/*
 Convert compiled function FUNCTION into an optimized internal form.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	Lisp_Compiled_Function *f;
@@ -2242,7 +2282,11 @@ First argument INSTRUCTIONS is a string of byte code.
 Second argument CONSTANTS is a vector of constants.
 Third argument STACK-DEPTH is the maximum stack depth used in this function.
 If STACK-DEPTH is incorrect, Emacs may crash.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (instructions, constants, stack_depth))
 {
 	/* This function can GC */

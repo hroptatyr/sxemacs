@@ -283,7 +283,11 @@ worker_job_remprop(Lisp_Object obj, Lisp_Object property)
 
 DEFUN("worker-job-plist", Fworker_job_plist, 1, 1, 0, /*
 Return the property list of WORKER-JOB.
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       (worker_job))
 {
 	Lisp_Object result = Qnil;
@@ -336,7 +340,11 @@ free_noseeum_worker_job(worker_job_t job)
 
 DEFUN("get-worker-job-result", Fget_worker_job_result, 1, 1, 0, /*
 Return the result slot of JOB.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (job))
 {
 	Lisp_Object res;
@@ -351,7 +359,11 @@ Return the result slot of JOB.
 
 DEFUN("worker-job-p", Fworker_job_p, 1, 1, 0, /*
 Return non-nil iff JOB is a valid worker-job object.
+<<<<<<< HEAD
 					      */
+=======
+*/
+>>>>>>> origin/master
       (job))
 {
 	if (WORKER_JOBP(job)) {
@@ -367,7 +379,11 @@ Return the state of JOB, will be one of
 'queued   when the job is on the queue but not yet processed
 'running  when the job is currently processed
 'finished when the job has finished
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (job))
 {
 	Lisp_Object result;

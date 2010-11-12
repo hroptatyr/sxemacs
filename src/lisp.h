@@ -2826,7 +2826,11 @@ void staticpro_nodump(Lisp_Object *);
 /* allocation goodies */
 #include "opaque.h"
 /* for size computation */
+<<<<<<< HEAD
 #include "ent.h"
+=======
+#include "ent/ent.h"
+>>>>>>> origin/master
 
 /* also generally useful if you want to avoid arbitrary size limits
    but don't need a full dynamic array.  Assumes that BASEVAR points
@@ -3752,6 +3756,10 @@ EXFUN(Fcanonicalize_plist, 2);
 EXFUN(Fcar, 1);
 EXFUN(Fcar_safe, 1);
 EXFUN(Fcdr, 1);
+<<<<<<< HEAD
+=======
+EXFUN (Fcdr_safe, 1);
+>>>>>>> origin/master
 EXFUN(Fchar_after, 2);
 EXFUN(Fchar_to_string, 1);
 EXFUN(Fcheck_valid_plist, 1);
@@ -4021,7 +4029,11 @@ extern Lisp_Object Qinteger_char_or_marker_p, Qinteger_or_char_p;
 extern Lisp_Object Qinteger_or_marker_p, Qintegerp, Qinteractive;
 extern Lisp_Object Qinternal_error, Qinvalid_argument;
 extern Lisp_Object Qinvalid_change, Qinvalid_function, Qinvalid_operation;
+<<<<<<< HEAD
 extern Lisp_Object Qinvalid_read_syntax, Qinvalid_state;
+=======
+extern Lisp_Object Qinvalid_byte_code, Qinvalid_read_syntax, Qinvalid_state;
+>>>>>>> origin/master
 extern Lisp_Object Qio_error;
 extern Lisp_Object Qiso2022;
 extern Lisp_Object Qip_any;

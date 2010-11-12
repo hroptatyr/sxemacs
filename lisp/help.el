@@ -40,6 +40,11 @@
 ;; or run interpreted, but not when the compiled code is loaded.
 (eval-when-compile (require 'help-macro))
 
+<<<<<<< HEAD
+=======
+(require 'loadhist) ;; For symbol-file. 
+
+>>>>>>> origin/master
 (defgroup help nil
   "Support for on-line help systems."
   :group 'emacs)
@@ -193,6 +198,11 @@ Commands:
 (define-key help-mode-map "c" 'customize-variable)
 (define-key help-mode-map [tab] 'help-next-symbol)
 (define-key help-mode-map [(shift tab)] 'help-prev-symbol)
+<<<<<<< HEAD
+=======
+(define-key help-mode-map [return] 'help-find-source-or-scroll-up)
+(define-key help-mode-map [button2] 'help-mouse-find-source-or-track)
+>>>>>>> origin/master
 (define-key help-mode-map "n" 'help-next-section)
 (define-key help-mode-map "p" 'help-prev-section)
 
@@ -946,6 +956,7 @@ there is no function around that point, nil is returned."
 ;; Default to nil for the non-hackers?  Not until we find a way to
 ;; distinguish hackers from non-hackers automatically!
 (defcustom describe-function-show-arglist t
+<<<<<<< HEAD
   "*If non-nil, describe-function will show its arglist,
 unless the function is autoloaded."
   :type 'boolean
@@ -959,6 +970,20 @@ unless the function is autoloaded."
 (define-obsolete-function-alias
   'describe-function-find-file
   'describe-symbol-find-file)
+=======
+  "*If non-nil, describe-function will show the function's arglist."
+  :type 'boolean
+  :group 'help-appearance)
+
+(define-obsolete-function-alias
+  ;; Moved to using the version in loadhist.el
+  'describe-function-find-symbol
+  'symbol-file)
+
+(define-obsolete-function-alias
+  'describe-function-find-file
+  'symbol-file)
+>>>>>>> origin/master
 
 (defun describe-function (function)
   "Display the full documentation of FUNCTION (a symbol).
@@ -1023,10 +1048,13 @@ When run interactively, it defaults to any function found by
 ;(gettext "an interactive Lisp function")
 ;(gettext "a Lisp macro")
 ;(gettext "an interactive Lisp macro")
+<<<<<<< HEAD
 ;(gettext "a mocklisp function")
 ;(gettext "an interactive mocklisp function")
 ;(gettext "a mocklisp macro")
 ;(gettext "an interactive mocklisp macro")
+=======
+>>>>>>> origin/master
 ;(gettext "an autoloaded Lisp function")
 ;(gettext "an interactive autoloaded Lisp function")
 ;(gettext "an autoloaded Lisp macro")
@@ -1038,7 +1066,11 @@ When run interactively, it defaults to any function found by
 For example:
 
 	(function-arglist 'function-arglist)
+<<<<<<< HEAD
 	=> (function-arglist FUNCTION)
+=======
+	=> \"(function-arglist FUNCTION)\"
+>>>>>>> origin/master
 
 This function is used by `describe-function-1' to list function
 arguments in the standard Lisp style."
@@ -1051,7 +1083,11 @@ arguments in the standard Lisp style."
 		 (compiled-function-arglist fndef))
 		((eq (car-safe fndef) 'lambda)
 		 (nth 1 fndef))
+<<<<<<< HEAD
 		((subrp fndef)
+=======
+		((or (subrp fndef) (eq 'autoload (car-safe fndef)))
+>>>>>>> origin/master
 		 (let* ((doc (documentation function))
 			(args (and (string-match
 				    "[\n\t ]*\narguments: ?(\\(.*\\))\n?\\'"
@@ -1062,6 +1098,7 @@ arguments in the standard Lisp style."
 		   (cond ((null args) t)
 			 ((equal args "") nil)
 			 (args))))
+<<<<<<< HEAD
 		(t t))))
     (cond ((listp arglist)
 	   (prin1-to-string
@@ -1070,6 +1107,18 @@ arguments in the standard Lisp style."
 					 arg
 				       (intern (upcase (symbol-name arg)))))
 				   arglist))
+=======
+		(t t)))
+         (print-gensym nil))
+    (cond ((listp arglist)
+	   (prin1-to-string
+	    (cons function (loop
+                             for arg in arglist
+                             collect (if (memq arg '(&optional &rest))
+                                         arg
+                                       (make-symbol (upcase (symbol-name
+                                                             arg))))))
+>>>>>>> origin/master
 	    t))
 	  ((stringp arglist)
 	   (format "(%s %s)" function arglist)))))
@@ -1083,9 +1132,16 @@ part of the documentation of internal subroutines."
 		     (gettext "not documented"))
 	       (void-function "(alias for undefined function)")
 	       (error "(unexpected error from `documention')"))))
+<<<<<<< HEAD
     (if (and strip-arglist
 	     (string-match "[\n\t ]*\narguments: ?(\\(.*\\))\n?\\'" doc))
 	(setq doc (substring doc 0 (match-beginning 0))))
+=======
+    (when (and strip-arglist
+               (string-match "[\n\t ]*\narguments: ?(\\([^)]*\\))\n?\\'" doc))
+      (setq doc (substring doc 0 (match-beginning 0)))
+      (and (zerop (length doc)) (setq doc (gettext "not documented"))))
+>>>>>>> origin/master
     doc))
 
 ;; replacement for `princ' that puts the text in the specified face,
@@ -1224,7 +1280,11 @@ part of the documentation of internal subroutines."
   (princ function)
   (princ "' is ")
   (let* ((def function)
+<<<<<<< HEAD
 	 aliases file-name autoload-file kbd-macro-p fndef macrop)
+=======
+	 aliases file-name kbd-macro-p fndef macrop)
+>>>>>>> origin/master
     (while (and (symbolp def) (fboundp def))
       (when (not (eq def function))
 	(setq aliases
@@ -1256,27 +1316,45 @@ part of the documentation of internal subroutines."
 					   (an-p "an ")
 					   (t "a "))
 				     "%s"
+<<<<<<< HEAD
 				     (if macro-p " macro" " function")))
+=======
+                                     (cond
+                                      ((eq 'neither macro-p)
+                                       "")
+                                      (macro-p " macro")
+                                      (t " function"))))
+>>>>>>> origin/master
 			   string)))))
       (cond ((or (stringp def) (vectorp def))
              (princ "a keyboard macro.")
 	     (setq kbd-macro-p t))
+<<<<<<< HEAD
+=======
+            ((special-form-p fndef)
+             (funcall int "built-in special form" nil 'neither))
+>>>>>>> origin/master
             ((subrp fndef)
              (funcall int "built-in" nil macrop))
             ((compiled-function-p fndef)
              (funcall int "compiled Lisp" nil macrop))
             ((eq (car-safe fndef) 'lambda)
              (funcall int "Lisp" nil macrop))
+<<<<<<< HEAD
             ((eq (car-safe fndef) 'mocklisp)
              (funcall int "mocklisp" nil macrop))
             ((eq (car-safe def) 'autoload)
 	     (setq autoload-file (elt def 1))
+=======
+            ((eq (car-safe def) 'autoload)
+>>>>>>> origin/master
 	     (funcall int "autoloaded Lisp" t (elt def 4)))
 	    ((and (symbolp def) (not (fboundp def)))
 	     (princ "a symbol with a void (unbound) function definition."))
             (t
              nil)))
     (princ "\n")
+<<<<<<< HEAD
     (if autoload-file
 	(princ (format "  -- autoloads from \"%s\"\n" autoload-file)))
     (or file-name
@@ -1284,6 +1362,24 @@ part of the documentation of internal subroutines."
     (if file-name
 	(princ (format "  -- loaded from \"%s\"\n" file-name)))
 ;;     (terpri)
+=======
+    (or file-name
+	(setq file-name (symbol-file function 'defun)))
+    (when file-name
+	(princ "  -- loaded from \"")
+	(if (not (bufferp standard-output))
+	    (princ file-name)
+	  (let ((opoint (point standard-output))
+		e)
+            (require 'hyper-apropos)
+	    (princ file-name)
+	    (setq e (make-extent opoint (point standard-output)
+				 standard-output))
+	    (set-extent-property e 'face 'hyper-apropos-hyperlink)
+	    (set-extent-property e 'mouse-face 'highlight)
+	    (set-extent-property e 'find-function-symbol function)))
+	(princ "\"\n"))
+>>>>>>> origin/master
     (if describe-function-show-arglist
 	(let ((arglist (function-arglist function)))
 	  (when arglist
@@ -1496,11 +1592,30 @@ there is no variable around that point, nil is returned."
 	     (princ (format "%s" aliases)))
 	 (princ (built-in-variable-doc variable))
 	 (princ ".\n")
+<<<<<<< HEAD
 	 (let ((file-name (describe-symbol-find-file variable)))
 	   (if file-name
 	       (princ (format "  -- loaded from \"%s\"\n" file-name))))
 	 (princ "\nValue: ")
 	 (require 'hyper-apropos)
+=======
+	 (require 'hyper-apropos)
+	 (let ((file-name (symbol-file variable 'defvar))
+	       opoint e)
+	   (when file-name
+	       (princ "  -- loaded from \"")
+	       (if (not (bufferp standard-output))
+		   (princ file-name)
+		 (setq opoint (point standard-output))
+		 (princ file-name)
+		 (setq e (make-extent opoint (point standard-output)
+				      standard-output))
+		 (set-extent-property e 'face 'hyper-apropos-hyperlink)
+		 (set-extent-property e 'mouse-face 'highlight)
+		 (set-extent-property e 'find-variable-symbol variable))
+	       (princ"\"\n")))
+	 (princ "\nValue: ")
+>>>>>>> origin/master
     	 (if (not (boundp variable))
 	     (Help-princ-face "void\n" 'hyper-apropos-documentation)
 	   (Help-prin1-face (symbol-value variable)
@@ -1685,4 +1800,31 @@ after the listing is made.)"
 	(with-displaying-help-buffer
 	 (insert string)))))
 
+<<<<<<< HEAD
+=======
+(defun help-find-source-or-scroll-up (&optional pos)
+  "Follow any cross reference to source code; if none, scroll up.  "
+  (interactive "d")
+  (let ((e (extent-at pos nil 'find-function-symbol)))
+    (if e
+	(find-function (extent-property e 'find-function-symbol))
+      (setq e (extent-at pos nil 'find-variable-symbol))
+      (if e 
+	  (find-variable (extent-property e 'find-variable-symbol))
+	(view-scroll-lines-up 1)))))
+
+(defun help-mouse-find-source-or-track (event)
+  "Follow any cross reference to source code under the mouse; 
+if none, call mouse-track.  "
+  (interactive "e")
+  (mouse-set-point event)
+  (let ((e (extent-at (point) nil 'find-function-symbol)))
+    (if e
+	(find-function (extent-property e 'find-function-symbol))
+      (setq e (extent-at (point) nil 'find-variable-symbol))
+      (if e 
+	  (find-variable (extent-property e 'find-variable-symbol))
+	(view-scroll-lines-up 1)))))
+
+>>>>>>> origin/master
 ;;; help.el ends here

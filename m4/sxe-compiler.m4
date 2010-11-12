@@ -296,7 +296,11 @@ AC_DEFUN([SXE_CHECK_CC_CHAR], [dnl
 	## ----------------------------------------------------------------
 	## Checking for gnuc va list need in solaris
 	## ----------------------------------------------------------------
+<<<<<<< HEAD
 	if test "$GCC" == "yes" -a "$opsys" == "sol2" ; then
+=======
+	if test "$GCC" = "yes" -a "$opsys" = "sol2" ; then
+>>>>>>> origin/master
 		AC_MSG_CHECKING(for need to define gnuc_va_list)
 		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #include <stdarg.h>

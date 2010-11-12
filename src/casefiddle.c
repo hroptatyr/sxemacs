@@ -101,7 +101,11 @@ STRING-OR-CHAR is not altered--the value is a copy.
 See also `capitalize', `downcase' and `upcase-initials'.
 Optional second arg BUFFER specifies which buffer's case tables to use,
 and defaults to the current buffer.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (string_or_char, buffer))
 {
 	return casify_object(CASE_UP, string_or_char, buffer);
@@ -113,7 +117,11 @@ STRING-OR-CHAR may be a character or string.  The result has the same type.
 STRING-OR-CHAR is not altered--the value is a copy.
 Optional second arg BUFFER specifies which buffer's case tables to use,
 and defaults to the current buffer.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (string_or_char, buffer))
 {
 	return casify_object(CASE_DOWN, string_or_char, buffer);
@@ -127,7 +135,11 @@ STRING-OR-CHAR may be a character or string.  The result has the same type.
 STRING-OR-CHAR is not altered--the value is a copy.
 Optional second arg BUFFER specifies which buffer's case tables to use,
 and defaults to the current buffer.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (string_or_char, buffer))
 {
 	return casify_object(CASE_CAPITALIZE, string_or_char, buffer);
@@ -142,7 +154,11 @@ STRING-OR-CHAR may be a character or string.  The result has the same type.
 STRING-OR-CHAR is not altered--the value is a copy.
 Optional second arg BUFFER specifies which buffer's case tables to use,
 and defaults to the current buffer.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (string_or_char, buffer))
 {
 	return casify_object(CASE_CAPITALIZE_UP, string_or_char, buffer);
@@ -226,7 +242,11 @@ the region to operate on.  When used as a command, the text between
 point and the mark is operated on.
 See also `capitalize-region'.
 Optional third arg BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (start, end, buffer))
 {
 	/* This function can GC */
@@ -239,7 +259,11 @@ These arguments specify the starting and ending character numbers of
 the region to operate on.  When used as a command, the text between
 point and the mark is operated on.
 Optional third arg BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (start, end, buffer))
 {
 	/* This function can GC */
@@ -253,7 +277,11 @@ and the rest of it is lower case.
 In programs, give two arguments, the starting and ending
 character positions to operate on.
 Optional third arg BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (start, end, buffer))
 {
 	/* This function can GC */
@@ -268,7 +296,11 @@ Subsequent letters of each word are not changed.
 In programs, give two arguments, the starting and ending
 character positions to operate on.
 Optional third arg BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (start, end, buffer))
 {
 	return casify_region(CASE_CAPITALIZE_UP, start, end, buffer);
@@ -297,7 +329,11 @@ Convert following word (or COUNT words) to upper case, moving over.
 With negative argument, convert previous words but do not move.
 See also `capitalize-word'.
 Optional second arg BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (count, buffer))
 {
 	/* This function can GC */
@@ -308,7 +344,11 @@ DEFUN("downcase-word", Fdowncase_word, 1, 2, "p",	/*
 Convert following word (or COUNT words) to lower case, moving over.
 With negative argument, convert previous words but do not move.
 Optional second arg BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (count, buffer))
 {
 	/* This function can GC */
@@ -321,7 +361,11 @@ This gives the word(s) a first character in upper case
 and the rest lower case.
 With negative argument, capitalize previous words but do not move.
 Optional second arg BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (count, buffer))
 {
 	/* This function can GC */

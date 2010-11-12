@@ -40,7 +40,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "sysdep.h"
 #include "window.h"
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #include "systime.h"
@@ -133,7 +137,11 @@ static void report_fork_error(char *string, Lisp_Object data)
 }
 #endif				/* unused */
 
+<<<<<<< HEAD
 DEFUN("old-call-process-internal", Fold_call_process_internal, 1, MANY, 0,	/*
+=======
+DEFUN("old-call-process-internal", Fold_call_process_internal, 1, MANY, 0, /*
+>>>>>>> origin/master
 Call PROGRAM synchronously in separate process, with coding-system specified.
 Arguments are
 (PROGRAM &optional INFILE BUFFER DISPLAY &rest ARGS).
@@ -154,8 +162,14 @@ Otherwise it waits for PROGRAM to terminate and returns a numeric exit status
 or a signal description string.
 If you quit, the process is killed with SIGINT, or SIGKILL if you
 quit again.
+<<<<<<< HEAD
 										 */
       (int nargs, Lisp_Object * args)) {
+=======
+*/
+      (int nargs, Lisp_Object * args))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Lisp_Object infile, buffer, current_dir, display, path;
 	int fd[2];
@@ -707,7 +721,11 @@ DEFUN("getenv", Fgetenv, 1, 2, "sEnvironment variable: \np",	/*
 Return the value of environment variable VAR, as a string.
 VAR is a string, the name of the variable.
 When invoked interactively, prints the value in the echo area.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (var, interactivep))
 {
 	Bufbyte *value = NULL;

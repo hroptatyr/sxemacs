@@ -30,7 +30,11 @@
 #endif
 
 #undef UNEXEC
+<<<<<<< HEAD
 #define UNEXEC	"unexsunos4.o"
+=======
+/* #define UNEXEC	"unexsunos4.o" */
+>>>>>>> origin/master
 #ifndef RUN_TIME_REMAP
 #define RUN_TIME_REMAP
 #endif

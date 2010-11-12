@@ -127,8 +127,13 @@ Tt_message unbox_tooltalk_message(Lisp_Object msg)
 }
 
 DEFUN("tooltalk-message-p", Ftooltalk_message_p, 1, 1, 0,	/*
+<<<<<<< HEAD
 								   Return non-nil if OBJECT is a tooltalk message.
 								 */
+=======
+Return non-nil if OBJECT is a tooltalk message.
+*/
+>>>>>>> origin/master
       (object))
 {
 	return TOOLTALK_MESSAGEP(object) ? Qt : Qnil;
@@ -195,8 +200,13 @@ static Tt_pattern unbox_tooltalk_pattern(Lisp_Object pattern)
 }
 
 DEFUN("tooltalk-pattern-p", Ftooltalk_pattern_p, 1, 1, 0,	/*
+<<<<<<< HEAD
 								   Return non-nil if OBJECT is a tooltalk pattern.
 								 */
+=======
+Return non-nil if OBJECT is a tooltalk pattern.
+*/
+>>>>>>> origin/master
       (object))
 {
 	return TOOLTALK_PATTERNP(object) ? Qt : Qnil;
@@ -220,9 +230,15 @@ static void check_status(Tt_status st)
 }
 
 DEFUN("receive-tooltalk-message", Freceive_tooltalk_message, 0, 2, 0,	/*
+<<<<<<< HEAD
 									   Run tt_message_receive().
 									   This function is the process handler for the ToolTalk connection process.
 									 */
+=======
+Run tt_message_receive().
+This function is the process handler for the ToolTalk connection process.
+*/
+>>>>>>> origin/master
       (ignore1, ignore2))
 {
 	/* This function can GC */
@@ -471,6 +487,7 @@ static Lisp_Object tt_message_arg_bval_vector(Tt_message m, int n)
 }
 
 DEFUN("get-tooltalk-message-attribute", Fget_tooltalk_message_attribute, 2, 3, 0,	/*
+<<<<<<< HEAD
 											   Return the indicated Tooltalk message attribute.  Attributes are
 											   identified by symbols with the same name (underscores and all) as the
 											   suffix of the Tooltalk tt_message_<attribute> function that extracts the value.
@@ -501,6 +518,39 @@ DEFUN("get-tooltalk-message-attribute", Fget_tooltalk_message_attribute, 2, 3, 0
 											   value returned by 'arg_bval like a string is fine.
 											 */
       (message_, attribute, argn)) {
+=======
+Return the indicated Tooltalk message attribute.  Attributes are
+identified by symbols with the same name (underscores and all) as the
+suffix of the Tooltalk tt_message_<attribute> function that extracts the value.
+String attribute values are copied, enumerated type values (except disposition)
+are converted to symbols - e.g. TT_HANDLER is 'TT_HANDLER, uid and gid are
+represented by fixnums (small integers), opnum is converted to a string,
+and disposition is converted to a fixnum.  We convert opnum (a C int) to a
+string, e.g. 123 => "123" because there's no guarantee that opnums will fit
+within the range of Lisp integers.
+
+Use the 'plist attribute instead of the C API 'user attribute
+for user defined message data.  To retrieve the value of a message property
+specify the indicator for argn.  For example to get the value of a property
+called 'rflag, use
+(get-tooltalk-message-attribute message 'plist 'rflag)
+
+To get the value of a message argument use one of the 'arg_val (strings),
+'arg_ival (integers), or 'arg_bval (strings with embedded nulls), attributes.
+For example to get the integer value of the third argument:
+
+(get-tooltalk-message-attribute message 'arg_ival 2)
+
+As you can see, argument numbers are zero based.  The type of each argument
+can be retrieved with the 'arg_type attribute; however, Tooltalk doesn't
+define any semantics for the string value of 'arg_type.  Conventionally
+"string" is used for strings and "int" for 32 bit integers.  Note that
+Emacs Lisp stores the lengths of strings explicitly (unlike C) so treating the
+value returned by 'arg_bval like a string is fine.
+*/
+      (message_, attribute, argn))
+{
+>>>>>>> origin/master
 	Tt_message m = unbox_tooltalk_message(message_);
 	int n = 0;
 
@@ -610,6 +660,7 @@ DEFUN("get-tooltalk-message-attribute", Fget_tooltalk_message_attribute, 2, 3, 0
 }
 
 DEFUN("set-tooltalk-message-attribute", Fset_tooltalk_message_attribute, 3, 4, 0,	/*
+<<<<<<< HEAD
 											   Initialize one Tooltalk message attribute.
 
 											   Attribute names and values are the same as for
@@ -628,6 +679,27 @@ DEFUN("set-tooltalk-message-attribute", Fset_tooltalk_message_attribute, 3, 4, 0
 											   New arguments can be added to a message with add-tooltalk-message-arg.
 											 */
       (value, message_, attribute, argn)) {
+=======
+Initialize one Tooltalk message attribute.
+
+Attribute names and values are the same as for
+`get-tooltalk-message-attribute'.  A property list is provided for user
+data (instead of the 'user message attribute); see
+`get-tooltalk-message-attribute'.
+
+The value of callback should be the name of a function of one argument.
+It will be applied to the message and matching pattern each time the state of the
+message changes.  This is usually used to notice when the messages state has
+changed to TT_HANDLED (or TT_FAILED), so that reply argument values
+can be used.
+
+If one of the argument attributes is specified, 'arg_val, 'arg_ival, or
+'arg_bval then argn must be the number of an already created argument.
+New arguments can be added to a message with add-tooltalk-message-arg.
+*/
+      (value, message_, attribute, argn))
+{
+>>>>>>> origin/master
 	Tt_message m = unbox_tooltalk_message(message_);
 	int n = 0;
 	Tt_status(*fun_str) (Tt_message, const char *) = 0;
@@ -719,12 +791,22 @@ DEFUN("set-tooltalk-message-attribute", Fset_tooltalk_message_attribute, 3, 4, 0
 }
 
 DEFUN("return-tooltalk-message", Freturn_tooltalk_message, 1, 2, 0,	/*
+<<<<<<< HEAD
 									   Send a reply to this message.  The second argument can be
 									   'reply, 'reject or 'fail; the default is 'reply.  Before sending
 									   a reply all message arguments whose mode is TT_INOUT or TT_OUT should
 									   have been filled in - see set-tooltalk-message-attribute.
 									 */
       (message_, mode)) {
+=======
+Send a reply to this message.  The second argument can be
+'reply, 'reject or 'fail; the default is 'reply.  Before sending
+a reply all message arguments whose mode is TT_INOUT or TT_OUT should
+have been filled in - see set-tooltalk-message-attribute.
+*/
+      (message_, mode))
+{
+>>>>>>> origin/master
 	Tt_message m = unbox_tooltalk_message(message_);
 
 	if (NILP(mode))
@@ -745,6 +827,7 @@ DEFUN("return-tooltalk-message", Freturn_tooltalk_message, 1, 2, 0,	/*
 }
 
 DEFUN("create-tooltalk-message", Fcreate_tooltalk_message, 0, 1, 0,	/*
+<<<<<<< HEAD
 									   Create a new tooltalk message.
 									   The messages session attribute is initialized to the default session.
 									   Other attributes can be initialized with `set-tooltalk-message-attribute'.
@@ -755,6 +838,19 @@ DEFUN("create-tooltalk-message", Fcreate_tooltalk_message, 0, 1, 0,	/*
 									   calling `make-tooltalk-message'.
 									 */
       (no_callback)) {
+=======
+Create a new tooltalk message.
+The messages session attribute is initialized to the default session.
+Other attributes can be initialized with `set-tooltalk-message-attribute'.
+`make-tooltalk-message' is the preferred to create and initialize a message.
+
+Optional arg NO-CALLBACK says don't add a C-level callback at all.
+Normally don't do that; just don't specify the Lisp callback when
+calling `make-tooltalk-message'.
+*/
+      (no_callback))
+{
+>>>>>>> origin/master
 	Tt_message m = tt_message_create();
 	Lisp_Object message_ = make_tooltalk_message(m);
 	if (NILP(no_callback)) {
@@ -766,12 +862,22 @@ DEFUN("create-tooltalk-message", Fcreate_tooltalk_message, 0, 1, 0,	/*
 }
 
 DEFUN("destroy-tooltalk-message", Fdestroy_tooltalk_message, 1, 1, 0,	/*
+<<<<<<< HEAD
 									   Apply tt_message_destroy() to the message.
 									   It's not necessary to destroy messages after they've been processed by
 									   a message or pattern callback; the Lisp/Tooltalk callback machinery does
 									   this for you.
 									 */
       (message_)) {
+=======
+Apply tt_message_destroy() to the message.
+It's not necessary to destroy messages after they've been processed by
+a message or pattern callback; the Lisp/Tooltalk callback machinery does
+this for you.
+*/
+      (message_))
+{
+>>>>>>> origin/master
 	Tt_message m = unbox_tooltalk_message(message_);
 
 	if (VALID_TOOLTALK_MESSAGEP(m))
@@ -796,6 +902,7 @@ DEFUN("destroy-tooltalk-message", Fdestroy_tooltalk_message, 1, 1, 0,	/*
 }
 
 DEFUN("add-tooltalk-message-arg", Fadd_tooltalk_message_arg, 3, 4, 0,	/*
+<<<<<<< HEAD
 									   Append one new argument to the message.
 									   MODE must be one of TT_IN, TT_INOUT, or TT_OUT; VTYPE must be a string;
 									   and VALUE can be a string or an integer.   Tooltalk doesn't
@@ -808,6 +915,21 @@ DEFUN("add-tooltalk-message-arg", Fadd_tooltalk_message_arg, 3, 4, 0,	/*
 									   embedded nulls (use 'arg_bval).
 									 */
       (message_, mode, vtype, value)) {
+=======
+Append one new argument to the message.
+MODE must be one of TT_IN, TT_INOUT, or TT_OUT; VTYPE must be a string;
+and VALUE can be a string or an integer.   Tooltalk doesn't
+define any semantics for VTYPE, so only the participants in the
+protocol you're using need to agree what types mean (if anything).
+Conventionally "string" is used for strings and "int" for 32 bit integers.
+Arguments can initialized by providing a value or with
+`set-tooltalk-message-attribute'.  The latter is necessary if you
+want to initialize the argument with a string that can contain
+embedded nulls (use 'arg_bval).
+*/
+      (message_, mode, vtype, value))
+{
+>>>>>>> origin/master
 	Tt_message m = unbox_tooltalk_message(message_);
 	Tt_mode n;
 
@@ -836,10 +958,17 @@ DEFUN("add-tooltalk-message-arg", Fadd_tooltalk_message_arg, 3, 4, 0,	/*
 }
 
 DEFUN("send-tooltalk-message", Fsend_tooltalk_message, 1, 1, 0,	/*
+<<<<<<< HEAD
 								   Send the message on its way.
 								   Once the message has been sent it's almost always a good idea to get rid of
 								   it with `destroy-tooltalk-message'.
 								 */
+=======
+Send the message on its way.
+Once the message has been sent it's almost always a good idea to get rid of
+it with `destroy-tooltalk-message'.
+*/
+>>>>>>> origin/master
       (message_))
 {
 	Tt_message m = unbox_tooltalk_message(message_);
@@ -853,9 +982,15 @@ DEFUN("send-tooltalk-message", Fsend_tooltalk_message, 1, 1, 0,	/*
 }
 
 DEFUN("create-tooltalk-pattern", Fcreate_tooltalk_pattern, 0, 0, 0,	/*
+<<<<<<< HEAD
 									   Create a new Tooltalk pattern.
 									   Its session attribute is initialized to be the default session.
 									 */
+=======
+Create a new Tooltalk pattern.
+Its session attribute is initialized to be the default session.
+*/
+>>>>>>> origin/master
       ())
 {
 	Tt_pattern p = tt_pattern_create();
@@ -869,9 +1004,15 @@ DEFUN("create-tooltalk-pattern", Fcreate_tooltalk_pattern, 0, 0, 0,	/*
 }
 
 DEFUN("destroy-tooltalk-pattern", Fdestroy_tooltalk_pattern, 1, 1, 0,	/*
+<<<<<<< HEAD
 									   Apply tt_pattern_destroy() to the pattern.
 									   This effectively unregisters the pattern.
 									 */
+=======
+Apply tt_pattern_destroy() to the pattern.
+This effectively unregisters the pattern.
+*/
+>>>>>>> origin/master
       (pattern))
 {
 	Tt_pattern p = unbox_tooltalk_pattern(pattern);
@@ -885,11 +1026,19 @@ DEFUN("destroy-tooltalk-pattern", Fdestroy_tooltalk_pattern, 1, 1, 0,	/*
 }
 
 DEFUN("add-tooltalk-pattern-attribute", Fadd_tooltalk_pattern_attribute, 3, 3, 0,	/*
+<<<<<<< HEAD
 											   Add one value to the indicated pattern attribute.
 											   All Tooltalk pattern attributes are supported except 'user.  The names
 											   of attributes are the same as the Tooltalk accessors used to set them
 											   less the "tooltalk_pattern_" prefix and the "_add" ...
 											 */
+=======
+Add one value to the indicated pattern attribute.
+All Tooltalk pattern attributes are supported except 'user.  The names
+of attributes are the same as the Tooltalk accessors used to set them
+less the "tooltalk_pattern_" prefix and the "_add" ...
+*/
+>>>>>>> origin/master
       (value, pattern, attribute))
 {
 	Tt_pattern p = unbox_tooltalk_pattern(pattern);
@@ -967,12 +1116,21 @@ DEFUN("add-tooltalk-pattern-attribute", Fadd_tooltalk_pattern_attribute, 3, 3, 0
 }
 
 DEFUN("add-tooltalk-pattern-arg", Fadd_tooltalk_pattern_arg, 3, 4, 0,	/*
+<<<<<<< HEAD
 									   Add one fully specified argument to a tooltalk pattern.
 									   Mode must be one of TT_IN, TT_INOUT, or TT_OUT, type must be a string.
 									   Value can be an integer, string or nil.  If value is an integer then
 									   an integer argument (tt_pattern_iarg_add) added otherwise a string argument
 									   is added.  At present there's no way to add a binary data argument.
 									 */
+=======
+Add one fully specified argument to a tooltalk pattern.
+Mode must be one of TT_IN, TT_INOUT, or TT_OUT, type must be a string.
+Value can be an integer, string or nil.  If value is an integer then
+an integer argument (tt_pattern_iarg_add) added otherwise a string argument
+is added.  At present there's no way to add a binary data argument.
+*/
+>>>>>>> origin/master
       (pattern, mode, vtype, value))
 {
 	Tt_pattern p = unbox_tooltalk_pattern(pattern);
@@ -1004,8 +1162,13 @@ DEFUN("add-tooltalk-pattern-arg", Fadd_tooltalk_pattern_arg, 3, 4, 0,	/*
 }
 
 DEFUN("register-tooltalk-pattern", Fregister_tooltalk_pattern, 1, 1, 0,	/*
+<<<<<<< HEAD
 									   Emacs will begin receiving messages that match this pattern.
 									 */
+=======
+Emacs will begin receiving messages that match this pattern.
+*/
+>>>>>>> origin/master
       (pattern))
 {
 	Tt_pattern p = unbox_tooltalk_pattern(pattern);
@@ -1018,8 +1181,13 @@ DEFUN("register-tooltalk-pattern", Fregister_tooltalk_pattern, 1, 1, 0,	/*
 }
 
 DEFUN("unregister-tooltalk-pattern", Funregister_tooltalk_pattern, 1, 1, 0,	/*
+<<<<<<< HEAD
 										   Emacs will stop receiving messages that match this pattern.
 										 */
+=======
+Emacs will stop receiving messages that match this pattern.
+*/
+>>>>>>> origin/master
       (pattern))
 {
 	Tt_pattern p = unbox_tooltalk_pattern(pattern);
@@ -1033,9 +1201,15 @@ DEFUN("unregister-tooltalk-pattern", Funregister_tooltalk_pattern, 1, 1, 0,	/*
 }
 
 DEFUN("tooltalk-pattern-prop-get", Ftooltalk_pattern_prop_get, 2, 2, 0,	/*
+<<<<<<< HEAD
 									   Return the value of PROPERTY in tooltalk pattern PATTERN.
 									   This is the last value set with `tooltalk-pattern-prop-set'.
 									 */
+=======
+Return the value of PROPERTY in tooltalk pattern PATTERN.
+This is the last value set with `tooltalk-pattern-prop-set'.
+*/
+>>>>>>> origin/master
       (pattern, property))
 {
 	CHECK_TOOLTALK_PATTERN(pattern);
@@ -1043,9 +1217,15 @@ DEFUN("tooltalk-pattern-prop-get", Ftooltalk_pattern_prop_get, 2, 2, 0,	/*
 }
 
 DEFUN("tooltalk-pattern-prop-set", Ftooltalk_pattern_prop_set, 3, 3, 0,	/*
+<<<<<<< HEAD
 									   Set the value of PROPERTY to VALUE in tooltalk pattern PATTERN.
 									   It can be retrieved with `tooltalk-pattern-prop-get'.
 									 */
+=======
+Set the value of PROPERTY to VALUE in tooltalk pattern PATTERN.
+It can be retrieved with `tooltalk-pattern-prop-get'.
+*/
+>>>>>>> origin/master
       (pattern, property, value))
 {
 	CHECK_TOOLTALK_PATTERN(pattern);
@@ -1053,8 +1233,13 @@ DEFUN("tooltalk-pattern-prop-set", Ftooltalk_pattern_prop_set, 3, 3, 0,	/*
 }
 
 DEFUN("tooltalk-pattern-plist-get", Ftooltalk_pattern_plist_get, 1, 1, 0,	/*
+<<<<<<< HEAD
 										   Return the a list of all the properties currently set in PATTERN.
 										 */
+=======
+Return the a list of all the properties currently set in PATTERN.
+*/
+>>>>>>> origin/master
       (pattern))
 {
 	CHECK_TOOLTALK_PATTERN(pattern);
@@ -1064,8 +1249,13 @@ DEFUN("tooltalk-pattern-plist-get", Ftooltalk_pattern_plist_get, 1, 1, 0,	/*
 }
 
 DEFUN("tooltalk-default-procid", Ftooltalk_default_procid, 0, 0, 0,	/*
+<<<<<<< HEAD
 									   Return current default process identifier for your process.
 									 */
+=======
+Return current default process identifier for your process.
+*/
+>>>>>>> origin/master
       ())
 {
 	char *procid = tt_default_procid();
@@ -1073,8 +1263,13 @@ DEFUN("tooltalk-default-procid", Ftooltalk_default_procid, 0, 0, 0,	/*
 }
 
 DEFUN("tooltalk-default-session", Ftooltalk_default_session, 0, 0, 0,	/*
+<<<<<<< HEAD
 									   Return current default session identifier for the current default procid.
 									 */
+=======
+Return current default session identifier for the current default procid.
+*/
+>>>>>>> origin/master
       ())
 {
 	char *session = tt_default_session();
@@ -1145,9 +1340,15 @@ static void init_tooltalk(void)
 }
 
 DEFUN("tooltalk-open-connection", Ftooltalk_open_connection, 0, 0, 0,	/*
+<<<<<<< HEAD
 									   Opens a connection to the ToolTalk server.
 									   Returns t if successful, nil otherwise.
 									 */
+=======
+Opens a connection to the ToolTalk server.
+Returns t if successful, nil otherwise.
+*/
+>>>>>>> origin/master
       ())
 {
 	if (!NILP(Vtooltalk_fd))

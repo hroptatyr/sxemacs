@@ -49,7 +49,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "sysdep.h"
 #include "window.h"
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #include <setjmp.h>

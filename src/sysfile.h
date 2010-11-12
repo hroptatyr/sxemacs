@@ -513,4 +513,11 @@ int sys_execvp(const char *, char *const *);
 # define sys_execvp execvp
 #endif
 
+<<<<<<< HEAD
+=======
+/* How long can a source filename be in DOC (including "\037S" at the start
+    and "\n" at the end) ? */
+#define DOC_MAX_FILENAME_LENGTH 2048
+
+>>>>>>> origin/master
 #endif				/* INCLUDED_sysfile_h_ */

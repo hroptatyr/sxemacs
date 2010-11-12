@@ -1422,9 +1422,12 @@ documentation as @dfn{info files}, for on-line use.  These files are
 used when you enter the Info system using @kbd{C-h i} or through the
 Help menu.
 
+<<<<<<< HEAD
 The @file{dynodump/} directory contains auxiliary code used to build
 SXEmacs on Solaris platforms.
 
+=======
+>>>>>>> origin/master
 The other directories contain various miscellaneous code and information
 that is not normally used or needed.
 

@@ -8,7 +8,11 @@ dnl -------------------------------------------------------------------------
 dnl Autoconf startup.
 dnl -------------------------------------------------------------------------
 
+<<<<<<< HEAD
 AC_PREREQ([2.60])
+=======
+AC_PREREQ([2.62])
+>>>>>>> origin/master
 AC_INIT([SXEmacs], [SXEM4CS_VERSION], [http://issues.sxemacs.org/])
 AC_CONFIG_HEADER([src/config.h])
 AC_CONFIG_SRCDIR([src/lisp.h])
@@ -209,10 +213,17 @@ OG_ARG_WITH([quick-build],
 		SXEmacs will still work (more or less) without them.
 		Potentially dangerous if you don't know what you're
 		doing. This (1) doesn't garbage-collect after loading
+<<<<<<< HEAD
 		each file during dumping[,] (2) doesn't automatically
 		rebuild the DOC file (remove it by hand to get it
 		rebuilt), (3) Removes config.h, lisp.h and associated
 		files from the dependency lists, so changes to these
+=======
+		each file during dumping, (2) doesn't automatically
+		rebuild the DOC file (remove it by hand to get it
+		rebuilt), (3) Removes config.h lisp.h and associated
+		files from the dependency lists so changes to these
+>>>>>>> origin/master
 		files don't automatically cause all .c files
 		to be rebuilt.]),
 	[no], [No], [])
@@ -314,11 +325,14 @@ OG_ARG_WITH([regex-malloc],
 		[Use malloc for regex failure stack.]),
 	[yes], [YES])
 
+<<<<<<< HEAD
 OG_ARG_WITH([pdump],
 	AS_HELP_STRING([--with-pdump],
 		[Use the portable dumper.]),
 	[yes], [YES])
 
+=======
+>>>>>>> origin/master
 OG_ARG_WITH([ffi],
 	AS_HELP_STRING([--with-ffi],
 		[Compile in experimental support for 
@@ -428,7 +442,11 @@ OG_OPTION_GROUP(Debugging Options)
 OG_ARG_WITH([debug],
 	AS_HELP_STRING([--with-debug],
 		[Compile with extra debugging code.
+<<<<<<< HEAD
 		This will turn on: --with-assertions[,]
+=======
+		This will turn on: --with-assertions
+>>>>>>> origin/master
 		and --with-memory-usage-stats.]),
 	[yes], [YES for beta; NO for release])
 
@@ -612,7 +630,11 @@ OG_MULTIARG_WITH([image], [dnl
 OG_MULTIARG_WITH([sound], [dnl
 	AS_HELP_STRING([--with-sound=TYPE],
 		[Compile with sound support.])],
+<<<<<<< HEAD
 	[auto], [Autodetect all sound support], [dnl
+=======
+	[auto], [Autodetect all sound support (except Pulse)], [dnl
+>>>>>>> origin/master
 	OG_MULTIARG_ITEM([alsa], [ALSA], [kernel-based linux sound standard])
 	OG_MULTIARG_ITEM([ao], [ao], [generic audio output layer])
 	OG_MULTIARG_ITEM([arts], [aRts], [discontinued realtime synthesizer])
@@ -620,9 +642,22 @@ OG_MULTIARG_WITH([sound], [dnl
 	OG_MULTIARG_ITEM([jack], [Jack], [a low-latency audio server])
 	OG_MULTIARG_ITEM([nas], [NAS], [Network Audio System])
 	OG_MULTIARG_ITEM([oss], [OSS], [Open Sound System])
+<<<<<<< HEAD
 	OG_MULTIARG_ITEM([pulse], [PulseAudio], [versatile audio server])
 ])
 
+=======
+])
+
+OG_ARG_WITH([pulseaudio],
+	AS_HELP_STRING([--with-pulseaudio],
+		[Compile with support for the PulseAudio audio server.
+		This has been turned off by default because of too many
+		bugs in recent versions of PA.  Use at your own risk,
+		YMMV, and all that.]),
+	[no], [NO])
+
+>>>>>>> origin/master
 OG_MULTIARG_WITH([media], [dnl
 	AS_HELP_STRING([--with-media=TYPE],
 		[Compile with media stream support.])],
@@ -714,7 +749,11 @@ OG_OPTION_GROUP(Internationalisation options)
 
 OG_ARG_WITH([mule],
 	AS_HELP_STRING([--with-mule],
+<<<<<<< HEAD
 		[Compile with Mule (MUlti-Lingual Emacs) support[,]
+=======
+		[Compile with Mule (MUlti-Lingual Emacs) support
+>>>>>>> origin/master
 		needed to support non-Latin-1 (including Asian)
 		languages.]),
 	[yes], [YES])
@@ -979,6 +1018,7 @@ dnl --------------------------------------------------------------
 dnl $opsys detection complete; defaults depending on $opsys follow
 dnl --------------------------------------------------------------
 
+<<<<<<< HEAD
 if test "$with_pdump" != "no"; then
 	case "$opsys" in
 	linux* )
@@ -998,6 +1038,13 @@ if test "$with_pdump" != "no"; then
 		;;           dnl unexec is broken
 	esac
 fi
+=======
+
+dnl --------------------------------------------------------------
+dnl WooHoo! pdump is ON always and everywhere! --SY.
+dnl --------------------------------------------------------------
+with_pdump=yes
+>>>>>>> origin/master
 
 if test "$with_dynamic" != "no"; then
 	case "$opsys" in
@@ -1186,6 +1233,7 @@ SXE_PROTECT_LINKER_FLAGS(ld_switch_site)
 SXE_PROTECT_LINKER_FLAGS(LDFLAGS)
 SXE_PROTECT_LINKER_FLAGS(ld_call_shared)
 
+<<<<<<< HEAD
 dnl Add s&m-determined objects (including unexec) to link line
 test -n "$objects_machine" && SXE_ADD_CORE_OBJS($objects_machine)
 test -n "$objects_system"  && SXE_ADD_CORE_OBJS($objects_system)
@@ -1218,6 +1266,13 @@ fi
 AM_CONDITIONAL([DESCEND_DYNO_I386], [test "$dynodump_arch" = "i386"])
 AM_CONDITIONAL([DESCEND_DYNO_PPC], [test "$dynodump_arch" = "ppc"])
 AM_CONDITIONAL([DESCEND_DYNO_SPARC], [test "$dynodump_arch" = "sparc"])
+=======
+dnl Add s&m-determined objects to link line
+test -n "$objects_machine" && SXE_ADD_CORE_OBJS($objects_machine)
+test -n "$objects_system"  && SXE_ADD_CORE_OBJS($objects_system)
+test "$with_pdump" = "yes" && SXE_ADD_CORE_OBJS(dumper.o)
+
+>>>>>>> origin/master
 
 dnl Feed s&m crud to src/Makefile
 
@@ -1671,7 +1726,11 @@ if test $ac_cv_lib_pthread_pthread_create = yes; then
   case "`$CC -pthread 2>&1`" in
      *unrecognized\ option*) have_pthread_opt=no ;;
   esac
+<<<<<<< HEAD
   if test "$have_pthread_opt" == "yes"; then
+=======
+  if test "$have_pthread_opt" = "yes"; then
+>>>>>>> origin/master
 	SXE_PREPEND(-pthread, c_switch_site)
   fi
   SXE_PREPEND(-lpthread, MM_LIBS)
@@ -2719,6 +2778,7 @@ extern Bool XRegisterIMInstantiateCallback(
 	dnl #### Someone, please add a better function than main
 	AC_CHECK_LIB([Xbsd], [main], SXE_PREPEND([-lXbsd], [libs_x]))
 
+<<<<<<< HEAD
 	dnl Problem with the MIT distribution of X on AIX
 	if test "$unexec" = "unexaix.o" -a "$x11_release" = "6"; then
 		dnl X11R6 requires thread-safe code on AIX for some reason
@@ -2740,6 +2800,8 @@ extern Bool XRegisterIMInstantiateCallback(
 		fi
 	fi
 
+=======
+>>>>>>> origin/master
 	dnl restore old values
 	SXE_RESTORE_LIBS
 fi dnl $with_x11 = yes
@@ -3396,7 +3458,11 @@ if test "$with_sound_esd" != "no"; then
 fi
 
 dnl PulseAudio Sound support
+<<<<<<< HEAD
 if test "$with_sound_pulse" != "no"; then
+=======
+if test "$with_pulseaudio" != "no"; then
+>>>>>>> origin/master
 	SXE_MM_CHECK_PULSE([have_sound_pulse=yes], [have_sound_pulse=no])
 
 	AC_MSG_CHECKING([for sufficient PulseAudio support])
@@ -4057,7 +4123,10 @@ AC_SUBST(RECURSIVE_MAKE_ARGS)
 AC_SUBST(sound_cflags)
 AC_SUBST(AR)
 AC_SUBST(RANLIB)
+<<<<<<< HEAD
 AC_SUBST(dynodump_arch)
+=======
+>>>>>>> origin/master
 
 AC_SUBST(SXEMACS_CC)
 AC_SUBST(SXE_CFLAGS)
@@ -4344,14 +4413,24 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([lib-src/Makefile])
 AC_CONFIG_FILES([lwlib/Makefile])
 AC_CONFIG_FILES([src/Makefile])
+<<<<<<< HEAD
+=======
+AC_CONFIG_FILES([src/media/Makefile])
+AC_CONFIG_FILES([src/database/Makefile])
+AC_CONFIG_FILES([src/mule/Makefile])
+AC_CONFIG_FILES([src/ent/Makefile])
+>>>>>>> origin/master
 AC_CONFIG_FILES([src/.gdbinit:src/gdbinit])
 AC_CONFIG_FILES([src/.dbxrc:src/dbxrc])
 AC_CONFIG_FILES([lisp/Makefile])
 AC_CONFIG_FILES([info/Makefile])
+<<<<<<< HEAD
 AC_CONFIG_FILES([dynodump/Makefile])
 AC_CONFIG_FILES([dynodump/i386/Makefile])
 AC_CONFIG_FILES([dynodump/ppc/Makefile])
 AC_CONFIG_FILES([dynodump/sparc/Makefile])
+=======
+>>>>>>> origin/master
 AC_CONFIG_FILES([tests/Makefile])
 AC_CONFIG_FILES([modules/Makefile])
 AC_CONFIG_FILES([etc/Makefile])

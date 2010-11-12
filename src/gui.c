@@ -46,7 +46,11 @@ int popup_up_p;
 DEFUN("popup-up-p", Fpopup_up_p, 0, 0, 0,	/*
 Return t if a popup menu or dialog box is up, nil otherwise.
 See `popup-menu' and `popup-dialog-box'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return popup_up_p ? Qt : Qnil;

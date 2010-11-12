@@ -124,6 +124,13 @@ AC_DEFUN([SXE_CHECK_OPENSSL_FEATURES], [dnl
 	dnl test for some special purpose stuff in libcrypto
 	AC_CHECK_LIB([crypto], [RSA_new], [openssl_no_rsa=no], [openssl_no_rsa=yes])
 	AC_CHECK_LIB([crypto], [DSA_new], [openssl_no_dsa=no], [openssl_no_dsa=yes])
+<<<<<<< HEAD
+=======
+	AC_CHECK_LIB([crypto], [ECDSA_SIG_new], [openssl_no_ecdsa=no],
+						[openssl_no_ecdsa=yes])
+	AC_CHECK_LIB([crypto], [ECDH_OpenSSL], [openssl_no_ecdh=no],
+						[openssl_no_ecdh=yes])
+>>>>>>> origin/master
 	AC_CHECK_LIB([crypto], [EC_KEY_new], [openssl_no_ec=no], [openssl_no_ec=yes])
 	AC_CHECK_LIB([crypto], [DH_new], [openssl_no_dh=no], [openssl_no_dh=yes])
 	if test "$openssl_no_rsa" = "yes"; then
@@ -132,6 +139,15 @@ AC_DEFUN([SXE_CHECK_OPENSSL_FEATURES], [dnl
 	if test "$openssl_no_dsa" = "yes"; then
 		AC_DEFINE([OPENSSL_NO_DSA], [1], [Description here!])
 	fi
+<<<<<<< HEAD
+=======
+	if test "$openssl_no_ecdsa" = "yes"; then
+		AC_DEFINE([OPENSSL_NO_ECDSA], [1], [Description here!])
+	fi
+	if test "$openssl_no_ecdh" = "yes"; then
+		AC_DEFINE([OPENSSL_NO_ECDH], [1], [Description here!])
+	fi
+>>>>>>> origin/master
 	if test "$openssl_no_ec" = "yes"; then
 		AC_DEFINE([OPENSSL_NO_EC], [1], [Description here!])
 	fi

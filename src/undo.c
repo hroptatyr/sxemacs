@@ -219,7 +219,11 @@ DEFUN("undo-boundary", Fundo_boundary, 0, 0, 0,	/*
 Mark a boundary between units of undo.
 An undo command will stop at this point,
 but another undo command will undo to the previous boundary.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	if (EQ(current_buffer->undo_list, Qt))
@@ -326,7 +330,11 @@ Lisp_Object truncate_undo_list(Lisp_Object list, int minsize, int maxsize)
 DEFUN("primitive-undo", Fprimitive_undo, 2, 2, 0,	/*
 Undo COUNT records from the front of the list LIST.
 Return what remains of the list.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (count, list))
 {
 	struct gcpro gcpro1, gcpro2;

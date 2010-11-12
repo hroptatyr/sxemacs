@@ -381,7 +381,11 @@ DEFUN("lock-buffer", Flock_buffer, 0, 1, 0,	/*
 Lock FILE, if current buffer is modified.
 FILE defaults to current buffer's visited file,
 or else nothing is done if current buffer isn't visiting a file.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (file))
 {
 	if (NILP(file))
@@ -396,7 +400,11 @@ or else nothing is done if current buffer isn't visiting a file.
 DEFUN("unlock-buffer", Funlock_buffer, 0, 0, 0,	/*
 Unlock the file visited in the current buffer,
 if it should normally be locked.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	/* This function can GC */
@@ -426,7 +434,11 @@ void unlock_buffer(struct buffer *buffer)
 DEFUN("file-locked-p", Ffile_locked_p, 0, 1, 0,	/*
 Return nil if the FILENAME is not locked,
 t if it is locked by you, else a string of the name of the locker.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	Lisp_Object ret;

@@ -62,6 +62,7 @@ static Lisp_Object Qkrbv42;
 static Lisp_Object Qnever, Qalways, Qfind;
 
 DEFUN("ldap-search-internal", Fldap_search_internal, 1, 1, 0,	/*
+<<<<<<< HEAD
 								   Perform a search on a LDAP server.
 								   SEARCH-PLIST is a property list describing the search request.
 								   Valid keys in that list are:
@@ -84,6 +85,48 @@ DEFUN("ldap-search-internal", Fldap_search_internal, 1, 1, 0,	/*
 								   The function returns a list of matching entries.  Each entry is itself
 								   an alist of attribute/values.
 								 */
+=======
+Perform a search on a LDAP server.
+
+SEARCH-PLIST is a property list describing the search request.
+Valid keys in that list are:
+
+  `host' is a string naming one or more (blank separated) LDAP servers
+  to to try to connect to. Each host name may optionally be of the
+  form host:port.
+
+  `filter' is a filter string for the search as described in RFC 1558
+
+  `attributes' is a list of strings indicating which attributes to
+  retrieve for each matching entry. If nil return all available
+  attributes.
+
+  `attrsonly' if non-nil indicates that only the attributes are
+  retrieved, not the associated values.
+
+  `base' is the base for the search as described in RFC 1779.
+
+  `scope' is one of the three symbols `subtree', `base' or `onelevel'.
+
+  `auth' is the authentication method to use, possible values depend
+  on the LDAP library XEmacs was compiled with: `simple', `krbv41' and
+  `krbv42'.
+
+  `binddn' is the distinguished name of the user to bind as (in RFC
+  1779 syntax).
+
+  `passwd' is the password to use for simple authentication.
+
+  `deref' is one of the symbols `never', `always', `search' or `find'.
+
+  `timelimit' is the timeout limit for the connection in seconds.
+
+  `sizelimit' is the maximum number of matches to return.
+
+The function returns a list of matching entries.  Each entry is itself
+an alist of attribute/values.
+*/
+>>>>>>> origin/master
       (search_plist))
 {
 	/* This function calls lisp */

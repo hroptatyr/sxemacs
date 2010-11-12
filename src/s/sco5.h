@@ -125,7 +125,15 @@ could #define sco and I think everything would work. rjl */
 
 #ifdef _SCO_ELF
 #undef COFF			/* coz we're NOT */
+<<<<<<< HEAD
 #define UNEXEC "unexelf.o"
+=======
+/*
+ * everythign is pdump now. --SY
+ * #define UNEXEC "unexelf.o"
+ */
+#undef UNEXEC
+>>>>>>> origin/master
 #endif
 
 /* For GCC 2.7.2.3 we require the "JKJ" version of gcc.

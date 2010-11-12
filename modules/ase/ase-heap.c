@@ -38,7 +38,11 @@
 
 #include "config.h"
 #include "sxemacs.h"
+<<<<<<< HEAD
 #include "ent.h"
+=======
+#include "ent/ent.h"
+>>>>>>> origin/master
 #include "ase-heap.h"
 #include "opaque.h"
 
@@ -1850,7 +1854,11 @@ Return a new heap object.
 Arguments: &rest keys
 :kind  kind of the heap, can be one of 'weak (default), 'dense, or 'dynamic
 :relation
+<<<<<<< HEAD
 				      */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 	ase_heap_options_t opts = xnew(struct ase_heap_options_s);
@@ -1887,7 +1895,11 @@ Arguments: &rest keys
 
 DEFUN("ase-add-heap", Fase_add_heap, 2, 3, 0, /*
 Add OBJECT to HEAP and (optionally) COLOUR it.
+<<<<<<< HEAD
 					      */
+=======
+*/
+>>>>>>> origin/master
       (heap, object, colour))
 {
 	void *h = NULL;
@@ -1911,7 +1923,11 @@ Add OBJECT to HEAP and (optionally) COLOUR it.
 
 DEFUN("ase-pop-heap", Fase_pop_heap, 1, 1, 0, /*
 Pop off and return the most extreme element of HEAP.
+<<<<<<< HEAD
 					      */
+=======
+*/
+>>>>>>> origin/master
       (heap))
 {
 	void *h = NULL;
@@ -1936,7 +1952,11 @@ Pop off and return the most extreme element of HEAP.
 /* convenience funs */
 DEFUN("ase-heap-size", Fase_heap_size, 1, 1, 0, /*
 Return the number of elements inside HEAP.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -1953,7 +1973,11 @@ Return the number of elements inside HEAP.
 
 DEFUN("ase-heap-top", Fase_heap_top, 1, 1, 0, /*
 Return the topmost element of HEAP.
+<<<<<<< HEAD
 					      */
+=======
+*/
+>>>>>>> origin/master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -1970,7 +1994,11 @@ Return the topmost element of HEAP.
 
 DEFUN("ase-heap-top-rank", Fase_heap_top_rank, 1, 1, 0, /*
 Return the rank (priority) of the topmost element of HEAP.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -1988,7 +2016,11 @@ Return the rank (priority) of the topmost element of HEAP.
 DEFUN("ase-heap-to-list", Fase_heap_to_list, 1, 1, 0, /*
 Return a (sorted) list with the elements of HEAP.
 HEAP is kept alive.  See also `ase-heap-to-list*'
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -2006,7 +2038,11 @@ DEFUN("ase-heap-to-list*", Fase_heap_to_listX, 1, 1, 0, /*
 Return a (sorted) list with the elements of HEAP.
 HEAP is destroyed by side-effect, each element from HEAP is
 popped off and consed to the result list.
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -2023,7 +2059,11 @@ popped off and consed to the result list.
 DEFUN("ase-heap-to-vector", Fase_heap_to_vector, 1, 1, 0, /*
 Return a (sorted) vector with the elements of HEAP.
 HEAP is kept alive hereby.  See also `ase-heap-to-vector*'.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -2041,7 +2081,11 @@ DEFUN("ase-heap-to-vector*", Fase_heap_to_vectorX, 1, 1, 0, /*
 Return a (sorted) vector with the elements of HEAP.
 HEAP is destroyed by side-effect, each element from HEAP is
 popped off and written into the result vector.
+<<<<<<< HEAD
 							    */
+=======
+*/
+>>>>>>> origin/master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -2058,7 +2102,11 @@ popped off and written into the result vector.
 DEFUN("ase-heap-to-dllist", Fase_heap_to_dllist, 1, 1, 0, /*
 Return a (sorted) list with the elements of HEAP.
 HEAP is kept intact.  See also `ase-heap-to-dllist*'.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -2076,7 +2124,11 @@ DEFUN("ase-heap-to-dllist*", Fase_heap_to_dllistX, 1, 1, 0, /*
 Return a (sorted) list with the elements of HEAP.
 HEAP is destroyed by side-effect, each element from HEAP is
 popped off and appended to the result dllist.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);

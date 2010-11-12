@@ -76,7 +76,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 extern void enqueue_gtk_dispatch_event(Lisp_Object event);

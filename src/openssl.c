@@ -355,11 +355,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "openssl.h"
 
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
 #endif
 
 #ifdef HAVE_POSTGRESQL
 #include "postgresql.h"
+=======
+#include "mule/file-coding.h"
+#endif
+
+#ifdef HAVE_POSTGRESQL
+#include "database/postgresql.h"
+>>>>>>> origin/master
 #endif
 
 #define OSSL_CODING Qbinary
@@ -432,7 +440,11 @@ extern Lisp_Object Qfile_writable_p;
  */
 DEFUN("ossl-version", Fossl_version, 0, 0, 0, /*
 Return a descriptive version number of the OpenSSL in use.
+<<<<<<< HEAD
 					      */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return build_string(SSLeay_version(SSLEAY_VERSION));
@@ -442,7 +454,11 @@ Return a descriptive version number of the OpenSSL in use.
 DEFUN("ossl-available-digests", Fossl_available_digests, 0, 0, 0, /*
 Return a list of digest algorithms in the underlying crypto library.
 This yields a plain list of symbols.
+<<<<<<< HEAD
 								  */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	int nid;
@@ -469,7 +485,11 @@ This yields a plain list of symbols.
 DEFUN("ossl-available-ciphers", Fossl_available_ciphers, 0, 0, 0, /*
 Return a list of cipher algorithms in the underlying crypto library.
 This yields a plain list of symbols.
+<<<<<<< HEAD
 								  */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	int nid;
@@ -529,7 +549,11 @@ ossl_digest_block_size(Lisp_Object digest)
 
 DEFUN("ossl-digest-size", Fossl_digest_size, 1, 1, 0, /*
 Return the hash length of DIGEST in bytes.
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       (digest))
 {
 	int size = ossl_digest_size(digest);
@@ -543,7 +567,11 @@ Return the hash length of DIGEST in bytes.
 /* deprecated */
 DEFUN("ossl-digest-bits", Fossl_digest_bits, 1, 1, 0, /*
 Return the number of effective output bits of DIGEST.
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       (digest))
 {
 	int size = ossl_digest_size(digest);
@@ -556,7 +584,11 @@ Return the number of effective output bits of DIGEST.
 
 DEFUN("ossl-digest-block-size", Fossl_digest_block_size, 1, 1, 0, /*
 Return the block size of DIGEST in bytes.
+<<<<<<< HEAD
 								  */
+=======
+*/
+>>>>>>> origin/master
       (digest))
 {
 	int size = ossl_digest_block_size(digest);
@@ -616,7 +648,11 @@ ossl_cipher_mode(Lisp_Object cipher)
 
 DEFUN("ossl-cipher-key-length", Fossl_cipher_key_length, 1, 1, 0, /*
 Return the effective key length of CIPHER in bytes.
+<<<<<<< HEAD
 								  */
+=======
+*/
+>>>>>>> origin/master
       (cipher))
 {
 	int size = ossl_cipher_key_length(cipher);
@@ -630,7 +666,11 @@ Return the effective key length of CIPHER in bytes.
 /* deprecated */
 DEFUN("ossl-cipher-bits", Fossl_cipher_bits, 1, 1, 0, /*
 Return the effective key size of CIPHER in bits.
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       (cipher))
 {
 	int size = ossl_cipher_key_length(cipher);
@@ -643,7 +683,11 @@ Return the effective key size of CIPHER in bits.
 
 DEFUN("ossl-cipher-iv-length", Fossl_cipher_iv_length, 1, 1, 0, /*
 Return the initialisation vector length of CIPHER in bytes.
+<<<<<<< HEAD
 								*/
+=======
+*/
+>>>>>>> origin/master
       (cipher))
 {
 	int size = ossl_cipher_iv_length(cipher);
@@ -656,7 +700,11 @@ Return the initialisation vector length of CIPHER in bytes.
 
 DEFUN("ossl-cipher-block-size", Fossl_cipher_block_size, 1, 1, 0, /*
 Return the block size of CIPHER in bytes.
+<<<<<<< HEAD
 								  */
+=======
+*/
+>>>>>>> origin/master
       (cipher))
 {
 	int size = ossl_cipher_block_size(cipher);
@@ -669,7 +717,11 @@ Return the block size of CIPHER in bytes.
 
 DEFUN("ossl-cipher-mode", Fossl_cipher_mode, 1, 1, 0, /*
 Return the operation mode of CIPHER.
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       (cipher))
 {
 	Lisp_Object result = Qnil;
@@ -714,7 +766,11 @@ Return COUNT bytes of randomness.
 Note: You probably want to put a wrapping encoder function
 \(like `base16-encode-string'\) around it, since this returns
 binary string data.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       (count))
 {
 	char *outbuf;
@@ -752,7 +808,11 @@ By default use the socket /var/run/egd-pool.
 Note: You probably want to put a wrapping encoder function
 \(like `base16-encode-string'\) around it, since this returns
 binary string data.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       (count, egd))
 {
 	/* This function can GC */
@@ -815,7 +875,11 @@ See `ossl-available-digests'.
 Note: You probably want to put a wrapping encoder function
 \(like `base16-encode-string'\) around it, since this returns
 binary string data.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (digest, string))
 {
 	EVP_MD_CTX *mdctx;
@@ -857,7 +921,11 @@ See `ossl-available-digests'.
 Note: You probably want to put a wrapping encoder function
 \(like `base16-encode-string'\) around it, since this returns
 binary string data.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (digest, file))
 {
 	EVP_MD_CTX *mdctx;
@@ -930,7 +998,11 @@ using the hash function DIGEST and the key PASSWORD.
 Note: You probably want to put a wrapping encoder function
 \(like `base16-encode-string'\) around it, since this returns
 binary string data.
+<<<<<<< HEAD
 					*/
+=======
+*/
+>>>>>>> origin/master
       (digest, msg, password))
 {
 	const EVP_MD *md;
@@ -991,7 +1063,11 @@ using the hash function DIGEST and the key PASSWORD.
 Note: You probably want to put a wrapping encoder function
 \(like `base16-encode-string'\) around it, since this returns
 binary string data.
+<<<<<<< HEAD
 					*/
+=======
+*/
+>>>>>>> origin/master
       (digest, file, password))
 {
 	const EVP_MD *md;
@@ -1084,7 +1160,11 @@ indicates how often the hash algorithm is called recursively.
 Note: You probably want to put a wrapping encoder function 
 \(like `base16-encode-string'\) around it, since this returns
 binary string data.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (cipher, digest, salt, password, count))
 {
 	const EVP_MD *md;
@@ -1172,7 +1252,11 @@ non-nil, use this IV instead.
 Note: You probably want to put a wrapping encoder function
 \(like `base16-encode-string'\) around it, since this returns
 binary string data.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (cipher, string, key, iv))
 {
 	/* buffer for the external string */
@@ -1294,7 +1378,11 @@ encrypted data redirected.
 Note: You probably want to put a wrapping encoder function
 \(like `base16-encode-string'\) around it, since this returns
 binary string data.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (cipher, file, key, iv, outfile))
 {
 	/* buffer for the external string */
@@ -1474,7 +1562,11 @@ Optional fourth argument IV should be an initialisation vector
 suitable for this cipher. Normally the initialisation vector from
 KEY's property list is used. However, if IV is
 non-nil, use this IV instead.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (cipher, string, key, iv))
 {
 	/* buffer for the external string */
@@ -1589,7 +1681,11 @@ non-nil, use this IV instead.
 
 Optional fifth argument OUTFILE may specify a file to have the
 encrypted data redirected.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (cipher, file, key, iv, outfile))
 {
 	/* buffer for the external string */
@@ -1873,7 +1969,11 @@ make_evp_pkey_x509(X509 *x509)
 
 DEFUN("ossl-pkey-p", Fossl_pkey_p, 1, 1, 0, /*
 Return t iff OBJECT is a pkey, nil otherwise.
+<<<<<<< HEAD
 					    */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	if (EVPPKEYP(object))
@@ -1884,7 +1984,11 @@ Return t iff OBJECT is a pkey, nil otherwise.
 
 DEFUN("ossl-pkey-size", Fossl_pkey_size, 1, 1, 0, /*
 Return the size a public key PKEY in bits. 
+<<<<<<< HEAD
 						  */
+=======
+*/
+>>>>>>> origin/master
       (pkey))
 {
 	EVP_PKEY *pk;
@@ -1961,7 +2065,11 @@ DEFUN("ossl-pkey-private-p", Fossl_pkey_private_p, 1, 1, 0, /*
 Return non-nil if PKEY contains private data.
 
 This function is not native OpenSSL.
+<<<<<<< HEAD
 							    */
+=======
+*/
+>>>>>>> origin/master
       (pkey))
 {
 	EVP_PKEY *pk;
@@ -1981,7 +2089,11 @@ DEFUN("ossl-pkey-get-public", Fossl_pkey_get_public, 1, 1, 0, /*
 Return a copy of PKEY stripped by the private data.
 
 This function is not native OpenSSL.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (pkey))
 {
 	EVP_PKEY *pk;
@@ -2043,7 +2155,11 @@ rsa_pkey_has_private_data(RSA *rsakey)
 
 DEFUN("ossl-rsa-generate-key", Fossl_rsa_generate_key, 2, 2, 0, /*
 Return an RSA public key with of length BITS and exponent EXPO.
+<<<<<<< HEAD
 								*/
+=======
+*/
+>>>>>>> origin/master
       (bits, expo))
 {
 	EVP_PKEY *pkey;
@@ -2067,7 +2183,11 @@ Return an RSA public key with of length BITS and exponent EXPO.
 
 DEFUN("ossl-rsa-pkey-p", Fossl_rsa_pkey_p, 1, 1, 0, /*
 Return t iff PKEY is of RSA type.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       (pkey))
 {
 	EVP_PKEY *pk;
@@ -2089,7 +2209,11 @@ I.e. if PKEY1 has the same public key data as PKEY2 and
 PKEY2 has all private data.
 
 This function is not native OpenSSL.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (pkey1, pkey2))
 {
 	EVP_PKEY *pk1;
@@ -2159,7 +2283,11 @@ dsa_pkey_has_private_data(DSA *dsakey)
 
 DEFUN("ossl-dsa-generate-key", Fossl_dsa_generate_key, 1, 2, 0, /*
 Return a DSA public key with of length BITS seeded with (optional) SEED.
+<<<<<<< HEAD
 								*/
+=======
+*/
+>>>>>>> origin/master
       (bits, seed))
 {
 	EVP_PKEY *pkey;
@@ -2201,7 +2329,11 @@ Return a DSA public key with of length BITS seeded with (optional) SEED.
 
 DEFUN("ossl-dsa-pkey-p", Fossl_dsa_pkey_p, 1, 1, 0, /*
 Return t iff PKEY is of DSA type.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       (pkey))
 {
 	EVP_PKEY *pk;
@@ -2236,7 +2368,11 @@ I.e. if PKEY1 has the same public key data as PKEY2 and
 PKEY2 has all private data.
 
 This function is not native OpenSSL.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (pkey1, pkey2))
 {
 	EVP_PKEY *pk1;
@@ -2302,7 +2438,11 @@ ec_pkey_has_private_data(EC_KEY *ec_key)
 
 DEFUN("ossl-ec-available-curves", Fossl_ec_available_curves, 0, 0, 0, /*
 Return a list of builtin elliptic curves.
+<<<<<<< HEAD
 								      */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	EC_builtin_curve *curves = NULL;
@@ -2343,7 +2483,11 @@ Return a EC public key on CURVE.
 CURVE may be any symbol from `ossl-ec-available-curves'.
 
 At the moment we do not support creating custom curves.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (curve))
 {
 	EVP_PKEY *pkey;
@@ -2369,7 +2513,11 @@ At the moment we do not support creating custom curves.
 
 DEFUN("ossl-ec-pkey-p", Fossl_ec_pkey_p, 1, 1, 0, /*
 Return t iff PKEY is of EC type.
+<<<<<<< HEAD
 						  */
+=======
+*/
+>>>>>>> origin/master
       (pkey))
 {
 	EVP_PKEY *pk;
@@ -2432,7 +2580,11 @@ dh_pkey_has_private_data(DH *dhkey)
 
 DEFUN("ossl-dh-pkey-p", Fossl_dh_pkey_p, 1, 1, 0, /*
 Return t iff PKEY is of DH type.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       (pkey))
 {
 	EVP_PKEY *pk;
@@ -2470,7 +2622,11 @@ where
 Note: You probably want to put a wrapping encoder function
 (like `base16-encode-string') around it, since this function
 returns binary string data.
+<<<<<<< HEAD
 					*/
+=======
+*/
+>>>>>>> origin/master
       (cipher, string, pkey))
 {
 	/* declarations for the cipher */
@@ -2580,7 +2736,11 @@ STRING is the encrypted message
 PKEY is the private key
 EKEY is the encrypted random key
 EIV is the encrypted iv
+<<<<<<< HEAD
 					*/
+=======
+*/
+>>>>>>> origin/master
       (cipher, string, pkey, ekey, eiv))
 {
 	/* declarations for the cipher */
@@ -2695,7 +2855,11 @@ See `ossl-available-digests'.
 Note: You probably want to put a wrapping encoder function
 (like `base16-encode-string') around it, since this returns
 binary string data.
+<<<<<<< HEAD
 					*/
+=======
+*/
+>>>>>>> origin/master
       (digest, string, pkey))
 {
 	/* declarations for the cipher */
@@ -2778,7 +2942,11 @@ DIGEST is the digest to use (the same as in `ossl-sign')
 STRING is the message
 SIG is the signature of message
 PKEY is the public key
+<<<<<<< HEAD
 					    */
+=======
+*/
+>>>>>>> origin/master
       (digest, string, sig, pkey))
 {
 	/* declarations for the cipher */
@@ -2854,7 +3022,11 @@ PKEY is the public key
  */
 DEFUN("ossl-pem-read-public-key", Fossl_pem_read_public_key, 1, 1, 0, /*
 Return a key (the public part) stored in a PEM structure from FILE.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (file))
 {
 	/* declarations for the pkey */
@@ -2883,7 +3055,11 @@ DEFUN("ossl-pem-read-key", Fossl_pem_read_key, 1, 2, 0, /*
 Return a key stored in a PEM structure from FILE.
 If the (private part of the) key is protected with a password
 provide (optional) PASSWORD.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (file, password))
 {
 	/* declarations for the pkey */
@@ -2919,7 +3095,11 @@ provide (optional) PASSWORD.
 
 DEFUN("ossl-pem-write-public-key", Fossl_pem_write_public_key, 2, 2, 0, /*
 Write PKEY (the public part) in a PEM structure to FILE.
+<<<<<<< HEAD
 									*/
+=======
+*/
+>>>>>>> origin/master
       (file, pkey))
 {
 	/* declarations for the pkey */
@@ -2955,7 +3135,11 @@ protected by (optional) CIPHER with PASSWORD.
 
 CIPHER can be set to nil and the key will not be encrypted.
 PASSWORD is ignored in this case.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       (file, pkey, cipher, password))
 {
 	const EVP_CIPHER *ciph;
@@ -3047,7 +3231,11 @@ ossl_pem_pkey_cb(BIO *bio, int cmd, const char *argp,
 
 DEFUN("ossl-pem-public-key",Fossl_pem_public_key, 1, 1, 0, /*
 Return PKEY as PEM encoded string.
+<<<<<<< HEAD
 							   */
+=======
+*/
+>>>>>>> origin/master
       (pkey))
 {
 	/* This function can GC */
@@ -3102,7 +3290,11 @@ protected by (optional) CIPHER with PASSWORD.
 
 CIPHER can be set to nil and the key will not be encrypted.
 PASSWORD is ignored in this case.
+<<<<<<< HEAD
 					     */
+=======
+*/
+>>>>>>> origin/master
       (pkey, cipher, password))
 {
 	/* This function can GC */
@@ -3812,7 +4004,11 @@ CERT does not contain it.
 Both, CERT and KEY may be either a filename pointing to a
 PEM-encoded certificate and key respectively, or may be an
 evp-pkey object.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn, cert, key))
 {
 	/* This function can GC */
@@ -3874,7 +4070,11 @@ CA may be either a file name pointing to a PEM-encoded
 CA certificate, or may be a directory containing a valid
 bunch of CA certificates according to OpenSSL's CA path
 layout, or may also be an evp-pkey object.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn, ca))
 {
 	/* This function can GC */
@@ -3936,7 +4136,11 @@ Optional argument SERVERP indicates whether to perform the
 handshake as a server if non-nil, and as a client otherwise.
 Note: In case of a handshake as server it is mandatory to provide
 a valid certificate and a corresponding key.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       (process, method, ca, cert, key, serverp))
 {
 	/* This function can GC */
@@ -3994,7 +4198,11 @@ handle ssl at all.
  PROCESS.
 Optional argument METHOD indicates the SSL connection method,
 it can be one of `tls1' \(default\), `ssl23', `ssl2', or `ssl3'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 	int i;
@@ -4082,7 +4290,11 @@ DEFUN("ossl-ssl-proselytise-process", Fossl_ssl_proselytise_process,
       1, 1, 0, /*
 Convert the underlying process of SSL-CONN into a secure
 network connection object.
+<<<<<<< HEAD
 	       */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	Lisp_Object process;
@@ -4107,7 +4319,11 @@ DEFUN("ossl-ssl-unproselytise-process", Fossl_ssl_unproselytise_process,
       1, 1, 0, /*
 Convert the underlying process of SSL-CONN into an ordinary
 network connection object.
+<<<<<<< HEAD
 	       */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	Lisp_Object process;
@@ -4133,7 +4349,11 @@ DEFUN("ossl-ssl-finish", Fossl_ssl_finish, 1, 1, 0, /*
 Finish an SSL connection SSL-CONN.
 
 Note: This may also finish the network connection.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	Lisp_Object process;
@@ -4154,7 +4374,11 @@ Note: This may also finish the network connection.
 DEFUN("ossl-ssl-read", Fossl_ssl_read, 2, 2, 0, /*
 Return the cleartext of STRING which is assumed to be a complete
 block of data sent through SSL-CONN.
+<<<<<<< HEAD
 					*/
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn, string))
 {
 	/* network stream stuff */
@@ -4180,7 +4404,11 @@ block of data sent through SSL-CONN.
 
 DEFUN("ossl-ssl-write", Fossl_ssl_write, 2, 2, 0, /*
 Send STRING to the tunnel SSL-CONN.
+<<<<<<< HEAD
 					  */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn, string))
 {
 	/* network stream stuff */
@@ -4240,7 +4468,11 @@ Send STRING to the tunnel SSL-CONN.
 /* convenience functions */
 DEFUN("ossl-ssl-parent", Fossl_ssl_parent, 1, 1, 0, /*
 Return the underlying parent layer of SSL-CONN.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	CHECK_SSLCONN(ssl_conn);
@@ -4251,7 +4483,11 @@ Return the underlying parent layer of SSL-CONN.
 DEFUN("ossl-ssl-cert", Fossl_ssl_cert, 1, 1, 0, /*
 Return the local peer's certificate of SSL-CONN if present,
 `nil' otherwise.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	/* SSL connection stuff */
@@ -4272,7 +4508,11 @@ Return the local peer's certificate of SSL-CONN if present,
 DEFUN("ossl-ssl-peer-cert", Fossl_ssl_peer_cert, 1, 1, 0, /*
 Return the remote peer's certificate of SSL-CONN if present,
 `nil' otherwise.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	/* SSL connection stuff */
@@ -4293,7 +4533,11 @@ Return the remote peer's certificate of SSL-CONN if present,
 DEFUN("ossl-ssl-peer-cert-chain", Fossl_ssl_peer_cert_chain, 1, 1, 0, /*
 Return the certificate chain of SSL-CONN as a list of
 evp-pkey objects.
+<<<<<<< HEAD
 								      */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	int i;
@@ -4323,7 +4567,11 @@ evp-pkey objects.
 #if 0
 DEFUN("ossl-ssl-cert-store", Fossl_ssl_cert_store, 1, 1, 0, /*
 Return the X509 cert store of SSL-CONN.
+<<<<<<< HEAD
 							    */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	X509_STORE *sto = NULL;
@@ -4343,7 +4591,11 @@ Return a verify code of SSL-CONN.
 
 The result is a cons cell with the numeric verify code in
 the car and a verbose string in the cdr.
+<<<<<<< HEAD
 	       */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	int vrc;
@@ -4366,7 +4618,11 @@ the car and a verbose string in the cdr.
 
 DEFUN("ossl-ssl-cipher-version", Fossl_ssl_cipher_version, 1, 1, 0, /*
 Return the protocol version of the tunnel SSL-CONN.
+<<<<<<< HEAD
 								    */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	/* SSL connection stuff */
@@ -4393,7 +4649,11 @@ Return the protocol version of the tunnel SSL-CONN.
 
 DEFUN("ossl-ssl-cipher-name", Fossl_ssl_cipher_name, 1, 1, 0, /*
 Return the name of the current cipher used in the tunnel SSL-CONN.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	/* SSL connection stuff */
@@ -4419,7 +4679,11 @@ Return the name of the current cipher used in the tunnel SSL-CONN.
 
 DEFUN("ossl-ssl-cipher-names", Fossl_ssl_cipher_names, 1, 1, 0, /*
 Return the names of all supported ciphers in the tunnel SSL-CONN.
+<<<<<<< HEAD
 								*/
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	int i;
@@ -4447,7 +4711,11 @@ Return the names of all supported ciphers in the tunnel SSL-CONN.
 
 DEFUN("ossl-ssl-cipher-bits", Fossl_ssl_cipher_bits, 1, 1, 0, /*
 Return the number of effective bits of the current cipher in SSL-CONN.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	/* SSL connection stuff */
@@ -4476,7 +4744,11 @@ Return the number of effective bits of the current cipher in SSL-CONN.
 
 DEFUN("ossl-ssl-cipher-description", Fossl_ssl_cipher_description, 1, 1, 0, /*
 Return a description of the current cipher used in the tunnel SSL-CONN.
+<<<<<<< HEAD
 									    */
+=======
+*/
+>>>>>>> origin/master
       (ssl_conn))
 {
 	/* SSL connection stuff */
@@ -4506,7 +4778,11 @@ DEFUN("ossl-x509-subject", Fossl_x509_subject, 1, 1, 0, /*
 Return the certificate subject of CERT (an evp-pkey object).
 
 This will return a string in LDAP syntax.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (cert))
 {
 	X509 *pk509;
@@ -4527,7 +4803,11 @@ Return the certificate issuer of CERT (an evp-pkey object),
 that is the organisation which signed the certificate.
 
 This will return a string in LDAP syntax.
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       (cert))
 {
 	X509 *pk509;
@@ -4545,7 +4825,11 @@ This will return a string in LDAP syntax.
 
 DEFUN("ossl-x509-serial", Fossl_x509_serial, 1, 1, 0, /*
 Return the certificate serial of CERT (an evp-pkey object).
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       (cert))
 {
 	X509 *pk509;
@@ -4563,7 +4847,11 @@ Return the certificate serial of CERT (an evp-pkey object).
 
 DEFUN("ossl-x509-not-before", Fossl_x509_not_before, 1, 1, 0, /*
 Return the certificate valid-not-before time of CERT.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (cert))
 {
 	X509 *pk509;
@@ -4581,7 +4869,11 @@ Return the certificate valid-not-before time of CERT.
 
 DEFUN("ossl-x509-not-after", Fossl_x509_not_after, 1, 1, 0, /*
 Return the certificate valid-not-after time of CERT.
+<<<<<<< HEAD
 							    */
+=======
+*/
+>>>>>>> origin/master
       (cert))
 {
 	X509 *pk509;
@@ -4599,7 +4891,11 @@ Return the certificate valid-not-after time of CERT.
 
 DEFUN("ossl-x509-signature-type", Fossl_x509_signature_type, 1, 1, 0, /*
 Return the signature type of CERT.
+<<<<<<< HEAD
 								      */
+=======
+*/
+>>>>>>> origin/master
       (cert))
 {
 	X509 *pk509;

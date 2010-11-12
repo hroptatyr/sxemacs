@@ -610,7 +610,11 @@ AC_DEFUN([_SXE_CHECK_LD_ZFLAG], [dnl
 	pushdef([LD_ZFLAG], [$1])
 	pushdef([cv_zflag], [sxe_cv_ld__z_]translit(LD_ZFLAG,[-.=],[___]))
 
+<<<<<<< HEAD
 	if test "$GCC" == "yes"; then
+=======
+	if test "$GCC" = "yes"; then
+>>>>>>> origin/master
 		if test "($CC -Xlinker --help 2>&1 | \
 			grep \"-z []LD_ZFLAG[]\" > /dev/null 2>&1 ) "; then
 			cv_zflag="yes"

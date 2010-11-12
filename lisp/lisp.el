@@ -152,6 +152,7 @@ With argument, kill that many sexps before the cursor.
 Negative arg -N means kill N sexps after the cursor."
   (interactive "p")
   (kill-sexp (- (or arg 1))))
+<<<<<<< HEAD
 
 (defun beginning-of-defun (&optional arg)
   "Move backward to the beginning of a defun.
@@ -169,10 +170,61 @@ open-parenthesis, and point ends up at the beginning of the line."
        (progn (beginning-of-line) t)))
 
 (defun beginning-of-defun-raw (&optional arg)
+=======
+
+;; XEmacs change (optional buffer parameter)
+(defun buffer-end (arg &optional buffer)
+  "Return `point-max' of BUFFER if ARG is > 0; return `point-min' otherwise.
+BUFFER defaults to the current buffer if omitted."
+  (if (> arg 0) (point-max buffer) (point-min buffer)))
+
+
+;; derived stuff from GNU Emacs
+(defvar beginning-of-defun-function nil
+  "If non-nil, this function will be called by `beginning-of-defun-raw'.
+It will be called with one argument, which is a repetition count.
+It provides an alternative algorithm to find the beginning of the current
+defun instead of using the standard one implemented by `beginning-of-defun'.
+See also `defun-prompt-regexp' for minor tweaks.")
+(make-variable-buffer-local 'beginning-of-defun-function)
+
+(defvar end-of-defun-function nil
+  "If non-nil, this function will be called by `end-of-defun'.
+It will be called with no arguments.  \(Repetition is implemented in
+`end-of-defun' by calling this function that many times.)
+This function provides an alternative algorithm to find the end
+of the current defun instead of using the standard one implemented by
+`end-of-defun'.
+")
+(make-variable-buffer-local 'end-of-defun-function)
+
+(defun beginning-of-defun (&optional count)
+  "Move backward to the beginning of the current defun COUNT times.
+COUNT defaults to 1.  COUNT < 0 means move forward to COUNTth following
+beginning of defun.
+Returns t unless search stops due to beginning or end of buffer.
+
+In the default implementation provided by `beginning-of-defun-raw',
+a defun starts at a char with open-parenthesis syntax at the beginning
+of a line.  If `defun-prompt-regexp' is non-nil, then a string which
+matches that regexp may precede the open-parenthesis.  Alternatively,
+if `beginning-of-defun-function' is non-nil, that function is called,
+and none of the default processing is done.
+
+If the beginning of defun function returns t, point moves to the
+beginning of the line containing the beginning of defun."
+  ;; XEmacs change (for zmacs regions)
+  (interactive "_p")
+  (and (beginning-of-defun-raw count)
+       (progn (beginning-of-line) t)))
+
+(defun beginning-of-defun-raw (&optional count)
+>>>>>>> origin/master
   "Move point to the character that starts a defun.
 This is identical to beginning-of-defun, except that point does not move
 to the beginning of the line when `defun-prompt-regexp' is non-nil."
   (interactive "p")
+<<<<<<< HEAD
   (and arg (< arg 0) (not (eobp)) (forward-char 1))
   (and (re-search-backward (if defun-prompt-regexp
 			       (concat #r"^\s(\|"
@@ -198,6 +250,40 @@ the open-parenthesis that starts a defun; see `beginning-of-defun'."
   (if (or (null arg) (= arg 0)) (setq arg 1))
   (let ((first t))
     (while (and (> arg 0) (< (point) (point-max)))
+=======
+  (unless count (setq count 1))
+  (if beginning-of-defun-function
+      (funcall beginning-of-defun-function count)
+    (and (< count 0) (not (eobp)) (forward-char 1))
+    (and
+     (re-search-backward (if defun-prompt-regexp
+			     (concat "^\\s(\\|"
+				     "\\(" defun-prompt-regexp "\\)\\s(")
+			   "^\\s(")
+			 nil 'move count)
+     (progn (goto-char (1- (match-end 0)))) t)))
+
+(defun end-of-defun (&optional count)
+  "Move forward to next end of defun COUNT times.
+COUNT defaults to 1.  Negative COUNT means move back to COUNT-th preceding
+end of defun.
+
+In the default implementation, the end of a defun is the end of the
+s-expression started at the character identified by `beginning-of-defun'.
+
+If `end-of-defun-function' is non-nil, none of the default processing is
+done.  For COUNT < 1, `end-of-defun-function' is called that many times.
+If COUNT < 1, nothing is done.  \(This is a bug.)"
+  ;; XEmacs change (for zmacs regions)
+  (interactive "_p")
+  (if (or (null count) (= count 0)) (setq count 1))
+  (if end-of-defun-function
+      (if (> count 0) 
+	  (dotimes (i count)
+	    (funcall end-of-defun-function)))
+  (let ((first t))
+    (while (and (> count 0) (< (point) (point-max)))
+>>>>>>> origin/master
       (let ((pos (point))) ; XEmacs -- remove unused npos.
 	(while (progn
 		(if (and first
@@ -213,8 +299,13 @@ the open-parenthesis that starts a defun; see `beginning-of-defun'."
 		(if (looking-at "\\s<\\|\n")
 		    (forward-line 1))
 		(<= (point) pos))))
+<<<<<<< HEAD
       (setq arg (1- arg)))
     (while (< arg 0)
+=======
+      (setq count (1- count)))
+    (while (< count 0)
+>>>>>>> origin/master
       (let ((pos (point)))
 	(beginning-of-defun-raw 1)
 	(forward-sexp 1)
@@ -227,7 +318,11 @@ the open-parenthesis that starts a defun; see `beginning-of-defun'."
 		  (if (looking-at "\\s<\\|\n")
 		      (forward-line 1)))
 	      (goto-char (point-min)))))
+<<<<<<< HEAD
       (setq arg (1+ arg)))))
+=======
+      (setq count (1+ count))))))
+>>>>>>> origin/master
 
 (defun mark-defun ()
   "Put mark at end of this defun, point at beginning.

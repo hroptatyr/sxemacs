@@ -131,8 +131,17 @@ AC_DEFUN([SXE_CHECK_LIBC_VERSION], [dnl
 			libc_version=`dpkg-query --showformat='${version}' --show libc6`
 			libc_version="GNU libc $libc_version (Debian)"
 		elif test -f /etc/slackware-version ; then
+<<<<<<< HEAD
 			libc_version=`/lib/libc.so.6|head -1|cut -d ' ' -f7|tr -d ,`
 			libc_version="GNU libc $libc_version (Slackware)"
+=======
+                        slackver=`cat /etc/slackware-version`
+			libc_version=`/lib/libc.so.6|head -1|cut -d ' ' -f7|tr -d ,`
+                        if test "x$libc_version" = "x"; then
+                                libc_version=`/lib64/libc.so.6|head -1|cut -d ' ' -f7|tr -d ,`
+                        fi
+			libc_version="GNU libc $libc_version ($slackver)"
+>>>>>>> origin/master
 		dnl need SuSE et al checks here...
 		fi
 		dnl #### Tested on Debian, does this actually work elsewhere?  ;-)
@@ -170,7 +179,11 @@ libc_file_we_use=`$LDD ./conftest | grep libc | sed -e "s/.*=>\(.*\) .*$/\1/"`],
 		)
 		;;
 
+<<<<<<< HEAD
 	powerpc-apple-darwin*)
+=======
+	*-apple-darwin*)
+>>>>>>> origin/master
 		dnl MacOS guys, does this work?
 		libc_version="`$LDD /usr/lib/libc.dylib | head -n1 | sed -e 's/.*current version[ ]*\([0-9.]*\).*$/\1/'`"
 		;;

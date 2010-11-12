@@ -925,7 +925,11 @@ selection_reply_done(void *ignore)
 static Lisp_Object Qx_selection_reply_timeout_internal;
 
 DEFUN("x-selection-reply-timeout-internal", Fx_selection_reply_timeout_internal, 1, 1, 0, /*
+<<<<<<< HEAD
                                                                                            */
+=======
+*/
+>>>>>>> origin/master
       (arg))
 {
         selection_reply_timed_out = 1;
@@ -1507,7 +1511,11 @@ initialize_cut_buffers(Display * display, Window window)
 
 DEFUN("x-get-cutbuffer-internal", Fx_get_cutbuffer_internal, 1, 1, 0, /*
 Return the value of the named CUTBUFFER (typically CUT_BUFFER0).
+<<<<<<< HEAD
                                                                       */
+=======
+*/
+>>>>>>> origin/master
       (cutbuffer))
 {
         struct device *d = decode_x_device(Qnil);
@@ -1541,7 +1549,11 @@ Return the value of the named CUTBUFFER (typically CUT_BUFFER0).
 
 DEFUN("x-store-cutbuffer-internal", Fx_store_cutbuffer_internal, 2, 2, 0,	/*
 Set the value of the named CUTBUFFER (typically CUT_BUFFER0) to STRING.
+<<<<<<< HEAD
                                                                                 */
+=======
+*/
+>>>>>>> origin/master
       (cutbuffer, string))
 {
         struct device *d = decode_x_device(Qnil);
@@ -1607,7 +1619,11 @@ Set the value of the named CUTBUFFER (typically CUT_BUFFER0) to STRING.
 DEFUN("x-rotate-cutbuffers-internal", Fx_rotate_cutbuffers_internal, 1, 1, 0,	/*
 Rotate the values of the cutbuffers by the given number of steps;
 positive means move values forward, negative means backward.
+<<<<<<< HEAD
                                                                                 */
+=======
+*/
+>>>>>>> origin/master
       (n))
 {
         struct device *d = decode_x_device(Qnil);

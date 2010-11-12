@@ -48,8 +48,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #define NO_T_CHARS_DEFINES
 
 /* Use our own unexec routines */
+<<<<<<< HEAD
 
 #define UNEXEC "unexnext.o"
+=======
+/* 
+ * everything is pdump now. --SY
+ * #define UNEXEC "unexnext.o"
+ */
+#undef UNEXEC
+>>>>>>> origin/master
 
 /* We don't have a g library either, so override the -lg LIBS_DEBUG switch */
 

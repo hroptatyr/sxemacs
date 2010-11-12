@@ -341,7 +341,11 @@ be passed in.)
 
 See `set-frame-properties', `default-x-frame-plist', and
 `default-tty-frame-plist' for the specially-recognized properties.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (props, device))
 {
 	struct frame *f;
@@ -659,7 +663,11 @@ Return non-nil if OBJECT is a frame.
 Also see `frame-live-p'.
 Note that FSF Emacs kludgily returns a value indicating what type of
 frame this is.  Use the cleaner function `frame-type' for that.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return FRAMEP(object) ? Qt : Qnil;
@@ -667,7 +675,11 @@ frame this is.  Use the cleaner function `frame-type' for that.
 
 DEFUN("frame-live-p", Fframe_live_p, 1, 1, 0,	/*
 Return non-nil if OBJECT is a frame which has not been deleted.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return FRAMEP(object) && FRAME_LIVE_P(XFRAME(object)) ? Qt : Qnil;
@@ -676,7 +688,11 @@ Return non-nil if OBJECT is a frame which has not been deleted.
 DEFUN("focus-frame", Ffocus_frame, 1, 1, 0,	/*
 Select FRAME and give it the window system focus.
 This function is not affected by the value of `focus-follows-mouse'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	CHECK_LIVE_FRAME(frame);
@@ -721,7 +737,11 @@ Also note that when focus-follows-mouse is non-nil, the frame
 selection is temporary and is reverted when the current command
 terminates, much like the buffer selected by `set-buffer'.  In order
 to effect a permanent focus change, use `focus-frame'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	CHECK_LIVE_FRAME(frame);
@@ -807,7 +827,11 @@ DEFUN("selected-frame", Fselected_frame, 0, 1, 0,	/*
 Return the frame that is now selected on device DEVICE.
 If DEVICE is not specified, the selected device will be used.
 If no frames exist on the device, nil is returned.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	if (NILP(device) && NILP(Fselected_device(Qnil)))
@@ -833,7 +857,11 @@ Lisp_Object frame_first_window(struct frame * f)
 
 DEFUN("active-minibuffer-window", Factive_minibuffer_window, 0, 0, 0,	/*
 Return the currently active minibuffer window, or nil if none.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return minibuf_level ? minibuf_window : Qnil;
@@ -844,7 +872,11 @@ Return the most-recently-selected non-minibuffer-only frame on CONSOLE.
 This will always be the same as (selected-frame device) unless the
 selected frame is a minibuffer-only frame.
 CONSOLE defaults to the selected console if omitted.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	Lisp_Object result;
@@ -862,7 +894,11 @@ CONSOLE defaults to the selected console if omitted.
 DEFUN("frame-root-window", Fframe_root_window, 0, 1, 0,	/*
 Return the root-window of FRAME.
 If omitted, FRAME defaults to the currently selected frame.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	struct frame *f = decode_frame(frame);
@@ -872,7 +908,11 @@ If omitted, FRAME defaults to the currently selected frame.
 DEFUN("frame-selected-window", Fframe_selected_window, 0, 1, 0,	/*
 Return the selected window of frame object FRAME.
 If omitted, FRAME defaults to the currently selected frame.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	struct frame *f = decode_frame(frame);
@@ -898,7 +938,11 @@ DEFUN("set-frame-selected-window", Fset_frame_selected_window, 2, 2, 0,	/*
 Set the selected window of FRAME to WINDOW.
 If FRAME is nil, the selected frame is used.
 If FRAME is the selected frame, this makes WINDOW the selected window.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (frame, window))
 {
 	XSETFRAME(frame, decode_frame(frame));
@@ -917,7 +961,11 @@ If FRAME is the selected frame, this makes WINDOW the selected window.
 DEFUN("frame-device", Fframe_device, 0, 1, 0,	/*
 Return the device that FRAME is on.
 If omitted, FRAME defaults to the currently selected frame.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	return FRAME_DEVICE(decode_frame(frame));
@@ -1152,8 +1200,14 @@ If a console, search all devices on that console.
 If a device type, search all devices of that type.
 If `window-system', search all window-system devices.
 Any other non-nil value means search all devices.
+<<<<<<< HEAD
 						 */
       (frame, which_frames, which_devices)) {
+=======
+*/
+      (frame, which_frames, which_devices))
+{
+>>>>>>> origin/master
 	XSETFRAME(frame, decode_frame(frame));
 
 	return next_frame(frame, which_frames, which_devices);
@@ -1169,8 +1223,14 @@ returned.
 
 See `next-frame' for an explanation of the WHICH-FRAMES and WHICH-DEVICES
 arguments.
+<<<<<<< HEAD
 							 */
       (frame, which_frames, which_devices)) {
+=======
+*/
+      (frame, which_frames, which_devices))
+{
+>>>>>>> origin/master
 	XSETFRAME(frame, decode_frame(frame));
 
 	return previous_frame(frame, which_frames, which_devices);
@@ -1585,7 +1645,11 @@ Normally, you cannot delete the last non-minibuffer-only frame (you must
 use `save-buffers-kill-emacs' or `kill-emacs').  However, if optional
 second argument FORCE is non-nil, you can delete the last frame. (This
 will automatically call `save-buffers-kill-emacs'.)
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame, force))
 {
 	/* This function can GC */
@@ -1638,7 +1702,11 @@ DEVICE specifies the device on which to read the mouse position, and
 defaults to the selected device.  If the device is a mouseless terminal
 or SXEmacs hasn't been programmed to read its mouse position, it returns
 the device's selected window for WINDOW and nil for X and Y.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	struct device *d = decode_device(device);
@@ -1679,7 +1747,11 @@ DEVICE specifies the device on which to read the mouse position, and
 defaults to the selected device.  If the device is a mouseless terminal
 or Emacs hasn't been programmed to read its mouse position, it returns
 the device's selected window for WINDOW and nil for X and Y.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	struct device *d = decode_device(device);
@@ -1715,7 +1787,11 @@ This allows you to call the standard event functions such as
 DEVICE specifies the device on which to read the mouse position, and
 defaults to the selected device.  If the mouse position can't be determined
 \(e.g. DEVICE is a TTY device), nil is returned instead of an event.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	struct device *d = decode_device(device);
@@ -1741,7 +1817,11 @@ before calling this function on it, like this.
 (while (not (frame-visible-p frame)) (sleep-for .5))
 Note also: Warping the mouse is contrary to the ICCCM, so be very sure
 that the behavior won't end up being obnoxious!
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window, x, y))
 {
 	struct window *w;
@@ -1767,7 +1847,11 @@ Note, this is a no-op for an X frame that is not visible.
 If you have just created a frame, you must wait for it to become visible
 before calling this function on it, like this.
 (while (not (frame-visible-p frame)) (sleep-for .5))
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (window, x, y))
 {
 	struct window *w;
@@ -1787,7 +1871,11 @@ DEFUN("make-frame-visible", Fmake_frame_visible, 0, 1, 0,	/*
 Make the frame FRAME visible (assuming it is an X-window).
 If omitted, FRAME defaults to the currently selected frame.
 Also raises the frame so that nothing obscures it.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	struct frame *f = decode_frame(frame);
@@ -1804,7 +1892,11 @@ icons) then you should call `iconify-frame' instead.
 Normally you may not make FRAME invisible if all other frames are invisible
 and uniconified, but if the second optional argument FORCE is non-nil,
 you may do so.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (frame, force))
 {
 	struct frame *f, *sel_frame;
@@ -1833,7 +1925,11 @@ you may do so.
 DEFUN("iconify-frame", Ficonify_frame, 0, 1, "",	/*
 Make the frame FRAME into an icon, if the window manager supports icons.
 If omitted, FRAME defaults to the currently selected frame.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	struct frame *f, *sel_frame;
@@ -1860,7 +1956,11 @@ Open (de-iconify) the iconified frame FRAME.
 Under X, this is currently the same as `make-frame-visible'.
 If omitted, FRAME defaults to the currently selected frame.
 Also raises the frame so that nothing obscures it.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	return Fmake_frame_visible(frame);
@@ -1874,7 +1974,11 @@ A frame that is not visible is not updated, and, if it works through a
 window system, may not show at all.
 N.B. Under X "visible" means Mapped. It the window is mapped but not
 actually visible on screen then `frame-visible-p' returns 'hidden.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	struct frame *f = decode_frame(frame);
@@ -1885,7 +1989,11 @@ actually visible on screen then `frame-visible-p' returns 'hidden.
 DEFUN("frame-totally-visible-p", Fframe_totally_visible_p, 0, 1, 0,	/*
 Return t if frame is not obscured by any other window system windows.
 Always returns t for tty frames.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	struct frame *f = decode_frame(frame);
@@ -1899,8 +2007,14 @@ Not all window managers use icons; some merely unmap the window, so this
 function is not the inverse of `frame-visible-p'.  It is possible for a
 frame to not be visible and not be iconified either.  However, if the
 frame is iconified, it will not be visible.
+<<<<<<< HEAD
 							 */
       (frame)) {
+=======
+*/
+      (frame))
+{
+>>>>>>> origin/master
 	struct frame *f = decode_frame(frame);
 	if (f->visible)
 		return Qnil;
@@ -1913,7 +2027,11 @@ Return a list of all frames now "visible" (being updated).
 If DEVICE is specified only frames on that device will be returned.
 Note that under virtual window managers not all these frames are
 necessarily really updated.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	Lisp_Object devcons, concons;
@@ -1946,7 +2064,11 @@ If omitted, FRAME defaults to the currently selected frame.
 If FRAME is invisible, make it visible.
 If Emacs is displaying on an ordinary terminal or some other device which
 doesn't support multiple overlapping frames, this function does nothing.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	struct frame *f = decode_frame(frame);
@@ -1962,7 +2084,11 @@ Send FRAME to the back, so it is occluded by any frames that overlap it.
 If omitted, FRAME defaults to the currently selected frame.
 If Emacs is displaying on an ordinary terminal or some other device which
 doesn't support multiple overlapping frames, this function does nothing.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	struct frame *f = decode_frame(frame);
@@ -1976,7 +2102,11 @@ Disable frame FRAME, so that it cannot have the focus or receive user input.
 This is normally used during modal dialog boxes.
 WARNING: Be very careful not to wedge SXEmacs!
 Use an `unwind-protect' that re-enables the frame to avoid this.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	struct frame *f = decode_frame(frame);
@@ -1989,7 +2119,11 @@ Use an `unwind-protect' that re-enables the frame to avoid this.
 DEFUN("enable-frame", Fenable_frame, 1, 1, 0,	/*
 Enable frame FRAME, so that it can have the focus and receive user input.
 Frames are normally enabled, unless explicitly disabled using `disable-frame'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	struct frame *f = decode_frame(frame);
@@ -2003,7 +2137,11 @@ Frames are normally enabled, unless explicitly disabled using `disable-frame'.
 
 DEFUN("print-job-page-number", Fprint_job_page_number, 1, 1, 0,	/*
 Return current page number for the print job FRAME.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	CHECK_PRINTER_FRAME(frame);
@@ -2012,7 +2150,11 @@ Return current page number for the print job FRAME.
 
 DEFUN("print-job-eject-page", Fprint_job_eject_page, 1, 1, 0,	/*
 Eject page in the print job FRAME.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	struct frame *f;
@@ -2214,7 +2356,11 @@ frame property name to another.
 See the variables `default-x-frame-plist', `default-tty-frame-plist'
 and `default-mswindows-frame-plist' for a description of the properties
 recognized for particular types of frames.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (frame, plist))
 {
 	struct frame *f = decode_frame(frame);
@@ -2303,7 +2449,11 @@ DEFUN("frame-property", Fframe_property, 2, 3, 0,	/*
 Return FRAME's value for property PROPERTY.
 Return DEFAULT if there is no such property.
 See `set-frame-properties' for the built-in property names.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (frame, property, default_))
 {
 	struct frame *f = decode_frame(frame);
@@ -2375,8 +2525,14 @@ See `set-frame-properties' for the built-in property names.
 DEFUN("frame-properties", Fframe_properties, 0, 1, 0,	/*
 Return a property list of the properties of FRAME.
 Do not modify this list; use `set-frame-property' instead.
+<<<<<<< HEAD
 							 */
       (frame)) {
+=======
+*/
+      (frame))
+{
+>>>>>>> origin/master
 	struct frame *f = decode_frame(frame);
 	Lisp_Object result = Qnil;
 	struct gcpro gcpro1;
@@ -2434,7 +2590,11 @@ Do not modify this list; use `set-frame-property' instead.
 
 DEFUN("frame-pixel-height", Fframe_pixel_height, 0, 1, 0,	/*
 Return the height in pixels of FRAME.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	return make_int(decode_frame(frame)->pixheight);
@@ -2442,7 +2602,11 @@ Return the height in pixels of FRAME.
 
 DEFUN("frame-pixel-width", Fframe_pixel_width, 0, 1, 0,	/*
 Return the width in pixels of FRAME.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	return make_int(decode_frame(frame)->pixwidth);
@@ -2451,7 +2615,11 @@ Return the width in pixels of FRAME.
 DEFUN("frame-name", Fframe_name, 0, 1, 0,	/*
 Return the name of FRAME (defaulting to the selected frame).
 This is not the same as the `title' of the frame.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	return decode_frame(frame)->name;
@@ -2465,7 +2633,11 @@ is resized, a window is resized, added, or deleted, a face is changed,
 frame, the window-start of a window in the frame has changed, or
 anything else interesting has happened.  It wraps around occasionally.
 No argument or nil as argument means use selected frame as FRAME.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	return make_int(decode_frame(frame)->modiff);
@@ -2487,7 +2659,11 @@ DEFUN("set-frame-height", Fset_frame_height, 2, 3, 0,	/*
 Specify that the frame FRAME has LINES lines.
 Optional third arg non-nil means that redisplay should use LINES lines
 but that the idea of the actual height of the frame should not be changed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (frame, lines, pretend))
 {
 	struct frame *f = decode_frame(frame);
@@ -2511,7 +2687,11 @@ DEFUN("set-frame-pixel-height", Fset_frame_pixel_height, 2, 3, 0,	/*
 Specify that the frame FRAME is HEIGHT pixels tall.
 Optional third arg non-nil means that redisplay should be HEIGHT pixels tall
 but that the idea of the actual height of the frame should not be changed.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (frame, height, pretend))
 {
 	struct frame *f = decode_frame(frame);
@@ -2539,7 +2719,11 @@ DEFUN("set-frame-width", Fset_frame_width, 2, 3, 0,	/*
 Specify that the frame FRAME has COLS columns.
 Optional third arg non-nil means that redisplay should use COLS columns
 but that the idea of the actual width of the frame should not be changed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (frame, cols, pretend))
 {
 	struct frame *f = decode_frame(frame);
@@ -2563,7 +2747,11 @@ DEFUN("set-frame-pixel-width", Fset_frame_pixel_width, 2, 3, 0,	/*
 Specify that the frame FRAME is WIDTH pixels wide.
 Optional third arg non-nil means that redisplay should be WIDTH wide
 but that the idea of the actual height of the frame should not be changed.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (frame, width, pretend))
 {
 	struct frame *f = decode_frame(frame);
@@ -2591,7 +2779,11 @@ DEFUN("set-frame-size", Fset_frame_size, 3, 4, 0,	/*
 Set the size of FRAME to COLS by ROWS, measured in characters.
 Optional fourth arg non-nil means that redisplay should use COLS by ROWS
 but that the idea of the actual size of the frame should not be changed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (frame, cols, rows, pretend))
 {
 	struct frame *f = decode_frame(frame);
@@ -2616,7 +2808,11 @@ DEFUN("set-frame-pixel-size", Fset_frame_pixel_size, 3, 4, 0,	/*
 Set the size of FRAME to WIDTH by HEIGHT, measured in pixels.
 Optional fourth arg non-nil means that redisplay should use WIDTH by HEIGHT
 but that the idea of the actual size of the frame should not be changed.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (frame, width, height, pretend))
 {
 	struct frame *f = decode_frame(frame);
@@ -2646,7 +2842,11 @@ Set position of FRAME in pixels to XOFFSET by YOFFSET.
 This is actually the position of the upper left corner of the frame.
 Negative values for XOFFSET or YOFFSET are interpreted relative to
 the rightmost or bottommost possible position (that stays within the screen).
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (frame, xoffset, yoffset))
 {
 	struct frame *f = decode_frame(frame);
@@ -3083,7 +3283,11 @@ You should not call this function directly.  Instead, set one of
 the variables `text-pointer-glyph', `nontext-pointer-glyph',
 `modeline-pointer-glyph', `selection-pointer-glyph',
 `busy-pointer-glyph', or `toolbar-pointer-glyph'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (frame, image_instance))
 {
 	struct frame *f = decode_frame(frame);

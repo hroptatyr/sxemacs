@@ -574,8 +574,14 @@ nothing happens unless ABORT is non-nil, in which case SXEmacs will
 abort() -- a sure-fire way to immediately get back to the debugger,
 but also a sure-fire way to kill SXEmacs (and dump core on Unix
 systems)!
+<<<<<<< HEAD
 								  */
       (abort_)) {
+=======
+*/
+      (abort_))
+{
+>>>>>>> origin/master
 	debugging_breakpoint();
 	if (!NILP(abort_))
 		abort();
@@ -739,7 +745,11 @@ static void init_cmdargs(int argc, Extbyte ** argv, int skip_args)
 DEFUN("invocation-name", Finvocation_name, 0, 0, 0, /*
 Return the program name that was used to run SXEmacs.
 Any directory names are omitted.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Fcopy_sequence(Vinvocation_name);
@@ -747,7 +757,11 @@ Any directory names are omitted.
 
 DEFUN("invocation-directory", Finvocation_directory, 0, 0, 0, /*
 Return the directory name in which the Emacs executable was located.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Fcopy_sequence(Vinvocation_directory);
@@ -2577,7 +2591,11 @@ DEFUN("running-temacs-p", Frunning_temacs_p, 0, 0, 0, /*
 True if running temacs.  This means we are in the dumping stage.
 This is false during normal execution of the `sxemacs' program, and
 becomes false once `run-emacs-from-temacs' is run.
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return run_temacs_argc >= 0 ? Qt : Qnil;
@@ -2585,7 +2603,11 @@ becomes false once `run-emacs-from-temacs' is run.
 
 DEFUN("run-emacs-from-temacs", Frun_emacs_from_temacs, 0, MANY, 0, /*
 Do not call this.  It will reinitialize your SXEmacs.  You'll be sorry.
+<<<<<<< HEAD
 								   */
+=======
+*/
+>>>>>>> origin/master
 /* If this function is called from startup.el, it will be possible to run
    temacs as an editor using 'temacs -batch -l loadup.el run-temacs', instead
    of having to dump an emacs and then run that (when debugging emacs itself,
@@ -2810,7 +2832,11 @@ If ARG is a string, stuff it as keyboard input.
 The value of `kill-emacs-hook', if not void,
 is a list of functions (of no args),
 all of which are called before SXEmacs is actually killed.
+<<<<<<< HEAD
 					    */
+=======
+*/
+>>>>>>> origin/master
       (arg))
 {
 	/* This function can GC */
@@ -3015,7 +3041,11 @@ This is used in the file `loadup.el' when building SXEmacs.
 Remember to set `command-line-processed' to nil before dumping
 if you want the dumped SXEmacs to process its command line
 and announce itself normally when it is run.
+<<<<<<< HEAD
 					  */
+=======
+*/
+>>>>>>> origin/master
       (symfile, filename))
 {
 	/* This function can GC */
@@ -3176,7 +3206,11 @@ Lisp_Object decode_env_path(const char *evarname, /*const*/ char *default_)
 
 DEFUN("split-string-by-char", Fsplit_string_by_char, 2, 2, 0, /*
 Split STRING into a list of substrings originally separated by SEPCHAR.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (string, sepchar))
 {
 	CHECK_STRING(string);
@@ -3192,7 +3226,11 @@ DEFUN("split-path", Fsplit_path, 1, 1, 0, /*
 Explode a search path into a list of strings.
 The path components are separated with the characters specified
 with `path-separator'.
+<<<<<<< HEAD
 					  */
+=======
+*/
+>>>>>>> origin/master
       (path))
 {
 	CHECK_STRING(path);
@@ -3210,7 +3248,11 @@ with `path-separator'.
 
 DEFUN("noninteractive", Fnoninteractive, 0, 0, 0, /*
 Non-nil return value means SXEmacs is running without interactive terminal.
+<<<<<<< HEAD
 						  */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return noninteractive ? Qt : Qnil;
@@ -3293,7 +3335,11 @@ assert_failed(const char *file, int line, const char *expr)
 #ifdef QUANTIFY
 DEFUN("quantify-start-recording-data", Fquantify_start_recording_data, 0, 0, "", /*
 Start recording Quantify data.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	quantify_start_recording_data();
@@ -3302,7 +3348,11 @@ Start recording Quantify data.
 
 DEFUN("quantify-stop-recording-data", Fquantify_stop_recording_data, 0, 0, "", /*
 Stop recording Quantify data.
+<<<<<<< HEAD
 									       */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	quantify_stop_recording_data();
@@ -3311,7 +3361,11 @@ Stop recording Quantify data.
 
 DEFUN("quantify-clear-data", Fquantify_clear_data, 0, 0, "", /*
 Clear all Quantify data.
+<<<<<<< HEAD
 							     */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	quantify_clear_data();

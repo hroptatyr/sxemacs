@@ -47,7 +47,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "procimpl.h"
 #include "window.h"
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #include "sysfile.h"
@@ -275,7 +279,11 @@ int network_connection_p(Lisp_Object process)
 
 DEFUN("processp", Fprocessp, 1, 1, 0,	/*
 Return t if OBJECT is a process.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return PROCESSP(object) ? Qt : Qnil;
@@ -283,7 +291,11 @@ Return t if OBJECT is a process.
 
 DEFUN("process-live-p", Fprocess_live_p, 1, 1, 0,	/*
 Return t if OBJECT is a process that is alive.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return PROCESSP(object) && PROCESS_LIVE_P(XPROCESS(object))
@@ -305,7 +317,11 @@ Return t if OBJECT is a process that is alive.
 */
 DEFUN("process-readable-p", Fprocess_readable_p, 1, 1, 0,	/*
 Return t if OBJECT is a process from which input may be available.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return PROCESSP(object) && PROCESS_READABLE_P(XPROCESS(object))
@@ -315,7 +331,11 @@ Return t if OBJECT is a process from which input may be available.
 
 DEFUN("process-list", Fprocess_list, 0, 0, 0,	/*
 Return a list of all processes.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Fcopy_sequence(Vprocess_list);
@@ -324,8 +344,14 @@ Return a list of all processes.
 DEFUN("get-process", Fget_process, 1, 1, 0,	/*
 Return the process named PROCESS-NAME (a string), or nil if there is none.
 PROCESS-NAME may also be a process; if so, the value is that process.
+<<<<<<< HEAD
 						 */
       (process_name)) {
+=======
+*/
+      (process_name))
+{
+>>>>>>> origin/master
 	if (PROCESSP(process_name))
 		return process_name;
 
@@ -346,7 +372,11 @@ PROCESS-NAME may also be a process; if so, the value is that process.
 DEFUN("get-buffer-process", Fget_buffer_process, 1, 1, 0,	/*
 Return the (or, a) process associated with BUFFER.
 BUFFER may be a buffer or the name of one.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	if (NILP(buffer))
@@ -417,7 +447,11 @@ Return the process id of PROCESS.
 This is the pid of the Unix process which PROCESS uses or talks to.
 For a network connection, this value is a cons of
 (foreign-network-port . foreign-host-name).
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	Lisp_Object pid;
@@ -435,7 +469,11 @@ DEFUN("process-name", Fprocess_name, 1, 1, 0,	/*
 Return the name of PROCESS, as a string.
 This is the name of the program invoked in PROCESS,
 possibly modified to make it unique among process names.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	CHECK_PROCESS(process);
@@ -446,7 +484,11 @@ DEFUN("process-command", Fprocess_command, 1, 1, 0,	/*
 Return the command that was executed to start PROCESS.
 This is a list of strings, the first string being the program executed
 and the rest of the strings being the arguments given to it.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	CHECK_PROCESS(process);
@@ -586,7 +628,11 @@ Third arg is program file name.  It is searched for as in the shell.
 Remaining arguments are strings to give program as arguments.
 If bound, `coding-system-for-read' and `coding-system-for-write' specify
 the coding-system objects used in input from and output to the process.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	/* This function can call lisp */
@@ -720,8 +766,14 @@ through a network server stream.
 Args are PROCESS 
 
 PROCESS should be a network-stream process accepted through a network
+<<<<<<< HEAD
 server stream. */
       (process)) {
+=======
+*/
+      (process))
+{
+>>>>>>> origin/master
 
         CHECK_PROCESS(process);
         return MAYBE_LISP_PROCMETH(network_process_listener, (process));
@@ -790,8 +842,14 @@ In the ACCEPTOR you can use `network-process-listener' to get the original
 listen process, and `process-buffer' to retrieve the associated
 buffers. If sentinels and/or filters are set in the ACCEPTOR they
 will override the FILTER and SENTINEL args to this function.
+<<<<<<< HEAD
 										 */
       (name, buffer, host, service, protocol, acceptor, filter, sentinel)) {
+=======
+*/
+      (name, buffer, host, service, protocol, acceptor, filter, sentinel))
+{
+>>>>>>> origin/master
 
 	/* !!#### This function has not been Mule-ized */
 	/* This function can GC */
@@ -886,8 +944,14 @@ not guaranteed to be sent and received in discrete packets. (But small
 datagrams around 500 bytes that are not truncated by `process-send-string'
 are usually fine.)  Note further that the UDP protocol does not guard
 against lost packets.
+<<<<<<< HEAD
 										 */
       (name, buffer, host, service, protocol)) {
+=======
+*/
+      (name, buffer, host, service, protocol))
+{
+>>>>>>> origin/master
 	/* !!#### This function has not been Mule-ized */
 	/* This function can GC */
 	Lisp_Object process = Qnil;
@@ -938,7 +1002,11 @@ BUFFER is the buffer (or buffer-name) to associate with the process.
  with any buffer.
 INFD and OUTFD specify the file descriptors to use for input and
  output, respectively.
+<<<<<<< HEAD
       */
+=======
+*/
+>>>>>>> origin/master
       (name, buffer, infd, outfd))
 {
         return connect_to_file_descriptor(name, buffer, infd, outfd);
@@ -961,8 +1029,14 @@ Third, fourth and fifth args are the multicast destination group, port and ttl.
 dest must be an internet address between 224.0.0.0 and 239.255.255.255
 port is a communication port like in traditional unicast
 ttl is the time-to-live (15 for site, 63 for region and 127 for world)
+<<<<<<< HEAD
 										 */
       (name, buffer, dest, port, ttl)) {
+=======
+*/
+      (name, buffer, dest, port, ttl))
+{
+>>>>>>> origin/master
 	/* !!#### This function has not been Mule-ized */
 	/* This function can GC */
 	Lisp_Object process = Qnil;
@@ -1003,7 +1077,11 @@ Lisp_Object canonicalize_host_name(Lisp_Object host)
 
 DEFUN("set-process-window-size", Fset_process_window_size, 3, 3, 0,	/*
 Tell PROCESS that it has logical window size HEIGHT and WIDTH.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (process, height, width))
 {
 	CHECK_PROCESS(process);
@@ -1223,7 +1301,11 @@ DEFUN("process-tty-name", Fprocess_tty_name, 1, 1, 0,	/*
 Return the name of the terminal PROCESS uses, or nil if none.
 This is the terminal that the process itself reads and writes on,
 not the name of the pty that Emacs uses to talk with that terminal.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	CHECK_PROCESS(process);
@@ -1232,7 +1314,11 @@ not the name of the pty that Emacs uses to talk with that terminal.
 
 DEFUN("set-process-buffer", Fset_process_buffer, 2, 2, 0,	/*
 Set buffer associated with PROCESS to BUFFER (a buffer, or nil).
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (process, buffer))
 {
 	CHECK_PROCESS(process);
@@ -1246,7 +1332,11 @@ DEFUN("process-buffer", Fprocess_buffer, 1, 1, 0,	/*
 Return the buffer PROCESS is associated with.
 Output from PROCESS is inserted in this buffer
 unless PROCESS has a filter.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	CHECK_PROCESS(process);
@@ -1255,7 +1345,11 @@ unless PROCESS has a filter.
 
 DEFUN("process-mark", Fprocess_mark, 1, 1, 0,	/*
 Return the marker for the end of the last output from PROCESS.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	CHECK_PROCESS(process);
@@ -1289,7 +1383,11 @@ output string is nil, and filter must perform reading by itself. It
 must return integer value of how much data was read, return 0 if there
 is nothing to be read.
 If the process has a filter, its buffer is not used for output.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (process, filter, filter_does_read))
 {
 	set_process_filter(process, filter, !NILP(filter_does_read));
@@ -1299,16 +1397,28 @@ If the process has a filter, its buffer is not used for output.
 DEFUN("process-filter", Fprocess_filter, 1, 1, 0,	/*
 Return the filter function of PROCESS; nil if none.
 See `set-process-filter' for more info on filter functions.
+<<<<<<< HEAD
 							 */
       (process)) {
+=======
+*/
+      (process))
+{
+>>>>>>> origin/master
 	CHECK_PROCESS(process);
 	return XPROCESS(process)->filter;
 }
 
 DEFUN("process-type-data", Fprocess_type_data, 1, 1, 0,	/*
 Return the type data of PROCESS; `nil' if none.
+<<<<<<< HEAD
 							 */
       (process)) {
+=======
+*/
+      (process))
+{
+>>>>>>> origin/master
 	CHECK_PROCESS(process);
 	return XPROCESS(process)->process_type_data;
 }
@@ -1322,8 +1432,14 @@ BUFFER specifies the buffer to look in; if nil, the current buffer is used.
 If STRING is more than 100 or so characters long, it may be sent in
 several chunks.  This may happen even for shorter strings.  Output
 from processes can arrive in between chunks.
+<<<<<<< HEAD
 								 */
       (process, start, end, buffer)) {
+=======
+*/
+      (process, start, end, buffer))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Bufpos bstart, bend;
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -1345,8 +1461,14 @@ Optional arguments START and END specify part of STRING; see `substring'.
 If STRING is more than 100 or so characters long, it may be sent in
 several chunks.  This may happen even for shorter strings.  Output
 from processes can arrive in between chunks.
+<<<<<<< HEAD
 								 */
       (process, string, start, end)) {
+=======
+*/
+      (process, string, start, end))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Bytecount bstart, bend;
 
@@ -1363,7 +1485,11 @@ from processes can arrive in between chunks.
 
 DEFUN("process-input-coding-system", Fprocess_input_coding_system, 1, 1, 0,	/*
 Return PROCESS's input coding system.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	process = get_process(process);
@@ -1375,7 +1501,11 @@ Return PROCESS's input coding system.
 
 DEFUN("process-output-coding-system", Fprocess_output_coding_system, 1, 1, 0,	/*
 Return PROCESS's output coding system.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	process = get_process(process);
@@ -1388,7 +1518,11 @@ Return PROCESS's output coding system.
 
 DEFUN("process-coding-system", Fprocess_coding_system, 1, 1, 0,	/*
 Return a pair of coding-system for decoding and encoding of PROCESS.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	process = get_process(process);
@@ -1401,7 +1535,11 @@ Return a pair of coding-system for decoding and encoding of PROCESS.
 
 DEFUN("set-process-input-coding-system", Fset_process_input_coding_system, 2, 2, 0,	/*
 Set PROCESS's input coding system to CODESYS.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (process, codesys))
 {
 	codesys = Fget_coding_system(codesys);
@@ -1416,7 +1554,11 @@ Set PROCESS's input coding system to CODESYS.
 DEFUN("set-process-output-coding-system", 
       Fset_process_output_coding_system, 2, 2, 0, /*
 Set PROCESS's output coding system to CODESYS.
+<<<<<<< HEAD
 						  */
+=======
+*/
+>>>>>>> origin/master
       (process, codesys))
 {
 	codesys = Fget_coding_system(codesys);
@@ -1432,7 +1574,11 @@ DEFUN("set-process-coding-system", Fset_process_coding_system, 1, 3, 0,	/*
 Set coding-systems of PROCESS to DECODING and ENCODING.
 DECODING will be used to decode subprocess output and ENCODING to
 encode subprocess input.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (process, decoding, encoding))
 {
 	if (!NILP(decoding))
@@ -1490,8 +1636,14 @@ DEFUN("set-process-sentinel", Fset_process_sentinel, 2, 2, 0,	/*
 Give PROCESS the sentinel SENTINEL; nil for none.
 The sentinel is called as a function when the process changes state.
 It gets two arguments: the process, and a string describing the change.
+<<<<<<< HEAD
 								 */
       (process, sentinel)) {
+=======
+*/
+      (process, sentinel))
+{
+>>>>>>> origin/master
 	CHECK_PROCESS(process);
 	XPROCESS(process)->sentinel = sentinel;
 	return sentinel;
@@ -1500,8 +1652,14 @@ It gets two arguments: the process, and a string describing the change.
 DEFUN("process-sentinel", Fprocess_sentinel, 1, 1, 0,	/*
 Return the sentinel of PROCESS; nil if none.
 See `set-process-sentinel' for more info on sentinels.
+<<<<<<< HEAD
 							 */
       (process)) {
+=======
+*/
+      (process))
+{
+>>>>>>> origin/master
 	CHECK_PROCESS(process);
 	return XPROCESS(process)->sentinel;
 }
@@ -1721,7 +1879,11 @@ nil    -- if arg is a process name and no such process exists.
 
 PROCESS may be a process, a buffer, the name of a process or buffer, or
 nil, indicating the current buffer's process.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	Lisp_Object status_symbol;
@@ -1747,7 +1909,11 @@ nil, indicating the current buffer's process.
 DEFUN("process-exit-status", Fprocess_exit_status, 1, 1, 0,	/*
 Return the exit status of PROCESS or the signal number that killed it.
 If PROCESS has not yet exited or died, return 0.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	CHECK_PROCESS(process);
@@ -1949,7 +2115,11 @@ foreground process group of the process's controlling terminal rather
 than to the process's own process group.
 If the process is a shell that supports job control, this means
 send the signal to the current subjob rather than the shell.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (signal_, process, current_group))
 {
 	/* This function can GC */
@@ -1961,7 +2131,11 @@ send the signal to the current subjob rather than the shell.
 DEFUN("interrupt-process", Finterrupt_process, 0, 2, 0,	/*
 Interrupt process PROCESS.
 See function `process-send-signal' for more details on usage.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (process, current_group))
 {
 	/* This function can GC */
@@ -1972,7 +2146,11 @@ See function `process-send-signal' for more details on usage.
 DEFUN("kill-process", Fkill_process, 0, 2, 0,	/*
 Kill process PROCESS.
 See function `process-send-signal' for more details on usage.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (process, current_group))
 {
 	/* This function can GC */
@@ -1987,7 +2165,11 @@ See function `process-send-signal' for more details on usage.
 DEFUN("quit-process", Fquit_process, 0, 2, 0,	/*
 Send QUIT signal to process PROCESS.
 See function `process-send-signal' for more details on usage.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (process, current_group))
 {
 	/* This function can GC */
@@ -2002,7 +2184,11 @@ See function `process-send-signal' for more details on usage.
 DEFUN("stop-process", Fstop_process, 0, 2, 0,	/*
 Stop process PROCESS.
 See function `process-send-signal' for more details on usage.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (process, current_group))
 {
 	/* This function can GC */
@@ -2017,7 +2203,11 @@ See function `process-send-signal' for more details on usage.
 DEFUN("continue-process", Fcontinue_process, 0, 2, 0,	/*
 Continue process PROCESS.
 See function `process-send-signal' for more details on usage.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (process, current_group))
 {
 	/* This function can GC */
@@ -2033,7 +2223,11 @@ DEFUN("signal-process", Fsignal_process, 2, 2, "nProcess number: \nnSignal code:
 Send the process with process id PID the signal with code SIGNAL.
 PID must be an integer.  The process need not be a child of this Emacs.
 SIGNAL may be an integer, or a symbol naming a signal, like `SIGSEGV'.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (pid, signal_))
 {
 	CHECK_INT(pid);
@@ -2050,7 +2244,11 @@ nil, indicating the current buffer's process.
 If PROCESS is a network connection, or is a process communicating
 through a pipe (as opposed to a pty), then you cannot send any more
 text to PROCESS after you call this function.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	/* This function can GC */
@@ -2132,7 +2330,11 @@ static void remove_process(Lisp_Object process)
 DEFUN("delete-process", Fdelete_process, 1, 1, 0,	/*
 Delete PROCESS: kill it and forget about it immediately.
 PROCESS may be a process or the name of one, or a buffer name.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	/* This function can GC */
@@ -2177,7 +2379,11 @@ DEFUN("process-kill-without-query", Fprocess_kill_without_query, 1, 2, 0,	/*
 Say no query needed if PROCESS is running when Emacs is exited.
 Optional second argument if non-nil says to require a query.
 Value is t if a query was formerly required.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (process, require_query_p))
 {
 	int tem;
@@ -2191,7 +2397,11 @@ Value is t if a query was formerly required.
 
 DEFUN("process-kill-without-query-p", Fprocess_kill_without_query_p, 1, 1, 0,	/*
 Return t if PROCESS will be killed without query when emacs is exited.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (process))
 {
 	CHECK_PROCESS(process);

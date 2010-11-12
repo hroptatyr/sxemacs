@@ -65,7 +65,11 @@ Lisp_Object Qappend_message, Qcurrent_message_label,
 
 DEFUN("minibuffer-depth", Fminibuffer_depth, 0, 0, 0,	/*
 Return current depth of activations of minibuffer, a nonnegative integer.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return make_int(minibuf_level);
@@ -110,7 +114,11 @@ static Lisp_Object read_minibuffer_internal_unwind(Lisp_Object unwind_data)
 DEFUN("set-minibuffer-preprompt", Fset_minibuffer_preprompt, 1, 1, 0,	/*
 Set the minibuffer preprompt string to PREPROMPT. This is used by language
 input methods to relay state information to the user.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (preprompt))
 {
 	if (NILP(preprompt)) {
@@ -125,7 +133,11 @@ input methods to relay state information to the user.
 
 DEFUN("read-minibuffer-internal", Fread_minibuffer_internal, 1, 1, 0,	/*
 Lowest-level interface to minibuffers.  Don't call this.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (prompt))
 {
 	/* This function can GC */
@@ -299,8 +311,14 @@ If optional third argument PREDICATE is non-nil, it is used to test
 each possible match.  The match is a candidate only if PREDICATE
 returns non-nil.  The argument given to PREDICATE is the alist element
 or the symbol from the obarray.
+<<<<<<< HEAD
 							 */
       (string, collection, predicate)) {
+=======
+*/
+      (string, collection, predicate))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Lisp_Object bestmatch, tail;
 	Charcount bestmatchsize = 0;
@@ -495,7 +513,11 @@ If optional third argument PREDICATE is non-nil, it is used to test
 each possible match.  The match is a candidate only if PREDICATE
 returns non-nil.  The argument given to PREDICATE is the alist element
 or the symbol from the obarray.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (string, collection, predicate))
 {
 	/* This function can GC */

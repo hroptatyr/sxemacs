@@ -35,7 +35,11 @@ Internal helper function for `make-dialog-box'.
 This handles all dialog-box types except `general'.
 TYPE is the same as the first argument to `make-dialog-box', and KEYS
 a list of the remaining arguments.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (type, keys))
 {
 	struct frame *f = selected_frame();

@@ -44,7 +44,11 @@ Args are the same as to `format'.  Returns whether the message was
 actually logged.  If usage-tracking support was not compiled in, this
 function has no effect and always returns `nil'.  See function
 `has-usage-tracking-p'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 #ifdef USAGE_TRACKING

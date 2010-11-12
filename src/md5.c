@@ -79,7 +79,11 @@ typedef unsigned long md5_uint32;
 #include "buffer.h"
 #include "lstream.h"
 #ifdef FILE_CODING
+<<<<<<< HEAD
 # include "file-coding.h"
+=======
+# include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 /* Structure to save state of computation between the single steps.  */
     struct md5_ctx {
@@ -501,7 +505,11 @@ fails.  Normally, an error is signaled in such case.
 
 CODING and NOERROR arguments are meaningful only in XEmacsen with
 file-coding or Mule support.  Otherwise, they are ignored.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object, start, end, coding, noerror))
 {
 	/* This function can GC */

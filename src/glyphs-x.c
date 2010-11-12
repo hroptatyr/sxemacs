@@ -75,7 +75,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <setjmp.h>
 
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #ifdef LWLIB_WIDGETS_MOTIF
@@ -2354,7 +2358,11 @@ x_subwindow_query_geometry(Lisp_Object image_instance,
 DEFUN("change-subwindow-property", Fchange_subwindow_property, 3, 3, 0,	/*
 For the given SUBWINDOW, set PROPERTY to DATA, which is a string.
 Subwindows are not currently implemented.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (subwindow, property, data))
 {
 	Atom property_atom;

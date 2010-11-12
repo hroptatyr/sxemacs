@@ -466,7 +466,11 @@ To retrieve the value for a particular character, use `get-char-table'.
 See also `map-char-table', `clear-char-table', `copy-char-table',
 `valid-char-table-type-p', `char-table-type-list',
 `valid-char-table-value-p', and `check-char-table-value'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CHAR_TABLEP(object) ? Qt : Qnil;
@@ -475,7 +479,11 @@ See also `map-char-table', `clear-char-table', `copy-char-table',
 DEFUN("char-table-type-list", Fchar_table_type_list, 0, 0, 0,	/*
 Return a list of the recognized char table types.
 See `valid-char-table-type-p'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 #ifdef MULE
@@ -512,7 +520,11 @@ Used for syntax tables, which specify the syntax of a particular
 character.  Higher-level Lisp functions are provided for
 working with syntax tables.  The valid values are integers.
 
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (type))
 {
 	return (EQ(type, Qchar) ||
@@ -526,7 +538,11 @@ working with syntax tables.  The valid values are integers.
 DEFUN("char-table-type", Fchar_table_type, 1, 1, 0,	/*
 Return the type of CHAR-TABLE.
 See `valid-char-table-type-p'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (char_table))
 {
 	CHECK_CHAR_TABLE(char_table);
@@ -550,7 +566,11 @@ void fill_char_table(Lisp_Char_Table * ct, Lisp_Object value)
 
 DEFUN("reset-char-table", Freset_char_table, 1, 1, 0,	/*
 Reset CHAR-TABLE to its default state.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (char_table))
 {
 	Lisp_Char_Table *ct;
@@ -585,7 +605,11 @@ DEFUN("make-char-table", Fmake_char_table, 1, 1, 0,	/*
 Return a new, empty char table of type TYPE.
 Currently recognized types are 'char, 'category, 'display, 'generic,
 and 'syntax.  See `valid-char-table-type-p'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (type))
 {
 	Lisp_Char_Table *ct;
@@ -654,7 +678,11 @@ DEFUN("copy-char-table", Fcopy_char_table, 1, 1, 0,	/*
 Return a new char table which is a copy of CHAR-TABLE.
 It will contain the same values for the same characters and ranges
 as CHAR-TABLE.  The values will not themselves be copied.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (char_table))
 {
 	Lisp_Char_Table *ct, *ctnew;
@@ -816,7 +844,11 @@ Lisp_Object get_char_table(Emchar ch, Lisp_Char_Table * ct)
 
 DEFUN("get-char-table", Fget_char_table, 2, 2, 0,	/*
 Find value for CHARACTER in CHAR-TABLE.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (character, char_table))
 {
 	CHECK_CHAR_TABLE(char_table);
@@ -828,7 +860,11 @@ Find value for CHARACTER in CHAR-TABLE.
 DEFUN("get-range-char-table", Fget_range_char_table, 2, 3, 0,	/*
 Find value for a range in CHAR-TABLE.
 If there is more than one value, return MULTI (defaults to nil).
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (range, char_table, multi))
 {
 	Lisp_Char_Table *ct;
@@ -1000,7 +1036,11 @@ canonicalize_char_table_value(Lisp_Object value, enum char_table_type type)
 
 DEFUN("valid-char-table-value-p", Fvalid_char_table_value_p, 2, 2, 0,	/*
 Return non-nil if VALUE is a valid value for CHAR-TABLE-TYPE.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (value, char_table_type))
 {
 	enum char_table_type type = symbol_to_char_table_type(char_table_type);
@@ -1011,7 +1051,11 @@ Return non-nil if VALUE is a valid value for CHAR-TABLE-TYPE.
 
 DEFUN("check-valid-char-table-value", Fcheck_valid_char_table_value, 2, 2, 0,	/*
 Signal an error if VALUE is not a valid value for CHAR-TABLE-TYPE.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (value, char_table_type))
 {
 	enum char_table_type type = symbol_to_char_table_type(char_table_type);
@@ -1143,7 +1187,11 @@ one of the following:
 
 VALUE must be a value appropriate for the type of CHAR-TABLE.
 See `valid-char-table-type-p'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (range, value, char_table))
 {
 	Lisp_Char_Table *ct;
@@ -1425,7 +1473,11 @@ each key and value in the table.
 RANGE specifies a subrange to map over and is in the same format as
 the RANGE argument to `put-range-table'.  If omitted or t, it defaults to
 the entire table.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (function, char_table, range))
 {
 	Lisp_Char_Table *ct;
@@ -1563,7 +1615,11 @@ whether the character is in that category.
 
 Special Lisp functions are provided that abstract this, so you do not
 have to directly manipulate bit vectors.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return (CHAR_TABLEP(object) &&
@@ -1606,7 +1662,11 @@ Optional third arg BUFFER specifies which buffer to use, and defaults
 to the current buffer.
 Optional fourth arg CATEGORY-TABLE specifies the category table to
 use, and defaults to BUFFER's category table.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (position, designator, buffer, category_table))
 {
 	Lisp_Object ctbl;
@@ -1626,7 +1686,11 @@ DEFUN("char-in-category-p", Fchar_in_category_p, 2, 3, 0,	/*
 Return t if category of CHARACTER includes DESIGNATOR, else nil.
 Optional third arg CATEGORY-TABLE specifies the category table to use,
 and defaults to the standard category table.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (character, designator, category_table))
 {
 	Lisp_Object ctbl;
@@ -1644,7 +1708,11 @@ and defaults to the standard category table.
 DEFUN("category-table", Fcategory_table, 0, 1, 0,	/*
 Return BUFFER's current category table.
 BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	return decode_buffer(buffer, 0)->category_table;
@@ -1653,7 +1721,11 @@ BUFFER defaults to the current buffer.
 DEFUN("standard-category-table", Fstandard_category_table, 0, 0, 0,	/*
 Return the standard category table.
 This is the one used for new buffers.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Vstandard_category_table;
@@ -1662,7 +1734,11 @@ This is the one used for new buffers.
 DEFUN("copy-category-table", Fcopy_category_table, 0, 1, 0,	/*
 Return a new category table which is a copy of CATEGORY-TABLE.
 CATEGORY-TABLE defaults to the standard category table.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (category_table))
 {
 	if (NILP(Vstandard_category_table))
@@ -1676,7 +1752,11 @@ CATEGORY-TABLE defaults to the standard category table.
 DEFUN("set-category-table", Fset_category_table, 1, 2, 0,	/*
 Select CATEGORY-TABLE as the new category table for BUFFER.
 BUFFER defaults to the current buffer if omitted.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (category_table, buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -1689,7 +1769,11 @@ BUFFER defaults to the current buffer if omitted.
 
 DEFUN("category-designator-p", Fcategory_designator_p, 1, 1, 0,	/*
 Return t if OBJECT is a category designator (a char in the range ' ' to '~').
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CATEGORY_DESIGNATORP(object) ? Qt : Qnil;
@@ -1698,7 +1782,11 @@ Return t if OBJECT is a category designator (a char in the range ' ' to '~').
 DEFUN("category-table-value-p", Fcategory_table_value_p, 1, 1, 0,	/*
 Return t if OBJECT is a category table value.
 Valid values are nil or a bit vector of size 95.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CATEGORY_TABLE_VALUEP(object) ? Qt : Qnil;

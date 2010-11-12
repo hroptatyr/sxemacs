@@ -133,7 +133,11 @@ ARGS is a standard list of command-line arguments.
 No effect if called more than once.  Called automatically when
 creating the first GTK device.  Must be called manually from batch
 mode.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	int argc;
@@ -394,7 +398,11 @@ const char *gtk_event_name(GdkEventType event_type)
 DEFUN("default-gtk-device", Fdefault_gtk_device, 0, 0, 0,	/*
 Return the default GTK device for resourcing.
 This is the first-created GTK device that still exists.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Vdefault_gtk_device;
@@ -404,7 +412,11 @@ DEFUN("gtk-display-visual-class", Fgtk_display_visual_class, 0, 1, 0,	/*
 Return the visual class of the GTK display DEVICE is using.
 The returned value will be one of the symbols `static-gray', `gray-scale',
 `static-color', `pseudo-color', `true-color', or `direct-color'.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	GdkVisual *vis = DEVICE_GTK_VISUAL(decode_gtk_device(device));
@@ -429,7 +441,11 @@ The returned value will be one of the symbols `static-gray', `gray-scale',
 
 DEFUN("gtk-display-visual-depth", Fgtk_display_visual_depth, 0, 1, 0,	/*
 Return the bitplane depth of the visual the GTK display DEVICE is using.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	return make_int(DEVICE_GTK_DEPTH(decode_gtk_device(device)));
@@ -506,7 +522,11 @@ The keysym name can be provided in two forms:
 - if keysym is a string, it must be the name as known to X windows.
 - if keysym is a symbol, it must be the name as known to SXEmacs.
 The two names differ in capitalization and underscoring.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (keysym, device))
 {
 	struct device *d = decode_device(device);
@@ -533,7 +553,11 @@ until `gtk-ungrab-pointer' is called (it should be an object returned by the
 If the second optional argument IGNORE-KEYBOARD is non-nil, ignore all
 keyboard events during the grab.
 Returns t if the grab is successful, nil otherwise.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device, cursor, ignore_keyboard))
 {
 	GdkWindow *w;
@@ -559,7 +583,11 @@ DEFUN("gtk-ungrab-pointer", Fgtk_ungrab_pointer, 0, 1, 0,	/*
 Release a pointer grab made with `gtk-grab-pointer'.
 If optional first arg DEVICE is nil the default device is used.
 If it is t the pointer will be released on all GTK devices.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	if (!EQ(device, Qt)) {
@@ -583,7 +611,11 @@ So long as the keyboard is grabbed, all keyboard events will be delivered
 to emacs -- it is not possible for other clients to eavesdrop on them.
 Ungrab the keyboard with `gtk-ungrab-keyboard' (use an unwind-protect).
 Returns t if the grab is successful, nil otherwise.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	struct device *d = decode_gtk_device(device);
@@ -598,7 +630,11 @@ Returns t if the grab is successful, nil otherwise.
 
 DEFUN("gtk-ungrab-keyboard", Fgtk_ungrab_keyboard, 0, 1, 0,	/*
 Release a keyboard grab made with `gtk-grab-keyboard'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	gdk_keyboard_ungrab(GDK_CURRENT_TIME);
@@ -610,7 +646,11 @@ Release a keyboard grab made with `gtk-grab-keyboard'.
 /************************************************************************/
 DEFUN("gtk-style-info", Fgtk_style_info, 0, 1, 0,	/*
 Get the style information for a Gtk device.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	struct device *d = decode_device(device);

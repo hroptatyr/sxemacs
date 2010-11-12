@@ -39,7 +39,11 @@
 
 #include "config.h"
 #include "sxemacs.h"
+<<<<<<< HEAD
 #include "ent.h"
+=======
+#include "ent/ent.h"
+>>>>>>> origin/master
 #include "ase.h"
 #include "ase-neighbourhood.h"
 
@@ -302,7 +306,11 @@ ase_neighbourhood_rational_measure(ase_neighbourhood_t n)
 /* lisp level */
 DEFUN("ase-neighbourhoodp", Fase_neighbourhoodp, 1, 1, 0, /*
 Return non-`nil' iff OBJECT is an ase neighbourhood.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	if (ASE_NEIGHBOURHOODP(object))
@@ -317,7 +325,11 @@ Return a neighbourhood around with POINT of radius RADIUS
 with respect to METRIC (optional).
 
 If no special metric is given, the supremum metric is used.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (point, radius, metric))
 {
 	if (!COMPARABLEP(point) &&
@@ -334,7 +346,11 @@ If no special metric is given, the supremum metric is used.
 
 DEFUN("ase-neighbourhood-open-p", Fase_neighbourhood_open_p, 1, 1, 0, /*
 Return non-`nil' iff NEIGHBOURHOOD is open with respect to its metric.
+<<<<<<< HEAD
 								      */
+=======
+*/
+>>>>>>> origin/master
       (neighbourhood))
 {
 	CHECK_ASE_NEIGHBOURHOOD(neighbourhood);
@@ -347,7 +363,11 @@ Return non-`nil' iff NEIGHBOURHOOD is open with respect to its metric.
 
 DEFUN("ase-neighbourhood-closed-p", Fase_neighbourhood_closed_p, 1, 1, 0, /*
 Return non-`nil' iff NEIGHBOURHOOD is closed with respect to its metric.
+<<<<<<< HEAD
 									  */
+=======
+*/
+>>>>>>> origin/master
       (neighbourhood))
 {
 	CHECK_ASE_NEIGHBOURHOOD(neighbourhood);
@@ -362,7 +382,11 @@ DEFUN("ase-neighbourhood-contains-p", Fase_neighbourhood_contains_p, 2, 2, 0, /*
 Return non-`nil' iff NEIGHBOURHOOD contains OBJECT.
 OBJECT may also be another neighbourhood under the restriction that
 both neighbourhoods must be defined over the same metric space.
+<<<<<<< HEAD
 									      */
+=======
+*/
+>>>>>>> origin/master
       (neighbourhood, object))
 {
 	CHECK_ASE_NEIGHBOURHOOD(neighbourhood);
@@ -391,7 +415,11 @@ to
        (ase-neighbourhood-contains-p n2 n1))
 
 Both neighbourhoods must be defined over the same metric space.
+<<<<<<< HEAD
 									*/
+=======
+*/
+>>>>>>> origin/master
       (n1, n2))
 {
 	Lisp_Object n1in2, n2in1;
@@ -411,7 +439,11 @@ Both neighbourhoods must be defined over the same metric space.
 /* just for now until we can overload <, > and = */
 DEFUN("ase-neighbourhood-<", Fase_neighbourhood_lssp, 2, 2, 0, /*
 Return (< n1 n2).
+<<<<<<< HEAD
 								*/
+=======
+*/
+>>>>>>> origin/master
       (n1, n2))
 {
 	int cmp;
@@ -439,7 +471,11 @@ Return (< n1 n2).
 
 DEFUN("ase-neighbourhood->", Fase_neighbourhood_gtrp, 2, 2, 0, /*
 Return (> n1 n2).
+<<<<<<< HEAD
 								*/
+=======
+*/
+>>>>>>> origin/master
       (n1, n2))
 {
 	int cmp;
@@ -468,7 +504,11 @@ Return (> n1 n2).
 /* accessors */
 DEFUN("ase-neighbourhood-point", Fase_neighbourhood_point, 1, 1, 0, /*
 Return the point of NEIGHBOURHOOD which defined it.
+<<<<<<< HEAD
 								    */
+=======
+*/
+>>>>>>> origin/master
       (neighbourhood))
 {
 	CHECK_ASE_NEIGHBOURHOOD(neighbourhood);
@@ -478,7 +518,11 @@ Return the point of NEIGHBOURHOOD which defined it.
 
 DEFUN("ase-neighbourhood-radius", Fase_neighbourhood_radius, 1, 1, 0, /*
 Return the radius of NEIGHBOURHOOD which defined it.
+<<<<<<< HEAD
 								      */
+=======
+*/
+>>>>>>> origin/master
       (neighbourhood))
 {
 	CHECK_ASE_NEIGHBOURHOOD(neighbourhood);
@@ -487,10 +531,16 @@ Return the radius of NEIGHBOURHOOD which defined it.
 }
 
 /* Measures */
+<<<<<<< HEAD
 DEFUN("ase-neighbourhood-lebesgue-measure",
       Fase_neighbourhood_lebesgue_measure, 1, 1, 0, /*
 Return the Lebesgue measure of NEIGHBOURHOOD.
 						    */
+=======
+DEFUN("ase-neighbourhood-lebesgue-measure", Fase_neighbourhood_lebesgue_measure, 1, 1, 0, /*
+Return the Lebesgue measure of NEIGHBOURHOOD.
+*/
+>>>>>>> origin/master
       (neighbourhood))
 {
 	CHECK_ASE_NEIGHBOURHOOD(neighbourhood);
@@ -499,10 +549,16 @@ Return the Lebesgue measure of NEIGHBOURHOOD.
 		XASE_NEIGHBOURHOOD(neighbourhood));
 }
 
+<<<<<<< HEAD
 DEFUN("ase-neighbourhood-rational-measure",
       Fase_neighbourhood_rational_measure, 1, 1, 0, /*
 Return the number of rational integers in NEIGHBOURHOOD.
 						    */
+=======
+DEFUN("ase-neighbourhood-rational-measure", Fase_neighbourhood_rational_measure, 1, 1, 0, /*
+Return the number of rational integers in NEIGHBOURHOOD.
+*/
+>>>>>>> origin/master
       (neighbourhood))
 {
 	CHECK_ASE_NEIGHBOURHOOD(neighbourhood);

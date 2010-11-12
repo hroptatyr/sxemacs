@@ -1,8 +1,12 @@
                                                   -*- mode:outline -*-
 
 At the time of this release (SXEmacs 22.1.10), SXEmacs has the
+<<<<<<< HEAD
 following idiosyncrasies in addition to what is in the XEmacs
 PROBLEMS: 
+=======
+following idiosyncrasies: 
+>>>>>>> origin/master
 
 * File Locations
 ================
@@ -142,12 +146,21 @@ unfortunately this has an impact on the other parts of the build
 tools.
 
 To cut it really short, here is the minimum known-to-work combination:
+<<<<<<< HEAD
 - autoconf 2.60, automake 1.9.6, libtool 1.5.22, m4 1.4.6
 
 In general we support (as of Dec 2007):
 - autoconf >= 2.60, including current git versions
 - automake 1.9.6, 1.10, 1.10a, and current git versions
 - libtool 1.5.N with N >= 22, libtool 2.1a (current CVS version)
+=======
+- autoconf 2.62, automake 1.9.6, libtool 1.5.22, m4 1.4.6
+
+In general we support (as of April, 2010):
+- autoconf >= 2.62, including current git versions
+- automake 1.9.6, 1.10, 1.10a, 1.11.1, and current git versions
+- libtool 1.5.N with N >= 22, libtool >= 2.1a (current CVS version)
+>>>>>>> origin/master
 - m4 1.4.M with M >= 6 plus current git versions
 
 Note that many libtool packages shipped with the distros (OpenSuSE,
@@ -163,6 +176,26 @@ installs as glibtool and doesn't clobber your other one.
 Sometimes it helps just to copy over the libtool script manually:
 cp -a $(type -p libtool) ${top_builddir}
 
+<<<<<<< HEAD
+=======
+*** ylwrap fails with sed errors
+
+Some versions of the ylwrap script provided by autotools uses commas
+as separators in sed commands. As such if your build path uses commas
+the ylwrap will fail. 
+
+Sample message (where the build path was /Users/njsf/Projects/SXEmacs/nsx-up/,,mac):
+
+/Users/njsf/Projects/SXEmacs/nsx-up/,,mac/lib-src/make-docfile --modname cl-loop -E cl-loop.doc.c ../../../modules/cl/cl-loop.c
+/bin/sh ../../../ylwrap ../../../modules/cl/cl-loop-parser.y y.tab.c cl-loop-parser.c y.tab.h cl-loop-parser.h y.output
+cl-loop-parser.output -- bison -y  -d
+sed: 1: "s,/Users/njsf/Projects/ ...": bad flag in substitute command: 'm'
+sed: 1: "s,/Users/njsf/Projects/ ...": bad flag in substitute command: 'm'
+
+The workaround is to use a path without commas in it.
+
+
+>>>>>>> origin/master
 *** Missing libltdl.la (Solaris 2.8)
 
 We've had a report that missing libtool on Solaris 2.8 isn't detected
@@ -174,17 +207,30 @@ with...
 
 ** configure
 
+<<<<<<< HEAD
 *** configure on FreeBSD
 
 Building SXEmacs on FreeBSD as far as we know requires the GNU Bourne
 Again SHell (bash) versions 3 or 4 - the /bin/sh supplied with FreeBSD 
 is the Almquist Shell and will not work correctly.
+=======
+*** configure on FreeBSD, NetBSD, OpenBSD, etc.
+
+Building SXEmacs on *BSD as far as we know requires the GNU Bourne
+Again SHell (bash) versions 3 or 4.
+>>>>>>> origin/master
 
 bash is available for all tier 1 architectures as a binary package and 
 and for tier 2/3 as a port.
 
+<<<<<<< HEAD
 To run configure successfully, simply replace `./configure ${ARGS}` 
 with `bash configure ${ARGS}` and proceed as normal.
+=======
+To run configure successfully...
+
+    CONFIG_SHELL=/path/to/bash $CONFIG_SHELL configure [option, ...]
+>>>>>>> origin/master
 
 ** bdwgc and gcc and code optimisation
 
@@ -213,6 +259,55 @@ If this still does not work out either dispense with BDWGC support or
 use a recent C compiler.  ATTOW, all GCC 4.x compilers (including SVN)
 should work.
 
+<<<<<<< HEAD
+=======
+** ENT
+
+ENT is basically a conglomerate of internally and externally implemented
+arithmetics.  Hence it supports a number of libraries, some of which
+overlap in their functionality, some others do not but then break at the
+compatibility layer.
+
+One of the most likely problems is the GMP vs. MPFR issue.  In past
+times, mpfr (a multiprecision library for floats with exact rounding
+facilities) has been a part of the GMP distribution.  Later on, mpfr got
+separated from it and has been developed independently while the version
+of mpfr which ships with GMP stayed the same.  Now that scenario is
+exactly the problem.
+
+Inattentive distributions (like Fedora) still deliver packages of GMP
+with the old'n'incompatible mpfr library.  SXEmacs will disable the MPFR
+support on such systems by default (at configure time).  However, if you
+install a supported version of mpfr in parallel to the packaged ones on
+such a system SXEmacs autodetection correctly reports that a sane
+version of mpfr is available and enables it.  Nonetheless, the according
+build may fail (or the build may even succeed but calling the binary may
+fail), like this:
+
+number-mpfr.o: In function `ent_lt_BIGFR_T':
+/home/martin/src/edit/sxemacs-main/src/number-mpfr.c:661: undefined
+reference to `mpfr_less_p'
+number-mpfr.o: In function `ent_gt_BIGFR_T':
+/home/martin/src/edit/sxemacs-main/src/number-mpfr.c:671: undefined
+reference to `mpfr_greater_p'
+...
+
+Especially note that we _only_ support the standalone version of MPFR,
+and not the one distributed with GMP.
+
+Solution:
+---------
+Either:
+   Badger your distributor and demand separate packages for GMP and
+   MPFR.
+Or:
+   Remove the GMP package and install your own build -- available at
+   http://swox.com/gmp -- afterwards install your own build of mpfr (the
+   one from http://www.mpfr.org)
+
+Reconfigure and rebuild SXEmacs afterwards.
+
+>>>>>>> origin/master
 
 * XEmacs Packages
 =================
@@ -232,6 +327,12 @@ here.
 
 Here is the patch to make EFS work with SXEmacs:
 
+<<<<<<< HEAD
+=======
+(Note: the current EFS package that XEmacs distributes has this
+patch installed) 
+
+>>>>>>> origin/master
 Index: ChangeLog
 ===================================================================
 RCS file: /pack/xemacscvs/XEmacs/packages/xemacs-packages/efs/ChangeLog,v
@@ -368,6 +469,7 @@ diff -u -u -r1.7 dired.el
    ;; Reading with history.
    (if (>= ver 19)
 
+<<<<<<< HEAD
 ** ENT
 
 ENT is basically a conglomerate of internally and externally implemented
@@ -414,6 +516,8 @@ Or:
 
 Reconfigure and rebuild SXEmacs afterwards.
 
+=======
+>>>>>>> origin/master
 
 * Problems with running SXEmacs
 ===============================
@@ -497,6 +601,11 @@ file.  Much of it is already fixed in SXEmacs (and in XEmacs too).
 We're keeping it here for prosperity, or until somebody finds the time
 to go through it all and remove the irrelevant stuff. :-)
 
+<<<<<<< HEAD
+=======
+Note: Some irrelevant stuff purged (mostly windows rubbish) 2010-04-01
+
+>>>>>>> origin/master
 This file describes various problems that have been encountered
 in compiling, installing and running XEmacs.  It has been updated for
 XEmacs 21.5.
@@ -566,6 +675,7 @@ config.h to point to it.
 
 It may also work to use the GCC version of `ld' instead of the standard one.
 
+<<<<<<< HEAD
 *** Excessive optimization with pgcc can break XEmacs
 
 It has been reported on some systems that compiling with -O6 can lead
@@ -577,11 +687,14 @@ of libc.  Snapshots near the release of pgcc-1.0 have been tested
 extensively and no sign of breakage has been seen on systems using
 glibc-2.
 
+=======
+>>>>>>> origin/master
 *** src/Makefile and lib-src/Makefile are truncated--most of the file missing.
 
 This can happen if configure uses GNU sed version 2.03.  That version
 had a bug.  GNU sed version 2.05 works properly.
 
+<<<<<<< HEAD
 *** When compiling with X11, you get "undefined symbol _XtStrings".
 
 This means that you are trying to link emacs against the X11r4 version of
@@ -654,6 +767,8 @@ when attempting to link against libMagick.  The fix is to remove the old
 libz.a in the X11 binary directory.
 
 
+=======
+>>>>>>> origin/master
 ** Motif
 
 Motif is the X11 version of the Gnus torture test: if there's a way to
@@ -860,6 +975,7 @@ Valdis.Kletnieks@vt.edu writes:
 
 
 ** SunOS/Solaris
+<<<<<<< HEAD
 *** Don't use -O2 with gcc 2.8.1 and egcs 1.0 under SPARC architectures
 without also using `-fno-schedule-insns'.
 
@@ -871,6 +987,8 @@ crashes in the function skip-syntax-backward.
 gcc will assume a 64-bit operating system, even though you've
 merely told it to assume a 64-bit instruction set.
 
+=======
+>>>>>>> origin/master
 *** Dumping error when using GNU binutils / GNU ld on a Sun.
 
 Errors similar to the following:
@@ -1001,11 +1119,14 @@ The solution is to install Patch-ID# 100267-03 from Sun.
 
 See also Intel Architecture General, above.
 
+<<<<<<< HEAD
 *** egcs-1.1 on Alpha Linux
 
 There have been reports of egcs-1.1 not compiling XEmacs correctly on
 Alpha Linux.  There have also been reports that egcs-1.0.3a is O.K.
 
+=======
+>>>>>>> origin/master
 *** Under Linux, you get "too many arguments to function `getpgrp'".
 
 You have probably installed LessTiff under `/usr/local' and `libXm.so'
@@ -1021,12 +1142,15 @@ prove enlightening.
 This error message has been observed with lesstif-0.75a.  It does not
 appear to cause any harm.
 
+<<<<<<< HEAD
 *** xemacs: can't resolve symbol '__malloc_hook'
 
 This is a Linux problem where you've compiled the XEmacs binary on a libc
 5.4 with version higher than 5.4.19 and attempted to run the binary against
 an earlier version.  The solution is to upgrade your old library.
 
+=======
+>>>>>>> origin/master
 ** IRIX
 
 *** More coredumping in Irix (6.5 known to be vulnerable)
@@ -1259,6 +1383,7 @@ to take advantage of the keyboard map in emacskeys.sco.
 Note: Much of the above entry is probably not valid for XEmacs 21.0
 and later.
 
+<<<<<<< HEAD
 ** Windows
 
 *** XEmacs complains "No such file or directory, diff"
@@ -1347,6 +1472,8 @@ This is usually because xmkmf is not in your path or because you are
 using the default Cygwin shell. (See above.)
 
 
+=======
+>>>>>>> origin/master
 * Problems with running XEmacs
 ==============================
 ** General
@@ -2523,6 +2650,7 @@ C Compiler Version 1.00.46 (Beta).  The solution is to compile with
 GCC.
 
 
+<<<<<<< HEAD
 ** Windows
 *** Conflicts with FSF NTEmacs
 
@@ -2677,6 +2805,8 @@ You need version 4.71 of commctrl.dll which does not ship with windows
 microsoft website.
 
 
+=======
+>>>>>>> origin/master
 * Compatibility problems (with Emacs 18, GNU Emacs, or previous XEmacs/lemacs)
 ==============================================================================
 

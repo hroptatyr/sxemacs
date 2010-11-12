@@ -133,7 +133,11 @@ information.
 Optional arg DATA-TYPE is a window-system-specific type.
 Optional arg DEVICE specifies the device on which to assert the selection.
 It defaults to the selected device.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (selection_name, selection_value, how_to_add, data_type, device))
 {
 	Lisp_Object selection_time, selection_data, prev_value = Qnil,
@@ -279,7 +283,11 @@ DEFUN("register-selection-data-type", Fregister_selection_data_type, 1, 2, 0,	/*
 Register a new selection data type DATA-TYPE, optionally on the specified
 DEVICE. Returns the device-specific data type identifier, or nil if the
 device does not support this feature or the registration fails. 
+<<<<<<< HEAD
 										*/
+=======
+*/
+>>>>>>> origin/master
       (data_type, device))
 {
 	/* Check arguments */
@@ -299,7 +307,11 @@ DEFUN("selection-data-type-name", Fselection_data_type_name, 1, 2, 0,	/*
 Retrieve the name of the specified selection data type DATA-TYPE, optionally
 on the specified DEVICE. Returns either a string or a symbol on success, and
 nil if the device does not support this feature or the type is not known. 
+<<<<<<< HEAD
 									*/
+=======
+*/
+>>>>>>> origin/master
       (data_type, device))
 {
 	if (NILP(device))
@@ -317,7 +329,11 @@ Retrieve a list of currently available types of selection associated with
 the given SELECTION-NAME, optionally on the specified DEVICE. This list
 does not take into account any possible conversions that might take place,
 so it should be taken as a minimal estimate of what is available.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (selection_name, device))
 {
 	Lisp_Object types = Qnil, rest;
@@ -410,7 +426,11 @@ void handle_selection_clear(Lisp_Object selection_symbol)
 
 DEFUN("disown-selection-internal", Fdisown_selection_internal, 1, 3, 0,	/*
 If we own the named selection, then disown it (make there be no selection).
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (selection_name, selection_time, device))
 {
 	if (NILP(assq_no_quit(selection_name, Vselection_alist)))
@@ -432,7 +452,11 @@ Return t if the current emacs process owns SELECTION.
 SELECTION should be the name of the selection in question, typically one of
 the symbols PRIMARY, SECONDARY, or CLIPBOARD.  (For convenience, the symbol
 nil is the same as PRIMARY, and t is the same as SECONDARY.)
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (selection))
 {
 	CHECK_SYMBOL(selection);
@@ -450,7 +474,11 @@ SELECTION should be the name of the selection in question, typically one of
 the symbols PRIMARY, SECONDARY, or CLIPBOARD.  (For convenience, the symbol
 nil is the same as PRIMARY, and t is the same as SECONDARY.)
 Optionally, the window-system DATA-TYPE and the DEVICE may be specified.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (selection, data_type, device))
 {
 	CHECK_SYMBOL(selection);
@@ -471,7 +499,11 @@ DEFUN("get-selection-timestamp", Fget_selection_timestamp, 1, 1, 0,	/*
 Return the timestamp associated with the specified SELECTION, if it exists.
 Note that the timestamp is a device-specific object, and may not actually be
 visible from Lisp.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (selection))
 {
 	Lisp_Object local_value = assq_no_quit(selection, Vselection_alist);
@@ -492,7 +524,11 @@ SELECTION is a symbol, typically PRIMARY, SECONDARY, or CLIPBOARD.
 TARGET-TYPE is the type of data desired, typically STRING or COMPOUND_TEXT.
 Under Mule, if the resultant data comes back as 8-bit data in type
 TEXT or COMPOUND_TEXT, it will be decoded as Compound Text.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (selection, target_type, device))
 {
 	/* This function can GC */

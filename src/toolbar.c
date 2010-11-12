@@ -76,7 +76,11 @@ DEFINE_LRECORD_IMPLEMENTATION("toolbar-button", toolbar_button,
 
 DEFUN("toolbar-button-p", Ftoolbar_button_p, 1, 1, 0,	/*
 Return non-nil if OBJECT is a toolbar button.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return TOOLBAR_BUTTONP(object) ? Qt : Qnil;
@@ -94,7 +98,11 @@ Return non-nil if OBJECT is a toolbar button.
 
 DEFUN("toolbar-button-callback", Ftoolbar_button_callback, 1, 1, 0,	/*
 Return the callback function associated with the toolbar BUTTON.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (button))
 {
 	CHECK_TOOLBAR_BUTTON(button);
@@ -104,7 +112,11 @@ Return the callback function associated with the toolbar BUTTON.
 
 DEFUN("toolbar-button-help-string", Ftoolbar_button_help_string, 1, 1, 0,	/*
 Return the help string function associated with the toolbar BUTTON.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (button))
 {
 	CHECK_TOOLBAR_BUTTON(button);
@@ -114,7 +126,11 @@ Return the help string function associated with the toolbar BUTTON.
 
 DEFUN("toolbar-button-enabled-p", Ftoolbar_button_enabled_p, 1, 1, 0,	/*
 Return t if BUTTON is active.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (button))
 {
 	CHECK_TOOLBAR_BUTTON(button);
@@ -124,7 +140,11 @@ Return t if BUTTON is active.
 
 DEFUN("set-toolbar-button-down-flag", Fset_toolbar_button_down_flag, 2, 2, 0,	/*
 Don't touch.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (button, flag))
 {
 	struct toolbar_button *tb;
@@ -224,7 +244,11 @@ DEFUN("set-default-toolbar-position", Fset_default_toolbar_position, 1, 1, 0,	/*
 Set the position that the `default-toolbar' will be displayed at.
 Valid positions are 'top, 'bottom, 'left and 'right.
 See `default-toolbar-position'.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (position))
 {
 	enum toolbar_pos cur =
@@ -264,7 +288,11 @@ DEFUN("default-toolbar-position", Fdefault_toolbar_position, 0, 0, 0,	/*
 Return the position that the `default-toolbar' will be displayed at.
 The `default-toolbar' will only be displayed here if the corresponding
 position-specific toolbar specifier does not provide a value.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Vdefault_toolbar_position;
@@ -942,7 +970,11 @@ DEFUN("check-toolbar-button-syntax", Fcheck_toolbar_button_syntax, 1, 2, 0,	/*
 Verify the syntax of entry BUTTON in a toolbar description list.
 If you want to verify the syntax of a toolbar description list as a
 whole, use `check-valid-instantiator' with a specifier type of 'toolbar.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (button, noerror))
 {
 	Lisp_Object *elt, glyphs, value;
@@ -1099,7 +1131,11 @@ Return non-nil if OBJECT is a toolbar specifier.
 
 See `make-toolbar-specifier' for a description of possible toolbar
 instantiators.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return TOOLBAR_SPECIFIERP(object) ? Qt : Qnil;

@@ -110,7 +110,11 @@ This function loops, signalling a continuable `wrong-type-argument' error
 with PREDICATE and VALUE as the data associated with the error and then
 calling PREDICATE on the returned value, until the value gotten satisfies
 PREDICATE.  At that point, the gotten value is returned.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (predicate, value))
 {
 	return wrong_type_argument(predicate, value);
@@ -164,7 +168,11 @@ EMACS_INT sign_extend_lisp_int(EMACS_INT num)
 
 DEFUN("eq", Feq, 2, 2, 0,	/*
 Return t if the two args are the same Lisp object.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object1, object2))
 {
 	return EQ_WITH_EBOLA_NOTICE(object1, object2) ? Qt : Qnil;
@@ -181,7 +189,11 @@ preserve byte-code compatibility with v19.  This kludge is known as the
 functions with `old-foo' equivalents.
 
 Do not use this function!
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object1, object2))
 {
 	/* #### blasphemy */
@@ -190,7 +202,11 @@ Do not use this function!
 
 DEFUN("null", Fnull, 1, 1, 0,	/*
 Return t if OBJECT is nil.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return NILP(object) ? Qt : Qnil;
@@ -206,7 +222,11 @@ series of cons cells.
 
 See the documentation for `cons' or the Lisp manual for more details on what
 a cons cell is.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CONSP(object) ? Qt : Qnil;
@@ -222,7 +242,11 @@ series of cons cells.
 
 See the documentation for `cons' or the Lisp manual for more details on what
 a cons cell is.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CONSP(object) ? Qnil : Qt;
@@ -234,7 +258,11 @@ Return t if OBJECT is a list.  `nil' is a list.
 A list is implemented as a series of cons cells structured such that the CDR
 of each cell either points to another cons cell or to `nil', the special
 Lisp value for both Boolean false and the empty list.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return LISTP(object) ? Qt : Qnil;
@@ -246,7 +274,11 @@ Return t if OBJECT is not a list.  `nil' is a list.
 A list is implemented as a series of cons cells structured such that the CDR
 of each cell either points to another cons cell or to `nil', the special
 Lisp value for both Boolean false and the empty list.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return LISTP(object) ? Qnil : Qt;
@@ -258,7 +290,11 @@ Return t if OBJECT is an acyclic, nil-terminated (ie, not dotted), list.
 A list is implemented as a series of cons cells structured such that the CDR
 of each cell either points to another cons cell or to `nil', the special
 Lisp value for both Boolean false and the empty list.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return TRUE_LIST_P(object) ? Qt : Qnil;
@@ -266,7 +302,11 @@ Lisp value for both Boolean false and the empty list.
 
 DEFUN("symbolp", Fsymbolp, 1, 1, 0,	/*
 Return t if OBJECT is a symbol.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return SYMBOLP(object) ? Qt : Qnil;
@@ -277,7 +317,11 @@ Return t if OBJECT is a keyword.
 
 A symbol is a Lisp object with a name. It can optionally have any and all of
 a value, a property list and an associated function. 
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return KEYWORDP(object) ? Qt : Qnil;
@@ -285,7 +329,11 @@ a value, a property list and an associated function.
 
 DEFUN("vectorp", Fvectorp, 1, 1, 0,	/*
 Return t if OBJECT is a vector.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return VECTORP(object) ? Qt : Qnil;
@@ -293,7 +341,11 @@ Return t if OBJECT is a vector.
 
 DEFUN("bit-vector-p", Fbit_vector_p, 1, 1, 0,	/*
 Return t if OBJECT is a bit vector.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return BIT_VECTORP(object) ? Qt : Qnil;
@@ -301,7 +353,11 @@ Return t if OBJECT is a bit vector.
 
 DEFUN("stringp", Fstringp, 1, 1, 0,	/*
 Return t if OBJECT is a string.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return STRINGP(object) ? Qt : Qnil;
@@ -309,7 +365,11 @@ Return t if OBJECT is a string.
 
 DEFUN("arrayp", Farrayp, 1, 1, 0,	/*
 Return t if OBJECT is an array (string, vector, or bit vector).
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return (VECTORP(object) || STRINGP(object) || BIT_VECTORP(object))
@@ -318,7 +378,11 @@ Return t if OBJECT is an array (string, vector, or bit vector).
 
 DEFUN("sequencep", Fsequencep, 1, 1, 0,	/*
 Return t if OBJECT is a sequence (list, dllist or array).
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return (LISTP(object) || DLLISTP(object) ||
@@ -328,7 +392,11 @@ Return t if OBJECT is a sequence (list, dllist or array).
 
 DEFUN("markerp", Fmarkerp, 1, 1, 0,	/*
 Return t if OBJECT is a marker (editor pointer).
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return MARKERP(object) ? Qt : Qnil;
@@ -336,7 +404,11 @@ Return t if OBJECT is a marker (editor pointer).
 
 DEFUN("subrp", Fsubrp, 1, 1, 0,	/*
 Return t if OBJECT is a built-in function.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return SUBRP(object) ? Qt : Qnil;
@@ -344,7 +416,11 @@ Return t if OBJECT is a built-in function.
 
 DEFUN("subr-min-args", Fsubr_min_args, 1, 1, 0,	/*
 Return minimum number of args built-in function SUBR may be called with.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (subr))
 {
 	CHECK_SUBR(subr);
@@ -354,7 +430,11 @@ Return minimum number of args built-in function SUBR may be called with.
 DEFUN("subr-max-args", Fsubr_max_args, 1, 1, 0,	/*
 Return maximum number of args built-in function SUBR may be called with,
 or nil if it takes an arbitrary number of arguments or is a special form.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (subr))
 {
 	int nargs;
@@ -370,7 +450,11 @@ DEFUN("subr-interactive", Fsubr_interactive, 1, 1, 0,	/*
 Return the interactive spec of the subr object SUBR, or nil.
 If non-nil, the return value will be a list whose first element is
 `interactive' and whose second element is the interactive spec.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (subr))
 {
 	const char *prompt;
@@ -397,8 +481,14 @@ compatibility with old E-Lisp programs that confounded characters and
 integers willy-nilly.  These behaviors may change in the future; therefore,
 do not rely on them.  Instead, use the character-specific functions such
 as `char='.
+<<<<<<< HEAD
 						 */
       (object)) {
+=======
+*/
+      (object))
+{
+>>>>>>> origin/master
 	return CHARP(object) ? Qt : Qnil;
 }
 
@@ -416,7 +506,11 @@ If support for Mule does not exist, these are the only valid character
 values.  When Mule support exists, the values assigned to other characters
 may vary depending on the particular version of SXEmacs, the order in which
 character sets were loaded, etc., and you should not depend on them.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (character))
 {
 	CHECK_CHAR(character);
@@ -428,8 +522,14 @@ Convert integer INTEGER into the equivalent character.
 Not all integers correspond to valid characters; use `char-int-p' to
 determine whether this is the case.  If the integer cannot be converted,
 nil is returned.
+<<<<<<< HEAD
 						 */
       (integer)) {
+=======
+*/
+      (integer))
+{
+>>>>>>> origin/master
 	CHECK_INT(integer);
 	if (CHAR_INTP(integer))
 		return make_char(XINT(integer));
@@ -440,7 +540,11 @@ nil is returned.
 DEFUN("char-int-p", Fchar_int_p, 1, 1, 0,	/*
 Return t if OBJECT is an integer that can be converted into a character.
 See `char-int'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CHAR_INTP(object) ? Qt : Qnil;
@@ -448,7 +552,11 @@ See `char-int'.
 
 DEFUN("char-or-char-int-p", Fchar_or_char_int_p, 1, 1, 0,	/*
 Return t if OBJECT is a character or an integer that can be converted into one.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CHAR_OR_CHAR_INTP(object) ? Qt : Qnil;
@@ -460,7 +568,11 @@ It is semi-hateful that we allow a char-int here, as it goes against
 the name of this function, but it makes the most sense considering the
 other steps we take to maintain compatibility with the old character/integer
 confoundedness in older versions of E-Lisp.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CHAR_OR_CHAR_INTP(object) || STRINGP(object) ? Qt : Qnil;
@@ -470,7 +582,11 @@ confoundedness in older versions of E-Lisp.
 /* In this case, integerp is defined in number.c. */
 DEFUN("intp", Fintp, 1, 1, 0, /*
 Return t if OBJECT is an ordinary integer.
+<<<<<<< HEAD
 				     */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return INTP(object) ? Qt : Qnil;
@@ -478,7 +594,11 @@ Return t if OBJECT is an ordinary integer.
 /* stay compatible to XE 21.5 */
 DEFUN("fixnump", Ffixnump, 1, 1, 0, /*
 Return t if OBJECT is an ordinary integer.
+<<<<<<< HEAD
 				     */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return INTP(object) ? Qt : Qnil;
@@ -486,7 +606,11 @@ Return t if OBJECT is an ordinary integer.
 #else  /* !WITH_NUMBER_TYPES */
 DEFUN("integerp", Fintegerp, 1, 1, 0,	/*
 Return t if OBJECT is an integer.
+<<<<<<< HEAD
 					*/
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return INTP(object) ? Qt : Qnil;
@@ -495,7 +619,11 @@ Return t if OBJECT is an integer.
 
 DEFUN("integer-or-marker-p", Finteger_or_marker_p, 1, 1, 0,	/*
 Return t if OBJECT is an integer or a marker (editor pointer).
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return INTP(object) || MARKERP(object) ? Qt : Qnil;
@@ -503,7 +631,11 @@ Return t if OBJECT is an integer or a marker (editor pointer).
 
 DEFUN("integer-or-char-p", Finteger_or_char_p, 1, 1, 0,	/*
 Return t if OBJECT is an integer or a character.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return INTP(object) || CHARP(object) ? Qt : Qnil;
@@ -511,7 +643,11 @@ Return t if OBJECT is an integer or a character.
 
 DEFUN("integer-char-or-marker-p", Finteger_char_or_marker_p, 1, 1, 0,	/*
 Return t if OBJECT is an integer, character or a marker (editor pointer).
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return INTP(object) || CHARP(object) || MARKERP(object) ? Qt : Qnil;
@@ -519,7 +655,11 @@ Return t if OBJECT is an integer, character or a marker (editor pointer).
 
 DEFUN("natnump", Fnatnump, 1, 1, 0,	/*
 Return t if OBJECT is a nonnegative integer.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return (NATNUMP(object)
@@ -535,7 +675,11 @@ Return t if OBJECT is a nonnegative number.
 
 We call a number object non-negative iff it is comparable
 and its value is not less than 0.
+<<<<<<< HEAD
 					       */
+=======
+*/
+>>>>>>> origin/master
        (object))
 {
 	return NATNUMP(object)
@@ -564,7 +708,11 @@ and its value is not less than 0.
 
 DEFUN("bitp", Fbitp, 1, 1, 0,	/*
 Return t if OBJECT is a bit (0 or 1).
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return BITP(object) ? Qt : Qnil;
@@ -572,7 +720,11 @@ Return t if OBJECT is a bit (0 or 1).
 
 DEFUN("numberp", Fnumberp, 1, 1, 0,	/*
 Return t if OBJECT is a number (floating point or integer).
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 #if defined(WITH_NUMBER_TYPES)
@@ -584,7 +736,11 @@ Return t if OBJECT is a number (floating point or integer).
 
 DEFUN("number-or-marker-p", Fnumber_or_marker_p, 1, 1, 0,	/*
 Return t if OBJECT is a number or a marker.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return INT_OR_FLOATP(object) || MARKERP(object) ? Qt : Qnil;
@@ -592,7 +748,11 @@ Return t if OBJECT is a number or a marker.
 
 DEFUN("number-char-or-marker-p", Fnumber_char_or_marker_p, 1, 1, 0,	/*
 Return t if OBJECT is a number, character or a marker.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return (INT_OR_FLOATP(object) || CHARP(object) || MARKERP(object))
@@ -602,7 +762,11 @@ Return t if OBJECT is a number, character or a marker.
 #ifdef HAVE_FPFLOAT
 DEFUN("floatp", Ffloatp, 1, 1, 0,	/*
 Return t if OBJECT is a floating point number.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return FLOATP(object) ? Qt : Qnil;
@@ -611,7 +775,11 @@ Return t if OBJECT is a floating point number.
 
 DEFUN("type-of", Ftype_of, 1, 1, 0,	/*
 Return a symbol representing the type of OBJECT.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	switch (XTYPE(object)) {
@@ -643,7 +811,11 @@ Return the car of CONS.  If CONS is nil, return nil.
 
 The car of a list or a dotted pair is its first element.
 Error if CONS is not nil and not a cons cell.  See also `car-safe'.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (cons))
 {
 	while (1) {
@@ -660,7 +832,11 @@ DEFUN("car-safe", Fcar_safe, 1, 1, 0,	/*
 Return the car of OBJECT if it is a cons cell, or else nil.
 
 The car of a list or a dotted pair is its first element.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CONSP(object) ? XCAR(object) : Qnil;
@@ -673,7 +849,11 @@ The cdr of a list is the list without its first element.  The cdr of a
 dotted pair (A . B) is the second element, B.
 
 Error if arg is not nil and not a cons cell.  See also `cdr-safe'.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (cons))
 {
 	while (1) {
@@ -691,7 +871,11 @@ Return the cdr of OBJECT if it is a cons cell, else nil.
 
 The cdr of a list is the list without its first element.  The cdr of a
 dotted pair (A . B) is the second element, B.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CONSP(object) ? XCDR(object) : Qnil;
@@ -701,7 +885,11 @@ DEFUN("setcar", Fsetcar, 2, 2, 0,	/*
 Set the car of CONS-CELL to be NEWCAR.  Return NEWCAR.
 
 The car of a list or a dotted pair is its first element.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (cons_cell, newcar))
 {
 	if (!CONSP(cons_cell))
@@ -716,7 +904,11 @@ Set the cdr of CONS-CELL to be NEWCDR.  Return NEWCDR.
 
 The cdr of a list is the list without its first element.  The cdr of a
 dotted pair (A . B) is the second element, B.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (cons_cell, newcdr))
 {
 	if (!CONSP(cons_cell))
@@ -768,7 +960,11 @@ If OBJECT is not a symbol, just return it.
 Signal a void-function error if the final symbol is unbound.
 Signal a cyclic-function-indirection error if there is a loop in the
 function chain of symbols.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return indirect_function(object, 1);
@@ -779,7 +975,11 @@ function chain of symbols.
 DEFUN("aref", Faref, 2, 2, 0,	/*
 Return the element of ARRAY at index INDEX.
 ARRAY may be a vector, bit vector, or string.  INDEX starts at 0.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (array, index_))
 {
 	EMACS_INT idx;
@@ -835,7 +1035,11 @@ range_error:
 DEFUN("aset", Faset, 3, 3, 0,	/*
 Store into the element of ARRAY at index INDEX the value NEWVAL.
 ARRAY may be a vector, bit vector, or string.  INDEX starts at 0.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (array, index_, newval))
 {
 	EMACS_INT idx;
@@ -984,7 +1188,11 @@ DEFUN("number-to-string", Fnumber_to_string, 1, 1, 0,	/*
 Convert NUMBER to a string by printing it in decimal.
 Uses a minus sign if negative.
 NUMBER may be an integer or a floating point number.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 	char buffer[VALBITS];
@@ -1098,7 +1306,11 @@ Floating point numbers always use base 10.
 
 If STRING is a float, the variable `read-real-as' decides how to
 interpret that float.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (string, base))
 {
 	char *p;
@@ -1272,7 +1484,11 @@ interpret that float.
 DEFUN("logand", Flogand, 0, MANY, 0,	/*
 Return bitwise-and of all the arguments.
 Arguments may be integers, or markers or characters converted to integers.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 #if defined HAVE_MPZ && (defined WITH_GMP || defined WITH_MP)
@@ -1335,7 +1551,11 @@ Arguments may be integers, or markers or characters converted to integers.
 DEFUN("logior", Flogior, 0, MANY, 0,	/*
 Return bitwise-or of all the arguments.
 Arguments may be integers, or markers or characters converted to integers.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 #if defined HAVE_MPZ && (defined WITH_GMP || defined WITH_MP)
@@ -1399,7 +1619,11 @@ Arguments may be integers, or markers or characters converted to integers.
 DEFUN("logxor", Flogxor, 0, MANY, 0,	/*
 Return bitwise-exclusive-or of all the arguments.
 Arguments may be integers, or markers or characters converted to integers.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 #if defined HAVE_MPZ && (defined WITH_GMP || defined WITH_MP)
@@ -1463,7 +1687,11 @@ Arguments may be integers, or markers or characters converted to integers.
 DEFUN("lognot", Flognot, 1, 1, 0,	/*
 Return the bitwise complement of NUMBER.
 NUMBER may be an integer, marker or character converted to integer.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 #if defined HAVE_MPZ && (defined WITH_GMP || defined WITH_MP)
@@ -1503,7 +1731,11 @@ DEFUN("ash", Fash, 2, 2, 0,	/*
 Return VALUE with its bits shifted left by COUNT.
 If COUNT is negative, shifting is actually to the right.
 In this case, the sign bit is duplicated.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (value, count))
 {
 	CHECK_INT_COERCE_CHAR(value);
@@ -1518,7 +1750,11 @@ DEFUN("lsh", Flsh, 2, 2, 0,	/*
 Return VALUE with its bits shifted left by COUNT.
 If COUNT is negative, shifting is actually to the right.
 In this case, zeros are shifted in on the left.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (value, count))
 {
 #if defined HAVE_MPZ && (defined WITH_GMP || defined WITH_MP)
@@ -1594,7 +1830,11 @@ If optional argument CERTAINTY-THRESHOLD is non-nil, it should be a
 natural number to indicate how many probabilistic primality tests must
 be passed in order to have certainty about the primality of NUMBER.
 The default is 8.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (number, certainty_threshold))
 {
 	Lisp_Object bznumber;
@@ -1624,7 +1864,11 @@ The default is 8.
 
 DEFUN("next-prime", Fnext_prime, 1, 1, 0,	/*
 Return the next prime number greater than NUMBER.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 	Lisp_Object bznumber;
@@ -1641,7 +1885,11 @@ Return the next prime number greater than NUMBER.
 
 DEFUN("factorial", Ffactorial, 1, 1, 0,	/*
 Return the factorial of NUMBER.
+<<<<<<< HEAD
 				*/
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 	bigz bz;
@@ -1671,7 +1919,11 @@ Return the factorial of NUMBER.
 
 DEFUN("binomial-coefficient", Fbinomial_coefficient, 2, 2, 0, /*
 Return the binomial coefficient, N over K.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (n, k))
 {
 	bigz bz;
@@ -1705,7 +1957,11 @@ Remove all occurences of FACTOR in NUMBER and return a cons cell
 with NUMBER divided by a maximal power of FACTOR in the car and
 the exponent in the cdr.
 FACTOR must be non-negative and greater than 1.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (factor, number))
 {
 	Lisp_Object bznumber, bzfactor;
@@ -1782,7 +2038,11 @@ DEFUN("fibonacci", Ffibonacci, 1, 1, 0, /*
 Return the NUMBERth Fibonacci number.
 To compute both, the NUMBERth and (NUMBER-1)th Fibonacci
 number use `fibonacci2' instead.
+<<<<<<< HEAD
 					*/
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 	bigz bz;
@@ -1812,7 +2072,11 @@ DEFUN("fibonacci2", Ffibonacci2, 1, 1, 0, /*
 Return a cons with the NUMBERth and (NUMBER-1)th Fibonacci number.
 To compute a series of Fibonacci numbers starting at index
 NUMBER, use this function and recursively compute the rest.
+<<<<<<< HEAD
 					  */
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 	bigz bzn, bznsub1;
@@ -1845,7 +2109,11 @@ DEFUN("lucas", Flucas, 1, 1, 0, /*
 Return the NUMBERth Lucas number.
 To compute both, the NUMBERth and (NUMBER-1)th Lucas
 number use `lucas2' instead.
+<<<<<<< HEAD
 				*/
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 	bigz bz;
@@ -1875,7 +2143,11 @@ DEFUN("lucas2", Flucas2, 1, 1, 0, /*
 Return a cons with the NUMBERth and (NUMBER-1)th Lucas number.
 To compute a series of Lucas numbers starting at index
 NUMBER, use this function and recursively compute the rest.
+<<<<<<< HEAD
 					  */
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 	bigz bzn, bznsub1;
@@ -1906,7 +2178,11 @@ NUMBER, use this function and recursively compute the rest.
 
 DEFUN("divisiblep", Fdivisiblep, 2, 2, 0, /*
 Return t if NUMBER is divisible by D, nil otherwise.
+<<<<<<< HEAD
 					  */
+=======
+*/
+>>>>>>> origin/master
       (number, d))
 {
 	CHECK_INTEGER(number);
@@ -1925,7 +2201,11 @@ Return t if NUMBER is divisible by D, nil otherwise.
 
 DEFUN("congruentp", Fcongruentp, 3, 3, 0, /*
 Return t if NUMBER is congruent to C modulo M, nil otherwise.
+<<<<<<< HEAD
 					  */
+=======
+*/
+>>>>>>> origin/master
       (number, c, m))
 {
 	CHECK_INTEGER(number);
@@ -1949,7 +2229,11 @@ DEFUN("perfect-power-p", Fperfect_power_p, 1, 1, 0, /*
 Return t if NUMBER is a perfect power, nil otherwise.
 An integer NUMBER is said to be a perfect power if there 
 exist integers, a and b, such that a^b = NUMBER.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 	CHECK_INTEGER(number);
@@ -1963,7 +2247,11 @@ DEFUN("perfect-square-p", Fperfect_square_p, 1, 1, 0, /*
 Return t if NUMBER is a perfect square, nil otherwise.
 An integer NUMBER is said to be a perfect square if there 
 exists an integer b such that b^2 = NUMBER.
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 	CHECK_INTEGER(number);
@@ -1978,7 +2266,11 @@ Return a cons with the integral square root of NUMBER
 in the car and the remainder in the cdr.
 An integral square root is a number b and a remainder c
 such that b*b + c = NUMBER.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 	bigz bzsqrt, bzrem;
@@ -2005,7 +2297,11 @@ DEFUN("zero-divisor-p", Fzero_divisor_p, 1, 1, 0, /*
 Return t if NUMBER is a zero-divisor, nil otherwise.
 That is, if there exists another non-zero number B, such that
   NUMBER * B = 0
+<<<<<<< HEAD
 						  */
+=======
+*/
+>>>>>>> origin/master
       (number))
 {
 	Lisp_Object result;
@@ -2026,7 +2322,11 @@ Return the factorisation of NUMBER.
 If optional arument B1 is non-nil, it should be a float used as
 stage 1 boundary.
 Second optional argument method can be 'ecm, 'p-1 'p+1.
+<<<<<<< HEAD
 					*/
+=======
+*/
+>>>>>>> origin/master
       (number, b1, method))
 {
 	int status;
@@ -2086,7 +2386,11 @@ Second optional argument method can be 'ecm, 'p-1 'p+1.
 #if defined(WITH_GMP) && (defined(HAVE_MPZ) || defined(HAVE_MPQ))
 DEFUN("gcd", Fgcd, 0, MANY, 0,	/*
 Return the greatest common divisor of the arguments.
+<<<<<<< HEAD
 				*/
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 	REGISTER int i;
@@ -2176,7 +2480,11 @@ Return the extended gcd of the arguments.
 The result is a list of integers, where the car is the actual gcd
 and the cdr consists of coefficients, s1, ..., sn, such that
 s1*arg1 + s2*arg2 + ... + sn*argn = gcd.
+<<<<<<< HEAD
 					*/
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 	REGISTER int i, j;
@@ -2284,7 +2592,11 @@ s1*arg1 + s2*arg2 + ... + sn*argn = gcd.
 
 DEFUN("lcm", Flcm, 0, MANY, 0,	/*
 Return the least common multiple of the arguments.
+<<<<<<< HEAD
 				*/
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 	REGISTER int i;
@@ -2722,7 +3034,11 @@ static Lisp_Object encode_weak_list_type(enum weak_list_type type)
 
 DEFUN("weak-list-p", Fweak_list_p, 1, 1, 0,	/*
 Return non-nil if OBJECT is a weak list.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return WEAK_LISTP(object) ? Qt : Qnil;
@@ -2753,7 +3069,11 @@ to `simple'.  Recognized types are
 		 and the cdr is not pointed to.
   `full-assoc'   Objects in the list disappear if they are conses
 		 and neither the car nor the cdr is pointed to.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (type))
 {
 	if (NILP(type))
@@ -2764,7 +3084,11 @@ to `simple'.  Recognized types are
 
 DEFUN("weak-list-type", Fweak_list_type, 1, 1, 0,	/*
 Return the type of the given weak-list object.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (weak))
 {
 	CHECK_WEAK_LIST(weak);
@@ -2773,7 +3097,11 @@ Return the type of the given weak-list object.
 
 DEFUN("weak-list-list", Fweak_list_list, 1, 1, 0,	/*
 Return the list contained in a weak-list object.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (weak))
 {
 	CHECK_WEAK_LIST(weak);
@@ -2782,7 +3110,11 @@ Return the list contained in a weak-list object.
 
 DEFUN("set-weak-list-list", Fset_weak_list_list, 2, 2, 0,	/*
 Change the list contained in a weak-list object.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (weak, new_list))
 {
 	CHECK_WEAK_LIST(weak);

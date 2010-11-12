@@ -738,7 +738,11 @@ int window_truncation_on(struct window *w)
 
 DEFUN("window-truncated-p", Fwindow_truncated_p, 0, 1, 0,	/*
 Returns non-nil if text in the window is truncated.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	struct window *w = decode_window(window);
@@ -1088,7 +1092,11 @@ static int window_pixel_height(struct window *w)
 
 DEFUN("windowp", Fwindowp, 1, 1, 0,	/*
 Return t if OBJECT is a window.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return WINDOWP(object) ? Qt : Qnil;
@@ -1096,7 +1104,11 @@ Return t if OBJECT is a window.
 
 DEFUN("window-live-p", Fwindow_live_p, 1, 1, 0,	/*
 Return t if OBJECT is a window which is currently visible.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return WINDOWP(object) && WINDOW_LIVE_P(XWINDOW(object))
@@ -1111,7 +1123,11 @@ CON-DEV-OR-FRAME is a device, then the selected frame on that device
 will be used.  If CON-DEV-OR-FRAME is a console, the selected frame on
 that console's selected device will be used.  Otherwise, the selected
 frame is used.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (con_dev_or_frame))
 {
 	if (NILP(con_dev_or_frame) && NILP(Fselected_device(Qnil)))
@@ -1131,7 +1147,11 @@ CON-DEV-OR-FRAME is a device, then the selected frame on that device
 will be used.  If CON-DEV-OR-FRAME is a console, the selected frame on
 that console's selected device will be used.  Otherwise, the selected
 frame is used.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (con_dev_or_frame))
 {
 	if (NILP(con_dev_or_frame) && NILP(Fselected_device(Qnil)))
@@ -1150,7 +1170,11 @@ return the minibuffer window used by that frame.  If CON-DEV-OR-FRAME
 is a device, then the selected frame on that device will be used.  If
 CON-DEV-OR-FRAME is a console, the selected frame on that console's
 selected device will be used.  Otherwise, the selected frame is used.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (con_dev_or_frame))
 {
 	return FRAME_MINIBUF_WINDOW(decode_frame_or_selected(con_dev_or_frame));
@@ -1158,7 +1182,11 @@ selected device will be used.  Otherwise, the selected frame is used.
 
 DEFUN("window-minibuffer-p", Fwindow_minibuffer_p, 0, 1, 0,	/*
 Return non-nil if WINDOW is a minibuffer window.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return MINI_WINDOW_P(decode_window(window)) ? Qt : Qnil;
@@ -1166,7 +1194,11 @@ Return non-nil if WINDOW is a minibuffer window.
 
 DEFUN("window-first-hchild", Fwindow_first_hchild, 1, 1, 0,	/*
 Return the first horizontal child of WINDOW, or nil.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return decode_window(window)->hchild;
@@ -1174,7 +1206,11 @@ Return the first horizontal child of WINDOW, or nil.
 
 DEFUN("window-first-vchild", Fwindow_first_vchild, 1, 1, 0,	/*
 Return the first vertical child of WINDOW, or nil.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return decode_window(window)->vchild;
@@ -1182,7 +1218,11 @@ Return the first vertical child of WINDOW, or nil.
 
 DEFUN("window-next-child", Fwindow_next_child, 1, 1, 0,	/*
 Return the next window on the same level as WINDOW, or nil.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return decode_window(window)->next;
@@ -1190,7 +1230,11 @@ Return the next window on the same level as WINDOW, or nil.
 
 DEFUN("window-previous-child", Fwindow_previous_child, 1, 1, 0,	/*
 Return the previous window on the same level as WINDOW, or nil.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return decode_window(window)->prev;
@@ -1198,7 +1242,11 @@ Return the previous window on the same level as WINDOW, or nil.
 
 DEFUN("window-parent", Fwindow_parent, 1, 1, 0,	/*
 Return the parent of WINDOW, or nil.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return decode_window(window)->parent;
@@ -1206,7 +1254,11 @@ Return the parent of WINDOW, or nil.
 
 DEFUN("window-lowest-p", Fwindow_lowest_p, 1, 1, 0,	/*
 Return non-nil if WINDOW is along the bottom of its frame.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return window_is_lowest(decode_window(window)) ? Qt : Qnil;
@@ -1214,7 +1266,11 @@ Return non-nil if WINDOW is along the bottom of its frame.
 
 DEFUN("window-highest-p", Fwindow_highest_p, 1, 1, 0,	/*
 Return non-nil if WINDOW is along the top of its frame.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return window_is_highest(decode_window(window)) ? Qt : Qnil;
@@ -1222,7 +1278,11 @@ Return non-nil if WINDOW is along the top of its frame.
 
 DEFUN("window-leftmost-p", Fwindow_leftmost_p, 1, 1, 0,	/*
 Return non-nil if WINDOW is along the left edge of its frame.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return window_is_leftmost(decode_window(window)) ? Qt : Qnil;
@@ -1230,7 +1290,11 @@ Return non-nil if WINDOW is along the left edge of its frame.
 
 DEFUN("window-rightmost-p", Fwindow_rightmost_p, 1, 1, 0,	/*
 Return non-nil if WINDOW is along the right edge of its frame.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return window_is_rightmost(decode_window(window)) ? Qt : Qnil;
@@ -1240,8 +1304,14 @@ DEFUN("pos-visible-in-window-p", Fpos_visible_in_window_p, 0, 2, 0,	/*
 Return t if position POS is currently on the frame in WINDOW.
 Returns nil if that position is scrolled vertically out of view.  POS
 defaults to point in WINDOW's buffer; WINDOW, to the selected window.
+<<<<<<< HEAD
 									 */
       (pos, window)) {
+=======
+*/
+      (pos, window))
+{
+>>>>>>> origin/master
 	struct window *w = decode_window(window);
 	Bufpos top = marker_position(w->start[CURRENT_DISP]);
 	Bufpos posint;
@@ -1276,7 +1346,11 @@ struct window *decode_window(Lisp_Object window)
 
 DEFUN("window-buffer", Fwindow_buffer, 0, 1, 0,	/*
 Return the buffer that WINDOW is displaying.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return decode_window(window)->buffer;
@@ -1284,7 +1358,11 @@ Return the buffer that WINDOW is displaying.
 
 DEFUN("window-frame", Fwindow_frame, 0, 1, 0,	/*
 Return the frame that window WINDOW is on.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return decode_window(window)->frame;
@@ -1316,8 +1394,14 @@ with gutters
 actually displayed
 (rows/columns) ----                 window-displayed-height
 (pixels)       ----                 window-displayed-text-pixel-height
+<<<<<<< HEAD
 						 */
       (window)) {
+=======
+*/
+      (window))
+{
+>>>>>>> origin/master
 	return make_int(window_char_height(decode_window(window), 1));
 }
 
@@ -1329,7 +1413,11 @@ scrollbar do not count as lines.  If there is some blank space
 between the end of the buffer and the end of the window, this
 function pretends that there are lines of text in the default
 font there.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return make_int(window_displayed_height(decode_window(window)));
@@ -1338,7 +1426,11 @@ font there.
 DEFUN("window-pixel-height", Fwindow_pixel_height, 0, 1, 0,	/*
 Return the height of WINDOW in pixels.  Defaults to current window.
 This includes the window's modeline and horizontal scrollbar (if any).
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return make_int(window_pixel_height(decode_window(window)));
@@ -1352,8 +1444,14 @@ height of the default font; therefore, the number of displayed lines
 will probably be different.
 
 See also `window-height' and `window-displayed-height'.
+<<<<<<< HEAD
 									 */
       (window)) {
+=======
+*/
+      (window))
+{
+>>>>>>> origin/master
 	return make_int(window_char_height(decode_window(window), 0));
 }
 
@@ -1361,7 +1459,11 @@ DEFUN("window-text-area-pixel-height", Fwindow_text_area_pixel_height, 0, 1, 0,	
 Return the height in pixels of the text-displaying portion of WINDOW.
 Unlike `window-pixel-height', the space occupied by the modeline and
 horizontal scrollbar, if any, is not counted.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	struct window *w = decode_window(window);
@@ -1374,7 +1476,11 @@ Return the height in pixels of the text displayed in WINDOW.
 Unlike `window-text-area-pixel-height', any blank space below the
 end of the buffer is not included.  If optional argument NOCLIPPED
 is non-nil, do not include space occupied by clipped lines.
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       (window, noclipped))
 {
 	struct window *w;
@@ -1440,7 +1546,11 @@ Return the number of display columns in WINDOW.
 This is the width that is usable columns available for text in WINDOW,
 and does not include vertical scrollbars, dividers, or the like.  See also
 `window-full-width' and `window-height'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return make_int(window_char_width(decode_window(window), 0));
@@ -1450,7 +1560,11 @@ DEFUN("window-full-width", Fwindow_full_width, 0, 1, 0,	/*
 Return the total number of columns in WINDOW.
 This is like `window-width' but includes vertical scrollbars, dividers,
 etc.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return make_int(window_char_width(decode_window(window), 1));
@@ -1458,7 +1572,11 @@ etc.
 
 DEFUN("window-pixel-width", Fwindow_pixel_width, 0, 1, 0,	/*
 Return the width of WINDOW in pixels.  Defaults to current window.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return make_int(decode_window(window)->pixel_width);
@@ -1468,7 +1586,11 @@ DEFUN("window-text-area-pixel-width", Fwindow_text_area_pixel_width, 0, 1, 0,	/*
 Return the width in pixels of the text-displaying portion of WINDOW.
 Unlike `window-pixel-width', the space occupied by the vertical
 scrollbar or divider, if any, is not counted.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	struct window *w = decode_window(window);
@@ -1478,7 +1600,11 @@ scrollbar or divider, if any, is not counted.
 
 DEFUN("window-hscroll", Fwindow_hscroll, 0, 1, 0,	/*
 Return the number of columns by which WINDOW is scrolled from left margin.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return make_int(decode_window(window)->hscroll);
@@ -1487,7 +1613,11 @@ Return the number of columns by which WINDOW is scrolled from left margin.
 DEFUN("modeline-hscroll", Fmodeline_hscroll, 0, 1, 0,	/*
 Return the horizontal scrolling amount of WINDOW's modeline.
 If the window has no modeline, return nil.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	struct window *w = decode_window(window);
@@ -1501,7 +1631,11 @@ Set the horizontal scrolling amount of WINDOW's modeline to NCOL.
 If NCOL is negative, it will silently be forced to 0.
 If the window has no modeline, return nil. Otherwise, return the actual
 value that was set.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window, ncol))
 {
 	struct window *w = decode_window(window);
@@ -1524,7 +1658,11 @@ value that was set.
 DEFUN("set-window-hscroll", Fset_window_hscroll, 2, 2, 0,	/*
 Set number of columns WINDOW is scrolled from left margin to NCOL.
 NCOL should be zero or positive.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window, ncol))
 {
 	struct window *w;
@@ -1573,7 +1711,11 @@ The returned list is of the form (LEFT TOP RIGHT BOTTOM),
 all relative to 0, 0 at the top left corner of WINDOW's frame.
 The frame toolbars, menubars and gutters are considered to be outside
 of this area, while the scrollbars are considered to be inside.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	struct window *w = decode_window(window);
@@ -1596,7 +1738,11 @@ Return a list of the pixel edge coordinates of the text area of WINDOW.
 The returned list is of the form (LEFT TOP RIGHT BOTTOM),
 all relative to 0, 0 at the top left corner of the total area allocated
 to the window, which includes the scrollbars.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	struct window *w = decode_window(window);
@@ -1620,7 +1766,11 @@ is also currently selected, the value returned is the same as (point).
 It would be more strictly correct to return the `top-level' value
 of point, outside of any save-excursion forms.
 But that value is hard to find.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	struct window *w = decode_window(window);
@@ -1638,7 +1788,11 @@ But that value is hard to find.
 DEFUN("window-start", Fwindow_start, 0, 1, 0,	/*
 Return position at which display currently starts in WINDOW.
 This is updated by redisplay or by calling `set-window-start'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return Fmarker_position(decode_window(window)->start[CURRENT_DISP]);
@@ -1654,7 +1808,11 @@ If optional arg GUARANTEE is non-nil, the return value is guaranteed
 to be the same value as this function would return at the end of the
 next full redisplay assuming nothing else changes in the meantime.
 This function is potentially much slower with this flag set.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (window, guarantee))
 {
 	struct window *w = decode_window(window);
@@ -1674,7 +1832,11 @@ This function is potentially much slower with this flag set.
 DEFUN("window-last-line-visible-height", Fwindow_last_line_visible_height, 0, 1, 0,	/*
 Return pixel height of visible part of last window line if it is clipped.
 If the last line is not clipped, return nil.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	struct window *w = decode_window(window);
@@ -1695,7 +1857,11 @@ If the last line is not clipped, return nil.
 
 DEFUN("set-window-point", Fset_window_point, 2, 2, 0,	/*
 Make point value in WINDOW be at position POS in WINDOW's buffer.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (window, pos))
 {
 	struct window *w = decode_window(window);
@@ -1717,7 +1883,11 @@ DEFUN("set-window-start", Fset_window_start, 2, 3, 0,	/*
 Make display in WINDOW start at position POS in WINDOW's buffer.
 Optional third arg NOFORCE non-nil inhibits next redisplay
 from overriding motion of point in order to display at this exact start.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (window, pos, noforce))
 {
 	struct window *w = decode_window(window);
@@ -1745,7 +1915,11 @@ from overriding motion of point in order to display at this exact start.
 DEFUN("window-dedicated-p", Fwindow_dedicated_p, 1, 1, 0,	/*
 Return WINDOW's dedicated object, usually t or nil.
 See also `set-window-dedicated-p'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return decode_window(window)->dedicated;
@@ -1757,8 +1931,14 @@ If it is dedicated, Emacs will not automatically change
 which buffer appears in it.
 The second argument is the new value for the dedication flag;
 non-nil means yes.
+<<<<<<< HEAD
 									 */
       (window, arg)) {
+=======
+*/
+      (window, arg))
+{
+>>>>>>> origin/master
 	struct window *w = decode_window(window);
 
 	w->dedicated = NILP(arg) ? Qnil : Qt;
@@ -1912,7 +2092,11 @@ must use `save-buffers-kill-emacs' or `kill-emacs').  However, if
 optional second argument FORCE is non-nil, you can delete the last
 frame. (This will automatically call `save-buffers-kill-emacs'.)
  
+<<<<<<< HEAD
 Runs the `window-configuration-hook'.*/
+=======
+*/
+>>>>>>> origin/master
       (window, force))
 {
 	/* This function can GC if this is the only window in the frame */
@@ -2128,8 +2312,14 @@ WHICH-DEVICES, you can use `next-window' to iterate through the entire
 cycle of acceptable windows, eventually ending up back at the window
 you started with.  `previous-window' traverses the same cycle, in the
 reverse order.
+<<<<<<< HEAD
 						 */
       (window, minibuf, which_frames, which_devices)) {
+=======
+*/
+      (window, minibuf, which_frames, which_devices))
+{
+>>>>>>> origin/master
 	Lisp_Object tem;
 	Lisp_Object start_window;
 
@@ -2271,8 +2461,14 @@ If you use consistent values for MINIBUF, WHICH-FRAMES, and WHICH-DEVICES,
 you can use `previous-window' to iterate through the entire cycle of
 acceptable windows, eventually ending up back at the window you started with.
 `next-window' traverses the same cycle, in the reverse order.
+<<<<<<< HEAD
 							 */
       (window, minibuf, which_frames, devices)) {
+=======
+*/
+      (window, minibuf, which_frames, devices))
+{
+>>>>>>> origin/master
 	Lisp_Object tem;
 	Lisp_Object start_window;
 
@@ -2397,7 +2593,11 @@ acceptable windows, eventually ending up back at the window you started with.
 
 DEFUN("next-vertical-window", Fnext_vertical_window, 0, 1, 0,	/*
 Return the next window which is vertically after WINDOW.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	Lisp_Object root;
@@ -2463,7 +2663,11 @@ If a console, search all devices on that console.
 If a device type, search all devices of that type.
 If `window-system', search all window-system devices.
 Any other non-nil value means search all devices.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (count, which_frames, which_devices))
 {
 	int i;
@@ -2879,7 +3083,11 @@ If a console, search all devices on that console.
 If a device type, search all devices of that type.
 If `window-system', search all devices on window-system consoles.
 Any other non-nil value means search all devices.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (which_frames, which_devices))
 {
 	Lisp_Object w;
@@ -2936,7 +3144,11 @@ If a console, search all devices on that console.
 If a device type, search all devices of that type.
 If `window-system', search all devices on window-system consoles.
 Any other non-nil value means search all devices.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (which_frames, which_devices))
 {
 	/* Don't search dedicated windows because FSFmacs doesn't.
@@ -2966,7 +3178,11 @@ If a console, search all devices on that console.
 If a device type, search all devices of that type.
 If `window-system', search all devices on window-system consoles.
 Any other non-nil value means search all devices.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (buffer, which_frames, which_devices))
 {
 	buffer = Fget_buffer(buffer);
@@ -2985,7 +3201,11 @@ Any other non-nil value means search all devices.
 DEFUN("window-left-margin-pixel-width", Fwindow_left_margin_pixel_width, 0, 1, 0,	/*
 Return the width in pixels of the left outside margin of window WINDOW.
 If WINDOW is nil, the selected window is assumed.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return make_int(window_left_margin_width(decode_window(window)));
@@ -2994,7 +3214,11 @@ If WINDOW is nil, the selected window is assumed.
 DEFUN("window-right-margin-pixel-width", Fwindow_right_margin_pixel_width, 0, 1, 0,	/*
 Return the width in pixels of the right outside margin of window WINDOW.
 If WINDOW is nil, the selected window is assumed.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	return make_int(window_right_margin_width(decode_window(window)));
@@ -3010,7 +3234,11 @@ the value of (window-start WINDOW), so if calling this function
 in a program gives strange scrolling, make sure the window-start
 value is reasonable when this function is called.
  
+<<<<<<< HEAD
 Runs the `window-configuration-hook'.*/
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	struct window *w = decode_window(window);
@@ -3074,7 +3302,11 @@ If a console, search all devices on that console.
 If a device type, search all devices of that type.
 If `window-system', search all devices on a window system.
 Any other non-nil value means search all devices.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (buffer, which_frames, which_devices))
 {
 	/* This function can GC */
@@ -3168,7 +3400,11 @@ If a console, search all devices on that console.
 If a device type, search all devices of that type.
 If `window-system', search all devices on a window system.
 Any other non-nil value means search all devices.
+<<<<<<< HEAD
 													 */
+=======
+*/
+>>>>>>> origin/master
       (buffer, which_frames, which_devices))
 {
 	/* This function can GC */
@@ -3414,7 +3650,11 @@ BUFFER can be a buffer or buffer name.
 With non-nil optional argument NORECORD, do not modify the
 global or per-frame buffer ordering.
 
+<<<<<<< HEAD
 Runs the `window-configuration-hook'.*/
+=======
+*/
+>>>>>>> origin/master
       (window, buffer, norecord))
 {
 	Lisp_Object tem;
@@ -3503,7 +3743,11 @@ before each command.
 
 With non-nil optional argument NORECORD, do not modify the
 global or per-frame buffer ordering.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (window, norecord))
 {
 	struct window *w;
@@ -3665,7 +3909,11 @@ If optional third arg HORFLAG is non-nil, split side by side and put
 SIZE columns in the first of the pair. The newly created window is
 returned.
 
+<<<<<<< HEAD
 Runs the `window-configuration-hook'.*/
+=======
+*/
+>>>>>>> origin/master
       (window, size, horflag))
 {
 	Lisp_Object new;
@@ -3804,7 +4052,11 @@ From program, optional second arg HORIZONTALP non-nil means grow
 sideways COUNT columns, and optional third arg WINDOW specifies the
 window to change instead of the selected window.
 
+<<<<<<< HEAD
 Runs the `window-configuration-hook'.*/
+=======
+*/
+>>>>>>> origin/master
       (count, horizontalp, window))
 {
 	CHECK_INT(count);
@@ -3819,7 +4071,11 @@ From program, optional second arg HORIZONTALP non-nil means grow
 sideways COUNT pixels, and optional third arg WINDOW specifies the
 window to change instead of the selected window.
 
+<<<<<<< HEAD
 Runs the `window-configuration-hook'.*/
+=======
+*/
+>>>>>>> origin/master
       (count, horizontalp, window))
 {
 	CHECK_INT(count);
@@ -3834,7 +4090,11 @@ From program, optional second arg HORIZONTALP non-nil means shrink
 sideways COUNT columns, and optional third arg WINDOW specifies the
 window to change instead of the selected window.
 
+<<<<<<< HEAD
 Runs the `window-configuration-hook'.*/
+=======
+*/
+>>>>>>> origin/master
       (count, horizontalp, window))
 {
 	CHECK_INT(count);
@@ -3849,7 +4109,11 @@ From program, optional second arg HORIZONTALP non-nil means shrink
 sideways COUNT pixels, and optional third arg WINDOW specifies the
 window to change instead of the selected window.
 
+<<<<<<< HEAD
 Runs the `window-configuration-hook'.*/
+=======
+*/
+>>>>>>> origin/master
       (count, horizontalp, window))
 {
 	CHECK_INT(count);
@@ -4542,8 +4806,14 @@ The characters that are moved over may be added to the current selection
 \(i.e. active region) if the Shift key is held down, a motion key is used
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
+<<<<<<< HEAD
 						 */
       (count)) {
+=======
+*/
+      (count))
+{
+>>>>>>> origin/master
 	window_scroll(Fselected_window(Qnil), count, 1, ERROR_ME);
 	return Qnil;
 }
@@ -4561,8 +4831,14 @@ The characters that are moved over may be added to the current selection
 \(i.e. active region) if the Shift key is held down, a motion key is used
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
+<<<<<<< HEAD
 						 */
       (count)) {
+=======
+*/
+      (count))
+{
+>>>>>>> origin/master
 	window_scroll(Fselected_window(Qnil), count, -1, ERROR_ME);
 	return Qnil;
 }
@@ -4573,7 +4849,11 @@ If in the minibuffer, `minibuffer-scroll-window' if non-nil
 specifies the window.
 If `other-window-scroll-buffer' is non-nil, a window
 showing that buffer is used.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	Lisp_Object window;
@@ -4623,8 +4903,14 @@ If in the minibuffer, `minibuffer-scroll-window' if non-nil
 specifies the window to scroll.
 If `other-window-scroll-buffer' is non-nil, scroll the window
 showing that buffer, popping the buffer up if necessary.
+<<<<<<< HEAD
 								 */
       (count)) {
+=======
+*/
+      (count))
+{
+>>>>>>> origin/master
 	window_scroll(Fother_window_for_scrolling(), count, 1, ERROR_ME);
 	return Qnil;
 }
@@ -4637,8 +4923,14 @@ The characters that are moved over may be added to the current selection
 \(i.e. active region) if the Shift key is held down, a motion key is used
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
+<<<<<<< HEAD
 						 */
       (count)) {
+=======
+*/
+      (count))
+{
+>>>>>>> origin/master
 	Lisp_Object window = Fselected_window(Qnil);
 	struct window *w = XWINDOW(window);
 	int n = (NILP(count) ?
@@ -4656,8 +4948,14 @@ The characters that are moved over may be added to the current selection
 \(i.e. active region) if the Shift key is held down, a motion key is used
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
+<<<<<<< HEAD
 							 */
       (count)) {
+=======
+*/
+      (count))
+{
+>>>>>>> origin/master
 	Lisp_Object window = Fselected_window(Qnil);
 	struct window *w = XWINDOW(window);
 	int n = (NILP(count) ?
@@ -4671,7 +4969,11 @@ DEFUN("center-to-window-line", Fcenter_to_window_line, 0, 2, "_P",	/*
 Center point in WINDOW.  With N, put point on line N.
 The desired position of point is always relative to the window.
 If WINDOW is nil, the selected window is used.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (n, window))
 {
 	struct window *w = decode_window(window);
@@ -4702,8 +5004,14 @@ With no argument, position text at center of window.
 An argument specifies window line; zero means top of window,
 negative means relative to bottom of window.
 If WINDOW is nil, the selected window is used.
+<<<<<<< HEAD
 								 */
       (arg, window)) {
+=======
+*/
+      (arg, window))
+{
+>>>>>>> origin/master
 	struct window *w;
 	struct buffer *b;
 	int height;
@@ -4959,7 +5267,11 @@ by a nil.  Each slice represents a particular view of the memory, a
 particular way of partitioning it into groups.  Within a slice, there
 is no overlap between the groups of memory, and each slice collectively
 represents all the memory concerned.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	struct window_stats stats;
@@ -5176,7 +5488,11 @@ static int window_config_equal(Lisp_Object conf1, Lisp_Object conf2)
 
 DEFUN("window-configuration-p", Fwindow_configuration_p, 1, 1, 0,	/*
 Return t if OBJECT is a window-configuration object.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return WINDOW_CONFIGURATIONP(object) ? Qt : Qnil;
@@ -5243,7 +5559,11 @@ DEFUN("set-window-configuration", Fset_window_configuration, 1, 1, 0,	/*
 Set the configuration of windows and buffers as specified by CONFIGURATION.
 CONFIGURATION must be a value previously returned
 by `current-window-configuration' (which see).
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (configuration))
 {
 	struct window *w;
@@ -5881,7 +6201,11 @@ and for each window on FRAME the displayed buffer, where display
 starts, and the positions of point and mark.
 An exception is made for point in the current buffer:
 its value is -not- saved.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	Lisp_Object result;
@@ -5965,7 +6289,11 @@ Execute body, preserving window sizes and contents.
 Restores which buffer appears in which window, where display starts,
 as well as the current buffer.
 Does not restore the value of point in current buffer.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -5984,7 +6312,11 @@ Beginning of line is column 0. This is calculated using the redisplay
 display tables.  If WINDOW is nil, the current window is assumed.
 If POS is nil, point is assumed. Note that POS must be visible for
 a non-nil result to be returned.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window, pos))
 {
 	struct window *w = decode_window(window);

@@ -5,6 +5,14 @@
 
 #undef ORDINARY_LINK
 #define ORDINARY_LINK 1
+<<<<<<< HEAD
 #define UNEXEC unexelf.o
 
+=======
+/*
+ * everything is pdump now. --SY
+ * #define UNEXEC unexelf.o
+ */
+#undef UNEXEC
+>>>>>>> origin/master
 #endif				/* ELF */

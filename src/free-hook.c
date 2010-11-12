@@ -346,7 +346,11 @@ void really_free_one_entry(void *, int, int *);
 DEFUN("really-free", Freally_free, 0, 1, "P",	/*
 Actually free the storage held by the free() debug hook.
 A no-op if the free hook is disabled.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (arg))
 {
 	int count[2];

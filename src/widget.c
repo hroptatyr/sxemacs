@@ -33,7 +33,11 @@ Lisp_Object Qwidget_type;
 
 DEFUN("widget-plist-member", Fwidget_plist_member, 2, 2, 0,	/*
 Like `plist-get', but returns the tail of PLIST whose car is PROP.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (plist, prop))
 {
 	while (!NILP(plist) && !EQ(Fcar(plist), prop)) {
@@ -48,7 +52,11 @@ Like `plist-get', but returns the tail of PLIST whose car is PROP.
 DEFUN("widget-put", Fwidget_put, 3, 3, 0,	/*
 In WIDGET set PROPERTY to VALUE.
 The value can later be retrieved with `widget-get'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (widget, property, value))
 {
 	CHECK_CONS(widget);
@@ -60,7 +68,11 @@ DEFUN("widget-get", Fwidget_get, 2, 2, 0,	/*
 In WIDGET, get the value of PROPERTY.
 The value could either be specified when the widget was created, or
 later with `widget-put'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (widget, property))
 {
 	Lisp_Object value = Qnil;
@@ -84,7 +96,11 @@ later with `widget-put'.
 DEFUN("widget-apply", Fwidget_apply, 2, MANY, 0,	/*
 Apply the value of WIDGET's PROPERTY to the widget itself.
 ARGS are passed as extra arguments to the function.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	/* This function can GC */

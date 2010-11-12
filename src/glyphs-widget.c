@@ -1547,7 +1547,11 @@ DEFUN("widget-logical-to-character-width", Fwidget_logical_to_character_width, 1
 Convert the width in logical widget units to characters.
 Logical widget units do not take into account adjusments made for
 layout borders, so this adjusment is approximated.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (width, face, domain))
 {
 	int w, neww, charwidth;
@@ -1587,7 +1591,11 @@ identical alignment for their subcontrols.
 
 Since frame sizes are measured in characters, this function allows you
 to do appropriate conversion between logical units and characters.
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       (height, face, domain))
 {
 	int h, newh, charheight;

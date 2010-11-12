@@ -39,7 +39,11 @@
 
 #include "config.h"
 #include "sxemacs.h"
+<<<<<<< HEAD
 #include "ent.h"
+=======
+#include "ent/ent.h"
+>>>>>>> origin/master
 #include "ase.h"
 #include "ase-interval.h"
 
@@ -3139,7 +3143,11 @@ ase_interval_union_rational_measure(ase_interval_union_t iu)
 /* lisp level */
 DEFUN("ase-intervalp", Fase_intervalp, 1, 1, 0, /*
 Return non-`nil' iff OBJECT is an ase interval.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	if (ASE_INTERVALP(object))
@@ -3150,7 +3158,11 @@ Return non-`nil' iff OBJECT is an ase interval.
 
 DEFUN("ase-interval-union-p", Fase_interval_union_p, 1, 1, 0, /*
 Return non-`nil' iff OBJECT is an ase interval or union thereof.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	if (ASE_INTERVAL_OR_UNION_P(object))
@@ -3161,7 +3173,11 @@ Return non-`nil' iff OBJECT is an ase interval or union thereof.
 
 DEFUN("ase-interval-empty-p", Fase_interval_empty_p, 1, 1, 0, /*
 Return non-`nil' iff INTERVAL is the empty interval.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_INTERVAL(interval);
@@ -3174,7 +3190,11 @@ Return non-`nil' iff INTERVAL is the empty interval.
 
 DEFUN("ase-interval-imprimitive-p", Fase_interval_imprimitive_p, 1, 1, 0, /*
 Return non-`nil' iff INTERVAL is not a primitive interval.
+<<<<<<< HEAD
 									  */
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_UBERINTERVAL(interval);
@@ -3188,7 +3208,11 @@ Return non-`nil' iff INTERVAL is not a primitive interval.
 DEFUN("ase-interval-open-p", Fase_interval_open_p, 1, 1, 0, /*
 Return non-`nil' iff INTERVAL (or a union thereof) is an open set
 with respect to the standard topology.
+<<<<<<< HEAD
 							    */
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_UBERINTERVAL(interval);
@@ -3213,7 +3237,11 @@ Return non-`nil' iff INTERVAL (or a union thereof) is a closed set
 with respect to the standard metric.
 
 An interval is said to be closed iff the complement is open.
+<<<<<<< HEAD
 								*/
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_UBERINTERVAL(interval);
@@ -3238,7 +3266,11 @@ An interval is said to be closed iff the complement is open.
 /* ###autoload */
 DEFUN("ase-empty-interval", Fase_empty_interval, 0, 0, 0, /*
 Return the empty interval.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Qase_empty_interval;
@@ -3247,7 +3279,11 @@ Return the empty interval.
 /* ###autoload */
 DEFUN("ase-universe-interval", Fase_universe_interval, 0, 0, 0, /*
 Return the universe interval.
+<<<<<<< HEAD
 								*/
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Qase_universe_interval;
@@ -3264,7 +3300,11 @@ subset of a poset.
 
 If no special partial order is given, it defaults to less-equal-p (<=).
 If no special topology is given, it defaults to the po topology.
+<<<<<<< HEAD
 					      */
+=======
+*/
+>>>>>>> origin/master
       (lower, upper, lower_open_p, upper_open_p))
 {
 	Lisp_Object result = Qnil;
@@ -3290,7 +3330,11 @@ DEFUN("ase-interval-contains-p", Fase_interval_contains_p, 2, 2, 0, /*
 Return non-`nil' iff INTERVAL (or a union thereof) contains OBJECT
 as one of its elements.  OBJECT can also be another interval or
 interval union to obtain the subset relation.
+<<<<<<< HEAD
 								    */
+=======
+*/
+>>>>>>> origin/master
       (interval, object))
 {
 	ase_interval_type_t sup, sub;
@@ -3314,7 +3358,11 @@ ELEMENT can also be another interval to obtain the subset relation.
 
 The non-`nil' value returned is the primitive interval which
 contained OBJECT.
+<<<<<<< HEAD
 								    */
+=======
+*/
+>>>>>>> origin/master
       (interval, object))
 {
 	ase_interval_type_t sup, sub;
@@ -3336,7 +3384,11 @@ Return non-`nil' iff INTERVALS are connected.
 Arguments: &rest intervals
 
 Zero intervals are trivially connected, as is one interval.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 	/* trivial cases */
@@ -3362,7 +3414,11 @@ Return non-`nil' iff INTERVALS are (pairwise) disjoint.
 
 Zero intervals are trivially disjoint, while one interval is
 trivially not disjoint.
+<<<<<<< HEAD
 								       */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 	/* trivial cases */
@@ -3387,7 +3443,11 @@ hereby means that I1 and I2 contain each other.
 In fact, this is just a convenience function and totally equivalent
 to
   (and (ase-interval-contains-p i1 i2) (ase-interval-contains-p i2 i1))
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (i1, i2))
 {
 	Lisp_Object i1in2, i2in1;
@@ -3521,7 +3581,11 @@ ase_interval_union_nsquare(int nargs, Lisp_Object *args)
 DEFUN("ase-interval-union", Fase_interval_union, 0, MANY, 0, /*
 Arguments: &rest intervals
 Return the union of all INTERVALS.
+<<<<<<< HEAD
 							     */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 	int dim;
@@ -3617,7 +3681,11 @@ ase_interval_intersection_nsquare(int nargs, Lisp_Object *args)
 DEFUN("ase-interval-intersection", Fase_interval_intersection, 0, MANY, 0, /*
 Arguments: &rest intervals
 Return the intersection of all INTERVALS.
+<<<<<<< HEAD
 									   */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 	/* trivial cases */
@@ -3679,7 +3747,11 @@ ase_interval_difference_nsquare(int nargs, Lisp_Object *args)
 DEFUN("ase-interval-difference", Fase_interval_difference, 0, MANY, 0, /*
 Arguments: &rest intervals
 Return the difference of all INTERVALS from left to right.
+<<<<<<< HEAD
 								       */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 	/* Treat the case args[0] = ( ) specially */
@@ -3701,7 +3773,11 @@ Return the difference of all INTERVALS from left to right.
 
 DEFUN("ase-copy-interval", Fase_copy_interval, 1, 1, 0, /*
 Return a copy of INTERVAL.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_INTERVAL(interval);
@@ -3712,7 +3788,11 @@ Return a copy of INTERVAL.
 DEFUN("ase-interval-boundary", Fase_interval_boundary, 1, 1, 0, /*
 Return the boundary of INTERVAL, that is the interior of INTERVAL
 subtracted from the closure of INTERVAL.
+<<<<<<< HEAD
 								*/
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_UBERINTERVAL(interval);
@@ -3732,7 +3812,11 @@ subtracted from the closure of INTERVAL.
 DEFUN("ase-interval-closure", Fase_interval_closure, 1, 1, 0, /*
 Return the closure of INTERVAL, that is the smallest closed set
 that contains INTERVAL.
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_UBERINTERVAL(interval);
@@ -3752,7 +3836,11 @@ that contains INTERVAL.
 DEFUN("ase-interval-interior", Fase_interval_interior, 1, 1, 0, /*
 Return the interior of INTERVAL, that is the largest open set that
 is contained in INTERVAL.
+<<<<<<< HEAD
 								*/
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_UBERINTERVAL(interval);
@@ -3773,7 +3861,11 @@ is contained in INTERVAL.
 DEFUN("ase-interval-lower", Fase_interval_lower, 1, 1, 0, /*
 Return the lower bound of INTERVAL or `nil' if empty.
 Only the numerical value is returned.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_INTERVAL(interval);
@@ -3787,7 +3879,11 @@ Only the numerical value is returned.
 DEFUN("ase-interval-upper", Fase_interval_upper, 1, 1, 0, /*
 Return the upper bound of INTERVAL or `nil' if empty.
 Only the numerical value is returned.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_INTERVAL(interval);
@@ -3801,7 +3897,11 @@ Only the numerical value is returned.
 DEFUN("ase-interval-lower*", Fase_interval_lower_, 1, 1, 0, /*
 Return the lower bound of INTERVAL or `nil' if empty
 along with the boundary shape.
+<<<<<<< HEAD
 							    */
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	Lisp_Object res;
@@ -3820,7 +3920,11 @@ along with the boundary shape.
 DEFUN("ase-interval-upper*", Fase_interval_upper_, 1, 1, 0, /*
 Return the upper bound of INTERVAL or `nil' if empty
 along with the boundary shape.
+<<<<<<< HEAD
 							    */
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	Lisp_Object res;
@@ -3838,7 +3942,11 @@ along with the boundary shape.
 
 DEFUN("ase-interval-explode-union", Fase_interval_explode_union, 1, 1, 0, /*
 Return IUNION exploded into primitive intervals and listed in a dllist.
+<<<<<<< HEAD
 									   */
+=======
+*/
+>>>>>>> origin/master
       (iunion))
 {
 	Lisp_Object result = Qnil;
@@ -3861,7 +3969,11 @@ Return IUNION exploded into primitive intervals and listed in a dllist.
 DEFUN("ase-interval-lebesgue-measure",
       Fase_interval_lebesgue_measure, 1, 1, 0, /*
 Return the Lebesgue measure of INTERVAL.
+<<<<<<< HEAD
 					       */
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_UBERINTERVAL(interval);
@@ -3880,7 +3992,11 @@ Return the Lebesgue measure of INTERVAL.
 DEFUN("ase-interval-rational-measure",
       Fase_interval_rational_measure, 1, 1, 0, /*
 Return the number of rational integers in INTERVAL.
+<<<<<<< HEAD
 					       */
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_UBERINTERVAL(interval);
@@ -3897,7 +4013,11 @@ Return the number of rational integers in INTERVAL.
 }
 
 DEFUN("ase-interval-dump", Fase_interval_dump, 1, 1, 0, /*
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (interval))
 {
 	CHECK_ASE_INTERVAL_OR_UNION(interval);

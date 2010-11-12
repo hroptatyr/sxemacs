@@ -54,6 +54,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <sys/param.h>
 
+<<<<<<< HEAD
+=======
+/* How long can a source filename be in DOC (including "\037S" at the start
+    and "\n" at the end) ? */
+#define DOC_MAX_FILENAME_LENGTH 2048
+#define IS_DIRECTORY_SEP(arg) ('/' == arg)
+
+/* Can't use the system assert on OS X, it can't find a definition for
+   __eprintf on linking */
+#define assert(x) ((x) ? (void) 0 : (void) abort ())
+
+>>>>>>> origin/master
 #define READ_TEXT "r"
 #define READ_BINARY "r"
 #define WRITE_BINARY "w"
@@ -69,6 +81,10 @@ enum {
 	c_file
 } Current_file_type;
 
+<<<<<<< HEAD
+=======
+static void put_filename (const char *filename);
+>>>>>>> origin/master
 static int scan_file(const char *filename);
 static int read_c_string(FILE *, int, int);
 static void write_c_args(FILE * out, const char *func, char *buf, int minargs,
@@ -239,7 +255,19 @@ int main(int argc, char **argv)
 	for (i = 1; i < argc; i++) {
 		int j;
 
+<<<<<<< HEAD
 		if (argv[i][0] == '-') {
+=======
+                if (argc > i + 1 && !strcmp (argv[i], "-d")) {
+                        /* XEmacs change; allow more than one chdir. The
+                           idea is that the second chdir is to source-lisp,
+                           and that any Lisp files not under there have the
+                           full path specified.  */
+                        i += 1;
+                        chdir (argv[i]);
+                        continue;
+                } else if (argv[i][0] == '-') {
+>>>>>>> origin/master
 			i++;
 			continue;
 		}
@@ -270,6 +298,33 @@ int main(int argc, char **argv)
 	return err_count > 0;
 }
 
+<<<<<<< HEAD
+=======
+/* Add a source file name boundary in the output file.  */
+static void put_filename (const char *filename)
+{
+        /* XEmacs change; don't strip directory information. */
+#if 0
+        const char *tmp;
+
+        /* Why are we cutting this off? */
+        for (tmp = filename; *tmp; tmp++) {
+                if (IS_DIRECTORY_SEP(*tmp))
+                        filename = tmp + 1;
+        }
+#endif
+        /* <= because sizeof includes the nul byte at the end. Not quite
+           right, because it should include the length of the symbol +
+           "\037[VF]" instead of simply 10. */
+        assert(sizeof("\037S\n") + strlen(filename) + 10 
+               <= DOC_MAX_FILENAME_LENGTH);
+
+        putc (037, outfile);
+        putc ('S', outfile);
+        fprintf (outfile, "%s\n", filename);
+}
+
+>>>>>>> origin/master
 /* Read file FILENAME and output its doc strings to outfile.  */
 /* Return 1 if file is not found, 0 if it is found.  */
 
@@ -641,6 +696,10 @@ static int scan_c_file(const char *filename, const char *mode)
 				fprintf(outfile, "\tCDOC%s(\"%s\", \"\\\n",
 					defvarflag ? "SYM" : "SUBR", buf);
 			} else {
+<<<<<<< HEAD
+=======
+                                put_filename (filename); /* XEmacs addition */
+>>>>>>> origin/master
 				putc(037, outfile);
 				putc(defvarflag ? 'V' : 'F', outfile);
 				fprintf(outfile, "%s\n", buf);
@@ -719,6 +778,13 @@ static int scan_c_file(const char *filename, const char *mode)
  The NAME and DOCSTRING are output.
  NAME is preceded by `F' for a function or `V' for a variable.
  An entry is output only if DOCSTRING has \ newline just after the opening "
+<<<<<<< HEAD
+=======
+
+ Adds the filename a symbol or function was found in before its docstring;
+ there's no need for this with the load-history available, but we do it for
+ consistency with the C parsing code. 
+>>>>>>> origin/master
  */
 
 static void skip_white(FILE * infile)
@@ -893,6 +959,72 @@ static int scan_lisp_file(const char *filename, const char *mode)
 			}
 		}
 
+<<<<<<< HEAD
+=======
+                else if (! strcmp (buffer, "custom-declare-variable"))
+                {
+                        char c1 = 0, c2 = 0;
+                        type = 'V';
+
+                        c = getc (infile);
+                        if (c == '\'')
+                                read_lisp_symbol (infile, buffer);
+                        else {
+                                if (c != '(') {
+                                        fprintf (stderr,
+                                                 "## unparsable name in "
+                                                 "custom-declare-variable "
+                                                 "in %s\n",
+                                                 filename);
+                                        continue;
+                                }
+                                read_lisp_symbol (infile, buffer);
+                                if (strcmp (buffer, "quote")) {
+                                        fprintf (stderr,
+                                                 "## unparsable name in "
+                                                 "custom-declare-variable "
+                                                 "in %s\n",
+                                                 filename);
+                                        continue;
+                                }
+                                read_lisp_symbol (infile, buffer);
+                                c = getc (infile);
+                                if (c != ')') {
+                                        fprintf (stderr,
+                                                 "## unparsable quoted name "
+                                                 "in custom-declare-variable"
+                                                 " in %s\n", filename);
+                                        continue;
+                                }
+                        }
+
+                        if (saved_string == 0)
+                        {
+                                /* Skip to end of line; remember the two
+                                   previous chars.  */
+                                while (c != '\n' && c >= 0) {
+                                        c2 = c1;
+                                        c1 = c;
+                                        /* SXEmacs: shame we can't do this. */
+                                        /* c = getc_skipping_iso2022 (infile); */
+                                        getc (infile);
+                                }
+	  
+                                /* If two previous characters were " and \,
+                                   this is a doc string.  Otherwise, there is
+                                   none.  */
+                                if (c2 != '"' || c1 != '\\') {
+#ifdef DEBUG
+                                        fprintf (stderr, "## non-docstring in"
+                                                 " %s (%s)\n",
+                                                 buffer, filename);
+#endif
+                                        continue;
+                                }
+                        }
+                }
+
+>>>>>>> origin/master
 		else if (!strcmp(buffer, "fset") || !strcmp(buffer, "defalias")) {
 			char c1 = 0, c2 = 0;
 			type = 'F';
@@ -1018,7 +1150,11 @@ static int scan_lisp_file(const char *filename, const char *mode)
 
 		   In the latter case, the opening quote (and leading
 		   backslash-newline) have already been read.  */
+<<<<<<< HEAD
 		putc('\n', outfile);	/* XEmacs addition */
+=======
+                put_filename (filename); /* XEmacs addition */
+>>>>>>> origin/master
 		putc(037, outfile);
 		putc(type, outfile);
 		fprintf(outfile, "%s\n", buffer);

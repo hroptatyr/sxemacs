@@ -1,15 +1,38 @@
+<<<<<<< HEAD
 [Desktop Entry]
 Type=Application
 Name=SXEmacs
+=======
+# -*- coding: utf-8 -*-
+# WARNING:  This file MUST be encoded in UTF-8. Please be careful with edits!
+[Desktop Entry]
+Type=Application
+Name=SXEmacs
+GenericName=Text Editor and Integrated Development Environment
+>>>>>>> origin/master
 Comment=Text editor and development environment
 Comment[pt_PT]=Editor de texto e ambiente de desenvolvimento
 Comment[pt_BR]=Editor de texto e ambiente de desenvolvimento
 Comment[de]=Texteditor und Entwicklungsumgebung
+<<<<<<< HEAD
 Terminal=false
 StartupNotify=true
 MimeType=text/plain;
 Categories=Utility;TextEditor;
 Version=@old_version@
+=======
+Comment[fr]=Editeur de texte et environne de développement intégré
+Comment[es]=Editor de texto y entorno de desarrollo
+Comment[sv]=Texteditor och integrerad Utvecklingsmiljö
+Comment[hu]=Szövegszerkesztő és integrált fejlesztőkörnyezet
+Comment[ru]=интегрированная среда разработки
+Terminal=false
+StartupNotify=true
+StartupWMClass=Emacs
+MimeType=text/plain;text/english;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+Categories=Development;TextEditor;
+Version=1.0
+>>>>>>> origin/master
 TryExec=@ABS_PROGNAME@
 Exec=@ABS_PROGNAME@ %F
 Icon=@ABS_ETCDIR@/sxemacs-icon3.png

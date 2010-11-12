@@ -43,6 +43,18 @@
 (defvar site-file-list nil)
 (defvar docfile-out-of-date nil)
 
+<<<<<<< HEAD
+=======
+(defvar build-directory (expand-file-name ".." (expand-file-name ".." invocation-directory)))
+(defvar build-lib-src (expand-file-name "lib-src" build-directory))
+(defvar source-lisp (file-name-directory #$))
+(defvar source-src (expand-file-name "../src" source-lisp))
+
+(defun message (fmt &rest args)
+  (princ (apply #'format fmt args))
+  (terpri))
+
+>>>>>>> origin/master
 ;; Gobble up the stuff we don't wish to pass on.
 (setq command-line-args (cdr (cdr (cdr (cdr command-line-args)))))
 
@@ -100,6 +112,7 @@
 (require 'custom)
 (load "process")
 
+<<<<<<< HEAD
 (let ((f (locate-file "dumped-lisp.el"
                       (cons (expand-file-name "lisp" invocation-directory)
                             load-path)))
@@ -132,6 +145,54 @@
 		  (setq docfile-out-of-date t))
 	      (setq processed (cons arg processed)))))
       (setq preloaded-file-list (cdr preloaded-file-list)))))
+=======
+(let (preloaded-file-list arg0 arg package-preloaded-file-list absolute)
+  (load (expand-file-name "dumped-lisp.el" source-lisp))
+
+  (setq package-preloaded-file-list
+	(packages-collect-package-dumped-lisps late-package-load-path)
+	preloaded-file-list
+	(append package-preloaded-file-list
+		preloaded-file-list
+		packages-hardcoded-lisp)
+	  
+	processed (cons "-d" processed)
+	processed (cons source-lisp processed)
+	;; Include loadup.el, which is never in preloaded-file-list:
+	processed (cons "loadup.el" processed))
+
+  (while preloaded-file-list
+    (setq arg0 (packages-add-suffix (car preloaded-file-list))
+	  arg (locate-library arg0)
+          absolute arg)
+    (if (null arg)
+	(progn
+	  (message "Error: dumped file %s does not exist" arg0)
+	  ;; Uncomment in case of difficulties
+          ;(message "late-package-hierarchies: %S"
+          ;         late-package-hierarchies)
+          ;(message "guessed-roots: %S" (paths-find-emacs-roots
+          ;                              invocation-directory
+          ;                              invocation-name
+          ;                              #'paths-emacs-root-p))
+          ;(message "guessed-data-roots: %S" (paths-find-emacs-roots
+          ;                                   invocation-directory
+          ;                                   invocation-name
+          ;                                   #'paths-emacs-data-root-p))
+          )
+      (when (equal arg (expand-file-name arg0 source-lisp))
+	;; Use relative paths where possible, since this makes file lookup
+	;; in an installed XEmacs easier:
+	(setq arg arg0))
+      (if (null (member arg processed))
+	  (progn
+	    (if (and (null docfile-out-of-date)
+                     ;; We need to check the absolute path here:
+		     (file-newer-than-file-p absolute docfile))
+		(setq docfile-out-of-date t))
+	    (setq processed (cons arg processed)))))
+    (setq preloaded-file-list (cdr preloaded-file-list))))
+>>>>>>> origin/master
 
 ;; Finally process the list of site-loaded files.
 (if site-file-list

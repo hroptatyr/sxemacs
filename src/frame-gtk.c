@@ -710,7 +710,11 @@ First arg is the event that started the drag,
 second arg should be some string, and the third
 is the type of the data (this should be a MIME type as a string (ie: text/plain)).
 The type defaults to text/plain.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (event, data, dtyp))
 {
 	if (EVENTP(event)) {
@@ -1076,7 +1080,11 @@ Get the ID of the Gtk window.
 This gives us a chance to manipulate the Emacs window from within a
 different program.  Since the ID is an unsigned long, we return it as
 a string.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (frame))
 {
 	char str[255];

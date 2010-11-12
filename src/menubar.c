@@ -172,7 +172,11 @@ submenu, NOT expanded and NOT checked against :config and :included.
 Also, individual menu items are not looked for, only submenus.
 
 See also 'find-menu-item'.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (desc, path))
 {
 	Lisp_Object path_entry, submenu_desc, submenu;
@@ -303,8 +307,14 @@ For example:
 [ "Read Only"     toggle-read-only :style toggle :selected buffer-read-only ]
 
 See menubar.el for many more examples.
+<<<<<<< HEAD
 						 */
       (menu_description, event)) {
+=======
+*/
+      (menu_description, event))
+{
+>>>>>>> origin/master
 	struct frame *f = decode_frame(Qnil);
 	MAYBE_FRAMEMETH(f, popup_menu, (menu_description, event));
 	return Qnil;
@@ -314,7 +324,11 @@ DEFUN("normalize-menu-item-name", Fnormalize_menu_item_name, 1, 2, 0,	/*
 Convert a menu item name string into normal form, and return the new string.
 Menu item names should be converted to normal form before being compared.
 This removes %_'s (accelerator indications) and converts %% to %.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (name, buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);

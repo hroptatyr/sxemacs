@@ -950,7 +950,11 @@ a new format, when variables have changed, etc."
   - And, above all, to have fun doing it.\n"
      "\n--\n"
      (face italic "
+<<<<<<< HEAD
 Copyright (C) 2004 - 2008 Steve Youngs\n"))
+=======
+Copyright (C) 2004 - 2009 Steve Youngs\n"))
+>>>>>>> origin/master
 ; Copyright (C) 1985-2001 Free Software Foundation, Inc.
 ; Copyright (C) 1990-1994 Lucid, Inc.
 ; Copyright (C) 1993-1997 Sun Microsystems, Inc. All Rights Reserved.

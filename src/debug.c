@@ -91,7 +91,11 @@ sxemacs_debug_loop(enum debug_loop op, Lisp_Object class, Lisp_Object type)
 
 DEFUN("add-debug-class-to-check", Fadd_debug_class_to_check, 1, 1, 0,	/*
 Add a debug class to the list of active classes.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (class))
 {
 	if (NILP(sxemacs_debug_loop(X_VALIDATE, class, Qnil)))
@@ -104,7 +108,11 @@ Add a debug class to the list of active classes.
 
 DEFUN("delete-debug-class-to-check", Fdelete_debug_class_to_check, 1, 1, 0,	/*
 Delete a debug class from the list of active classes.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (class))
 {
 	if (NILP(sxemacs_debug_loop(X_VALIDATE, class, Qnil)))
@@ -117,7 +125,11 @@ Delete a debug class from the list of active classes.
 
 DEFUN("debug-classes-being-checked", Fdebug_classes_being_checked, 0, 0, 0,	/*
 Return a list of active debug classes.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return (sxemacs_debug_loop(X_ACTIVE, Qnil, Qnil));
@@ -125,7 +137,11 @@ Return a list of active debug classes.
 
 DEFUN("debug-classes-list", Fdebug_classes_list, 0, 0, 0,	/*
 Return a list of all defined debug classes.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return (sxemacs_debug_loop(X_LIST, Qnil, Qnil));
@@ -134,7 +150,11 @@ Return a list of all defined debug classes.
 DEFUN("set-debug-classes-to-check", Fset_debug_classes_to_check, 1, 1, 0,	/*
 Set which classes of debug statements should be active.
 CLASSES should be a list of debug classes.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (classes))
 {
 	Lisp_Object rest;
@@ -158,7 +178,11 @@ DEFUN("set-debug-class-types-to-check", Fset_debug_class_types_to_check, 2, 2, 0
 For the given debug CLASS, set which TYPES are actually interesting.
 TYPES should be an integer representing the or'd value of all desired types.
 Lists of defined types and their values are located in the source code.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (class, type))
 {
 	CHECK_INT(type);
@@ -172,7 +196,11 @@ Lists of defined types and their values are located in the source code.
 
 DEFUN("debug-types-being-checked", Fdebug_types_being_checked, 1, 1, 0,	/*
 For the given CLASS, return the associated type value.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (class))
 {
 	if (NILP(sxemacs_debug_loop(X_VALIDATE, class, Qnil)))

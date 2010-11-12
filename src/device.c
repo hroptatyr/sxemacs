@@ -141,7 +141,11 @@ int valid_device_class_p(Lisp_Object class)
 DEFUN("valid-device-class-p", Fvalid_device_class_p, 1, 1, 0,	/*
 Given a DEVICE-CLASS, return t if it is valid.
 Valid classes are 'color, 'grayscale, and 'mono.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (device_class))
 {
 	return valid_device_class_p(device_class) ? Qt : Qnil;
@@ -149,7 +153,11 @@ Valid classes are 'color, 'grayscale, and 'mono.
 
 DEFUN("device-class-list", Fdevice_class_list, 0, 0, 0,	/*
 Return a list of valid device classes.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Fcopy_sequence(Vdevice_class_list);
@@ -218,7 +226,11 @@ struct device *decode_device(Lisp_Object device)
 DEFUN("dfw-device", Fdfw_device, 1, 1, 0,	/*
 Given a device, frame, or window, return the associated device.
 Return nil otherwise.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return DFW_DEVICE(object);
@@ -228,7 +240,11 @@ DEFUN("selected-device", Fselected_device, 0, 1, 0,	/*
 Return the device which is currently active.
 If optional CONSOLE is non-nil, return the device that would be currently
 active if CONSOLE were the selected console.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	if (NILP(console) && NILP(Vselected_console))
@@ -257,7 +273,11 @@ and selected window.
 The selection of DEVICE lasts until the next time the user does
 something to select a different device, or until the next time this
 function is called.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	CHECK_LIVE_DEVICE(device);
@@ -285,7 +305,11 @@ DEFUN("set-device-selected-frame", Fset_device_selected_frame, 2, 2, 0,	/*
 Set the selected frame of device object DEVICE to FRAME.
 If DEVICE is nil, the selected device is used.
 If DEVICE is the selected device, this makes FRAME the selected frame.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (device, frame))
 {
 	XSETDEVICE(device, decode_device(device));
@@ -303,7 +327,11 @@ If DEVICE is the selected device, this makes FRAME the selected frame.
 
 DEFUN("devicep", Fdevicep, 1, 1, 0,	/*
 Return non-nil if OBJECT is a device.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return DEVICEP(object) ? Qt : Qnil;
@@ -311,7 +339,11 @@ Return non-nil if OBJECT is a device.
 
 DEFUN("device-live-p", Fdevice_live_p, 1, 1, 0,	/*
 Return non-nil if OBJECT is a device that has not been deleted.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return DEVICEP(object) && DEVICE_LIVE_P(XDEVICE(object)) ? Qt : Qnil;
@@ -320,7 +352,11 @@ Return non-nil if OBJECT is a device that has not been deleted.
 DEFUN("device-name", Fdevice_name, 0, 1, 0,	/*
 Return the name of the specified device.
 DEVICE defaults to the selected device if omitted.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	return DEVICE_NAME(decode_device(device));
@@ -329,7 +365,11 @@ DEVICE defaults to the selected device if omitted.
 DEFUN("device-connection", Fdevice_connection, 0, 1, 0,	/*
 Return the connection of the specified device.
 DEVICE defaults to the selected device if omitted.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	return DEVICE_CONNECTION(decode_device(device));
@@ -338,7 +378,11 @@ DEVICE defaults to the selected device if omitted.
 DEFUN("device-console", Fdevice_console, 0, 1, 0,	/*
 Return the console of the specified device.
 DEVICE defaults to the selected device if omitted.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	return DEVICE_CONSOLE(decode_device(device));
@@ -421,8 +465,14 @@ If TYPE is specified, only return devices of that type; otherwise,
 return devices of any type. (It is possible, although unlikely,
 that two devices of different types could have the same connection
 name; in such a case, the first device found is returned.)
+<<<<<<< HEAD
 						 */
       (connection, type)) {
+=======
+*/
+      (connection, type))
+{
+>>>>>>> origin/master
 	Lisp_Object canon = Qnil;
 	struct gcpro gcpro1;
 
@@ -468,8 +518,14 @@ If TYPE is specified, only return devices of that type; otherwise,
 return devices of any type. (It is possible, although unlikely,
 that two devices of different types could have the same connection
 name; in such a case, the first device found is returned.)
+<<<<<<< HEAD
 						 */
       (connection, type)) {
+=======
+*/
+      (connection, type))
+{
+>>>>>>> origin/master
 	Lisp_Object device = Ffind_device(connection, type);
 	if (NILP(device)) {
 		if (NILP(type))
@@ -504,8 +560,14 @@ device creation.
 If CONNECTION specifies an already-existing device connection, that
 device is simply returned; no new device is created, and PROPS
 have no effect.
+<<<<<<< HEAD
 						 */
       (type, connection, props)) {
+=======
+*/
+      (type, connection, props))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	struct device *d;
 	struct console *con;
@@ -818,7 +880,11 @@ Normally, you cannot delete the last non-minibuffer-only frame (you must
 use `save-buffers-kill-emacs' or `kill-emacs').  However, if optional
 second argument FORCE is non-nil, you can delete the last frame. (This
 will automatically call `save-buffers-kill-emacs'.)
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (device, force))
 {
 	CHECK_DEVICE(device);
@@ -829,7 +895,11 @@ will automatically call `save-buffers-kill-emacs'.)
 DEFUN("device-frame-list", Fdevice_frame_list, 0, 1, 0,	/*
 Return a list of all frames on DEVICE.
 If DEVICE is nil, the selected device will be used.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	return Fcopy_sequence(DEVICE_FRAME_LIST(decode_device(device)));
@@ -838,7 +908,11 @@ If DEVICE is nil, the selected device will be used.
 DEFUN("device-class", Fdevice_class, 0, 1, 0,	/*
 Return the class (color behavior) of DEVICE.
 This will be one of 'color, 'grayscale, or 'mono.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	return DEVICE_CLASS(decode_device(device));
@@ -849,7 +923,11 @@ Set the class (color behavior) of DEVICE.
 CLASS should be one of 'color, 'grayscale, or 'mono.
 This is only allowed on device such as TTY devices, where the color
 behavior cannot necessarily be determined automatically.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device, class))
 {
 	struct device *d = decode_device(device);
@@ -881,7 +959,11 @@ DEFUN("set-device-baud-rate", Fset_device_baud_rate, 2, 2, 0,	/*
 Set the output baud rate of DEVICE to RATE.
 On most systems, changing this value will affect the amount of padding
 and other strategic decisions made during redisplay.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (device, rate))
 {
 	CHECK_INT(rate);
@@ -893,7 +975,11 @@ and other strategic decisions made during redisplay.
 
 DEFUN("device-baud-rate", Fdevice_baud_rate, 0, 1, 0,	/*
 Return the output baud rate of DEVICE.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	return make_int(DEVICE_BAUD_RATE(decode_device(device)));
@@ -902,7 +988,11 @@ Return the output baud rate of DEVICE.
 DEFUN("device-printer-p", Fdevice_printer_p, 0, 1, 0,	/*
 Return t if DEVICE is a printer, nil if it is a display. DEVICE defaults
 to selected device if omitted, and must be live if specified.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	return DEVICE_PRINTER_P(decode_device(device)) ? Qt : Qnil;
@@ -986,7 +1076,11 @@ swap-buttons          Non-zero if left and right mouse buttons are swapped.
 show-sounds           User preference for visual over audible bell.
 slow-device           Device is slow, avoid animation.
 security              Non-zero if user environment is secure.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (device, metric, default_))
 {
 	struct device *d = decode_device(device);
@@ -1050,7 +1144,11 @@ Get a property list of device metric for DEVICE.
 
 See `device-system-metric' for the description of available metrics.
 DEVICE defaults to selected device when omitted.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	struct device *d = decode_device(device);
@@ -1146,7 +1244,11 @@ int window_system_pixelated_geometry(Lisp_Object domain)
 DEFUN("domain-device-type", Fdomain_device_type, 0, 1, 0,	/*
 Return the device type symbol for a DOMAIN, e.g. 'x or 'tty.
 DOMAIN can be either a window, frame, device or console.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (domain))
 {
 	if (!WINDOWP(domain) && !FRAMEP(domain)

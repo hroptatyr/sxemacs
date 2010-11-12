@@ -237,7 +237,11 @@ Valid formats are some subset of 'nothing, 'string, 'formatted-string,
 'native-layout, 'layout, 'label, 'tab-control, 'tree-view,
 'progress-gauge, 'scrollbar, 'combo-box, 'edit-field, 'button,
 'widget, 'pointer, and 'text, depending on how SXEmacs was compiled.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (image_instantiator_format, locale))
 {
 	return valid_image_instantiator_format_p(image_instantiator_format,
@@ -246,7 +250,11 @@ Valid formats are some subset of 'nothing, 'string, 'formatted-string,
 
 DEFUN("image-instantiator-format-list", Fimage_instantiator_format_list, 0, 0, 0,	/*
 Return a list of valid image-instantiator formats.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Fcopy_sequence(Vimage_instantiator_format_list);
@@ -295,7 +303,11 @@ added to an image specifier, not when the specifier is actually
 instantiated.  Therefore, changing the image-conversion-list only affects
 newly-added instantiators.  Existing instantiators in glyphs and image
 specifiers will not be affected.
+<<<<<<< HEAD
 													 */
+=======
+*/
+>>>>>>> origin/master
       (console_type, list))
 {
 	Lisp_Object tail;
@@ -351,7 +363,11 @@ Return the image-conversion-list for devices of the given CONSOLE-TYPE.
 The image-conversion-list specifies how to interpret image string
 instantiators for the specified console type.  See
 `set-console-type-image-conversion-list' for a description of its syntax.
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       (console_type))
 {
 	return Fcopy_tree(*get_image_conversion_list(console_type), Qt);
@@ -464,7 +480,11 @@ Destructively set the property KEYWORD of INSTANTIATOR to VALUE.
 If the property is not set then it is added to a copy of the
 instantiator and the new instantiator returned.
 Use `set-glyph-image' on glyphs to register instantiator changes.  
+<<<<<<< HEAD
 									*/
+=======
+*/
+>>>>>>> origin/master
       (instantiator, keyword, value))
 {
 	Lisp_Object *elt;
@@ -1378,7 +1398,11 @@ DEFUN("valid-image-instance-type-p", Fvalid_image_instance_type_p, 1, 1, 0,	/*
 Given an IMAGE-INSTANCE-TYPE, return non-nil if it is valid.
 Valid types are some subset of 'nothing, 'text, 'mono-pixmap, 'color-pixmap,
 'pointer, 'subwindow, and 'widget, depending on how SXEmacs was compiled.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance_type))
 {
 	return valid_image_instance_type_p(image_instance_type) ? Qt : Qnil;
@@ -1386,7 +1410,11 @@ Valid types are some subset of 'nothing, 'text, 'mono-pixmap, 'color-pixmap,
 
 DEFUN("image-instance-type-list", Fimage_instance_type_list, 0, 0, 0,	/*
 Return a list of valid image-instance types.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Fcopy_sequence(Vimage_instance_type_list);
@@ -1550,8 +1578,14 @@ NOERROR controls what happens when the image cannot be generated.
 If nil, an error message is generated.  If t, no messages are
 generated and this function returns nil.  If anything else, a warning
 message is generated and this function returns nil.
+<<<<<<< HEAD
 								 */
       (data, domain, dest_types, noerror)) {
+=======
+*/
+      (data, domain, dest_types, noerror))
+{
+>>>>>>> origin/master
 	Error_behavior errb = decode_error_behavior_flag(noerror);
 
 	return call_with_suspended_errors((lisp_fn_t) make_image_instance_1,
@@ -1561,7 +1595,11 @@ message is generated and this function returns nil.
 
 DEFUN("image-instance-p", Fimage_instance_p, 1, 1, 0,	/*
 Return non-nil if OBJECT is an image instance.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return IMAGE_INSTANCEP(object) ? Qt : Qnil;
@@ -1571,7 +1609,11 @@ DEFUN("image-instance-type", Fimage_instance_type, 1, 1, 0,	/*
 Return the type of the given image instance.
 The return value will be one of 'nothing, 'text, 'mono-pixmap,
 'color-pixmap, 'pointer, or 'subwindow.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1581,7 +1623,11 @@ The return value will be one of 'nothing, 'text, 'mono-pixmap,
 
 DEFUN("image-instance-name", Fimage_instance_name, 1, 1, 0,	/*
 Return the name of the given image instance.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1595,7 +1641,11 @@ instance is specific to.  It is NOT necessarily the domain that was
 given to the call to `specifier-instance' that resulted in the creation
 of this image instance.  See `make-image-instance' for more information
 on governing domains.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1605,7 +1655,11 @@ on governing domains.
 DEFUN("image-instance-string", Fimage_instance_string, 1, 1, 0,	/*
 Return the string of the given image instance.
 This will only be non-nil for text image instances and widgets.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1621,7 +1675,11 @@ DEFUN("image-instance-property", Fimage_instance_property, 2, 2, 0,	/*
 Return the given property of the given image instance.
 Returns nil if the property or the property method do not exist for
 the image instance in the domain.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance, prop))
 {
 	Lisp_Image_Instance *ii;
@@ -1657,7 +1715,11 @@ the image instance in the domain.
 
 DEFUN("image-instance-file-name", Fimage_instance_file_name, 1, 1, 0,	/*
 Return the file name from which IMAGE-INSTANCE was read, if known.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1681,7 +1743,11 @@ Return the file name from which IMAGE-INSTANCE was read, if known.
 
 DEFUN("image-instance-mask-file-name", Fimage_instance_mask_file_name, 1, 1, 0,	/*
 Return the file name from which IMAGE-INSTANCE's mask was read, if known.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1706,7 +1772,11 @@ Return the file name from which IMAGE-INSTANCE's mask was read, if known.
 DEFUN("image-instance-depth", Fimage_instance_depth, 1, 1, 0,	/*
 Return the depth of the image instance.
 This is 0 for a bitmap, or a positive integer for a pixmap.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1730,7 +1800,11 @@ This is 0 for a bitmap, or a positive integer for a pixmap.
 
 DEFUN("image-instance-height", Fimage_instance_height, 1, 1, 0,	/*
 Return the height of the image instance, in pixels.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1754,7 +1828,11 @@ Return the height of the image instance, in pixels.
 
 DEFUN("image-instance-width", Fimage_instance_width, 1, 1, 0,	/*
 Return the width of the image instance, in pixels.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1783,7 +1861,11 @@ used as a mouse pointer, the hotspot is the point on the image that sits
 over the location that the pointer points to.  This is, for example, the
 tip of the arrow or the center of the crosshairs.
 This will always be nil for a non-pointer image instance.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1812,7 +1894,11 @@ used as a mouse pointer, the hotspot is the point on the image that sits
 over the location that the pointer points to.  This is, for example, the
 tip of the arrow or the center of the crosshairs.
 This will always be nil for a non-pointer image instance.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1838,7 +1924,11 @@ DEFUN("image-instance-foreground", Fimage_instance_foreground, 1, 1, 0,	/*
 Return the foreground color of IMAGE-INSTANCE, if applicable.
 This will be a color instance or nil. (It will only be non-nil for
 colorized mono pixmaps and for pointers.)
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1868,7 +1958,11 @@ DEFUN("image-instance-background", Fimage_instance_background, 1, 1, 0,	/*
 Return the background color of IMAGE-INSTANCE, if applicable.
 This will be a color instance or nil. (It will only be non-nil for
 colorized mono pixmaps and for pointers.)
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (image_instance))
 {
 	CHECK_IMAGE_INSTANCE(image_instance);
@@ -1900,8 +1994,14 @@ This function returns a new image instance that is exactly like the
 specified one except that (if possible) the foreground and background
 colors and as specified.  Currently, this only does anything if the image
 instance is a mono pixmap; otherwise, the same image instance is returned.
+<<<<<<< HEAD
 									 */
       (image_instance, foreground, background)) {
+=======
+*/
+      (image_instance, foreground, background))
+{
+>>>>>>> origin/master
 	Lisp_Object new;
 	Lisp_Object device;
 
@@ -3443,7 +3543,11 @@ static Lisp_Object image_copy_instantiator(Lisp_Object arg)
 DEFUN("image-specifier-p", Fimage_specifier_p, 1, 1, 0,	/*
 Return non-nil if OBJECT is an image specifier.
 See `make-image-specifier' for a description of image instantiators.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return IMAGE_SPECIFIERP(object) ? Qt : Qnil;
@@ -3675,7 +3779,11 @@ static int valid_glyph_type_p(Lisp_Object type)
 DEFUN("valid-glyph-type-p", Fvalid_glyph_type_p, 1, 1, 0,	/*
 Given a GLYPH-TYPE, return non-nil if it is valid.
 Valid types are `buffer', `pointer', and `icon'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (glyph_type))
 {
 	return valid_glyph_type_p(glyph_type) ? Qt : Qnil;
@@ -3683,7 +3791,11 @@ Valid types are `buffer', `pointer', and `icon'.
 
 DEFUN("glyph-type-list", Fglyph_type_list, 0, 0, 0,	/*
 Return a list of valid glyph types.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Fcopy_sequence(Vglyph_type_list);
@@ -3709,8 +3821,14 @@ image can be instantiated as `pointer'.
 `icon' glyphs can be used to specify the icon used when a frame is
 iconified.  Their image can be instantiated as `mono-pixmap' and
 `color-pixmap'.
+<<<<<<< HEAD
 								 */
       (type)) {
+=======
+*/
+      (type))
+{
+>>>>>>> origin/master
 	enum glyph_type typeval = decode_glyph_type(type, ERROR_ME);
 	return allocate_glyph(typeval, 0);
 }
@@ -3725,7 +3843,11 @@ buttons, and the like.  Much more detailed information can be found at
 `make-glyph'.  Its image is described using an image specifier --
 see `make-image-specifier'.  See also `make-image-instance' for further
 information.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return GLYPHP(object) ? Qt : Qnil;
@@ -3734,7 +3856,11 @@ information.
 DEFUN("glyph-type", Fglyph_type, 1, 1, 0,	/*
 Return the type of the given glyph.
 The return value will be one of 'buffer, 'pointer, or 'icon.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (glyph))
 {
 	CHECK_GLYPH(glyph);
@@ -3809,7 +3935,11 @@ DEFUN("glyph-width", Fglyph_width, 1, 2, 0,	/*
 Return the width of GLYPH on WINDOW.
 This may not be exact as it does not take into account all of the context
 that redisplay will.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (glyph, window))
 {
 	XSETWINDOW(window, decode_window(window));
@@ -3878,7 +4008,11 @@ DEFUN("glyph-ascent", Fglyph_ascent, 1, 2, 0,	/*
 Return the ascent value of GLYPH on WINDOW.
 This may not be exact as it does not take into account all of the context
 that redisplay will.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (glyph, window))
 {
 	XSETWINDOW(window, decode_window(window));
@@ -3891,7 +4025,11 @@ DEFUN("glyph-descent", Fglyph_descent, 1, 2, 0,	/*
 Return the descent value of GLYPH on WINDOW.
 This may not be exact as it does not take into account all of the context
 that redisplay will.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (glyph, window))
 {
 	XSETWINDOW(window, decode_window(window));
@@ -3905,7 +4043,11 @@ DEFUN("glyph-height", Fglyph_height, 1, 2, 0,	/*
 Return the height of GLYPH on WINDOW.
 This may not be exact as it does not take into account all of the context
 that redisplay will.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (glyph, window))
 {
 	XSETWINDOW(window, decode_window(window));
@@ -4636,7 +4778,11 @@ subwindow_query_geometry(Lisp_Object image_instance, int *width,
 
 DEFUN("subwindowp", Fsubwindowp, 1, 1, 0,	/*
 Return non-nil if OBJECT is a subwindow.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	CHECK_IMAGE_INSTANCE(object);
@@ -4645,7 +4791,11 @@ Return non-nil if OBJECT is a subwindow.
 
 DEFUN("image-instance-subwindow-id", Fimage_instance_subwindow_id, 1, 1, 0,	/*
 Return the window id of SUBWINDOW as a number.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (subwindow))
 {
 	CHECK_SUBWINDOW_IMAGE_INSTANCE(subwindow);
@@ -4655,7 +4805,11 @@ Return the window id of SUBWINDOW as a number.
 DEFUN("resize-subwindow", Fresize_subwindow, 1, 3, 0,	/*
 Resize SUBWINDOW to WIDTH x HEIGHT.
 If a value is nil that parameter is not changed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (subwindow, width, height))
 {
 	int neww, newh;
@@ -4685,7 +4839,11 @@ If a value is nil that parameter is not changed.
 
 DEFUN("force-subwindow-map", Fforce_subwindow_map, 1, 1, 0,	/*
 Generate a Map event for SUBWINDOW.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (subwindow))
 {
 	CHECK_SUBWINDOW_IMAGE_INSTANCE(subwindow);
@@ -4776,7 +4934,11 @@ static Lisp_Object Qglyph_animated_timeout_handler;
 DEFUN("glyph-animated-timeout-handler", Fglyph_animated_timeout_handler, 1, 1, 0,	/*
 Callback function for updating animated images.
 Don't use this.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (arg))
 {
 	CHECK_WEAK_LIST(arg);

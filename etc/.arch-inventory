@@ -1,2 +1,6 @@
 precious ^(Makefile\.in)$
 precious ^(Makefile)$
+<<<<<<< HEAD
+=======
+precious ^(sxemacs.desktop)$
+>>>>>>> origin/master

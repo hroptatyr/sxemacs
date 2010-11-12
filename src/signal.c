@@ -333,7 +333,11 @@ This is intended for use by asynchronous timeout callbacks and by
 asynchronous process output filters and sentinels (not yet implemented
 in SXEmacs).  It will always be nil if SXEmacs is not inside of
 an asynchronous timeout or process callback.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return waiting_for_user_input_p ? Qt : Qnil;

@@ -1136,7 +1136,11 @@ int main(int c, char *v[])
 		AC_MSG_WARN([Your ALSA version is _KNOWN_ to fail! Do not say we have not warned you!])
 		sxe_mm_alsa_version_supported_p="no"
 		;;
+<<<<<<< HEAD
 	1.0.2* | 1.0.4* | 1.0.5* | 1.0.6* | 1.0.7* | 1.0.8* ) 
+=======
+	1.0.2 | 1.0.4* | 1.0.5* | 1.0.6* | 1.0.7* | 1.0.8* ) 
+>>>>>>> origin/master
 		AC_MSG_RESULT([${sxe_mm_alsa_version} (suspicious to break)])
 		AC_MSG_WARN([Your ALSA version has not been tested. Do not be surprised if it fails!])
 		sxe_mm_alsa_version_supported_p="no"

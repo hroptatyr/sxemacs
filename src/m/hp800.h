@@ -92,7 +92,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* This machine requires completely different unexec code
    which lives in a separate file.  Specify the file name.  */
 
+<<<<<<< HEAD
 #define UNEXEC "unexhp9k800.o"
+=======
+/* 
+ * everything is pdump now --SY
+ * #define UNEXEC "unexhp9k800.o"
+ */
+#undef UNEXEC
+>>>>>>> origin/master
 
 #define LIBS_MACHINE
 #define LIBS_DEBUG

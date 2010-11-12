@@ -88,8 +88,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #define LIB_GCC
 
 /* Definitions for how to dump.  */
+<<<<<<< HEAD
 
 #define UNEXEC "unexnext.o"
+=======
+/*
+ * everythign is pdump now. --SY
+ * #define UNEXEC "unexnext.o"
+ */
+#undef UNEXEC
+>>>>>>> origin/master
 
 /* start_of_text isn't actually used, so make it compile without error.  */
 #define TEXT_START 0

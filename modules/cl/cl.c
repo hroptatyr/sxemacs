@@ -57,7 +57,11 @@ PROVIDE(cl);
 
 /* ###autoload */
 DEFUN("cl:pop", Fcl_pop, 1, UNEVALLED, 0, /*
+<<<<<<< HEAD
 						      */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -82,7 +86,11 @@ DEFUN("cl:pop", Fcl_pop, 1, UNEVALLED, 0, /*
 
 /* ###autoload */
 DEFUN("cl:push", Fcl_push, 2, UNEVALLED, 0, /*
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -106,7 +114,11 @@ DEFUN("cl:push", Fcl_push, 2, UNEVALLED, 0, /*
 
 /* ###autoload */
 DEFUN("cl:pushnew", Fcl_pushnew, 2, UNEVALLED, 0, /*
+<<<<<<< HEAD
 							      */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -140,7 +152,11 @@ int emodcl_eql(Lisp_Object a, Lisp_Object b)
 
 /* ###autoload */
 DEFUN("cl:eql", Fcl_eql, 2, 2, 0, /*
+<<<<<<< HEAD
 					      */
+=======
+*/
+>>>>>>> origin/master
       (a, b))
 {
 	if (EMOD_CL_EQL(a, b))
@@ -151,7 +167,11 @@ DEFUN("cl:eql", Fcl_eql, 2, 2, 0, /*
 
 /* ###autoload */
 DEFUN("cl:list*", Fcl_list_, 1, MANY, 0, /*
+<<<<<<< HEAD
 						     */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object *args))
 {
 	if (nargs == 1)
@@ -167,7 +187,11 @@ DEFUN("cl:list*", Fcl_list_, 1, MANY, 0, /*
 
 /* ###autoload */
 DEFUN("cl:tailp", Fcl_tailp, 2, 2, 0, /*
+<<<<<<< HEAD
 						  */
+=======
+*/
+>>>>>>> origin/master
       (list, object))
 {
 	Lisp_Object trav1 = Qnil, trav2 = Qnil;
@@ -207,7 +231,11 @@ DEFUN("cl:tailp", Fcl_tailp, 2, 2, 0, /*
 
 /* ###autoload */
 DEFUN("cl:ldiff", Fcl_ldiff, 2, 2, 0, /*
+<<<<<<< HEAD
 						  */
+=======
+*/
+>>>>>>> origin/master
       (list, object))
 {
 	Lisp_Object result = Qnil, tmp1 = Qnil, tmp2 = Qnil;

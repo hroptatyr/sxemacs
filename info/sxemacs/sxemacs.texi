@@ -669,6 +669,7 @@ This manual is for SXEmacs installed on UNIX systems.
 
 @comment  node-name,  next,  previous,  up
 @node License, Distrib, Top, Top
+<<<<<<< HEAD
 @unnumbered GNU GENERAL PUBLIC LICENSE
 @center Version 1, February 1989
 @cindex license to copy SXEmacs
@@ -972,6 +973,9 @@ Ty Coon, President of Vice
 That's all there is to it!
 
 @comment  node-name,  next,  previous,  up
+=======
+@include gpl.texi
+>>>>>>> origin/master
 @node Distrib, Intro, License, Top
 @unnumbered Distribution
 

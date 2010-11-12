@@ -579,7 +579,11 @@ DEFUN("or", For, 0, UNEVALLED, 0,	/*
 Eval args until one of them yields non-nil, then return that value.
 The remaining args are not evalled at all.
 If all args return nil, return nil.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -597,7 +601,11 @@ DEFUN("and", Fand, 0, UNEVALLED, 0,	/*
 Eval args until one of them yields nil, then return nil.
 The remaining args are not evalled at all.
 If no arg yields nil, return the last arg's value.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -616,7 +624,11 @@ DEFUN("if", Fif, 2, UNEVALLED, 0,	/*
 Returns the value of THEN or the value of the last of the ELSE's.
 THEN must be one expression, but ELSE... can be zero or more expressions.
 If COND yields nil, and there are no ELSE's, the value is nil.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -636,7 +648,11 @@ If COND yields nil, and there are no ELSE's, the value is nil.
 DEFUN("when", Fwhen, 1, MANY, 0,	/*
 \(when COND BODY...): if COND yields non-nil, do BODY, else return nil.
 BODY can be zero or more expressions.  If BODY is nil, return nil.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	Lisp_Object cond = args[0];
@@ -660,7 +676,11 @@ BODY can be zero or more expressions.  If BODY is nil, return nil.
 DEFUN("unless", Funless, 1, MANY, 0,	/*
 \(unless COND BODY...): if COND yields nil, do BODY, else return nil.
 BODY can be zero or more expressions.  If BODY is nil, return nil.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	Lisp_Object cond = args[0];
@@ -677,7 +697,11 @@ value is the value of the cond-form.
 If no clause succeeds, cond returns nil.
 If a clause has one element, as in (CONDITION),
 CONDITION's value if non-nil is returned from the cond-form.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -699,7 +723,11 @@ CONDITION's value if non-nil is returned from the cond-form.
 
 DEFUN("progn", Fprogn, 0, UNEVALLED, 0,	/*
 \(progn BODY...): eval BODY forms sequentially and return value of last one.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -726,7 +754,11 @@ Similar to `progn', but the value of the first form is returned.
 \(prog1 FIRST BODY...): All the arguments are evaluated sequentially.
 The value of FIRST is saved during evaluation of the remaining args,
 whose values are discarded.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -751,7 +783,11 @@ Similar to `progn', but the value of the second form is returned.
 \(prog2 FIRST SECOND BODY...): All the arguments are evaluated sequentially.
 The value of SECOND is saved during evaluation of the remaining args,
 whose values are discarded.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -780,7 +816,11 @@ The value of the last form in BODY is returned.
 Each element of VARLIST is a symbol (which is bound to nil)
 or a list (SYMBOL VALUEFORM) (which binds SYMBOL to the value of VALUEFORM).
 Each VALUEFORM can refer to the symbols already bound by this VARLIST.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -818,7 +858,11 @@ The value of the last form in BODY is returned.
 Each element of VARLIST is a symbol (which is bound to nil)
 or a list (SYMBOL VALUEFORM) (which binds SYMBOL to the value of VALUEFORM).
 All the VALUEFORMs are evalled before any symbols are bound.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -881,7 +925,11 @@ DEFUN("while", Fwhile, 1, UNEVALLED, 0,	/*
 \(while TEST BODY...): if TEST yields non-nil, eval BODY... and repeat.
 The order of execution is thus TEST, BODY, TEST, BODY and so on
 until TEST returns nil.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -904,8 +952,14 @@ Thus, (setq x (1+ y)) sets `x' to the value of `(1+ y)'.
 The second VAL is not computed until after the first SYM is set, and so on;
 each VAL can use the new value of variables set earlier in the `setq'.
 The return value of the `setq' form is the value of the last VAL.
+<<<<<<< HEAD
 					 */
       (args)) {
+=======
+*/
+      (args))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Lisp_Object symbol, tail, val = Qnil;
 	int nargs;
@@ -930,7 +984,11 @@ The return value of the `setq' form is the value of the last VAL.
 
 DEFUN("quote", Fquote, 1, UNEVALLED, 0,	/*
 Return the argument, without evaluating it.  `(quote x)' yields `x'.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	return XCAR(args);
@@ -940,7 +998,11 @@ DEFUN("function", Ffunction, 1, UNEVALLED, 0,	/*
 Like `quote', but preferred for objects which are functions.
 In byte compilation, `function' causes its argument to be compiled.
 `quote' cannot do that.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	return XCAR(args);
@@ -952,7 +1014,11 @@ In byte compilation, `function' causes its argument to be compiled.
 static Lisp_Object define_function(Lisp_Object name, Lisp_Object defn)
 {
 	Ffset(name, defn);
+<<<<<<< HEAD
 	LOADHIST_ATTACH(name);
+=======
+        LOADHIST_ATTACH (Fcons (Qdefun, name));
+>>>>>>> origin/master
 	return name;
 }
 
@@ -960,7 +1026,11 @@ DEFUN("defun", Fdefun, 2, UNEVALLED, 0,	/*
 \(defun NAME ARGLIST [DOCSTRING] BODY...): define NAME as a function.
 The definition is (lambda ARGLIST [DOCSTRING] BODY...).
 See also the function `interactive'.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -974,7 +1044,11 @@ When the macro is called, as in (NAME ARGS...),
 the function (lambda ARGLIST BODY...) is applied to
 the list ARGS... as it appears in the expression,
 and the result should be a form to be evaluated instead of the original.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -1000,8 +1074,14 @@ This means that M-x set-variable recognizes it.
 If INITVALUE is missing, SYMBOL's value is not set.
 
 In lisp-interaction-mode defvar is treated as defconst.
+<<<<<<< HEAD
 						 */
       (args)) {
+=======
+*/
+      (args))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Lisp_Object sym = XCAR(args);
 
@@ -1048,8 +1128,14 @@ normally loaded, since it is useful for users to be able to specify
 their own values for such variables before loading the library.
 Since `defconst' unconditionally assigns the variable,
 it would override the user's choice.
+<<<<<<< HEAD
 						 */
       (args)) {
+=======
+*/
+      (args))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Lisp_Object sym = XCAR(args);
 	Lisp_Object val = Feval(XCAR(args = XCDR(args)));
@@ -1081,7 +1167,11 @@ Return t if VARIABLE is intended to be set and modified by users.
 \(The alternative is a variable used internally in a Lisp program.)
 Determined by whether the first character of the documentation
 for the variable is `*'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (variable))
 {
 	Lisp_Object documentation =
@@ -1106,7 +1196,11 @@ in place of FORM.  When a non-macro-call results, it is returned.
 
 The second optional arg ENVIRONMENT specifies an environment of macro
 definitions to shadow the loaded ones for use in file byte-compilation.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (form, environment))
 {
 	/* This function can GC */
@@ -1177,7 +1271,11 @@ TAG is evalled to get the tag to use.  Then the BODY is executed.
 Within BODY, (throw TAG) with same tag exits BODY and exits this `catch'.
 If no throw happens, `catch' returns the value of the last BODY form.
 If a throw happens, it specifies the value to return from `catch'.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -1377,7 +1475,11 @@ throw_or_bomb_out(Lisp_Object tag, Lisp_Object val, int bomb_out_p,
 DEFUN("throw", Fthrow, 2, 2, 0,	/*
 Throw to the catch for TAG and return VALUE from it.
 Both TAG and VALUE are evalled.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (tag, value))
 {
 	throw_or_bomb_out(tag, value, 0, Qnil, Qnil);	/* Doesn't return */
@@ -1390,7 +1492,11 @@ Usage looks like (unwind-protect BODYFORM UNWINDFORMS...).
 If BODYFORM completes normally, its value is returned
 after executing the UNWINDFORMS.
 If BODYFORM exits nonlocally, the UNWINDFORMS are executed anyway.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -1656,8 +1762,14 @@ within the handler will not result in an infinite loop.
 If you want to establish an error handler that is called with the
 Lisp stack, bindings, etc. as they were when `signal' was called,
 rather than when the handler was set, use `call-with-condition-handler'.
+<<<<<<< HEAD
 								 */
       (args)) {
+=======
+*/
+      (args))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Lisp_Object var = XCAR(args);
 	Lisp_Object bodyform = XCAR(XCDR(args));
@@ -1680,7 +1792,11 @@ you to specify which errors are trapped).  If the handler function
 returns, `signal' continues as if the handler were never invoked.
 \(It continues to look for handlers established earlier than this one,
 and invokes the standard error-handler if none is found.)
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {				/* Note!  Args side-effected! */
 	/* This function can GC */
@@ -1906,7 +2022,11 @@ See also the function `signal-error', and the functions to handle errors:
 
 Note that this function can return, if the debugger is invoked and the
 user invokes the "return from signal" option.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (error_symbol, data))
 {
 	/* Fsignal() is one of these functions that's called all the time
@@ -2719,7 +2839,11 @@ value
 -- subrs (built-in functions) that are interactively callable
 
 Also, a symbol satisfies `commandp' if its function definition does so.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	Lisp_Object fun = indirect_function(function, 0);
@@ -2757,7 +2881,11 @@ CMD must be an object that satisfies the `commandp' predicate.
 Optional second arg RECORD-FLAG is as in `call-interactively'.
 The argument KEYS specifies the value to use instead of (this-command-keys)
 when reading the arguments.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (cmd, record_flag, keys))
 {
 	/* This function can GC */
@@ -2812,7 +2940,11 @@ Return t if function in which this appears was called interactively.
 This means that the function was called with call-interactively (which
 includes being called as the binding of a key)
 and input is currently coming from the keyboard (not in keyboard macro).
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	REGISTER struct backtrace *btp;
@@ -2900,8 +3032,14 @@ nil or omitted says FUNCTION is a function,
 `macro' or t says FUNCTION is really a macro.
 If FUNCTION already has a non-void function definition that is not an
 autoload object, this function does nothing and returns nil.
+<<<<<<< HEAD
 					 */
       (function, filename, docstring, interactive, type)) {
+=======
+*/
+      (function, filename, docstring, interactive, type))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	CHECK_SYMBOL(function);
 	CHECK_STRING(filename);
@@ -3013,7 +3151,11 @@ static Lisp_Object in_warnings_restore(Lisp_Object minimus)
 
 DEFUN("eval", Feval, 1, 1, 0,	/*
 Evaluate FORM and return its value.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (form))
 {
 	/* This function can GC */
@@ -3257,7 +3399,11 @@ retry:
 DEFUN("funcall", Ffuncall, 1, MANY, 0,	/*
 Call first argument as a function, passing the remaining arguments to it.
 Thus, (funcall 'cons 'x 'y) returns (x . y).
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	/* This function can GC */
@@ -3379,7 +3525,11 @@ DEFUN("functionp", Ffunctionp, 1, 1, 0,	/*
 Return t if OBJECT can be called as a function, else nil.
 A function is an object that can be applied to arguments,
 using for example `funcall' or `apply'.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	if (SYMBOLP(object))
@@ -3459,7 +3609,11 @@ DEFUN("function-min-args", Ffunction_min_args, 1, 1, 0,	/*
 Return the number of arguments a function may be called with.
 The function may be any form that can be passed to `funcall',
 any special form, or any macro.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	return function_argcount(function, 1);
@@ -3471,7 +3625,11 @@ The function may be any form that can be passed to `funcall',
 any special form, or any macro.
 If the function takes an arbitrary number of arguments or is
 a built-in special form, nil is returned.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (function))
 {
 	return function_argcount(function, 0);
@@ -3480,7 +3638,11 @@ a built-in special form, nil is returned.
 DEFUN("apply", Fapply, 2, MANY, 0,	/*
 Call FUNCTION with the remaining args, using the last arg as a list of args.
 Thus, (apply '+ 1 2 '(3 4)) returns 10.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	/* This function can GC */
@@ -3625,7 +3787,11 @@ If it is a list, the elements are called, in order, with no arguments.
 
 To make a hook variable buffer-local, use `make-local-hook',
 not `make-local-variable'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	REGISTER int i;
@@ -3662,7 +3828,11 @@ as that may change.
 
 To make a hook variable buffer-local, use `make-local-hook',
 not `make-local-variable'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	return run_hook_with_args(nargs, args, RUN_HOOKS_TO_COMPLETION);
@@ -3678,7 +3848,11 @@ If all the functions return nil, we return nil.
 
 To make a hook variable buffer-local, use `make-local-hook',
 not `make-local-variable'.
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	return run_hook_with_args(nargs, args, RUN_HOOKS_UNTIL_SUCCESS);
@@ -3694,7 +3868,11 @@ If all the functions return non-nil, we return non-nil.
 
 To make a hook variable buffer-local, use `make-local-hook',
 not `make-local-variable'.
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	return run_hook_with_args(nargs, args, RUN_HOOKS_UNTIL_FAILURE);
@@ -4756,7 +4934,11 @@ Lisp_Object top_level_set(Lisp_Object symbol, Lisp_Object newval)
 DEFUN("backtrace-debug", Fbacktrace_debug, 2, 2, 0,	/*
 Set the debug-on-exit flag of eval frame LEVEL levels down to FLAG.
 The debugger is entered when that frame exits, if the flag is non-nil.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (level, flag))
 {
 	REGISTER struct backtrace *backlist = backtrace_list;
@@ -4805,7 +4987,11 @@ and defaults to the value of `standard-output'.
 Optional second arg DETAILED non-nil means show places where currently
 active variable bindings, catches, condition-cases, and
 unwind-protects, as well as function calls, were made.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (stream, detailed))
 {
 	/* This function can GC */
@@ -4932,7 +5118,11 @@ A &rest arg is represented as the tail of the list ARG-VALUES.
 FUNCTION is whatever was supplied as car of evaluated list,
 or a lambda expression for macro calls.
 If NFRAMES is more than the number of frames, the value is nil.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (nframes))
 {
 	REGISTER struct backtrace *backlist = backtrace_list;

@@ -1382,7 +1382,11 @@ static void gtk_popup_menu(Lisp_Object menu_desc, Lisp_Object event)
 DEFUN("gtk-build-xemacs-menu", Fgtk_build_xemacs_menu, 1, 1, 0,	/*
 Returns a GTK menu item from MENU, a standard XEmacs menu description.
 See the definition of `popup-menu' for more information on the format of MENU.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (menu))
 {
 	GtkWidget *w = menu_descriptor_to_widget(menu, NULL);

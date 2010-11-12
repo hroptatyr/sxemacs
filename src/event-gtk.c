@@ -48,7 +48,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef FILE_CODING
 #include "lstream.h"
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #include <gdk/gdkkeysyms.h>

@@ -1211,7 +1211,11 @@ int x_kludge_lw_menu_active(void)
 DEFUN("accelerate-menu", Faccelerate_menu, 0, 0, "_",	/*
 Make the menubar active.  Menu items can be selected using menu accelerators
 or by actions defined in menu-accelerator-map.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	struct console *con = XCONSOLE(Vselected_console);

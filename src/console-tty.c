@@ -35,7 +35,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "sysdep.h"
 #include "sysfile.h"
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 DEFINE_CONSOLE_TYPE(tty);
@@ -202,7 +206,11 @@ static struct console *decode_tty_console(Lisp_Object console)
 
 DEFUN("console-tty-terminal-type", Fconsole_tty_terminal_type, 0, 1, 0,	/*
 Return the terminal type of TTY console CONSOLE.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	return CONSOLE_TTY_DATA(decode_tty_console(console))->terminal_type;
@@ -210,7 +218,11 @@ Return the terminal type of TTY console CONSOLE.
 
 DEFUN("console-tty-max-colors", Fconsole_tty_max_colors, 0, 1, 0, /*
 Return the maximum number of colors of TTY console CONSOLE.
+<<<<<<< HEAD
 								  */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	return make_int(CONSOLE_TTY_DATA(
@@ -219,7 +231,11 @@ Return the maximum number of colors of TTY console CONSOLE.
 
 DEFUN("console-tty-controlling-process", Fconsole_tty_controlling_process, 0, 1, 0,	/*
 Return the controlling process of tty console CONSOLE.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	return CONSOLE_TTY_DATA(decode_tty_console(console))->
@@ -230,7 +246,11 @@ Return the controlling process of tty console CONSOLE.
 
 DEFUN("console-tty-input-coding-system", Fconsole_tty_input_coding_system, 0, 1, 0,	/*
 Return the input coding system of tty console CONSOLE.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	return decoding_stream_coding_system
@@ -241,7 +261,11 @@ DEFUN("set-console-tty-input-coding-system", Fset_console_tty_input_coding_syste
 Set the input coding system of tty console CONSOLE to CODESYS.
 CONSOLE defaults to the selected console.
 CODESYS defaults to the value of `keyboard-coding-system'.
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       (console, codesys))
 {
 	set_decoding_stream_coding_system
@@ -252,7 +276,11 @@ CODESYS defaults to the value of `keyboard-coding-system'.
 
 DEFUN("console-tty-output-coding-system", Fconsole_tty_output_coding_system, 0, 1, 0,	/*
 Return TTY CONSOLE's output coding system.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	return encoding_stream_coding_system
@@ -264,7 +292,11 @@ DEFUN("set-console-tty-output-coding-system", Fset_console_tty_output_coding_sys
 Set the coding system of tty output of console CONSOLE to CODESYS.
 CONSOLE defaults to the selected console.
 CODESYS defaults to the value of `terminal-coding-system'.
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       (console, codesys))
 {
 	set_encoding_stream_coding_system
@@ -282,7 +314,11 @@ CONSOLE defaults to the selected console.
 If CODESYS is nil, the values of `keyboard-coding-system' and
 `terminal-coding-system' will be used for the input and
 output coding systems of CONSOLE.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (console, codesys))
 {
 	Fset_console_tty_input_coding_system(console, codesys);

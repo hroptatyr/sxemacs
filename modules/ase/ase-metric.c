@@ -38,7 +38,11 @@
 
 #include "config.h"
 #include "sxemacs.h"
+<<<<<<< HEAD
 #include "ent.h"
+=======
+#include "ent/ent.h"
+>>>>>>> origin/master
 #include "ase.h"
 #include "ase-metric.h"
 #include "ase-cartesian.h"
@@ -407,7 +411,11 @@ ase_metric_p_p(void *data, Lisp_Object a, Lisp_Object b)
 /* ###autoload */
 DEFUN("ase-p-metric", Fase_p_metric, 1, 1, 0, /*
 Return a p-metric for some natural number P.
+<<<<<<< HEAD
 					      */
+=======
+*/
+>>>>>>> origin/master
       (p))
 #ifndef HAVE_MPFR
 {
@@ -428,7 +436,11 @@ Return a p-metric for some natural number P.
 /* ###autoload */
 DEFUN("ase-p-metric*", Fase_p_metricX, 1, 1, 0, /*
 Return a p-metric without the final root for some natural number P.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (p))
 {
 	ase_pmetric_data_t data;
@@ -445,7 +457,11 @@ Return a metric from a distance function FN.
 
 FN should take two arguments and return the distance between those,
 a distance by definition lives in the reals.
+<<<<<<< HEAD
 					  */
+=======
+*/
+>>>>>>> origin/master
       (fn))
 {
 	if (!SUBRP(fn) && !SYMBOLP(fn) &&
@@ -460,7 +476,11 @@ a distance by definition lives in the reals.
 
 DEFUN("ase-metric-distance", Fase_metric_distance, 3, 3, 0, /*
 Return the distance of P1 and P2 with respect to METRIC.
+<<<<<<< HEAD
 							    */
+=======
+*/
+>>>>>>> origin/master
       (metric, p1, p2))
 {
 	ase_distance_f dist;

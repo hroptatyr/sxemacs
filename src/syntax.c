@@ -170,7 +170,11 @@ static Bufpos find_defun_start(struct buffer *buf, Bufpos pos)
 DEFUN("syntax-table-p", Fsyntax_table_p, 1, 1, 0,	/*
 Return t if OBJECT is a syntax table.
 Any vector of 256 elements will do.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return (CHAR_TABLEP(object)
@@ -191,7 +195,11 @@ DEFUN("syntax-table", Fsyntax_table, 0, 1, 0,	/*
 Return the current syntax table.
 This is the one specified by the current buffer, or by BUFFER if it
 is non-nil.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	return decode_buffer(buffer, 0)->syntax_table;
@@ -200,7 +208,11 @@ is non-nil.
 DEFUN("standard-syntax-table", Fstandard_syntax_table, 0, 0, 0,	/*
 Return the standard syntax table.
 This is the one used for new buffers.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Vstandard_syntax_table;
@@ -209,7 +221,11 @@ This is the one used for new buffers.
 DEFUN("copy-syntax-table", Fcopy_syntax_table, 0, 1, 0,	/*
 Return a new syntax table which is a copy of SYNTAX-TABLE.
 SYNTAX-TABLE defaults to the standard syntax table.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (syntax_table))
 {
 	if (NILP(Vstandard_syntax_table))
@@ -222,7 +238,11 @@ SYNTAX-TABLE defaults to the standard syntax table.
 DEFUN("set-syntax-table", Fset_syntax_table, 1, 2, 0,	/*
 Select SYNTAX-TABLE as the new syntax table for BUFFER.
 BUFFER defaults to the current buffer if omitted.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (syntax_table, buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -523,7 +543,11 @@ DEFUN("syntax-designator-chars", Fsyntax_designator_chars, 0, 0, 0,	/*
 Return a string of the recognized syntax designator chars.
 The chars are ordered by their internal syntax codes, which are
 numbered starting at 0.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Vsyntax_designator_chars_string;
@@ -537,7 +561,11 @@ The characters that correspond to various syntax codes
 are listed in the documentation of `modify-syntax-entry'.
 Optional second argument SYNTAX-TABLE defaults to the current buffer's
 syntax table.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (character, syntax_table))
 {
 	Lisp_Char_Table *mirrortab;
@@ -583,7 +611,11 @@ DEFUN("matching-paren", Fmatching_paren, 1, 2, 0,	/*
 Return the matching parenthesis of CHARACTER, or nil if none.
 Optional second argument SYNTAX-TABLE defaults to the current buffer's
 syntax table.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (character, syntax_table))
 {
 	Lisp_Char_Table *mirrortab;
@@ -722,8 +754,14 @@ to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
 
 COUNT defaults to 1, and BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 							 */
       (count, buffer)) {
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> origin/master
 	Bufpos val;
 	struct buffer *buf = decode_buffer(buffer, 0);
 	EMACS_INT n;
@@ -1009,8 +1047,14 @@ If COUNT comments are found as expected, with nothing except whitespace
 between them, return t; otherwise return nil.
 Point is set in either case.
 COUNT defaults to 1, and BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 							 */
       (count, buffer)) {
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> origin/master
 	Bufpos from;
 	Bufpos stop;
 	Emchar c;
@@ -1655,8 +1699,14 @@ of in the current buffer.
 
 If optional arg NOERROR is non-nil, scan-lists will return nil instead of
 signalling an error.
+<<<<<<< HEAD
 						 */
       (from, count, depth, buffer, noerror)) {
+=======
+*/
+      (from, count, depth, buffer, noerror))
+{
+>>>>>>> origin/master
 	struct buffer *buf;
 
 	CHECK_INT(from);
@@ -1685,7 +1735,11 @@ of in the current buffer.
 
 If optional arg NOERROR is non-nil, scan-sexps will return nil instead of
 signalling an error.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (from, count, buffer, noerror))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -1700,7 +1754,11 @@ Move point backward over any number of chars with prefix syntax.
 This includes chars with "quote" or "prefix" syntax (' or p).
 
 Optional arg BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -2113,8 +2171,14 @@ elements are ignored.
 Sixth arg COMMENTSTOP non-nil means stop at the start of a comment. If it
 is `syntax-table', stop after the start of a comment or a string, or after
 the end of a comment or string.
+<<<<<<< HEAD
 								 */
       (from, to, targetdepth, stopbefore, oldstate, commentstop, buffer)) {
+=======
+*/
+      (from, to, targetdepth, stopbefore, oldstate, commentstop, buffer))
+{
+>>>>>>> origin/master
 	struct lisp_parse_state state;
 	int target;
 	Bufpos start, end;

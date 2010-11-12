@@ -33,7 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lstream.h"
 #include "opaque.h"
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #include "sysfile.h"
@@ -573,7 +577,11 @@ USED-CODESYS is non-nil, it should be a symbol, and the actual coding
 system that was used for the decoding is stored into it.  It will in
 general be different from CODESYS if CODESYS specifies automatic
 encoding detection or end-of-line detection.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (file, noerror, nomessage, nosuffix, codesys, used_codesys))
 {
 	/* This function can GC */
@@ -888,7 +896,11 @@ the face of a changing and unpredictable environment, but can occasionally
 get tripped up.  In this case, you will have to call
 `locate-file-clear-hashing' to get it back on track.  See that function
 for details.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (filename, path_list, suffixes, mode))
 {
 	/* This function can GC */
@@ -1173,7 +1185,11 @@ In this case, you must call `locate-file-clear-hashing'.
 
 If PATH is t, it means to fully clear all the accumulated hashes.  This
 can be used if the internal tables grow too large, or when dumping.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (path))
 {
 	if (EQ(path, Qt))
@@ -1471,8 +1487,14 @@ nil means discard it; anything else is a stream for printing.
 
 If there is no error, point does not move.  If there is an error,
 point remains at the end of the last character read from the buffer.
+<<<<<<< HEAD
 							 */
       (buffer, printflag)) {
+=======
+*/
+      (buffer, printflag))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	int speccount = specpdl_depth();
 	Lisp_Object tem, buf;
@@ -1524,8 +1546,14 @@ point remains at the end of the last character read from the buffer.
 Note:  Before evaling the region, this function narrows the buffer to it.
 If the code being eval'd should happen to trigger a redisplay you may
 see some text temporarily disappear because of this.
+<<<<<<< HEAD
 						 */
       (start, end, stream)) {
+=======
+*/
+      (start, end, stream))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	int speccount = specpdl_depth();
 	Lisp_Object tem;
@@ -1561,7 +1589,11 @@ a function (call it with no arguments for each character,
 call it with a char as argument to push a char back)
 a string (takes text from string, starting at the beginning)
 t (read text line using minibuffer and use it).
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (stream))
 {
 	if (NILP(stream))
@@ -1592,8 +1624,14 @@ Read one Lisp expression which is represented as text by STRING.
 Returns a cons: (OBJECT-READ . FINAL-STRING-INDEX).
 START and END optionally delimit a substring of STRING from which to read;
 they default to 0 and (length STRING) respectively.
+<<<<<<< HEAD
 							 */
       (string, start, end)) {
+=======
+*/
+      (string, start, end))
+{
+>>>>>>> origin/master
 	Bytecount startval, endval;
 	Lisp_Object tem;
 	Lisp_Object lispstream = Qnil;

@@ -191,7 +191,11 @@ int valid_console_type_p(Lisp_Object type)
 DEFUN("valid-console-type-p", Fvalid_console_type_p, 1, 1, 0,	/*
 Return t if CONSOLE-TYPE is a valid console type.
 Valid types are 'x, 'tty, and 'stream.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (console_type))
 {
 	return valid_console_type_p(console_type) ? Qt : Qnil;
@@ -199,7 +203,11 @@ Valid types are 'x, 'tty, and 'stream.
 
 DEFUN("console-type-list", Fconsole_type_list, 0, 0, 0,	/*
 Return a list of valid console types.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Fcopy_sequence(Vconsole_type_list);
@@ -208,7 +216,11 @@ Return a list of valid console types.
 DEFUN("cdfw-console", Fcdfw_console, 1, 1, 0,	/*
 Given a console, device, frame, or window, return the associated console.
 Return nil otherwise.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CDFW_CONSOLE(object);
@@ -216,7 +228,11 @@ Return nil otherwise.
 
 DEFUN("selected-console", Fselected_console, 0, 0, 0,	/*
 Return the console which is currently active.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Vselected_console;
@@ -249,7 +265,11 @@ Subsequent editing commands apply to its selected device, selected frame,
 and selected window.  The selection of CONSOLE lasts until the next time
 the user does something to select a different console, or until the next
 time this function is called.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	Lisp_Object device;
@@ -277,7 +297,11 @@ void set_console_last_nonminibuf_frame(struct console *con, Lisp_Object frame)
 
 DEFUN("consolep", Fconsolep, 1, 1, 0,	/*
 Return non-nil if OBJECT is a console.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CONSOLEP(object) ? Qt : Qnil;
@@ -285,7 +309,11 @@ Return non-nil if OBJECT is a console.
 
 DEFUN("console-live-p", Fconsole_live_p, 1, 1, 0,	/*
 Return non-nil if OBJECT is a console that has not been deleted.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return CONSOLEP(object) && CONSOLE_LIVE_P(XCONSOLE(object)) ? Qt : Qnil;
@@ -300,7 +328,11 @@ Value is `tty' for a tty console (a character-only terminal),
 implemented),
 `stream' for a stream console (which acts like a stdio stream), and
 `dead' for a deleted console.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	/* don't call decode_console() because we want to allow for dead
@@ -313,7 +345,11 @@ implemented),
 
 DEFUN("console-name", Fconsole_name, 0, 1, 0,	/*
 Return the name of CONSOLE.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	return CONSOLE_NAME(decode_console(console));
@@ -322,7 +358,11 @@ Return the name of CONSOLE.
 DEFUN("console-connection", Fconsole_connection, 0, 1, 0,	/*
 Return the connection of the specified console.
 CONSOLE defaults to the selected console if omitted.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	return CONSOLE_CONNECTION(decode_console(console));
@@ -387,8 +427,14 @@ If TYPE is specified, only return consoles of that type; otherwise,
 return consoles of any type. (It is possible, although unlikely,
 that two consoles of different types could have the same connection
 name; in such a case, the first console found is returned.)
+<<<<<<< HEAD
 						 */
       (connection, type)) {
+=======
+*/
+      (connection, type))
+{
+>>>>>>> origin/master
 	Lisp_Object canon = Qnil;
 	struct gcpro gcpro1;
 
@@ -435,8 +481,14 @@ If TYPE is specified, only return consoles of that type; otherwise,
 return consoles of any type. (It is possible, although unlikely,
 that two consoles of different types could have the same connection
 name; in such a case, the first console found is returned.)
+<<<<<<< HEAD
 						 */
       (connection, type)) {
+=======
+*/
+      (connection, type))
+{
+>>>>>>> origin/master
 	Lisp_Object console = Ffind_console(connection, type);
 	if (NILP(console)) {
 		if (NILP(type))
@@ -702,7 +754,11 @@ Normally, you cannot delete the last non-minibuffer-only frame (you must
 use `save-buffers-kill-emacs' or `kill-emacs').  However, if optional
 second argument FORCE is non-nil, you can delete the last frame. (This
 will automatically call `save-buffers-kill-emacs'.)
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (console, force))
 {
 	CHECK_CONSOLE(console);
@@ -712,7 +768,11 @@ will automatically call `save-buffers-kill-emacs'.)
 
 DEFUN("console-list", Fconsole_list, 0, 0, 0,	/*
 Return a list of all consoles.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Fcopy_sequence(Vconsole_list);
@@ -721,7 +781,11 @@ Return a list of all consoles.
 DEFUN("console-device-list", Fconsole_device_list, 0, 1, 0,	/*
 Return a list of all devices on CONSOLE.
 If CONSOLE is nil, the selected console is used.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	return Fcopy_sequence(CONSOLE_DEVICE_LIST(decode_console(console)));
@@ -729,7 +793,11 @@ If CONSOLE is nil, the selected console is used.
 
 DEFUN("console-enable-input", Fconsole_enable_input, 1, 1, 0,	/*
 Enable input on console CONSOLE.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	struct console *con = decode_console(console);
@@ -740,7 +808,11 @@ Enable input on console CONSOLE.
 
 DEFUN("console-disable-input", Fconsole_disable_input, 1, 1, 0,	/*
 Disable input on console CONSOLE.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	struct console *con = decode_console(console);
@@ -754,7 +826,11 @@ Return t if CONSOLE is on a window system.
 If CONSOLE is nil, the selected console is used.
 This generally means that there is support for the mouse, the menubar,
 the toolbar, glyphs, etc.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 	Lisp_Object type = CONSOLE_TYPE(decode_console(console));
@@ -793,7 +869,11 @@ After resumption run the normal hook `suspend-resume-hook'.
 
 Some operating systems cannot stop the Emacs process and resume it later.
 On such systems, Emacs will start a subshell and wait for it to exit.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (stuffstring))
 {
 	int speccount = specpdl_depth();
@@ -878,7 +958,11 @@ Otherwise it is assumed to be the selected console.
 
 Some operating systems cannot stop processes and resume them later.
 On such systems, who knows what will happen.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 #ifdef HAVE_TTY
@@ -914,7 +998,11 @@ On such systems, who knows what will happen.
 DEFUN("resume-console", Fresume_console, 1, 1, "",	/*
 Re-initialize a previously suspended console.
 For tty consoles, do stuff to the tty to make it sane again.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (console))
 {
 #ifdef HAVE_TTY
@@ -959,8 +1047,14 @@ Optional fourth arg QUIT if non-nil specifies character to use for quitting.
 Optional fifth arg CONSOLE specifies console to make changes to; nil means
 the selected console.
 See also `current-input-mode'.
+<<<<<<< HEAD
 							 */
       (ignored, flow, meta, quit, console)) {
+=======
+*/
+      (ignored, flow, meta, quit, console))
+{
+>>>>>>> origin/master
 	struct console *con = decode_console(console);
 	int meta_key = (!CONSOLE_TTY_P(con) ? 1 :
 			EQ(meta, Qnil) ? 0 : EQ(meta, Qt) ? 1 : 2);
@@ -998,8 +1092,14 @@ QUIT is the character Emacs currently uses to quit.
 FLOW, and META are only meaningful for TTY consoles.
 The elements of this list correspond to the arguments of
 `set-input-mode'.
+<<<<<<< HEAD
 								 */
       (console)) {
+=======
+*/
+      (console))
+{
+>>>>>>> origin/master
 	struct console *con = decode_console(console);
 	Lisp_Object flow, meta, quit;
 

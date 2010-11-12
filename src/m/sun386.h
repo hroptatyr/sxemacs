@@ -86,4 +86,12 @@ NOTE-END  */
 /* XEmacs addition? */
 #undef RUN_TIME_REMAP
 #undef UNEXEC
+<<<<<<< HEAD
 #define UNEXEC "unexec.o"
+=======
+
+/* 
+ * everything is pdump now. --SY
+ * #define UNEXEC "unexec.o"
+ */
+>>>>>>> origin/master

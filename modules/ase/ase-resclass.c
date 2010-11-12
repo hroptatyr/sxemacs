@@ -39,7 +39,11 @@
 
 #include "config.h"
 #include "sxemacs.h"
+<<<<<<< HEAD
 #include "ent.h"
+=======
+#include "ent/ent.h"
+>>>>>>> origin/master
 #include "ase-resclass.h"
 
 #define EMOD_ASE_DEBUG_RESC(args...)	EMOD_ASE_DEBUG("[RESC]: " args)
@@ -1519,7 +1523,11 @@ ent_resclass_lifttable_init(void)
 /* ###autoload */
 DEFUN("make-residue-class-ring", Fmake_residue_class_ring, 1, 1, 0, /*
 Return a residue class ring of size MODULUS (>= 2).
+<<<<<<< HEAD
 								    */
+=======
+*/
+>>>>>>> origin/master
        (modulus))
 {
 	CHECK_INTEGER(modulus);
@@ -1536,7 +1544,11 @@ Return a residue class ring of size MODULUS (>= 2).
 /* ###autoload */
 DEFUN("make-residue-class", Fmake_residue_class, 2, 2, 0, /*
 Return the residue class of ELEMENT in RING.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       (element, ring))
 {
 	CHECK_ASE_RESC_RNG(ring);
@@ -1548,7 +1560,11 @@ Return the residue class of ELEMENT in RING.
 /* ###autoload */
 DEFUN("residue-class-ring", Fresidue_class_ring, 1, 1, 0, /*
 Return the parental residue class ring (the world) of RESCLASS.
+<<<<<<< HEAD
 							  */
+=======
+*/
+>>>>>>> origin/master
       (resclass))
 {
 	CHECK_ASE_RESC_ELM(resclass);
@@ -1597,7 +1613,11 @@ to the ring of rational integers.
 /* ###autoload */
 DEFUN ("residue-class-ring-p", Fresidue_class_ring_p, 1, 1, 0, /*
 Return t if OBJECT is a residue class ring, nil otherwise.
+<<<<<<< HEAD
 							       */
+=======
+*/
+>>>>>>> origin/master
        (object))
 {
 	return ASE_RESC_RNG_P(object) ? Qt : Qnil;
@@ -1606,7 +1626,11 @@ Return t if OBJECT is a residue class ring, nil otherwise.
 /* ###autoload */
 DEFUN ("residue-class-p", Fresidue_class_p, 1, 1, 0, /*
 Return t if OBJECT is a residue class, nil otherwise.
+<<<<<<< HEAD
 						     */
+=======
+*/
+>>>>>>> origin/master
        (object))
 {
 	return ASE_RESC_ELM_P(object) ? Qt : Qnil;

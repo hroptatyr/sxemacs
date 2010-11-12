@@ -96,7 +96,11 @@ static void init(void)
 
 DEFUN("show-balloon-help", Fshow_balloon_help, 1, 1, 0,	/*
 Show balloon help.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (string))
 {
 	char *p;
@@ -113,7 +117,11 @@ Show balloon help.
 
 DEFUN("hide-balloon-help", Fhide_balloon_help, 0, 0, 0,	/*
 Hide balloon help.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	init();
@@ -126,7 +134,11 @@ Hide balloon help.
 DEFUN("balloon-help-move-to-pointer", Fballoon_help_move_to_pointer, 0, 0, 0,	/*
 Move the balloon help to the place where the pointer currently
 resides.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	init();

@@ -777,7 +777,11 @@ void structure_type_create_hash_table(void)
 
 DEFUN("hash-table-p", Fhash_table_p, 1, 1, 0,	/*
 Return t if OBJECT is a hash table, else nil.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return HASH_TABLEP(object) ? Qt : Qnil;
@@ -830,7 +834,11 @@ that a key-value pair will be removed only if the value and the key remain
 unmarked outside of weak hash tables.  The pair will remain in the
 hash table if the value or key are pointed to by something other than a weak
 hash table, even if the other is not.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	int i = 0;
@@ -885,7 +893,11 @@ if (!NILP (var)) hash_table_##var##_validate (Q##var, var, ERROR_ME);
 DEFUN("copy-hash-table", Fcopy_hash_table, 1, 1, 0,	/*
 Return a new hash table containing the same keys and values as HASH-TABLE.
 The keys and values will not themselves be copied.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (hash_table))
 {
 	const hash_table_t ht_old = xhash_table(hash_table);
@@ -995,7 +1007,11 @@ dict_ht_get(hash_table_t ht, Lisp_Object key, Lisp_Object _default)
 DEFUN("gethash", Fgethash, 2, 3, 0,	/*
 Find hash value for KEY in HASH-TABLE.
 If there is no corresponding value, return DEFAULT (which defaults to nil).
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (key, hash_table, default_))
 {
 	return dict_ht_get(xhash_table(hash_table), key, default_);
@@ -1021,7 +1037,11 @@ dict_ht_put(hash_table_t ht, Lisp_Object key, Lisp_Object value)
 
 DEFUN("puthash", Fputhash, 3, 3, 0,	/*
 Hash KEY to VALUE in HASH-TABLE.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (key, value, hash_table))
 {
 	return dict_ht_put(xhash_table(hash_table), key, value);
@@ -1067,7 +1087,11 @@ dict_ht_remove(hash_table_t ht, Lisp_Object key)
 DEFUN("remhash", Fremhash, 2, 2, 0,	/*
 Remove the entry for KEY from HASH-TABLE.
 Do nothing if there is no entry for KEY in HASH-TABLE.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (key, hash_table))
 {
 	return dict_ht_remove(xhash_table(hash_table), key);
@@ -1075,7 +1099,11 @@ Do nothing if there is no entry for KEY in HASH-TABLE.
 
 DEFUN("clrhash", Fclrhash, 1, 1, 0,	/*
 Remove all entries from HASH-TABLE, leaving it empty.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (hash_table))
 {
 	hash_table_t ht = xhash_table(hash_table);
@@ -1094,7 +1122,11 @@ Remove all entries from HASH-TABLE, leaving it empty.
 
 DEFUN("hash-table-count", Fhash_table_count, 1, 1, 0,	/*
 Return the number of entries in HASH-TABLE.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (hash_table))
 {
 	return make_int(xhash_table(hash_table)->count);
@@ -1103,7 +1135,11 @@ Return the number of entries in HASH-TABLE.
 DEFUN("hash-table-test", Fhash_table_test, 1, 1, 0,	/*
 Return the test function of HASH-TABLE.
 This can be one of `eq', `eql' or `equal'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (hash_table))
 {
 	hash_table_test_f fun = xhash_table(hash_table)->test_function;
@@ -1121,7 +1157,11 @@ dict_ht_size(const hash_table_t ht)
 DEFUN("hash-table-size", Fhash_table_size, 1, 1, 0,	/*
 Return the size of HASH-TABLE.
 This is the current number of slots in HASH-TABLE, whether occupied or not.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (hash_table))
 {
 	return make_int(xhash_table(hash_table)->size);
@@ -1131,7 +1171,11 @@ DEFUN("hash-table-rehash-size", Fhash_table_rehash_size, 1, 1, 0,	/*
 Return the current rehash size of HASH-TABLE.
 This is a float greater than 1.0; the factor by which HASH-TABLE
 is enlarged when the rehash threshold is exceeded.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (hash_table))
 {
 	return make_float(xhash_table(hash_table)->rehash_size);
@@ -1141,7 +1185,11 @@ DEFUN("hash-table-rehash-threshold", Fhash_table_rehash_threshold, 1, 1, 0,	/*
 Return the current rehash threshold of HASH-TABLE.
 This is a float between 0.0 and 1.0; the maximum `load factor' of HASH-TABLE,
 beyond which the HASH-TABLE is enlarged by rehashing.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (hash_table))
 {
 	return make_float(xhash_table(hash_table)->rehash_threshold);
@@ -1150,7 +1198,11 @@ beyond which the HASH-TABLE is enlarged by rehashing.
 DEFUN("hash-table-weakness", Fhash_table_weakness, 1, 1, 0,	/*
 Return the weakness of HASH-TABLE.
 This can be one of `nil', `key-and-value', `key-or-value', `key' or `value'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (hash_table))
 {
 	switch (xhash_table(hash_table)->weakness) {
@@ -1178,7 +1230,11 @@ This can be one of `nil', `key-and-value', `key-or-value', `key' or `value'.
 DEFUN("hash-table-type", Fhash_table_type, 1, 1, 0,	/*
 Return the type of HASH-TABLE.
 This can be one of `non-weak', `weak', `key-weak' or `value-weak'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (hash_table))
 {
 	switch (xhash_table(hash_table)->weakness) {
@@ -1211,7 +1267,11 @@ each key and value in HASH-TABLE.
 
 FUNCTION may not modify HASH-TABLE, with the one exception that FUNCTION
 may remhash or puthash the entry currently being processed by FUNCTION.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (function, hash_table))
 {
 	const hash_table_t ht = xhash_table(hash_table);
@@ -1526,7 +1586,11 @@ internal_hash(const Lisp_Object obj, int depth)
 DEFUN("sxhash", Fsxhash, 1, 1, 0,	/*
 Return a hash value for OBJECT.
 \(equal obj1 obj2) implies (= (sxhash obj1) (sxhash obj2)).
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return make_int(internal_hash(object, 0));

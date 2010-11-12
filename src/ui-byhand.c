@@ -14,7 +14,11 @@
 DEFUN("gtk-box-query-child-packing", Fgtk_box_query_child_packing, 2, 2, 0,	/*
 Returns information about how CHILD is packed into BOX.
 Return value is a list of (EXPAND FILL PADDING PACK_TYPE).
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (box, child))
 {
 	gboolean expand, fill;
@@ -48,7 +52,11 @@ Return value is a list of (EXPAND FILL PADDING PACK_TYPE).
 /* void gtk_button_box_get_child_size_default (gint *min_width, gint *min_height); */
 DEFUN("gtk-button-box-get-child-size-default", Fgtk_button_box_get_child_size_default, 0, 0, 0,	/*
 Return a cons cell (WIDTH . HEIGHT) of the default button box child size.
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	gint width, height;
@@ -61,7 +69,11 @@ Return a cons cell (WIDTH . HEIGHT) of the default button box child size.
 /* void gtk_button_box_get_child_ipadding_default (gint *ipad_x, gint *ipad_y);  */
 DEFUN("gtk-button-box-get-child-ipadding-default", Fgtk_button_box_get_child_ipadding_default, 0, 0, 0,	/*
 Return a cons cell (X . Y) of the default button box ipadding.
+<<<<<<< HEAD
 													 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	gint x, y;
@@ -75,7 +87,11 @@ Return a cons cell (X . Y) of the default button box ipadding.
    gint *min_width, gint *min_height); */
 DEFUN("gtk-button-box-get-child-size", Fgtk_button_box_get_child_size, 1, 1, 0,	/*
 Get the current size of a child in the buttonbox BOX.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (box))
 {
 	gint width, height;
@@ -95,7 +111,11 @@ Get the current size of a child in the buttonbox BOX.
 /* void gtk_button_box_get_child_ipadding (GtkButtonBox *widget, gint *ipad_x, gint *ipad_y); */
 DEFUN("gtk-button-box-get-child-ipadding", Fgtk_button_box_get_child_ipadding, 1, 1, 0,	/*
 Return a cons cell (X . Y) of the current buttonbox BOX ipadding.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (box))
 {
 	gint x, y;
@@ -119,7 +139,11 @@ Return a cons cell (X . Y) of the current buttonbox BOX ipadding.
 */
 DEFUN("gtk-calendar-get-date", Fgtk_calendar_get_date, 1, 1, 0,	/*
 Return a list of (YEAR MONTH DAY) from the CALENDAR object.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (calendar))
 {
 	guint year, month, day;
@@ -143,7 +167,11 @@ Return a list of (YEAR MONTH DAY) from the CALENDAR object.
 */
 DEFUN("gtk-clist-get-text", Fgtk_clist_get_text, 3, 3, 0,	/*
 Returns the text from GtkCList OBJ cell at coordinates ROW, COLUMN.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (obj, row, column))
 {
 	gchar *text = NULL;
@@ -178,7 +206,11 @@ Returns the text from GtkCList OBJ cell at coordinates ROW, COLUMN.
 			     	   gint *column); */
 DEFUN("gtk-clist-get-selection-info", Fgtk_clist_get_selection, 3, 3, 0,	/*
 Returns a cons cell of (ROW . COLUMN) of the GtkCList OBJ at coordinates X, Y.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (obj, x, y))
 {
 	gint row, column;
@@ -199,7 +231,11 @@ Returns a cons cell of (ROW . COLUMN) of the GtkCList OBJ at coordinates X, Y.
 
 DEFUN("gtk-clist-get-pixmap", Fgtk_clist_get_pixmap, 3, 3, 0,	/*
 Return a cons of (pixmap . mask) at ROW,COLUMN in CLIST.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (clist, row, column))
 {
 	GdkPixmap *pixmap = NULL;
@@ -223,7 +259,11 @@ Return a cons of (pixmap . mask) at ROW,COLUMN in CLIST.
 
 DEFUN("gtk-clist-get-pixtext", Fgtk_clist_get_pixtext, 3, 3, 0,	/*
 Return a list of (pixmap mask text) at ROW,COLUMN in CLIST.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (clist, row, column))
 {
 	GdkPixmap *pixmap = NULL;
@@ -255,7 +295,11 @@ Return a list of (pixmap mask text) at ROW,COLUMN in CLIST.
 /* void gtk_color_selection_get_color(GtkColorSelection *colorsel, gdouble *color); */
 DEFUN("gtk-color-selection-get-color", Fgtk_color_selection_get_color, 1, 1, 0,	/*
 Return a list of (RED GREEN BLUE ALPHA) from the GtkColorSelection OBJECT.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	gdouble rgba[4];
@@ -279,7 +323,11 @@ Return a list of (RED GREEN BLUE ALPHA) from the GtkColorSelection OBJECT.
 DEFUN("gtk-editable-insert-text", Fgtk_editable_insert_text, 3, 3, 0,	/*
 Insert text STRINT at POS in GtkEditable widget OBJ.
 Returns the new position of the cursor in the widget.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (obj, string, pos))
 {
 	gint the_pos;
@@ -303,7 +351,11 @@ Returns the new position of the cursor in the widget.
 
 DEFUN("gtk-pixmap-get", Fgtk_pixmap_get, 1, 1, 0,	/*
 Return a cons cell of (PIXMAP . MASK) from GtkPixmap OBJECT.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	GdkPixmap *pixmap, *mask;
@@ -322,7 +374,11 @@ Return a cons cell of (PIXMAP . MASK) from GtkPixmap OBJECT.
 
 DEFUN("gtk-curve-get-vector", Fgtk_curve_get_vector, 2, 2, 0,	/*
 Returns a vector of LENGTH points representing the curve of CURVE.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (curve, length))
 {
 	gfloat *vector = NULL;
@@ -351,7 +407,11 @@ Returns a vector of LENGTH points representing the curve of CURVE.
 
 DEFUN("gtk-curve-set-vector", Fgtk_curve_set_vector, 2, 2, 0,	/*
 Set the vector of points on CURVE to VECTOR.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (curve, vector))
 {
 	gfloat *c_vector = NULL;
@@ -381,7 +441,11 @@ Set the vector of points on CURVE to VECTOR.
 
 DEFUN("gtk-label-get", Fgtk_label_get, 1, 1, 0,	/*
 Return the text of LABEL.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (label))
 {
 	gchar *string;
@@ -399,7 +463,11 @@ Return the text of LABEL.
 
 DEFUN("gtk-notebook-query-tab-label-packing", Fgtk_notebook_query_tab_label_packing, 2, 2, 0,	/*
 Return a list of packing information (EXPAND FILL PACK_TYPE) for CHILD in NOTEBOOK.
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       (notebook, child))
 {
 	gboolean expand, fill;
@@ -428,7 +496,11 @@ Return a list of packing information (EXPAND FILL PACK_TYPE) for CHILD in NOTEBO
 
 DEFUN("gtk-widget-get-pointer", Fgtk_widget_get_pointer, 1, 1, 0,	/*
 Return the pointer position relative to WIDGET as a cons of (X . Y).
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (widget))
 {
 	gint x, y;
@@ -532,7 +604,11 @@ generic_toolbar_insert_item(Lisp_Object toolbar,
 
 DEFUN("gtk-toolbar-append-item", Fgtk_toolbar_append_item, 6, 7, 0,	/*
 Appends a new button to the given toolbar.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (toolbar, text, tooltip_text, tooltip_private_text, icon, callback, data))
 {
 	return (generic_toolbar_insert_item
@@ -542,7 +618,11 @@ Appends a new button to the given toolbar.
 
 DEFUN("gtk-toolbar-prepend-item", Fgtk_toolbar_prepend_item, 6, 7, 0,	/*
 Adds a new button to the beginning (left or top edges) of the given toolbar.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (toolbar, text, tooltip_text, tooltip_private_text, icon, callback, data))
 {
 	return (generic_toolbar_insert_item
@@ -552,7 +632,11 @@ Adds a new button to the beginning (left or top edges) of the given toolbar.
 
 DEFUN("gtk-toolbar-insert-item", Fgtk_toolbar_insert_item, 7, 8, 0,	/*
 Adds a new button to the beginning (left or top edges) of the given toolbar.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (toolbar, text, tooltip_text, tooltip_private_text, icon, callback,
        position, data))
 {
@@ -608,8 +692,14 @@ GtkCTreeNode *node,
 gint          depth,
 GtkCTreeFunc  func,
 gpointer      data);
+<<<<<<< HEAD
 							 */
       (ctree, node, func, data, childfirstp, depth)) {
+=======
+*/
+      (ctree, node, func, data, childfirstp, depth))
+{
+>>>>>>> origin/master
 	struct gcpro gcpro1, gcpro2, gcpro3;
 	Lisp_Object closure = Qnil;
 

@@ -402,7 +402,11 @@ int main()
 		resvar[=user],
 		resvar[=sys],
 		resvar[=sys])
+<<<<<<< HEAD
         if test "${malloc_check}" == "" ; then
+=======
+        if test "${malloc_check}" = "" ; then
+>>>>>>> origin/master
 		unset MALLOC_CHECK_
         else 
         	MALLOC_CHECK_=${malloc_check}

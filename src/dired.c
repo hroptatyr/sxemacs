@@ -38,7 +38,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "dynacat.h"
 
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #define USE_D_TYPE 1
@@ -635,7 +639,11 @@ Optional argument FILES-ONLY can be one of:
   subdirectories) in DIRECTORY
 - subdir  to return only subdirectories -- but *NOT* symlinks to
   directories -- in DIRECTORY
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
       (directory, full, match, result_type, files_only))
 {
 	Lisp_Object handler;
@@ -708,7 +716,11 @@ case symlinks to directories are not recurred.
 
 Optional argument BLOOM-FILTER specifies a bloom filter where
 to put results in addition to the ordinary result list.
+<<<<<<< HEAD
 								*/
+=======
+*/
+>>>>>>> origin/master
       (directory, full, match, result_type, files_only, maxdepth,
        symlink_is_file, bloom_filter))
 #if 0
@@ -781,7 +793,11 @@ File names which end with any member of `completion-ignored-extensions'
 are not considered as possible completions for PARTIAL-FILENAME unless
 there is no other possible completion. `completion-ignored-extensions'
 is not applied to the names of directories.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (partial_filename, directory))
 {
 	/* This function can GC.  GC checked 1996.04.06. */
@@ -808,7 +824,11 @@ is not applied to the names of directories.
 DEFUN("file-name-all-completions", Ffile_name_all_completions, 2, 2, 0,	/*
 Return a list of all completions of PARTIAL-FILENAME in DIRECTORY.
 These are all file names in DIRECTORY which begin with PARTIAL-FILENAME.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (partial_filename, directory))
 {
 	/* This function can GC. GC checked 1997.06.04. */
@@ -1104,7 +1124,11 @@ Return the longest prefix common to all user names starting with
 PARTIAL-USERNAME.  If there is only one and PARTIAL-USERNAME matches
 it exactly, returns t.  Return nil if there is no user name starting
 with PARTIAL-USERNAME.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (partial_username))
 {
 	return user_name_completion(partial_username, 0, NULL);
@@ -1123,7 +1147,11 @@ PARTIAL-USERNAME matches it exactly, the car is t.  The car is nil if
 there is no user name starting with PARTIAL-USERNAME.  The cdr of the
 result is non-nil if and only if the completion returned in the car
 was unique.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (partial_username))
 {
 	int uniq;
@@ -1135,7 +1163,11 @@ was unique.
 DEFUN("user-name-all-completions", Fuser_name_all_completions, 1, 1, 0,	/*
 Return a list of all user name completions from PARTIAL-USERNAME.
 These are all the user names which begin with PARTIAL-USERNAME.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (partial_username))
 {
 	return user_name_completion(partial_username, 1, NULL);
@@ -1340,7 +1372,11 @@ First integer has high-order 16 bits of time, second has low 16 bits.
 11. Device number.
 
 If file does not exist, returns nil.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC. GC checked 1997.06.04. */

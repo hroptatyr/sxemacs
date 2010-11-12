@@ -29,7 +29,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "objects-tty.h"
 #ifdef MULE
 #include "device.h"
+<<<<<<< HEAD
 #include "mule-charset.h"
+=======
+#include "mule/mule-charset.h"
+>>>>>>> origin/master
 #endif
 #include "skiplist.h"
 
@@ -99,7 +103,11 @@ DEFUN("register-tty-color-index", Fregister_tty_color_index, 6, 7, 0, /*
 Register COLOR as recognized by TERM with index IDX and RED, GREEN and BLUE
 components.
 RED, GREEN and BLUE is expected to be in the range 0 through 65535
+<<<<<<< HEAD
 								       */
+=======
+*/
+>>>>>>> origin/master
       (term,color,idx,red,green,blue,bold))
 {
 	Lisp_Object sym_term = Qnil;
@@ -198,7 +206,11 @@ If it is found, return a list (INDEX BOLD) used to set the foreground to the col
 If it is not found, return nil.
 If NEAREST is non-nil and an exact match was not found, find and return
 the nearest available color.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (color,device,nearest))
 {
 	Lisp_Object result = Qnil;
@@ -322,7 +334,11 @@ the nearest available color.
 DEFUN("tty-registered-color-list", Ftty_registered_color_list, 0, 1, 0,	/*
 Return a list of the registered TTY colors FOR DEVICE.
 DEVICE defaults to the selected device if omitted.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	Lisp_Object result = Qnil;

@@ -428,7 +428,11 @@ DEFUN("valid-specifier-type-p", Fvalid_specifier_type_p, 1, 1, 0,	/*
 Given a SPECIFIER-TYPE, return non-nil if it is valid.
 Valid types are 'generic, 'integer, 'boolean, 'color, 'font, 'image,
 'face-boolean, and 'toolbar.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (specifier_type))
 {
 	return valid_specifier_type_p(specifier_type) ? Qt : Qnil;
@@ -436,7 +440,11 @@ Valid types are 'generic, 'integer, 'boolean, 'color, 'font, 'image,
 
 DEFUN("specifier-type-list", Fspecifier_type_list, 0, 0, 0,	/*
 Return a list of valid specifier types.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Fcopy_sequence(Vspecifier_type_list);
@@ -557,8 +565,14 @@ functions `make-generic-specifier', `make-integer-specifier',
 `make-face-boolean-specifier', `make-gutter-size-specifier',
 `make-gutter-visible-specifier', `default-toolbar', `default-gutter',
 and `current-display-table'.
+<<<<<<< HEAD
 							 */
       (type)) {
+=======
+*/
+      (type))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	struct specifier_methods *meths = decode_specifier_type(type, ERROR_ME);
 
@@ -572,7 +586,11 @@ A specifier is an object that can be used to keep track of a property
 whose value can be per-buffer, per-window, per-frame, or per-device,
 and can further be restricted to a particular console-type or device-class.
 See `make-specifier'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return SPECIFIERP(object) ? Qt : Qnil;
@@ -580,7 +598,11 @@ See `make-specifier'.
 
 DEFUN("specifier-type", Fspecifier_type, 1, 1, 0,	/*
 Return the type of SPECIFIER.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (specifier))
 {
 	CHECK_SPECIFIER(specifier);
@@ -595,7 +617,11 @@ DEFUN("valid-specifier-locale-p", Fvalid_specifier_locale_p, 1, 1, 0,	/*
 Return t if LOCALE is a valid specifier locale.
 Valid locales are devices, frames, windows, buffers, and 'global.
 \(nil is not valid.)
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (locale))
 {
 	/* This cannot GC. */
@@ -615,7 +641,11 @@ value in that domain).  Valid domains are image instances, windows, frames,
 and devices. \(nil is not valid.) image instances are pseudo-domains since
 instantiation will actually occur in the window the image instance itself is
 instantiated in.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (domain))
 {
 	/* This cannot GC. */
@@ -633,7 +663,11 @@ Given a specifier LOCALE-TYPE, return non-nil if it is valid.
 Valid locale types are 'global, 'device, 'frame, 'window, and 'buffer.
 \(Note, however, that in functions that accept either a locale or a locale
 type, 'global is considered an individual locale.)
+<<<<<<< HEAD
        */
+=======
+*/
+>>>>>>> origin/master
       (locale_type))
 {
 	/* This cannot GC. */
@@ -657,7 +691,11 @@ static void check_valid_locale_or_locale_type(Lisp_Object locale)
 
 DEFUN("specifier-locale-type-from-locale", Fspecifier_locale_type_from_locale, 1, 1, 0,	/*
 Given a specifier LOCALE, return its type.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (locale))
 {
 	/* This cannot GC. */
@@ -752,7 +790,11 @@ Lisp_Object decode_domain(Lisp_Object domain)
 DEFUN("valid-specifier-tag-p", Fvalid_specifier_tag_p, 1, 1, 0,	/*
 Return non-nil if TAG is a valid specifier tag.
 See also `valid-specifier-tag-set-p'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (tag))
 {
 	return (valid_console_type_p(tag) ||
@@ -785,7 +827,11 @@ all tags in the tag set attached to that instantiator.
 
 Most of the time, a tag set is not specified, and the instantiator
 gets a null tag set, which matches all devices.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (tag_set))
 {
 	Lisp_Object rest;
@@ -863,7 +909,11 @@ Canonicalize the given tag set.
 Two canonicalized tag sets can be compared with `equal' to see if they
 represent the same tag set. (Specifically, canonicalizing involves
 sorting by symbol name and removing duplicates.)
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (tag_set))
 {
 	if (NILP(Fvalid_specifier_tag_set_p(tag_set)))
@@ -902,7 +952,11 @@ Return non-nil if DEVICE matches specifier tag set TAG-SET.
 This means that DEVICE matches each tag in the tag set. (Every
 tag recognized by SXEmacs has a predicate associated with it that
 specifies which devices match it.)
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       (device, tag_set))
 {
 	CHECK_LIVE_DEVICE(device);
@@ -923,7 +977,11 @@ device.  If PREDICATE is omitted, the tag matches all devices.
 You can redefine an existing user-defined specifier tag.  However,
 you cannot redefine the built-in specifier tags (the device types
 and classes) or the symbols nil, t, 'all, or 'global.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (tag, predicate))
 {
 	Lisp_Object assoc, devcons, concons;
@@ -1011,7 +1069,11 @@ void setup_device_initial_specifier_tags(struct device *d)
 DEFUN("device-matching-specifier-tag-list", Fdevice_matching_specifier_tag_list, 0, 1, 0,	/*
 Return a list of all specifier tags matching DEVICE.
 DEVICE defaults to the selected device if omitted.
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	struct device *d = decode_device(device);
@@ -1035,7 +1097,11 @@ DEVICE defaults to the selected device if omitted.
 DEFUN("specifier-tag-list", Fspecifier_tag_list, 0, 0, 0,	/*
 Return a list of all currently-defined specifier tags.
 This includes the built-in ones (the device types and classes).
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	Lisp_Object list = Qnil, rest;
@@ -1055,7 +1121,11 @@ This includes the built-in ones (the device types and classes).
 
 DEFUN("specifier-tag-predicate", Fspecifier_tag_predicate, 1, 1, 0,	/*
 Return the predicate for the given specifier tag.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (tag))
 {
 	/* The return value of this function must be GCPRO'd. */
@@ -1150,7 +1220,11 @@ check_valid_instantiator(Lisp_Object instantiator,
 
 DEFUN("check-valid-instantiator", Fcheck_valid_instantiator, 2, 2, 0,	/*
 Signal an error if INSTANTIATOR is invalid for SPECIFIER-TYPE.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (instantiator, specifier_type))
 {
 	struct specifier_methods *meths = decode_specifier_type(specifier_type,
@@ -1161,7 +1235,11 @@ Signal an error if INSTANTIATOR is invalid for SPECIFIER-TYPE.
 
 DEFUN("valid-instantiator-p", Fvalid_instantiator_p, 2, 2, 0,	/*
 Return non-nil if INSTANTIATOR is valid for SPECIFIER-TYPE.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (instantiator, specifier_type))
 {
 	struct specifier_methods *meths = decode_specifier_type(specifier_type,
@@ -1208,7 +1286,11 @@ check_valid_inst_list(Lisp_Object inst_list, struct specifier_methods *meths,
 
 DEFUN("check-valid-inst-list", Fcheck_valid_inst_list, 2, 2, 0,	/*
 Signal an error if INST-LIST is invalid for specifier type TYPE.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (inst_list, type))
 {
 	struct specifier_methods *meths = decode_specifier_type(type, ERROR_ME);
@@ -1218,7 +1300,11 @@ Signal an error if INST-LIST is invalid for specifier type TYPE.
 
 DEFUN("valid-inst-list-p", Fvalid_inst_list_p, 2, 2, 0,	/*
 Return non-nil if INST-LIST is valid for specifier type TYPE.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (inst_list, type))
 {
 	struct specifier_methods *meths = decode_specifier_type(type, ERROR_ME);
@@ -1256,7 +1342,11 @@ check_valid_spec_list(Lisp_Object spec_list, struct specifier_methods *meths,
 
 DEFUN("check-valid-spec-list", Fcheck_valid_spec_list, 2, 2, 0,	/*
 Signal an error if SPEC-LIST is invalid for specifier type TYPE.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (spec_list, type))
 {
 	struct specifier_methods *meths = decode_specifier_type(type, ERROR_ME);
@@ -1266,7 +1356,11 @@ Signal an error if SPEC-LIST is invalid for specifier type TYPE.
 
 DEFUN("valid-spec-list-p", Fvalid_spec_list_p, 2, 2, 0,	/*
 Return non-nil if SPEC-LIST is valid for specifier type TYPE.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (spec_list, type))
 {
 	struct specifier_methods *meths = decode_specifier_type(type, ERROR_ME);
@@ -1892,8 +1986,14 @@ before adding the new spec.
 
 You can retrieve the specifications for a particular locale or locale type
 with the function `specifier-spec-list' or `specifier-specs'.
+<<<<<<< HEAD
 								 */
       (specifier, instantiator, locale, tag_set, how_to_add)) {
+=======
+*/
+      (specifier, instantiator, locale, tag_set, how_to_add))
+{
+>>>>>>> origin/master
 	enum spec_add_meth add_meth;
 	Lisp_Object inst_list;
 	struct gcpro gcpro1;
@@ -1944,7 +2044,11 @@ the existing ones, and has the same semantics as for
 
 In many circumstances, the higher-level function `set-specifier' is
 more convenient and should be used instead.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (specifier, spec_list, how_to_add))
 {
 	enum spec_add_meth add_meth;
@@ -2055,8 +2159,14 @@ subset of (or possibly equal to) the instantiator's tag set are returned.
 no instantiators will be screened out.) If EXACT-P is non-nil, however,
 TAG-SET must be equal to an instantiator's tag set for the instantiator
 to be returned.
+<<<<<<< HEAD
 								 */
       (specifier, locale, tag_set, exact_p)) {
+=======
+*/
+      (specifier, locale, tag_set, exact_p))
+{
+>>>>>>> origin/master
 	struct specifier_spec_list_closure cl;
 	struct gcpro gcpro1, gcpro2;
 
@@ -2090,8 +2200,14 @@ instead of the inst-pair.
 'any, a one-element list containing nil will be returned rather
 than just nil, to distinguish this case from there being no
 instantiators at all.
+<<<<<<< HEAD
 							 */
       (specifier, locale, tag_set, exact_p)) {
+=======
+*/
+      (specifier, locale, tag_set, exact_p))
+{
+>>>>>>> origin/master
 	if (!NILP(Fvalid_specifier_locale_p(locale)) ||
 	    (CONSP(locale) && !NILP(Fvalid_specifier_locale_p(XCAR(locale))) &&
 	     NILP(XCDR(locale)))) {
@@ -2150,8 +2266,14 @@ The default value of nil is a subset of all tag sets, so in this case
 no instantiators will be screened out. If EXACT-P is non-nil, however,
 TAG-SET must be equal to an instantiator's tag set for the instantiator
 to be removed.
+<<<<<<< HEAD
 							 */
       (specifier, locale, tag_set, exact_p)) {
+=======
+*/
+      (specifier, locale, tag_set, exact_p))
+{
+>>>>>>> origin/master
 	CHECK_SPECIFIER(specifier);
 	check_modifiable_specifier(specifier);
 
@@ -2226,8 +2348,14 @@ Optional argument HOW-TO-ADD specifies what to do with existing
 specifications in DEST.  If nil, then whichever locales or locale types
 are copied will first be completely erased in DEST.  Otherwise, it is
 the same as in `add-spec-to-specifier'.
+<<<<<<< HEAD
 							 */
       (specifier, dest, locale, tag_set, exact_p, how_to_add)) {
+=======
+*/
+      (specifier, dest, locale, tag_set, exact_p, how_to_add))
+{
+>>>>>>> origin/master
 	struct gcpro gcpro1;
 	struct copy_specifier_closure cl;
 
@@ -2305,7 +2433,11 @@ check_valid_specifier_matchspec(Lisp_Object matchspec,
 DEFUN("check-valid-specifier-matchspec", Fcheck_valid_specifier_matchspec, 2, 2, 0,	/*
 Signal an error if MATCHSPEC is invalid for SPECIFIER-TYPE.
 See `specifier-matching-instance' for a description of matchspecs.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (matchspec, specifier_type))
 {
 	struct specifier_methods *meths = decode_specifier_type(specifier_type,
@@ -2317,7 +2449,11 @@ See `specifier-matching-instance' for a description of matchspecs.
 DEFUN("valid-specifier-matchspec-p", Fvalid_specifier_matchspec_p, 2, 2, 0,	/*
 Return non-nil if MATCHSPEC is valid for SPECIFIER-TYPE.
 See `specifier-matching-instance' for a description of matchspecs.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (matchspec, specifier_type))
 {
 	struct specifier_methods *meths = decode_specifier_type(specifier_type,
@@ -2367,7 +2503,11 @@ any other inst-list, a specifier of the same type as SPECIFIER
 When you instance a specifier, you can explicitly request that the
 fallback not be consulted. (The C code does this, for example, when
 merging faces.) See `specifier-instance'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (specifier))
 {
 	CHECK_SPECIFIER(specifier);
@@ -2605,8 +2745,14 @@ value will be a font-instance object.  For glyphs, the returned value
 will be a string, pixmap, or subwindow.
 
 See also `specifier-matching-instance'.
+<<<<<<< HEAD
 								 */
       (specifier, domain, default_, no_fallback)) {
+=======
+*/
+      (specifier, domain, default_, no_fallback))
+{
+>>>>>>> origin/master
 	Lisp_Object instance;
 
 	CHECK_SPECIFIER(specifier);
@@ -2639,7 +2785,11 @@ implemented.)
 (This only makes sense with Mule support.) This makes it easy to choose a
 font that can display a particular character. (This is what redisplay
 does, in fact.)
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (specifier, matchspec, domain, default_, no_fallback))
 {
 	Lisp_Object instance;
@@ -2661,8 +2811,14 @@ This attempts to instantiate INST-LIST in the given DOMAIN,
 as if INST-LIST existed in a specification in SPECIFIER.  If
 the instantiation fails, DEFAULT is returned.  In most circumstances,
 you should not use this function; use `specifier-instance' instead.
+<<<<<<< HEAD
 											 */
       (specifier, domain, inst_list, default_)) {
+=======
+*/
+      (specifier, domain, inst_list, default_))
+{
+>>>>>>> origin/master
 	Lisp_Object val = Qunbound;
 	Lisp_Specifier *sp = XSPECIFIER(specifier);
 	struct gcpro gcpro1;
@@ -2692,7 +2848,11 @@ This function is analogous to `specifier-instance-from-inst-list'
 but allows for specification-matching as in `specifier-matching-instance'.
 See that function for a description of exactly how the matching process
 works.
+<<<<<<< HEAD
 														 */
+=======
+*/
+>>>>>>> origin/master
       (specifier, matchspec, domain, inst_list, default_))
 {
 	Lisp_Object val = Qunbound;
@@ -2881,8 +3041,14 @@ toolbar button whose `active-p' field is an expression to be
 evaluated.  Calling `set-specifier-dirty-flag' on the
 toolbar specifier will force the `active-p' fields to be
 recomputed.
+<<<<<<< HEAD
 									 */
       (specifier)) {
+=======
+*/
+      (specifier))
+{
+>>>>>>> origin/master
 	CHECK_SPECIFIER(specifier);
 	recompute_cached_specifier_everywhere(specifier);
 	return Qnil;
@@ -2943,7 +3109,11 @@ Return non-nil if OBJECT is a generic specifier.
 
 See `make-generic-specifier' for a description of possible generic
 instantiators.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return GENERIC_SPECIFIERP(object) ? Qt : Qnil;
@@ -2965,7 +3135,11 @@ Return non-nil if OBJECT is an integer specifier.
 
 See `make-integer-specifier' for a description of possible integer
 instantiators.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return INTEGER_SPECIFIERP(object) ? Qt : Qnil;
@@ -2987,7 +3161,11 @@ Return non-nil if OBJECT is a natnum (non-negative-integer) specifier.
 
 See `make-natnum-specifier' for a description of possible natnum
 instantiators.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return NATNUM_SPECIFIERP(object) ? Qt : Qnil;
@@ -3011,7 +3189,11 @@ Return non-nil if OBJECT is a boolean specifier.
 
 See `make-boolean-specifier' for a description of possible boolean
 instantiators.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return BOOLEAN_SPECIFIERP(object) ? Qt : Qnil;
@@ -3057,7 +3239,11 @@ Return non-nil if OBJECT is a display-table specifier.
 
 See `current-display-table' for a description of possible display-table
 instantiators.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return DISPLAYTABLE_SPECIFIERP(object) ? Qt : Qnil;

@@ -26,7 +26,15 @@
 # ifndef LD_SWITCH_SYSTEM
 # define LD_SWITCH_SYSTEM "-Bstatic"
 # endif
+<<<<<<< HEAD
 # define UNEXEC "unexsunos4.o"
+=======
+/*
+ * everythign is pdump now. --SY
+ * # define UNEXEC "unexsunos4.o"
+ */
+#undef UNEXEC
+>>>>>>> origin/master
 #endif				/* NOT_C_CODE */
 
 #define RUN_TIME_REMAP

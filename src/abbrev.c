@@ -256,7 +256,11 @@ Effective when explicitly called even when `abbrev-mode' is nil.
 Returns the abbrev symbol, if expansion took place.
 If no abbrev matched, but `pre-abbrev-expand-hook' changed the buffer,
 returns t.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	/* This function can GC */

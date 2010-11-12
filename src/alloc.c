@@ -1098,7 +1098,11 @@ series of cons cells.
 The pointers are accessed from Lisp with `car' and `cdr', and mutated with
 `setcar' and `setcdr' respectively.  For historical reasons, the aliases
 `rplaca' and `rplacd' (for `setcar' and `setcdr') are supported.
+<<<<<<< HEAD
                                 */
+=======
+*/
+>>>>>>> origin/master
       (car, cdr))
 {
 	/* This cannot GC. */
@@ -1137,7 +1141,11 @@ Lisp_Object noseeum_cons(Lisp_Object car, Lisp_Object cdr)
 DEFUN("list", Flist, 0, MANY, 0,	/*
 Return a newly created list with specified arguments as elements.
 Any number of arguments, even zero arguments, are allowed.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	Lisp_Object val = Qnil;
@@ -1206,7 +1214,11 @@ list6(Lisp_Object obj0, Lisp_Object obj1, Lisp_Object obj2, Lisp_Object obj3,
 
 DEFUN("make-list", Fmake_list, 2, 2, 0,	/*
 Return a new list of length LENGTH, with each element being OBJECT.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (length, object))
 {
 	CHECK_NATNUM(length);
@@ -2056,7 +2068,11 @@ Lisp_Object make_vector(size_t length, Lisp_Object object)
 DEFUN("make-vector", Fmake_vector, 2, 2, 0,	/*
 Return a new vector of length LENGTH, with each element being OBJECT.
 See also the function `vector'.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (length, object))
 {
 	CONCHECK_NATNUM(length);
@@ -2066,7 +2082,11 @@ See also the function `vector'.
 DEFUN("vector", Fvector, 0, MANY, 0,	/*
 Return a newly created vector with specified arguments as elements.
 Any number of arguments, even zero arguments, are allowed.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	Lisp_Vector *vecp = make_vector_internal(nargs);
@@ -2251,7 +2271,11 @@ make_bit_vector_from_byte_vector(unsigned char *bytevec, size_t length)
 DEFUN("make-bit-vector", Fmake_bit_vector, 2, 2, 0,	/*
 Return a new bit vector of length LENGTH. with each bit set to BIT.
 BIT must be one of the integers 0 or 1.  See also the function `bit-vector'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (length, bit))
 {
 	CONCHECK_NATNUM(length);
@@ -2263,7 +2287,11 @@ DEFUN("bit-vector", Fbit_vector, 0, MANY, 0,	/*
 Return a newly created bit vector with specified arguments as elements.
 Any number of arguments, even zero arguments, are allowed.
 Each argument must be one of the integers 0 or 1.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	int i;
@@ -2390,7 +2418,11 @@ that this function was defined with `(interactive)'.  If the arg is not
 specified, then that means the function is not interactive.
 This is terrible behavior which is retained for compatibility with old
 `.elc' files which expect these semantics.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 /* In a non-insane world this function would have this arglist...
@@ -2490,7 +2522,11 @@ DECLARE_FIXED_TYPE_ALLOC(symbol, Lisp_Symbol);
 DEFUN("make-symbol", Fmake_symbol, 1, 1, 0,	/*
 Return a newly allocated uninterned symbol whose name is NAME.
 Its value and function definition are void, and its property list is nil.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (name))
 {
 	Lisp_Object val;
@@ -2564,7 +2600,11 @@ DECLARE_FIXED_TYPE_ALLOC(marker, Lisp_Marker);
 
 DEFUN("make-marker", Fmake_marker, 0, 0, 0,	/*
 Return a new marker which does not point at any place.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	Lisp_Object val;
@@ -3157,7 +3197,11 @@ void set_string_char(Lisp_String * s, Charcount i, Emchar c)
 DEFUN("make-string", Fmake_string, 2, 2, 0,	/*
 Return a new string consisting of LENGTH copies of CHARACTER.
 LENGTH must be a non-negative integer.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (length, character))
 {
 	CHECK_NATNUM(length);
@@ -3197,7 +3241,11 @@ LENGTH must be a non-negative integer.
 
 DEFUN("string", Fstring, 0, MANY, 0,	/*
 Concatenate all the argument characters and make the result a string.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	Bufbyte *storage, *p;
@@ -3509,7 +3557,11 @@ Old:
 Make a copy of OBJECT in pure storage.
 Recursively copies contents of vectors and cons cells.
 Does not copy symbols.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return object;
@@ -4939,7 +4991,11 @@ where `PLIST' is a list of alternating keyword/value pairs providing
 more detailed information.
 Garbage collection happens automatically if you cons more than
 `gc-cons-threshold' bytes of Lisp data since previous garbage collection.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
@@ -5111,7 +5167,11 @@ Return the number of bytes consed since the last garbage collection.
 of all different kinds of objects, not just conses.
 
 If this value exceeds `gc-cons-threshold', a garbage collection happens.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC

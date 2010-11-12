@@ -98,7 +98,11 @@ static Lisp_Object default_error_handler(Lisp_Object data)
 
 DEFUN("really-early-error-handler", Freally_early_error_handler, 1, 1, 0,	/*
 You should almost certainly not be using this.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (x))
 {
 	/* This is an error handler used when we're running temacs and when
@@ -334,8 +338,14 @@ Invoke the editor command loop recursively.
 To get out of the recursive edit, a command can do `(throw 'exit nil)';
 that tells this function to return.
 Alternately, `(throw 'exit t)' makes this function signal an error.
+<<<<<<< HEAD
 							 */
       ()) {
+=======
+*/
+      ())
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Lisp_Object val;
 	int speccount = specpdl_depth();
@@ -485,7 +495,11 @@ static Lisp_Object command_loop_1(Lisp_Object dummy)
 DEFUN("command-loop-1", Fcommand_loop_1, 0, 0, 0,	/*
 Invoke the internals of the canonical editor command loop.
 Don't call this unless you know what you're doing.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	/* This function can GC */

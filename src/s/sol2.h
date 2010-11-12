@@ -69,11 +69,23 @@ extern int __xnet_getsockopt(int, int, int, void *, size_t *);
  */
 
 #undef UNEXEC
+<<<<<<< HEAD
 #if OS_RELEASE < 506
 #define UNEXEC "unexsol2.o"
 #else
 #define UNEXEC "unexsol2-6.o"
 #endif
+=======
+
+/*
+ * everythign is pdump now. --SY
+ * #if OS_RELEASE < 506
+ * #define UNEXEC "unexsol2.o"
+ * #else
+ * #define UNEXEC "unexsol2-6.o"
+ * #endif
+ */
+>>>>>>> origin/master
 
 #else				/* C_CODE */
 

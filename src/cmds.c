@@ -54,8 +54,14 @@ The characters that are moved over may be added to the current selection
 \(i.e. active region) if the Shift key is held down, a motion key is used
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
+<<<<<<< HEAD
 							 */
       (count, buffer)) {
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> origin/master
 	struct buffer *buf = decode_buffer(buffer, 1);
 	EMACS_INT n;
 
@@ -100,8 +106,14 @@ The characters that are moved over may be added to the current selection
 \(i.e. active region) if the Shift key is held down, a motion key is used
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
+<<<<<<< HEAD
 							 */
       (count, buffer)) {
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> origin/master
 	if (NILP(count))
 		count = make_int(-1);
 	else {
@@ -125,8 +137,14 @@ The characters that are moved over may be added to the current selection
 \(i.e. active region) if the Shift key is held down, a motion key is used
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
+<<<<<<< HEAD
 							 */
       (count, buffer)) {
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> origin/master
 	struct buffer *buf = decode_buffer(buffer, 1);
 	Bufpos pos2 = BUF_PT(buf);
 	Bufpos pos;
@@ -154,7 +172,11 @@ Return the character position of the first character on the current line.
 With argument COUNT not nil or 1, move forward COUNT - 1 lines first.
 If scan reaches end of buffer, return that position.
 This function does not move point.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (count, buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -186,8 +208,14 @@ The characters that are moved over may be added to the current selection
 \(i.e. active region) if the Shift key is held down, a motion key is used
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
+<<<<<<< HEAD
 								 */
       (count, buffer)) {
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> origin/master
 	struct buffer *b = decode_buffer(buffer, 1);
 
 	BUF_SET_PT(b, XINT(Fpoint_at_bol(count, buffer)));
@@ -199,7 +227,11 @@ Return the character position of the last character on the current line.
 With argument COUNT not nil or 1, move forward COUNT - 1 lines first.
 If scan reaches end of buffer, return that position.
 This function does not move point.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (count, buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 1);
@@ -226,8 +258,14 @@ The characters that are moved over may be added to the current selection
 \(i.e. active region) if the Shift key is held down, a motion key is used
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
+<<<<<<< HEAD
 						 */
       (count, buffer)) {
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> origin/master
 	struct buffer *b = decode_buffer(buffer, 1);
 
 	BUF_SET_PT(b, XINT(Fpoint_at_eol(count, buffer)));
@@ -239,7 +277,11 @@ Delete the following COUNT characters (previous, with negative COUNT).
 Optional second arg KILLP non-nil means kill instead (save in kill ring).
 Interactively, COUNT is the prefix arg, and KILLP is set if
 COUNT was explicitly specified.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (count, killp))
 {
 	/* This function can GC */
@@ -278,7 +320,11 @@ Delete the previous COUNT characters (following, with negative COUNT).
 Optional second arg KILLP non-nil means kill instead (save in kill ring).
 Interactively, COUNT is the prefix arg, and KILLP is set if
 COUNT was explicitly specified.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (count, killp))
 {
 	/* This function can GC */
@@ -300,7 +346,11 @@ DEFUN("self-insert-command", Fself_insert_command, 1, 1, "*p",	/*
 Insert the character you type.
 Whichever character you type to run this command is inserted.
 If a prefix arg COUNT is specified, the character is inserted COUNT times.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (count))
 {
 	/* This function can GC */
@@ -457,7 +507,11 @@ static void internal_self_insert(Emchar c1, int noautofill)
 
 DEFUN("self-insert-internal", Fself_insert_internal, 1, 1, 0,	/*
 Invoke `self-insert-command' as if CHARACTER is entered from keyboard.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (character))
 {
 	/* This function can GC */

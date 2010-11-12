@@ -127,6 +127,27 @@ most of the added features are not mandatory for the core SXEmacs, we
 decided to make them optional.  That is, you can - but do not need to -
 install them and incorporate them into SXEmacs.
 
+<<<<<<< HEAD
+=======
+  Failure to detect optional libraries:
+  -------------------------------------
+  If the optional libraries are in a non-standard location, use
+  --with-site-prefixes option of configure. Ex:
+
+	./configure --with-site-prefixes=/opt/local
+
+  You can specify a list of paths with --with-site-prefixes:
+
+  	./configure --with-site-prefixes=/opt/local:/sw
+
+  NOTE: Usage of --prefix does NOT imply that it is added to
+  site prefixes, so if you may need to add --with-site-prefixes
+  even with --prefix:
+	
+	./configure --prefix=/opt/local --with-site-prefixes=/opt/local
+
+
+>>>>>>> origin/master
 
   Multimedia Libraries:
   --------------------
@@ -383,3 +404,7 @@ The two most common warnings seen are...
     projects can use, unfortunately it doesn't fit in with our needs,
     and isn't easily customisable.  So we wrote our own ETAGS Makefile
     target.
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master

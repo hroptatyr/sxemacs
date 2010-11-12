@@ -39,7 +39,11 @@
 
 #include "config.h"
 #include "sxemacs.h"
+<<<<<<< HEAD
 #include "ent.h"
+=======
+#include "ent/ent.h"
+>>>>>>> origin/master
 #include "ase.h"
 #include "ase-permutation.h"
 
@@ -356,7 +360,11 @@ ase_make_permutation(Lisp_Object vec)
 /* lisp level */
 DEFUN("ase-permutationp", Fase_permutationp, 1, 1, 0, /*
 Return non-`nil' iff OBJECT is an ase permutation.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	if (ASE_PERMUTATIONP(object))
@@ -371,7 +379,11 @@ Return a permutation around with POINT of radius RADIUS
 with respect to METRIC (optional).
 
 If no special metric is given, the supremum metric is used.
+<<<<<<< HEAD
 						    */
+=======
+*/
+>>>>>>> origin/master
       (vector))
 {
 	return ase_make_permutation(vector);

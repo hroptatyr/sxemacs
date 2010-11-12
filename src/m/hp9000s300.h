@@ -52,9 +52,21 @@ NOTE-END */
 /* #define CANNOT_DUMP */
 
 /* Let the OS header file determine this if not HPUX. */
+<<<<<<< HEAD
 #ifdef HPUX
 # define UNEXEC "unexhp9k3.o"
 #endif
+=======
+
+/*
+ * everything is pdump now --SY
+ * #ifdef HPUX
+ * # define UNEXEC "unexhp9k3.o"
+ * #endif
+ */
+#undef UNEXEC
+
+>>>>>>> origin/master
 
 /* For University of Utah 4.3bsd implementation on HP300s.
    The #ifndef __GNUC__ definitions are required for the "standard" cc,

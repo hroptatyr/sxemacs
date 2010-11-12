@@ -559,7 +559,11 @@ face_property_matching_instance(Lisp_Object face, Lisp_Object property,
 
 DEFUN("facep", Ffacep, 1, 1, 0,	/*
 Return t if OBJECT is a face.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	return FACEP(object) ? Qt : Qnil;
@@ -570,7 +574,11 @@ Retrieve the face of the given name.
 If FACE-OR-NAME is a face object, it is simply returned.
 Otherwise, FACE-OR-NAME should be a symbol.  If there is no such face,
 nil is returned.  Otherwise the associated face object is returned.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (face_or_name))
 {
 	Lisp_Object retval;
@@ -592,7 +600,11 @@ DEFUN("get-face", Fget_face, 1, 1, 0,	/*
 Retrieve the face of the given name.
 Same as `find-face' except an error is signalled if there is no such
 face instead of returning nil.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (name))
 {
 	Lisp_Object face = Ffind_face(name);
@@ -604,7 +616,11 @@ face instead of returning nil.
 
 DEFUN("face-name", Fface_name, 1, 1, 0,	/*
 Return the name of the given face.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (face))
 {
 	Lisp_Object tmp_face = Fget_face(face);
@@ -614,7 +630,11 @@ Return the name of the given face.
 DEFUN("built-in-face-specifiers", Fbuilt_in_face_specifiers, 0, 0, 0,	/*
 Return a list of all built-in face specifier properties.
 Don't modify this list!
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Vbuilt_in_face_specifiers;
@@ -696,7 +716,11 @@ Return a list of the names of all defined faces.
 If TEMPORARY is nil, only the permanent faces are included.
 If it is t, only the temporary faces are included.  If it is any
 other non-nil value both permanent and temporary are included.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (temporary))
 {
 	Lisp_Object face_list = Qnil;
@@ -720,7 +744,11 @@ Define a new face with name NAME (a symbol), described by DOC-STRING.
 You can modify the font, color, etc. of a face with the set-face-* functions.
 If the face already exists, it is unmodified.
 If TEMPORARY is non-nil, this face will cease to exist if not in use.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (name, doc_string, temporary))
 {
 	/* This function can GC if initialized is non-zero */
@@ -1688,7 +1716,11 @@ DEFUN("copy-face", Fcopy_face, 2, 6, 0,	/*
 Define and return a new face which is a copy of an existing one,
 or makes an already-existing face be exactly like another.
 LOCALE, TAG-SET, EXACT-P, and HOW-TO-ADD are as in `copy-specifier'.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (old_face, new_name, locale, tag_set, exact_p, how_to_add))
 {
 	Lisp_Face *fold, *fnew;

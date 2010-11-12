@@ -24,3 +24,7 @@ precious ^(libtool)$
 precious ^sxemacs\.pc$
 precious ^cpuid$
 precious ^libltdl$
+<<<<<<< HEAD
+=======
+precious ^lock$
+>>>>>>> origin/master

@@ -697,7 +697,11 @@ SXEmacs, and then reload those new or changed modules that are required.
 
 Messages informing you of the progress of the load are displayed unless
 the variable `load-modules-quietly' is non-NIL.
+<<<<<<< HEAD
 								   */
+=======
+*/
+>>>>>>> origin/master
       (file, unused1, unused2))
 {
 /* not mt-safe */
@@ -734,7 +738,11 @@ the safest way.
 
 One last little gotcha... FOO is the _internal_ name of the emodule.
 The internal name is listed in `list-modules'.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (foo))
 {
 /* not mt-safe */
@@ -757,7 +765,11 @@ The internal name is listed in `list-modules'.
 
 DEFUN("list-loaded-modules", Flist_loaded_modules, 0, 0, 0,	/*
 Return a list of loaded modules.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	Lisp_Object mlist = Qnil;

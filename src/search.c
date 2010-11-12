@@ -443,7 +443,11 @@ cache_regexp(Lisp_Object regexp, COMPRE_T *buf)
 
 DEFUN("compile-regexp", Fcompile_regexp, 1, 1, 0, /*
 Forcibly compile REGEXP and store the result in object-plist.
+<<<<<<< HEAD
 						   */
+=======
+*/
+>>>>>>> origin/master
       (regexp))
 {
 	CHECK_STRING(regexp);
@@ -462,7 +466,11 @@ The same restrictions that apply to `defconst' apply here in regard
 to user variables.  You shouldn't use this for regular expressions
 that a user might want to customise.  Instead, use `defcustom' with
 :type 'regexp.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -616,8 +624,14 @@ This function modifies the match data that `match-beginning',
 data if you want to preserve them.
 
 Optional argument BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 						 */
       (regexp, buffer)) {
+=======
+*/
+      (regexp, buffer))
+{
+>>>>>>> origin/master
 	return looking_at_1(regexp, decode_buffer(buffer, 0), 0);
 }
 
@@ -629,8 +643,14 @@ This function modifies the match data that `match-beginning',
 data if you want to preserve them.
 
 Optional argument BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 							 */
       (regexp, buffer)) {
+=======
+*/
+      (regexp, buffer))
+{
+>>>>>>> origin/master
 	return looking_at_1(regexp, decode_buffer(buffer, 0), 1);
 }
 
@@ -694,7 +714,11 @@ matched by parenthesis constructs in the pattern.
 Optional arg BUFFER controls how case folding is done (according to
 the value of `case-fold-search' in that buffer and that buffer's case
 tables) and defaults to the current buffer.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (regexp, string, start, buffer))
 {
 	return string_match_1(regexp, string, start, decode_buffer(buffer, 0),
@@ -712,7 +736,11 @@ matched by parenthesis constructs in the pattern.
 Optional arg BUFFER controls how case folding is done (according to
 the value of `case-fold-search' in that buffer and that buffer's case
 tables) and defaults to the current buffer.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (regexp, string, start, buffer))
 {
 	return string_match_1(regexp, string, start, decode_buffer(buffer, 0),
@@ -1218,7 +1246,11 @@ With arg "^a-zA-Z", skips nonletters stopping before first letter.
 Returns the distance traveled, either zero or positive.
 
 Optional argument BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (string, limit, buffer))
 {
 	return skip_chars(decode_buffer(buffer, 0), 1, 0, string, limit);
@@ -1230,7 +1262,11 @@ See `skip-chars-forward' for details.
 Returns the distance traveled, either zero or negative.
 
 Optional argument BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (string, limit, buffer))
 {
 	return skip_chars(decode_buffer(buffer, 0), 0, 0, string, limit);
@@ -1244,7 +1280,11 @@ If SYNTAX starts with ^, skip characters whose syntax is NOT in SYNTAX.
 This function returns the distance traveled, either zero or positive.
 
 Optional argument BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (syntax, limit, buffer))
 {
 	return skip_chars(decode_buffer(buffer, 0), 1, 1, syntax, limit);
@@ -1258,7 +1298,11 @@ If SYNTAX starts with ^, skip characters whose syntax is NOT in SYNTAX.
 This function returns the distance traveled, either zero or negative.
 
 Optional argument BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (syntax, limit, buffer))
 {
 	return skip_chars(decode_buffer(buffer, 0), 0, 1, syntax, limit);
@@ -2305,8 +2349,14 @@ Optional fifth argument BUFFER specifies the buffer to search in and
 defaults to the current buffer.
 
 See also the functions `match-beginning', `match-end' and `replace-match'.
+<<<<<<< HEAD
 									 */
       (string, limit, noerror, count, buffer)) {
+=======
+*/
+      (string, limit, noerror, count, buffer))
+{
+>>>>>>> origin/master
 	return search_command(string, limit, noerror, count, buffer, -1, 0, 0);
 }
 
@@ -2329,8 +2379,14 @@ Optional fifth argument BUFFER specifies the buffer to search in and
 defaults to the current buffer.
 
 See also the functions `match-beginning', `match-end' and `replace-match'.
+<<<<<<< HEAD
 								 */
       (string, limit, noerror, count, buffer)) {
+=======
+*/
+      (string, limit, noerror, count, buffer))
+{
+>>>>>>> origin/master
 	return search_command(string, limit, noerror, count, buffer, 1, 0, 0);
 }
 
@@ -2353,8 +2409,14 @@ Optional fifth argument BUFFER specifies the buffer to search in and
 defaults to the current buffer.
 
 See also the functions `match-beginning', `match-end' and `replace-match'.
+<<<<<<< HEAD
 											 */
       (string, limit, noerror, count, buffer)) {
+=======
+*/
+      (string, limit, noerror, count, buffer))
+{
+>>>>>>> origin/master
 	return search_command(wordify(buffer, string), limit, noerror, count,
 			      buffer, -1, 1, 0);
 }
@@ -2378,8 +2440,14 @@ Optional fifth argument BUFFER specifies the buffer to search in and
 defaults to the current buffer.
 
 See also the functions `match-beginning', `match-end' and `replace-match'.
+<<<<<<< HEAD
 										 */
       (string, limit, noerror, count, buffer)) {
+=======
+*/
+      (string, limit, noerror, count, buffer))
+{
+>>>>>>> origin/master
 	return search_command(wordify(buffer, string), limit, noerror, count,
 			      buffer, 1, 1, 0);
 }
@@ -2405,8 +2473,14 @@ Optional fifth argument BUFFER specifies the buffer to search in and
 defaults to the current buffer.
 
 See also the functions `match-beginning', `match-end' and `replace-match'.
+<<<<<<< HEAD
 										 */
       (regexp, limit, noerror, count, buffer)) {
+=======
+*/
+      (regexp, limit, noerror, count, buffer))
+{
+>>>>>>> origin/master
 	return search_command(regexp, limit, noerror, count, buffer, -1, 1, 0);
 }
 
@@ -2429,8 +2503,14 @@ Optional fifth argument BUFFER specifies the buffer to search in and
 defaults to the current buffer.
 
 See also the functions `match-beginning', `match-end' and `replace-match'.
+<<<<<<< HEAD
 									 */
       (regexp, limit, noerror, count, buffer)) {
+=======
+*/
+      (regexp, limit, noerror, count, buffer))
+{
+>>>>>>> origin/master
 	return search_command(regexp, limit, noerror, count, buffer, 1, 1, 0);
 }
 
@@ -2456,8 +2536,14 @@ Optional fifth argument BUFFER specifies the buffer to search in and
 defaults to the current buffer.
 
 See also the functions `match-beginning', `match-end' and `replace-match'.
+<<<<<<< HEAD
 												 */
       (regexp, limit, noerror, count, buffer)) {
+=======
+*/
+      (regexp, limit, noerror, count, buffer))
+{
+>>>>>>> origin/master
 	return search_command(regexp, limit, noerror, count, buffer, -1, 1, 1);
 }
 
@@ -2481,8 +2567,14 @@ Optional fifth argument BUFFER specifies the buffer to search in and
 defaults to the current buffer.
 
 See also the functions `match-beginning', `match-end' and `replace-match'.
+<<<<<<< HEAD
 										 */
       (regexp, limit, noerror, count, buffer)) {
+=======
+*/
+      (regexp, limit, noerror, count, buffer))
+{
+>>>>>>> origin/master
 	return search_command(regexp, limit, noerror, count, buffer, 1, 1, 1);
 }
 
@@ -2535,7 +2627,11 @@ When fourth argument is nil, STRBUFFER specifies a subexpression of
 the match.  It says to replace just that subexpression instead of the
 whole match.  This is useful only after a regular expression search or
 match since only regular expressions have distinguished subexpressions.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (replacement, fixedcase, literal, string, strbuffer))
 {
 	/* This function has been Mule-ized. */
@@ -2997,7 +3093,11 @@ Return position of start of text matched by last regexp search.
 NUM, specifies which parenthesized expression in the last regexp.
 Value is nil if NUMth pair didn't match, or there were less than NUM pairs.
 Zero means the entire text matched by the whole regexp or whole string.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (num))
 {
 	return match_limit(num, 1);
@@ -3008,7 +3108,11 @@ Return position of end of text matched by last regexp search.
 NUM specifies which parenthesized expression in the last regexp.
 Value is nil if NUMth pair didn't match, or there were less than NUM pairs.
 Zero means the entire text matched by the whole regexp or whole string.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (num))
 {
 	return match_limit(num, 0);
@@ -3025,8 +3129,14 @@ If INTEGERS (the optional first argument) is non-nil, always use integers
 \(rather than markers) to represent buffer positions.
 If REUSE is a list, reuse it as part of the value.  If REUSE is long enough
 to hold all the values, and if INTEGERS is non-nil, no consing is done.
+<<<<<<< HEAD
 						 */
       (integers, reuse)) {
+=======
+*/
+      (integers, reuse))
+{
+>>>>>>> origin/master
 	/* This function has been Mule-ized. */
 	Lisp_Object tail, prev;
 	Lisp_Object *data;
@@ -3089,7 +3199,11 @@ to hold all the values, and if INTEGERS is non-nil, no consing is done.
 DEFUN("store-match-data", Fstore_match_data, 1, 1, 0,	/*
 Set internal data on last search match from elements of LIST.
 LIST should have been created by calling `match-data' previously.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (list))
 {
 	/* This function has been Mule-ized. */
@@ -3195,7 +3309,11 @@ void restore_match_data(void)
 
 DEFUN("regexp-quote", Fregexp_quote, 1, 1, 0,	/*
 Return a regexp string which matches exactly STRING and nothing else.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (string))
 {
 	REGISTER Bufbyte *in, *out, *end;
@@ -3229,7 +3347,11 @@ DEFUN("set-word-regexp", Fset_word_regexp, 1, 1, 0,	/*
 Set the regexp to be used to match a word in regular-expression searching.
 #### Not yet implemented.  Currently does nothing.
 #### Do not use this yet.  Its calling interface is likely to change.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (regexp))
 {
 	return Qnil;

@@ -151,8 +151,13 @@ static int std_handle_out_va(FILE * stream, const char *fmt, va_list args)
 {
 	Bufbyte buffer[16384],
 		*kludge = buffer;
+<<<<<<< HEAD
 	Extbyte *extptr;
 	Extcount extlen;
+=======
+	Extbyte *extptr = NULL;
+	Extcount extlen = 0;
+>>>>>>> origin/master
 	int     retval, 
 		bufsize = sizeof(buffer), 
 		tries = 3;
@@ -180,10 +185,20 @@ static int std_handle_out_va(FILE * stream, const char *fmt, va_list args)
 
 	extlen = retval;
 
+<<<<<<< HEAD
 	if (initialized && !inhibit_non_essential_printing_operations)
 		TO_EXTERNAL_FORMAT(DATA, (kludge, strlen((char *)kludge)),
 				   ALLOCA, (extptr, extlen), Qnative);
 	std_handle_out_external(stream, Qnil, extptr, extlen, 1, 1);
+=======
+	if (initialized && !inhibit_non_essential_printing_operations && 
+	    ! fatal_error_in_progress ) {
+		TO_EXTERNAL_FORMAT(DATA, (kludge, strlen((char *)kludge)),
+				   ALLOCA, (extptr, extlen), Qnative);
+		std_handle_out_external(stream, Qnil, extptr, extlen, 1, 1);
+	} else if (fatal_error_in_progress || !inhibit_non_essential_printing_operations)
+		fprintf(stream,(char*)kludge);
+>>>>>>> origin/master
 	XMALLOC_UNBIND(kludge, bufsize, speccount);
 	return retval;
 }
@@ -498,7 +513,11 @@ static void write_fmt_string(Lisp_Object stream, const char *fmt, ...)
 DEFUN("write-char", Fwrite_char, 1, 2, 0,	/*
 Output character CHARACTER to stream STREAM.
 STREAM defaults to the value of `standard-output' (which see).
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (character, stream))
 {
 	/* This function can GC */
@@ -565,7 +584,11 @@ If BODY does not finish normally, the buffer BUFNAME is not displayed.
 
 If variable `temp-buffer-show-function' is non-nil, call it at the end
 to get the buffer displayed.  It gets one argument, the buffer to display.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (args))
 {
 	/* This function can GC */
@@ -596,7 +619,11 @@ to get the buffer displayed.  It gets one argument, the buffer to display.
 DEFUN("terpri", Fterpri, 0, 1, 0,	/*
 Output a newline to STREAM.
 If STREAM is omitted or nil, the value of `standard-output' is used.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (stream))
 {
 	/* This function can GC */
@@ -609,7 +636,11 @@ Output the printed representation of OBJECT, any Lisp object.
 Quoting characters are printed when needed to make output that `read'
 can handle, whenever this is possible.
 Output stream is STREAM, or value of `standard-output' (which see).
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object, stream))
 {
 	/* This function can GC */
@@ -631,7 +662,11 @@ Return a string containing the printed representation of OBJECT,
 any Lisp object.  Quoting characters are used when needed to make output
 that `read' can handle, whenever this is possible, unless the optional
 second argument NOESCAPE is non-nil.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object, noescape))
 {
 	/* This function can GC */
@@ -659,8 +694,14 @@ Output the printed representation of OBJECT, any Lisp object.
 No quoting characters are used; no delimiters are printed around
 the contents of strings.
 Output stream is STREAM, or value of `standard-output' (which see).
+<<<<<<< HEAD
 				 */
       (object, stream)) {
+=======
+*/
+      (object, stream))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Lisp_Object frame = Qnil;
 	struct gcpro gcpro1, gcpro2;
@@ -679,7 +720,11 @@ Output the printed representation of OBJECT, with newlines around it.
 Quoting characters are printed when needed to make output that `read'
 can handle, whenever this is possible.
 Output stream is STREAM, or value of `standard-output' (which see).
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (object, stream))
 {
 	/* This function can GC */
@@ -790,7 +835,11 @@ Convert ERROR-OBJECT to an error message, and return it.
 The format of ERROR-OBJECT should be (ERROR-SYMBOL . DATA).  The
 message is equivalent to the one that would be issued by
 `display-error' with the same argument.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (error_object))
 {
 	/* This function can GC */
@@ -811,7 +860,11 @@ message is equivalent to the one that would be issued by
 
 DEFUN("display-error", Fdisplay_error, 2, 2, 0,	/*
 Display ERROR-OBJECT on STREAM in a user-friendly way.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (error_object, stream))
 {
 	/* This function can GC */
@@ -1600,7 +1653,11 @@ Append CHARACTER to the array `alternate_do_string'.
 This can be used in place of `external-debugging-output' as a function
 to be passed to `print'.  Before calling `print', set `alternate_do_pointer'
 to 0.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (character))
 {
 	Bufbyte str[MAX_EMCHAR_LEN];
@@ -1630,8 +1687,14 @@ created, if necessary), unless SXEmacs is being run noninteractively
 
 If you have opened a termscript file (using `open-termscript'), then
 the output also will be logged to this file.
+<<<<<<< HEAD
 									 */
       (char_or_string, stdout_p, device)) {
+=======
+*/
+      (char_or_string, stdout_p, device))
+{
+>>>>>>> origin/master
 	FILE *file = 0;
 	struct console *con = 0;
 
@@ -1677,7 +1740,11 @@ the output also will be logged to this file.
 DEFUN("open-termscript", Fopen_termscript, 1, 1, "FOpen termscript file: ",	/*
 Start writing all terminal output to FILENAME as well as the terminal.
 FILENAME = nil means just close any termscript file currently open.
+<<<<<<< HEAD
 										 */
+=======
+*/
+>>>>>>> origin/master
       (filename))
 {
 	/* This function can GC */

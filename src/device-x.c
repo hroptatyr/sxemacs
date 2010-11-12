@@ -1221,7 +1221,11 @@ If DEVICE is not specified, the selected device is assumed.
 
 Calling this function is the same as calling the C function `XSynchronize',
 or starting the program with the `-sync' command line argument.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (arg, device))
 {
 	struct device *d = decode_x_device(device);
@@ -1479,7 +1483,11 @@ found.  If the third arg is `string', a string is returned, and if it is
 `integer', an integer is returned.  If the third arg is `boolean', then the
 returned value is the list (t) for true, (nil) for false, and is nil to
 mean ``unspecified''.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (name, class, type, locale, device, noerror))
 {
 	char *name_string, *class_string;
@@ -1589,7 +1597,11 @@ For example, if LOCALE is a frame, the returned value might be
 \("sxemacs.frame.FRAME-NAME" . "Emacs.EmacsLocaleType.EmacsFrame").
 If no valid X device for resourcing can be obtained, this function
 returns nil. (In such a case, `x-get-resource' would always return nil.)
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (locale, device))
 {
 	Display *display;
@@ -1612,7 +1624,11 @@ DEFUN("x-put-resource", Fx_put_resource, 1, 2, 0,	/*
 Add a resource to the resource database for DEVICE.
 RESOURCE-LINE specifies the resource to add and should be a
 standard resource specification.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (resource_line, device))
 {
 	struct device *d = decode_device(device);
@@ -1645,7 +1661,11 @@ standard resource specification.
 DEFUN("default-x-device", Fdefault_x_device, 0, 0, 0,	/*
 Return the default X device for resourcing.
 This is the first-created X device that still exists.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Vdefault_x_device;
@@ -1656,7 +1676,11 @@ Return the visual class of the X display DEVICE is using.
 This can be altered from the default at startup using the XResource "EmacsVisual".
 The returned value will be one of the symbols `static-gray', `gray-scale',
 `static-color', `pseudo-color', `true-color', or `direct-color'.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	Visual *vis = DEVICE_X_VISUAL(decode_x_device(device));
@@ -1681,7 +1705,11 @@ The returned value will be one of the symbols `static-gray', `gray-scale',
 
 DEFUN("x-display-visual-depth", Fx_display_visual_depth, 0, 1, 0,	/*
 Return the bitplane depth of the visual the X display DEVICE is using.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	return make_int(DEVICE_X_DEPTH(decode_x_device(device)));
@@ -1714,7 +1742,11 @@ x_device_system_metrics(struct device *d, enum device_metrics m)
 DEFUN("x-server-vendor", Fx_server_vendor, 0, 1, 0,	/*
 Return the vendor ID string of the X server DEVICE is on.
 Return the empty string if the vendor ID string cannot be determined.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	Display *dpy = get_x_display(device);
@@ -1728,7 +1760,11 @@ Return the version numbers of the X server DEVICE is on.
 The returned value is a list of three integers: the major and minor
 version numbers of the X Protocol in use, and the vendor-specific release
 number.  See also `x-server-vendor'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	Display *dpy = get_x_display(device);
@@ -1742,7 +1778,11 @@ DEFUN("x-valid-keysym-name-p", Fx_valid_keysym_name_p, 1, 1, 0,	/*
 Return true if KEYSYM names a keysym that the X library knows about.
 Valid keysyms are listed in the files /usr/include/X11/keysymdef.h and in
 /usr/lib/X11/XKeysymDB, or whatever the equivalents are on your system.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (keysym))
 {
 	const char *keysym_ext;
@@ -1756,7 +1796,11 @@ Valid keysyms are listed in the files /usr/include/X11/keysymdef.h and in
 DEFUN("x-keysym-hash-table", Fx_keysym_hash_table, 0, 1, 0,	/*
 Return a hash table containing a key for all keysyms on DEVICE.
 DEVICE must be an X11 display device.  See `x-keysym-on-keyboard-p'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	struct device *d = decode_device(device);
@@ -1776,7 +1820,11 @@ The keysym name can be provided in two forms:
 - if keysym is a string, it must be the name as known to X windows.
 - if keysym is a symbol, it must be the name as known to SXEmacs.
 The two names differ in capitalization and underscoring.
+<<<<<<< HEAD
 												 */
+=======
+*/
+>>>>>>> origin/master
       (keysym, device))
 {
 	struct device *d = decode_device(device);
@@ -1798,7 +1846,11 @@ The keysym name can be provided in two forms:
 - if keysym is a string, it must be the name as known to X windows.
 - if keysym is a symbol, it must be the name as known to SXEmacs.
 The two names differ in capitalization and underscoring.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (keysym, device))
 {
 	struct device *d = decode_device(device);
@@ -1822,7 +1874,11 @@ until `x-ungrab-pointer' is called (it should be an object returned by the
 If the second optional argument IGNORE-KEYBOARD is non-nil, ignore all
 keyboard events during the grab.
 Returns t if the grab is successful, nil otherwise.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device, cursor, ignore_keyboard))
 {
 	Window w;
@@ -1858,7 +1914,11 @@ DEFUN("x-ungrab-pointer", Fx_ungrab_pointer, 0, 1, 0,	/*
 Release a pointer grab made with `x-grab-pointer'.
 If optional first arg DEVICE is nil the default device is used.
 If it is t the pointer will be released on all X devices.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	if (!EQ(device, Qt)) {
@@ -1885,7 +1945,11 @@ So long as the keyboard is grabbed, all keyboard events will be delivered
 to emacs -- it is not possible for other X clients to eavesdrop on them.
 Ungrab the keyboard with `x-ungrab-keyboard' (use an unwind-protect).
 Returns t if the grab is successful, nil otherwise.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	struct device *d = decode_x_device(device);
@@ -1918,7 +1982,11 @@ Returns t if the grab is successful, nil otherwise.
 
 DEFUN("x-ungrab-keyboard", Fx_ungrab_keyboard, 0, 1, 0,	/*
 Release a keyboard grab made with `x-grab-keyboard'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	Display *dpy = get_x_display(device);
@@ -1930,7 +1998,11 @@ DEFUN("x-get-font-path", Fx_get_font_path, 0, 1, 0,	/*
 Get the X Server's font path.
 
 See also `x-set-font-path'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (device))
 {
 	Display *dpy = get_x_display(device);
@@ -1962,7 +2034,11 @@ Setting the FONT-PATH to nil tells the X server to use the default
 font path.
 
 See also `x-get-font-path'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (font_path, device))
 {
 	Display *dpy = get_x_display(device);

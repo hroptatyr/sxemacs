@@ -1504,7 +1504,11 @@ mmap-live-pages:      total number of pages live.
 mmap-addr-looked-up:  total number of times needed to check if addr is in block.
 mmap-hash-worked:     total number of times the simple hash check worked.
 mmap-addrlist-size:   number of entries in address picking list.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	Lisp_Object result = Qnil;

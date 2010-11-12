@@ -25,6 +25,10 @@
 LANG=C
 LC_ALL=C
 
+<<<<<<< HEAD
+=======
+top_build_prefix = $(top_builddir)/
+>>>>>>> origin/master
 sxesrcdir = $(top_srcdir)/src
 
 AM_CFLAGS = -DXTSTRINGDEFINES

@@ -93,7 +93,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 
 #ifdef FILE_CODING
+<<<<<<< HEAD
 #include "file-coding.h"
+=======
+#include "mule/file-coding.h"
+>>>>>>> origin/master
 #endif
 
 #ifdef TOOLTALK
@@ -105,7 +109,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 
 #ifdef WITH_NUMBER_TYPES
+<<<<<<< HEAD
 #include "ent.h"
+=======
+#include "ent/ent.h"
+>>>>>>> origin/master
 #endif
 
 #ifdef HAVE_LIBFFI

@@ -163,7 +163,11 @@ DEFUN("ignore-defer-gettext", Fignore_defer_gettext, 1, 1, 0,	/*
 If OBJECT is of the form (defer-gettext "string"), return the string.
 The purpose of the defer-gettext symbol is to identify strings which
 are translated when they are referenced instead of when they are defined.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	if (CONSP(object)) {
@@ -178,7 +182,11 @@ are translated when they are referenced instead of when they are defined.
 DEFUN("gettext", Fgettext, 1, 1, 0,	/*
 Look up STRING in the default message domain and return its translation.
 This function does nothing if I18N3 was not enabled when Emacs was compiled.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (string))
 {
 #ifdef I18N3
@@ -222,7 +230,11 @@ This function does nothing if I18N3 was not enabled when Emacs was compiled.
 DEFUN("dgettext", Fdgettext, 2, 2, 0,	/*
 Look up STRING in the specified message domain and return its translation.
 This function does nothing if I18N3 was not enabled when Emacs was compiled.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (domain, string))
 {
 	CHECK_STRING(domain);
@@ -240,7 +252,11 @@ Associate a pathname with a message domain.
 Here's how the path to message files is constructed under SunOS 5.0:
 {pathname}/{LANG}/LC_MESSAGES/{domain}.mo
 This function does nothing if I18N3 was not enabled when Emacs was compiled.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (domain, pathname))
 {
 	CHECK_STRING(domain);
@@ -263,7 +279,11 @@ all function and variable definitions.
 The presence of this declaration in a compiled file effectively sets the
 domain of all functions and variables which are defined in that file.
 Bug: it has no effect on source (.el) files, only compiled (.elc) files.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (domain_name))
 {
 	CHECK_STRING(domain_name);

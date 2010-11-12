@@ -30,6 +30,10 @@ ACLOCAL_AMFLAGS = -I m4
 builddir = @builddir@
 srcdir = @srcdir@
 top_builddir = .
+<<<<<<< HEAD
+=======
+top_build_prefix = $(top_builddir)/
+>>>>>>> origin/master
 top_srcdir = @top_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
@@ -50,9 +54,12 @@ if DESCEND_LIBLTDL
 sxe_subdirs += libltdl
 endif
 sxe_subdirs += lib-src
+<<<<<<< HEAD
 if DESCEND_DYNODUMP
 sxe_subdirs += dynodump
 endif
+=======
+>>>>>>> origin/master
 if DESCEND_LWLIB
 sxe_subdirs += lwlib
 endif

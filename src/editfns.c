@@ -100,7 +100,11 @@ void init_editfns(void)
 
 DEFUN("char-to-string", Fchar_to_string, 1, 1, 0,	/*
 Convert CHARACTER to a one-character string containing that character.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (character))
 {
 	Bytecount len;
@@ -126,7 +130,11 @@ Convert CHARACTER to a one-character string containing that character.
 DEFUN("string-to-char", Fstring_to_char, 1, 1, 0,	/*
 Convert arg STRING to a character, the first character of that string.
 An empty string will return the constant `nil'.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (string))
 {
 	Lisp_String *p;
@@ -152,7 +160,11 @@ DEFUN("point", Fpoint, 0, 1, 0,	/*
 Return value of point, as an integer.
 Beginning of buffer is position (point-min).
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -166,8 +178,14 @@ If optional argument DONT-COPY-P is non-nil, then it returns the real
 point-marker; modifying the position of this marker will move point.
 It is illegal to change the buffer of it, or make it point nowhere.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 						 */
       (dont_copy_p, buffer)) {
+=======
+*/
+      (dont_copy_p, buffer))
+{
+>>>>>>> origin/master
 	struct buffer *b = decode_buffer(buffer, 1);
 	if (NILP(dont_copy_p))
 		return Fcopy_marker(b->point_marker, Qnil);
@@ -204,7 +222,11 @@ Set point to POSITION, a number or marker.
 Beginning of buffer is position (point-min), end is (point-max).
 If BUFFER is nil, the current buffer is assumed.
 Return value of POSITION, as an integer.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (position, buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -235,7 +257,11 @@ static Lisp_Object region_limit(int beginningp, struct buffer *b)
 DEFUN("region-beginning", Fregion_beginning, 0, 1, 0,	/*
 Return position of beginning of region in BUFFER, as an integer.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	return region_limit(1, decode_buffer(buffer, 1));
@@ -244,7 +270,11 @@ If BUFFER is nil, the current buffer is assumed.
 DEFUN("region-end", Fregion_end, 0, 1, 0,	/*
 Return position of end of region in BUFFER, as an integer.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	return region_limit(0, decode_buffer(buffer, 1));
@@ -296,7 +326,11 @@ if the user has expressed a preference for the zmacs-region model.
 Watch out!  Moving this marker changes the mark position.
 If you set the marker not to point anywhere, the buffer will have no mark.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (force, buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -375,8 +409,14 @@ Save point, mark, and current buffer; execute BODY; restore those things.
 Executes BODY just like `progn'.
 The values of point, mark and the current buffer are restored
 even in case of abnormal exit (throw or error).
+<<<<<<< HEAD
 								 */
       (args)) {
+=======
+*/
+      (args))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	int speccount = specpdl_depth();
 
@@ -398,8 +438,14 @@ Lisp_Object save_current_buffer_restore(Lisp_Object buffer)
 DEFUN("save-current-buffer", Fsave_current_buffer, 0, UNEVALLED, 0,	/*
 Save the current buffer; execute BODY; restore the current buffer.
 Executes BODY just like `progn'.
+<<<<<<< HEAD
 									 */
       (args)) {
+=======
+*/
+      (args))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	int speccount = specpdl_depth();
 
@@ -411,7 +457,11 @@ Executes BODY just like `progn'.
 DEFUN("buffer-size", Fbuffer_size, 0, 1, 0,	/*
 Return the number of characters in BUFFER.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -423,7 +473,11 @@ Return the minimum permissible value of point in BUFFER.
 This is 1, unless narrowing (a buffer restriction)
 is in effect, in which case it may be greater.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -435,7 +489,11 @@ Return a marker to the minimum permissible value of point in BUFFER.
 This is the beginning, unless narrowing (a buffer restriction)
 is in effect, in which case it may be greater.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -447,7 +505,11 @@ Return the maximum permissible value of point in BUFFER.
 This is (1+ (buffer-size)), unless narrowing (a buffer restriction)
 is in effect, in which case it may be less.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -459,7 +521,11 @@ Return a marker to the maximum permissible value of point in BUFFER.
 This is (1+ (buffer-size)), unless narrowing (a buffer restriction)
 is in effect, in which case it may be less.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -470,7 +536,11 @@ DEFUN("following-char", Ffollowing_char, 0, 1, 0,	/*
 Return the character following point.
 At the end of the buffer or accessible region, return 0.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -484,7 +554,11 @@ DEFUN("preceding-char", Fpreceding_char, 0, 1, 0,	/*
 Return the character preceding point.
 At the beginning of the buffer or accessible region, return 0.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -498,7 +572,11 @@ DEFUN("bobp", Fbobp, 0, 1, 0,	/*
 Return t if point is at the beginning of the buffer.
 If the buffer is narrowed, this means the beginning of the narrowed part.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -509,7 +587,11 @@ DEFUN("eobp", Feobp, 0, 1, 0,	/*
 Return t if point is at the end of the buffer.
 If the buffer is narrowed, this means the end of the narrowed part.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -524,7 +606,11 @@ int beginning_of_line_p(struct buffer *b, Bufpos pt)
 DEFUN("bolp", Fbolp, 0, 1, 0,	/*
 Return t if point is at the beginning of a line.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -535,7 +621,11 @@ DEFUN("eolp", Feolp, 0, 1, 0,	/*
 Return t if point is at the end of a line.
 `End of a line' includes point being at the end of the buffer.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 				 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -549,7 +639,11 @@ POS is an integer or a marker.
 If POS is out of range, the value is nil.
 if POS is nil, the value of point is assumed.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (pos, buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -567,7 +661,11 @@ POS is an integer or a marker.
 If POS is out of range, the value is nil.
 if POS is nil, the value of point is assumed.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (pos, buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -592,7 +690,11 @@ Return the pathname to the directory to use for temporary files.
 On MS Windows, this is obtained from the TEMP or TMP environment variables,
 defaulting to / if they are both undefined.
 On Unix it is obtained from TMPDIR, with /tmp as the default.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	char *tmpdir;
@@ -653,7 +755,11 @@ Also, if the environment variable LOGNAME or USER is set,
 that determines the value of this function.
 If the optional argument UID is present, then environment variables are
 ignored and this function returns the login name for that UID, or nil.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (uid))
 {
 	char *returned_name;
@@ -707,7 +813,11 @@ DEFUN("user-real-login-name", Fuser_real_login_name, 0, 0, 0,	/*
 Return the name of the user's real uid, as a string.
 This ignores the environment variables LOGNAME and USER, so it differs from
 `user-login-name' when running under `su'.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	struct passwd *pw = getpwuid(getuid());
@@ -719,7 +829,11 @@ This ignores the environment variables LOGNAME and USER, so it differs from
 
 DEFUN("user-uid", Fuser_uid, 0, 0, 0,	/*
 Return the effective uid of Emacs, as an integer.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return make_int(geteuid());
@@ -727,7 +841,11 @@ Return the effective uid of Emacs, as an integer.
 
 DEFUN("user-real-uid", Fuser_real_uid, 0, 0, 0,	/*
 Return the real uid of Emacs, as an integer.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return make_int(getuid());
@@ -740,7 +858,11 @@ user is returned, or nil.  USER may be either a login name or a uid.
 
 If USER is nil, and `user-full-name' contains a string, the
 value of `user-full-name' is returned.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (user))
 {
 	Lisp_Object user_name;
@@ -851,7 +973,11 @@ Extbyte *get_home_directory(void)
 
 DEFUN("user-home-directory", Fuser_home_directory, 0, 0, 0,	/*
 Return the user's home directory, as a string.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	Extbyte *path = get_home_directory();
@@ -864,7 +990,11 @@ Return the user's home directory, as a string.
 
 DEFUN("system-name", Fsystem_name, 0, 0, 0,	/*
 Return the name of the machine you are running on, as a string.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return Fcopy_sequence(Vsystem_name);
@@ -872,7 +1002,11 @@ Return the name of the machine you are running on, as a string.
 
 DEFUN("emacs-pid", Femacs_pid, 0, 0, 0,	/*
 Return the process ID of Emacs, as an integer.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	return make_int(getpid());
@@ -887,7 +1021,11 @@ count.
 
 The microsecond count is zero on systems that do not provide
 resolution finer than a second.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	EMACS_TIME t;
@@ -903,7 +1041,11 @@ DEFUN("current-btime", Fcurrent_btime, 0, 0, 0,	/*
 Return the current time, as the number of microseconds since
 1970-01-01 00:00:00.
 The time is returned as a big integer.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	EMACS_TIME t;
@@ -925,7 +1067,11 @@ The time is returned as a big integer.
 DEFUN("time-to-btime", Ftime_to_btime, 1, 1, 0, /*
 Return a big integer from SPECIFIED-TIME with the
 number of microseconds since the Epoch.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (specified_time))
 {
 	if (CONSP(specified_time)) {
@@ -967,7 +1113,11 @@ number of microseconds since the Epoch.
 DEFUN("btime-to-time", Fbtime_to_time, 1, 1, 0, /*
 Return a time specified as (HIGH LOW USEC) as obtainable
 from `current-time' from SPECIFIED-TIME.
+<<<<<<< HEAD
 						*/
+=======
+*/
+>>>>>>> origin/master
       (specified_time))
 {
 	if (CONSP(specified_time)) {
@@ -1036,7 +1186,11 @@ the process, and the system time will be 0.
 Some systems do not allow the real and processor times to be distinguished.
 In this case, the user and real times will be the same and the system
 time will be 0.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       ())
 {
 	double user, sys, real;
@@ -1057,7 +1211,11 @@ With optional prefix arg, USR-SYS-REAL, return a list of 3 floats:
 user time, system time, and real time.  Also displayed in the echo
 area if called interactively.  See: `current-process-time' for more
 details.
+<<<<<<< HEAD
 				   */
+=======
+*/
+>>>>>>> origin/master
       (usr_sys_real))
 {
 	double usr, sys, real;
@@ -1201,7 +1359,11 @@ The number of options reflects the `strftime' function.
 
 BUG: If the charset used by the current locale is not ISO 8859-1, the
 characters appearing in the day and month names may be incorrect.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (format_string, time_))
 {
 	time_t value;
@@ -1250,8 +1412,14 @@ DOW is the day of week, an integer between 0 and 6, where 0 is Sunday.
 DST is t if daylight savings time is effect, otherwise nil.
 ZONE is an integer indicating the number of seconds east of Greenwich.
 \(Note that Common Lisp has different meanings for DOW and ZONE.)
+<<<<<<< HEAD
 						 */
       (specified_time)) {
+=======
+*/
+      (specified_time))
+{
+>>>>>>> origin/master
 	time_t time_spec;
 	struct tm save_tm;
 	struct tm *decoded_time;
@@ -1307,7 +1475,11 @@ Out-of-range values for SEC, MINUTE, HOUR, DAY, or MONTH are allowed;
 for example, a DAY of 0 means the day preceding the given month.
 Year numbers less than 100 are treated just like other year numbers.
 If you want them to stand for years in this century, you must do that yourself.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	time_t the_time;
@@ -1379,7 +1551,11 @@ If you want them to stand for years in this century, you must do that yourself.
 #if defined(HAVE_MPZ) && defined WITH_GMP
 DEFUN("encode-btime", Fencode_btime, 6, MANY, 0,	/*
 Like `encode-time' but return a big integer time instead.
+<<<<<<< HEAD
 							*/
+=======
+*/
+>>>>>>> origin/master
 
       (int nargs, Lisp_Object * args))
 {
@@ -1468,7 +1644,11 @@ and from `file-attributes'.
 If compiled with ENT, SPECIFIED-TIME may also be a big integer
 as obtained from `current-btime' with the number of microseconds
 since the Epoch.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (specified_time))
 {
 	time_t value;
@@ -1525,7 +1705,11 @@ and from `file-attributes'.
 Some operating systems cannot provide all this information to Emacs;
 in this case, `current-time-zone' returns a list containing nil for
 the data it can't find.
+<<<<<<< HEAD
       */
+=======
+*/
+>>>>>>> origin/master
       (specified_time))
 {
 	time_t value;
@@ -1649,7 +1833,11 @@ static void set_time_zone_rule(char *tzstring)
 DEFUN("set-time-zone-rule", Fset_time_zone_rule, 1, 1, 0,	/*
 Set the local time zone using TZ, a string specifying a time zone rule.
 If TZ is nil, use implementation-defined default time zone information.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (tz))
 {
 	char *tzstring;
@@ -1696,7 +1884,11 @@ Insert the arguments, either strings or characters, at point.
 Point moves forward so that it ends up after the inserted text.
 Any other markers at the point of insertion remain before the text.
 If a string has non-null string-extent-data, new extents will be created.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	/* This function can GC */
@@ -1713,7 +1905,11 @@ DEFUN("insert-before-markers", Finsert_before_markers, 0, MANY, 0,	/*
 Insert strings or characters at point, relocating markers after the text.
 Point moves forward so that it ends up after the inserted text.
 Any other markers at the point of insertion also end up after the text.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (int nargs, Lisp_Object * args))
 {
 	/* This function can GC */
@@ -1744,7 +1940,11 @@ Point moves forward so that it ends up after the inserted text.
 Any other markers at the point of insertion remain before the text.
 If a string has non-null string-extent-data, new extents will be created.
 BUFFER defaults to the current buffer.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (string, buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -1769,7 +1969,11 @@ This is highly bogus, however, and SXEmacs always behaves as if
 `t' were passed to INHERIT.
 The optional fourth arg BUFFER specifies the buffer to insert the
 text into.  If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (character, count, ignored, buffer))
 {
 	/* This function can GC */
@@ -1830,8 +2034,14 @@ and end of BUFFER, respectively.
 If there are duplicable extents in the region, the string remembers
 them in its extent data.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 							 */
       (start, end, buffer)) {
+=======
+*/
+      (start, end, buffer))
+{
+>>>>>>> origin/master
 	/* This function can GC */
 	Bufpos begv, zv;
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -1846,7 +2056,11 @@ If BUFFER is nil, the current buffer is assumed.
    user-code will typically want to use it for. */
 DEFUN("buffer-substring-no-properties", Fbuffer_substring_no_properties, 0, 3, 0,	/*
 Return the text from START to END as a string, without copying the extents.
+<<<<<<< HEAD
 											 */
+=======
+*/
+>>>>>>> origin/master
       (start, end, buffer))
 {
 	/* This function can GC */
@@ -1862,7 +2076,11 @@ Insert before point a substring of the contents of buffer BUFFER.
 BUFFER may be a buffer or a buffer name.
 Arguments START and END are character numbers specifying the substring.
 They default to the beginning and the end of BUFFER.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (buffer, start, end))
 {
 	/* This function can GC */
@@ -1888,8 +2106,14 @@ That makes six args in all, three for each substring.
 
 The value of `case-fold-search' in the current buffer
 determines whether case is significant or ignored.
+<<<<<<< HEAD
 									 */
       (buffer1, start1, end1, buffer2, start2, end2)) {
+=======
+*/
+      (buffer1, start1, end1, buffer2, start2, end2))
+{
+>>>>>>> origin/master
 	Bufpos begp1, endp1, begp2, endp2;
 	REGISTER Charcount len1, len2, length, i;
 	struct buffer *bp1, *bp2;
@@ -1953,7 +2177,11 @@ DEFUN("subst-char-in-region", Fsubst_char_in_region, 4, 5, 0,	/*
 From START to END, replace FROMCHAR with TOCHAR each time it occurs.
 If optional arg NOUNDO is non-nil, don't record this change for undo
 and don't mark the buffer as really changed.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (start, end, fromchar, tochar, noundo))
 {
 	/* This function can GC */
@@ -2029,7 +2257,11 @@ characters and their replacements.  The char-table should be of type
 `char' or `generic'.
 
 Returns the number of substitutions performed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (start, end, table))
 {
 	/* This function can GC */
@@ -2154,7 +2386,11 @@ Delete the text between point and mark.
 When called from a program, expects two arguments START and END
 \(integers or markers) specifying the stretch to be deleted.
 If optional third arg BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (start, end, buffer))
 {
 	/* This function can GC */
@@ -2190,7 +2426,11 @@ DEFUN("widen", Fwiden, 0, 1, "",	/*
 Remove restrictions (narrowing) from BUFFER.
 This allows the buffer's full text to be seen and edited.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -2208,8 +2448,14 @@ See also `save-restriction'.
 
 When calling from a program, pass two arguments; positions (integers
 or markers) bounding the text that should remain visible.
+<<<<<<< HEAD
 							 */
       (start, end, buffer)) {
+=======
+*/
+      (start, end, buffer))
+{
+>>>>>>> origin/master
 	Bufpos bp_start, bp_end;
 	struct buffer *buf = decode_buffer(buffer, 1);
 	Bytind bi_start, bi_end;
@@ -2319,7 +2565,11 @@ and then make changes outside the area within the saved restrictions.
 Note: if you are using both `save-excursion' and `save-restriction',
 use `save-excursion' outermost:
 (save-excursion (save-restriction ...))
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (body))
 {
 	/* This function can GC */
@@ -2482,8 +2732,14 @@ numbers are printed after it; and trailing zeroes are not omitted in
 %g and %G conversions.
 
 Use %% to put a single % into the output.
+<<<<<<< HEAD
 					 */
       (int nargs, Lisp_Object * args)) {
+=======
+*/
+      (int nargs, Lisp_Object * args))
+{
+>>>>>>> origin/master
 	/* It should not be necessary to GCPRO ARGS, because
 	   the caller in the interpreter should take care of that.  */
 
@@ -2496,7 +2752,11 @@ Return t if two characters match, optionally ignoring case.
 Both arguments must be characters (i.e. NOT integers).
 Case is ignored if `case-fold-search' is non-nil in BUFFER.
 If BUFFER is nil, the current buffer is assumed.
+<<<<<<< HEAD
 						 */
+=======
+*/
+>>>>>>> origin/master
       (character1, character2, buffer))
 {
 	Emchar x1, x2;
@@ -2516,7 +2776,11 @@ If BUFFER is nil, the current buffer is assumed.
 DEFUN("char=", Fchar_Equal, 2, 2, 0,	/*
 Return t if two characters match, case is significant.
 Both arguments must be characters (i.e. NOT integers).
+<<<<<<< HEAD
 					 */
+=======
+*/
+>>>>>>> origin/master
       (character1, character2))
 {
 	CHECK_CHAR_COERCE_INT(character1);
@@ -2596,7 +2860,11 @@ any markers that happen to be located in the regions. (#### BUG: currently
 this function always acts as if LEAVE-MARKERS is non-nil.)
 
 Transposing beyond buffer boundaries is an error.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (start1, end1, start2, end2, leave_markers))
 {
 	Bufpos startr1, endr1, startr2, endr2;

@@ -761,10 +761,17 @@ See also `hyper-apropos' and `hyper-describe-function'."
 		       ((eq symtype 'bytecode)
 			(princ (or (compiled-function-arglist newsym)
 				   "()")))
+<<<<<<< HEAD
 		       ((and (eq symtype 'subr)
 			     (string-match
 			      "[\n\t ]*\narguments: ?\\((.*)\\)\n?\\'"
 			      doc))
+=======
+		       ((and (or (eq symtype 'subr) (eq symtype 'autoload))
+			     (string-match
+                              "[\n\t ]*\narguments: ?(\\([^)]*\\))\n?\\'"
+ 			      doc))
+>>>>>>> origin/master
 			(insert (substring doc
 					   (match-beginning 1)
 					   (match-end 1)))

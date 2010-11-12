@@ -1,10 +1,21 @@
 #!/bin/sh
 
+<<<<<<< HEAD
 M4_VERSION=$(m4 --version | head -1 | sed -e 's/^\(m4 \)\?(\?GNU M4)\? *//g' ) 
 GOOD_M4=$( echo $M4_VERSION | awk -F. '{if( ($1>1) || ( ($1==1) && ($2>4) ) || ( ($1==1) && ($2==4) && ($3>=6) )) print 1 }')
 
 if [ "$GOOD_M4" != "1" ]; then
     echo You have m4 version $M4_VERSION. SXEmacs requires m4 version 1.4.6 in order to work correctly
+=======
+# BSD's m4 probably isn't gonna cut it, use gm4 if it is available
+type gm4 >/dev/null 2>&1 && M4=gm4 || M4=m4
+
+M4_VERSION=$($M4 --version | head -1 | sed -e 's/^\(m4 \)\?(\?GNU M4)\? *//g' ) 
+GOOD_M4=$( echo $M4_VERSION | awk -F. '{if( ($1>1) || ( ($1==1) && ($2>4) ) || ( ($1==1) && ($2==4) && ($3>=6) )) print 1 }')
+
+if [ "$GOOD_M4" != "1" ]; then
+    echo You have m4 version $M4_VERSION.  SXEmacs requires m4 version 1.4.6 or later.
+>>>>>>> origin/master
     exit 1
 fi
 
@@ -37,7 +48,11 @@ elif test -d "{arch}" -a -s "{arch}/++default-version"; then
 	MAIN_ARCH_VERSION="$MAIN_VERSION--$(/bin/ls|grep -v base|sort -k1.7|tail -n1)"
 	cd "$CURDIR"
 else
+<<<<<<< HEAD
 	TREE_VERSION="--22.1.11"
+=======
+	TREE_VERSION="--22.1.12"
+>>>>>>> origin/master
 	ARCH_VERSION="no_arch_version"
 	MAIN_ARCH_VERSION="no_arch_version"
 fi
@@ -45,7 +60,11 @@ fi
 emacs_major_version="$(echo $TREE_VERSION|sed -e s/"^.*--"//|cut -d . -f1)"
 emacs_minor_version="$(echo $TREE_VERSION|sed -e s/"^.*--"//|cut -d . -f2)"
 emacs_beta_version="$(echo $TREE_VERSION|sed -e s/"^.*--"//|cut -d . -f3)"
+<<<<<<< HEAD
 sxemacs_codename="Ferrari"
+=======
+sxemacs_codename="Fiat"
+>>>>>>> origin/master
 sxemacs_arch_version="$ARCH_VERSION"
 sxemacs_main_arch_version="$MAIN_ARCH_VERSION"
 

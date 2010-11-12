@@ -648,7 +648,11 @@ Function called when the line-up arrow on the scrollbar is clicked.
 This is the little arrow at the top of the scrollbar.  One argument, the
 scrollbar's window.  You can advise this function to change the scrollbar
 behavior.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	CHECK_LIVE_WINDOW(window);
@@ -662,7 +666,11 @@ Function called when the line-down arrow on the scrollbar is clicked.
 This is the little arrow at the bottom of the scrollbar.  One argument, the
 scrollbar's window.  You can advise this function to change the scrollbar
 behavior.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	CHECK_LIVE_WINDOW(window);
@@ -678,7 +686,11 @@ a cons containing the scrollbar's window and a value (#### document me!
 This value is nil for Motif/Lucid scrollbars and a number for Athena
 scrollbars).  You can advise this function to change the scrollbar
 behavior.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	Lisp_Object window = Fcar(object);
@@ -718,7 +730,11 @@ a cons containing the scrollbar's window and a value (#### document me!
 This value is nil for Motif/Lucid scrollbars and a number for Athena
 scrollbars).  You can advise this function to change the scrollbar
 behavior.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	Lisp_Object window = Fcar(object);
@@ -748,7 +764,11 @@ The way this is done can vary from scrollbar to scrollbar, but
 C-button1 on the up-arrow is very common. One argument, the
 scrollbar's window.  You can advise this function to change the
 scrollbar behavior.
+<<<<<<< HEAD
 							 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	Lisp_Object orig_pt = Fwindow_point(window);
@@ -765,7 +785,11 @@ The way this is done can vary from scrollbar to scrollbar, but
 C-button1 on the down-arrow is very common. One argument, the
 scrollbar's window.  You can advise this function to change the
 scrollbar behavior.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window))
 {
 	Lisp_Object orig_pt = Fwindow_point(window);
@@ -781,7 +805,11 @@ Function called when the user drags the vertical scrollbar slider.
 One argument, a cons containing the scrollbar's window and a value
 between point-min and point-max.  You can advise this function to
 change the scrollbar behavior.
+<<<<<<< HEAD
 									 */
+=======
+*/
+>>>>>>> origin/master
       (object))
 {
 	Bufpos start_pos;
@@ -802,7 +830,11 @@ change the scrollbar behavior.
 DEFUN("scrollbar-set-hscroll", Fscrollbar_set_hscroll, 2, 2, 0,	/*
 Set WINDOW's hscroll position to VALUE.
 This ensures that VALUE is in the proper range for the horizontal scrollbar.
+<<<<<<< HEAD
 								 */
+=======
+*/
+>>>>>>> origin/master
       (window, value))
 {
 	struct window *w;
