@@ -1084,7 +1084,13 @@ git config hooks.showrev "git show -C %s; echo"
 Take note that the SXEmacs mailing lists will funnel any post from
 non-subscribers into the moderation queue.  So make sure that the
 address you set @dfn{hooks.envelopesender} to is subscribed to the
-patches list.
+patches list. 
+
+Also be aware that using this @dfn{post-receive} hook will mean that 
+every time you push to your publicly accessible repo, a message will be
+sent to sxemacs-patches; this includes instances where you merely 
+are pulling the latest from mainline and mirroring. Hence, the use of 
+aliases as discussed below may be preferable. 
 
 @subsection Automating with Aliases
 
