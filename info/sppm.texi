@@ -911,6 +911,9 @@ reason you are not able to set up a repository with read-only access
 for (at least) @s{}, that doesn't mean that you can't still contribute
 your patches and code.
 
+You can check how to setup a publicly accessible repo at @xref{Setting
+up a publicly accessible repo}.
+
 There are a number of different situations and circumstances that you
 may find yourself in with regards to contributing to the SXEmacs
 project.  I'll try to cover the main ones here, but please note that
@@ -926,27 +929,33 @@ The diff is always in @dfn{unified} format
 @end enumerate
 
 @menu
-* Publicly Accessible Repo::    A git repo that others have read
-                                access to.
-* Private Repo::                A git repo that nobody, but you, has
-                                access to.
+* Sending a patch from a git repo::
+                                Procedure to send a patch from a git repo,
+                                be it a publicly accessible one, or just a
+                                private clone from the master repo.
 * Vanilla sources (no repo)::   Just the source tree that isn't under
                                 git control.
 @end menu
 
-@node Publicly Accessible Repo, Private Repo, Patches, Patches
+@node Sending a patch from a git repo, Vanilla sources (no repo), Patches, Patches
 @comment  node-name,  next,  previous,  up
-@chapter Publicly Accessible Repo
+@chapter Sending a patch from a git repo
 @cindex patches
 @cindex contributions
 @cindex diff
 @cindex patch
 
+Firstly, if you can set up an accessible remote repo, please do so.
+You can see how easy it is in section @xref{Setting up a publicly
+accessible repo}.  It will make things so much easier for everyone.
+We do understand that there may be some valid reasons why you can't,
+and that is okay, this section still provides a valid workflow.
+
+
+@subheading Preparing a patch from a git repo
+
 Are you in the right place?  You cloned the SXEmacs sources with
-@code{git clone http://git.sxemacs.org/sxemacs}, and you are able to
-push your working copy to a remote repo that is accessible for git
-read operations by other people (even if @dfn{other people} means only
-@s{}).
+@code{git clone http://git.sxemacs.org/sxemacs}.
 
 Yes?  OK, great, read on.
 
@@ -1009,16 +1018,21 @@ to carry out the merge.
 At this point everything that was in the @dfn{mybugfix} branch is now
 in your master branch, so you no longer need it. You can safely delete
 it with @code{git branch -d mybugfix}.
+
+Now if you have a publicly accessible repo, you should do:
 @item
 @code{git push myremote master}  To push the changes to your publicly
 accessible repo, @dfn{myremote}.
 @end enumerate
 
-@subheading Patch Submission
+If your repos is private, it is safe to skip the push and just advance
+to the next step.
 
-At this point, your changes are ready for @s{} to pull into the
-main SXEmacs code base.  All you need to do is let him know, and you
-can easily do that with the following 2 git commands:
+@subheading @anchor{Patch Submission}Patch Submission
+
+At this point, your changes are ready for @s{} to be incorporated into
+the main SXEmacs code base.  All you need to do is let him know, and
+you can easily do that with the following 2 git commands:
 
 @enumerate
 @item
@@ -1033,143 +1047,20 @@ can easily do that with the following 2 git commands:
 --from="$(git config user.name) <$(git config user.email)>" DIR}
 @end enumerate
 
-@subheading Automation
-
-Those last two commands, @code{format-patch} and @code{send-email} are
-fairly long and hairy.  You'd no doubt have trouble remembering them.
-But, never fear, git has a few tricks up her sleeve to make your life
-easier.
-
-@subsection Automating with Hooks
-
-If you are lucky enough to @emph{NOT} be using github@footnote{github
-is great and may be the ideal solution for you to host your repo
-somewhere, but it is inflexible in that you get no shell access, you
-can't set up custom hooks, and you are very limited in what git config
-settings you can tweak.} to host your publicly accessible repo you can
-set up a @dfn{post-receive} hook to automatically send your pull
-requests to the SXEmacs mailing list when you push to it.
-
-@subsubsection Setting Up The post-receive Hook
-
-Remember: This hook runs from your publicly accessible repo (your
-remote), and @emph{NOT} from your local working directory.  It is
-called after you push to your remote.
-
-Jump over to your remote now and follow these steps
-
-@enumerate
-@item
-Take a look in the file
-@file{hooks/post-receive.sample}.  At the bottom of that file there is
-a commented line, that when uncommented would call another script,
-@file{post-receive-email}.  Check that the path is correct, and
-uncomment it.
-@item
-Rename @file{hooks/post-receive.sample} to @file{hooks/post-receive}
-@item
-Tweak the remote's config with@dots{}
-
-@smallexample
-git config hooks.mailinglist \
-    "SXEmacs Patches <sxemacs-patches@@sxemacs.org>"
-git config hooks.envelopesender "Your Name <your@@email>"
-git config hooks.emailprefix "[P-Req] "
-git config hooks.showrev "git show -C %s; echo"
-@end smallexample
-@item
-@code{echo "Your Name's SXEmacs Repo" > description}
-@end enumerate
-
-Take note that the SXEmacs mailing lists will funnel any post from
-non-subscribers into the moderation queue.  So make sure that the
-address you set @dfn{hooks.envelopesender} to is subscribed to the
-patches list. 
-
-Also be aware that using this @dfn{post-receive} hook will mean that 
-every time you push to your publicly accessible repo, a message will be
-sent to sxemacs-patches; this includes instances where you merely 
-are pulling the latest from mainline and mirroring. Hence, the use of 
-aliases as discussed below may be preferable. 
-
-@subsection Automating with Aliases
-
-Git allows you to define aliases that will let you do all kinds of
-funky things.  Remember those hairy @code{format-patch} and
-@code{send-email} commands?
-
-@smallexample
-git config alias.sxe-fp 'format-patch --add-header="X-Git-Repo: REPO-URL" \
-    --subject-prefix="P-Req" --numbered'
-
-git config alias.sxe-sm 'send-email \
-    --to="SXEmacs Patches <sxemacs-patches@@sxemacs.org>" \
-    --from="$(git config user.name) <$(git config user.email)>"'
-@end smallexample
-
-With those 2 aliases set you can get your pull requests in by
-doing@dots{}
-
-@code{git sxe-fp -o DIR origin && git sxe-sm DIR}
-
-@subsection Making Life Even Easier with git config
-
-You can make your life even easier by having git store things in its
-config.  In this case, you can store those @code{format-patch} and
-@code{send-email} command line options in the repo's config@dots{}
-
-@smallexample
-git config format.headers "X-Git-Repo: YOUR-REMOTE-URL"
-git config format.subjectprefix "P-Req"
-git config format.numbered true
-
-git config sendemail.to \
-    "SXEmacs Patches <sxemacs-patches@@sxemacs.org>"
-git config sendemail.from "Your Name <your@@email>"
-@end smallexample
-
-With those settings, the commands: @code{git format-patch -o DIR
-origin}, and @code{git send-email DIR} are now equivalent of the
-original long hairy ones mentioned further up.
-
-Be careful when setting up aliases and config settings that you only
-make them global if you absolutely have to.  All the ones I've shown
-here have been repo-specific.
-
-@node Private Repo, Vanilla sources (no repo), Publicly Accessible Repo, Patches
-@comment  node-name,  next,  previous,  up
-@chapter Private Repo
-@cindex patches
-@cindex contributions
-@cindex diff
-@cindex patch
-
-Are you in the right place?  You have cloned the main SXEmacs repo,
-but for whatever reasons, you are unable to set up a remote repo that
-@s{} can access.
-
-Yes?  OK, great, read on.
-
-Firstly, if you can set up an accessible remote repo, please do so.  It
-will make things so much easier for everyone.  We do understand that
-there may be some valid reasons why you can't, hence, this section.
-
-This section differs from the previous only in that because you have
-no accessible remote, the SXEmacs developers can't pull in your
-changesets directly from you.  Instead, once your patch hits the
-mailing list and is approved, it will be applied manually to the
-SXEmacs code base.
-
-The steps you take to get your patch to the list are almost identical
-to those in the previous section, except you won't push anything
-anywhere, and you'd not be using a post-receive hook.
+If you not have have a publicly accessible repository, the SXEmacs
+developers can't pull in your changesets directly from you.  Instead,
+once your patch hits the mailing list and is approved, it will be
+applied manually to the SXEmacs code base.
 
 You could, in theory, use a post-commit hook, but I'd not recommend
 it.  Think about the situation where you are working on something
 fairly big.  You'd most likely commit several times before you have
 things ready for us.
 
-@node Vanilla sources (no repo),, Private Repo, Patches
+If you have a publicly accessible repo, be sure to setup automation
+like in @xref{Automation}.
+
+@node Vanilla sources (no repo),, Sending a patch from a git repo, Patches
 @comment  node-name,  next,  previous,  up
 @chapter Vanilla sources (no repo)
 @cindex patches
@@ -1608,7 +1499,8 @@ but he isn't an immovable force, his mind can be changed and he
 @cindex tla
 @cindex git
 
-The SXEmacs Project keeps control of its sources with git.
+The SXEmacs Project keeps control of its sources with git, starting
+with version 22.1.13.
 The main repository is that of the Project Lead (@sy{}).  It is
 located at:
 
@@ -1622,7 +1514,25 @@ Checking out a copy of SXEmacs is as easy as:
   git clone http://git.sxemacs.org/sxemacs
 @end smallexample
 
-@subheading Setting Up Your Own git Repo
+See how to patches in chapter @xref{Patches}.
+
+@menu
+* Setting up a publicly accessible repo::
+                                   A git repo that others have read
+                                   access to .
+* Setting up a private repos::     A git repo only you have access to.
+* Other Developers' Repositories:: Git repos of regular developers of 
+                                   SXEmacs.
+@end menu
+
+
+@node  Setting up a publicly accessible repo, Setting up a private repos, Version Control, Version Control
+@comment  node-name,  next,  previous,  up
+@chapter Setting up a publicly accessible repo
+@cindex version control
+@cindex repo
+@cindex git
+@cindex contributions
 
 You only need to read this section if you are able to host a publicly
 accessible repo somewhere.
@@ -1652,20 +1562,165 @@ now is push your local copy to your remote@dots{}
 git push myremote master
 @end smallexample
 
-@subheading Other Developers' Repositories
+
+@subheading @anchor{Automation}Automation
+
+The last two commands for patch submission listed in @xref{Patch
+Submission}, @code{format-patch} and @code{send-email} are fairly long
+and hairy.  You'd no doubt have trouble remembering them.  But, never
+fear, git has a few tricks up her sleeve to make your life easier.
+
+@subsection Automating with Hooks
+
+If you are lucky enough to @emph{NOT} be using github@footnote{github
+is great and may be the ideal solution for you to host your repo
+somewhere, but it is inflexible in that you get no shell access, you
+can't set up custom hooks, and you are very limited in what git config
+settings you can tweak.} to host your publicly accessible repo you can
+set up a @dfn{post-receive} hook to automatically send your pull
+requests to the SXEmacs mailing list when you push to it.
+
+@subsubsection Setting Up The post-receive Hook
+
+Remember: This hook runs from your publicly accessible repo (your
+remote), and @emph{NOT} from your local working directory.  It is
+called after you push to your remote.
+
+Jump over to your remote now and follow these steps
+
+@enumerate
+@item
+Take a look in the file
+@file{hooks/post-receive.sample}.  At the bottom of that file there is
+a commented line, that when uncommented would call another script,
+@file{post-receive-email}.  Check that the path is correct, and
+uncomment it.
+@item
+Rename @file{hooks/post-receive.sample} to @file{hooks/post-receive}
+@item
+Tweak the remote's config with@dots{}
+
+@smallexample
+git config hooks.mailinglist \
+    "SXEmacs Patches <sxemacs-patches@@sxemacs.org>"
+git config hooks.envelopesender "Your Name <your@@email>"
+git config hooks.emailprefix "[P-Req] "
+git config hooks.showrev "git show -C %s; echo"
+@end smallexample
+@item
+@code{echo "Your Name's SXEmacs Repo" > description}
+@end enumerate
+
+Take note that the SXEmacs mailing lists will funnel any post from
+non-subscribers into the moderation queue.  So make sure that the
+address you set @dfn{hooks.envelopesender} to is subscribed to the
+patches list. 
+
+Also be aware that using this @dfn{post-receive} hook will mean that 
+every time you push to your publicly accessible repo, a message will be
+sent to sxemacs-patches; this includes instances where you merely 
+are pulling the latest from mainline and mirroring. Hence, the use of 
+aliases as discussed below may be preferable. 
+
+@subsection @anchor{Automating with Aliases}Automating with Aliases
+
+Git allows you to define aliases that will let you do all kinds of
+funky things.  Remember those hairy @code{format-patch} and
+@code{send-email} commands?
+
+@smallexample
+git config alias.sxe-fp 'format-patch --add-header="X-Git-Repo: REPO-URL" \
+    --subject-prefix="P-Req" --numbered'
+
+git config alias.sxe-sm 'send-email \
+    --to="SXEmacs Patches <sxemacs-patches@@sxemacs.org>" \
+    --from="$(git config user.name) <$(git config user.email)>"'
+@end smallexample
+
+With those 2 aliases set you can get your pull requests in by
+doing@dots{}
+
+@code{git sxe-fp -o DIR origin && git sxe-sm DIR}
+
+@subsection Making Life Even Easier with git config
+
+You can make your life even easier by having git store things in its
+config.  In this case, you can store those @code{format-patch} and
+@code{send-email} command line options in the repo's config@dots{}
+
+@smallexample
+git config format.headers "X-Git-Repo: YOUR-REMOTE-URL"
+git config format.subjectprefix "P-Req"
+git config format.numbered true
+
+git config sendemail.to \
+    "SXEmacs Patches <sxemacs-patches@@sxemacs.org>"
+git config sendemail.from "Your Name <your@@email>"
+@end smallexample
+
+With those settings, the commands: @code{git format-patch -o DIR
+origin}, and @code{git send-email DIR} are now equivalent of the
+original long hairy ones mentioned further up.
+
+Be careful when setting up aliases and config settings that you only
+make them global if you absolutely have to.  All the ones I've shown
+here have been repo-specific.
+
+@node  Setting up a private repos, Other Developers' Repositories, Setting up a publicly accessible repo, Version Control
+@comment  node-name,  next,  previous,  up
+@chapter Setting up a private repos
+@cindex version control
+@cindex repo
+@cindex git
+@cindex contributions
+
+Git makes it as easy to create a private repos as getting a checkout
+of the source code. In fact, all you need to do is to actually
+checkout and you have a repos:
+
+@smallexample
+  git clone http://git.sxemacs.org/sxemacs
+@end smallexample
+
+You may want to follow some of the steps in @xref{Automating with
+Aliases}, to easy your life when sending patches if you plan to
+contribute frequently from this repo. Please note that in this case
+you should not reference any REPO-URL.
+
+However if you do plan to contribute frequently, we strongly suggest
+you configure a publicly accessible repos.
+
+More details at @xref{Setting up a publicly accessible repo}.
+
+@node  Other Developers' Repositories,, Setting up a private repos, Version Control
+@comment  node-name,  next,  previous,  up
+@chapter Other Developers' Repositories
+@cindex version control
+@cindex repo
+@cindex git
+@cindex contributions
+
+As previously mentioned, the master SXEmacs repo is at:
+@smallexample
+  http://git.sxemacs.org/sxemacs
+@end smallexample
 
 Some of these repos may not be publicly accessible or may not be
 accessible 24/7.
 
-No, there's nothing here yet.  We've only just moved to git and the
+@itemize @bullet
+Nelson
+@item
+http://git.nelsonferreira.com/sxemacs
+@end itemize
+
+And that is it for now.  We've only just moved to git and the
 main SXEmacs developers haven't set up their repos.
+
 @c @itemize @bullet
 @c Sebastian
 @c @item
 @c http://www.math.tu-berlin.de/~freundt/archives/sxemacs/
-@c Nelson
-@c @item
-@c http://sxemacs.homeip.net:4080/njsf-arch/sxemacs/2007/
 @c Evgeny
 @c @item
 @c http://arch.xwem.org/2006/
@@ -1694,7 +1749,7 @@ And of course the main repo (Steve's) is at:
 http://git.sxemacs.org/sxemacs
 http://git.sxemacs.org/website  (our website is under git too)
 
-@subheading The Old tla Repo
+@subheading The tla repository for versions upto 22.1.12
 
 The old tla repos at http://arch.sxemacs.org/@yy{} still exist, and
 will remain forever.  If you ever need anything from them just install
