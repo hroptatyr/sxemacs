@@ -4,7 +4,7 @@ Copyright (C) 2005 - 2008 Steve Youngs
 
 Building from tarball release: 
 -----------------------------
-(See "Building from arch source" below if you got SXEmacs that way)
+(See "Building from git source" below if you got SXEmacs that way)
 
 In a nutshell:
 -------------
@@ -358,8 +358,8 @@ tell you in much greater detail what they need and how you can get the
 files and information you need.
 
 
-Building from arch source:
--------------------------
+Building from git source:
+------------------------
 This is identical to building from the tarball sources, with the
 addition of an extra step, and some extra requirements (that are most
 likely already on your system).
@@ -372,7 +372,7 @@ likely already on your system).
 
 Extra requirements:
 ------------------
-The SXEmacs sources in the arch repo do not contain _any_ generated
+The SXEmacs sources in the git repo do not contain _any_ generated
 files.  You will need recent versions of the GNU autotools (automake,
 autoconf).
 

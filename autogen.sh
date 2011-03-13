@@ -27,14 +27,14 @@ if test -n "$GIT" -a -n "$($GIT symbolic-ref HEAD 2>/dev/null)"; then
 	TREE_VERSION="$($GIT tag|tail -n1|tr -d v)"
 	GIT_VERSION="$($GIT describe)"
 else
-	TREE_VERSION="22.1.13"
+	TREE_VERSION="22.1.14"
 	GIT_VERSION="no_git_version"
 fi
 
 emacs_major_version="$(echo $TREE_VERSION|cut -d. -f1)"
 emacs_minor_version="$(echo $TREE_VERSION|cut -d. -f2)"
 emacs_beta_version="$(echo $TREE_VERSION|cut -d. -f3)"
-sxemacs_codename="Ford"
+sxemacs_codename="Geo"
 sxemacs_git_version="$GIT_VERSION"
 
 autoconf_ver=$(autoconf --version 2>/dev/null | head -n1)

@@ -16,23 +16,19 @@ Steve
 @end macro
 
 @macro syc
-Copyright @copyright{} 2004 - 2010 @sy{}
+Copyright @copyright{} 2004 - 2011 @sy{}
 @end macro
 
 @macro sye
 @email{steve@@sxemacs.org, @sy{}}
 @end macro
 
-@macro yy
-2010
-@end macro
-
 @macro cver
-22.1.13
+22.1.14
 @end macro
 
 @macro nver
-22.1.14
+22.1.15
 @end macro
 
 
@@ -1751,11 +1747,11 @@ http://git.sxemacs.org/website  (our website is under git too)
 
 @subheading The tla repository for versions upto 22.1.12
 
-The old tla repos at http://arch.sxemacs.org/@yy{} still exist, and
+The old tla repos at http://arch.sxemacs.org/2010 still exist, and
 will remain forever.  If you ever need anything from them just install
 @code{tla} and leech them with that.
 
-The reason we are keeping the around indefinitely is because the move
+The reason we are keeping them around indefinitely is because the move
 to git meant a loss of history.  There are tools available for
 converting a arch repo to git, but they failed to work in our case
 because of the cached revisions in our repos.

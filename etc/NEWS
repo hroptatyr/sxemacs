@@ -20,6 +20,18 @@ in each release should look at the appropriate section of this file.
 
 
 
+* Changes in SXEmacs 22.1.14 (Geo)
+==================================
+
+We switched to git!  And this release cycle was all about updating the
+build chain, version strings, and docs and whatnot from tla-isms to
+git-isms. 
+
+You can now grab the SXEmacs sources via git with...
+
+   git clone http://git.sxemacs.org/sxemacs
+
+
 * Changes in SXEmacs 22.1.12 (Fiat)
 ===================================
 
