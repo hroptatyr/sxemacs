@@ -1,0 +1,206 @@
+commit f42afd30dde1a0b648be4926ff1f8bbc144134ab
+Author: Steve Youngs <steve@sxemacs.org>
+Date:   Sun Mar 13 23:55:32 2011 +1000
+
+    SXEmacs 22.1.14 (Geo) is Released!
+    
+    	* INSTALL: Couple minor arch -> git updates.
+    
+    	* PROBLEMS: Update version it applies to
+    
+    	* etc/NEWS: Release day update
+    
+    	* autogen.sh (sxemacs_codename): Geo
+    	  (TREE_VERSION): Bump
+    
+    	* info/sxemacs/sxemacs.texi (Top): Bump version the manual
+    	corresponds to.
+    
+    	* info/sppm.texi: Update version and date macros
+    
+    Signed-off-by: Steve Youngs <steve@sxemacs.org>
+
+ INSTALL                   |    8 ++++----
+ PROBLEMS                  |    2 +-
+ autogen.sh                |    4 ++--
+ etc/NEWS                  |   12 ++++++++++++
+ info/sppm.texi            |   14 +++++---------
+ info/sxemacs/sxemacs.texi |    4 +---
+ 6 files changed, 25 insertions(+), 19 deletions(-)
+
+commit d891805a38bb4e015ddbedc87e3059b5527f168b
+Merge: 375ba92 9a4d8ec
+Author: Steve Youngs <steve@sxemacs.org>
+Date:   Sun Nov 28 11:11:35 2010 +1000
+
+    Merge branch 'merges'
+
+commit 9a4d8ec64ba725cd56180419c7232af8120b5537
+Merge: 375ba92 6c61c41
+Author: Nelson Ferreira <nelson.ferreira@ieee.org>
+Date:   Sat Nov 27 15:26:33 2010 -0500
+
+    Merge branch 'sppm-git'
+
+commit 6c61c414d4341c77789f83febad2d2d82b181d03
+Author: Nelson Ferreira <nelson.ferreira@ieee.org>
+Date:   Sat Nov 27 15:25:27 2010 -0500
+
+    Refactored a bit the SPPM portion of Patches and Version control. Now Patches only deals with how to send a patch, and Version Control shows how to setup repos. Cross references were added.
+    
+    Signed-off-by: Nelson Ferreira <nelson.ferreira@ieee.org>
+
+ info/sppm.texi |  361 ++++++++++++++++++++++++++++++++------------------------
+ 1 files changed, 208 insertions(+), 153 deletions(-)
+
+commit 375ba92b128405b26c2062df3c3cfc6f272f261b
+Merge: ea7ec0e cffe579
+Author: Steve Youngs <steve@sxemacs.org>
+Date:   Mon Nov 15 11:15:38 2010 +1000
+
+    Merge branch 'merges'
+
+commit cffe5798e48f3b8323844286b8318d5d1f393e5a
+Merge: ea7ec0e 7e1e9d6
+Author: Horst Günther Burkhardt III <horst@sxemacs.org>
+Date:   Mon Nov 15 11:28:17 2010 +1100
+
+    Merge branch 'sppm-update'
+
+commit 7e1e9d6a506850807c8fa254be39b0d71dfcac35
+Author: Horst Günther Burkhardt III <horst@sxemacs.org>
+Date:   Mon Nov 15 11:27:34 2010 +1100
+
+    A note on PRs and associated git hooks in sppm.texi 13.0.1
+    
+    Signed-off-by: Horst Günther Burkhardt III <horst@sxemacs.org>
+
+ info/sppm.texi |    8 +++++++-
+ 1 files changed, 7 insertions(+), 1 deletions(-)
+
+commit ea7ec0ecac0042c5de1c2f21d97695d9a5bb315d
+Author: Steve Youngs <steve@sxemacs.org>
+Date:   Thu Nov 11 09:00:00 2010 +1000
+
+    Quick typo fix in SPPM
+    
+    Signed-off-by: Steve Youngs <steve@sxemacs.org>
+
+ info/sppm.texi |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+commit 0a2eab68ed661dff754c225796c266e5472c46ed
+Merge: 6231bf6 23e85ff
+Author: Steve Youngs <steve@sxemacs.org>
+Date:   Wed Nov 10 14:40:00 2010 +1000
+
+    Merge branch 'sppmupd'
+
+commit 23e85ff78951b7ec5bede55b34329e393997d90c
+Author: Steve Youngs <steve@sxemacs.org>
+Date:   Wed Nov 10 14:39:10 2010 +1000
+
+    Update SPPM converting all the tla stuff to git stuff
+    
+    This gives the SPPM the once over to cover all the stuff that changes
+    because we now use git.
+    
+    	* info/sppm.texi (Patches): Rewrite for git
+    	  (Publicly Accessible Repo): New node.
+    	  (Private Repo): New node.
+    	  (Making Releases): Rewrite for git.
+    	  (Version Control): Rewrite for git.
+    
+    Signed-off-by: Steve Youngs <steve@sxemacs.org>
+
+ info/sppm.texi |  847 +++++++++++++++++++++-----------------------------------
+ 1 files changed, 312 insertions(+), 535 deletions(-)
+
+commit 6231bf69d122f8d604617c78914a48bcc25789a5
+Author: Steve Youngs <steve@sxemacs.org>
+Date:   Thu Nov 4 23:23:12 2010 +1000
+
+    Update the .gitignore to cater for in-tree builds
+    
+    	* .gitignore: Update to cater for in-tree builds
+    
+    Signed-off-by: Steve Youngs <steve@sxemacs.org>
+
+ .gitignore                   |   70 +++++++++++++++++++++++++++++++++++++----
+ 1 files changed, 63 insertions(+), 7 deletions(-)
+
+commit fb572f497caf4cd28bdb8fa4b061a0e29528ab9a
+Author: Steve Youngs <steve@sxemacs.org>
+Date:   Thu Nov 4 21:44:02 2010 +1000
+
+    Convert the tla-generated versioning info to git-generated
+    
+    	This changeset converts all of our sexy automagic versioning info
+    	from being tla-based to being git-based.  The old tla variables
+    	are now gone, replaced with git equivalents...
+    
+    	    SXEMACS_ARCH_VERSION -> SXEMACS_GIT_VERSION
+    	    sxemacs_arch_version -> sxemacs_git_version
+    	    sxemacs-arch-version -> sxemacs-git-version
+    	    SXEMACS_MAIN_ARCH_VERSION -> removed.
+    
+    	Also, a .gitignore has been added to the repo.
+    
+    	* src/emacs.c (vars_of_emacs): New variable, Vsxemacs_git_version,
+    	sxemacs-git-version
+    
+    	* m4/sxe-summary.m4: tla -> git
+    
+    	* lisp/version.el (emacs-version): Use sxemacs-git-version instead
+    	of the old arch one.
+    
+    	* lisp/obsolete.el (sxemacs-arch-version): Obsolete it.
+    
+    	* lisp/build-rpt.el (build-rpt-subject): Use SXEMACS_GIT_VERSION
+    	instead of the old arch one.
+    
+    	* configure.ac: tla -> git
+    
+    	* autogen.sh: Convert all the tla/arch stuff to git stuff.
+    
+    Signed-off-by: Steve Youngs <steve@sxemacs.org>
+
+ .arch-inventory                      |   27 --------------
+ .gitignore                           |   63 +++++++++++++++++++++++++++++++++
+ autogen.sh                           |   64 ++++++++++------------------------
+ configure.ac                         |   30 +++++----------
+ etc/.arch-inventory                  |    3 --
+ info/.arch-inventory                 |    6 ---
+ info/internals/.arch-inventory       |    2 -
+ info/lispref/.arch-inventory         |    2 -
+ info/new-users-guide/.arch-inventory |    2 -
+ info/sxemacs/.arch-inventory         |    2 -
+ lib-src/.arch-inventory              |   29 ---------------
+ lisp/.arch-inventory                 |   13 -------
+ lisp/build-rpt.el                    |    2 +-
+ lisp/ffi/.arch-inventory             |    5 ---
+ lisp/mule/.arch-inventory            |    5 ---
+ lisp/obsolete.el                     |    3 ++
+ lisp/term/.arch-inventory            |    1 -
+ lisp/version.el                      |    6 ++--
+ m4/.arch-inventory                   |    3 --
+ m4/sxe-summary.m4                    |    7 +---
+ modules/.arch-inventory              |    4 --
+ modules/ase/.arch-inventory          |   19 ----------
+ modules/cl/.arch-inventory           |   13 -------
+ modules/ldap/.arch-inventory         |    6 ---
+ src/.arch-inventory                  |   40 ---------------------
+ src/database/.arch-inventory         |    8 ----
+ src/emacs.c                          |   17 ++-------
+ src/ent/.arch-inventory              |    8 ----
+ src/events/.arch-inventory           |    8 ----
+ src/media/.arch-inventory            |    9 -----
+ src/mem/.arch-inventory              |    9 -----
+ src/mule/.arch-inventory             |    8 ----
+ src/ui/.arch-inventory               |    8 ----
+ src/ui/Gtk/.arch-inventory           |    8 ----
+ src/ui/TTY/.arch-inventory           |    8 ----
+ src/ui/X11/.arch-inventory           |    8 ----
+ src/ui/lwlib/.arch-inventory         |   10 -----
+ tests/.arch-inventory                |    2 -
+ 38 files changed, 104 insertions(+), 364 deletions(-)

@@ -33,7 +33,7 @@ Copyright @copyright{} 2004 - 2011 @sy{}
 
 
 @set EDITION First
-@set UPDATED November 6, 2010
+@set UPDATED March 14, 2011
 
 @c Things would be a lot easier if everything supported the `@copying'
 @c command, I wouldn't have to put in these conditionals.  --SY.
@@ -1274,7 +1274,7 @@ HAMMER=1 ./autogen.sh
 Copy the autotool files to the exported tree
 
 @smallexample
-mkdir -v ~/upload/sxemacs-@nver{}/libltdl &&
+cp -va libltdl ~/upload/sxemacs-@nver{} &&
 for f in $(git ls-files --others -i --exclude-standard); do
     cp -va $@{f@} ~/upload/sxemacs-@nver{}/$@{f@}
 done
@@ -1284,7 +1284,7 @@ done
 Add a ChangeLog
 
 @smallexample
-git log --stat v@cver{}..v@nver{} > /tmp/sxemacs-@nver{}/ChangeLog
+git log --stat v@cver{}..v@nver{} > ~/upload/sxemacs-@nver{}/ChangeLog
 @end smallexample
 
 @item
@@ -1323,7 +1323,7 @@ Move the tarball, diff, GnuPG sigs, and md5sums to
 @uref{http://downloads.sxemacs.org/releases/, SXEmacs Download Site}.
 
 @item
-Rename the @file{LATEST-IS-foo} file.
+Rename the @file{LATEST-IS-VER} file.
 @example
 mv LATEST-IS-@cver{} LATEST-IS-@nver{}
 @end example
