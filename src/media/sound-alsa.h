@@ -45,7 +45,7 @@ struct sound_alsa_data_s {
 
 struct sound_alsa_aj_data_s {
 	/* stream props */
-	size_t samplerate;	/* rate used on the device */
+	unsigned int samplerate;	/* rate used on the device */
 	unsigned int channels;	/* channels used on the device */
 	size_t framesize;	/* resulting framesize */
 	snd_pcm_format_t format;

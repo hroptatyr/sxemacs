@@ -72,8 +72,7 @@ ase_metric_prnt(Lisp_Object obj, Lisp_Object pcf, int unused)
 	{
 		char addr[64];
 		if (NILP(XASE_METRIC_LDIST(obj))) {
-			snprintf(addr, 63, " 0x%x",
-				 (unsigned int)XASE_METRIC_DIST(obj));
+			snprintf(addr, 63, " %p", XASE_METRIC_DIST(obj));
 		} else {
 			Lisp_Object ldist = XASE_METRIC_LDIST(obj);
 			if (SYMBOLP(ldist)) {

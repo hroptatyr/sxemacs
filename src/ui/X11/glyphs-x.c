@@ -2338,7 +2338,8 @@ x_subwindow_query_geometry(Lisp_Object image_instance,
 {
 	Lisp_Image_Instance *ii = XIMAGE_INSTANCE(image_instance);
         Window droot;
-        unsigned int dx, dy, dbdw, dd, dw = 20, dh = 20;
+	int dx, dy;
+        unsigned int dbdw, dd, dw = 20, dh = 20;
 
         XGetGeometry(IMAGE_INSTANCE_X_SUBWINDOW_DISPLAY(ii),
                      (Window)IMAGE_INSTANCE_SUBWINDOW_ID(ii),

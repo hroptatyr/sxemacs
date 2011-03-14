@@ -85,7 +85,7 @@ char *emacs_tparam(const char *string, char *outstring, int len, int arg1,
 {
 	char *temp;
 
-	temp = (char *)tparm(string, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+	temp = (char *)tparm((char *)string, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
 			     arg8, arg9);
 	if (outstring == 0) {
 		outstring = (char *)xmalloc_atomic(strlen(temp) + 1);
