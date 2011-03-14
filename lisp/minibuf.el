@@ -2179,6 +2179,8 @@ whether it is a file(/result) or a directory (/result/)."
   "Read the name of a face from the minibuffer and return it as a symbol."
   (intern (completing-read prompt obarray 'find-face must-match)))
 
+(eval-when-compile
+  (defvar x-read-color-completion-table))
 
 (defun read-color-completion-table ()
   (case (device-type)

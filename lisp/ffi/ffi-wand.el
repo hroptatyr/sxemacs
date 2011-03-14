@@ -51,6 +51,7 @@
 ;;{{{ Initialisation
 
 (eval-when-compile
+  (require 'wid-edit)
   (globally-declare-boundp
    '(operations-list undo-list buffer-file-name image-wand preview-wand
                      preview-region preview-extent
@@ -2213,7 +2214,7 @@ BLUR is float, 0.25 for insane pixels, > 2.0 for excessively smoth."
                         Wand-global-operations-list) "\n")))
 
     ;; Info about pickup color
-    (when (boundp 'pickup-color)
+    (when-boundp 'pickup-color
       (let* ((cf (make-face (gensym "dcolor-") nil t))
              (place (car pickup-color))
              (color (cdr pickup-color))
@@ -2958,9 +2959,10 @@ RADIUS range is [-1.0, 1.0]."
                       preview-extent (Wand-mode-preview-glyph preview-wand)))
 
                  ;; Otherwise pickup color
-                 (let* ((col (Wand:get-rgb-pixel-at preview-wand sx sy))
-                        (pickup-color (cons (cons sx sy) col)))
-                   (Wand-mode-update-info)))))
+		 (with-boundp 'pickup-color
+		   (let* ((col (Wand:get-rgb-pixel-at preview-wand sx sy))
+			  (pickup-color (cons (cons sx sy) col)))
+		     (Wand-mode-update-info))))))
             (t (dispatch-event event))))))
 
 (defun Wand-mode-activate-region ()

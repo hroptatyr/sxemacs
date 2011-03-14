@@ -38,7 +38,10 @@
 
 ;; Get the macro make-help-screen when this is compiled,
 ;; or run interpreted, but not when the compiled code is loaded.
-(eval-when-compile (require 'help-macro))
+(eval-when-compile
+  (require 'help-macro)
+  (globally-declare-fboundp
+   '(find-function find-variable view-scroll-lines-up)))
 
 (require 'loadhist) ;; For symbol-file. 
 
