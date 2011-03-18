@@ -370,7 +370,7 @@ sound_jack_error(const char *errmsg)
 static void
 sound_jack_shutdown_cbfun(void *arg)
 {
-	JACK_CRITICAL("Shutdown: 0x%x\n", (unsigned int)arg);
+	JACK_CRITICAL("Shutdown: %p\n", arg);
 
 	LONGJMP(jack_server_sig, 1);
 

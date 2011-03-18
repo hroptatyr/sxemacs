@@ -826,7 +826,7 @@ Return a list of input formats in the underlying media libraries.
 	return formats;
 }
 
-static inline void __attribute__((always_inline, artificial))
+static inline void __attribute__((always_inline))
 __add_prop(Lisp_Object *reslist, Lisp_Object key, Lisp_Object val)
 {
 	*reslist = Fcons(Fcons(key, val), *reslist);
