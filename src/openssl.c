@@ -4371,7 +4371,7 @@ Return the protocol version of the tunnel SSL-CONN.
 {
 	/* SSL connection stuff */
 	SSL *conn=NULL;
-	SSL_CIPHER *ciph;
+	const SSL_CIPHER *ciph;
 	/* network stream stuff */
 	Lisp_SSL_CONN *lisp_ssl_conn;
 
@@ -4398,7 +4398,7 @@ Return the name of the current cipher used in the tunnel SSL-CONN.
 {
 	/* SSL connection stuff */
 	SSL *conn=NULL;
-	SSL_CIPHER *ciph;
+	const SSL_CIPHER *ciph;
 	/* network stream stuff */
 	Lisp_SSL_CONN *lisp_ssl_conn;
 
@@ -4452,7 +4452,7 @@ Return the number of effective bits of the current cipher in SSL-CONN.
 {
 	/* SSL connection stuff */
 	SSL *conn=NULL;
-	SSL_CIPHER *ciph;
+	const SSL_CIPHER *ciph;
 	int alg_bits, strength_bits;
 	/* network stream stuff */
 	Lisp_SSL_CONN *lisp_ssl_conn;
@@ -4481,7 +4481,7 @@ Return a description of the current cipher used in the tunnel SSL-CONN.
 {
 	/* SSL connection stuff */
 	SSL *conn=NULL;
-	SSL_CIPHER *ciph;
+	const SSL_CIPHER *ciph;
 	/* network stream stuff */
 	Lisp_SSL_CONN *lisp_ssl_conn;
 

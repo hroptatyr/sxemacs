@@ -137,6 +137,7 @@ EXFUN(Fmake_skiplist, 0);
 EXFUN(Fget_skiplist,3);
 EXFUN(Fremove_skiplist,2);
 
+#if 0
 extern_inline skiplist_path_t make_skiplist_path(skiplist_t);
 extern_inline void free_skiplist_path(skiplist_path_t);
 extern_inline size_t skiplist_path_size(skiplist_path_t);
@@ -146,6 +147,6 @@ extern_inline void skiplist_path_push(skiplist_path_t, skiplist_level_t);
 extern_inline skiplist_level_t skiplist_path_pop(skiplist_path_t);
 extern_inline skiplist_level_t skiplist_path_pophead(skiplist_path_t);
 extern_inline int descend_level_p(void);
-
+#endif
 
 #endif	/* INCLUDED_skiplist_h_ */
