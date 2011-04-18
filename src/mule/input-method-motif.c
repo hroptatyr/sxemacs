@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "ui/X11/console-x.h"
 #include "ui/device.h"
 #include "ui/frame.h"
-#include "EmacsFrame.h"
+#include "ui/X11/EmacsFrame.h"
 #include <Xm/Xm.h>
 
 #ifndef XIM_MOTIF

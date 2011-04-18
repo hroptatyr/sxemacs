@@ -76,7 +76,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "ui/window.h"
 #include "buffer.h"
 #include "ui/X11/console-x.h"
-#include "EmacsFrame.h"
+#include "ui/X11/EmacsFrame.h"
 #define INCLUDE_EVENTS_H_PRIVATE_SPHERE
 #include "events/events.h"
 
