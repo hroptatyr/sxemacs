@@ -138,8 +138,7 @@ nodumplibs  += $(builddir)/mem/libmemalloc.a
 # because libsxemem already is there
 endif
 if DESCEND_LWLIB
-nodumplibs += libsxeX.a
-noinst_nodumplibs += libsxeX.a
+nodumplibs += $(builddir)/ui/X11/libsxeX.a
 endif
 
 SUBDIRS += $(sxe_subdirs)
@@ -241,33 +240,6 @@ libcruft_a_LIBADD = $(libcruft_objs)
 libcruft_a_DEPENDENCIES = $(libcruft_a_LIBADD)
 all_sources += $(libcruft_a_sources) $(extra_objs:.o=.c)
 
-## just a trick :( we create these libraries to get the object files
-if DESCEND_LWLIB
-noinst_LIBRARIES += libTopLevelEmacsShell.a libTransientEmacsShell.a
-libTopLevelEmacsShell_a_SOURCES = EmacsShell-sub.c
-libTopLevelEmacsShell_a_CFLAGS = -DDEFINE_TOP_LEVEL_EMACS_SHELL
-libTopLevelEmacsShell_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_CFLAGS)
-libTransientEmacsShell_a_SOURCES = EmacsShell-sub.c
-libTransientEmacsShell_a_CFLAGS = -DDEFINE_TRANSIENT_EMACS_SHELL
-libTransientEmacsShell_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_CFLAGS)
-endif
-libsxeX_a_headers = \
-	EmacsFrame.h EmacsFrameP.h EmacsManager.h EmacsManagerP.h	   \
-	EmacsShell.h EmacsShellP.h ExternalClient.h ExternalClientP.h	   \
-	ExternalShell.h ExternalShellP.h xintrinsic.h xintrinsicp.h
-libsxeX_a_sources = \
-	EmacsFrame.c EmacsShell.c EmacsManager.c
-if WITH_EXTW
-libsxeX_a_sources += ExternalShell.c 
-## extw-Xt-nonshared.c extw-Xlib-nonshared.c where are these????
-endif
-libsxeX_a_SOURCES = $(libsxeX_a_headers) $(libsxeX_a_sources)
-libsxeX_a_LIBADD =				\
-	$(libTransientEmacsShell_a_OBJECTS)	\
-	$(libTopLevelEmacsShell_a_OBJECTS)
-libsxeX_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_CFLAGS)
-libsxeX_a_DEPENDENCIES = libTopLevelEmacsShell.a libTransientEmacsShell.a
-all_sources += $(libsxeX_a_sources) $(libsxeX_a_LIBADD:.o=.c)
 
 ### custom rules
 SXEMACS = $(bldsrcdir)/sxemacs

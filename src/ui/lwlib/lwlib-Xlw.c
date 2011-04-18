@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <X11/CompositeP.h>
 #include <X11/Shell.h>
 #ifdef HAVE_WIDGETS
-#include "EmacsManager.h"
+#include "ui/X11/EmacsManager.h"
 #endif
 #ifdef LWLIB_MENUBARS_LUCID
 #include "xlwmenu.h"

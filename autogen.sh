@@ -26,9 +26,16 @@ emacs_is_beta=t
 if test -n "$GIT" -a -n "$($GIT symbolic-ref HEAD 2>/dev/null)"; then
 	TREE_VERSION="$($GIT tag|tail -n1|tr -d v)"
 	GIT_VERSION="$($GIT describe)"
-else
+	IN_GIT="1"
+fi
+if test -z "$TREE_VERSION"; then
 	TREE_VERSION="22.1.14"
-	GIT_VERSION="no_git_version"
+        if test -n "$IN_GIT"; then
+	    echo "If you cloned this branch into your own you should issue: git tag -s v${TREE_VERSION}.<your branch_name>"
+	fi
+fi
+if test -z "$GIT_VERSION"; then
+	GIT_VERSION="${TREE_VERSION}-no_git_version"
 fi
 
 emacs_major_version="$(echo $TREE_VERSION|cut -d. -f1)"
