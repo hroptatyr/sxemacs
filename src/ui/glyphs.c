@@ -82,12 +82,13 @@ DEFINE_IMAGE_INSTANTIATOR_FORMAT(subwindow);
 DEFINE_IMAGE_INSTANTIATOR_FORMAT(text);
 DEFINE_IMAGE_INSTANTIATOR_FORMAT(pointer);
 
+Lisp_Object Q_mask_file, Q_mask_data, Q_hotspot_x, Q_hotspot_y;
+Lisp_Object Q_foreground, Q_background;
+
 #ifdef HAVE_WINDOW_SYSTEM
 DEFINE_IMAGE_INSTANTIATOR_FORMAT(xbm);
 Lisp_Object Qxbm;
 
-Lisp_Object Q_mask_file, Q_mask_data, Q_hotspot_x, Q_hotspot_y;
-Lisp_Object Q_foreground, Q_background;
 #ifndef BitmapSuccess
 #define BitmapSuccess           0
 #define BitmapOpenFailed        1
@@ -2731,6 +2732,7 @@ xface_normalize(Lisp_Object inst, Lisp_Object console_type,
 	if (NILP(file) && NILP(mask_file))	/* no conversion necessary */
 		RETURN_UNGCPRO(inst);
 
+#ifdef HAVE_WINDOW_SYSTEM
 	alist = tagged_vector_to_alist(inst);
 
 	{
@@ -2748,6 +2750,9 @@ xface_normalize(Lisp_Object inst, Lisp_Object console_type,
 		free_alist(alist);
 		RETURN_UNGCPRO(result);
 	}
+#else
+	RETURN_UNGCPRO(Qnil);
+#endif
 }
 
 static int xface_possible_dest_types(void)
@@ -4858,11 +4863,6 @@ void syms_of_glyphs(void)
 	DEFSUBR(Fset_console_type_image_conversion_list);
 	DEFSUBR(Fconsole_type_image_conversion_list);
 
-#if 0
-	/* moved to general-slots */
-	DEFKEYWORD(Q_file);
-	DEFKEYWORD(Q_data);
-#endif
 	DEFKEYWORD(Q_face);
 	DEFKEYWORD(Q_pixel_height);
 	DEFKEYWORD(Q_pixel_width);
@@ -4870,14 +4870,14 @@ void syms_of_glyphs(void)
 #ifdef HAVE_XPM
 	DEFKEYWORD(Q_color_symbols);
 #endif
-#ifdef HAVE_WINDOW_SYSTEM
+
 	DEFKEYWORD(Q_mask_file);
 	DEFKEYWORD(Q_mask_data);
 	DEFKEYWORD(Q_hotspot_x);
 	DEFKEYWORD(Q_hotspot_y);
 	DEFKEYWORD(Q_foreground);
 	DEFKEYWORD(Q_background);
-#endif
+
 	/* image specifiers */
 
 	DEFSUBR(Fimage_specifier_p);
