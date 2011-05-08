@@ -880,16 +880,17 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	Lisp_Image_Instance *ii = XIMAGE_INSTANCE(image_instance);
 	struct png_unwind_data unwind;
 	int speccount = specpdl_depth();
-	int height, width;
 	struct png_memory_storage tbr;	/* Data to be read */
 
 	/* PNG variables */
 	png_structp png_ptr;
 	png_infop info_ptr;
+	png_uint_32 height, width;
+	int bit_depth, color_type, interlace_type;
 
 	/* Initialize all PNG structures */
 	png_ptr =
-	    png_create_read_struct(PNG_LIBPNG_VER_STRING, (void *)&png_err_stct,
+	    png_create_read_struct(PNG_LIBPNG_VER_STRING, (png_voidp *)&png_err_stct,
 				   png_error_func, png_warning_func);
 	if (!png_ptr)
 		signal_image_error("Error obtaining memory for png_read",
@@ -915,11 +916,13 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	/* It has been further modified to handle the API changes for 0.96,
 	   and is no longer usable for previous versions. jh
 	 */
+	/* It has been further modified to handle libpng 1.5.x --SY */
 
 	/* Set the jmp_buf return context for png_error ... if this returns !0, then
 	   we ran into a problem somewhere, and need to clean up after ourselves. */
 	if (setjmp(png_err_stct.setjmp_buffer)) {
-		/* Something blew up: just display the error (cleanup happens in the unwind) */
+		/* Something blew up: just display the error (cleanup
+		 * happens in the unwind) */
 		signal_image_error_2("Error decoding PNG",
 				     build_string(png_err_stct.err_str),
 				     instantiator);
@@ -950,23 +953,27 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	}
 
 	png_read_info(png_ptr, info_ptr);
+	png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,
+		     &interlace_type, NULL, NULL);
 
 	{
-		int y;
-		unsigned char **row_pointers;
-		height = info_ptr->height;
-		width = info_ptr->width;
+		int y, pass;
+		int passes = 0;
+		png_bytep row_pointers[height];
 
 		/* Wow, allocate all the memory.  Truly, exciting. */
 		unwind.eimage = xmalloc_atomic(width * height * 3);
 		/* libpng expects that the image buffer passed in contains a
 		   picture to draw on top of if the png has any transparencies.
 		   This could be a good place to pass that in... */
-		row_pointers = xnew_array(png_byte *, height);
-
 		for (y = 0; y < height; y++) {
-			row_pointers[y] = unwind.eimage + (width * 3 * y);
+			row_pointers[y] = NULL;
 		}
+		
+		for (y = 0; y < height; y++) {
+		 	row_pointers[y] = unwind.eimage + (width * 3 * y);
+		}
+		 
 		{
 			/* if the png specifies a background chunk, go ahead and
 			 * use it, else use what we can get
@@ -1010,58 +1017,53 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 
 		/* Now that we're using EImage, ask for 8bit RGB triples for any type
 		   of image */
-		/* convert palette images to full RGB */
-		if (info_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
-			png_set_expand(png_ptr);
-		/* send grayscale images to RGB too */
-		if (info_ptr->color_type == PNG_COLOR_TYPE_GRAY ||
-		    info_ptr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
-			png_set_gray_to_rgb(png_ptr);
-		/* we can't handle alpha values
-		 * Actually, mostly, we can.  There's just a problem
-		 * with FACE_BACKGROUND_PIXMAP.  Don't set a
-		 * background pixmap and you're fine. --SY.
-		 * if (info_ptr->color_type & PNG_COLOR_MASK_ALPHA)
-		 *	png_set_strip_alpha(png_ptr);
-                 */
+
 		/* tell libpng to strip 16 bit depth files down to 8 bits */
-		if (info_ptr->bit_depth == 16)
+		if (bit_depth == 16)
 			png_set_strip_16(png_ptr);
 		/* if the image is < 8 bits, pad it out */
-		if (info_ptr->bit_depth < 8) {
-			if (info_ptr->color_type == PNG_COLOR_TYPE_GRAY)
-				png_set_expand(png_ptr);
+		if (bit_depth < 8) {
+			if (color_type == PNG_COLOR_TYPE_GRAY)
+				png_set_expand_gray_1_2_4_to_8(png_ptr);
 			else
 				png_set_packing(png_ptr);
 		}
-
-		png_read_image(png_ptr, row_pointers);
-		png_read_end(png_ptr, info_ptr);
-
-#ifdef PNG_SHOW_COMMENTS
-		/* ####
-		 * I turn this off by default now, because the !%^@#!% comments
-		 * show up every time the image is instantiated, which can get
-		 * really really annoying.  There should be some way to pass this
-		 * type of data down into the glyph code, where you can get to it
-		 * from lisp anyway. - WMP
+		/* convert palette images to full RGB */
+		if (color_type == PNG_COLOR_TYPE_PALETTE)
+			png_set_palette_to_rgb(png_ptr);
+		/* send grayscale images to RGB too */
+		if (color_type == PNG_COLOR_TYPE_GRAY ||
+		    color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+			png_set_gray_to_rgb(png_ptr);
+		/*
+		 * Expand paletted or RGB images with transparency to
+		 * full alpha channels so the data will be available
+		 * as RGBA quartets.  We don't actually take advantage
+		 * of this yet, but it's not going to hurt, and you
+		 * never know... one of these days... --SY.
 		 */
-		{
-			int i;
+  		if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+  			png_set_tRNS_to_alpha(png_ptr);
+		/* Turn on interlace handling */
+		if (interlace_type == PNG_INTERLACE_ADAM7)
+			passes = png_set_interlace_handling(png_ptr);
 
-			for (i = 0; i < info_ptr->num_text; i++) {
-				/* How paranoid do I have to be about no trailing NULLs, and
-				   using (int)info_ptr->text[i].text_length, and strncpy and a temp
-				   string somewhere? */
+		/* Update the data */
+		png_read_update_info(png_ptr, info_ptr);
 
-				warn_when_safe(Qpng, Qinfo, "%s - %s",
-					       info_ptr->text[i].key,
-					       info_ptr->text[i].text);
+		/* read in the image row by row if interlaced, */
+		if (interlace_type == PNG_INTERLACE_ADAM7) {
+			for (pass = 0; pass < passes; pass++) {
+				for (y = 0; y < height; y++) {
+					png_read_rows(png_ptr,
+						      &row_pointers[y],
+						      NULL, 1);
+				}
 			}
+		} else { /* the whole thing in 1 hit for non-interlaced */
+			png_read_image(png_ptr, row_pointers);
 		}
-#endif
-
-		xfree(row_pointers);
+		png_read_end(png_ptr, info_ptr);
 	}
 
 	/* now instantiate */
