@@ -210,7 +210,7 @@ static void init_async_timeouts(void)
 
 /* Turn off async timeouts.  */
 
-static void stop_async_timeouts(void)
+extern void stop_async_timeouts(void)
 {
 	if (async_timer_suppress_count == 0) {
 		/* If timer was on, turn it off. */
@@ -223,7 +223,7 @@ static void stop_async_timeouts(void)
 
 /* Turn on async timeouts again. */
 
-static void start_async_timeouts(void)
+extern void start_async_timeouts(void)
 {
 	assert(async_timer_suppress_count > 0);
 	async_timer_suppress_count--;

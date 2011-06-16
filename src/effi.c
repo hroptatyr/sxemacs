@@ -1340,8 +1340,10 @@ ffi_call_using_libffi(Lisp_Object fo_fun, Lisp_Object ret_fo,
         if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, in_nargs,
                          rtype, ex_ffitypes) == FFI_OK)
         {
+		stop_async_timeouts();
                 ffi_call(&cif, (void(*)(void))XEFFIO(fo_fun)->fop.fun, rvalue,
                          ex_values);
+		start_async_timeouts();
                 return 0;
         }
 
