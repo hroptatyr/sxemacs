@@ -2831,8 +2831,10 @@ Bindings are:
                        (make-ffi-object 'MagickExceptionInfo)))))
       (and (not (ffi-null-p fi))
            (not (ffi-null-p (MagickInfo->decoder fi)))
+           ))))
+;; ImageMagick on linux treats any format to be RAW for some reason
            ;; We can't read raw formats
-           (not (MagickInfo->raw fi))))))
+;           (not (MagickInfo->raw fi))))))
 
 (defcustom Wand-formats-write-unsupported
   '("html")
@@ -2864,7 +2866,7 @@ Bindings are:
                (Wand-format-supported-for-read-p itype))))))
 
 (defun Wand-formats-list (fmt-regexp &optional mode)
-  "Return name of supportef formats that matches FMT-REGEXP.
+  "Return names of supported formats that matches FMT-REGEXP.
 Optionally you can specify MODE:
   'read  - Only formats that we can read
   'write - Only formats that we can write
