@@ -1713,9 +1713,6 @@ FN might be a string or wand-font object."
 (defsetf Wand:draw-fill-opacity (w) (fo)
   `(Wand:DrawSetFillOpacity ,w ,fo))
 
-(cffi:defcfun ("DrawSetFillRule" Wand:DrawSetFillRule) void
-  (dw DrawingWand) (fr FillRule))
-
 (cffi:defcfun ("DrawMatte" Wand:draw-matte) void
   (dw DrawingWand) (x double) (y double) (paint-method PaintMethod))
 
@@ -1727,9 +1724,6 @@ FN might be a string or wand-font object."
 
 (defsetf Wand:draw-stroke-width (dw) (sw)
   `(Wand:DrawSetStrokeWidth ,dw ,sw))
-
-(cffi:defcfun ("DrawSetStrokeColor" Wand:DrawSetStrokeColor) void
-  (dw DrawingWand) (stroke-color pointer))
 
 (cffi:defcfun ("DrawGetStrokeOpacity" Wand:draw-stroke-opacity) double
   (dw DrawingWand))
