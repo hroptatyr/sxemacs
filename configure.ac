@@ -744,11 +744,6 @@ dnl dnl Other Options
 dnl dnl =============
 dnl OG_OPTION_GROUP(Other options)
 dnl 
-dnl OG_ARG_WITH([tooltalk],
-dnl 	AS_HELP_STRING([--with-tooltalk],
-dnl 		[Support the ToolTalk IPC protocol.]),
-dnl 	[no], [NO], [], [with_tooltalk=$withval], [with_tooltalk=no])
-
 
 ## -------------------------------------------------------------------------
 ## Check for users who regularly forget about running autoconf
@@ -1034,13 +1029,6 @@ AC_DEFINE_UNQUOTED([STACK_TRACE_EYE_CATCHER], [$stack_trace_eye_catcher],
 dnl --------------------------------------------------
 dnl Determine the compiler, set up for feature testing
 dnl --------------------------------------------------
-
-dnl Sun Development environment support
-test "$with_sparcworks" = "yes" && with_workshop=yes # compatibility alias
-SXE_CHECK_FEATURE_DEPENDENCY([workshop], [tooltalk])
-if test "$with_workshop" = "yes"; then
-	AC_DEFINE([SUNPRO], [1], [Description here!])
-fi
 
 if test "$with_clash_detection" != "no"; then
 	AC_DEFINE([CLASH_DETECTION], [1], [Description here!])
@@ -2460,7 +2448,7 @@ if test "$with_x11" = "yes"; then
 	fi
 	
 	if test "$got_motif" != "yes"; then
-		dnl Try to find Motif/CDE/Tooltalk dirs
+		dnl Try to find Motif dirs
 		dnl These take precedence over other X libs/includes, so PRE-pend
 		for lib_dir in \
 			"/usr/dt/lib" "/usr/lib/Motif2.1" \
@@ -2700,7 +2688,7 @@ if test "$with_x11" != "yes"; then
   dnl if test "$with_tty" = "no" ; then
   dnl   AC_MSG_ERROR([No window system support and no TTY support - Unable to proceed.])
   dnl fi
-  for feature in tooltalk cde offix wmcommand xim xmu nas_sound
+  for feature in offix wmcommand xim xmu nas_sound
   do
     if eval "test -n \"\$with_${feature}\" -a \"\$with_${feature}\" != no" ; then
        AC_MSG_WARN([--with-$feature ignored:  Not valid without X support])
@@ -2817,55 +2805,6 @@ else
 	with_widgets=no
 fi
 
-dnl Autodetect tooltalk
-if test "$with_tooltalk" != "no" ; then
-  dnl autodetect the location of tt_c.h
-  dnl tt_c.h might be in Tt or desktop include directories
-  for dir in "" "Tt/" "desktop/" ; do
-    AC_CHECK_HEADER(${dir}tt_c.h, tt_c_h_file="${dir}tt_c.h"; break)
-  done
-  if test -z "$tt_c_h_file"; then
-    if test "$with_tooltalk" = "yes"; then
-      SXE_USAGE_ERROR("Unable to find required tooltalk header files.")
-    fi
-    with_tooltalk=no
-  fi
-fi
-if test "$with_tooltalk" != "no" ; then
-  for extra_libs in "" "-lI18N -lce" "-lcxx"; do
-    AC_CHECK_LIB(tt, tt_message_create,
-      tt_libs="-ltt $extra_libs"; break, [:],$extra_libs)
-  done
-  if test -z "$tt_libs"; then
-    if test "$with_tooltalk" = "yes"; then
-      SXE_USAGE_ERROR("Unable to find required tooltalk libraries.")
-    fi
-    with_tooltalk=no
-  fi
-fi
-if test "$with_tooltalk" = "yes"; then
-  AC_DEFINE([TOOLTALK], [1], [Description here!])
-  AC_DEFINE_UNQUOTED([TT_C_H_FILE], ["$tt_c_h_file"], [Description here!])
-  SXE_PREPEND($tt_libs, libs_x)
-fi
-
-dnl Autodetect CDE
-AC_CHECK_HEADER(Dt/Dt.h, , with_cde=no)
-AC_CHECK_LIB(DtSvc, DtDndDragStart, [:], with_cde=no)
-if test "$with_dragndrop" = "no" ; then
-  if test "$with_cde" = "yes" ; then
-    AC_MSG_WARN([--with-cde forced to `no'; no generic Drag'n'Drop support])
-  fi
-  with_cde=no
-fi
-if test "$with_cde" = "yes" ; then
-  AC_DEFINE([HAVE_CDE], [1], [Description here!])
-  SXE_PREPEND(-lDtSvc, libs_x)
-  SXE_APPEND(CDE, dragndrop_proto)
-  with_tooltalk=yes # CDE requires Tooltalk
-  need_motif=yes    # CDE requires Motif
-fi
-
 dnl Always compile OffiX unless --without-offix is given, no
 dnl X11 support is compiled in, no standard Xmu is available,
 dnl or dragndrop support is disabled
@@ -2881,12 +2820,6 @@ fi
 if test "$with_dragndrop" = "no" ; then
   if test "$with_offix" = "yes" ; then
     AC_MSG_WARN([--with-offix forced to `no'; no generic Drag'n'Drop support])
-  fi
-  with_offix=no
-fi
-if test "$with_cde" = "yes" ; then
-  if test "$with_offix" = "yes" ; then
-    AC_MSG_WARN([--with-offix forced to `no'; CDE already found])
   fi
   with_offix=no
 fi

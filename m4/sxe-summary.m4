@@ -288,8 +288,6 @@ OG_MULTIARG_SUMMARY([static-modules], [Static Modules], [  ])
 echo "
 Other Features:"
 test "$with_ipv6_cname" = no && echo "  Inhibiting IPv6 canonicalization at startup."
-test "$with_tooltalk" = yes && echo "  Compiling in support for ToolTalk."
-test "$with_workshop" = yes && echo "  Compiling in support for Sun WorkShop."
 test "$with_socks" = yes && echo "  Compiling in support for SOCKS."
 test "$with_dnet" = yes && echo "  Compiling in support for DNET."
 if test "$with_regex_malloc" = no; then

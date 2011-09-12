@@ -300,9 +300,6 @@ Display time & date on the modeline.
 *** tm
 Emacs MIME support. Not needed for gnus >= 5.8.0.
 
-*** tooltalk
-Support for building with Tooltalk.
-
 *** tpu
 DEC EDIT/TPU support.
 
