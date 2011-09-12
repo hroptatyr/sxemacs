@@ -203,10 +203,6 @@ version 18.59 released October 31, 1992.
 #include <locale.h>
 #endif
 
-#ifdef TOOLTALK
-#include TT_C_H_FILE
-#endif
-
 /* For PATH_EXEC */
 #include <sxe-paths.h>
 
@@ -1502,10 +1498,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		syms_of_free_hook();
 #endif
 
-#ifdef TOOLTALK
-		syms_of_tooltalk();
-#endif
-
 #ifdef SUNPRO
 		syms_of_sunpro();
 #endif
@@ -1921,10 +1913,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		vars_of_mule_canna();
 #endif				/* HAVE_CANNA */
 #endif				/* MULE */
-
-#ifdef TOOLTALK
-		vars_of_tooltalk();
-#endif
 
 #ifdef SUNPRO
 		vars_of_sunpro();
@@ -2988,14 +2976,6 @@ static void shut_down_emacs(int sig, Lisp_Object stuff, int no_auto_save)
 #ifdef CLASH_DETECTION
 	unlock_all_files();
 #endif
-
-#ifdef TOOLTALK
-	tt_session_quit(tt_default_session());
-#if 0
-	/* The following crashes when built on X11R5 and run on X11R6 */
-	tt_close();
-#endif
-#endif				/* TOOLTALK */
 
 }
 

@@ -61,8 +61,7 @@ libsxeui_a_headers =				   \
 	glyphs.h gui.h gutter.h            	   \
 	imgproc.h insdel.h keymap.h menubar.h 	   \
 	objects.h redisplay.h scrollbar.h select.h \
-	toolbar.h tooltalk.h universe.h   \
-	window.h winslots.h 		      
+	toolbar.h universe.h window.h winslots.h 		      
 libsxeui_a_sources = 							\
 	console.c console-stream.c device.c faces.c font-lock.c         \
 	frame.c glyphs.c glyphs-eimage.c glyphs-widget.c gui.c gutter.c \

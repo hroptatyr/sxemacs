@@ -43,9 +43,6 @@ ERROR ! This ought not be getting compiled if EXTERNAL_WIDGET
 #endif
 #include "ExternalClientP.h"
 #include "ui/X11/extw-Xt.h"
-#ifdef TOOLTALK
-#include TT_C_H_FILE
-#endif
 /* This is the client widget, used to communicate with an ExternalShell
    widget. */
 #define NOTIFY(w, type, l0, l1, l2) \
@@ -97,10 +94,6 @@ static XtResource resources[] = {
 	{XtNshellName, XtCShellName,
 	 XtRString, sizeof(String),
 	 offset(shell_name), XtRImmediate, (XtPointer) NULL}
-	,
-	{XtNuseToolTalk, XtCUseToolTalk,
-	 XtRBoolean, sizeof(Boolean),
-	 offset(use_tooltalk), XtRImmediate, (XtPointer) False}
 };
 
 static XtActionsRec actions[] = {
@@ -218,50 +211,6 @@ externalClientInitialize(Widget req, Widget new, ArgList args,
 	}
 }
 
-#ifdef TOOLTALK
-static Tt_callback_action tt_callback(Tt_message m, Tt_pattern p)
-{
-	ExternalClientWidget ecw = (ExternalClientWidget) tt_message_user(m, 0);
-
-	switch (tt_message_state(m)) {
-	case TT_FAILED:
-		/* handle errors here */
-		break;
-	case TT_HANDLED:
-		ecw->externalClient.shell_name = tt_message_arg_val(m, 2);
-		XtCallCallbackList((Widget) ecw,
-				   ecw->externalClient.shell_ready_callback,
-				   NULL);
-		break;
-	}
-
-	tt_message_destroy(m);
-	return TT_CALLBACK_PROCESSED;
-}
-
-static void
-send_tooltalk_handshake(ExternalClientWidget ecw, Window win, char *name)
-{
-	Tt_message m = tt_message_create();
-
-	tt_message_op_set(m, "emacs-make-client-screen");
-	tt_message_scope_set(m, TT_SESSION);
-	tt_message_class_set(m, TT_REQUEST);
-	tt_message_arg_add(m, TT_IN, "string", name);
-	tt_message_iarg_add(m, TT_IN, "int", win);
-	tt_message_arg_add(m, TT_OUT, "string", NULL);
-	tt_message_user_set(m, 0, (void *)ecw);
-	tt_message_callback_add(m, tt_callback);
-	if (ecw->externalClient.emacs_procid) {
-		tt_message_address_set(m, TT_HANDLER);
-		tt_message_handler_set(m, ecw->externalClient.emacs_procid);
-	} else
-		tt_message_address_set(m, TT_PROCEDURE);
-	tt_message_send(m);
-}
-
-#endif
-
 static void
 externalClientRealize(Widget w, XtValueMask * vm, XSetWindowAttributes * attrs)
 {
@@ -273,16 +222,6 @@ externalClientRealize(Widget w, XtValueMask * vm, XSetWindowAttributes * attrs)
 	(*coreWidgetClass->core_class.realize) (w, vm, attrs);
 #endif
 
-#ifdef TOOLTALK
-
-	/* Make sure that the server actually knows about this window id before
-	 * telling Emacs about it.
-	 */
-	if (ecw->externalClient.use_tooltalk) {
-		XSync(XtDisplay(w), False);
-		send_tooltalk_handshake(ecw, XtWindow(w), XtName(w));
-	}
-#endif
 }
 
 /***********************************************************************/
