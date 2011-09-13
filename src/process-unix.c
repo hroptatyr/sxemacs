@@ -74,7 +74,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  */
 
 struct unix_process_data {
-	/* Non-0 if this is really a ToolTalk channel. */
+	/* Always 0.  Used to be for tooltalk only. */
 	int connected_via_filedesc_p;
 	/* Descriptor by which we read from this process.  -1 for dead process */
 	int infd;
@@ -1112,13 +1112,6 @@ unix_create_process(Lisp_Process * p,
 		report_file_error("Opening pty or pipe", Qnil);
 		return 0;	/* not reached */
 	}
-}
-
-/* Return nonzero if this process is a ToolTalk connection. */
-
-static int unix_tooltalk_connection_p(Lisp_Process * p)
-{
-	return UNIX_DATA(p)->connected_via_filedesc_p;
 }
 
 /* This is called to set process' virtual terminal size */
@@ -2598,7 +2591,6 @@ void process_type_create_unix(void)
 #endif
 	PROCESS_HAS_METHOD(unix, init_process_io_handles);
 	PROCESS_HAS_METHOD(unix, create_process);
-	PROCESS_HAS_METHOD(unix, tooltalk_connection_p);
 	PROCESS_HAS_METHOD(unix, set_window_size);
 #ifdef HAVE_WAITPID
 	PROCESS_HAS_METHOD(unix, update_status_if_terminated);

@@ -233,9 +233,6 @@ special way (they are passed arguments, or else their values are used).
 @item text-mode-hook
 @item today-visible-calendar-hook
 @item today-invisible-calendar-hook
-@item tooltalk-message-handler-hook
-@item tooltalk-pattern-handler-hook
-@item tooltalk-unprocessed-message-hook
 @item unmap-frame-hook
 @item vc-checkin-hook
 @item vc-checkout-writable-buffer-hook

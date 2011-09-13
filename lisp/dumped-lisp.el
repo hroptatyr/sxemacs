@@ -227,13 +227,6 @@ in dumped-lisp.el and is not itself listed.")
 
 ;; preload the TTY init code.
 	(when-feature tty "tty-init")
-;;; Formerly in tooltalk/tooltalk-load.el
-	;; Moved to tooltalk package
-	;; (when-feature tooltalk "tooltalk-macros")
-	;; (when-feature tooltalk "tooltalk-util")
-	;; (when-feature tooltalk "tooltalk-init")
-	;; "vc-hooks"		; Packaged.  Available in two versions.
-	;; "ediff-hook"		; Packaged.
         "x-color"
         "cus-face"
         "font-lock"
@@ -241,24 +234,5 @@ in dumped-lisp.el and is not itself listed.")
 	"auto-show"
 	(when-feature ldap "ldap")
 
-;; (when-feature energize "energize/energize-load.el")
-;;; formerly in sunpro/sunpro-load.el
-;;	(when-feature (and mule sparcworks) "mime-setup")
-
-	;; Moved to Sun package
-	;; (when-feature sparcworks "cc-mode") ; Requires cc-mode package
-	;; (when-feature sparcworks "sunpro-init")
-	;; (when-feature sparcworks "ring")
-	;; (when-feature sparcworks "comint") ; Requires comint package
-	;; (when-feature sparcworks "annotations")
-
-;;; formerly in eos/sun-eos-load.el
-;;	(when-feature sparcworks "sun-eos-init")
-;;	(when-feature sparcworks "sun-eos-common")
-;;	(when-feature sparcworks "sun-eos-editor")
-;;	(when-feature sparcworks "sun-eos-browser")
-;;	(when-feature sparcworks "sun-eos-debugger")
-;;	(when-feature sparcworks "sun-eos-debugger-extra")
-;;	(when-feature sparcworks "sun-eos-menubar")
 	"loaddefs"		; <=== autoloads get loaded here
 ))

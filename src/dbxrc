@@ -330,10 +330,6 @@ function pobj {
     pstruct event-stream.c Lisp_Timeout
   elif test $lrecord_type = lrecord_type_toolbar_button; then
     pstruct toolbar.c toolbar_button
-  elif test $lrecord_type = lrecord_type_tooltalk_message; then
-    pstruct tooltalk.c Lisp_Tooltalk_Message
-  elif test $lrecord_type = lrecord_type_tooltalk_pattern; then
-    pstruct tooltalk.c Lisp_Tooltalk_Pattern
   elif test $lrecord_type = lrecord_type_weak_list; then
     pstruct data.c weak_list
   elif test $lrecord_type = lrecord_type_window; then

@@ -1805,10 +1805,6 @@ An object that encapsulate a @dfn{subwindow} resource, i.e. a
 window-system child window that is drawn into by an external process;
 this object should be integrated into the glyph system but isn't yet,
 and may change form when this is done.
-@item tooltalk-message
-@itemx tooltalk-pattern
-Objects that represent resources used in the ToolTalk interprocess
-communication protocol.
 @item toolbar-button
 An object used in conjunction with the toolbar.
 @end table
@@ -4914,23 +4910,6 @@ currently in use.
 
 
 @example
-tooltalk.c
-tooltalk.h
-@end example
-
-These two modules implement an interface to the ToolTalk protocol, which
-is an interprocess communication protocol implemented on some versions
-of Unix.  ToolTalk is a high-level protocol that allows processes to
-register themselves as providers of particular services; other processes
-can then request a service without knowing or caring exactly who is
-providing the service.  It is similar in spirit to the DDE protocol
-provided under Microsoft Windows.  ToolTalk is a part of the new CDE
-(Common Desktop Environment) specification and is used to connect the
-parts of the SPARCWorks development environment.
-
-
-
-@example
 getloadavg.c
 @end example
 
@@ -5832,7 +5811,7 @@ coding-system, frame, image-instance, glyph, popup-data, gui-item,
 keymap, charset, color_instance, font_instance, opaque, opaque-list,
 process, range-table, specifier, symbol-value-buffer-local,
 symbol-value-lisp-magic, symbol-value-varalias, toolbar-button,
-tooltalk-message, tooltalk-pattern, window, and window-configuration. We
+window, and window-configuration. We
 take care of them in the fist place
 in order to be able to handle and to finalize items stored in them more
 easily. The function @code{sweep_lcrecords_1} as described below is

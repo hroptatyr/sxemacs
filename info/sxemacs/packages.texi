@@ -777,9 +777,6 @@ Display time & date on the modeline.
 @item tm
 Emacs MIME support. Not needed for Gnus >= 5.8.0
 
-@item tooltalk
-Support for building with Tooltalk.
-
 @item tpu
 DEC EDIT/TPU support.
 

@@ -7,11 +7,6 @@
 #include <Xm/PanedW.h>
 #include "ExternalClient.h"
 
-#ifdef TOOLTALK
-#include <desktop/tt_c.h>
-char *HxProcID;
-#endif
-
 XtAppContext xt_app_con;
 
 void ScaleValueChangedCB(Widget scale, XtPointer app_data,
@@ -29,37 +24,6 @@ void ScaleValueChangedCB(Widget scale, XtPointer app_data,
 #endif
 }
 
-#ifdef TOOLTALK
-static void handle_tt_input(XtPointer client_data, int *source, XtInputId * id)
-{
-	Tt_message m = tt_message_receive();
-
-	if (m && !(tt_ptr_error(m))) {
-		tt_message_destroy(m);
-	}
-}
-
-Tt_status HxInitializeToolTalk()
-{
-	static Boolean initialized = FALSE;
-
-	if (!initialized) {
-		int fd;
-		Tt_status status;
-
-		HxProcID = tt_open();
-		fd = tt_fd();
-		if (TT_OK != (status = tt_session_join(tt_default_session())))
-			return status;
-		(void)XtAppAddInput(xt_app_con, fd, (void *)XtInputReadMask,
-				    handle_tt_input, NULL);
-		initialized = TRUE;
-	}
-
-	return TT_OK;
-}
-#endif
-
 main(int argc, char **argv)
 {
 	Widget shell, rowcolumn, scale, pushbutton, label1, label2, text;
@@ -76,10 +40,6 @@ main(int argc, char **argv)
 
 	shell = XtAppInitialize(&xt_app_con, "Testmotif", NULL, 0,
 				&argc, argv, NULL, NULL, 0);
-
-#ifdef TOOLTALK
-	HxInitializeToolTalk();
-#endif
 
 	rowcolumn = XmCreateRowColumn(shell, "rowcolumn", NULL, 0);
 	XtManageChild(rowcolumn);
@@ -113,9 +73,6 @@ main(int argc, char **argv)
 		    XtVaCreateWidget(buf, externalClientWidgetClass, paned,
 				     XmNwidth, 500, XmNheight, 200,
 				     XmNtraversalOn, TRUE,
-#ifdef TOOLTALK
-				     XtNuseToolTalk, TRUE,
-#endif
 				     NULL);
 	}
 	text2 = XmCreateText(paned, "text2", NULL, 0);

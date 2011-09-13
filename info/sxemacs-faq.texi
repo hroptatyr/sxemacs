@@ -317,7 +317,6 @@ Other Mail & News:
 
 Sparcworks, EOS, and WorkShop:
 * Q4.4.1::      What is SPARCworks, EOS, and WorkShop
-* Q4.4.2::      How do I start the Sun Workshop support in SXEmacs?
 
 Energize:
 * Q4.5.1::      What is/was Energize?
@@ -586,9 +585,6 @@ Packages at all.
 
 @item
 Marginal annotations.
-
-@item
-ToolTalk support.
 
 @item
 XEmacs can be used as an Xt widget, and can be embedded within another
@@ -4072,7 +4068,6 @@ Other Mail & News:
 
 Sparcworks, EOS, and WorkShop:
 * Q4.4.1::      What is SPARCworks, EOS, and WorkShop
-* Q4.4.2::      How do I start the Sun Workshop support in SXEmacs?
 
 Energize:
 * Q4.5.1::      What is/was Energize?
@@ -4585,27 +4580,6 @@ called Sun WorkShop.  For more details, check out
 @end iftex
 @uref{http://www.sun.com/software/Products/Developer-products}.
 @end quotation
-
-
-@node Q4.4.2
-@unnumberedsec Q4.4.2: How do I start the Sun Workshop support in SXEmacs?
-
-Add the switch ---with-workshop to the configure command when building
-SXEmacs and put the following in one of your startup files
-(e.g. site-start.el or init.el):
-
-@lisp
-(when (featurep 'tooltalk)
-  (load "tooltalk-macros")
-  (load "tooltalk-util")
-  (load "tooltalk-init"))
-(when (featurep 'sparcworks)
-  (load "sunpro-init")
-  (load "ring")
-  (load "comint")
-  (load "annotations")
-  (sunpro-startup))
-@end lisp
 
 
 @node Q4.5.1
