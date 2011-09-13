@@ -56,13 +56,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #define XtCShellName "ShellName"
 #endif
 
-#ifndef XtNuseToolTalk
-#define XtNuseToolTalk "useToolTalk"
-#endif
-#ifndef XtCUseToolTalk
-#define XtCUseToolTalk "UseToolTalk"
-#endif
-
 typedef struct _ExternalClientClassRec *ExternalClientWidgetClass;
 typedef struct _ExternalClientRec *ExternalClientWidget;
 extern WidgetClass externalClientWidgetClass;

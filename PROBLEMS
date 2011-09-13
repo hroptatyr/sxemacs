@@ -101,13 +101,6 @@ configure with `--with-cflags='-mcpu=ultrasparc -m64''.  Apparently
 GCC on Solaris 9 defaults to building 32-bit, so you lose if you have
 64-bit PostgreSQL.
 
-** Tooltalk
-
-Tooltalk seems to be very broken, and to be honest, we don't know of
-anyone who actually uses it.  So we're defaulting it to `off'.  It may
-disappear entirely in a future release, but the jury is still out on
-that one.
-
 ** 64-bit test suite failure
 
 We have had a couple of reports of the test suite failing on 64-bit
