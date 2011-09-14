@@ -5113,7 +5113,7 @@ print_window_config(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		error("printing unreadable object #<window-configuration 0x%x>",
 		      config->header.uid);
 	write_c_string("#<window-configuration ", printcharfun);
-	sprintf(buf, "0x%x>", config->header.uid);
+	snprintf(buf, sizeof(buf), "0x%x>", config->header.uid);
 	write_c_string(buf, printcharfun);
 }
 
