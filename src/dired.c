@@ -851,7 +851,7 @@ file_name_completion_stat(Lisp_Object directory, DIRENTRY * dp,
 	   in case it is a directory.  */
 	value = lstat(fullname, st_addr);
 	if (S_ISLNK(st_addr->st_mode))
-		sxemacs_stat(fullname, st_addr);
+		(void)sxemacs_stat(fullname, st_addr);
 #else
 	value = sxemacs_stat(fullname, st_addr);
 #endif
