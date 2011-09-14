@@ -38,9 +38,10 @@ int main(int argc, char *argv[])
 	FILE *fp;
 	char file[BUFSIZ];
 
-	if (argc > 2 && !strcmp(argv[1], "-f"))
-		strcpy(file, argv[2]);
-	else
+	if (argc > 2 && !strcmp(argv[1], "-f")) {
+		strncpy(file, argv[2], sizeof(file)-1);
+		file[sizeof(file)-1]='\0';
+	} else
 #ifdef PATH_DATA
 #ifdef vms
 		sprintf(file, "%s%s", PATH_DATA, YOW_FILE);
