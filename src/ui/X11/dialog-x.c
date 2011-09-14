@@ -244,7 +244,7 @@ x_make_dialog_box_internal(struct frame *f, Lisp_Object type, Lisp_Object keys)
 {
 	int dbox_id;
 	widget_value *data;
-	Widget parent, dbox;
+	Widget parent;
 
 	if (!EQ(type, Qquestion))
 		signal_type_error(Qunimplemented, "Dialog box type", type);
@@ -254,9 +254,9 @@ x_make_dialog_box_internal(struct frame *f, Lisp_Object type, Lisp_Object keys)
 	parent = FRAME_X_SHELL_WIDGET(f);
 
 	dbox_id = new_lwlib_id();
-	dbox =
-	    lw_create_widget(data->name, "dialog", dbox_id, data, parent, 1, 0,
-			     dbox_selection_callback, 0);
+
+	(void)lw_create_widget(data->name, "dialog", dbox_id, data, parent, 1, 0,
+			       dbox_selection_callback, 0);
 	lw_modify_all_widgets(dbox_id, data, True);
 	lw_modify_all_widgets(dbox_id, data->contents, True);
 	free_popup_widget_value_tree(data);
