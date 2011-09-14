@@ -141,14 +141,16 @@ static void tty_init_console(struct console *con, Lisp_Object props)
 
 		EMACS_GET_TTY_PROCESS_GROUP(tty_con->infd, &tty_pg);
 		cfd = open("/dev/tty", O_RDWR, 0);
-		EMACS_GET_TTY_PROCESS_GROUP(cfd, &controlling_tty_pg);
-		close(cfd);
-		if (tty_pg == controlling_tty_pg) {
-			tty_con->controlling_terminal = 1;
-			XSETCONSOLE(Vcontrolling_terminal, con);
-			munge_tty_process_group();
-		} else
-			tty_con->controlling_terminal = 0;
+		tty_con->controlling_terminal = 0;
+		if (cfd >= 0 ) {
+			EMACS_GET_TTY_PROCESS_GROUP(cfd, &controlling_tty_pg);
+			close(cfd);
+			if (tty_pg == controlling_tty_pg) {
+				tty_con->controlling_terminal = 1;
+				XSETCONSOLE(Vcontrolling_terminal, con);
+				munge_tty_process_group();
+			}
+		}
 	}
 
 	UNGCPRO;

@@ -178,7 +178,7 @@ static char *get_current_working_directory(void)
   filename_expand -- try to convert the given filename into a fully-qualified
   		     pathname.
 */
-static void filename_expand(char *fullpath, char *filename)
+static void filename_expand(char *fullpath, char *filename, size_t fullsize)
   /* fullpath - returned full pathname */
   /* filename - filename to expand */
 {
@@ -187,21 +187,21 @@ static void filename_expand(char *fullpath, char *filename)
 
 	if (filename[0] && filename[0] == '/') {
 		/* Absolute (unix-style) pathname.  Do nothing */
-		strcat(fullpath, filename);
+	        strncat(fullpath, filename, fullsize-1);
 	} else {
 		/* Assume relative Unix style path.  Get the current directory
 		   and prepend it.  FIXME: need to fix the case of DOS paths like
 		   "\foo", where we need to get the current drive. */
 
-		strcat(fullpath, get_current_working_directory());
+	        strncat(fullpath, get_current_working_directory(), fullsize-1);
 		len = strlen(fullpath);
 
 		if (len > 0 && fullpath[len - 1] == '/')	/* trailing slash already? */
 			;	/* yep */
-		else
+		else if (len < fullsize-1)
 			strcat(fullpath, "/");	/* nope, append trailing slash */
 		/* Don't forget to add the filename! */
-		strcat(fullpath, filename);
+		strncat(fullpath, filename, fullsize-len-1);
 	}
 }				/* filename_expand */
 
@@ -540,9 +540,11 @@ int main(int argc, char *argv[])
 			gethostname(thishost, HOSTNAMSZ);
 			if (!rflg) {	/* attempt to generate a path
 					 * to this machine */
-				if ((ptr = getenv("GNU_NODE")) != NULL)
+				if ((ptr = getenv("GNU_NODE")) != NULL) {
 					/* user specified a path */
-					strcpy(remotepath, ptr);
+					strncpy(remotepath, ptr, sizeof(remotepath)-1);
+					remotepath[sizeof(remotepath)-1]='\0';
+				}
 			}
 #if 0				/* This is really bogus... re-enable it if you must have it! */
 #if defined (hp9000s300) || defined (hp9000s800)
@@ -611,7 +613,7 @@ int main(int argc, char *argv[])
 				starting_line = 1;
 				--i;
 			}
-			filename_expand(fullpath, argv[i]);
+			filename_expand(fullpath, argv[i], sizeof(fullpath));
 #ifdef INTERNET_DOMAIN_SOCKETS
 			path =
 			    (char *)malloc(strlen(remotepath) +
