@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #define	C_LEN		(1L<<C_DEPTH)	/* # cells/color to use */
 
 #define	COLOR_SHIFT	(COLOR_DEPTH-B_DEPTH)
+#define COLOR_MASK      (B_LEN-1)
 
 typedef struct colorbox {
 	struct colorbox *next, *prev;

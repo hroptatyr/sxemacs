@@ -58,9 +58,9 @@ get_histogram(quant_table * qt, unsigned char *pic,
 	inptr = pic;
 	for (i = 0; i < height; i++) {
 		for (j = width; j-- > 0;) {
-			red = *inptr++ >> COLOR_SHIFT;
-			green = *inptr++ >> COLOR_SHIFT;
-			blue = *inptr++ >> COLOR_SHIFT;
+			red = (*inptr++ >> COLOR_SHIFT) & COLOR_MASK;
+			green = (*inptr++ >> COLOR_SHIFT) & COLOR_MASK;
+			blue = (*inptr++ >> COLOR_SHIFT) & COLOR_MASK;
 			if (red < box->rmin)
 				box->rmin = red;
 			if (red > box->rmax)
