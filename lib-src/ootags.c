@@ -5070,18 +5070,19 @@ char *file, *dir;
 	do			/* look at the equal chars until '/' */
 		fp--, dp--;
 	while (*fp != '/');
+	fp ++; /* Advance past the '/' */
 
 	/* Build a sequence of "../" strings for the resulting relative file name. */
 	i = 0;
 	while ((dp = etags_strchr(dp + 1, '/')) != NULL)
 		i += 1;
-	res = xnew(3 * i + strlen(fp + 1) + 1, char);
+	res = xnew(3 * i + strlen(fp) + 1, char);
 	res[0] = '\0';
 	while (i-- > 0)
 		strcat(res, "../");
 
 	/* Add the file name relative to the common root of file and dir. */
-	strcat(res, fp + 1);
+	strcat(res, fp);
 	free(afn);
 
 	return res;
