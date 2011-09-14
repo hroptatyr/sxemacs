@@ -611,16 +611,14 @@ The float closest in value to -0.
 								       */);
 	Vleast_negative_float = make_float(fp);
 
-	f = 1.0;
-	while ((fp = f, f /= 2) * 2 == fp && f != 0);
+	for( f = fp = 1.0; (f /= 2) * 2 == fp && f != 0; fp = f );
 	DEFVAR_CONST_LISP("least-positive-normalised-float",
 			  &Vleast_positive_normalised_float /*
 The float closest in value to +0 without rounding errors.
 							    */);
 	Vleast_positive_normalised_float = make_float(fp);
 
-	f = -1.0;
-	while ((fp = f, f /= 2) * 2 == fp && f != 0);
+	for( f = fp = -1.0; ( f /= 2) * 2 == fp && f != 0; fp = f);
 	DEFVAR_CONST_LISP("least-negative-normalised-float",
 			  &Vleast_negative_normalised_float /*
 The float closest in value to -0 without rounding errors.

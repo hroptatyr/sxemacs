@@ -889,6 +889,7 @@ concat(int nargs, Lisp_Object * args,
 						   XINT(elt));
 			} else {
 				CHECK_CHAR_COERCE_INT(elt);
+                                assert(string_result_ptr != NULL);
 				string_result_ptr +=
 				    set_charptr_emchar(string_result_ptr,
 						       XCHAR(elt));
