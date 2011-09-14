@@ -116,4 +116,3 @@ finder-inf.el
 ## Exceptions
 !cl-loop-parser.y
 !etc/tests/external-widget/Makefile
-!tests/tooltalk/Makefile

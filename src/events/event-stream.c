@@ -2961,7 +2961,10 @@ execute_internal_event(Lisp_Object event)
 			     every time the file descriptor becomes
 			     active, so the filter function forces this
 			     by returning 0.  Emacs must not interpret
-			     this as a closed pipe. */
+			     this as a closed pipe. 
+
+			     We don't do ToolTalk anymore, but come
+			     back and revisit this for D-Bus */
 			   connected_via_filedesc_p(XPROCESS(p))))
 #ifdef HAVE_PTYS
 			 /* On some OSs with ptys, when the process on

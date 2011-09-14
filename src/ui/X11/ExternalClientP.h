@@ -51,7 +51,7 @@ typedef struct {		/* new fields for ExternalClient widget */
 	char *emacs_procid;
 	XtCallbackList shell_ready_callback;
 	String shell_name;
-	Bool use_tooltalk;
+	/* Probably need a `Bool use_dbus' here one day */
 } ExternalClientPart;
 
 typedef struct _ExternalClientRec {	/* full instance record */

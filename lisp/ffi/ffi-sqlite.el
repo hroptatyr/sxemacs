@@ -315,14 +315,14 @@ provide COPY-FLAG argument."
              (sqlite:bind-double statement key value))
             ((stringp value)
              (sqlite:bind-text statement key value (length value)
-                               (or copy-flag sqlite-TRANSIENT)))
+                               (or copy-flag sqlite-STATIC)))
             ((and (consp value) (eq (car value) 'blob)
                   (stringp (cdr value)))
              (let ((bval (ffi-create-fo `(c-data . ,(length (cdr value)))
                                         (cdr value))))
                (sqlite:bind-blob
                 statement key bval (length (cdr value))
-                (or copy-flag sqlite-TRANSIENT))))
+                (or copy-flag sqlite-STATIC))))
             (t (error 'sqlite-datatype-error value
                       :comment (concat "Attempt to insert data not one of "
                                        "integer, float, text, or blob."))))

@@ -46,6 +46,7 @@
   (:header 42)                          ; throw the header out too
   (:nobody 44)                          ; use HEAD to get http document
   (:post 47)                            ; HTTP POST method
+  (:nosignal 99)
   )
 
 (define-ffi-enum curl-info
@@ -179,7 +180,7 @@ Options are passed as keyword-value-pairs. Supported keywords are:
         ((:read-function :write-function)
          (setq value (ffi-callback-fo value)))
 
-        ((:nobody :header :post)
+        ((:nobody :header :post :nosignal)
          (setq value (ffi-create-fo 'int (if value 1 0)))))
 
       (setq error (curl:curl_easy_setopt ctx option value))
@@ -276,6 +277,10 @@ works with HTTP URLs."
         (progn
           (when bufferp
             (curl:easy-setopt ctx :write-function 'curl:cb-write-to-buffer))
+
+          ;; Avoid signalling!
+          (curl:easy-setopt ctx :nosignal t)
+
           (apply #'curl:easy-setopt ctx :fstream fs :url url options)
           (curl:easy-perform ctx))
       (unless bufferp (c:fclose fs))
@@ -316,6 +321,10 @@ is run.  Functions in there will be called with an argument JOB."
             (progn
               (when bufferp
                 (curl:easy-setopt ctx :write-function 'curl:cb-write-to-buffer))
+
+              ;; Avoid signalling!
+              (curl:easy-setopt ctx :nosignal t)
+
               (apply #'curl:easy-setopt ctx :fstream fs :url url options)
               (curl:easy-perform& ctx #'curl:easy-perform-sentinel
                                   (cons bufferp fs)))

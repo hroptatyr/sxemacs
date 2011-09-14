@@ -281,6 +281,11 @@ FROM-CALL is magic, do not use it!"
                             :off (+ off (ffi-slot-offset
                                          ctype (first sslot)))))))
 
+          ;; Extremely special case for safe-string!
+          ((eq type 'safe-string)
+           (unless (ffi-null-p fo)
+             (ffi-fetch fo off 'c-string)))
+
           ((and (not from-call)
                 (or (eq ctype 'pointer)
                     (and (listp ctype)
@@ -602,14 +607,8 @@ and pass the name of the callback."
 (define-ffi-translator-from-foreign lisp-object
   (ffi-pointer-to-lisp-object value))
 
+;; NOTE: use only for return values
 (define-ffi-type safe-string pointer)
-(define-ffi-translator-to-foreign safe-string
-  (if (stringp value)
-      (ffi-create-fo 'c-string value)
-    (ffi-null-pointer)))
-(define-ffi-translator-from-foreign safe-string
-  (unless (ffi-null-p value)
-    (ffi-get value :type 'c-string)))
 
 (define-ffi-type callback pointer)
 (define-ffi-translator-to-foreign callback
@@ -640,11 +639,12 @@ and pass the name of the callback."
 
 ;;;# Accessing Foreign Globals
 
-(defun cffi:lisp-var-name (name)
+(defun cffi:lisp-var-name (name &optional fun-p)
   "Return the Lisp symbol for foreign var NAME."
   (etypecase name
     (list (second name))
-    (string (intern (format "*%s*" (downcase (substitute ?- ?_ name)))))
+    (string (intern (format "%s%s%s" (if fun-p "" "*")
+                            (downcase (substitute ?- ?_ name)) (if fun-p "" "*"))))
     (symbol name)))
 
 (defun cffi:foreign-var-name (name)
@@ -677,7 +677,7 @@ and pass the name of the callback."
           (format "Lisp variant for `%s' foreign function."
                   (cffi:foreign-var-name name))))
 
-  (let* ((nsl (cffi:lisp-var-name name))
+  (let* ((nsl (cffi:lisp-var-name name t))
          (nsf (cffi:foreign-var-name name))
          (with-rest (when (eq (car (last in-args)) '&rest)
                       (setq in-args (butlast in-args))

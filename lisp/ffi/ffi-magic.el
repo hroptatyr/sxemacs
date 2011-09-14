@@ -60,6 +60,9 @@
 ;; Can't do anything without this
 (ffi-load "libmagic")
 
+(defvar ffi-magic-shared nil
+  "Shared context with preloaded magic file, to speed up things.")
+
 
 (define-ffi-type magic_t pointer)
 
@@ -75,7 +78,7 @@
 
 (define-ffi-function magic-file (magic file)
   "Call libmagic's magic_file()."
-  '(function c-string magic_t c-string)
+  '(function safe-string magic_t c-string)
   "magic_file")
 
 (define-ffi-function magic-close (magic)
@@ -83,18 +86,26 @@
   '(function void magic_t)
   "magic_close")
 
+(define-ffi-function magic-error (magic)
+  "Call libmagic's magic_error()."
+  '(function safe-string magic_t)
+  "magic_error")
+
 ;;;###autoload
 (defun magic:file-type (file)
   "Return as a string what type FILE is using libmagic."
   (interactive "fFile name: ")
-  (let ((magic (magic-open 0))
-	(cfile (expand-file-name file)))
-    (magic-load magic (ffi-null-pointer))
-    (let ((type (magic-file magic cfile)))
-      (magic-close magic)
-      (if (interactive-p)
-          (message type)
-        type))))
-  
+  (unless ffi-magic-shared
+    (setq ffi-magic-shared (magic-open 0))
+    (magic-load ffi-magic-shared (ffi-null-pointer)))
+
+  (let ((ftype (magic-file ffi-magic-shared (expand-file-name file))))
+    (if (interactive-p)
+        (message ftype)
+      ftype)))
+
+(defun magic:error (&optional magic)
+  (magic-error (or magic ffi-magic-shared)))
+
 (provide 'ffi-magic)
 ;;; ffi-magic.el ends here

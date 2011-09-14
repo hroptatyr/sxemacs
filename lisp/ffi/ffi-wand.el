@@ -1,4 +1,4 @@
-;;; ffi-wand.el --- SXEmacs interface to libWand
+;;; ffi-wand.el --- SXEmacs interface to libWand.
 ;;
 ;;{{{ Copyright (C) 2005 Sebastian Freundt
 ;;
@@ -45,31 +45,37 @@
 ;;   so be careful.  Need some assistance from IM developers to solve
 ;;   this problem.
 ;;
+;; 
 ;;}}}
 ;;; Code:
 
 ;;{{{ Initialisation
 
 (eval-when-compile
-  (require 'wid-edit)
   (globally-declare-boundp
    '(operations-list undo-list buffer-file-name image-wand preview-wand
                      preview-region preview-extent
                      find-file-magic-files-alist)))
 
 (require 'ffi)
+(require 'wid-edit)
 
 (defvar Wand-ffio-as-image-data
   (valid-instantiator-p
    (vector 'rawrgb :data (make-ffi-object 'pointer)
            :pixel-width 2 :pixel-height 2) 'image))
 
+(defvar Wand-GM-p nil
+  "Non-nil if using GraphicsMagick.")
+
 ;; this is our spine, barf if it does not exist
 ;; ImageMagick version 6.4.0 calls libWand `libMagickWand' so try the
 ;; old name first and don't error, fall back to the new name, barf if
 ;; that fails as well --SY.
 (or (ffi-load-library "libWand")
-    (ffi-load "libMagickWand"))
+    (ffi-load-library "libMagickWand")
+    (and (ffi-load "libGraphicsMagickWand")
+         (setq Wand-GM-p t)))
 
 ;;}}}
 ;;{{{ [+] FFI for MagickWand
@@ -123,70 +129,70 @@
   (signature unsigned-long))
 
 (define-ffi-enum MagickExceptionType
-  UndefinedException
-  (WarningException 300)
-  (ResourceLimitWarning 300)
-  (TypeWarning 305)
-  (OptionWarning 310)
-  (DelegateWarning 315)
-  (MissingDelegateWarning 320)
-  (CorruptImageWarning 325)
-  (FileOpenWarning 330)
-  (BlobWarning 335)
-  (StreamWarning 340)
-  (CacheWarning 345)
-  (CoderWarning 350)
-  (ModuleWarning 355)
-  (DrawWarning 360)
-  (ImageWarning 365)
-  (WandWarning 370)
-  (RandomWarning 375)
-  (XServerWarning 380)
-  (MonitorWarning 385)
-  (RegistryWarning 390)
-  (ConfigureWarning 395)
-  (ErrorException 400)
-  (ResourceLimitError 400)
-  (TypeError 405)
-  (OptionError 410)
-  (DelegateError 415)
-  (MissingDelegateError 420)
-  (CorruptImageError 425)
-  (FileOpenError 430)
-  (BlobError 435)
-  (StreamError 440)
-  (CacheError 445)
-  (CoderError 450)
-  (ModuleError 455)
-  (DrawError 460)
-  (ImageError 465)
-  (WandError 470)
-  (RandomError 475)
-  (XServerError 480)
-  (MonitorError 485)
-  (RegistryError 490)
-  (ConfigureError 495)
-  (FatalErrorException 700)
-  (ResourceLimitFatalError 700)
-  (TypeFatalError 705)
-  (OptionFatalError 710)
-  (DelegateFatalError 715)
-  (MissingDelegateFatalError 720)
-  (CorruptImageFatalError 725)
-  (FileOpenFatalError 730)
-  (BlobFatalError 735)
-  (StreamFatalError 740)
-  (CacheFatalError 745)
-  (CoderFatalError 750)
-  (ModuleFatalError 755)
-  (DrawFatalError 760)
-  (ImageFatalError 765)
-  (WandFatalError 770)
-  (RandomFatalError 775)
-  (XServerFatalError 780)
-  (MonitorFatalError 785)
-  (RegistryFatalError 790)
-  (ConfigureFatalError 795))
+  :UndefinedException
+  :WarningException       = 300
+  :ResourceLimitWarning   = :WarningException
+  :TypeWarning            = 305
+  :OptionWarning          = 310
+  :DelegateWarning        = 315
+  :MissingDelegateWarning = 320
+  :CorruptImageWarning    = 325
+  :FileOpenWarning        = 330
+  :BlobWarning            = 335
+  :StreamWarning          = 340
+  :CacheWarning           = 345
+  :CoderWarning           = 350
+  :ModuleWarning          = 355
+  :DrawWarning            = 360
+  :ImageWarning           = 365
+  :WandWarning            = 370
+  :RandomWarning          = 375
+  :XServerWarning         = 380
+  :MonitorWarning         = 385
+  :RegistryWarning        = 390
+  :ConfigureWarning       = 395
+  :ErrorException         = 400
+  :ResourceLimitError     = :ErrorException
+  :TypeError              = 405
+  :OptionError            = 410
+  :DelegateError          = 415
+  :MissingDelegateError   = 420
+  :CorruptImageError      = 425
+  :FileOpenError          = 430
+  :BlobError              = 435
+  :StreamError            = 440
+  :CacheError             = 445
+  :CoderError             = 450
+  :ModuleError            = 455
+  :DrawError              = 460
+  :ImageError             = 465
+  :WandError              = 470
+  :RandomError            = 475
+  :XServerError           = 480
+  :MonitorError           = 485
+  :RegistryError          = 490
+  :ConfigureError         = 495
+  :FatalErrorException    = 700
+  :ResourceLimitFatalError = :FatalErrorException
+  :TypeFatalError         = 705
+  :OptionFatalError       = 710
+  :DelegateFatalError     = 715
+  :MissingDelegateFatalError = 720
+  :CorruptImageFatalError = 725
+  :FileOpenFatalError     = 730
+  :BlobFatalError         = 735
+  :StreamFatalError       = 740
+  :CacheFatalError        = 745
+  :CoderFatalError        = 750
+  :ModuleFatalError       = 755
+  :DrawFatalError         = 760
+  :ImageFatalError        = 765
+  :WandFatalError         = 770
+  :RandomFatalError       = 775
+  :XServerFatalError      = 780
+  :MonitorFatalError      = 785
+  :RegistryFatalError     = 790
+  :ConfigureFatalError    = 795)
 
 (define-ffi-struct MagickExceptionInfo
   (severity MagickExceptionType)
@@ -207,166 +213,220 @@
   (x double) (y double))
 
 (define-ffi-enum MagickStorageType
-  undefined-pixel
-  char-pixel
-  short-pixel
-  integer-pixel
-  long-pixel
-  float-pixel
-  double-pixel)
+  :undefined-pixel
+  :char-pixel = (if Wand-GM-p 0 1)
+  :short-pixel
+  :integer-pixel
+  :long-pixel
+  :float-pixel
+  :double-pixel)
 
 (define-ffi-enum MagickChannelType
-  (undefined-channel #x0000)
-  (red-channel #x0001)
-  (cyan-channel #x0001)
-  (gray-channel #x0001)
-  (green-channel #x0002)
-  (magenta-channel #x0002)
-  (blue-channel #x0004)
-  (yellow-channel #x0004)
-  (alpha-channel #x0008)
-  (opacity-channel #x0008)
-  (black-channel #x0020)
-  (index-channel #x0020)
-  (all-channel #x7fff))
+  :undefined-channel
+  :red-channel       = #x0001
+  :cyan-channel      = :red-channel
+  :gray-channel      = :red-channel
+  :green-channel     = #x0002
+  :magenta-channel   = :green-channel
+  :blue-channel      = #x0004
+  :yellow-channel    = :blue-channel
+  :alpha-channel     = #x0008
+  :opacity-channel   = :alpha-channel
+  :black-channel     = #x0020
+  :index-channel     = :black-channel
+  :all-channel       = #x7fff)
 
 (define-ffi-enum WandCompositeOperator
-  UndefinedCompositeOp
-  NoCompositeOp
-  AddCompositeOp
-  AtopCompositeOp
-  BlendCompositeOp
-  BumpmapCompositeOp
-  ChangeMaskCompositeOp
-  ClearCompositeOp
-  ColorBurnCompositeOp
-  ColorDodgeCompositeOp
-  ColorizeCompositeOp
-  CopyBlackCompositeOp
-  CopyBlueCompositeOp
-  CopyCompositeOp
-  CopyCyanCompositeOp
-  CopyGreenCompositeOp
-  CopyMagentaCompositeOp
-  CopyOpacityCompositeOp
-  CopyRedCompositeOp
-  CopyYellowCompositeOp
-  DarkenCompositeOp
-  DstAtopCompositeOp
-  DstCompositeOp
-  DstInCompositeOp
-  DstOutCompositeOp
-  DstOverCompositeOp
-  DifferenceCompositeOp
-  DisplaceCompositeOp
-  DissolveCompositeOp
-  ExclusionCompositeOp
-  HardLightCompositeOp
-  HueCompositeOp
-  InCompositeOp
-  LightenCompositeOp
-  LinearLightCompositeOp
-  LuminizeCompositeOp
-  MinusCompositeOp
-  ModulateCompositeOp
-  MultiplyCompositeOp
-  OutCompositeOp
-  OverCompositeOp
-  OverlayCompositeOp
-  PlusCompositeOp
-  ReplaceCompositeOp
-  SaturateCompositeOp
-  ScreenCompositeOp
-  SoftLightCompositeOp
-  SrcAtopCompositeOp
-  SrcCompositeOp
-  SrcInCompositeOp
-  SrcOutCompositeOp
-  SrcOverCompositeOp
-  SubtractCompositeOp
-  ThresholdCompositeOp
-  XorCompositeOp
-  DivideCompositeOp)
+  :UndefinedCompositeOp
+  :NoCompositeOp
+  :AddCompositeOp
+  :AtopCompositeOp
+  :BlendCompositeOp
+  :BumpmapCompositeOp
+  :ChangeMaskCompositeOp
+  :ClearCompositeOp
+  :ColorBurnCompositeOp
+  :ColorDodgeCompositeOp
+  :ColorizeCompositeOp
+  :CopyBlackCompositeOp
+  :CopyBlueCompositeOp
+  :CopyCompositeOp
+  :CopyCyanCompositeOp
+  :CopyGreenCompositeOp
+  :CopyMagentaCompositeOp
+  :CopyOpacityCompositeOp
+  :CopyRedCompositeOp
+  :CopyYellowCompositeOp
+  :DarkenCompositeOp
+  :DstAtopCompositeOp
+  :DstCompositeOp
+  :DstInCompositeOp
+  :DstOutCompositeOp
+  :DstOverCompositeOp
+  :DifferenceCompositeOp
+  :DisplaceCompositeOp
+  :DissolveCompositeOp
+  :ExclusionCompositeOp
+  :HardLightCompositeOp
+  :HueCompositeOp
+  :InCompositeOp
+  :LightenCompositeOp
+  :LinearLightCompositeOp
+  :LuminizeCompositeOp
+  :MinusCompositeOp
+  :ModulateCompositeOp
+  :MultiplyCompositeOp
+  :OutCompositeOp
+  :OverCompositeOp
+  :OverlayCompositeOp
+  :PlusCompositeOp
+  :ReplaceCompositeOp
+  :SaturateCompositeOp
+  :ScreenCompositeOp
+  :SoftLightCompositeOp
+  :SrcAtopCompositeOp
+  :SrcCompositeOp
+  :SrcInCompositeOp
+  :SrcOutCompositeOp
+  :SrcOverCompositeOp
+  :SubtractCompositeOp
+  :ThresholdCompositeOp
+  :XorCompositeOp
+  :DivideCompositeOp)
 
 (define-ffi-enum FillRule
-  UndefinedRule
-  EvenOddRule
-  NonZeroRule)
+  :UndefinedRule
+  :EvenOddRule
+  :NonZeroRule)
 
 (define-ffi-enum PaintMethod
-  UndefinedMethod
-  PointMethod
-  ReplaceMethod
-  FloodfillMethod
-  FillToBorderMethod
-  ResetMethod)
+  :UndefinedMethod
+  :PointMethod
+  :ReplaceMethod
+  :FloodfillMethod
+  :FillToBorderMethod
+  :ResetMethod)
 
 (define-ffi-enum MagickAlphaType
-  UndefinedAlphaChannel
-  ActivateAlphaChannel
-  DeactivateAlphaChannel
-  ResetAlphaChannel
-  SetAlphaChannel)
+  :UndefinedAlphaChannel
+  :ActivateAlphaChannel
+  :DeactivateAlphaChannel
+  :ResetAlphaChannel
+  :SetAlphaChannel)
 
 (define-ffi-enum MagickNoiseType
-  UndefinedNoise
-  UniformNoise
-  GaussianNoise
-  MultiplicativeGaussianNoise
-  ImpulseNoise
-  LaplacianNoise
-  PoissonNoise
-  RandomNoise)
+  :UndefinedNoise
+  :UniformNoise
+  :GaussianNoise
+  :MultiplicativeGaussianNoise
+  :ImpulseNoise
+  :LaplacianNoise
+  :PoissonNoise
+  :RandomNoise)
 
 (define-ffi-enum MagickFilterType
-  UndefinedFilter
-  PointFilter
-  BoxFilter
-  TriangleFilter
-  HermiteFilter
-  HanningFilter
-  HammingFilter
-  BlackmanFilter
-  GaussianFilter
-  QuadraticFilter
-  CubicFilter
-  CatromFilter
-  MitchellFilter
-  LanczosFilter
-  BesselFilter
-  SincFilter
-  KaiserFilter
-  WelshFilter
-  ParzenFilter
-  LagrangeFilter
-  BohmanFilter
-  BartlettFilter
-  SentinelFilter)
+  :UndefinedFilter
+  :PointFilter
+  :BoxFilter
+  :TriangleFilter
+  :HermiteFilter
+  :HanningFilter
+  :HammingFilter
+  :BlackmanFilter
+  :GaussianFilter
+  :QuadraticFilter
+  :CubicFilter
+  :CatromFilter
+  :MitchellFilter
+  :LanczosFilter
+  :BesselFilter
+  :SincFilter
+  :KaiserFilter
+  :WelshFilter
+  :ParzenFilter
+  :LagrangeFilter
+  :BohmanFilter
+  :BartlettFilter
+  :SentinelFilter)
 
 (define-ffi-enum MagickColorspaceType
-  UndefinedColorspace
-  RGBColorspace
-  GRAYColorspace
-  TransparentColorspace
-  OHTAColorspace
-  LabColorspace
-  XYZColorspace
-  YCbCrColorspace
-  YCCColorspace
-  YIQColorspace
-  YPbPrColorspace
-  YUVColorspace
-  CMYKColorspace
-  sRGBColorspace
-  HSBColorspace
-  HSLColorspace
-  HWBColorspace
-  Rec601LumaColorspace
-  Rec601YCbCrColorspace
-  Rec709LumaColorspace
-  Rec709YCbCrColorspace
-  LogColorspace
-  CMYColorspace)
+  :UndefinedColorspace
+  :RGBColorspace
+  :GRAYColorspace
+  :TransparentColorspace
+  :OHTAColorspace
+  :LabColorspace
+  :XYZColorspace
+  :YCbCrColorspace
+  :YCCColorspace
+  :YIQColorspace
+  :YPbPrColorspace
+  :YUVColorspace
+  :CMYKColorspace
+  :sRGBColorspace
+  :HSBColorspace
+  :HSLColorspace
+  :HWBColorspace
+  :Rec601LumaColorspace
+  :Rec601YCbCrColorspace
+  :Rec709LumaColorspace
+  :Rec709YCbCrColorspace
+  :LogColorspace
+  :CMYColorspace)
+
+(define-ffi-enum MagickAlignType
+  :UndefinedAlign
+  :LeftAlign
+  :CenterAlign
+  :RightAlign)
+
+(define-ffi-enum MagickDecorationType
+  :UndefinedDecoration
+  :NoDecoration
+  :UnderlineDecoration
+  :OverlineDecoration
+  :LineThroughDecoration)
+
+(define-ffi-enum MagickGravityType
+  :UndefinedGravity
+  :ForgetGravity = :UndefinedGravity
+  :NorthWestGravity
+  :NorthGravity
+  :NorthEastGravity
+  :WestGravity
+  :CenterGravity
+  :EastGravity
+  :SouthWestGravity
+  :SouthGravity
+  :SouthEastGravity
+  :StaticGravity)
+
+(define-ffi-enum MagickStretchType
+  :UndefinedStretch
+  :NormalStretch
+  :UltraCondensedStretch
+  :ExtraCondensedStretch
+  :CondensedStretch
+  :SemiCondensedStretch
+  :SemiExpandedStretch
+  :ExpandedStretch
+  :ExtraExpandedStretch
+  :UltraExpandedStretch
+  :AnyStretch)
+
+(define-ffi-enum MagickStyleType
+  :UndefinedStyle
+  :NormalStyle
+  :ItalicStyle
+  :ObliqueStyle
+  :AnyStyle)
+
+(defstruct wand-font
+  family
+  size
+  weight
+  stretch
+  style)
 
 ;;}}}
 ;;{{{  `-- Wand:version
@@ -470,6 +530,34 @@
   "Reset the WAND page canvas and position to GEOMETRY.
 If GEOMETRY is ommited then 0x0+0+0 is used."
   (Wand:MagickResetImagePage wand (or geometry "0x0+0+0")))
+
+;; Magick Properties
+(cffi:defcfun ("GetMagickProperty" Wand:GetMagickProperty) pointer
+  (info pointer) (image pointer) (property c-string))
+
+(defun Wand:get-magick-property (wand prop)
+  "From WAND get magick property PROP.
+PROP can be one of: `base', `channels', `colorspace', `depth',
+`directory', `extension', `height', `input', `magick', `name',
+`page', `size', `width', `xresolution', `yresolution'."
+  (when (member prop '("group" "kurtosis" "max" "mean"
+                       "min" "output" "scene" "skewness"
+                       "standard-deviation" "standard_deviation"
+                       "unique" "zero"))
+    (error "Unsupported magick property" prop))
+  (let ((rt (Wand:GetMagickProperty
+             (ffi-null-pointer) (MagickWand-private->images wand)
+             prop)))
+    (unless (ffi-null-p rt)
+      (ffi-get rt :type 'c-string))))
+
+(defun Wand:image-orig-width (wand)
+  "Return original width of the image associated with WAND."
+  (string-to-int (Wand:get-magick-property wand "width")))
+
+(defun Wand:image-orig-height (wand)
+  "Return original height of the image associated with WAND."
+  (string-to-int (Wand:get-magick-property wand "height")))
 
 ;;}}}
 ;;{{{  `-- Images list operations
@@ -678,6 +766,31 @@ Use \(setf \(Wand:image-format w\) FMT\) to set new one."
 (cffi:defcfun ("PixelGetBlue" Wand:pixel-blue) double
   (pw PixelWand))
 
+(cffi:defcfun ("PixelSetRed" Wand:PixelSetRed) void
+  (pw pointer) (red double))
+(cffi:defcfun ("PixelSetGreen" Wand:PixelSetGreen) void
+  (pw pointer) (red double))
+(cffi:defcfun ("PixelSetBlue" Wand:PixelSetBlue) void
+  (pw pointer) (red double))
+
+(defsetf Wand:pixel-red (pw) (r)
+  `(Wand:PixelSetRed ,pw ,r))
+(defsetf Wand:pixel-green (pw) (g)
+  `(Wand:PixelSetGreen ,pw ,g))
+(defsetf Wand:pixel-blue (pw) (b)
+  `(Wand:PixelSetBlue ,pw ,b))
+
+(defun Wand:pixel-rgb-components (pw)
+  "Return RGB components for pixel wand PW."
+  (mapcar #'(lambda (c) (int (* (funcall c pw) 65535.0)))
+          '(Wand:pixel-red Wand:pixel-green Wand:pixel-blue)))
+
+(defsetf Wand:pixel-rgb-components (pw) (rgb)
+  "For pixel wand PW set RGB components."
+  `(mapcar* #'(lambda (sf c) (funcall sf ,pw (/ c 65535.0)))
+            '(Wand:PixelSetRed Wand:PixelSetGreen Wand:PixelSetBlue)
+            ,rgb))
+
 ;; PixelGetColorAsString() returns the color of the pixel wand as a
 ;; string.
 (cffi:defcfun ("PixelGetColorAsString" Wand:pixel-color) c-string
@@ -723,14 +836,16 @@ Use \(setf \(Wand:image-format w\) FMT\) to set new one."
   (target (pointer int)))
 
 (defun Wand:get-image-pixels-internal
-  (wand from-width from-height delta-width delta-height)
+  (wand img-type from-width from-height delta-width delta-height)
   "Return WAND's raw string of image pixel data (RGB triples).
 FROM-WIDTH, FROM-HEIGHT, DELTA-WIDTH, DELTA-HEIGHT specifies region to
 fetch data from."
-  (let ((target (make-ffi-object 'c-data (* delta-width delta-height 3))))
+  (let* ((tsz (ecase img-type (rawrgb 3) (rawrgba 4)))
+         (mapn (ecase img-type (rawrgb "RGB") (rawrgba "RGBA")))
+         (target (make-ffi-object 'c-data (* delta-width delta-height tsz))))
     (when (Wand:MagickGetImagePixels
            wand from-width from-height delta-width delta-height
-           "RGB" 'char-pixel target)
+           mapn :char-pixel target)
       (if Wand-ffio-as-image-data
           target
         (ffi-get target)))))
@@ -738,7 +853,7 @@ fetch data from."
 (defun Wand:get-image-pixels (wand)
   "Return WAND's raw string of image pixel data (RGB triples)."
   (Wand:get-image-pixels-internal
-   wand 0 0 (Wand:image-width wand) (Wand:image-height wand)))
+   wand 'rawrgb 0 0 (Wand:image-width wand) (Wand:image-height wand)))
 
 (cffi:defcfun ("MagickSetImagePixels" Wand:MagickSetImagePixels)
   MagickBooleanType
@@ -767,11 +882,10 @@ Return list of lists of N int elements representing RBG(A) values."
   "Create pixels string from CLS.
 CLS is list of lists of N int elements representing RBG(A) values."
   (mapconcat #'identity
-             (apply #'nconc
-                    (mapcar #'(lambda (els)
-                                (mapcar #'char-to-string
-                                        (mapcar #'int-to-char els)))
-                            cls))
+             (mapcan #'(lambda (els)
+                         (mapcar #'char-to-string
+                                 (mapcar #'int-to-char els)))
+                     cls)
              ""))
 
 ;; MagickConstituteImage() adds an image to the wand comprised of the
@@ -808,10 +922,11 @@ CLS is list of lists of N int elements representing RBG(A) values."
   (wand MagickWand) (width unsigned-long) (height unsigned-long)
   (filter MagickFilterType) (blur double))
 
-(cffi:defcfun ("MagickLiquidRescaleImage" Wand:liquid-rescale)
-  MagickBooleanType
-  (wand MagickWand) (width unsigned-long) (height unsigned-long)
-  (delta-x double) (rigidity double))
+(ignore-errors
+  (cffi:defcfun ("MagickLiquidRescaleImage" Wand:liquid-rescale)
+    MagickBooleanType
+    (wand MagickWand) (width unsigned-long) (height unsigned-long)
+    (delta-x double) (rigidity double)))
 
 ;; Crop to the rectangle spanned at X and Y by width DX and
 ;; height DY in the image associated with WAND."
@@ -1054,6 +1169,11 @@ effect to wipe hard contrasts."
 (cffi:defcfun ("MagickRadialBlurImage" Wand:radial-blur-image)
   MagickBooleanType
   (wand MagickWand) (radius double))
+
+;; Simulates an image shadow
+(cffi:defcfun ("MagickShadowImage" Wand:shadow-image)
+  MagickBooleanType
+  (wand MagickWand) (opacity double) (sigma double) (x long) (y long))
 
 ;; Sharpen the image associated with WAND.
 ;; The RADIUS argument is a float and measured in pixels.
@@ -1323,10 +1443,17 @@ If CM is nil or null-pointer then unset clip mask."
   (w MagickWand)
   (matte MagickBooleanType))
 
+(cffi:defcfun ("MagickGetImageAlphaChannel" Wand:image-alpha-channel)
+  MagickBooleanType
+  (wand MagickWand))
+
 (cffi:defcfun ("MagickSetImageAlphaChannel" Wand:MagickSetImageAlphaChannel)
   MagickBooleanType
   (wand MagickWand)
   (alpha MagickAlphaType))
+
+(defsetf Wand:image-alpha-channel (w) (at)
+  `(Wand:MagickSetImageAlphaChannel ,w ,at))
 
 ;;}}}
 ;;{{{  `-- DrawingWand operations
@@ -1359,8 +1486,120 @@ If CM is nil or null-pointer then unset clip mask."
        (Wand:delete-drawing-wand ,dw))))
 (put 'Wand-with-drawing-wand 'lisp-indent-function 'defun)
 
+;; Drawing fonts
+(defun Wand:draw-font (dw)
+  "For drawing wand DW return draw font as wand-font object."
+  (make-wand-font :family (Wand:draw-font-family dw)
+                  :size (Wand:draw-font-size dw)
+                  :weight (Wand:draw-font-weight dw)
+                  :stretch (Wand:draw-font-stretch dw)
+                  :style (Wand:draw-font-style dw)))
+
+(defsetf Wand:draw-font (dw) (fn)
+  "For drawing wand DW set font to FN.
+FN might be a string or wand-font object."
+  `(if (stringp ,fn)
+       (setf (Wand:draw-font-font ,dw) ,fn)
+     (let ((fm (wand-font-family ,fn))
+           (sz (wand-font-size ,fn))
+           (weight (wand-font-weight ,fn))
+           (stretch (wand-font-stretch ,fn))
+           (style (wand-font-style ,fn)))
+       (when fm (setf (Wand:draw-font-family ,dw) fm))
+       (when sz (setf (Wand:draw-font-size ,dw) sz))
+       (when weight (setf (Wand:draw-font-weight ,dw) weight))
+       (when stretch (setf (Wand:draw-font-stretch ,dw) stretch))
+       (when style (setf (Wand:draw-font-style ,dw) style)))))
+
+(cffi:defcfun ("DrawGetFont" Wand:draw-font-font) safe-string
+  (dw DrawingWand))
+(cffi:defcfun ("DrawSetFont" Wand:DrawSetFont) MagickBooleanType
+  (dw DrawingWand) (font-name c-string))
+
+(defsetf Wand:draw-font-font (dw) (fn)
+  `(Wand:DrawSetFont ,dw ,fn))
+
+(cffi:defcfun ("DrawGetFontFamily" Wand:draw-font-family) safe-string
+  (dw DrawingWand))
+(cffi:defcfun ("DrawSetFontFamily" Wand:DrawSetFontFamily) MagickBooleanType
+  (dw DrawingWand) (font-family c-string))
+
+(defsetf Wand:draw-font-family (dw) (ff)
+  `(Wand:DrawSetFontFamily ,dw ,ff))
+
+(cffi:defcfun ("DrawGetFontSize" Wand:DrawGetFontSize) double
+  (dw DrawingWand))
+(cffi:defcfun ("DrawSetFontSize" Wand:DrawSetFontSize) void
+  (dw DrawingWand) (font-size double))
+
+(defun Wand:draw-font-size (dw)
+  (int (Wand:DrawGetFontSize dw)))
+(defsetf Wand:draw-font-size (dw) (fn-size)
+  `(Wand:DrawSetFontSize ,dw (float ,fn-size)))
+
+(cffi:defcfun ("DrawGetFontStretch" Wand:draw-font-stretch) MagickStretchType
+  (dw DrawingWand))
+(cffi:defcfun ("DrawSetFontStretch" Wand:DrawSetFontStretch) void
+  (dw DrawingWand) (stretch MagickStretchType))
+(defsetf Wand:draw-font-stretch (dw) (fs)
+  `(Wand:DrawSetFontStretch ,dw ,fs))
+
+(cffi:defcfun ("DrawGetFontStyle" Wand:draw-font-style) MagickStyleType
+  (dw DrawingWand))
+(cffi:defcfun ("DrawSetFontStyle" Wand:DrawSetFontStyle) void
+  (dw DrawingWand) (stretch MagickStyleType))
+(defsetf Wand:draw-font-style (dw) (fs)
+  `(Wand:DrawSetFontStyle ,dw ,fs))
+
+(cffi:defcfun ("DrawGetFontWeight" Wand:draw-font-weight) unsigned-long
+  (dw DrawingWand))
+(cffi:defcfun ("DrawSetFontWeight" Wand:DrawSetFontWeight) void
+  (dw DrawingWand) (fw unsigned-long))
+(defsetf Wand:draw-font-weight (dw) (fw)
+  `(Wand:DrawSetFontWeight ,dw ,fw))
+
+(cffi:defcfun ("DrawGetFillRule" Wand:draw-fill-rule) FillRule
+  (dw DrawingWand))
+(cffi:defcfun ("DrawSetFillRule" Wand:DrawSetFillRule) void
+  (dw DrawingWand) (fill-rule FillRule))
+
+(defsetf Wand:draw-fill-rule (dw) (fr)
+  `(Wand:DrawSetFillRule ,dw ,fr))
+
+(cffi:defcfun ("DrawPoint" Wand:draw-point) void
+  (dw DrawingWand) (x double) (y double))
+
+(defun Wand:draw-points (dw points)
+  (mapc #'(lambda (p) (Wand:draw-point dw (car p) (cdr p))) points))
+
 (cffi:defcfun ("DrawAnnotation" Wand:draw-annotation) void
   (dw DrawingWand) (x double) (y double) (text c-string))
+
+(cffi:defcfun ("DrawGetTextAntialias" Wand:text-antialias)
+  MagickBooleanType
+  (dw DrawingWand))
+(cffi:defcfun ("DrawSetTextAntialias" Wand:SetTextAntialias) void
+  (dw DrawingWand) (taa MagickBooleanType))
+(defsetf Wand:text-antialias (dw) (taa)
+  `(Wand:SetTextAntialias ,dw ,taa))
+
+(cffi:defcfun ("DrawGetTextAlignment" Wand:text-alignment)
+  MagickAlignType
+  (dw DrawingWand))
+(cffi:defcfun ("DrawSetTextAlignment" Wand:SetTextAlignment) void
+  (dw DrawingWand) (tat MagickAlignType))
+(defsetf Wand:text-alignment (dw) (tat)
+  `(Wand:SetTextAlignment ,dw ,tat))
+
+(cffi:defcfun ("DrawGetGravity" Wand:text-gravity)
+  MagickGravityType
+  (dw DrawingWand))
+(cffi:defcfun ("DrawSetGravity" Wand:SetTextGravity) void
+  (dw DrawingWand) (tat MagickGravityType))
+(defsetf Wand:text-gravity (dw) (tgt)
+  `(Wand:SetTextGravity ,dw ,tgt))
+
+;  DrawSetTextDecoration(DrawingWand *,const DecorationType),
 
 (cffi:defcfun ("DrawArc" Wand:draw-arc) void
   (dw DrawingWand) (sx double) (sy double) (ex double)
@@ -1372,6 +1611,10 @@ If CM is nil or null-pointer then unset clip mask."
 (cffi:defcfun ("DrawRectangle" Wand:draw-rectangle) void
   (dw DrawingWand) (ox double) (oy double) (ex double) (ey double))
 
+(cffi:defcfun ("DrawRoundRectangle" Wand:draw-round-rectangle) void
+  (dw DrawingWand) (x1 double) (y1 double) (x2 double) (y2 double)
+  (rx double) (ry double))
+
 (cffi:defcfun ("DrawColor" Wand:draw-color) void
   (dw DrawingWand) (x double) (y double) (paint-method PaintMethod))
 
@@ -1381,6 +1624,11 @@ If CM is nil or null-pointer then unset clip mask."
   (coordinates PointInfo))
 
 (cffi:defcfun ("DrawPolyline" Wand:DrawPolyline) void
+  (dw DrawingWand)
+  (number-coordinates unsigned-long)
+  (coordinates PointInfo))
+
+(cffi:defcfun ("DrawBezier" Wand:DrawBezier) void
   (dw DrawingWand)
   (number-coordinates unsigned-long)
   (coordinates PointInfo))
@@ -1399,8 +1647,22 @@ If CM is nil or null-pointer then unset clip mask."
 (defun Wand:draw-polygon (dw points)
   (Wand:DrawPolygon dw (length points) (Wand:points-PointInfo points)))
 
+(cffi:defcfun ("DrawLine" Wand:draw-line) void
+  (dw DrawingWand) (sx double) (sy double)
+  (ex double) (ey double))
+
 (defun Wand:draw-lines (dw points)
   (Wand:DrawPolyline dw (length points) (Wand:points-PointInfo points)))
+
+(defun Wand:draw-bezier (dw points)
+  (Wand:DrawBezier dw (length points) (Wand:points-PointInfo points)))
+
+(defun Wand:draw-segment (dw seg)
+  (Wand:draw-line dw (float (caar seg)) (float (cdar seg))
+                  (float (cadr seg)) (float (cddr seg))))
+
+(defun Wand:draw-segments (dw segs)
+  (mapc #'(lambda (seg) (Wand:draw-segment dw seg)) segs))
 
 ;; DrawComposite() composites an image onto the current image, using
 ;; the specified composition operator, specified position, and at the
@@ -1415,16 +1677,32 @@ If CM is nil or null-pointer then unset clip mask."
   (ry double) (start double) (end double))
 
 (cffi:defcfun ("DrawGetFillColor" Wand:DrawGetFillColor) void
-  (dw DrawingWand) (pixel pointer))
+  (dw DrawingWand) (pixel PixelWand))
 
 (cffi:defcfun ("DrawSetFillColor" Wand:DrawSetFillColor) void
   (dw DrawingWand) (pixel pointer))
 
 (defun Wand:draw-fill-color (dw)
-  (error "Not yet implemented"))
+  (let ((pw (Wand:NewPixelWand)))
+    (Wand:DrawGetFillColor dw pw)
+    pw))
 
 (defsetf Wand:draw-fill-color (w) (p)
   `(Wand:DrawSetFillColor ,w ,p))
+
+(cffi:defcfun ("DrawGetStrokeColor" Wand:DrawGetStrokeColor) void
+  (dw DrawingWand) (pixel PixelWand))
+
+(cffi:defcfun ("DrawSetStrokeColor" Wand:DrawSetStrokeColor) void
+  (dw DrawingWand) (pixel pointer))
+
+(defun Wand:draw-stroke-color (dw)
+  (let ((pw (Wand:NewPixelWand)))
+    (Wand:DrawGetStrokeColor dw pw)
+    pw))
+
+(defsetf Wand:draw-stroke-color (w) (p)
+  `(Wand:DrawSetStrokeColor ,w ,p))
 
 (cffi:defcfun ("DrawGetFillOpacity" Wand:draw-fill-opacity) double
   (dw DrawingWand))
@@ -1434,9 +1712,6 @@ If CM is nil or null-pointer then unset clip mask."
 
 (defsetf Wand:draw-fill-opacity (w) (fo)
   `(Wand:DrawSetFillOpacity ,w ,fo))
-
-(cffi:defcfun ("DrawSetFillRule" Wand:DrawSetFillRule) void
-  (dw DrawingWand) (fr FillRule))
 
 (cffi:defcfun ("DrawMatte" Wand:draw-matte) void
   (dw DrawingWand) (x double) (y double) (paint-method PaintMethod))
@@ -1450,9 +1725,6 @@ If CM is nil or null-pointer then unset clip mask."
 (defsetf Wand:draw-stroke-width (dw) (sw)
   `(Wand:DrawSetStrokeWidth ,dw ,sw))
 
-(cffi:defcfun ("DrawSetStrokeColor" Wand:DrawSetStrokeColor) void
-  (dw DrawingWand) (stroke-color pointer))
-
 (cffi:defcfun ("DrawGetStrokeOpacity" Wand:draw-stroke-opacity) double
   (dw DrawingWand))
 
@@ -1461,6 +1733,43 @@ If CM is nil or null-pointer then unset clip mask."
 
 (defsetf Wand:draw-stroke-opacity (dw) (so)
   `(Wand:DrawSetStrokeOpacity ,dw ,so))
+
+(cffi:defcfun ("DrawGetStrokeAntialias" Wand:draw-stroke-antialias)
+  MagickBooleanType
+  (dw DrawingWand))
+
+(cffi:defcfun ("DrawSetStrokeAntialias" Wand:DrawSetStrokeAntialias) void
+  (dw DrawingWand) (aa MagickBooleanType))
+
+(defsetf Wand:draw-stroke-antialias (dw) (aa)
+  `(Wand:DrawSetStrokeAntialias ,dw ,aa))
+
+(cffi:defcfun ("DrawGetClipPath" Wand:draw-clip-path) safe-string
+  (dw DrawingWand))
+
+(cffi:defcfun ("DrawSetClipPath" Wand:DrawSetClipPath) MagickBooleanType
+  (dw DrawingWand) (clip-path c-string))
+
+(defsetf Wand:draw-clip-path (dw) (cp)
+  `(Wand:DrawSetClipPath ,dw ,cp))
+
+(cffi:defcfun ("DrawPushClipPath" Wand:draw-push-clip-path) void
+  (dw DrawingWand) (clip-mask-id c-string))
+
+(cffi:defcfun ("DrawPopClipPath" Wand:draw-pop-clip-path) void
+  (dw DrawingWand))
+
+;; ImageMagick
+(cffi:defcfun ("PushDrawingWand" Wand:push-drawing-wand) void
+  (dw DrawingWand))
+(cffi:defcfun ("PopDrawingWand" Wand:pop-drawing-wand) void
+  (dw DrawingWand))
+
+(cffi:defcfun ("DrawPushDefs" Wand:draw-push-defs) void
+  (dw DrawingWand))
+
+(cffi:defcfun ("DrawPopDefs" Wand:draw-pop-defs) void
+  (dw DrawingWand))
 
 ;;}}}
 
@@ -1474,20 +1783,41 @@ If CM is nil or null-pointer then unset clip mask."
 
 ;;}}}
 
-;;{{{ Util glyph and size related functions
+;;{{{ Util image, glyph and size related functions
+
+(defun Wand:emacs-image-type (wand)
+  "Return `rawrgb' or `rawrgba' image type suitable for WAND."
+  'rawrgb)
+
+;; NOTE: 'rawrgba DOES NOT actually works in SXEmacs, so we strip
+;;       alpha --lg
+
+;   (if (Wand:image-alpha-channel wand)
+;       'rawrgba
+;     'rawrgb))
+
+(defun Wand:emacs-image-internal (wand img-type x y w h)
+  "Return Emacs image spec."
+  (vector img-type
+          :data (Wand:get-image-pixels-internal wand img-type x y w h)
+          :pixel-width w
+          :pixel-height h))
+
+(defun Wand:emacs-image (wand)
+  "Return Emacs image for the WAND."
+  (Wand:emacs-image-internal
+   wand (Wand:emacs-image-type wand)
+   0 0 (Wand:image-width wand) (Wand:image-height wand)))
 
 (defun Wand:glyph-internal (wand x y w h)
   "Return glyph for the WAND."
   (make-glyph
-   (vector 'rawrgb
-           :data (Wand:get-image-pixels-internal wand x y w h)
-           :pixel-width w
-           :pixel-height h)))
+   (Wand:emacs-image-internal
+    wand (Wand:emacs-image-type wand) x y w h)))
 
 (defun Wand:glyph (wand)
   "Return glyph for the WAND."
-  (Wand:glyph-internal
-   wand 0 0 (Wand:image-width wand) (Wand:image-height wand)))
+  (make-glyph (Wand:emacs-image wand)))
 
 (defun Wand:correct-orientation (wand)
   "Automatically rotate WAND image according to exif:Orientation."
@@ -1514,7 +1844,7 @@ Return non-nil if fiting was performed."
       (setq width max-width
             height (round (/ max-width prop))
             rescale t))
-    (when (< max-height height)
+    (when (or force (< max-height height))
       (setq width (round (* max-height prop))
             height max-height
             rescale t))
@@ -1544,7 +1874,7 @@ Return non-nil if fiting was performed."
   :group 'Wand-mode)
 
 (defcustom Wand-mode-sigma 2.0
-  "*Sigma for operations such as guassian-blur, sharpen, etc."
+  "*Sigma for operations such as gaussian-blur, sharpen, etc."
   :type 'float
   :group 'Wand-mode)
 
@@ -1633,6 +1963,9 @@ your own scaler with `Wand-make-scaler'."
 (defvar Wand-mode-hook nil
   "Hooks to call when entering `Wand-mode'.")
 
+(defvar Wand-insert-info-hook nil
+  "Hooks to call when inserting info into `Wand-mode'.")
+
 ;;}}}
 ;;{{{ Wand-mode-map
 
@@ -1692,7 +2025,6 @@ your own scaler with `Wand-make-scaler'."
     (define-key map [c] #'Wand-mode-crop)
     (define-key map [\.] #'Wand-mode-redeye-remove)
 
-    (define-key map [:] #'Wand-mode-eval-operation)
     map)
   "Keymap for Wand mode.")
 
@@ -1772,8 +2104,8 @@ your own scaler with `Wand-make-scaler'."
   "Generate menu structure for TAG commands."
   (mapcar #'(lambda (to)
               (vector (get to 'menu-name) to))
-	  (remove-if-not #'(lambda (c) (get c tag))
-			 (Wand-mode-commands-by-tag 'menu-name))))
+          (remove-if-not #'(lambda (c) (get c tag))
+                         (Wand-mode-commands-by-tag 'menu-name))))
 
 (defun Wand-mode-popup-menu (be)
   "Popup wand menu."
@@ -1798,7 +2130,7 @@ ARGS specifies arguments to operation, first must always be wand."
          (unwind-protect
              (progn
                ,@body
-               (Wand:image-composite iwand wand 'CopyCompositeOp
+               (Wand:image-composite iwand wand :CopyCompositeOp
                                      (nth 2 region) (nth 3 region)))
            (setq preview-region nil)
            (Wand:delete-wand wand)))
@@ -1875,7 +2207,7 @@ This is NOT lossless rotation for jpeg-like formats."
 (define-Wand-operation grayscale (wand)
   "Grayscale image."
   (Wand-possible-for-region wand
-    (Wand:SetImageColorspace wand 'GRAYColorspace)))
+    (Wand:SetImageColorspace wand :GRAYColorspace)))
 
 (define-Wand-operation solarize (wand threshold)
   "Solarise image by THRESHOLD."
@@ -1965,7 +2297,7 @@ This is NOT lossless rotation for jpeg-like formats."
   "Extract RGB pixels from WAND."
   (let ((target (make-ffi-object 'c-data (* w h 3))))
     (when (Wand:MagickGetImagePixels
-           wand x y w h "RGB" 'char-pixel target)
+           wand x y w h "RGB" :char-pixel target)
       (Wand:pixels-extract-colors (ffi-get target) 3))))
 
 (defun Wand:get-rgb-pixel-at (wand x y)
@@ -2006,7 +2338,7 @@ too small for small regions."
     (Wand-with-wand cw
       ;; Consitute new wand with fixed red pixels
       (Wand:MagickConstituteImage
-       cw w h "RGB" 'char-pixel
+       cw w h "RGB" :char-pixel
        (let ((stor (make-ffi-object 'c-data (* w h 3))))
          (ffi-set stor (Wand:pixels-arrange-colors
                         (Wand-fix-red-pixels
@@ -2022,7 +2354,7 @@ too small for small regions."
                 (Wand-with-pixel-wand pw
                   (setf (Wand:pixel-color pw) "white")
                   (setf (Wand:draw-fill-color dw) pw)
-                  (Wand:draw-color dw 0.0 0.0 'ResetMethod))
+                  (Wand:draw-color dw 0.0 0.0 :ResetMethod))
                 (Wand-with-pixel-wand pw
                   (setf (Wand:pixel-color pw) "black")
                   (setf (Wand:draw-fill-color dw) pw))
@@ -2037,7 +2369,7 @@ too small for small regions."
       (setf (Wand:clip-mask cw) nil)
 
       ;; Finally copy blured image to WAND
-      (Wand:image-composite wand cw 'CopyCompositeOp x y))))
+      (Wand:image-composite wand cw :CopyCompositeOp x y))))
 
 (define-Wand-operation zoom (wand outp factor)
   (let ((nw (funcall (if outp #'/ #'*)
@@ -2107,24 +2439,32 @@ BLUR is float, 0.25 for insane pixels, > 2.0 for excessively smoth."
   "Return info about file as a string."
   (declare (special off-x))
   (declare (special off-y))
-  (concat "File: " (file-name-nondirectory buffer-file-name) ", "
-          (Wand:image-format image-wand)
-          " " (format "%dx%d" (Wand:image-width image-wand)
-                      (Wand:image-height image-wand))
-          (if (> (Wand:images-num image-wand) 1)
-              (format ", Page: %d/%d" (1+ (Wand:iterator-index image-wand))
-                      (Wand:images-num image-wand))
-            "")
-          ;; Print offset info
-          (if (and preview-wand (boundp 'off-x) (boundp 'off-y)
-                   (or (positivep off-x) (positivep off-y)))
-              (format ", Offset: +%d+%d" off-x off-y)
-            "")
-          ;; Print region info
-          (if preview-region
-              (apply #'format ", Region: %dx%d+%d+%d"
-                     (Wand-mode-image-region))
-            "")))
+  (let ((iw (Wand:image-width image-wand))
+        (ih (Wand:image-height image-wand))
+        (ow (Wand:image-orig-width image-wand))
+        (oh (Wand:image-orig-height image-wand)))
+    (concat "File: " (file-name-nondirectory buffer-file-name)
+            " (" (Wand:get-magick-property image-wand "size") "), "
+            (Wand:image-format image-wand)
+            " " (format "%dx%d" iw ih)
+            (if (and (not (zerop ow)) (not (zerop oh))
+                     (or (/= ow iw) (/= oh ih)))
+                (format " (Orig: %dx%d)" ow oh)
+              "")
+            (if (> (Wand:images-num image-wand) 1)
+                (format ", Page: %d/%d" (1+ (Wand:iterator-index image-wand))
+                        (Wand:images-num image-wand))
+              "")
+            ;; Print offset info
+            (if (and preview-wand (boundp 'off-x) (boundp 'off-y)
+                     (or (positivep off-x) (positivep off-y)))
+                (format ", Offset: +%d+%d" off-x off-y)
+              "")
+            ;; Print region info
+            (if preview-region
+                (apply #'format ", Region: %dx%d+%d+%d"
+                       (Wand-mode-image-region))
+              ""))))
 
 (defun Wand-mode-iptc-split-keywords (tag-value)
   (mapcar #'(lambda (kw) (cons 'keyword kw))
@@ -2214,7 +2554,8 @@ BLUR is float, 0.25 for insane pixels, > 2.0 for excessively smoth."
                         Wand-global-operations-list) "\n")))
 
     ;; Info about pickup color
-    (when-boundp 'pickup-color
+    (when (boundp 'pickup-color)
+      (declare (special pickup-color))
       (let* ((cf (make-face (gensym "dcolor-") nil t))
              (place (car pickup-color))
              (color (cdr pickup-color))
@@ -2223,7 +2564,9 @@ BLUR is float, 0.25 for insane pixels, > 2.0 for excessively smoth."
         (insert (format "Color: +%d+%d " (car place) (cdr place)))
         (insert-face "      " cf)
         (insert (format " %s R:%d, G:%d, B:%d\n" fcol
-                        (car color) (cadr color) (caddr color)))))))
+                        (car color) (cadr color) (caddr color)))))
+
+    (run-hooks 'Wand-insert-info-hook)))
 
 (defun Wand-mode-update-info ()
   "Only update info region."
@@ -2335,15 +2678,14 @@ BLUR is float, 0.25 for insane pixels, > 2.0 for excessively smoth."
     (erase-buffer)
     (Wand-mode-insert-info)
     (Wand-mode-insert-preview)
-    ;;(when Wand-interactive-resize
-    ;;  (Wand-mode-insert-resize-glyphs))
     (goto-char (point-min)))
   (set-buffer-modified-p nil))
 
 ;;;###autoload
 (defun Wand-display-noselect (file)
   (let* ((bn (format "*Wand: %s*" (file-name-nondirectory file)))
-         (buf (if (eq major-mode 'Wand-mode)
+         (buf (if (and (eq major-mode 'Wand-mode)
+                       (not (get-buffer bn)))
                   ;; Use current buffer
                   (progn
                     (rename-buffer bn)
@@ -2469,27 +2811,39 @@ Bindings are:
   (let ((op (assoc op-name (Wand-mode-operations-table))))
     (call-interactively (cdr op))))
 
+(defcustom Wand-formats-read-unsupported
+  '("a" "b" "c" "g" "h" "o" "k" "m" "r" "x" "y" "txt" "text" "pm")
+  "List of formats that are not intented to be opened by Wand."
+  :type '(list string)
+  :group 'Wand-mode)
+
 (defun Wand-format-supported-for-read-p (format)
   "Return non-nil if Wand can read files in FORMAT."
-  (let ((fi (Wand:GetMagickInfo
-             format (ffi-address-of
-                     (make-ffi-object 'MagickExceptionInfo)))))
-    (and (not (ffi-null-p fi))
-         (not (ffi-null-p (MagickInfo->decoder fi))))))
+  (unless (member (downcase format) Wand-formats-read-unsupported)
+    (let ((fi (Wand:GetMagickInfo
+               format (ffi-address-of
+                       (make-ffi-object 'MagickExceptionInfo)))))
+      (and (not (ffi-null-p fi))
+           (not (ffi-null-p (MagickInfo->decoder fi)))
+           ))))
+;; ImageMagick on linux treats any format to be RAW for some reason
+           ;; We can't read raw formats
+;           (not (MagickInfo->raw fi))))))
+
+(defcustom Wand-formats-write-unsupported
+  '("html")
+  "List of formats that are not intented to be written by Wand."
+  :type '(list string)
+  :group 'Wand-mode)
 
 (defun Wand-format-supported-for-write-p (format)
   "Return non-nil if Wand can write files in FORMAT."
-  (let ((fi (Wand:GetMagickInfo
-             format (ffi-address-of
-                     (make-ffi-object 'MagickExceptionInfo)))))
-    (and (not (ffi-null-p fi))
-         (not (ffi-null-p (MagickInfo->encoder fi))))))
-
-(defcustom Wand-file-extensions-unsupported
-  '("a" "b" "c" "g" "h" "o" "k" "m" "r" "x" "y" "txt" "text" "pm")
-  "List of file extensions that are not intented to be opened by Wand."
-  :type '(list string)
-  :group 'Wand-mode)
+  (unless (member (downcase format) Wand-formats-write-unsupported)
+    (let ((fi (Wand:GetMagickInfo
+               format (ffi-address-of
+                       (make-ffi-object 'MagickExceptionInfo)))))
+      (and (not (ffi-null-p fi))
+           (not (ffi-null-p (MagickInfo->encoder fi)))))))
 
 ;;;###autoload
 (defun Wand-file-supported-for-read-p (file)
@@ -2497,16 +2851,16 @@ Bindings are:
   ;; Try by extension first, then try heuristic method using
   ;; `magic:file-type'
   (let ((ext (file-name-extension file)))
-    (or (and ext (not (member (downcase ext) Wand-file-extensions-unsupported))
-             (Wand-format-supported-for-read-p ext))
+    (or (and ext (Wand-format-supported-for-read-p ext))
+
         (multiple-value-bind (itype imagetext)
-            (split-string (magic:file-type file) " ")
+            (split-string (or (magic:file-type file) " ") " ")
           (and imagetext
                (string= (downcase imagetext) "image")
                (Wand-format-supported-for-read-p itype))))))
 
 (defun Wand-formats-list (fmt-regexp &optional mode)
-  "Return name of supportef formats that matches FMT-REGEXP.
+  "Return names of supported formats that matches FMT-REGEXP.
 Optionally you can specify MODE:
   'read  - Only formats that we can read
   'write - Only formats that we can write
@@ -2748,12 +3102,16 @@ Default is 1."
 (defun Wand-mode-add-noise (noise-type)
   "Add noise of NOISE-TYPE."
   (interactive
-   (list (completing-read "Noise type [PoissonNoise]: "
+   (list (completing-read "Noise type [poisson]: "
                           (mapcar #'(lambda (ev)
-                                      (cons (symbol-name (car ev)) nil))
+                                      (let ((sn (symbol-name (car ev))))
+                                        (list (and (string-match
+                                                    ":\\(.+\\)Noise" sn)
+                                                   (downcase
+                                                    (match-string 1 sn))))))
                                   (ffi-enum-values 'MagickNoiseType))
-                          nil t nil nil "PoissonNoise")))
-  (let ((nt (intern noise-type)))
+                          nil t nil nil "poisson")))
+  (let ((nt (intern (format ":%sNoise" (capitalize noise-type)))))
     (Wand-operation-apply 'add-noise image-wand nt))
   (Wand-redisplay))
 (put 'Wand-mode-add-noise 'effect-operation t)
@@ -2920,50 +3278,51 @@ RADIUS range is [-1.0, 1.0]."
 (defun Wand-mode-select-region (event)
   "Select region."
   (interactive "e")
-  (let ((gc-cons-threshold most-positive-fixnum) ; inhibit gc
-        (sx (event-glyph-x-pixel event))
-        (sy (event-glyph-y-pixel event))
-        (had-preview-region preview-region)
-        (mouse-down t))
-    (setq preview-region (list 0 0 sx sy))
-    (while mouse-down
-      (setq event (next-event event))
-      (cond ((motion-event-p event)
-             (let ((mx (event-glyph-x-pixel event))
-                   (my (event-glyph-y-pixel event)))
-               (when (and mx my)
-                 (setq preview-region
-                       (list (abs (- sx mx)) (abs (- sy my))
-                             (min sx mx) (min sy my)))
-                 ;; Update info and preview image
-                 (Wand-mode-update-file-info)
-                 (let ((pwr (Wand-mode-preview-with-region)))
-                   (unwind-protect
+  (with-current-buffer (event-buffer event)
+    (let ((gc-cons-threshold most-positive-fixnum) ; inhibit gc
+          (sx (event-glyph-x-pixel event))
+          (sy (event-glyph-y-pixel event))
+          (had-preview-region preview-region)
+          (mouse-down t))
+      (setq preview-region (list 0 0 sx sy))
+      (while mouse-down
+        (setq event (next-event event))
+        (cond ((motion-event-p event)
+               (let ((mx (event-glyph-x-pixel event))
+                     (my (event-glyph-y-pixel event)))
+                 (when (and mx my)
+                   (setq preview-region
+                         (list (abs (- sx mx)) (abs (- sy my))
+                               (min sx mx) (min sy my)))
+                   ;; Update info and preview image
+                   (Wand-mode-update-file-info)
+                   (let ((pwr (Wand-mode-preview-with-region)))
+                     (unwind-protect
+                         (set-extent-end-glyph
+                          preview-extent (Wand-mode-preview-glyph pwr))
+                       (Wand:delete-wand pwr))))))
+
+              ((button-release-event-p event)
+               (setq mouse-down nil)
+               (if (and (positivep (nth 0 preview-region))
+                        (positivep (nth 1 preview-region)))
+                   ;; Save region
+                   (put image-wand 'last-preview-region preview-region)
+
+                 (setq preview-region nil)
+                 (if had-preview-region
+                     (progn
+                       ;; Remove any regions
+                       (Wand-mode-update-file-info)
                        (set-extent-end-glyph
-                        preview-extent (Wand-mode-preview-glyph pwr))
-                     (Wand:delete-wand pwr))))))
+                        preview-extent (Wand-mode-preview-glyph preview-wand)))
 
-            ((button-release-event-p event)
-             (setq mouse-down nil)
-             (if (and (positivep (nth 0 preview-region))
-                      (positivep (nth 1 preview-region)))
-                 ;; Save region
-                 (put image-wand 'last-preview-region preview-region)
-
-               (setq preview-region nil)
-               (if had-preview-region
-                   (progn
-                     ;; Remove any regions
-                     (Wand-mode-update-file-info)
-                     (set-extent-end-glyph
-                      preview-extent (Wand-mode-preview-glyph preview-wand)))
-
-                 ;; Otherwise pickup color
-		 (with-boundp 'pickup-color
-		   (let* ((col (Wand:get-rgb-pixel-at preview-wand sx sy))
-			  (pickup-color (cons (cons sx sy) col)))
-		     (Wand-mode-update-info))))))
-            (t (dispatch-event event))))))
+                   ;; Otherwise pickup color
+                   (let* ((col (Wand:get-rgb-pixel-at preview-wand sx sy))
+                          (pickup-color (cons (cons sx sy) col)))
+                     (declare (special pickup-color))
+                     (Wand-mode-update-info)))))
+              (t (dispatch-event event)))))))
 
 (defun Wand-mode-activate-region ()
   "Activate last preview-region."
@@ -3040,16 +3399,24 @@ RADIUS range is [-1.0, 1.0]."
 ;;}}}
 ;;{{{ Zooming/Sampling
 
-(defun Wand-mode-zoom-in (&optional outp)
-  "Zoom image in by `Wand-mode-zoom-factor'.."
-  (interactive)
-  (Wand-operation-apply 'zoom image-wand outp Wand-mode-zoom-factor)
+(defun Wand-mode-zoom-in (factor)
+  "Zoom image by FACTOR.
+If FACTOR is nil, then `Wand-mode-zoom-factor' is used."
+  (interactive "P")
+  (Wand-operation-apply 'zoom image-wand nil
+                        (if factor
+                            (prefix-numeric-value factor)
+                          Wand-mode-zoom-factor))
   (Wand-redisplay))
 
-(defun Wand-mode-zoom-out ()
+(defun Wand-mode-zoom-out (factor)
   "Zoom image out by `Wand-mode-zoom-factor'."
-  (interactive)
-  (Wand-mode-zoom-in t))
+  (interactive "P")
+  (Wand-operation-apply 'zoom image-wand t
+                        (if factor
+                            (prefix-numeric-value factor)
+                          Wand-mode-zoom-factor))
+  (Wand-redisplay))
 
 (defun Wand-mode-sample (w h)
   "Sample image to WxH size."
@@ -3092,16 +3459,7 @@ RADIUS range is [-1.0, 1.0]."
 (put 'Wand-mode-liquid-rescale 'menu-name "Liquid rescale")
 
 ;;}}}
-;;{{{ Eval, Toggle fit, Undo/Redo, Saving
-
-(defun Wand-mode-eval-operation (op)
-  "Evaluate raw operation OP."
-  (interactive
-   (list (read-from-minibuffer "Wand op: " nil
-                               read-expression-map t)))
-  (apply #'Wand-operation-apply
-         (car op) image-wand (cdr op))
-  (Wand-redisplay))
+;;{{{ Toggle fit, Undo/Redo, Saving
 
 (defun Wand-mode-toggle-fit ()
   "Toggle autofit."
@@ -3171,6 +3529,10 @@ example zoom."
                (file-name-directory buffer-file-name)
                nfname nil (file-name-nondirectory nfname))))
      (list ofmt fn)))
+
+  (unless (Wand-format-supported-for-write-p format)
+    (error "Unsupported format for writing: %s" format))
+
   (when (or (not Wand-mode-query-for-overwrite)
             (not (file-exists-p nfile))
             (y-or-n-p (format "File %s exists, overwrite? " nfile)))

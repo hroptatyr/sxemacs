@@ -1307,7 +1307,6 @@ error
         end-of-file
       process-error
       network-error
-      tooltalk-error
       gui-error
         dialog-box-error
       sound-error

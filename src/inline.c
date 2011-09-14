@@ -96,10 +96,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "mule/file-coding.h"
 #endif
 
-#ifdef TOOLTALK
-#include "ui/tooltalk.h"
-#endif
-
 #ifdef HAVE_OPENSSL
 #include "openssl.h"
 #endif

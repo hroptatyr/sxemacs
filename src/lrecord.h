@@ -185,8 +185,6 @@ enum lrecord_type {
 	lrecord_type_glyph,
 	lrecord_type_face,
 	lrecord_type_database,
-	lrecord_type_tooltalk_message, /* 50 */
-	lrecord_type_tooltalk_pattern,
 	lrecord_type_ldap,
 	lrecord_type_pgconn,
 	lrecord_type_pgresult,

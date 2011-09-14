@@ -263,7 +263,12 @@ void set_process_selected_p(Lisp_Process * p, int selected_p)
 
 int connected_via_filedesc_p(Lisp_Process * p)
 {
-	return MAYBE_INT_PROCMETH(tooltalk_connection_p, (p));
+	/* In the bad old days of tooltalk this would return non-0 if
+	 * there was a tooltalk connection.  So that really means that
+	 * in 101 times out of 100 this would return 0 because nobody
+	 * ever used tooltalk.  It is possible that one day this might
+	 * need some d-bus love. */
+	return 0;
 }
 
 #ifdef HAVE_SOCKETS

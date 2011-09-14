@@ -5,7 +5,7 @@
 @c See the file lispref.texi for copying conditions.
 @setfilename ../../info/ldap.info
 
-@node LDAP Support, PostgreSQL Support, ToolTalk Support, top
+@node LDAP Support, PostgreSQL Support, X-Windows, top
 @chapter LDAP Support
 @cindex LDAP
 

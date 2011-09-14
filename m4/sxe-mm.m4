@@ -380,7 +380,7 @@ dnl 	_SXE_CHECK_pkgconfig_based([ffmpeg], [libavformat], [49.0.0])
 
 	SXE_DUMP_LIBS
 	CPPFLAGS="$CPPFLAGS ${FFMPEG_CPPFLAGS}"
-	SXE_LANG_WERROR([on])
+	SXE_LANG_WERROR([off])
 	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #if defined HAVE_ERRNO_H
 # include <errno.h>
