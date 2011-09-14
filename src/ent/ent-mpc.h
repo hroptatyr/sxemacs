@@ -132,8 +132,13 @@ extern Bufbyte *bigc_to_string(bigc, int);
 	mpc_add_fr(c, c, bf1, GMP_RNDN);				\
 } while (0)
 
+#if defined mpc_realref
+#define bigc_re(z)                  mpc_realref(z)
+#define bigc_im(z)                  mpc_imagref(z)
+#else
 #define bigc_re(z)                  MPC_RE(z)
 #define bigc_im(z)                  MPC_IM(z)
+#endif
 
 /***** Bigc: comparisons *****/
 #define bigc_cmp(f1,f2)             mpc_cmp(f1, f2)
