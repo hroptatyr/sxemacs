@@ -986,6 +986,8 @@ make_filedesc_stream_1(int filedesc, int offset, int count, int flags,
 		       const char *mode)
 {
 	Lisp_Object obj;
+        if (filedesc < 0)
+		return obj;
 	lstream_t lstr = Lstream_new(lstream_filedesc, mode);
 	filedesc_stream_t fstr = FILEDESC_STREAM_DATA(lstr);
 
