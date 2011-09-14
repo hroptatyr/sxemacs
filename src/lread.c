@@ -716,6 +716,9 @@ encoding detection or end-of-line detection.
 		struct gcpro ngcpro1;
 
 		NGCPRO1(lstrm);
+               if (fd < 0)
+                      signal_file_error("Cannot open load file", file);
+
 		lstrm = make_filedesc_input_stream(fd, 0, -1, LSTR_CLOSING);
 		/* 64K is used for normal files; 8K should be OK here because
 		 * Lisp files aren't really all that big. */
