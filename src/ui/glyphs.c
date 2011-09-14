@@ -4531,7 +4531,6 @@ void map_subwindow(Lisp_Object subwindow, int x, int y,
 		   struct display_glyph_area *dga)
 {
 	Lisp_Image_Instance *ii = XIMAGE_INSTANCE(subwindow);
-	struct frame *f;
 
 	ERROR_CHECK_IMAGE_INSTANCE(subwindow);
 
@@ -4544,7 +4543,7 @@ void map_subwindow(Lisp_Object subwindow, int x, int y,
 		   IMAGE_INSTANCE_SUBWINDOW_ID(ii),
 		   dga->width, dga->height, x, y);
 #endif
-	f = XFRAME(IMAGE_INSTANCE_FRAME(ii));
+	(void)XFRAME(IMAGE_INSTANCE_FRAME(ii));
 	IMAGE_INSTANCE_DISPLAY_X(ii) = x;
 	IMAGE_INSTANCE_DISPLAY_Y(ii) = y;
 	IMAGE_INSTANCE_DISPLAY_WIDTH(ii) = dga->width;
