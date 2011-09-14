@@ -2826,7 +2826,7 @@ here because write-region handler writers need to be aware of it.
 {
 	/* This function can call lisp.  GC checked 2000-07-28 ben */
 	int desc;
-	int failure;
+	int failure, stat_res;
 	int save_errno = 0;
 	struct stat st;
 	Lisp_Object fn = Qnil;
@@ -3045,7 +3045,7 @@ here because write-region handler writers need to be aware of it.
 		NNUNGCPRO;
 	}
 
-	sxemacs_stat((char *)XSTRING_DATA(fn), &st);
+	stat_res = sxemacs_stat((char *)XSTRING_DATA(fn), &st);
 
 #ifdef CLASH_DETECTION
 	if (!auto_saving)
@@ -3056,7 +3056,13 @@ here because write-region handler writers need to be aware of it.
 	   to avoid a "file has changed on disk" warning on
 	   next attempt to save.  */
 	if (visiting)
+           if (stat_res == 0)
 		current_buffer->modtime = st.st_mtime;
+	   /* else: 
+		If sxemacs_stat failed, we have bigger problems, and
+		   most likely the file is gone, so the error next time is
+		   the right behavior
+            */
 
 	if (failure) {
 		errno = save_errno;
