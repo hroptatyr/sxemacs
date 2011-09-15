@@ -364,7 +364,7 @@ sound_ao_play(audio_job_t aj)
 	SXE_MUTEX_UNLOCK(&aj->mtx);
 	resolution = (sasd->mtap->samplerate * MTPSTATE_REACT_TIME) / 1000000;
 
-	while (aj->play_state != MTPSTATE_STOP) {
+	while (mtp != MTPSTATE_STOP) {
 
 #ifdef EF_USE_ASYNEQ
 		/* events are there? */
@@ -380,7 +380,7 @@ sound_ao_play(audio_job_t aj)
 		case MTPSTATE_RUN:
 			if (!ao_push(aj, resolution)) {
 				SXE_MUTEX_LOCK(&aj->mtx);
-				aj->play_state = MTPSTATE_STOP;
+				mtp = aj->play_state = MTPSTATE_STOP;
 				SXE_MUTEX_UNLOCK(&aj->mtx);
 			}
 			break;
