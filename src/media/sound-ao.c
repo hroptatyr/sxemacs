@@ -407,7 +407,8 @@ sound_ao_play(audio_job_t aj)
 	aj->buffer_alloc_size = 0;
 	SXE_MUTEX_UNLOCK(&aj->mtx);
 
-	if (sasd && sasd->dev) {
+	/* sasd is always != NULL here per its initialization */
+	if (sasd->dev) {
 		ao_close(sasd->dev);
 		sasd->dev = NULL;
 	}
