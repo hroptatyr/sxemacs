@@ -253,6 +253,10 @@ static prop_block_dynarr *add_glyph_rune(pos_data * data,
 					 struct glyph_block *gb,
 					 int pos_type, int allow_cursor,
 					 struct glyph_cachel *cachel);
+static void add_glyph_rune_noret(pos_data * data,
+				 struct glyph_block *gb,
+				 int pos_type, int allow_cursor,
+				 struct glyph_cachel *cachel);
 static Bytind create_text_block(struct window *w, struct display_line *dl,
 				Bytind bi_start_pos, prop_block_dynarr ** prop,
 				int type);
@@ -1184,6 +1188,14 @@ static prop_block_dynarr *add_blank_rune(pos_data * data, struct window *w,
 	return NULL;
 }
 
+static void add_blank_rune_noret(pos_data * data, struct window *w,
+				 int char_tab_width)
+{
+	prop_block_dynarr *prop = add_blank_rune(data,w,char_tab_width);
+	if (prop && prop != ADD_FAILED )
+		Dynarr_free(prop);
+}
+
 /* Add runes representing a character in octal. */
 
 #define ADD_NEXT_OCTAL_RUNE_CHAR do				\
@@ -1263,6 +1275,8 @@ static prop_block_dynarr *add_octal_runes(pos_data * data)
 	ADD_NEXT_OCTAL_RUNE_CHAR;
 
 	data->cursor_type = orig_cursor_type;
+	if (prop && prop != ADD_FAILED )
+		Dynarr_free(prop);
 	return NULL;
 }
 
@@ -1300,10 +1314,13 @@ static prop_block_dynarr *add_control_char_runes(pos_data * data,
 
 				/* We only propagate information if the glyph was partially
 				   added. */
-				if (add_glyph_rune(data, &gb, BEGIN_GLYPHS, 1,
-						   GLYPH_CACHEL(w,
-								CONTROL_GLYPH_INDEX)))
+				prop = add_glyph_rune(data, &gb, BEGIN_GLYPHS, 1,
+						      GLYPH_CACHEL(w, CONTROL_GLYPH_INDEX));
+				if ( prop != NULL ) {
+					if ( prop != ADD_FAILED )
+						Dynarr_free(prop);
 					return ADD_FAILED;
+				}
 			}
 		}
 
@@ -1597,6 +1614,16 @@ static prop_block_dynarr *add_propagation_runes(prop_block_dynarr ** prop,
    the display block, but add all other types to the appropriate list
    of the display line.  They will be added later by different
    routines. */
+
+static void add_glyph_rune_noret(pos_data * data,
+				 struct glyph_block *gb, int pos_type,
+				 int allow_cursor,
+				 struct glyph_cachel *cachel)
+{
+	prop_block_dynarr *prop = add_glyph_rune(data,gb,pos_type,allow_cursor,cachel);
+	if (prop && prop != ADD_FAILED )
+		Dynarr_free(prop);
+}
 
 static prop_block_dynarr *add_glyph_rune(pos_data * data,
 					 struct glyph_block *gb, int pos_type,
@@ -2309,10 +2336,10 @@ create_text_block(struct window *w, struct display_line *dl,
 						gb.extent = Qnil;
 						gb.glyph =
 						    Vinvisible_text_glyph;
-						add_glyph_rune(&data, &gb,
-							       BEGIN_GLYPHS, 0,
-							       GLYPH_CACHEL(w,
-									    INVIS_GLYPH_INDEX));
+						add_glyph_rune_noret(&data, &gb,
+								     BEGIN_GLYPHS, 0,
+								     GLYPH_CACHEL(w,
+										  INVIS_GLYPH_INDEX));
 					} else {
 						/* Cheesy, cheesy, cheesy.  We mark the end of the
 						   line with a special "character rune" whose width
@@ -2825,7 +2852,7 @@ static int create_overlay_glyph_block(struct window *w, struct display_line *dl)
 
 		gb.glyph = Voverlay_arrow_string;
 		gb.extent = Qnil;
-		add_glyph_rune(&data, &gb, BEGIN_GLYPHS, 0, 0);
+		add_glyph_rune_noret(&data, &gb, BEGIN_GLYPHS, 0, 0);
 	}
 
 	calculate_baseline(&data);
@@ -2897,7 +2924,7 @@ add_margin_runes(struct display_line *dl, struct display_block *db, int start,
 			 layout))) {
 			data.findex = gb->findex;
 			data.max_pixpos = data.pixpos + gb->width;
-			add_glyph_rune(&data, gb, side, 0, NULL);
+			add_glyph_rune_noret(&data, gb, side, 0, NULL);
 			count--;
 			gb->active = 0;
 		}
@@ -3754,7 +3781,7 @@ add_string_to_fstring_db_runes(pos_data * data, const Bufbyte * str,
 
 	while (Dynarr_length(db->runes) < min_pos &&
 	       (data->pixpos + data->blank_width <= data->max_pixpos))
-		add_blank_rune(data, NULL, 0);
+		add_blank_rune_noret(data, NULL, 0);
 
 	return Dynarr_length(db->runes);
 }
@@ -3773,7 +3800,7 @@ add_glyph_to_fstring_db_runes(pos_data * data, Lisp_Object glyph,
 
 	data->blank_width = space_width(XWINDOW(data->window));
 	while (Dynarr_length(db->runes) < pos)
-		add_blank_rune(data, NULL, 0);
+		add_blank_rune_noret(data, NULL, 0);
 
 	end = Dynarr_length(db->runes) + 1;
 	if (max_pos != -1)
@@ -3781,7 +3808,7 @@ add_glyph_to_fstring_db_runes(pos_data * data, Lisp_Object glyph,
 
 	gb.glyph = glyph;
 	gb.extent = extent;
-	add_glyph_rune(data, &gb, BEGIN_GLYPHS, 0, 0);
+	add_glyph_rune_noret(data, &gb, BEGIN_GLYPHS, 0, 0);
 	pos++;
 
 	while (Dynarr_length(db->runes) < pos &&
@@ -4769,8 +4796,8 @@ create_string_text_block(struct window *w, Lisp_Object disp_string,
 			}
 
 			if (data.end_glyph_width)
-				add_glyph_rune(&data, &gb, BEGIN_GLYPHS, 0,
-					       cachel);
+				add_glyph_rune_noret(&data, &gb, BEGIN_GLYPHS, 0,
+						     cachel);
 
 			if (truncate_win && data.bi_bufpos == bi_string_zv) {
 				const Bufbyte *endb =
