@@ -616,29 +616,32 @@ On Unix it is obtained from TMPDIR, with /tmp as the default.
 		    S_ISDIR(st.st_mode)) {
 			tmpdir = path;
 		} else {
-                        strncpy(path, getenv("HOME"), sizeof(path)-1);
-			strncat(path, "/tmp/", sizeof(path)-strlen(path)-1);
-			if (stat(path, &st) < 0 && errno == ENOENT) {
-				int fd;
-				char warnpath[ 
-                                              /* strlen(".created_by_sxemacs") */ 
-                                              19 + _POSIX_PATH_MAX + 1];
-				mkdir(path, 0700);	/* ignore retvals */
-				strncpy(warnpath, path, _POSIX_PATH_MAX);
-                                warnpath[sizeof(warnpath)-1]=0;
-
-                                /* we already are reserved these 20 bytes... */
-				strcat(warnpath, ".created_by_sxemacs");
-				if ((fd =
-				     open(warnpath, O_WRONLY | O_CREAT,
-					  0644)) > 0) {
-					write(fd,
-					      "SXEmacs created this directory because /tmp/<yourname> was unavailable -- \nPlease check !\n",
-					      89);
-					close(fd);
+		        const char* home_env = getenv("HOME");
+			if ( home_env ) {
+				strncpy(path, home_env, sizeof(path)-1);
+				strncat(path, "/tmp/", sizeof(path)-1);
+				if (stat(path, &st) < 0 && errno == ENOENT) {
+					int fd;
+					char warnpath[ 
+						/* strlen(".created_by_sxemacs") */ 
+						19 + _POSIX_PATH_MAX + 1];
+					mkdir(path, 0700);	/* ignore retvals */
+					strncpy(warnpath, path, _POSIX_PATH_MAX);
+					warnpath[sizeof(warnpath)-1]=0;
+					
+					/* we already are reserved these 20 bytes... */
+					strcat(warnpath, ".created_by_sxemacs");
+					if ((fd = open(warnpath, O_WRONLY | O_CREAT,
+						       0644)) > 0) {
+						write(fd, "SXEmacs created this directory "
+						          "because /tmp/<yourname> "
+						          "was unavailable -- \nPlease check !\n",  89);
+						close(fd);
+					}
 				}
 			}
-			if (stat(path, &st) == 0 && S_ISDIR(st.st_mode)) {
+			if (stat(path, &st) == 0 && st.st_uid == (uid_t) myuid 
+			    && S_ISDIR(st.st_mode)) {
 				tmpdir = path;
 			} else {
 				tmpdir = "/tmp";
