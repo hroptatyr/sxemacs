@@ -863,7 +863,8 @@ binary string data.
 	EVP_MD_CTX *mdctx;
 	const EVP_MD *md;
 	unsigned char md_value[EVP_MAX_MD_SIZE];
-	unsigned int md_len, md_blocksize, n;
+	unsigned int md_len, md_blocksize;
+	ssize_t n;
 	/* input file */
 	FILE *fp;
 
@@ -999,7 +1000,8 @@ binary string data.
 
 	/* buffer for the ciphertext */
 	unsigned char outbuf[EVP_MAX_MD_SIZE];
-	unsigned int outlen, n;
+	unsigned int outlen;
+	ssize_t n;
 	/* buffer for external password */
 	char *password_ext;
 	unsigned int password_len;
@@ -1299,7 +1301,7 @@ binary string data.
 {
 	/* buffer for the external string */
 	unsigned char string_in[1024];
-	unsigned int string_len;
+	ssize_t string_len;
 	unsigned int block_len;
 	unsigned long file_size;
 	/* buffer for the ciphertext */
@@ -1594,7 +1596,7 @@ encrypted data redirected.
 {
 	/* buffer for the external string */
 	unsigned char string_in[1024];
-	unsigned int string_len;
+	ssize_t string_len;
 	unsigned int block_len;
 	unsigned long file_size;
 	/* buffer for the deciphered text */
