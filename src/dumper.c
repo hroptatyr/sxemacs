@@ -1349,6 +1349,7 @@ int pdump_load(const char *argv0)
 	if (dir[0] == '-') {
 		/* SXEmacs as a login shell, oh goody! */
 		dir = getenv("SHELL");
+		assert(dir != NULL);
 	}
 
 	p = dir + strlen(dir);
@@ -1364,6 +1365,8 @@ int pdump_load(const char *argv0)
 	} else {
 		const char *path = getenv("PATH");
 		const char *name = p;
+
+		assert(path != NULL);
 		for (;;) {
                         int remain = sizeof(exe_path)-1;
                         exe_path[remain] = '\0';
