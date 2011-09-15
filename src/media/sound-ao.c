@@ -381,7 +381,7 @@ sound_ao_play(audio_job_t aj)
 			if (!ao_push(aj, resolution)) {
 				SXE_MUTEX_LOCK(&aj->mtx);
 				aj->play_state = MTPSTATE_STOP;
-				SXE_MUTEX_LOCK(&aj->mtx);
+				SXE_MUTEX_UNLOCK(&aj->mtx);
 			}
 			break;
 		case MTPSTATE_PAUSE:
