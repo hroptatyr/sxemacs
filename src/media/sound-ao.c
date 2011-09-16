@@ -356,6 +356,7 @@ sound_ao_play(audio_job_t aj)
 
 	/* ... and play it */
 	SXE_MUTEX_LOCK(&aj->mtx);
+	mtp = aj->play_state;
 	if (aj->buffer_alloc_size < SOUND_MAX_AUDIO_FRAME_SIZE) {
 		alloced_myself = 1;
 		aj->buffer = xmalloc_atomic(SOUND_MAX_AUDIO_FRAME_SIZE);
