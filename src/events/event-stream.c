@@ -4398,8 +4398,7 @@ See `function-key-map' for more details.
 								   Probably not -- see
 								   comment in
 								   next-event */
-	struct command_builder *command_builder =
-	    XCOMMAND_BUILDER(con->command_builder);
+	struct command_builder *command_builder;
 	Lisp_Object result;
 	Lisp_Object event = Fmake_event(Qnil, Qnil);
 	int speccount = specpdl_depth();
