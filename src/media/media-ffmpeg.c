@@ -455,8 +455,10 @@ media_ffmpeg_analyse_video(media_substream *mss, AVFormatContext *avfc, int st)
 	AVCodecContext *avcc;
 
 	/* unpack the stream and codec context from the container, again */
-	avst = avfc->streams[st];
-	avcc = avst->codec;
+	if (avfc)
+	  avst = avfc->streams[st];
+	if (avst)
+	  avcc = avst->codec;
 
 	/* initialise */
 	mtvp = xnew_and_zero(mtype_video_properties);
@@ -469,11 +471,13 @@ media_ffmpeg_analyse_video(media_substream *mss, AVFormatContext *avfc, int st)
 
 	mtvp->name = name;
 	mtvp->codec_name = codec_name;
-	mtvp->bitrate = avcc->bit_rate;
-	mtvp->width = avcc->width;
-	mtvp->height = avcc->height;
-	mtvp->aspect_num = avcc->sample_aspect_ratio.num;
-	mtvp->aspect_den = avcc->sample_aspect_ratio.den;
+	if (avcc) {
+	  mtvp->bitrate = avcc->bit_rate;
+	  mtvp->width = avcc->width;
+	  mtvp->height = avcc->height;
+	  mtvp->aspect_num = avcc->sample_aspect_ratio.num;
+	  mtvp->aspect_den = avcc->sample_aspect_ratio.den;
+	}
 
 	mtvp->endianness = 0;
 
