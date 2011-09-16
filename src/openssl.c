@@ -876,9 +876,11 @@ binary string data.
 	file = Fexpand_file_name(file, Qnil);
 
 	if (((fp = fopen((char *)XSTRING_DATA(file),"rb")) == NULL) ||
-	    (fseek(fp, 0, SEEK_SET)))
+	    (fseek(fp, 0, SEEK_SET))) {
+		if (fp)
+			fclose(fp);
 		return wrong_type_argument(Qfile_readable_p, file);
-
+	}
 
 	OpenSSL_add_all_digests();
 	md = EVP_get_digestbyname(
@@ -886,6 +888,7 @@ binary string data.
 
 	if (!md) {
 		EVP_cleanup();
+		fclose(fp);
 		error ("no such digest");
 	}
 
