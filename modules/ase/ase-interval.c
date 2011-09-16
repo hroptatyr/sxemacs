@@ -2044,6 +2044,12 @@ _ase_subtract_intr_union(ase_cartesian_t c, ase_interval_union_item_t u)
 		u = u->next;
 	}
 
+	if (na == &ures) {
+		/* Copy the local temporary to the heap */
+		na = xnew(struct ase_interval_union_item_s);
+		assert(na);
+		memcpy(na,&ures,sizeof(ures));
+	}
 	return na;
 }
 
