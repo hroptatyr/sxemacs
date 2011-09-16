@@ -284,9 +284,9 @@ static void
 x_print_color_instance(Lisp_Color_Instance * c,
 		       Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[100];
+	char buf[256];
 	XColor color = COLOR_INSTANCE_X_COLOR(c);
-	sprintf(buf, " %ld=(%X,%X,%X)",
+	snprintf(buf, sizeof(buf), " %ld=(%X,%X,%X)",
 		color.pixel, color.red, color.green, color.blue);
 	write_c_string(buf, printcharfun);
 }
@@ -452,8 +452,8 @@ static void
 x_print_font_instance(Lisp_Font_Instance * f,
 		      Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[200];
-	sprintf(buf, " 0x%lx", (unsigned long)FONT_INSTANCE_X_FONT(f)->fid);
+	char buf[64];
+	snprintf(buf, sizeof(buf), " 0x%lx", (unsigned long)FONT_INSTANCE_X_FONT(f)->fid);
 	write_c_string(buf, printcharfun);
 }
 
