@@ -377,12 +377,14 @@ media_ffmpeg_analyse_audio(media_substream *mss, AVFormatContext *avfc, int st)
 	const char *name = NULL;
 	const char *codec_name = NULL;
 	/* libavformat cruft */
-	AVStream *avst;
-	AVCodecContext *avcc;
+	AVStream *avst = NULL;
+	AVCodecContext *avcc = NULL;
 
 	/* unpack the stream and codec context from the container, again */
-	avst = avfc->streams[st];
-	avcc = avst->codec;
+	if (avfc)
+	  avst = avfc->streams[st];
+	if (avst)
+	  avcc = avst->codec;
 
 	/* initialise */
 	mtap = xnew_and_zero(mtype_audio_properties);
@@ -395,9 +397,11 @@ media_ffmpeg_analyse_audio(media_substream *mss, AVFormatContext *avfc, int st)
 
 	mtap->name = name;
 	mtap->codec_name = codec_name;
-	mtap->channels = avcc->channels;
-	mtap->samplerate = avcc->sample_rate;
-	mtap->bitrate = media_ffmpeg_bitrate(avcc);
+	if (avcc ) {
+		mtap->channels = avcc->channels;
+		mtap->samplerate = avcc->sample_rate;
+		mtap->bitrate = media_ffmpeg_bitrate(avcc);
+	}
 
 	/* samplewidth and framesize */
 	switch (avcc->sample_fmt) {
