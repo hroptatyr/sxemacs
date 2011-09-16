@@ -391,7 +391,7 @@ sound_ao_play(audio_job_t aj)
 			aj->play_state = MTPSTATE_STOP;
 			break;
 		}
-		mtp = aj->play_state
+		mtp = aj->play_state;
 		SXE_MUTEX_UNLOCK(&aj->mtx);
 		if (mtp == MTPSTATE_PAUSE) {
 			AO_DEBUG("sleeping for %d\n", resolution);
