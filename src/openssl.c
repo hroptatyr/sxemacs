@@ -1015,8 +1015,11 @@ binary string data.
 	file = Fexpand_file_name(file, Qnil);
 
 	if (((fp = fopen((char *)XSTRING_DATA(file),"rb")) == NULL) ||
-	    (fseek(fp, 0, SEEK_SET)))
+	    (fseek(fp, 0, SEEK_SET))) {
+		if (fp)
+			fclose(fp);
 		return wrong_type_argument(Qfile_readable_p, file);
+	}
 
 
 	OpenSSL_add_all_digests();
@@ -1053,6 +1056,7 @@ binary string data.
 	xfree(hmacctx);
 
 	EVP_cleanup();
+	fclose(fp);
 
 	return make_ext_string((char*)outbuf, outlen, OSSL_CODING);
 }
@@ -1347,8 +1351,13 @@ binary string data.
 
 	file = Fexpand_file_name(file, Qnil);
 	if (((fp = fopen((char *)XSTRING_DATA(file),"rb")) == NULL) ||
-	    (fseek(fp, 0, SEEK_SET)))
+	    (fseek(fp, 0, SEEK_SET))) {
+		if (fp)
+			fclose(fp);
+		if (of)
+			fclose(of);
 		return wrong_type_argument(Qfile_readable_p, file);
+	}
 
 	fseek(fp, 0, SEEK_END);
 	file_size = ftell(fp); 
@@ -1363,6 +1372,9 @@ binary string data.
 
 	if (!ciph) {
 		EVP_cleanup();
+		fclose(fp);
+		if (of)
+			fclose(of);
 		error ("no such cipher");
 	}
 
@@ -1389,6 +1401,9 @@ binary string data.
 			     (unsigned char *)key_ext,
 			     (unsigned char *)iv_ext)) {
 		EVP_cleanup();
+		fclose(fp);
+		if (of)
+			fclose(of);
 		xfree(ciphctx);
 		error("error in EncryptInit");
 	}
@@ -1400,6 +1415,8 @@ binary string data.
 		if (string_len < 0) {
 			EVP_cleanup();
 			fclose(fp);
+			if (of)
+				fclose(of);
 			xfree(ciphctx);
 			error("file corrupted");
 			return Qnil;
@@ -1411,6 +1428,9 @@ binary string data.
 				       obp, &tmplen,
 				       string_in, string_len)) {
 			EVP_cleanup();
+			fclose(fp);
+			if (of)
+				fclose(of);
 			xfree(ciphctx);
 			error("error in EncryptUpdate");
 		}
@@ -1428,6 +1448,9 @@ binary string data.
 	 */
 	if (!EVP_EncryptFinal(ciphctx, obp, &tmplen)) {
 		EVP_cleanup();
+		fclose(fp);
+		if (of)
+			fclose(of);
 		xfree(ciphctx);
 		error("error in EncryptFinal");
 	}
@@ -1642,8 +1665,13 @@ encrypted data redirected.
 
 	file = Fexpand_file_name(file, Qnil);
 	if (((fp = fopen((char *)XSTRING_DATA(file),"rb")) == NULL) ||
-	    (fseek(fp, 0, SEEK_SET)))
+	    (fseek(fp, 0, SEEK_SET))) {
+		if (fp)
+			fclose(fp);
+		if (of)
+			fclose(of);
 		return wrong_type_argument(Qfile_readable_p, file);
+	}
 
 	fseek(fp, 0, SEEK_END);
 	file_size = ftell(fp); 
@@ -1658,6 +1686,9 @@ encrypted data redirected.
 
 	if (!ciph) {
 		EVP_cleanup();
+		fclose(fp);
+		if (of)
+			fclose(of);
 		error ("no such cipher");
 	}
 
@@ -1681,6 +1712,9 @@ encrypted data redirected.
 			     (unsigned char *)key_ext,
 			     (unsigned char *)iv_ext)) {
 		EVP_cleanup();
+		fclose(fp);
+		if (of)
+			fclose(of);
 		xfree(ciphctx);
 		error ("error in DecryptInit");
 	}
@@ -1692,6 +1726,8 @@ encrypted data redirected.
 		if (string_len < 0) {
 			EVP_cleanup();
 			fclose(fp);
+			if (of)
+				fclose(of);
 			xfree(ciphctx);
 			error("file corrupted");
 			return Qnil;
@@ -1703,6 +1739,9 @@ encrypted data redirected.
 				       obp, &tmplen,
 				       string_in, string_len)) {
 			EVP_cleanup();
+			fclose(fp);
+			if (of)
+				fclose(of);
 			xfree(ciphctx);
 			error ("error in DecryptUpdate");
 		}
@@ -1720,6 +1759,9 @@ encrypted data redirected.
 	 */
 	if (!EVP_DecryptFinal(ciphctx, obp, &tmplen)) {
 		EVP_cleanup();
+		fclose(fp);
+		if (of)
+			fclose(of);
 		xfree(ciphctx);
 		error ("error in DecryptFinal");
 	}
