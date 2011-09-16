@@ -233,6 +233,7 @@ static void x_output_toolbar_button(struct frame *f, Lisp_Object button)
 			dl.ascent = fm.ascent;
 			dl.descent = fm.descent;
 			dl.ypos = tb->y + y_offset + fm.ascent;
+			dl.top_clip = 0;
 
 			if (fm.ascent + fm.descent <= height) {
 				dl.ypos +=
