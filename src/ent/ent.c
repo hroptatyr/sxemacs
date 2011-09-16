@@ -498,10 +498,8 @@ int
 ase_optable_index_typesym(Lisp_Object typesym)
 {
 	Lisp_Object idx = Fget(typesym, Qoptable_index, Qnil);
-	if (INTEGERP(idx))
-		return XINT(idx);
-	else
-		return -1;
+	assert(INTEGERP(idx));
+	return XINT(idx);
 }
 
 /* categorial subtleties */
