@@ -3258,7 +3258,7 @@ Lisp_Object build_string(const char *str)
 Lisp_Object build_ext_string(const char *str, Lisp_Object coding_system)
 {
 	/* Some strlen's crash and burn if passed null. */
-	return make_ext_string((const Extbyte*)str, strlen(str), coding_system);
+	return make_ext_string((const Extbyte*)str, (str ? strlen(str) : 0), coding_system);
 }
 
 Lisp_Object build_translated_string(const char *str)
