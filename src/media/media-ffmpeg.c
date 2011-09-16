@@ -544,42 +544,43 @@ media_ffmpeg_open(Lisp_Media_Stream *ms)
 		break;
 	}
 
-	/* check if there is at least one usable stream */
-	for (size_t st = 0; st < avfc->nb_streams; st++) {
-		avst = avfc->streams[st];
-		avcc = avst->codec;
-		if (avcc &&
-		    avcc->codec_id != CODEC_ID_NONE &&
-		    avcc->codec_type != CODEC_TYPE_DATA &&
-		    (avc = avcodec_find_decoder(avcc->codec_id)) &&
-		    (avc && (avcodec_open(avcc, avc) >= 0))) {
-
-			/* create a substream */
-			mss = make_media_substream_append(ms);
-
-			switch ((unsigned int)avcc->codec_type) {
-			case CODEC_TYPE_VIDEO:
-				/* assign substream props */
-				media_substream_type(mss) = MTYPE_VIDEO;
-				media_ffmpeg_analyse_video(mss, avfc, st);
-				break;
-			case CODEC_TYPE_AUDIO:
-				/* assign substream props */
-				media_substream_type(mss) = MTYPE_AUDIO;
-				media_ffmpeg_analyse_audio(mss, avfc, st);
-				/* set some stream handlers */
-				media_stream_set_meths(ms, media_ffmpeg);
-				break;
-			case CODEC_TYPE_DATA:
-				media_substream_type(mss) = MTYPE_IMAGE;
-				break;
-			default:
-				media_substream_type(mss) = MTYPE_UNKNOWN;
-				break;
+	if (avfc)
+		/* check if there is at least one usable stream */
+		for (size_t st = 0; st < avfc->nb_streams; st++) {
+			avst = avfc->streams[st];
+			avcc = avst->codec;
+			if (avcc &&
+			    avcc->codec_id != CODEC_ID_NONE &&
+			    avcc->codec_type != CODEC_TYPE_DATA &&
+			    (avc = avcodec_find_decoder(avcc->codec_id)) &&
+			    (avc && (avcodec_open(avcc, avc) >= 0))) {
+				
+				/* create a substream */
+				mss = make_media_substream_append(ms);
+				
+				switch ((unsigned int)avcc->codec_type) {
+				case CODEC_TYPE_VIDEO:
+					/* assign substream props */
+					media_substream_type(mss) = MTYPE_VIDEO;
+					media_ffmpeg_analyse_video(mss, avfc, st);
+					break;
+				case CODEC_TYPE_AUDIO:
+					/* assign substream props */
+					media_substream_type(mss) = MTYPE_AUDIO;
+					media_ffmpeg_analyse_audio(mss, avfc, st);
+					/* set some stream handlers */
+					media_stream_set_meths(ms, media_ffmpeg);
+					break;
+				case CODEC_TYPE_DATA:
+					media_substream_type(mss) = MTYPE_IMAGE;
+					break;
+				default:
+					media_substream_type(mss) = MTYPE_UNKNOWN;
+					break;
+				}
 			}
 		}
-	}
-
+	
 	/* keep the format context */
 	media_stream_data(ms) = avfc;
 
