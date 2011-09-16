@@ -142,20 +142,25 @@ char *media_ffmpeg_streaminfo(Lisp_Media_Stream *ms)
 		return out;
 
 	if (avfc->author && *avfc->author) {
-		charsleft -= strncat(out, " :author \"", chars_left);
-		charsleft -= strncat(out, avfc->author, chars_left);
-		charsleft -= strncat(out, "\"", chars_left);
+		strncat(out, " :author \"", chars_left);
+		chars_left -= 10;
+		strncat(out, avfc->author, chars_left);
+		chars_left -= strlen(avfc->author);
+	        strncat(out, "\"", chars_left--);
 	}
 	if (avfc->title && *avfc->title) {
-		charsleft -= strncat(out, " :title: \"", chars_left);
-		charsleft -= strncat(out, avfc->title, chars_left);
-		charsleft -= strncat(out, "\"", chars_left);
+		strncat(out, " :title: \"", chars_left);
+		chars_left -= 10;
+		strncat(out, avfc->title, chars_left);
+		chars_left -= strlen(avfc->title);
+		strncat(out, "\"", chars_left--);
 	}
 	if (avfc->year) {
 		char year[12];
-		charsleft -= strcat(out, " :year ", chars_left);
+		strncat(out, " :year ", chars_left);
+		chars_left -= 7;
 		snprintf(year, 12, "%d", avfc->year);
-		charsleft -= strncat(out, year, chars_left);
+		strncat(out, year, chars_left);
 	}
 
 	return out;
@@ -451,8 +456,8 @@ media_ffmpeg_analyse_video(media_substream *mss, AVFormatContext *avfc, int st)
 	const char *name = NULL;
 	const char *codec_name = NULL;
 	/* libavformat cruft */
-	AVStream *avst;
-	AVCodecContext *avcc;
+	AVStream *avst = NULL;
+	AVCodecContext *avcc = NULL;
 
 	/* unpack the stream and codec context from the container, again */
 	if (avfc)
