@@ -375,29 +375,27 @@ sound_ao_play(audio_job_t aj)
 #endif
 
 		SXE_MUTEX_LOCK(&aj->mtx);
-		mtp = aj->play_state;
-		SXE_MUTEX_UNLOCK(&aj->mtx);
-		switch (mtp) {
+		switch (aj->play_state) {
 		case MTPSTATE_RUN:
-			if (!ao_push(aj, resolution)) {
-				SXE_MUTEX_LOCK(&aj->mtx);
-				mtp = aj->play_state = MTPSTATE_STOP;
-				SXE_MUTEX_UNLOCK(&aj->mtx);
-			}
+			if (!ao_push(aj, resolution))
+				aj->play_state = MTPSTATE_STOP;
 			break;
 		case MTPSTATE_PAUSE:
-			AO_DEBUG("sleeping for %d\n", resolution);
-			usleep(resolution);
-			break;
+		  /* must sleep resolution outside of lock */
 
 		case MTPSTATE_UNKNOWN:
 		case MTPSTATE_STOP:
 		case NUMBER_OF_MEDIA_THREAD_PLAY_STATES:
 		default:
 			AO_DEBUG("ACK, quit\n");
-			SXE_MUTEX_LOCK(&aj->mtx);
-			mtp = aj->play_state = MTPSTATE_STOP;
-			SXE_MUTEX_UNLOCK(&aj->mtx);
+			aj->play_state = MTPSTATE_STOP;
+			break;
+		}
+		mtp = aj->play_state
+		SXE_MUTEX_UNLOCK(&aj->mtx);
+		if (mtp == MTPSTATE_PAUSE) {
+			AO_DEBUG("sleeping for %d\n", resolution);
+			usleep(resolution);
 			break;
 		}
 	}
