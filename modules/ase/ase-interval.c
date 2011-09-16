@@ -2044,6 +2044,12 @@ _ase_subtract_intr_union(ase_cartesian_t c, ase_interval_union_item_t u)
 		u = u->next;
 	}
 
+	if (na == &ures) {
+		/* Copy the local temporary to the heap */
+		na = xnew(struct ase_interval_union_item_s);
+		assert(na);
+		memcpy(na,&ures,sizeof(ures));
+	}
 	return na;
 }
 
@@ -3042,23 +3048,26 @@ static Lisp_Object
 __ase_interval_union_rational(ase_interval_union_item_t u)
 {
 	int i = 0, nargs = __ase_interval_union_update_rational(u);
-	Lisp_Object args[nargs];
-
 	if (nargs == 0)
 		return Qzero;
+	{
+		Lisp_Object args[nargs];
+		for ( i = nargs; i > 0; )
+			args[--i] = Qnil;
 
-	while (u) {
-		if (ASE_INTERVALP(u->current)) {
-			args[i] = _ase_interval_rational(
-				XASE_INTERVAL(u->current));
-		} else if (ASE_INTERVAL_INTERIOR_P(u->current)) {
-			args[i] = _ase_interval_interior_rational(
-				XASE_CARTESIAN(u->current));
+		while (u) {
+			if (ASE_INTERVALP(u->current)) {
+				args[i] = _ase_interval_rational(
+					XASE_INTERVAL(u->current));
+			} else if (ASE_INTERVAL_INTERIOR_P(u->current)) {
+				args[i] = _ase_interval_interior_rational(
+					XASE_CARTESIAN(u->current));
+			}
+			i++;
+			u = u->next;
 		}
-		i++;
-		u = u->next;
+		return ent_binop_many(ASE_BINARY_OP_SUM, nargs, args);
 	}
-	return ent_binop_many(ASE_BINARY_OP_SUM, nargs, args);
 }
 
 static inline void

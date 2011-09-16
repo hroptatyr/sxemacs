@@ -158,7 +158,7 @@ Initialize_Locale (void)
 			   "Using C Locale instead\n", locale);
 		putenv ("LANG=C");
 		putenv ("LC_ALL=C");
-		if ((locale = setlocale (LC_ALL, "C")) == NULL) {
+		if (setlocale (LC_ALL, "C") == NULL) {
 			xim_warn ("Can't set locale to `C'!\n");
 			return;
 		}

@@ -2664,7 +2664,7 @@ create_text_block(struct window *w, struct display_line *dl,
 				cachel = GLYPH_CACHEL(w, CONT_GLYPH_INDEX);
 			}
 
-			add_glyph_rune(&data, &gb, BEGIN_GLYPHS, 0, cachel);
+			add_glyph_rune_noret(&data, &gb, BEGIN_GLYPHS, 0, cachel);
 
 			if (truncate_win && data.bi_bufpos == BI_BUF_ZV(b)
 			    && BI_BUF_FETCH_CHAR(b,
@@ -3758,7 +3758,7 @@ add_string_to_fstring_db_runes(pos_data * data, const Bufbyte * str,
 
 	data->blank_width = space_width(XWINDOW(data->window));
 	while (Dynarr_length(db->runes) < pos)
-		add_blank_rune(data, NULL, 0);
+		add_blank_rune_noret(data, NULL, 0);
 
 	end = (Dynarr_length(db->runes) +
 	       bytecount_to_charcount(str, strlen((const char *)str)));
@@ -3813,7 +3813,7 @@ add_glyph_to_fstring_db_runes(pos_data * data, Lisp_Object glyph,
 
 	while (Dynarr_length(db->runes) < pos &&
 	       (data->pixpos + data->blank_width <= data->max_pixpos))
-		add_blank_rune(data, NULL, 0);
+		add_blank_rune_noret(data, NULL, 0);
 
 	return Dynarr_length(db->runes);
 }

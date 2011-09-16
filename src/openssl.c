@@ -876,9 +876,11 @@ binary string data.
 	file = Fexpand_file_name(file, Qnil);
 
 	if (((fp = fopen((char *)XSTRING_DATA(file),"rb")) == NULL) ||
-	    (fseek(fp, 0, SEEK_SET)))
+	    (fseek(fp, 0, SEEK_SET))) {
+		if (fp)
+			fclose(fp);
 		return wrong_type_argument(Qfile_readable_p, file);
-
+	}
 
 	OpenSSL_add_all_digests();
 	md = EVP_get_digestbyname(
@@ -886,6 +888,7 @@ binary string data.
 
 	if (!md) {
 		EVP_cleanup();
+		fclose(fp);
 		error ("no such digest");
 	}
 
@@ -2391,7 +2394,7 @@ At the moment we do not support creating custom curves.
       (curve))
 {
 	EVP_PKEY *pkey;
-	EC_KEY *eckey = EC_KEY_new();
+	EC_KEY *eckey;
 
 	CHECK_SYMBOL(curve);
 
@@ -2399,7 +2402,7 @@ At the moment we do not support creating custom curves.
 	eckey = EC_KEY_new_by_curve_name(
 		ec_curve_by_name((char *)string_data(XSYMBOL(curve)->name)));
 
-	if ((eckey == NULL)) {
+	if (eckey == NULL) {
 		error ("no such curve");
 	}
 
