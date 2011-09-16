@@ -839,12 +839,12 @@ as BUFFER means use current buffer.
       (flag, buffer))
 {
 	/* This function can GC */
-	struct buffer *buf = decode_buffer(buffer, 0);
+	struct buffer *buf;
 
 #ifdef CLASH_DETECTION
 	/* If buffer becoming modified, lock the file.
 	   If buffer becoming unmodified, unlock the file.  */
-
+	buf =  decode_buffer(buffer, 0);
 	Lisp_Object fn = buf->file_truename;
 	if (!NILP(fn)) {
 		int already = BUF_SAVE_MODIFF(buf) < BUF_MODIFF(buf);
