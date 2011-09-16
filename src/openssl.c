@@ -2391,7 +2391,7 @@ At the moment we do not support creating custom curves.
       (curve))
 {
 	EVP_PKEY *pkey;
-	EC_KEY *eckey = EC_KEY_new();
+	EC_KEY *eckey;
 
 	CHECK_SYMBOL(curve);
 
@@ -2399,7 +2399,7 @@ At the moment we do not support creating custom curves.
 	eckey = EC_KEY_new_by_curve_name(
 		ec_curve_by_name((char *)string_data(XSYMBOL(curve)->name)));
 
-	if ((eckey == NULL)) {
+	if (eckey == NULL) {
 		error ("no such curve");
 	}
 
