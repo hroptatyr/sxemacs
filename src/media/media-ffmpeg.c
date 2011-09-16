@@ -135,29 +135,27 @@ char *media_ffmpeg_streaminfo(Lisp_Media_Stream *ms)
 	avfc = media_stream_data(ms);
 	out = xmalloc_atomic(chars_left+1);
 	out[0] = '\0';
+	out[chars_left] = '\0';
 
 	/* cannot use ffmpeg on corrupt streams */
 	if (media_stream_driver(ms) != MYSELF || avfc == NULL)
 		return out;
 
 	if (avfc->author && *avfc->author) {
-		strcat(out, " :author \"");
-		strncat(out, avfc->author, chars_left);
-		strcat(out, "\"");
-		chars_left -= 560;
+		charsleft -= strncat(out, " :author \"", chars_left);
+		charsleft -= strncat(out, avfc->author, chars_left);
+		charsleft -= strncat(out, "\"", chars_left);
 	}
 	if (avfc->title && *avfc->title) {
-		strcat(out, " :title: \"");
-		strncat(out, avfc->title, chars_left);
-		strcat(out, "\"");
-		chars_left -= 560;
+		charsleft -= strncat(out, " :title: \"", chars_left);
+		charsleft -= strncat(out, avfc->title, chars_left);
+		charsleft -= strncat(out, "\"", chars_left);
 	}
 	if (avfc->year) {
 		char year[12];
-		strcat(out, " :year ");
+		charsleft -= strcat(out, " :year ", chars_left);
 		snprintf(year, 12, "%d", avfc->year);
-		strncat(out, year, chars_left);
-		chars_left -= 24;
+		charsleft -= strncat(out, year, chars_left);
 	}
 
 	return out;
