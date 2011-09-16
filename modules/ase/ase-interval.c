@@ -2001,7 +2001,7 @@ _ase_subtract_intv_union(ase_interval_t a, ase_interval_union_item_t u)
 		/* Copy the local temporary to the heap */
 		na = xnew(struct ase_interval_union_item_s);
 		assert(na);
-		memcpy(na,ures,sizeof(ures));
+		memcpy(na,&ures,sizeof(ures));
 	}
 	return na;
 }
