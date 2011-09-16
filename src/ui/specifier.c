@@ -255,7 +255,7 @@ static void
 print_specifier(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	Lisp_Specifier *sp = XSPECIFIER(obj);
-	char buf[100];
+	char buf[128];
 	int count = specpdl_depth();
 	Lisp_Object the_specs;
 
@@ -263,7 +263,7 @@ print_specifier(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		error("printing unreadable object #<%s-specifier 0x%x>",
 		      sp->methods->name, sp->header.uid);
 
-	sprintf(buf, "#<%s-specifier global=", sp->methods->name);
+	snprintf(buf, sizeof(buf), "#<%s-specifier global=", sp->methods->name);
 	write_c_string(buf, printcharfun);
 	specbind(Qprint_string_length, make_int(100));
 	specbind(Qprint_length, make_int(5));
@@ -278,7 +278,7 @@ print_specifier(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		print_internal(sp->fallback, printcharfun, escapeflag);
 	}
 	unbind_to(count, Qnil);
-	sprintf(buf, " 0x%x>", sp->header.uid);
+	snprintf(buf, sizeof(buf), " 0x%x>", sp->header.uid);
 	write_c_string(buf, printcharfun);
 }
 

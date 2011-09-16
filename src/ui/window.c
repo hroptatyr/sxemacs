@@ -212,7 +212,7 @@ run_window_configuration_hook ( Lisp_Object win )
 static void
 print_window(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[200];
+	char buf[64];
 
 	if (print_readably)
 		error("printing unreadable object #<window 0x%x>",
@@ -224,7 +224,7 @@ print_window(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		write_c_string(" on ", printcharfun);
 		print_internal(name, printcharfun, 1);
 	}
-	sprintf(buf, " 0x%x>", XWINDOW(obj)->header.uid);
+	snprintf(buf, sizeof(buf), " 0x%x>", XWINDOW(obj)->header.uid);
 	write_c_string(buf, printcharfun);
 }
 
@@ -5108,7 +5108,7 @@ static void
 print_window_config(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	struct window_config *config = XWINDOW_CONFIGURATION(obj);
-	char buf[200];
+	char buf[64];
 	if (print_readably)
 		error("printing unreadable object #<window-configuration 0x%x>",
 		      config->header.uid);

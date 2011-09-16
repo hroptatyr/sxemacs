@@ -600,11 +600,10 @@ On Unix it is obtained from TMPDIR, with /tmp as the default.
 {
 	char *tmpdir;
 	tmpdir = getenv("TMPDIR");
+	char path[5 /* strlen ("/tmp/") */  + 1 + _POSIX_PATH_MAX];
 	if (!tmpdir) {
 		struct stat st;
 		int myuid = getuid();
-		char path[5 /* strlen ("/tmp/") */  + 1 +
-                          _POSIX_PATH_MAX];
 
 		strcpy(path, "/tmp/");
 		strncat(path, user_login_name(NULL), _POSIX_PATH_MAX);

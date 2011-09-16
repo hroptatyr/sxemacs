@@ -916,8 +916,8 @@ static int scan_lisp_file(const char *filename, const char *mode)
 				while (c != '\n' && c >= 0) {
 					/* #### Kludge -- Ignore any ESC x x ISO2022 sequences */
 					if (c == 27) {
-						getc(infile);
-						getc(infile);
+						(void)getc(infile);
+						(void)getc(infile);
 						goto nextchar;
 					}
 
