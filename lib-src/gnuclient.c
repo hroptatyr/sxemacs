@@ -398,7 +398,8 @@ int main(int argc, char *argv[])
 					break;
 				case 'r':
 					GET_ARGUMENT(remotearg, "-r");
-					strcpy(remotepath, remotearg);
+					strncpy(remotepath, remotearg, sizeof(remotepath));
+					remotepath[sizeof(remotepath)-1]='\0';
 					rflg = 1;
 					break;
 #endif				/* INTERNET_DOMAIN_SOCKETS */
