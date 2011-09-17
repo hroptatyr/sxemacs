@@ -6399,6 +6399,7 @@ FILE *stream;
 						make_tag (name, strlen (name), TRUE,
 							  lbp->buffer, match, lineno, linecharno);
 						free(name);
+						name = NULL;
 					} else 
 						make_tag (rp->name, strlen (rp->name), TRUE,
 							  lbp->buffer, match, lineno, linecharno);
