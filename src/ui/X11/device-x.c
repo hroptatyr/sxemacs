@@ -1155,9 +1155,11 @@ int signal_if_x_error(Display * dpy, int resumable_p)
 	XGetErrorText(last_error.display, last_error.error_code, buf,
 		      sizeof(buf));
 	data = Fcons(build_string(buf), data);
-	do {
-		Fsignal(Qx_error, data);
-	} while (!resumable_p);
+	Fsignal(Qx_error, data);
+	if (!resumable_p) {
+		while(1)
+			Fsignal(Qx_error, data);
+	} 
 	return 1;
 }
 
