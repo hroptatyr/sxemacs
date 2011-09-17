@@ -2934,6 +2934,7 @@ extent_fragment_update(struct window * w, struct extent_fragment * ef,
 
 				gb.glyph = glyph;
 				gb.active = 0; /* BEGIN_GLYPH */
+				gb.width = 0;
 				XSETEXTENT(gb.extent, e);
 		    
 				if (zero_width) {
