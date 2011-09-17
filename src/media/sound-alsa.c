@@ -625,7 +625,9 @@ sound_alsa_play(audio_job_t aj)
 				mss, aj->buffer, resolution);
 			if (!len) {
 				ALSA_DEBUG_S("finished\n");
+				SXE_MUTEX_LOCK(&aj->mtx);
 				aj->play_state = MTPSTATE_STOP;
+				SXE_MUTEX_UNLOCK(&aj->mtx);
 				break;
 			}
 
