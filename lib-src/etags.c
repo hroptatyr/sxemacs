@@ -6351,7 +6351,7 @@ FILE *stream;
 	{
 		int match;
 		regexp *rp;
-		char *name;
+		char *name = NULL;
 
 		/* Match against relevant regexps. */
 		if (lbp->len > 0)
@@ -6389,16 +6389,18 @@ FILE *stream;
 					break;
 				default:
 					/* Match occurred.  Construct a tag. */
-					name = rp->name;
-					if (name[0] == '\0')
-						name = NULL;
-					else /* make a named tag */
+					if (rp->name[0] != '\0')
+						/* make a named tag */
 						name = substitute (lbp->buffer, rp->name, &rp->regs);
 					if (rp->force_explicit_name)
 						/* Force explicit tag name, if a name is there. */
 						pfnote (name, TRUE, lbp->buffer, match, lineno, linecharno);
-					else
+					else if (name) {
 						make_tag (name, strlen (name), TRUE,
+							  lbp->buffer, match, lineno, linecharno);
+						free(name);
+					} else 
+						make_tag (rp->name, strlen (rp->name), TRUE,
 							  lbp->buffer, match, lineno, linecharno);
 					break;
 				}
