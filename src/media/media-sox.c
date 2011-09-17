@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* Synched up with: Not in FSF. */
 
 #include <config.h>
-#include "lisp.h"
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -29,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <errno.h>
 #include <string.h>
 
+#include "lisp.h"
 #include "media-sox.h"
 
 #define MYSELF MDRIVER_SOX
