@@ -161,7 +161,9 @@ typedef void (*lw_callback) (Widget w, LWLIB_ID id, XtPointer data);
 extern int lw_menu_active;
 
 #if defined (LWLIB_MENUBARS_LUCID)
+#ifndef INCLUDED_xlwmenu_h_
 #include "xlwmenu.h"
+#endif
 #define lw_set_menu xlw_set_menu
 #define lw_push_menu xlw_push_menu
 #define lw_pop_menu xlw_pop_menu
