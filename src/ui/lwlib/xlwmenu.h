@@ -7,7 +7,9 @@
  *
  ***********************************************************************/
 
+#ifndef INCLUDED_lwlib_h_
 #include "lwlib.h"
+#endif
 
 /* Resource names used by the XlwMenu widget */
 #define XtNbuttonForeground "buttonForeground"

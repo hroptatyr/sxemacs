@@ -194,7 +194,7 @@ typedef struct {
 
 char *pdump_start;
 char *pdump_end;
-static size_t pdump_length;
+static off_t pdump_length;
 
 
 static void (*pdump_free) (void);
@@ -459,8 +459,8 @@ restart:
 		}
 		case XD_C_STRING: {
 			const char *str = *(const char *const*)rdata;
-			size_t str_sz = strlen(str);
 			if (str) {
+				size_t str_sz = strlen(str);
 				pdump_add_entry(&pdump_opaque_data_list,
 						str, str_sz + 1, 1);
 			}
@@ -1069,7 +1069,16 @@ pdump(const char *dumpfile)
 #undef open
 	pdump_fd = open(dumpfile,
 			O_WRONLY | O_CREAT | O_TRUNC | OPEN_BINARY, 0666);
+	if ( pdump_fd < 0 ) {
+		stderr_out("Could not open dump file:");
+		stderr_out(dumpfile);
+		abort();
+	}
 	pdump_out = fdopen(pdump_fd, "w");
+	if ( pdump_out < 0 ) {
+		stderr_out("Could not fdopen dump file");
+		abort();
+	}
 
 	fwrite(&header, sizeof(header), 1, pdump_out);
 	PDUMP_ALIGN_OUTPUT(max_align_t);
@@ -1361,7 +1370,8 @@ int pdump_load(const char *argv0)
 		/* invocation-name includes a directory component -- presumably it
 		   is relative to cwd, not $PATH */
                 assert(strlen(dir) < sizeof(exe_path));
-                strcpy(exe_path, dir);
+                strncpy(exe_path, dir, sizeof(exe_path)-1);
+		exe_path[sizeof(exe_path)-1]='\0';
 	} else {
 		const char *path = getenv("PATH");
 		const char *name = p;
