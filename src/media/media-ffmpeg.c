@@ -406,41 +406,41 @@ media_ffmpeg_analyse_audio(media_substream *mss, AVFormatContext *avfc, int st)
 		mtap->channels = avcc->channels;
 		mtap->samplerate = avcc->sample_rate;
 		mtap->bitrate = media_ffmpeg_bitrate(avcc);
-	}
 
-	/* samplewidth and framesize */
-	switch (avcc->sample_fmt) {
-	case SAMPLE_FMT_U8:
-		mtap->samplewidth = 8;
-		mtap->framesize = mtap->channels * 1;
-		mtap->msf = sxe_msf_U8;
-		break;
-	case SAMPLE_FMT_S16:
-		mtap->samplewidth = 16;
-		mtap->framesize = mtap->channels * 2;
-		mtap->msf = sxe_msf_S16;
-		break;
+		/* samplewidth and framesize */
+		switch (avcc->sample_fmt) {
+		case SAMPLE_FMT_U8:
+			mtap->samplewidth = 8;
+			mtap->framesize = mtap->channels * 1;
+			mtap->msf = sxe_msf_U8;
+			break;
+		case SAMPLE_FMT_S16:
+			mtap->samplewidth = 16;
+			mtap->framesize = mtap->channels * 2;
+			mtap->msf = sxe_msf_S16;
+			break;
 #if defined SAMPLE_FMT_S24
-	case SAMPLE_FMT_S24:
-		mtap->samplewidth = 32;
-		mtap->framesize = mtap->channels * 4;
-		mtap->msf = sxe_msf_S24;
-		break;
+		case SAMPLE_FMT_S24:
+			mtap->samplewidth = 32;
+			mtap->framesize = mtap->channels * 4;
+			mtap->msf = sxe_msf_S24;
+			break;
 #endif	/* SAMPLE_FMT_S24 */
-	case SAMPLE_FMT_S32:
-		mtap->samplewidth = 32;
-		mtap->framesize = mtap->channels * 4;
-		mtap->msf = sxe_msf_S32;
-		break;
-	case SAMPLE_FMT_FLT:
-		mtap->samplewidth = 8*sizeof(float);
-		mtap->framesize = mtap->channels * sizeof(float);
-		mtap->msf = sxe_msf_FLT;
-		break;
-	case SAMPLE_FMT_NONE:
-	default:
-		mtap->samplewidth = 0;
-		break;
+		case SAMPLE_FMT_S32:
+			mtap->samplewidth = 32;
+			mtap->framesize = mtap->channels * 4;
+			mtap->msf = sxe_msf_S32;
+			break;
+		case SAMPLE_FMT_FLT:
+			mtap->samplewidth = 8*sizeof(float);
+			mtap->framesize = mtap->channels * sizeof(float);
+			mtap->msf = sxe_msf_FLT;
+			break;
+		case SAMPLE_FMT_NONE:
+		default:
+			mtap->samplewidth = 0;
+			break;
+		}
 	}
 	mtap->endianness = 0;
 
