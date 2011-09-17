@@ -2591,9 +2591,9 @@ create_text_block(struct window *w, struct display_line *dl,
 
 					gb.extent = Qnil;
 					gb.glyph = Vhscroll_glyph;
-					add_glyph_rune(&data, &gb, BEGIN_GLYPHS,
-						       0, GLYPH_CACHEL(w,
-								       HSCROLL_GLYPH_INDEX));
+					add_glyph_rune_noret(&data, &gb, BEGIN_GLYPHS,
+						             0, GLYPH_CACHEL(w,
+								             HSCROLL_GLYPH_INDEX));
 				} else {
 					/* This duplicates code down below to add a newline to
 					   the end of an otherwise empty line. */
