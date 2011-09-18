@@ -1338,7 +1338,7 @@ char *argv[];
 			default:
 				continue;		/* the for loop */
 			}
-			sprintf (cmd,
+			snprintf (cmd, sizeof(cmd),
 				 "mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
 				 tagfile, argbuffer[i].what, tagfile);
 			if (system (cmd) != EXIT_SUCCESS)
