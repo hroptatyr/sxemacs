@@ -2505,7 +2505,8 @@ emacs_Xt_unselect_process(Lisp_Process * p)
 {
 	int infd = event_stream_unixoid_unselect_process(p);
 
-	unselect_filedesc(infd);
+	if (infd >= 0)
+		unselect_filedesc(infd);
 	return;
 }
 
