@@ -2604,7 +2604,8 @@ emacs_Xt_unselect_console(struct console *con)
 	}
 	infd = event_stream_unixoid_unselect_console(con);
 	XSETCONSOLE(console, con);
-	unselect_filedesc(infd);
+	if (infd >= 0)
+		unselect_filedesc(infd);
 	return;
 }
 
