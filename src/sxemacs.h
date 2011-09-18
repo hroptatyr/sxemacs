@@ -81,6 +81,7 @@
 #if defined USE_SXEMACS_CONFIG_H
 # include "config.h"
 #endif
+#include "sxe-utils.h"
 #include "lisp.h"
 
 #include "sysfile.h"

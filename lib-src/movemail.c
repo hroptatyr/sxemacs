@@ -671,10 +671,10 @@ static char *concat(char *s1, char *s2, char *s3)
 	int len1 = strlen(s1), len2 = strlen(s2), len3 = strlen(s3);
 	char *result = (char *)xmalloc(len1 + len2 + len3 + 1);
 
-	strcpy(result, s1);
-	strcpy(result + len1, s2);
-	strcpy(result + len1 + len2, s3);
-	*(result + len1 + len2 + len3) = 0;
+	strncpy(result, s1, len1+1);
+	strncpy(result + len1, s2, len2+1);
+	strncpy(result + len1 + len2, s3, len3+1);
+	*(result + len1 + len2 + len3) = '\0';
 
 	return result;
 }

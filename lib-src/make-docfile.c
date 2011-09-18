@@ -843,7 +843,7 @@ static int scan_lisp_file(const char *filename, const char *mode)
 				length--;
 
 				/* Read in the contents.  */
-				if (saved_string != 0)
+				if (saved_string != 0) 
 					free(saved_string);
 				saved_string = (char *)xmalloc(length);
 				for (i = 0; i < length; i++)
@@ -1139,6 +1139,15 @@ static int scan_lisp_file(const char *filename, const char *mode)
 			saved_string = 0;
 		} else
 			read_c_string(infile, 1, 0);
+	}
+	if (saved_string) {
+		/* If this is true then a dynamic doc string was
+		   detected without a next expression. We should not
+		   emit anything since the input was badly formed,
+		   but lets free the string...
+		*/
+		free(saved_string);
+		saved_string = 0;
 	}
 	fclose(infile);
 	return 0;

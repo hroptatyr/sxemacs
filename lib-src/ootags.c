@@ -3896,7 +3896,7 @@ FILE *inf;
 
 			/* save all values for later tagging */
 			grow_linebuffer(&tline, lb.len + 1);
-			strcpy(tline.buffer, lb.buffer);
+			strncpy(tline.buffer, lb.buffer, lb.len);
 			save_lineno = lineno;
 			save_lcno = linecharno;
 
@@ -4289,6 +4289,7 @@ FILE *inf;
 			last[len] = '\0';
 		}
 	}
+	free(last);
 }
 
 void prolog_skip_comment(plb, inf)
@@ -5059,6 +5060,7 @@ char *file, *dir;
 {
 	char *fp, *dp, *afn, *res;
 	int i;
+	ssize_t res_left;
 
 	/* Find the common root of file and dir (with a trailing slash). */
 	afn = absolute_filename(file, cwd);
@@ -5076,13 +5078,14 @@ char *file, *dir;
 	i = 0;
 	while ((dp = etags_strchr(dp + 1, '/')) != NULL)
 		i += 1;
-	res = xnew(3 * i + strlen(fp) + 1, char);
+	res_left = 3 * i + strlen(fp);
+	res = xnew( res_left + 1, char);
 	res[0] = '\0';
-	while (i-- > 0)
-		strcat(res, "../");
+	for ( ; i-- > 0 ; res_left -= 4 )
+		strncat(res, "../", res_left );
 
 	/* Add the file name relative to the common root of file and dir. */
-	strcat(res, fp);
+	strncat(res, fp, res_left);
 	free(afn);
 
 	return res;

@@ -45,6 +45,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 #include "xlwmenuP.h"
 
+#include <sxe-utils.h>
+
 #ifdef USE_DEBUG_MALLOC
 #include <dmalloc.h>
 #endif
@@ -551,6 +553,7 @@ static char *parameterize_string(const char *string, const char *value)
 	char *result;
 	unsigned int done = 0;
 	unsigned int ntimes;
+	size_t res_left = 0;
 
 	if (!string) {
 		result = XtMalloc(1);
@@ -564,17 +567,22 @@ static char *parameterize_string(const char *string, const char *value)
 	for (ntimes = 1, percent = string;
 	     (percent = strchr(percent, '%')); ntimes++)
 		percent++;
-
-	result = XtMalloc((ntimes * strlen(value)) + strlen(string) + 4);
-	result[0] = '\0';
+	
+	res_left = (ntimes * strlen(value)) + strlen(string) + 3;
+	result = XtMalloc(res_left+1);
+	result[res_left] = result[0] = '\0';
 
 	while ((percent = strchr(string, '%'))) {
 		unsigned int left_pad;
 		unsigned int right_pad;
 		const char *p;
+		off_t offset = percent-string;
 
 		if (percent[1] == '%') {	/* it's a real % */
-			strncat(result, string, 1 + percent - string);	/* incl % */
+			assert( res_left >= (1 + offset) );
+					        /* incl % */
+			strncat(result, string, 1 + offset);
+			res_left -= 1 + offset;
 			string = &percent[2];	/* after the second '%' */
 			continue;	/* with the while() loop */
 		}
@@ -588,34 +596,41 @@ static char *parameterize_string(const char *string, const char *value)
 			} else if (*p == '-') {	/* right pad */
 				right_pad++;
 			} else if (*p == '1') {	/* param and terminator */
-				strncat(result, string, percent - string);
+				assert( res_left >= offset );
+				res_left -= offset;
+				strncat(result, string, offset);
 				if (value[0] != '\0') {
 					unsigned int i;
 					for (i = 0; i < left_pad; i++)
-						strcat(result, " ");
-					strcat(result, value);
+						strncat(result, " ", res_left --);
+					strncat(result, value, res_left);
+					res_left -= strlen(value);
 					for (i = 0; i < right_pad; i++)
-						strcat(result, " ");
+						strncat(result, " ", res_left--);
 				}
 				string = &p[1];	/* after the '1' */
 				done++;	/* no need to do old way */
 				break;	/* out of for() loop */
 			} else {	/* bogus, copy the format as is */
 				/* out of for() loop */
+				assert( res_left >= (1+ p - string) );
 				strncat(result, string, 1 + p - string);
+				res_left -= 1 + p - string;
 				string = (*p ? &p[1] : p);
+				offset = percent - string;
 				break;
 			}
 		}
 	}
 
 	/* Copy the tail of the string */
-	strcat(result, string);
+	strncat(result, string, res_left);
+	res_left -= strlen(string);
 
 	/* If we have not processed a % string, and we have a value, tail it. */
 	if (!done && value[0] != '\0') {
-		strcat(result, " ");
-		strcat(result, value);
+		strncat(result, " ", res_left--);
+		strncat(result, value, res_left);
 	}
 
 	return result;

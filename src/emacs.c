@@ -818,6 +818,7 @@ make_docfile(int c, char **v)
 	size_t edlen = XSTRING_LENGTH(Vexec_directory);
 	char mdocfile[edlen+countof(make_docfile_prog)];
 	char **newargv = xnew_array_and_zero(char*, c), **p;
+	int  ret = -1;
 
 	/* set up the program call */
 	xstrncpy(mdocfile,
@@ -840,7 +841,9 @@ make_docfile(int c, char **v)
 	for (char **o = p, **n = &newargv[1]; *o;) {
 		*n++ = *o++;
 	}
-	return execv(mdocfile, newargv);
+	ret = execv(mdocfile, newargv);
+	xfree(newargv);
+	return ret;
 }
 
 static inline void*

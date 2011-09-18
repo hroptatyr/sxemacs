@@ -2496,7 +2496,8 @@ emacs_Xt_select_process(Lisp_Process * p)
 	int infd = event_stream_unixoid_select_process(p);
 
 	XSETPROCESS(process, p);
-	select_filedesc(infd, process);
+	if (infd >= 0)
+		select_filedesc(infd, process);
 	return;
 }
 
@@ -2505,7 +2506,8 @@ emacs_Xt_unselect_process(Lisp_Process * p)
 {
 	int infd = event_stream_unixoid_unselect_process(p);
 
-	unselect_filedesc(infd);
+	if (infd >= 0)
+		unselect_filedesc(infd);
 	return;
 }
 
@@ -2586,7 +2588,8 @@ emacs_Xt_select_console(struct console *con)
 	}
 	infd = event_stream_unixoid_select_console(con);
 	XSETCONSOLE(console, con);
-	select_filedesc(infd, console);
+	if (infd >= 0)
+		select_filedesc(infd, console);
 	return;
 }
 
@@ -2603,7 +2606,8 @@ emacs_Xt_unselect_console(struct console *con)
 	}
 	infd = event_stream_unixoid_unselect_console(con);
 	XSETCONSOLE(console, con);
-	unselect_filedesc(infd);
+	if (infd >= 0)
+		unselect_filedesc(infd);
 	return;
 }
 
@@ -2722,8 +2726,9 @@ static void describe_event(XEvent * event)
 	char buf[100];
 	struct device *d = get_device_from_display(event->xany.display);
 
-	sprintf(buf, "%s%s", x_event_name(event->type),
-		event->xany.send_event ? " (send)" : "");
+	snprintf(buf, sizeof(buf),
+		 "%s%s", x_event_name(event->type),
+		 event->xany.send_event ? " (send)" : "");
 	stderr_out("%-30s", buf);
 	switch (event->type) {
 	case FocusIn:

@@ -1338,7 +1338,7 @@ char *argv[];
 			default:
 				continue;		/* the for loop */
 			}
-			sprintf (cmd,
+			snprintf (cmd, sizeof(cmd),
 				 "mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
 				 tagfile, argbuffer[i].what, tagfile);
 			if (system (cmd) != EXIT_SUCCESS)
@@ -2664,8 +2664,8 @@ char *qualifier;
 	else
 	{
 		len = strlen (cstack.cname[0]);
-		linebuffer_setlen (cn, len);
-		strcpy (cn->buffer, cstack.cname[0]);
+		linebuffer_setlen (cn, len+1);
+		strncpy (cn->buffer, cstack.cname[0],len+1);
 	}
 	for (i = 1; i < cstack.nl; i++)
 	{
@@ -4830,7 +4830,7 @@ FILE *inf;
 
 			/* Save all values for later tagging. */
 			linebuffer_setlen (&tline, lb.len);
-			strcpy (tline.buffer, lb.buffer);
+			strncpy(tline.buffer, lb.buffer, lb.len-1);
 			save_lineno = lineno;
 			save_lcno = linecharno;
 			name = tline.buffer + (dbp - lb.buffer);
@@ -6399,6 +6399,7 @@ FILE *stream;
 						make_tag (name, strlen (name), TRUE,
 							  lbp->buffer, match, lineno, linecharno);
 						free(name);
+						name = NULL;
 					} else 
 						make_tag (rp->name, strlen (rp->name), TRUE,
 							  lbp->buffer, match, lineno, linecharno);
@@ -6589,9 +6590,9 @@ char *s1, *s2, *s3;
 	int len1 = strlen (s1), len2 = strlen (s2), len3 = strlen (s3);
 	char *result = xnew (len1 + len2 + len3 + 1, char);
 
-	strcpy (result, s1);
-	strcpy (result + len1, s2);
-	strcpy (result + len1 + len2, s3);
+	strncpy(result, s1, len1+1);
+	strncpy(result + len1, s2, len2+1);
+	strncpy(result + len1 + len2, s3, len3+1);
 	result[len1 + len2 + len3] = '\0';
 
 	return result;
@@ -6641,6 +6642,7 @@ char *file, *dir;
 {
 	char *fp, *dp, *afn, *res;
 	int i;
+	ssize_t res_left;
 
 	/* Find the common root of file and dir (with a trailing slash). */
 	afn = absolute_filename (file, cwd);
@@ -6658,14 +6660,15 @@ char *file, *dir;
 	i = 0;
 	while ((dp = etags_strchr (dp + 1, '/')) != NULL)
 		i += 1;
-	res = xnew (3*i + strlen (fp) + 1, char);
+	res_left = 3 * i + strlen(fp);
+	res = xnew( res_left + 1, char);
 	res[0] = '\0';
-	while (i-- > 0)
-		strcat (res, "../");
+	for ( ; i-- > 0 ; res_left -= 4 )
+		strncat(res, "../", res_left );
 
 	/* Add the file name relative to the common root of file and dir. */
-	strcat (res, fp);
-	free (afn);
+	strncat(res, fp, res_left);
+	free(afn);
 
 	return res;
 }
