@@ -2722,8 +2722,9 @@ static void describe_event(XEvent * event)
 	char buf[100];
 	struct device *d = get_device_from_display(event->xany.display);
 
-	sprintf(buf, "%s%s", x_event_name(event->type),
-		event->xany.send_event ? " (send)" : "");
+	snprintf(buf, sizeof(buf),
+		 "%s%s", x_event_name(event->type),
+		 event->xany.send_event ? " (send)" : "");
 	stderr_out("%-30s", buf);
 	switch (event->type) {
 	case FocusIn:
