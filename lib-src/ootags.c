@@ -4289,6 +4289,7 @@ FILE *inf;
 			last[len] = '\0';
 		}
 	}
+	free(last);
 }
 
 void prolog_skip_comment(plb, inf)
