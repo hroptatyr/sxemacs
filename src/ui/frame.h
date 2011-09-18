@@ -273,7 +273,7 @@ extern_inline struct frame *error_check_frame_type(struct frame *f,
 extern_inline struct frame *error_check_frame_type(struct frame *f,
 						   Lisp_Object sym)
 {
-	assert(EQ(FRAME_TYPE(f), sym));
+	assert(f && EQ(FRAME_TYPE(f), sym));
 	return f;
 }
 
