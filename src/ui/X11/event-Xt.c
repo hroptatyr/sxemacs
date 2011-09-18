@@ -2496,7 +2496,8 @@ emacs_Xt_select_process(Lisp_Process * p)
 	int infd = event_stream_unixoid_select_process(p);
 
 	XSETPROCESS(process, p);
-	select_filedesc(infd, process);
+	if (infd >= 0)
+		select_filedesc(infd, process);
 	return;
 }
 
