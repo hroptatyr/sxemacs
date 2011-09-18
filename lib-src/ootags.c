@@ -3896,7 +3896,7 @@ FILE *inf;
 
 			/* save all values for later tagging */
 			grow_linebuffer(&tline, lb.len + 1);
-			strcpy(tline.buffer, lb.buffer);
+			strncpy(tline.buffer, lb.buffer, lb.len);
 			save_lineno = lineno;
 			save_lcno = linecharno;
 
