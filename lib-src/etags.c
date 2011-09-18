@@ -2664,8 +2664,8 @@ char *qualifier;
 	else
 	{
 		len = strlen (cstack.cname[0]);
-		linebuffer_setlen (cn, len);
-		strcpy (cn->buffer, cstack.cname[0]);
+		linebuffer_setlen (cn, len+1);
+		strncpy (cn->buffer, cstack.cname[0],len+1);
 	}
 	for (i = 1; i < cstack.nl; i++)
 	{
@@ -4830,7 +4830,7 @@ FILE *inf;
 
 			/* Save all values for later tagging. */
 			linebuffer_setlen (&tline, lb.len);
-			strcpy (tline.buffer, lb.buffer);
+			strncpy(tline.buffer, lb.buffer, lb.len-1);
 			save_lineno = lineno;
 			save_lcno = linecharno;
 			name = tline.buffer + (dbp - lb.buffer);
