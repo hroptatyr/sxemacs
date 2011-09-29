@@ -1328,6 +1328,8 @@ char *argv[];
 	if (update)
 	{
 		char cmd[BUFSIZ];
+		int len;
+
 		for (i = 0; i < current_arg; ++i)
 		{
 			switch (argbuffer[i].arg_type)
@@ -1338,9 +1340,11 @@ char *argv[];
 			default:
 				continue;		/* the for loop */
 			}
-			snprintf (cmd, sizeof(cmd),
-				 "mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
-				 tagfile, argbuffer[i].what, tagfile);
+			len = snprintf (cmd, sizeof(cmd),
+					"mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
+					tagfile, argbuffer[i].what, tagfile);
+			if (len >= 0 && len < sizeof(cmd))
+				fatal ("failed to build shell command line", (char *)NULL);
 			if (system (cmd) != EXIT_SUCCESS)
 				fatal ("failed to execute shell command", (char *)NULL);
 		}
@@ -1363,7 +1367,13 @@ char *argv[];
 			/* Maybe these should be used:
 			   setenv ("LC_COLLATE", "C", 1);
 			   setenv ("LC_ALL", "C", 1); */
-			sprintf (cmd, "sort -u -o %.*s %.*s", BUFSIZ, tagfile, BUFSIZ, tagfile);
+			ssize_t len = snprintf (cmd, sizeof(cmd),
+						"sort -u -o %.*s %.*s", 
+						BUFSIZ, tagfile, 
+						BUFSIZ, tagfile);
+			if (len >= 0 && len < sizeof(cmd))
+				fatal("failed to build sort shell command line", 
+				      (char *)NULL);
 			exit (system (cmd));
 		}
 	return EXIT_SUCCESS;
