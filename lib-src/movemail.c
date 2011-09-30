@@ -446,7 +446,8 @@ int main(int argc, char *argv[])
 		case FLOCKING:
 		case LOCKING:
 #ifdef HAVE_FTRUNCATE
-			ftruncate(indesc, 0L);
+			if(ftruncate(indesc, 0L)!=0)
+				pfatal_and_delete(inname);
 #else
 			close(open(inname, O_CREAT | O_TRUNC | O_RDWR, 0666));
 #endif
