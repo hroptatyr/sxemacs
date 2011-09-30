@@ -2128,11 +2128,10 @@ void init_system_name(void)
 			hints.ai_socktype = SOCK_STREAM;
 			hints.ai_protocol = 0;
 			if (!getaddrinfo(hostname, NULL, &hints, &res)) {
-				hostname =
-				    (char *)alloca(strlen(res->ai_canonname) +
-						   1);
-				strcpy(hostname, res->ai_canonname);
+				ssize_t canon_len=strlen(res->ai_canonname)+1;
 
+				hostname = (char *)alloca(canon_len);
+				strncpy(hostname, res->ai_canonname, canon_len);
 				freeaddrinfo(res);
 			}
 #  endif			/* !(HAVE_GETADDRINFO && HAVE_GETNAMEINFO) */

@@ -71,6 +71,8 @@ void unrequest_sigio(void);
 
 void stop_interrupts(void);
 void start_interrupts(void);
+void stop_async_timeouts(void);
+void start_async_timeouts(void);
 void slow_down_interrupts(void);
 void speed_up_interrupts(void);
 void init_poll_for_quit(void);
