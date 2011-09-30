@@ -116,21 +116,18 @@ static void
 print_console(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	struct console *con = XCONSOLE(obj);
-	char buf[256];
 
 	if (print_readably)
 		error("printing unreadable object #<console %s 0x%x>",
 		      XSTRING_DATA(con->name), con->header.uid);
 
-	snprintf(buf, sizeof(buf), "#<%s-console", !CONSOLE_LIVE_P(con) ? "dead" :
-                 CONSOLE_TYPE_NAME(con));
-	write_c_string(buf, printcharfun);
+	write_fmt_string(printcharfun, "#<%s-console", 
+			 (!CONSOLE_LIVE_P(con) ? "dead" : CONSOLE_TYPE_NAME(con)));
 	if (CONSOLE_LIVE_P(con) && !NILP(CONSOLE_CONNECTION(con))) {
 		write_c_string(" on ", printcharfun);
 		print_internal(CONSOLE_CONNECTION(con), printcharfun, 1);
 	}
-	sprintf(buf, " 0x%x>", con->header.uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, " 0x%x>", con->header.uid);
 }
 
 DEFINE_LRECORD_IMPLEMENTATION("console", console,
