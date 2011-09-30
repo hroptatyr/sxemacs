@@ -212,8 +212,6 @@ run_window_configuration_hook ( Lisp_Object win )
 static void
 print_window(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[64];
-
 	if (print_readably)
 		error("printing unreadable object #<window 0x%x>",
 		      XWINDOW(obj)->header.uid);
@@ -224,8 +222,7 @@ print_window(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		write_c_string(" on ", printcharfun);
 		print_internal(name, printcharfun, 1);
 	}
-	snprintf(buf, sizeof(buf), " 0x%x>", XWINDOW(obj)->header.uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, " 0x%x>", XWINDOW(obj)->header.uid);
 }
 
 static void finalize_window(void *header, int for_disksave)
@@ -933,7 +930,6 @@ int window_modeline_height(struct window *w)
  ****************************************************************************/
 static int margin_width_internal(struct window *w, int left_margin)
 {
-	struct buffer *b;
 	int window_cwidth = window_char_width(w, 1);
 	int margin_cwidth;
 	int font_width;
@@ -948,7 +944,7 @@ static int margin_width_internal(struct window *w, int left_margin)
 		return 0;
 
 	XSETWINDOW(window, w);
-	b = XBUFFER(w->buffer);
+	(void)XBUFFER(w->buffer);
 	margin_cwidth = (left_margin ? XINT(w->left_margin_width) :
 			 XINT(w->right_margin_width));
 
@@ -5108,13 +5104,10 @@ static void
 print_window_config(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	struct window_config *config = XWINDOW_CONFIGURATION(obj);
-	char buf[64];
 	if (print_readably)
 		error("printing unreadable object #<window-configuration 0x%x>",
 		      config->header.uid);
-	write_c_string("#<window-configuration ", printcharfun);
-	snprintf(buf, sizeof(buf), "0x%x>", config->header.uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, "#<window-configuration 0x%x>", config->header.uid);
 }
 
 DEFINE_LRECORD_SEQUENCE_IMPLEMENTATION("window-configuration",
