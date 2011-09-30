@@ -917,14 +917,12 @@ command_builder_operate_menu_accelerator(struct command_builder *builder)
 	{
 		int i;
 		Lisp_Object t;
-		char buf[50];
 
 		t = builder->current_events;
 		i = 0;
 		while (!NILP(t)) {
 			i++;
-			sprintf(buf, "OPERATE (%d): ", i);
-			write_c_string(buf, Qexternal_debugging_output);
+			write_fmt_str(Qexternal_debugging_outpu, "OPERATE (%d): ", i);
 			print_internal(t, Qexternal_debugging_output, 1);
 			write_c_string("\n", Qexternal_debugging_output);
 			t = XEVENT_NEXT(t);
