@@ -1296,7 +1296,7 @@ layout_query_geometry(Lisp_Object image_instance, int *width,
 
 	/* Work out minimum space we need to fit all the items. This could
 	   have been fixed by the user. */
-	if (IMAGE_INSTANCE_SUBWINDOW_H_RESIZEP(ii)) {
+	if (width && IMAGE_INSTANCE_SUBWINDOW_H_RESIZEP(ii)) {
 		if (!NILP(IMAGE_INSTANCE_WIDGET_WIDTH_SUBR(ii))) {
 			Lisp_Object dynamic_width =
 			    Feval(IMAGE_INSTANCE_WIDGET_WIDTH_SUBR(ii));
@@ -1316,7 +1316,7 @@ layout_query_geometry(Lisp_Object image_instance, int *width,
 	}
 
 	/* Work out vertical spacings. */
-	if (IMAGE_INSTANCE_SUBWINDOW_V_RESIZEP(ii)) {
+	if (height && IMAGE_INSTANCE_SUBWINDOW_V_RESIZEP(ii)) {
 		if (!NILP(IMAGE_INSTANCE_WIDGET_HEIGHT_SUBR(ii))) {
 			Lisp_Object dynamic_height =
 			    Feval(IMAGE_INSTANCE_WIDGET_HEIGHT_SUBR(ii));
