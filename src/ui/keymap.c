@@ -287,7 +287,6 @@ print_keymap(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	/* This function can GC */
 	Lisp_Keymap *keymap = XKEYMAP(obj);
-	char buf[200];
 	if (print_readably)
 		error("printing unreadable object #<keymap 0x%x>",
 		      keymap->header.uid);
@@ -296,9 +295,8 @@ print_keymap(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		print_internal(keymap->name, printcharfun, 1);
 		write_c_string(" ", printcharfun);
 	}
-	sprintf(buf, "size %ld 0x%x>",
-		(long)XINT(Fkeymap_fullness(obj)), keymap->header.uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, "size %ld 0x%x>",
+		      (long)XINT(Fkeymap_fullness(obj)), keymap->header.uid);
 }
 
 static const struct lrecord_description keymap_description[] = {
