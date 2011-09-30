@@ -1150,7 +1150,8 @@ make_dialog(char *name, Widget parent, Boolean pop_up_p,
 	n_children = 0;
 	for (i = 0; i < left_buttons; i++) {
 		char button_name[16];
-		sprintf(button_name, "button%d", i + 1);
+		int sz = snprintf(button_name, sizeof(button_name), "button%d", i + 1);
+		assert(sz >= 0 && sz < sizeof(button_name));
 		ac = 0;
 		if (i == 0) {
 			XtSetArg(al[ac], XmNhighlightThickness, 1);
@@ -1194,7 +1195,9 @@ make_dialog(char *name, Widget parent, Boolean pop_up_p,
 
 	for (i = 0; i < right_buttons; i++) {
 		char button_name[16];
-		sprintf(button_name, "button%d", left_buttons + i + 1);
+		int sz = snprintf(button_name, sizeof(button_name), 
+				  "button%d", left_buttons + i + 1);
+		assert(sz >= 0 && sz < sizeof(button_name));
 		ac = 0;
 		XtSetArg(al[ac], XmNnavigationType, XmTAB_GROUP);
 		ac++;
