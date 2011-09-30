@@ -380,6 +380,7 @@ make_dialog(const char *name, Widget parent, Boolean pop_up_p,
 	bc = 0;
 	button = 0;
 	for (i = 0; i < left_buttons; i++) {
+		int sz;
 		ac = 0;
 		XtSetArg(av[ac], XtNfromHoriz, button);
 		ac++;
@@ -393,7 +394,8 @@ make_dialog(const char *name, Widget parent, Boolean pop_up_p,
 		ac++;
 		XtSetArg(av[ac], XtNresizable, True);
 		ac++;
-		sprintf(button_name, "button%d", ++bc);
+		sz = snprintf(button_name, sizeof(button_name), "button%d", ++bc);
+		assert(sz >= 0 && sz < sizeof(button_name));
 		button = XtCreateManagedWidget(button_name, commandWidgetClass,
 					       dialog, av, ac);
 	}
@@ -437,6 +439,7 @@ make_dialog(const char *name, Widget parent, Boolean pop_up_p,
 					       dialog, av, ac);
 	}
 	for (i = 0; i < right_buttons; i++) {
+		int sz;
 		ac = 0;
 		XtSetArg(av[ac], XtNfromHoriz, button);
 		ac++;
@@ -450,7 +453,8 @@ make_dialog(const char *name, Widget parent, Boolean pop_up_p,
 		ac++;
 		XtSetArg(av[ac], XtNresizable, True);
 		ac++;
-		sprintf(button_name, "button%d", ++bc);
+		sz = snprintf(button_name, sizeof(button_name), "button%d", ++bc);
+		assert(sz >= 0 && sz < sizeof(button_name));
 		button = XtCreateManagedWidget(button_name, commandWidgetClass,
 					       dialog, av, ac);
 	}
