@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include "lwlib-internal.h"
 #include <X11/IntrinsicP.h>
 #include <X11/Xatom.h>
 #include <X11/StringDefs.h>
@@ -441,8 +442,8 @@ static void GaugeExpose(Widget w, XEvent * event, Region region)
 
 	/* draw labels */
 	if (gw->gauge.nlabels > 1) {
-		char label[20], *s = label;
-		int xlen, wd, h = 0;
+		char label[sizeof(long)*3+1], *s = label;
+		int xlen, wd, h = 0, n;
 
 		if (gw->gauge.orientation == XtorientHorizontal)
 			y = gw->gauge.lmargin +
@@ -453,16 +454,18 @@ static void GaugeExpose(Widget w, XEvent * event, Region region)
 		}
 
 		for (i = 0; i < gw->gauge.nlabels; ++i) {
-			if (gw->gauge.labels == NULL)
-				sprintf(label, "%d",
-					v0 + i * (v1 -
-						  v0) / (gw->gauge.nlabels -
-							 1));
+			if (gw->gauge.labels == NULL) {
+				n = snprintf(label, sizeof(label),
+					     "%d",
+					     v0 + i * (v1 - v0) / 
+					          (gw->gauge.nlabels - 1));
+				assert(n >= 0 &&  n < sizeof(label));
+			}
 			else
 				s = gw->gauge.labels[i];
 			if (s != NULL) {
-				x = e0 + i * (e1 - e0 -
-					      1) / (gw->gauge.nlabels - 1);
+				x = e0 + i * (e1 - e0 - 1) / 
+					     (gw->gauge.nlabels - 1);
 				xlen = strlen(s);
 				if (gw->gauge.orientation == XtorientHorizontal) {
 					wd = XTextWidth(gw->label.font, s,
@@ -587,9 +590,12 @@ GaugeSelect(Widget w, XEvent * event, String * params, Cardinal * num_params)
 
 		fprintf(stderr, "Gauge failed to get selection, try again\n");
 	} else {
+		int n;
+		const int max_selstr = 4 * sizeof(int);
 		gw->gauge.selected = TRUE;
-		gw->gauge.selstr = (String) XtMalloc(4 * sizeof(int));
-		sprintf(gw->gauge.selstr, "%d", gw->gauge.value);
+		gw->gauge.selstr = (String) XtMalloc(max_selstr);
+		n = snprintf(gw->gauge.selstr, max_selstr, "%d", gw->gauge.value);
+		assert(n >= 0 && n < max_selstr);
 		GaugeExpose(w, 0, 0);
 	}
 }
@@ -890,9 +896,11 @@ static void MaxLabel(GaugeWidget gw, Dimension * wid,	/* max label width */
 		 */
 		w = 0;
 		for (i = 0; i < gw->gauge.nlabels; ++i) {
-			if (gw->gauge.labels == NULL)	/* numeric labels */
-				sprintf(lbl = lstr, "%d", v0 + i * dv / n);
-			else
+			if (gw->gauge.labels == NULL)	{ /* numeric labels */
+				int sz = snprintf(lbl = lstr, sizeof(lstr), 
+						  "%d", v0 + i * dv / n);
+				assert(sz >= 0 && sz < sizeof(lstr));
+			} else
 				lbl = gw->gauge.labels[i];
 
 			if (lbl != NULL) {
