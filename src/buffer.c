@@ -687,7 +687,7 @@ even if a buffer with that name exists.
       (name, ignore))
 {
 	REGISTER Lisp_Object gentemp, tem;
-	int count;
+	int count, prt;
 	char number[23];
 
 	CHECK_STRING(name);
@@ -704,8 +704,8 @@ even if a buffer with that name exists.
 
 	count = 1;
 	while (1) {
-                
-                snprintf(number, sizeof(number), "<%d>", ++count);
+                prt = snprintf(number, sizeof(number), "<%d>", ++count);
+	        assert(prt>=0 && prt < sizeof(number));
 		gentemp = concat2(name, build_string(number));
 		if (!NILP(ignore)) {
 			tem = Fstring_equal(gentemp, ignore);
