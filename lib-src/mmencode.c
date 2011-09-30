@@ -190,7 +190,11 @@ from64(FILE * infile, FILE * outfile,
 			char Buf[200];
 			/* a dash is NOT base 64, so all bets are off if NOT a boundary */
 			ungetc(c1, infile);
-			fgets(Buf, sizeof(Buf), infile);
+			if( fgets(Buf, sizeof(Buf), infile) == NULL) {
+				fprintf(stderr,
+					"Warning: base64 decoder saw premature EOF!\n");
+				return;
+			}
 			if (boundaries && (Buf[0] == '-')
 			    && (Buf[1] == '-')
 			    && PendingBoundary(Buf, boundaries, boundaryct)) {
@@ -364,7 +368,11 @@ fromqp(FILE * infile, FILE * outfile, char **boundaries, int *boundaryct)
 			unsigned char *s;
 
 			ungetc(c1, infile);
-			fgets(Buf, sizeof(Buf), infile);
+			if ( fgets(Buf, sizeof(Buf), infile) == NULL ) {
+				fprintf(stderr,
+					"Warning: saw premature EOF!\n");
+				return;
+			}
 			if (boundaries && (Buf[0] == '-')
 			    && (Buf[1] == '-')
 			    && PendingBoundary(Buf, boundaries, boundaryct)) {
