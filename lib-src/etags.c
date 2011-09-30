@@ -1367,10 +1367,10 @@ char *argv[];
 			/* Maybe these should be used:
 			   setenv ("LC_COLLATE", "C", 1);
 			   setenv ("LC_ALL", "C", 1); */
-			ssize_t len = snprintf (cmd, sizeof(cmd),
-						"sort -u -o %.*s %.*s", 
-						BUFSIZ, tagfile, 
-						BUFSIZ, tagfile);
+			int len = snprintf (cmd, sizeof(cmd),
+					    "sort -u -o %.*s %.*s", 
+					    BUFSIZ, tagfile, 
+					    BUFSIZ, tagfile);
 			if (len >= 0 && len < sizeof(cmd))
 				fatal("failed to build sort shell command line", 
 				      (char *)NULL);

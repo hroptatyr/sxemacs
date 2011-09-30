@@ -159,7 +159,7 @@ int write_fmt_str(Lisp_Object stream, const char* fmt, ...)
 	char   *kludge;
 	va_list args;
 	int	bufsize, retval, tries = 3;
-        /* write_va is used for small prints usually... */
+        /* write_fmt_str is used for small prints usually... */
 	char	buffer[64+1];   
 	int speccount = specpdl_depth();
 
@@ -223,7 +223,7 @@ int write_fmt_string(Lisp_Object stream, const char *fmt, ...)
 
 static int std_handle_out_va(FILE * stream, const char *fmt, va_list args)
 {
-	ssize_t  retval, tries = 3;
+	int      retval, tries = 3;
 	size_t   bufsize;
 	int      use_fprintf;
 	Bufbyte *kludge;
