@@ -3594,14 +3594,17 @@ Characters out of the base64 alphabet are ignored.
 
 /* base16 encode/decode functions. */
 static Bytind
-base16_encode_1(Lstream * istream, int length, Bufbyte * to)
+base16_encode_1(Lstream * istream, int length, Bufbyte * to, int max)
 {
 	Emchar ec;
-	int i;
+	int i, sz;
 
 	for (i=0; i < length; i++) {
 		ec = Lstream_get_emchar (istream);
-		sprintf((char *)to+2*i,"%02x", ec);
+		sz = snprintf((char *)to+2*i, 3, "%02x", ec);
+		assert( sz >= 0 && sz < 3);
+		max -= sz;
+		assert(max >= 0);
 	}
 
 	return 1;
@@ -3656,18 +3659,19 @@ into shorter lines.
 	Charcount length;
 	Bufbyte *encoded;
 	Lisp_Object input, result;
+	int sz;
 	int speccount = specpdl_depth();
 
 	CHECK_STRING(string);
 
 	length = XSTRING_CHAR_LENGTH(string);
-
+	sz = 2 * length;
 	input = make_lisp_string_input_stream(string, 0, -1);
-	XMALLOC_ATOMIC_OR_ALLOCA(encoded, 2*length, Bufbyte);
-	base16_encode_1(XLSTREAM(input), length, encoded);
+	XMALLOC_ATOMIC_OR_ALLOCA(encoded, sz+1, Bufbyte);
+	base16_encode_1(XLSTREAM(input), length, encoded, sz);
 	Lstream_delete(XLSTREAM(input));
-	result = make_string(encoded, 2*length);
-	XMALLOC_UNBIND(encoded, 2*length, speccount);
+	result = make_string(encoded, sz);
+	XMALLOC_UNBIND(encoded, sz+1, speccount);
 
 	XSTRING(result)->plist = XSTRING(string)->plist;
 
