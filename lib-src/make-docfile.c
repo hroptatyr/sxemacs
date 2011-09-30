@@ -141,7 +141,11 @@ static char *next_extra_elc(char *extra_elcs)
 			/*fatal("error opening site package file list", 0); */
 			return NULL;
 		}
-		fgets(line_buf, BUFSIZ, fp);
+		if(!fgets(line_buf, BUFSIZ, fp)) {
+			fclose(fp);
+			fp = NULL;
+			return NULL;
+		}
 	}
 
       again:
@@ -226,7 +230,8 @@ int main(int argc, char **argv)
 			outfile = fopen(argv[++i], WRITE_BINARY);
 		}
 		if (!strcmp(argv[i], "-d")) {
-			chdir(argv[++i]);
+			if (chdir(argv[++i]) < 0)
+				fatal("Could not change to directory ",argv[i]);
 		}
 
 		if (!strcmp(argv[i], "-i")) {
@@ -255,7 +260,8 @@ int main(int argc, char **argv)
                            and that any Lisp files not under there have the
                            full path specified.  */
                         i += 1;
-                        chdir (argv[i]);
+                        if (chdir (argv[i]) < 0)
+				fatal("Could not change to directory ", argv[i]);
                         continue;
                 } else if (argv[i][0] == '-') {
 			i++;
@@ -646,12 +652,14 @@ static int scan_c_file(const char *filename, const char *mode)
 					if (c < 0)
 						goto eof;
 					ungetc(c, infile);
-					if (commas == 2)	/* pick up minargs */
-						fscanf(infile, "%d", &minargs);
-					else /* pick up maxargs */ if (c == 'M' || c == 'U')	/* MANY || UNEVALLED */
+					if (commas == 2) {	/* pick up minargs */
+						if ( fscanf(infile, "%d", &minargs) != 1)
+							fprintf(stderr, "Failed to read minargs\n");
+					} else /* pick up maxargs */ if (c == 'M' || c == 'U')	/* MANY || UNEVALLED */
 						maxargs = -1;
 					else
-						fscanf(infile, "%d", &maxargs);
+						if ( fscanf(infile, "%d", &maxargs) != 1)
+							fprintf(stderr, "Failed to read maxargs\n");;
 				}
 			}
 			if (c < 0)
