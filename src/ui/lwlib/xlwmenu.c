@@ -44,12 +44,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif				/* XmVersion < 1.2 */
 #endif
 #include "xlwmenuP.h"
+#include "lwlib-internal.h"
 
 #include <sxe-utils.h>
 
 #ifdef USE_DEBUG_MALLOC
 #include <dmalloc.h>
 #endif
+
 
 /* simple, naive integer maximum */
 #ifndef max
@@ -655,7 +657,9 @@ static XmString resource_widget_value(XlwMenuWidget mw, widget_value * val)
 			   resource. */
 			if (val->value) {
 				char named_name[1024];
-				sprintf(named_name, "%sNamed", massaged_name);
+				int sz = snprintf(named_name, sizeof(named_name),
+						  "%sNamed", massaged_name);
+				assert(sz >= 0 && sz < sizeof(named_name));
 				XtGetSubresources((Widget) mw,
 						  (XtPointer) & resourced_name,
 						  named_name, named_name,
