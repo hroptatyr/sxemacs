@@ -128,7 +128,9 @@ int main(int argc, char *argv[])
 
 #define hexchar(x) (isdigit (x) ? x - '0' : x - 'a' + 10)
 
-				fread(buf, 1, 10, fp);	/* skip 10 bytes */
+				if (fread(buf, 1, 10, fp) != 10)
+					if (feof(fp))
+						break;	/* skip 10 bytes */
 
 				for (i = 0; i < 16; ++i) {
 					if ((c = getc(fp)) == ' ' || c == EOF)
@@ -152,7 +154,9 @@ int main(int argc, char *argv[])
 					if (i < 16)
 						break;
 
-					fread(buf, 1, 18, fp);	/* skip 18 bytes */
+					if (fread(buf, 1, 18, fp)!=18) /* skip 18 bytes */
+						if(feof(fp))
+							break;	
 				}
 			}
 		} else {
