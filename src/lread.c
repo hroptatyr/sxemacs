@@ -640,9 +640,10 @@ encoding detection or end-of-line detection.
 			}
 		}
 
-		foundstr = (char *)alloca(XSTRING_LENGTH(found) + 1);
-		strcpy(foundstr, (char *)XSTRING_DATA(found));
-		foundlen = strlen(foundstr);
+		foundlen = XSTRING_LENGTH(found);
+		foundstr = (char *)alloca( foundlen+ 1);
+		strncpy(foundstr, (char *)XSTRING_DATA(found), foundlen+1);
+
 
 		/* The omniscient JWZ thinks this is worthless, but I beg to
 		   differ. --ben */
