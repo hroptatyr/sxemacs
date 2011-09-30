@@ -117,11 +117,8 @@ std_handle_out_external(FILE * stream, Lisp_Object lstream,
 		return;
 	}
 	if (stream) {
-		{
-			fwrite(extptr, 1, extlen, stream);
-			if (must_flush)
-				fflush(stream);
-		}
+		fwrite(extptr, 1, extlen, stream);
+		if (must_flush)	fflush(stream);
 	} else
 		Lstream_write(XLSTREAM(lstream), extptr, extlen);
 
@@ -130,8 +127,83 @@ std_handle_out_external(FILE * stream, Lisp_Object lstream,
 			fwrite(extptr, 1, extlen, termscript);
 			fflush(termscript);
 		}
-		stdout_needs_newline = extlen ? (extptr[extlen - 1] != '\n') : 1;
+		stdout_needs_newline = extptr[extlen - 1] != '\n';
 	}
+}
+
+
+#define SXE_VSNPRINT_VA(ret,sbuf,buf,size,spec,tries,type,fmt,args)	\
+	do {								\
+		--tries;						\
+		ret = vsnprintf((char*)buf,size,fmt,args);		\
+		if ( retval == 0 ) {					\
+			/* Nothing to write */				\
+			break;						\
+		} else if ( ret < 0 ) {					\
+			XMALLOC_UNBIND(buf,size,spec);			\
+			size *= 2;					\
+			XMALLOC_OR_ALLOCA(buf,size,type);		\
+			ret = 0;					\
+		} else if ( ret > size ) {				\
+		    /* We need more space, so we need to allocate it */ \
+			XMALLOC_UNBIND(buf,size,spec);			\
+			size = ret + 1;					\
+			XMALLOC_OR_ALLOCA(buf,size,type);		\
+			ret = 0;					\
+		}							\
+	} while( ret == 0 && tries > 0 )
+
+
+int write_fmt_str(Lisp_Object stream, const char* fmt, ...)
+{
+	char   *kludge;
+	va_list args;
+	int	bufsize, retval, tries = 3;
+        /* write_va is used for small prints usually... */
+	char	buffer[64+1];   
+	int speccount = specpdl_depth();
+
+	va_start(args, fmt);
+	kludge = buffer;
+	bufsize = sizeof(buffer);
+
+	SXE_VSNPRINT_VA(retval,buffer,kludge,bufsize,speccount,tries,char,fmt,args);
+
+	if (retval>0)
+		write_c_string(kludge,stream);
+
+	XMALLOC_UNBIND(kludge, bufsize, speccount);
+	va_end(args);
+
+	if (retval < 0)
+		error("Error attempting to write write format string '%s'",
+		      fmt);
+	return retval;
+}
+
+int write_fmt_string(Lisp_Object stream, const char *fmt, ...)
+{
+	char   *kludge;
+	va_list args;
+	int	bufsize, retval, tries = 3;
+	/* write_va is used for small prints usually... */
+	char	buffer[128+1];
+	int speccount = specpdl_depth();
+
+	va_start(args, fmt);
+	kludge = buffer;
+	bufsize = sizeof(buffer);
+
+	SXE_VSNPRINT_VA(retval,buffer,kludge,bufsize,speccount,tries,char,fmt,args);
+	if (retval>0)
+		write_c_string(kludge,stream);
+	XMALLOC_UNBIND(kludge, bufsize, speccount);
+	va_end(args);
+
+	if (retval < 0)
+		error("Error attempting to write write format string '%s'",
+		      fmt);
+	return retval;
 }
 
 /* #### The following function should be replaced a call to the
@@ -151,47 +223,49 @@ std_handle_out_external(FILE * stream, Lisp_Object lstream,
 
 static int std_handle_out_va(FILE * stream, const char *fmt, va_list args)
 {
-	Bufbyte buffer[16384],
-		*kludge = buffer;
-	Extbyte *extptr = NULL;
-	Extcount extlen = 0;
-	int     retval, 
-		bufsize = sizeof(buffer), 
-		tries = 3;
-	int speccount = specpdl_depth();
+	ssize_t  retval, tries = 3;
+	size_t   bufsize;
+	int      use_fprintf;
+	Bufbyte *kludge;
+	Bufbyte  buffer[1024]; /* Tax stack lightly, used to be 16KiB */
+	int      speccount = specpdl_depth();
 
-	do {
-		assert(tries != 0);
-		retval = vsnprintf((char *)kludge, bufsize, fmt, args);
-		if ( retval == 0 ) {
-			/* Nothing to write!! */
-			return retval;
-		} else if ( retval < 0 ) {
-			bufsize *= 2;
-			XMALLOC_UNBIND(kludge, bufsize, speccount);
-			XMALLOC_OR_ALLOCA(kludge,bufsize,Bufbyte);
-			retval = 0;
-		} else if ( retval > bufsize ) {
-			/* We need more space, so we need to allocate it 
-			 */
-			bufsize = retval + 1;
-			XMALLOC_OR_ALLOCA(kludge,bufsize,Bufbyte);
-			retval = 0;
+	bufsize = sizeof(buffer);
+	kludge = buffer;
+
+	SXE_VSNPRINT_VA(retval,buffer,kludge,bufsize,speccount,tries,Bufbyte,fmt,args);
+	
+	if (retval == 0)
+		/* nothing to write */
+		return retval;
+
+	use_fprintf = ! initialized ||fatal_error_in_progress || 
+		inhibit_non_essential_printing_operations;
+
+	if (retval > 0) {
+		if (use_fprintf) {
+			fprintf(stream,"%s",(char*)kludge);
+		} else {
+			Extbyte	 *extptr = NULL;
+			Extcount extlen = retval;
+
+			TO_EXTERNAL_FORMAT(DATA, (kludge, strlen((char *)kludge)),
+					   ALLOCA, (extptr, extlen), Qnative);
+			std_handle_out_external(stream, Qnil, extptr, extlen, 1, 1);
 		}
-	} while( retval == 0 );
-
-	extlen = retval;
-
-	if (initialized && !inhibit_non_essential_printing_operations && 
-	    ! fatal_error_in_progress ) {
-		TO_EXTERNAL_FORMAT(DATA, (kludge, strlen((char *)kludge)),
-				   ALLOCA, (extptr, extlen), Qnative);
-		std_handle_out_external(stream, Qnil, extptr, extlen, 1, 1);
-	} else if (fatal_error_in_progress || !inhibit_non_essential_printing_operations)
-		fprintf(stream,"%s",(char*)kludge);
+	} else {
+		if (use_fprintf) {
+			fprintf(stream,"Error attempting to write format string '%s'",
+				fmt);
+		} else {
+			const Extbyte *msg = "Error attempting to write format string";
+			std_handle_out_external(stream, Qnil, msg, strlen(msg), 1, 1);
+		}
+	}
 	XMALLOC_UNBIND(kludge, bufsize, speccount);
 	return retval;
 }
+
 
 /* Output portably to stderr or its equivalent; call GETTEXT on the
    format string.  Automatically flush when done. */
@@ -217,10 +291,10 @@ int stdout_out(const char *fmt, ...)
 	int retval;
 	va_list args;
 	va_start(args, fmt);
-	retval =
-	    std_handle_out_va
-	    (stdout, initialized
-	     && !fatal_error_in_progress ? GETTEXT(fmt) : fmt, args);
+	retval = std_handle_out_va(stdout, 
+				   (initialized && !fatal_error_in_progress 
+				    ? GETTEXT(fmt) : fmt), 
+				   args);
 	va_end(args);
 	return retval;
 }
@@ -231,7 +305,10 @@ DOESNT_RETURN fatal(const char *fmt, ...)
 	va_start(args, fmt);
 
 	stderr_out("\nSXEmacs: ");
-	std_handle_out_va(stderr, GETTEXT(fmt), args);
+	std_handle_out_va(stderr, 
+			  (initialized && !fatal_error_in_progress 
+			   ? GETTEXT(fmt) : fmt), 
+			  args);
 	stderr_out("\n");
 
 	va_end(args);
@@ -483,22 +560,21 @@ void write_string_1(const Bufbyte * str, Bytecount size, Lisp_Object stream)
 	output_string(stream, str, Qnil, 0, size);
 }
 
+
+void write_hex_ptr(void* value, Lisp_Object stream)
+{
+	char buf[sizeof(value)*2+1];
+	int n = snprintf(buf,sizeof(buf),"0x%p",value);
+	assert(n>=0 && n<sizeof(buf));
+	write_c_string(buf,stream);
+}
+
 void write_c_string(const char *str, Lisp_Object stream)
 {
 	/* This function can GC */
 	write_string_1((const Bufbyte *)str, strlen(str), stream);
 }
 
-static void write_fmt_string(Lisp_Object stream, const char *fmt, ...)
-{
-	va_list va;
-	char bigbuf[666];
-
-	va_start(va, fmt);
-	vsprintf(bigbuf, fmt, va);
-	va_end(va);
-	write_c_string(bigbuf, stream);
-}
 
 DEFUN("write-char", Fwrite_char, 1, 2, 0,	/*
 Output character CHARACTER to stream STREAM.
@@ -1129,27 +1205,23 @@ default_object_printer(Lisp_Object obj, Lisp_Object printcharfun,
 		       int escapeflag)
 {
 	struct lcrecord_header *header = (struct lcrecord_header *)XPNTR(obj);
-	char buf[200];
 
 	if (print_readably)
 		error("printing unreadable object #<%s 0x%x>",
 		      LHEADER_IMPLEMENTATION(&header->lheader)->name,
 		      header->uid);
 
-	sprintf(buf, "#<%s 0x%x>",
-		LHEADER_IMPLEMENTATION(&header->lheader)->name, header->uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_string(printcharfun, "#<%s 0x%x>",
+			 LHEADER_IMPLEMENTATION(&header->lheader)->name, header->uid);
 }
 
 void
 internal_object_printer(Lisp_Object obj, Lisp_Object printcharfun,
 			int escapeflag)
 {
-	char buf[200];
-	sprintf(buf, "#<INTERNAL OBJECT (SXEmacs bug?) (%s) 0x%lx>",
-		XRECORD_LHEADER_IMPLEMENTATION(obj)->name,
-		(unsigned long)XPNTR(obj));
-	write_c_string(buf, printcharfun);
+	write_fmt_string(printcharfun, "#<INTERNAL OBJECT (SXEmacs bug?) (%s) 0x%lx>",
+			 XRECORD_LHEADER_IMPLEMENTATION(obj)->name,
+			 (unsigned long)XPNTR(obj));
 }
 
 enum printing_badness {
@@ -1164,23 +1236,27 @@ printing_major_badness(Lisp_Object printcharfun,
 		       enum printing_badness badness)
 {
 	char buf[666];
+	ssize_t len;
 
 	switch (badness) {
 	case BADNESS_INTEGER_OBJECT:
-		sprintf(buf, "%s %d object %ld", badness_string, type,
-			(EMACS_INT) val);
+		len = snprintf(buf, sizeof(buf), "%s %d object %ld", badness_string, type,
+			       (EMACS_INT) val);
 		break;
 
 	case BADNESS_POINTER_OBJECT:
-		sprintf(buf, "%s %d object %p", badness_string, type, val);
+		len = snprintf(buf, sizeof(buf), "%s %d object %p", badness_string, type, val);
 		break;
 
 	case BADNESS_NO_TYPE:
-		sprintf(buf, "%s object %p", badness_string, val);
+		len = snprintf(buf, sizeof(buf), "%s object %p", badness_string, val);
 		break;
 	default:
+		len = snprintf(buf, sizeof(buf), "%s unknown badness %d", 
+			       badness_string, badness);
 		break;
 	}
+	assert(len >= 0 && len < sizeof(buf));
 
 	/* Don't abort or signal if called from debug_print() or already
 	   crashing */
