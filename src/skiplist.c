@@ -411,15 +411,9 @@ mark_skiplist(Lisp_Object obj)
 static void
 print_skiplist(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	char num[16];
-
-	write_c_string("#<skiplist :size ", printcharfun);
-	snprintf(num, 15, "%lu", (long unsigned int)XSKIPLIST_NNODES(obj));
-	write_c_string(num, printcharfun);
-	write_c_string(" :levels ", printcharfun);
-	snprintf(num, 15, "%lu", (long unsigned int)XSKIPLIST_NLEVELS(obj));
-	write_c_string(num, printcharfun);
-	write_c_string(">", printcharfun);
+	write_fmt_str(printcharfun, "#<skiplist :size %lu  :levels %lu >", 
+		      (long unsigned int)XSKIPLIST_NNODES(obj), 
+		      (long unsigned int)XSKIPLIST_NLEVELS(obj));
 }
 
 static void

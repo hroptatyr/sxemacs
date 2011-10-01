@@ -112,21 +112,18 @@ static void
 print_device(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	struct device *d = XDEVICE(obj);
-	char buf[256];
 
 	if (print_readably)
 		error("printing unreadable object #<device %s 0x%x>",
 		      XSTRING_DATA(d->name), d->header.uid);
 
-	snprintf(buf, sizeof(buf), "#<%s-device", !DEVICE_LIVE_P(d) ? "dead" :
-		DEVICE_TYPE_NAME(d));
-	write_c_string(buf, printcharfun);
+	write_fmt_string(printcharfun, "#<%s-device", 
+			 (!DEVICE_LIVE_P(d) ? "dead" :DEVICE_TYPE_NAME(d)));
 	if (DEVICE_LIVE_P(d) && !NILP(DEVICE_CONNECTION(d))) {
 		write_c_string(" on ", printcharfun);
 		print_internal(DEVICE_CONNECTION(d), printcharfun, 1);
 	}
-	sprintf(buf, " 0x%x>", d->header.uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, " 0x%x>", d->header.uid);
 }
 
 DEFINE_LRECORD_IMPLEMENTATION("device", device,

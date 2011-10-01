@@ -872,13 +872,9 @@ mark_bloom(Lisp_Object obj)
 static void
 print_bloom(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	char *tmp = alloca(96);
-
-	snprintf(tmp, 95, "#<bloom-filter :order %u :degree %u :size %u>",
-		 XBLOOM_ORDER(obj), XBLOOM_DEGREE(obj), XBLOOM_SIZE(obj));
-
-	write_c_string(tmp, printcharfun);
-
+	write_fmt_string(printcharfun,
+			 "#<bloom-filter :order %u :degree %u :size %u>",
+			 XBLOOM_ORDER(obj), XBLOOM_DEGREE(obj), XBLOOM_SIZE(obj));
 	if (escapeflag);
 }
 

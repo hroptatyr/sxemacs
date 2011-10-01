@@ -95,12 +95,14 @@ x_create_scrollbar_instance(struct frame *f, int vertical,
 			    struct scrollbar_instance *instance)
 {
 	char buffer[32];
+	int sz;
 
 	/* initialize the X specific data section. */
 	instance->scrollbar_data = xnew_and_zero(struct x_scrollbar_data);
 
 	SCROLLBAR_X_ID(instance) = new_lwlib_id();
-	sprintf(buffer, "scrollbar_%d", SCROLLBAR_X_ID(instance));
+	sz = snprintf(buffer, sizeof(buffer), "scrollbar_%d", SCROLLBAR_X_ID(instance));
+	assert(sz >= 0 && sz < sizeof(buffer));
 	SCROLLBAR_X_NAME(instance) = xstrdup(buffer);
 #if defined (LWLIB_SCROLLBARS_MOTIF) || defined (LWLIB_SCROLLBARS_LUCID) || \
     defined (LWLIB_SCROLLBARS_ATHENA3D)

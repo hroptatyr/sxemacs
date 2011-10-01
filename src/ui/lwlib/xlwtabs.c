@@ -1233,9 +1233,10 @@ void XawTabsSetTop(Widget w, Bool callCallbacks)
 
 	if (!XtIsSubclass(w->core.parent, tabsWidgetClass)) {
 		char line[256];
-		sprintf(line,
+		int n = snprintf(line, sizeof(line),
 			"XawTabsSetTop: widget \"%.64s\" is not the child of a tabs widget.",
 			XtName(w));
+		assert(n >= 0 && n < sizeof(line));
 		XtAppWarning(XtWidgetToApplicationContext(w), line);
 		return;
 	}

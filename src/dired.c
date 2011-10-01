@@ -1,4 +1,4 @@
- /* Lisp functions for making directory listings.
+/* Lisp functions for making directory listings.
     Copyright (C) 1985, 1986, 1992, 1993, 1994 Free Software Foundation, Inc.
 
 This file is part of SXEmacs
@@ -130,8 +130,10 @@ dired_realpath(const char *file)
 {
 	char *result = xmalloc_atomic(4096); 	
 
-	realpath(file, result);
-
+	if ( realpath(file, result) == NULL ) {
+		xfree(result);
+		result = NULL;
+	}
 	return result;
 }
 #endif
@@ -247,10 +249,11 @@ dfr_inner(dirent_t *res,
 		 * store it to our companion bloom filter
 		 */
 		canon_name = CANONICALISE_FILENAME(statnam);
-
-		/* now, recycle full name */
-		fullname = make_ext_string(
-			canon_name, strlen(canon_name), Qfile_name);
+		if (canon_name) {
+			/* now, recycle full name */
+			fullname = make_ext_string(
+				canon_name, strlen(canon_name), Qfile_name);
+		}
 		fullname = fname_as_directory(fullname);
 
 		/* now stat statnam */
@@ -282,11 +285,13 @@ dfr_inner(dirent_t *res,
 		 * check against the bloom filter.
 		 */
 		canon_name = CANONICALISE_FILENAME(statnam);
-
-		/* now, recycle full name */
-		fullname = make_ext_string(
-			canon_name, strlen(canon_name),
-			Qfile_name);
+		
+		if (canon_name) {
+			/* now, recycle full name */
+			fullname = make_ext_string(
+				canon_name, strlen(canon_name),
+				Qfile_name);
+		}
 		fullname = fname_as_directory(fullname);
 
 		/* now stat statnam */

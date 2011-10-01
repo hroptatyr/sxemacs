@@ -66,7 +66,6 @@ static Lisp_Object mark_color_instance(Lisp_Object obj)
 static void
 print_color_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[100];
 	Lisp_Color_Instance *c = XCOLOR_INSTANCE(obj);
 	if (print_readably)
 		error("printing unreadable object #<color-instance 0x%x>",
@@ -78,8 +77,7 @@ print_color_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	if (!NILP(c->device))	/* Vthe_null_color_instance */
 		MAYBE_DEVMETH(XDEVICE(c->device), print_color_instance,
 			      (c, printcharfun, escapeflag));
-	sprintf(buf, " 0x%x>", c->header.uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, " 0x%x>", c->header.uid);
 }
 
 static void finalize_color_instance(void *header, int for_disksave)
@@ -249,7 +247,6 @@ static Lisp_Object mark_font_instance(Lisp_Object obj)
 static void
 print_font_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[200];
 	Lisp_Font_Instance *f = XFONT_INSTANCE(obj);
 	if (print_readably)
 		error("printing unreadable object #<font-instance 0x%x>",
@@ -261,8 +258,7 @@ print_font_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	if (!NILP(f->device))
 		MAYBE_DEVMETH(XDEVICE(f->device), print_font_instance,
 			      (f, printcharfun, escapeflag));
-	sprintf(buf, " 0x%x>", f->header.uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, " 0x%x>", f->header.uid);
 }
 
 static void finalize_font_instance(void *header, int for_disksave)

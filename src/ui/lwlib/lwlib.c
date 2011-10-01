@@ -97,10 +97,11 @@ static char *safe_strdup(const char *s)
 	char *result;
 	if (!s)
 		return 0;
-	result = (char *)xmalloc(strlen(s) + 1);
+	ssize_t len = strlen(s)+1;
+	result = (char *)xmalloc(len);
 	if (!result)
 		return 0;
-	strcpy(result, s);
+	strncpy(result, s, len);
 	return result;
 }
 

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <dlfcn.h>
 #include <math.h>
-
+#include "sysdep.h"
 #include "effi.h"
 
 #include "buffer.h"
@@ -612,9 +612,11 @@ $LD_LIBRARY_PATH environment variable or the more global ld.so.cache.
 	/* Add an extension if we need to */
 	dotpos = strrchr((char *)XSTRING_DATA(libname),'.');
 	if ( dotpos == NULL || strncmp(dotpos, EXT, sizeof(EXT))) {
-		soname = xmalloc(XSTRING_LENGTH(libname) + sizeof(EXT) + 1);
-		strcpy(soname, (char *)XSTRING_DATA(libname));
-		strcat(soname, EXT);
+		ssize_t liblen = XSTRING_LENGTH(libname);
+		ssize_t soname_len = liblen + sizeof(EXT);
+		soname = xmalloc( soname_len + 1);
+		strncpy(soname, (char *)XSTRING_DATA(libname), liblen+1);
+		strncat(soname, EXT, sizeof(EXT)+1);
 	}
 
 	if ( soname == NULL ) {

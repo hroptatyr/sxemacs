@@ -589,9 +589,9 @@ read_locale_specific_resources(Display *dpy)
 		{
 			/* C99 we need you ... VLA */
 			char path[strlen(data_dir) + strlen(locale) + 7];
-
-			snprintf(path, countof(path),
-				 "%s%s/Emacs", data_dir, locale);
+			int sz = snprintf(path, sizeof(path),
+					  "%s%s/Emacs", data_dir, locale);
+			assert(sz >= 0 && sz < sizeof(path));
 			if (!access(path, R_OK)) {
 				XrmCombineFileDatabase(path, &db, False);
 			}
@@ -605,9 +605,10 @@ read_locale_specific_resources(Display *dpy)
 			/* C99 we need you ... VLA */
 			char path[strlen(data_dir) + 13 + strlen(locale) + 7];
 
-
-			snprintf(path, countof(path), "%sapp-defaults/%s/Emacs",
-				 data_dir, locale);
+			int sz = snprintf(path, sizeof(path), 
+					  "%sapp-defaults/%s/Emacs",
+					  data_dir, locale);
+			assert(sz >= 0 && sz < sizeof(path));
 			if (!access(path, R_OK)) {
 				XrmCombineFileDatabase(path, &db, False);
 			}
@@ -718,8 +719,11 @@ static void x_init_device(struct device *d, Lisp_Object props)
 		char *type;
 		XrmValue value;
 
-		sprintf(buf1, "%s.emacsVisual", app_name);
-		sprintf(buf2, "%s.EmacsVisual", app_class);
+		int sz = snprintf(buf1, sizeof(buf1), "%s.emacsVisual", app_name);
+		assert(sz >= 0 && sz < sizeof(buf1));
+		sz = snprintf(buf2, sizeof(buf2), "%s.EmacsVisual", app_class);
+		assert(sz >= 0 && sz < sizeof(buf2));
+
 		if (XrmGetResource(XtDatabase(dpy), buf1, buf2, &type, &value)
 		    == True) {
 			int cnt = 0;
@@ -778,8 +782,11 @@ static void x_init_device(struct device *d, Lisp_Object props)
 		   PseudoColor, check to see if the user specified that we need
 		   a private colormap */
 		if (visual == DefaultVisual(dpy, screen)) {
-			sprintf(buf1, "%s.privateColormap", app_name);
-			sprintf(buf2, "%s.PrivateColormap", app_class);
+			int sz = snprintf(buf1, sizeof(buf1), "%s.privateColormap", app_name);
+			assert(sz >= 0 && sz < sizeof(buf1));
+			sz = snprintf(buf2, sizeof(buf2), "%s.PrivateColormap", app_class);
+			assert(sz >= 0 && sz < sizeof(buf2));
+
 			if ((visual->class == PseudoColor) &&
 			    (XrmGetResource
 			     (XtDatabase(dpy), buf1, buf2, &type,
@@ -1138,18 +1145,24 @@ int signal_if_x_error(Display * dpy, int resumable_p)
 {
 	char buf[1024];
 	Lisp_Object data;
+	int sz;
+
 	if (!x_error_occurred_p(dpy))
 		return 0;
 	data = Qnil;
-	sprintf(buf, "0x%X", (unsigned int)last_error.resourceid);
+	sz = snprintf(buf, sizeof(buf), "0x%X", (unsigned int)last_error.resourceid);
+	assert(sz >= 0 && sz < sizeof(buf));
 	data = Fcons(build_string(buf), data);
 	{
 		char num[32];
-		sprintf(num, "%d", last_error.request_code);
+		sz = snprintf(num, sizeof(num), "%d", last_error.request_code);
+		assert(sz >= 0 && sz < sizeof(num));
 		XGetErrorDatabaseText(last_error.display, "XRequest", num, "",
 				      buf, sizeof(buf));
-		if (!*buf)
-			sprintf(buf, "Request-%d", last_error.request_code);
+		if (!*buf) {
+			sz = snprintf(buf, sizeof(buf), "Request-%d", last_error.request_code);
+			assert(sz >=0 && sz < sizeof(buf));
+		}
 		data = Fcons(build_string(buf), data);
 	}
 	XGetErrorText(last_error.display, last_error.error_code, buf,

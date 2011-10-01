@@ -1041,7 +1041,8 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 			close(1);
 			if (open(term, O_RDWR | OPEN_BINARY, 2) < 0)
 				fatal("%s: %s", term, strerror(errno));
-			dup(0);
+			if( dup(0) < 0)
+				fatal("dup failed %s: %s", term, strerror(errno));
 			if (!isatty(0))
 				fatal("%s: not a tty", term);
 

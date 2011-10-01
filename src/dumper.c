@@ -1070,13 +1070,12 @@ pdump(const char *dumpfile)
 	pdump_fd = open(dumpfile,
 			O_WRONLY | O_CREAT | O_TRUNC | OPEN_BINARY, 0666);
 	if ( pdump_fd < 0 ) {
-		stderr_out("Could not open dump file:");
-		stderr_out(dumpfile);
+		stderr_out("Could not open dump file: %s", dumpfile);
 		abort();
 	}
 	pdump_out = fdopen(pdump_fd, "w");
 	if ( pdump_out < 0 ) {
-		stderr_out("Could not fdopen dump file");
+		stderr_out("Could not fdopen dump file: %s %d", dumpfile, pdump_fd);
 		abort();
 	}
 

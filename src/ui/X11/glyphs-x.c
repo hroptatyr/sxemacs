@@ -371,20 +371,15 @@ static void
 x_print_image_instance(Lisp_Image_Instance * p,
 		       Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[100];
-
 	switch (IMAGE_INSTANCE_TYPE(p)) {
 	case IMAGE_MONO_PIXMAP:
 	case IMAGE_COLOR_PIXMAP:
 	case IMAGE_POINTER:
-		sprintf(buf, " (0x%lx",
-			(unsigned long)IMAGE_INSTANCE_X_PIXMAP(p));
-		write_c_string(buf, printcharfun);
-		if (IMAGE_INSTANCE_X_MASK(p)) {
-			sprintf(buf, "/0x%lx",
-				(unsigned long)IMAGE_INSTANCE_X_MASK(p));
-			write_c_string(buf, printcharfun);
-		}
+		write_fmt_str(printcharfun, " (0x%lx",
+			      (unsigned long)IMAGE_INSTANCE_X_PIXMAP(p));
+		if (IMAGE_INSTANCE_X_MASK(p))
+			write_fmt_str(printcharfun, "/0x%lx",
+				      (unsigned long)IMAGE_INSTANCE_X_MASK(p));
 		write_c_string(")", printcharfun);
 		break;
 
@@ -658,109 +653,6 @@ static Lisp_Object locate_pixmap_file(Lisp_Object name)
 	return x_locate_pixmap_file(name);
 }
 
-#if 0
-static void
-write_lisp_string_to_temp_file(Lisp_Object string, char *filename_out)
-{
-	Lisp_Object instream, outstream;
-	Lstream *istr, *ostr;
-	char tempbuf[1024];	/* some random amount */
-	int fubar = 0;
-	FILE *tmpfil;
-	static Extbyte_dynarr *conversion_out_dynarr;
-	Bytecount bstart, bend;
-	struct gcpro gcpro1, gcpro2;
-#ifdef FILE_CODING
-	Lisp_Object conv_out_stream;
-	Lstream *costr;
-	struct gcpro gcpro3;
-#endif
-
-	/* This function can GC */
-	if (!conversion_out_dynarr)
-		conversion_out_dynarr = Dynarr_new(Extbyte);
-	else
-		Dynarr_reset(conversion_out_dynarr);
-
-	/* Create the temporary file ... */
-	sprintf(filename_out, "/tmp/emacs%d.XXXXXX", (int)getpid());
-	mktemp(filename_out);
-	tmpfil = fopen(filename_out, "w");
-	if (!tmpfil) {
-		if (tmpfil) {
-			int old_errno = errno;
-			fclose(tmpfil);
-			unlink(filename_out);
-			errno = old_errno;
-		}
-		report_file_error("Creating temp file",
-				  list1(build_string(filename_out)));
-	}
-
-	CHECK_STRING(string);
-	get_string_range_byte(string, Qnil, Qnil, &bstart, &bend,
-			      GB_HISTORICAL_STRING_BEHAVIOR);
-	instream = make_lisp_string_input_stream(string, bstart, bend);
-	istr = XLSTREAM(instream);
-	/* setup the out stream */
-	outstream =
-	    make_dynarr_output_stream((unsigned_char_dynarr *)
-				      conversion_out_dynarr);
-	ostr = XLSTREAM(outstream);
-#ifdef FILE_CODING
-	/* setup the conversion stream */
-	conv_out_stream =
-	    make_encoding_output_stream(ostr, Fget_coding_system(Qbinary));
-	costr = XLSTREAM(conv_out_stream);
-	GCPRO3(instream, outstream, conv_out_stream);
-#else
-	GCPRO2(instream, outstream);
-#endif
-
-	/* Get the data while doing the conversion */
-	while (1) {
-		Lstream_data_count size_in_bytes =
-		    Lstream_read(istr, tempbuf, sizeof(tempbuf));
-		if (!size_in_bytes)
-			break;
-		/* It does seem the flushes are necessary... */
-#ifdef FILE_CODING
-		Lstream_write(costr, tempbuf, size_in_bytes);
-		Lstream_flush(costr);
-#else
-		Lstream_write(ostr, tempbuf, size_in_bytes);
-#endif
-		Lstream_flush(ostr);
-		if (fwrite
-		    ((unsigned char *)Dynarr_atp(conversion_out_dynarr, 0),
-		     Dynarr_length(conversion_out_dynarr), 1, tmpfil) != 1) {
-			fubar = 1;
-			break;
-		}
-		/* reset the dynarr */
-		Lstream_rewind(ostr);
-	}
-
-	if (fclose(tmpfil) != 0)
-		fubar = 1;
-	Lstream_close(istr);
-#ifdef FILE_CODING
-	Lstream_close(costr);
-#endif
-	Lstream_close(ostr);
-
-	UNGCPRO;
-	Lstream_delete(istr);
-	Lstream_delete(ostr);
-#ifdef FILE_CODING
-	Lstream_delete(costr);
-#endif
-
-	if (fubar)
-		report_file_error("Writing temp file",
-				  list1(build_string(filename_out)));
-}
-#endif				/* 0 */
 
 /************************************************************************/
 /*                           cursor functions                           */

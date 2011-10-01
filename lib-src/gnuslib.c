@@ -29,12 +29,9 @@
  * ../etc/gnuserv.README relative to the directory containing this file)
  */
 
-#if 0
-static char rcsid[] = "!Header: gnuslib.c,v 2.4 95/02/16 11:57:37 arup alpha !";
-#endif
-
 #include "gnuserv.h"
 #include <errno.h>
+#include <assert.h>
 
 #ifdef SYSV_IPC
 static int connect_to_ipc_server(void);
@@ -312,7 +309,7 @@ static int connect_to_internet_server(char *serverhost, unsigned short port)
 	struct sockaddr_in peeraddr_in;	/* for peer socket address */
 	char buf[512];		/* temporary buffer */
 
-	int t;
+	int t, len;
 
 	/* clear out address structures */
 	memset((char *)&peeraddr_in, 0, sizeof(struct sockaddr_in));
@@ -368,17 +365,30 @@ static int connect_to_internet_server(char *serverhost, unsigned short port)
 			     strlen(MCOOKIE_X_NAME), MCOOKIE_X_NAME);
 
 	if (server_xauth && server_xauth->data) {
-		sprintf(buf, "%s\n%d\n", MCOOKIE_NAME,
-			server_xauth->data_length);
-		write(s, buf, strlen(buf));
-		write(s, server_xauth->data, server_xauth->data_length);
-
+		len = snprintf(buf, sizeof(buf), "%s\n%d\n", MCOOKIE_NAME,
+			       server_xauth->data_length);
+		assert( len >=0 && len < sizeof(buf));
+		t = write(s, buf, len);
+		if(t != len) {
+			fprintf(stderr, "%s: unable to send auth", progname);
+			exit(1);
+		}
+		t = write(s, server_xauth->data, server_xauth->data_length);
+		if(t !=  server_xauth->data_length) {
+			fprintf(stderr, "%s: unable to send auth", progname);
+			exit(1);
+		}
 		return (s);
 	}
 #endif				/* AUTH_MAGIC_COOKIE */
 
-	sprintf(buf, "%s\n", DEFAUTH_NAME);
-	write(s, buf, strlen(buf));
+	len = snprintf(buf, sizeof(buf), "%s\n", DEFAUTH_NAME);
+	assert(len >= 0 && len < sizeof(buf));
+	t = write(s, buf, len);
+	if(t != len) {
+		fprintf(stderr, "%s: unable to send auth", progname);
+		exit(1);
+	}
 
 	return (s);
 
@@ -428,7 +438,7 @@ void disconnect_from_server(int s, int echo)
 #else
 	while ((length = read(s, buffer, GSERV_BUFSZ)) > 0 ||
 	       (length == -1 && errno == EINTR)) {
-		if (length) {
+		if (length>0) {
 			buffer[length] = '\0';
 			if (echo) {
 				fputs(buffer, stdout);

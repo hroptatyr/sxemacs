@@ -1274,6 +1274,8 @@ static prop_block_dynarr *add_octal_runes(pos_data * data)
 	data->ch = (7 & orig_char) + '0';
 	ADD_NEXT_OCTAL_RUNE_CHAR;
 
+	(void)add_failed;
+	
 	data->cursor_type = orig_cursor_type;
 	if (prop && prop != ADD_FAILED )
 		Dynarr_free(prop);
@@ -6623,7 +6625,7 @@ static void decode_mode_spec(struct window *w, Emchar spec, int type)
 		int col =
 			column_at_point(b, pt,
 					1) + !!column_number_start_at_one;
-		char buf[32];
+		char buf[sizeof(long)*3+1];
 
 		long_to_string(buf, col);
 
@@ -6664,8 +6666,10 @@ static void decode_mode_spec(struct window *w, Emchar spec, int type)
 		if (FRAME_TTY_P(f) && f->order_count > 1
 		    && f->order_count <= 99999999) {
 			/* Naughty, naughty */
-			char *writable_str = alloca_array(char, 10);
-			sprintf(writable_str, "-%d", f->order_count);
+			const size_t order_strmax = sizeof(f->order_count)*3+2;
+			char *writable_str = alloca_array(char, order_strmax);
+			int n = snprintf(writable_str, order_strmax, "-%d", f->order_count);
+			assert(n>=0 && n < order_strmax);
 			str = writable_str;
 		}
 #endif				/* HAVE_TTY */
@@ -6740,7 +6744,8 @@ static void decode_mode_spec(struct window *w, Emchar spec, int type)
 			/* This hard limit is ok since the string it will hold
 			   has a fixed maximum length of 3.  But just to be
 			   safe... */
-			char buf[10];
+			char buf[sizeof(long)*3+4];
+			int n;
 			Charcount chars = pos - BUF_BEGV(b);
 			Charcount total = BUF_ZV(b) - BUF_BEGV(b);
 
@@ -6754,7 +6759,8 @@ static void decode_mode_spec(struct window *w, Emchar spec, int type)
 			if (percent == 100)
 				percent = 99;
 
-			sprintf(buf, "%d%%", percent);
+			n = snprintf(buf, sizeof(buf), "%d%%", percent);
+			assert(n>=0 && n < sizeof(buf));
 			Dynarr_add_many(mode_spec_bufbyte_string,
 					(Bufbyte *) buf, strlen(buf));
 
@@ -6784,7 +6790,8 @@ static void decode_mode_spec(struct window *w, Emchar spec, int type)
 			/* This hard limit is ok since the string it will hold
 			   has a fixed maximum length of around 6.  But just to
 			   be safe... */
-			char buf[10];
+			char buf[sizeof(long)*3+6];
+			int n;
 			Charcount chars = botpos - BUF_BEGV(b);
 			Charcount total = BUF_ZV(b) - BUF_BEGV(b);
 
@@ -6799,10 +6806,10 @@ static void decode_mode_spec(struct window *w, Emchar spec, int type)
 				percent = 99;
 
 			if (toppos <= BUF_BEGV(b))
-				sprintf(buf, "Top%d%%", percent);
+				n = snprintf(buf, sizeof(buf), "Top%d%%", percent);
 			else
-				sprintf(buf, "%d%%", percent);
-
+				n = snprintf(buf, sizeof(buf), "%d%%", percent);
+			assert(n>=0 && n < sizeof(buf));
 			Dynarr_add_many(mode_spec_bufbyte_string,
 					(Bufbyte *) buf, strlen(buf));
 

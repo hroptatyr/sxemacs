@@ -630,15 +630,10 @@ static void
 print_gui_item(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	Lisp_Gui_Item *g = XGUI_ITEM(obj);
-	char buf[20];
-
 	if (print_readably)
 		error("printing unreadable object #<gui-item 0x%x>",
 		      g->header.uid);
-
-	write_c_string("#<gui-item ", printcharfun);
-	sprintf(buf, "0x%x>", g->header.uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_string(printcharfun, "#<gui-item 0x%x>", g->header.uid);
 }
 
 Lisp_Object copy_gui_item(Lisp_Object gui_item)

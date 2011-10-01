@@ -121,17 +121,6 @@ static Lisp_Object call_process_cleanup(Lisp_Object fdpid)
 }
 
 static Lisp_Object fork_error;
-#if 0				/* UNUSED */
-static void report_fork_error(char *string, Lisp_Object data)
-{
-	Lisp_Object errstring = lisp_strerror(errno);
-
-	fork_error = Fcons(build_string(string), Fcons(errstring, data));
-
-	/* terminate this branch of the fork, without closing stdin/out/etc. */
-	_exit(1);
-}
-#endif				/* unused */
 
 DEFUN("old-call-process-internal", Fold_call_process_internal, 1, MANY, 0, /*
 Call PROGRAM synchronously in separate process, with coding-system specified.
@@ -293,7 +282,10 @@ quit again.
 		fd[1] = open(NULL_DEVICE, O_WRONLY | OPEN_BINARY, 0);
 		fd[0] = -1;
 	} else {
-		pipe(fd);
+		if( pipe(fd) < 0 )
+			report_file_error("Opening process input file pipe",
+					  Fcons(infile, Qnil));
+
 #if 0
 		/* Replaced by close_process_descs */
 		set_exclusive_use(fd[0]);

@@ -897,8 +897,8 @@ int main(int argc, char *argv[])
 		case 'o':
 			if (tagfile) {
 				/* convert char to string, to call error with */
-				char buf[2];
-				sprintf(buf, "%c", opt);
+				char buf[]=" ";
+				buf[0]=opt;
 				error("-%s option may only be given once.",
 				      buf);
 				suggest_asking_for_help();
@@ -1094,12 +1094,15 @@ if (cxref_style) {
 
 if (update) {
 	char cmd[BUFSIZ];
+	int sz;
 	for (i = 0; i < current_arg; ++i) {
 		if (argbuffer[i].arg_type != at_filename)
 			continue;
-		sprintf(cmd,
-			"mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
-			tagfile, argbuffer[i].what, tagfile);
+		sz = snprintf(cmd, sizeof(cmd),
+			      "mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
+			      tagfile, argbuffer[i].what, tagfile);
+		if(sz >= 0 && sz < sizeof(cmd))
+			fatal("failed to build shell command line", (char *)NULL);
 		if (system(cmd) != GOOD)
 			fatal("failed to execute shell command", (char *)NULL);
 	}
@@ -1114,7 +1117,9 @@ fclose(tagf);
 
 if (update) {
 	char cmd[BUFSIZ];
-	sprintf(cmd, "sort %s -o %s", tagfile, tagfile);
+	int sz = snprintf(cmd, sizeof(cmd), "sort %s -o %s", tagfile, tagfile);
+	if(sz >= 0 && sz < sizeof(cmd))
+		fatal("failed to build sort command line", (char *)NULL);
 	exit(system(cmd));
 }
 return GOOD;

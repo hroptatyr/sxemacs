@@ -54,8 +54,6 @@ static void
 print_marker(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	Lisp_Marker *marker = XMARKER(obj);
-	char buf[200];
-
 	if (print_readably)
 		error("printing unreadable object #<marker 0x%lx>",
 		      (long)marker);
@@ -64,12 +62,10 @@ print_marker(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	if (!marker->buffer)
 		write_c_string(GETTEXT("in no buffer"), printcharfun);
 	else {
-		sprintf(buf, "at %ld in ", (long)marker_position(obj));
-		write_c_string(buf, printcharfun);
+		write_fmt_str(printcharfun, "at %ld in ", (long)marker_position(obj));
 		print_internal(marker->buffer->name, printcharfun, 0);
 	}
-	sprintf(buf, " 0x%lx>", (long)marker);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, " 0x%lx>", (long)marker);
 }
 
 static int marker_equal(Lisp_Object obj1, Lisp_Object obj2, int depth)
