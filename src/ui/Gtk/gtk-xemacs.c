@@ -383,9 +383,10 @@ static gint gtk_xemacs_expose(GtkWidget * widget, GdkEventExpose * event)
 
 Lisp_Object xemacs_gtk_convert_color(GdkColor * c, GtkWidget * w)
 {
-	char color_buf[255];
+	char color_buf[16];
 
-	sprintf(color_buf, "#%04x%04x%04x", c->red, c->green, c->blue);
-
+	int sz = snprintf(color_buf, sizeof(color_buf), 
+			  "#%04x%04x%04x", c->red, c->green, c->blue);
+	assert(sz >= 0 && sz < sizeof(color_buf));
 	return (build_string(color_buf));
 }
