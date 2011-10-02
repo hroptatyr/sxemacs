@@ -467,11 +467,13 @@ static void init_x_prop_symbols(void)
 static Lisp_Object color_to_string(Widget w, unsigned long pixel)
 {
 	char buf[255];
+	int sz;
 
 	XColor color;
 	color.pixel = pixel;
 	XQueryColor(XtDisplay(w), w->core.colormap, &color);
-	sprintf(buf, "#%04x%04x%04x", color.red, color.green, color.blue);
+	sz = snprintf(buf, sizeof(buf), "#%04x%04x%04x", color.red, color.green, color.blue);
+	assert(sz>=0 && sz < sizeof(buf));
 	return build_string(buf);
 }
 
@@ -682,12 +684,13 @@ static void
 x_set_initial_frame_size(struct frame *f, int flags, int x, int y,
 			 unsigned int w, unsigned int h)
 {
-	char shell_geom[255];
-	int xval, yval;
-	char xsign, ysign;
-	char uspos = !!(flags & (XValue | YValue));
-	char ussize = !!(flags & (WidthValue | HeightValue));
+	char  shell_geom[255];
+	int   xval, yval;
+	char  xsign, ysign;
+	char  uspos = !!(flags & (XValue | YValue));
+	char  ussize = !!(flags & (WidthValue | HeightValue));
 	char *temp;
+	int   sz = 0;
 
 	/* assign the correct size to the EmacsFrame widget ... */
 	EmacsFrameSetCharSize(FRAME_X_TEXT_WIDGET(f), w, h);
@@ -699,13 +702,16 @@ x_set_initial_frame_size(struct frame *f, int flags, int x, int y,
 							  '+');
 
 	if (uspos && ussize)
-		sprintf(shell_geom, "=%dx%d%c%d%c%d", w, h, xsign, xval, ysign,
-			yval);
+		sz = snprintf(shell_geom, sizeof(shell_geom),
+			      "=%dx%d%c%d%c%d", w, h, xsign, xval, ysign,
+			      yval);
 	else if (uspos)
-		sprintf(shell_geom, "=%c%d%c%d", xsign, xval, ysign, yval);
+		sz = snprintf(shell_geom, sizeof(shell_geom),
+			      "=%c%d%c%d", xsign, xval, ysign, yval);
 	else if (ussize)
-		sprintf(shell_geom, "=%dx%d", w, h);
-
+		sz = snprintf(shell_geom, sizeof(shell_geom),
+			      "=%dx%d", w, h);
+	assert(sz >=0 && sz < sizeof(shell_geom));
 	if (uspos || ussize) {
 		temp = xnew_atomic_array(char, 1 + strlen(shell_geom));
 		strcpy(temp, shell_geom);
@@ -2098,7 +2104,8 @@ a string.
 	char str[255];
 	struct frame *f = decode_x_frame(frame);
 
-	sprintf(str, "%lu", XtWindow(FRAME_X_TEXT_WIDGET(f)));
+	int sz = snprintf(str, sizeof(str), "%lu", XtWindow(FRAME_X_TEXT_WIDGET(f)));
+	assert(sz >= 0 && sz < sizeof(str));
 	return build_string(str);
 }
 
