@@ -1097,8 +1097,10 @@ x_keysym_to_emacs_keysym(KeySym keysym, int simple_p)
 				return KEYSYM("SunF37");
 			default: {
 				char buf[64];
-				snprintf(buf, countof(buf)-1,
-					 "unknown-keysym-0x%X", (int)keysym);
+				int sz = snprintf(buf, sizeof(buf),
+						  "unknown-keysym-0x%X", 
+						  (int)keysym);
+				assert(sz>=0 && sz < sizeof(buf));
 				return KEYSYM(buf);
 			}
 			}
@@ -2659,10 +2661,11 @@ static void describe_event_window(Window window, Display * display)
 		stderr_out(" %s", w->core.widget_class->core_class.class_name);
 	f = x_any_window_to_frame(get_device_from_display(display), window);
 	if (f) {
-		size_t sz = XSTRING_LENGTH(f->name) + 4;
-		char buf[sz];
+		int len = XSTRING_LENGTH(f->name) + 4;
+		char buf[len];
 		
-		sz = snprintf(buf, sz-1, " \"%s\"", XSTRING_DATA(f->name));
+		int sz = snprintf(buf, len, " \"%s\"", XSTRING_DATA(f->name));
+		assert(sz >= 0 && sz < len);
 		write_string_to_stdio_stream(stderr, 0, (Bufbyte*)buf, 0,
 					     sz, Qterminal, 1);
 	}
@@ -2726,9 +2729,10 @@ static void describe_event(XEvent * event)
 	char buf[100];
 	struct device *d = get_device_from_display(event->xany.display);
 
-	snprintf(buf, sizeof(buf),
-		 "%s%s", x_event_name(event->type),
-		 event->xany.send_event ? " (send)" : "");
+	int sz = snprintf(buf, sizeof(buf),
+			  "%s%s", x_event_name(event->type),
+			  event->xany.send_event ? " (send)" : "");
+	assert(sz >= 0 && sz < sizeof(buf));
 	stderr_out("%-30s", buf);
 	switch (event->type) {
 	case FocusIn:
