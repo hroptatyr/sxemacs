@@ -149,7 +149,7 @@ Lisp_Object
 unparesseuxify_doc_string(int fd, EMACS_INT position,
 			  char *name_nonreloc, Lisp_Object name_reloc)
 {
-	char buf[512 * 32 + 1];
+	char buf[512 * 8 + 1];
 	char *buffer = buf;
 	int buffer_size = sizeof(buf)-1;
 	char *from, *to;
@@ -708,18 +708,22 @@ when doc strings are referred to in the dumped Emacs.
 	if (!NILP(Vdoc_directory)) {
 		int alloca_sz = XSTRING_LENGTH(filename)
 			+ XSTRING_LENGTH(Vdoc_directory) + 1 + 9;
+		int prt;
 		CHECK_STRING(Vdoc_directory);
 		name = (char *)alloca(alloca_sz);
-		snprintf(name, alloca_sz, "%s%s",
-			 (char*)XSTRING_DATA(Vdoc_directory),
-			 (char*)XSTRING_DATA(filename))
+		prt = snprintf(name, alloca_sz, "%s%s",
+			       (char*)XSTRING_DATA(Vdoc_directory),
+			       (char*)XSTRING_DATA(filename));
+		assert(prt>=0 && prt < alloca_sz);
 	} else
 #endif				/* CANNOT_DUMP */
 	{
 		int alloca_sz = 2 + XSTRING_LENGTH(filename) + 3 + 9 + 1;
+		int prt;
 		name = (char *)alloca(alloca_sz);
-		snprintf(name, alloca_sz, "./%s",
+		prt = snprintf(name, alloca_sz, "./%s",
 			 (char*)XSTRING_DATA(filename));
+		assert(prt >= 0 && prt < alloca_sz);
 	}
 
 	fd = open(name, O_RDONLY | OPEN_BINARY, 0);
