@@ -411,8 +411,10 @@ static Lisp_Object gtk_keysym_to_emacs_keysym(guint keysym, int simple_p)
 			default:
 				{
 					char buf[64];
-					sprintf(buf, "unknown-keysym-0x%X",
-						(int)keysym);
+					int sz = snprintf(buf, sizeof(buf),
+							  "unknown-keysym-0x%X",
+							  (int)keysym);
+					assert(sz >= 0 && sz < sizeof(buf));
 					return KEYSYM(buf);
 				}
 			}
