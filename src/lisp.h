@@ -641,9 +641,9 @@ PRIVATE_EXTERNAL_LIST_LOOP_6 (elt, list, len, tail,			\
 				     tortoise, suspicion_length)	\
   for (tortoise = hare = list, len = 0;					\
 									\
-       (CONSP (hare) ? ((elt = XCAR (hare)), 1) :			\
+       (CONSP (hare) ? ((void)(elt = XCAR (hare)), 1) :			\
 	(NILP (hare) ? 0 :						\
-	 (signal_malformed_list_error (list), 0)));			\
+	 ((void)signal_malformed_list_error (list), 0)));		\
 									\
        hare = XCDR (hare),						\
 	 (void)								\
@@ -3254,6 +3254,9 @@ void temp_output_buffer_show(Lisp_Object, Lisp_Object);
  * Note: stream should be defaulted before calling
  *  (eg Qnil means stdout, not Vstandard_output, etc) */
 void write_c_string(const char *, Lisp_Object);
+void write_hex_ptr(void*, Lisp_Object);
+int write_fmt_str(Lisp_Object,const char *,...) PRINTF_ARGS(2, 3);
+int write_fmt_string(Lisp_Object,const char *,...) PRINTF_ARGS(2, 3);
 /* Same goes for this function. */
 void write_string_1(const Bufbyte *, Bytecount, Lisp_Object);
 void print_cons(Lisp_Object, Lisp_Object, int);
