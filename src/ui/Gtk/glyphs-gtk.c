@@ -377,13 +377,11 @@ gtk_print_image_instance(struct Lisp_Image_Instance *p,
 	case IMAGE_MONO_PIXMAP:
 	case IMAGE_COLOR_PIXMAP:
 	case IMAGE_POINTER:
-		sprintf(buf, " (0x%lx",
-			(unsigned long)IMAGE_INSTANCE_GTK_PIXMAP(p));
-		write_c_string(buf, printcharfun);
+		write_fmt_str(printcharfun, " (0x%lx",
+			      (unsigned long)IMAGE_INSTANCE_GTK_PIXMAP(p));
 		if (IMAGE_INSTANCE_GTK_MASK(p)) {
-			sprintf(buf, "/0x%lx",
-				(unsigned long)IMAGE_INSTANCE_GTK_MASK(p));
-			write_c_string(buf, printcharfun);
+			write_fmt_str(printcharfun, "/0x%lx",
+				      (unsigned long)IMAGE_INSTANCE_GTK_MASK(p));
 		}
 		write_c_string(")", printcharfun);
 		break;
@@ -1277,14 +1275,16 @@ gtk_xpm_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 				    !ascii_strcasecmp(color_symbols[i].name,
 						      image.colorTable[j].
 						      symbolic)) {
+					int maxLen = 16, sz;
 					image.colorTable[j].c_color =
-					    xmalloc(16);
+					    xmalloc(maxLen);
 
-					sprintf(image.colorTable[j].c_color,
-						"#%.4x%.4x%.4x",
-						color_symbols[i].color.red,
-						color_symbols[i].color.green,
-						color_symbols[i].color.blue);
+					sz = snprintf(image.colorTable[j].c_color,
+						      maxLen, "#%.4x%.4x%.4x",
+						      color_symbols[i].color.red,
+						      color_symbols[i].color.green,
+						      color_symbols[i].color.blue);
+					assert( sz >= 0 && sz < maxLen);
 				}
 			}
 		}
