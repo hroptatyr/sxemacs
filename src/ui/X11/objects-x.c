@@ -284,11 +284,9 @@ static void
 x_print_color_instance(Lisp_Color_Instance * c,
 		       Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[256];
 	XColor color = COLOR_INSTANCE_X_COLOR(c);
-	snprintf(buf, sizeof(buf), " %ld=(%X,%X,%X)",
-		color.pixel, color.red, color.green, color.blue);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, " %ld=(%X,%X,%X)",
+		      color.pixel, color.red, color.green, color.blue);
 }
 
 static void x_finalize_color_instance(Lisp_Color_Instance * c)
@@ -452,9 +450,7 @@ static void
 x_print_font_instance(Lisp_Font_Instance * f,
 		      Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[64];
-	snprintf(buf, sizeof(buf), " 0x%lx", (unsigned long)FONT_INSTANCE_X_FONT(f)->fid);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, " 0x%lx", (unsigned long)FONT_INSTANCE_X_FONT(f)->fid);
 }
 
 static void x_finalize_font_instance(Lisp_Font_Instance * f)
@@ -595,7 +591,7 @@ static Extbyte *truename_via_random_props(Display * dpy, XFontStruct * font)
 	unsigned long avg_width;
 	Extbyte *registry, *encoding;
 	Extbyte composed_name[2048];
-	int ok = 0;
+	int ok = 0, sz;
 	Extbyte *result;
 
 #define get_string(atom,var)				\
@@ -629,10 +625,11 @@ static Extbyte *truename_via_random_props(Display * dpy, XFontStruct * font)
 #undef get_number
 #undef get_string
 
-	snprintf(composed_name,sizeof(composed_name),
-		"-%s-%s-%s-%s-%s-%s-%ld-%ld-%ld-%ld-%s-%ld-%s-%s",
-		foundry, family, weight, slant, setwidth, add_style, pixel,
-		point, res_x, res_y, spacing, avg_width, registry, encoding);
+	sz = snprintf(composed_name,sizeof(composed_name),
+		      "-%s-%s-%s-%s-%s-%s-%ld-%ld-%ld-%ld-%s-%ld-%s-%s",
+		      foundry, family, weight, slant, setwidth, add_style, pixel,
+		      point, res_x, res_y, spacing, avg_width, registry, encoding);
+	assert(sz>=0 && sz < sizeof(composed_name));
 	ok = 1;
 
       FAIL:
@@ -640,7 +637,6 @@ static Extbyte *truename_via_random_props(Display * dpy, XFontStruct * font)
 		int L = strlen(composed_name) + 1;
 		result = (Extbyte *)xmalloc_atomic(L);
 		strncpy(result, composed_name, L);
-                result[L-1]='\0';
 	} else
 		result = 0;
 
