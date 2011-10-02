@@ -1082,10 +1082,12 @@ a string.
 	char str[255];
 	struct frame *f = decode_gtk_frame(frame);
 
-	/* Arrrrggghhh... this defeats the whole purpose of using Gdk... do we really need this? */
-	sprintf(str, "%lu",
-		GDK_WINDOW_XWINDOW(GET_GTK_WIDGET_WINDOW
-				   (FRAME_GTK_TEXT_WIDGET(f))));
+	/* Arrrrggghhh... this defeats the whole purpose of using
+	   Gdk... do we really need this? */
+	int sz = snprintf(str, sizeof(str), "%lu",
+			  GDK_WINDOW_XWINDOW(GET_GTK_WIDGET_WINDOW
+					     (FRAME_GTK_TEXT_WIDGET(f))));
+	assert(sz >= 0 && sz < sizeof(str));
 	return build_string(str);
 }
 #endif
