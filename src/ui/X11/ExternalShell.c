@@ -404,6 +404,7 @@ static void GetGeometry(Widget W, Widget child)
 	if (w->shell.geometry != NULL) {
 		char def_geom[128];
 		int width, height;
+		int sz;
 
 		x = w->core.x;
 		y = w->core.y;
@@ -411,7 +412,8 @@ static void GetGeometry(Widget W, Widget child)
 		height = w->core.height;
 		hints.flags = 0;
 
-		snprintf(def_geom, sizeof(def_geom), "%dx%d+%d+%d", width, height, x, y);
+		sz = snprintf(def_geom, sizeof(def_geom), "%dx%d+%d+%d", width, height, x, y);
+		assert(sz >= 0 && sz < sizeof(def_geom))
 		flag = XWMGeometry(XtDisplay(W),
 				   XScreenNumberOfScreen(XtScreen(W)),
 				   w->shell.geometry, def_geom,
