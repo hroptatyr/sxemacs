@@ -2992,10 +2992,10 @@ we_didnt_get_an_event:
 }
 
 void
-emacs_Xt_event_handler(Widget UNUSED(wid),
-		       XtPointer UNUSED(closure),
+emacs_Xt_event_handler(Widget SXE_UNUSED(wid),
+		       XtPointer SXE_UNUSED(closure),
 		       XEvent *event,
-		       Boolean *UNUSED(continue_to_dispatch))
+		       Boolean * SXE_UNUSED(continue_to_dispatch))
 {
 	Lisp_Object emacs_event = Fmake_event(Qnil, Qnil);
 

@@ -352,7 +352,7 @@ the playback volume.
 
 /* media thread sentinels */
 static Lisp_Object
-exec_sentinel_unwind(Lisp_Object UNUSED(datum))
+exec_sentinel_unwind(Lisp_Object SXE_UNUSED(datum))
 {
 	return Qnil;
 }
@@ -958,7 +958,7 @@ audio_device_equal(Lisp_Object obj1, Lisp_Object obj2, int depth)
 }
 
 static unsigned long
-audio_device_hash (Lisp_Object obj, int UNUSED(depth))
+audio_device_hash (Lisp_Object obj, int SXE_UNUSED(depth))
 {
 	return (unsigned long)obj;
 	/* audio_device_hashcode(XAUDIO_DEVICE_DATA(obj)); */

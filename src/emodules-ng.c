@@ -667,7 +667,7 @@ emodng_load_unwind(Lisp_Object unw)
 static Lisp_Object
 emodng_unload_unwind(Lisp_Object unw)
 {
-	lt_dlhandle UNUSED(mod_handle) = get_dynacat(unw);
+	lt_dlhandle SXE_UNUSED(mod_handle) = get_dynacat(unw);
 
 	/* if the handle's still vivid, drown him */
 	return Qnil;

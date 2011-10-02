@@ -527,10 +527,10 @@ __nnaughts(printf_spec_t s, int nlen, int tlen)
 }
 
 static inline int
-__bsize_smZ(printf_spec_t s, EMACS_INT UNUSED(Z))
+__bsize_smZ(printf_spec_t s, EMACS_INT SXE_UNUSED(Z))
 	__attribute__((always_inline));
 static inline int
-__bsize_smZ(printf_spec_t s, EMACS_INT UNUSED(Z))
+__bsize_smZ(printf_spec_t s, EMACS_INT SXE_UNUSED(Z))
 {
 	return 32 + s->minwidth + sizeof(long int) *
 		/* if binary representation is wanted, use an

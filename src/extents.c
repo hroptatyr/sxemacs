@@ -1073,13 +1073,13 @@ finalize_extent_info(void *header, int for_disksave)
 #else  /* BDWGC */
 /* just define dummies */
 static Lisp_Object
-mark_extent_info(Lisp_Object UNUSED(obj))
+mark_extent_info(Lisp_Object SXE_UNUSED(obj))
 {
 	return Qnil;
 }
 
 static void
-finalize_extent_info(void *UNUSED(header), int UNUSED(for_disksave))
+finalize_extent_info(void *SXE_UNUSED(header), int SXE_UNUSED(for_disksave))
 {
 	return;
 }

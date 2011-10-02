@@ -445,7 +445,7 @@ lcrec_register_finaliser(struct lcrecord_header *b)
 	void **bar = NULL;
 	auto void lcrec_finaliser();
 
-	auto void lcrec_finaliser(void *obj, void *UNUSED(data))
+	auto void lcrec_finaliser(void *obj, void *SXE_UNUSED(data))
 	{
 		const struct lrecord_implementation *lrimp =
 			XRECORD_LHEADER_IMPLEMENTATION(obj);
@@ -465,7 +465,7 @@ lcrec_register_finaliser(struct lcrecord_header *b)
 }
 #else  /* !BDWGC */
 static inline void
-lcrec_register_finaliser(struct lcrecord_header *UNUSED(b))
+lcrec_register_finaliser(struct lcrecord_header *SXE_UNUSED(b))
 {
 	return;
 }
@@ -968,7 +968,7 @@ cons_register_finaliser(Lisp_Cons *s)
 	void **bar = NULL;
 	auto void cons_finaliser();
 
-	auto void cons_finaliser(void *obj, void *UNUSED(data))
+	auto void cons_finaliser(void *obj, void *SXE_UNUSED(data))
 	{
 		/* cleanse */
 		memset(obj, 0, sizeof(Lisp_Cons));
@@ -981,7 +981,7 @@ cons_register_finaliser(Lisp_Cons *s)
 }
 #else  /* !BDWGC */
 static inline void
-cons_register_finaliser(Lisp_Cons *UNUSED(b))
+cons_register_finaliser(Lisp_Cons *SXE_UNUSED(b))
 {
 	return;
 }
@@ -1275,7 +1275,7 @@ bigz_register_finaliser(Lisp_Bigz *b)
 	void **bar = NULL;
 	auto void bigz_finaliser();
 
-	auto void bigz_finaliser(void *obj, void *UNUSED(data))
+	auto void bigz_finaliser(void *obj, void *SXE_UNUSED(data))
 	{
 		bigz_fini(bigz_data((Lisp_Bigz*)obj));
 		/* cleanse */
@@ -1288,7 +1288,7 @@ bigz_register_finaliser(Lisp_Bigz *b)
 }
 #else  /* !BDWGC */
 static inline void
-bigz_register_finaliser(Lisp_Bigz *UNUSED(b))
+bigz_register_finaliser(Lisp_Bigz *SXE_UNUSED(b))
 {
 	return;
 }
@@ -1340,7 +1340,7 @@ bigq_register_finaliser(Lisp_Bigq *b)
 	void **bar = NULL;
 	auto void bigq_finaliser();
 
-	auto void bigq_finaliser(void *obj, void *UNUSED(data))
+	auto void bigq_finaliser(void *obj, void *SXE_UNUSED(data))
 	{
 		bigq_fini(bigq_data((Lisp_Bigq*)obj));
 		/* cleanse */
@@ -1353,7 +1353,7 @@ bigq_register_finaliser(Lisp_Bigq *b)
 }
 #else  /* !BDWGC */
 static inline void
-bigq_register_finaliser(Lisp_Bigq *UNUSED(b))
+bigq_register_finaliser(Lisp_Bigq *SXE_UNUSED(b))
 {
 	return;
 }
@@ -1417,7 +1417,7 @@ bigf_register_finaliser(Lisp_Bigf *b)
 	void **bar = NULL;
 	auto void bigf_finaliser();
 
-	auto void bigf_finaliser(void *obj, void *UNUSED(data))
+	auto void bigf_finaliser(void *obj, void *SXE_UNUSED(data))
 	{
 		bigf_fini(bigf_data((Lisp_Bigf*)obj));
 		/* cleanse */
@@ -1430,7 +1430,7 @@ bigf_register_finaliser(Lisp_Bigf *b)
 }
 #else  /* !BDWGC */
 static inline void
-bigf_register_finaliser(Lisp_Bigf *UNUSED(b))
+bigf_register_finaliser(Lisp_Bigf *SXE_UNUSED(b))
 {
 	return;
 }
@@ -1484,7 +1484,7 @@ bigfr_register_finaliser(Lisp_Bigfr *b)
 	void **bar = NULL;
 	auto void bigfr_finaliser();
 
-	auto void bigfr_finaliser(void *obj, void *UNUSED(data))
+	auto void bigfr_finaliser(void *obj, void *SXE_UNUSED(data))
 	{
 		bigfr_fini(bigfr_data((Lisp_Bigfr*)obj));
 		/* cleanse */
@@ -1497,7 +1497,7 @@ bigfr_register_finaliser(Lisp_Bigfr *b)
 }
 #else  /* !BDWGC */
 static inline void
-bigfr_register_finaliser(Lisp_Bigfr *UNUSED(b))
+bigfr_register_finaliser(Lisp_Bigfr *SXE_UNUSED(b))
 {
 	return;
 }
@@ -1571,7 +1571,7 @@ bigg_register_finaliser(Lisp_Bigg *b)
 	void **bar = NULL;
 	auto void bigg_finaliser();
 
-	auto void bigg_finaliser(void *obj, void *UNUSED(data))
+	auto void bigg_finaliser(void *obj, void *SXE_UNUSED(data))
 	{
 		bigg_fini(bigg_data((Lisp_Bigg*)obj));
 		/* cleanse */
@@ -1584,7 +1584,7 @@ bigg_register_finaliser(Lisp_Bigg *b)
 }
 #else  /* !BDWGC */
 static inline void
-bigg_register_finaliser(Lisp_Bigg *UNUSED(b))
+bigg_register_finaliser(Lisp_Bigg *SXE_UNUSED(b))
 {
 	return;
 }
@@ -1650,7 +1650,7 @@ bigc_register_finaliser(Lisp_Bigc *b)
 	void **bar = NULL;
 	auto void bigc_finaliser();
 
-	auto void bigc_finaliser(void *obj, void *UNUSED(data))
+	auto void bigc_finaliser(void *obj, void *SXE_UNUSED(data))
 	{
 		bigc_fini(bigc_data((Lisp_Bigc*)obj));
 		/* cleanse */
@@ -1663,7 +1663,7 @@ bigc_register_finaliser(Lisp_Bigc *b)
 }
 #else  /* !BDWGC */
 static inline void
-bigc_register_finaliser(Lisp_Bigc *UNUSED(b))
+bigc_register_finaliser(Lisp_Bigc *SXE_UNUSED(b))
 {
 	return;
 }
@@ -1737,7 +1737,7 @@ quatern_register_finaliser(Lisp_Quatern *b)
 	void **bar = NULL;
 	auto void quatern_finaliser();
 
-	auto void quatern_finaliser(void *obj, void *UNUSED(data))
+	auto void quatern_finaliser(void *obj, void *SXE_UNUSED(data))
 	{
 		quatern_fini(quatern_data((Lisp_Quatern*)obj));
 		/* cleanse */
@@ -1750,7 +1750,7 @@ quatern_register_finaliser(Lisp_Quatern *b)
 }
 #else  /* !BDWGC */
 static inline void
-quatern_register_finaliser(Lisp_Quatern *UNUSED(b))
+quatern_register_finaliser(Lisp_Quatern *SXE_UNUSED(b))
 {
 	return;
 }
@@ -1859,7 +1859,7 @@ dynacat_register_finaliser(dynacat_t b)
 	void **bar = NULL;
 	auto void dynacat_finaliser();
 
-	auto void dynacat_finaliser(void *obj, void *UNUSED(data))
+	auto void dynacat_finaliser(void *obj, void *SXE_UNUSED(data))
 	{
 		SXE_DEBUG_GC("calling dynacat finaliser on %p\n", obj);
 		dynacat_fini(obj);
@@ -1874,7 +1874,7 @@ dynacat_register_finaliser(dynacat_t b)
 }
 #else  /* !BDWGC */
 static inline void
-dynacat_register_finaliser(dynacat_t UNUSED(b))
+dynacat_register_finaliser(dynacat_t SXE_UNUSED(b))
 {
 	return;
 }
@@ -2627,7 +2627,7 @@ string_register_finaliser(Lisp_String *s)
 	void **bar = NULL;
 	auto void string_finaliser();
 
-	auto void string_finaliser(void *obj, void *UNUSED(data))
+	auto void string_finaliser(void *obj, void *SXE_UNUSED(data))
 	{
 		if (!(((Lisp_String*)obj)->lheader.c_readonly)) {
 			yfree(((Lisp_String*)obj)->data);
@@ -2643,7 +2643,7 @@ string_register_finaliser(Lisp_String *s)
 }
 #else  /* !BDWGC */
 static inline void
-string_register_finaliser(Lisp_String *UNUSED(b))
+string_register_finaliser(Lisp_String *SXE_UNUSED(b))
 {
 	return;
 }
@@ -3365,7 +3365,7 @@ allocate_managed_lcrecord(Lisp_Object lcrecord_list)
 }
 
 void
-free_managed_lcrecord(Lisp_Object UNUSED(lcrecord_list), Lisp_Object lcrecord)
+free_managed_lcrecord(Lisp_Object SXE_UNUSED(lcrecord_list), Lisp_Object lcrecord)
 {
 	struct free_lcrecord_header *free_header =
 		(struct free_lcrecord_header*)XPNTR(lcrecord);
@@ -3601,7 +3601,7 @@ void staticpro_nodump(Lisp_Object * varaddress)
    seen yet, recursively mark all the references contained in it. */
 
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
-void mark_object(Lisp_Object UNUSED(obj))
+void mark_object(Lisp_Object SXE_UNUSED(obj))
 {
 	return;
 }
@@ -5286,7 +5286,7 @@ my_malloc(size_t bar)
 /* We need the next two functions since GNU MP insists on giving us an extra
    parameter. */
 static void*
-my_realloc (void *ptr, size_t UNUSED(old_size), size_t new_size)
+my_realloc (void *ptr, size_t SXE_UNUSED(old_size), size_t new_size)
 {
 	void *foo = xrealloc(ptr, new_size);
 	SXE_DEBUG_GC_GMP("gmp realloc :was %p  :is %p\n", ptr, foo);

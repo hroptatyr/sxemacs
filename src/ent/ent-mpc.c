@@ -33,7 +33,7 @@ static ase_nullary_operation_f Qent_mpc_zero, Qent_mpc_one;
 
 
 static void
-bigc_print (Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
+bigc_print (Lisp_Object obj, Lisp_Object printcharfun, int SXE_UNUSED(escapeflag))
 {
 	Bufbyte *fstr = bigc_to_string(XBIGC_DATA(obj), 10);
 	write_c_string((char*)fstr, printcharfun);
@@ -43,19 +43,19 @@ bigc_print (Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
 }
 
 static int
-bigc_equal (Lisp_Object obj1, Lisp_Object obj2, int UNUSED(depth))
+bigc_equal (Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
 {
 	return bigc_eq(XBIGC_DATA(obj1), XBIGC_DATA(obj2));
 }
 
 static unsigned long
-bigc_hash (Lisp_Object obj, int UNUSED(depth))
+bigc_hash (Lisp_Object obj, int SXE_UNUSED(depth))
 {
 	return bigc_hashcode(XBIGC_DATA(obj));
 }
 
 static Lisp_Object
-bigc_mark (Lisp_Object UNUSED(obj))
+bigc_mark (Lisp_Object SXE_UNUSED(obj))
 {
 	return Qnil;
 }
@@ -301,7 +301,7 @@ ent_mpc_onep(Lisp_Object l)
 }
 
 static int
-ent_mpc_unitp(Lisp_Object UNUSED(unused))
+ent_mpc_unitp(Lisp_Object SXE_UNUSED(unused))
 {
 	return 1;
 }
@@ -600,7 +600,7 @@ ent_inv_BIGC_T(Lisp_Object r)
 }
 
 static Lisp_Object
-ent_rem_BIGC_T(Lisp_Object UNUSED(unused), Lisp_Object r)
+ent_rem_BIGC_T(Lisp_Object SXE_UNUSED(unused), Lisp_Object r)
 {
 	return Qent_mpc_zero;
 }

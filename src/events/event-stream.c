@@ -3763,6 +3763,8 @@ static int is_scrollbar_event(Lisp_Object event)
 #ifdef HAVE_SCROLLBARS
 	Lisp_Object fun;
 
+	if (!EVENTP(event))
+		return 0;
 	if (XEVENT(event)->event_type != misc_user_event)
 		return 0;
 	fun = XEVENT(event)->event.misc.function;

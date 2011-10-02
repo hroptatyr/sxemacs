@@ -162,7 +162,7 @@ dllist_hash(Lisp_Object obj, int depth)
 
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
 static void
-finalise_dllist(void *header, int UNUSED(for_disksave))
+finalise_dllist(void *header, int SXE_UNUSED(for_disksave))
 {
 	SXE_DEBUG_GC("finalising dllist %p\n", header);
 
@@ -176,7 +176,7 @@ finalise_dllist(void *header, int UNUSED(for_disksave))
 #else  /* !BDWGC */
 
 static void
-finalise_dllist(void *header, int UNUSED(for_disksave))
+finalise_dllist(void *header, int SXE_UNUSED(for_disksave))
 {
 	volatile dllist_t dllist = header;
 

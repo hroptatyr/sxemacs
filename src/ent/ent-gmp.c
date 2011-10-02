@@ -49,7 +49,7 @@ static ase_nullary_operation_f Qent_mpf_zero, Qent_mpf_one;
 
 /************************* Big Rational Integers ****************************/
 static void
-bigz_print (Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
+bigz_print (Lisp_Object obj, Lisp_Object printcharfun, int SXE_UNUSED(escapeflag))
 {
 	Bufbyte *bstr;
 
@@ -60,13 +60,13 @@ bigz_print (Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
 }
 
 static int
-bigz_equal (Lisp_Object obj1, Lisp_Object obj2, int UNUSED(depth))
+bigz_equal (Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
 {
 	return bigz_eql(XBIGZ_DATA(obj1), XBIGZ_DATA(obj2));
 }
 
 static unsigned long
-bigz_hash (Lisp_Object obj, int UNUSED(depth))
+bigz_hash (Lisp_Object obj, int SXE_UNUSED(depth))
 {
 	return (unsigned long)bigz_hashcode(XBIGZ_DATA(obj));
 }
@@ -84,7 +84,7 @@ DEFINE_BASIC_LRECORD_IMPLEMENTATION("bigz", bigz,
 
 /************************** Rational Integer Fractions **********************/
 static void
-bigq_print (Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
+bigq_print (Lisp_Object obj, Lisp_Object printcharfun, int SXE_UNUSED(escapeflag))
 {
 	Bufbyte *rstr;
 
@@ -96,13 +96,13 @@ bigq_print (Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
 }
 
 static int
-bigq_equal (Lisp_Object obj1, Lisp_Object obj2, int UNUSED(depth))
+bigq_equal (Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
 {
 	return bigq_eql(XBIGQ_DATA(obj1), XBIGQ_DATA(obj2));
 }
 
 static unsigned long
-bigq_hash (Lisp_Object obj, int UNUSED(depth))
+bigq_hash (Lisp_Object obj, int SXE_UNUSED(depth))
 {
 	return bigq_hashcode(XBIGQ_DATA(obj));
 }
@@ -120,7 +120,7 @@ DEFINE_BASIC_LRECORD_IMPLEMENTATION("bigq", bigq,
 
 /********************************** Bigfs ***********************************/
 static void
-bigf_print(Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
+bigf_print(Lisp_Object obj, Lisp_Object printcharfun, int SXE_UNUSED(escapeflag))
 {
 	Bufbyte *fstr = bigf_to_string(XBIGF_DATA(obj), 10);
 	write_c_string((char*)fstr, printcharfun);
@@ -130,13 +130,13 @@ bigf_print(Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
 }
 
 static int
-bigf_equal(Lisp_Object obj1, Lisp_Object obj2, int UNUSED(depth))
+bigf_equal(Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
 {
 	return bigf_eq(XBIGF_DATA(obj1), XBIGF_DATA(obj2));
 }
 
 static unsigned long
-bigf_hash(Lisp_Object obj, int UNUSED(depth))
+bigf_hash(Lisp_Object obj, int SXE_UNUSED(depth))
 {
 	return bigf_hashcode(XBIGF_DATA(obj));
 }
@@ -838,27 +838,27 @@ ent_ne_float_bigzq(Lisp_Object l, Lisp_Object r)
 
 
 static Lisp_Object
-_ent_lift_INT_T_BIGZ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_INT_T_BIGZ_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	return make_bigz(ent_int(number));
 }
 
 static Lisp_Object
-_ent_lift_BIGZ_T_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_BIGZ_T_INT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	return make_int(bigz_to_long(XBIGZ_DATA(number)));
 }
 
 #ifdef HAVE_FPFLOAT
 static Lisp_Object
-_ent_lift_FLOAT_T_BIGZ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_FLOAT_T_BIGZ_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	bigz_set_fpfloat(ent_scratch_bigz, XFLOAT_DATA(number));
 	return make_bigz_bz(ent_scratch_bigz);
 }
 
 static Lisp_Object
-_ent_lift_BIGZ_T_FLOAT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_BIGZ_T_FLOAT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	/* can result in an indef object */
 	return make_float(bigz_to_fpfloat(XBIGZ_DATA(number)));
@@ -1397,13 +1397,13 @@ ent_ne_bigz_bigq(Lisp_Object l, Lisp_Object r)
 
 
 static inline Lisp_Object
-_ent_lift_INT_T_BIGQ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_INT_T_BIGQ_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	return make_bigq(ent_int(number), 1UL);
 }
 
 static inline Lisp_Object
-_ent_lift_BIGQ_T_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_BIGQ_T_INT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	bigz_div(ent_scratch_bigz,
 		 XBIGQ_NUMERATOR(number),
@@ -1412,14 +1412,14 @@ _ent_lift_BIGQ_T_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
 }
 
 static inline Lisp_Object
-_ent_lift_BIGZ_T_BIGQ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_BIGZ_T_BIGQ_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	bigz_set_long(ent_scratch_bigz, 1L);
 	return make_bigq_bz(XBIGZ_DATA(number), ent_scratch_bigz);
 }
 
 static inline Lisp_Object
-_ent_lift_BIGQ_T_BIGZ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_BIGQ_T_BIGZ_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	bigz_div(ent_scratch_bigz,
 		 XBIGQ_NUMERATOR(number),
@@ -1429,14 +1429,14 @@ _ent_lift_BIGQ_T_BIGZ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
 
 #ifdef HAVE_FPFLOAT
 static inline Lisp_Object
-_ent_lift_FLOAT_T_BIGQ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_FLOAT_T_BIGQ_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	bigq_set_fpfloat(ent_scratch_bigq, XFLOAT_DATA(number));
 	return make_bigq_bq(ent_scratch_bigq);
 }
 
 static inline Lisp_Object
-_ent_lift_BIGQ_T_FLOAT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_BIGQ_T_FLOAT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	/* can result in an indef object */
 	return make_float(bigq_to_fpfloat(XBIGQ_DATA(number)));
@@ -2153,7 +2153,7 @@ ent_lift_INT_T_BIGF_T(Lisp_Object number, ent_lift_args_t la)
 }
 
 static Lisp_Object
-ent_lift_BIGF_T_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+ent_lift_BIGF_T_INT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	return make_int(bigf_to_long(XBIGF_DATA(number)));
 }
@@ -2169,7 +2169,7 @@ ent_lift_BIGZ_T_BIGF_T(Lisp_Object number, ent_lift_args_t la)
 }
 
 static Lisp_Object
-ent_lift_BIGF_T_BIGZ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+ent_lift_BIGF_T_BIGZ_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	bigz_set_bigf(ent_scratch_bigz, XBIGF_DATA(number));
 	return make_bigz_bz(ent_scratch_bigz);
@@ -2186,7 +2186,7 @@ ent_lift_BIGQ_T_BIGF_T(Lisp_Object number, ent_lift_args_t la)
 }
 
 static Lisp_Object
-ent_lift_BIGF_T_BIGQ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+ent_lift_BIGF_T_BIGQ_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	bigq_set_bigf(ent_scratch_bigq, XBIGF_DATA(number));
 	return make_bigq_bq(ent_scratch_bigq);
@@ -2204,7 +2204,7 @@ ent_lift_FLOAT_T_BIGF_T(Lisp_Object number, ent_lift_args_t la)
 }
 
 static Lisp_Object
-ent_lift_BIGF_T_FLOAT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+ent_lift_BIGF_T_FLOAT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	/* can result in an indef object */
 	return make_float(bigf_to_fpfloat(XBIGF_DATA(number)));

@@ -187,13 +187,13 @@ ent_ne_int(Lisp_Object l, Lisp_Object r)
 
 
 static inline Lisp_Object
-ent_lift_INT_T_INT_T(Lisp_Object number, unsigned long precision)
+ent_lift_INT_T_INT_T(Lisp_Object number, unsigned long SXE_UNUSED(precision))
 {
 	return make_int(ent_int(number));
 }
 
 static inline Lisp_Object
-ent_lift_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(unused))
+ent_lift_INT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(unused))
 {
 	return make_int(ent_int(number));
 }

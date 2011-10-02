@@ -38,7 +38,7 @@ static ase_nullary_operation_f Qent_mpfr_zero, Qent_mpfr_one;
 
 
 static void
-bigfr_print(Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(unused))
+bigfr_print(Lisp_Object obj, Lisp_Object printcharfun, int SXE_UNUSED(unused))
 {
 	Bufbyte *fstr = bigfr_to_string(XBIGFR_DATA(obj), 10);
 	write_c_string((char*)fstr, printcharfun);
@@ -1116,7 +1116,7 @@ _ent_lift_INT_T_BIGFR_T(Lisp_Object number, ent_lift_args_t la)
 }
 
 static inline Lisp_Object
-_ent_lift_BIGFR_T_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_BIGFR_T_INT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	return make_int(bigfr_to_long(XBIGFR_DATA(number)));
 }
@@ -1133,7 +1133,7 @@ _ent_lift_BIGZ_T_BIGFR_T(Lisp_Object number, ent_lift_args_t la)
 }
 
 static inline Lisp_Object
-_ent_lift_BIGFR_T_BIGZ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_BIGFR_T_BIGZ_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	bigz_set_bigfr(ent_scratch_bigz, XBIGFR_DATA(number));
 	return make_bigz_bz(ent_scratch_bigz);
@@ -1186,7 +1186,7 @@ _ent_lift_FLOAT_T_BIGFR_T(Lisp_Object number, ent_lift_args_t la)
 }
 
 static inline Lisp_Object
-_ent_lift_BIGFR_T_FLOAT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+_ent_lift_BIGFR_T_FLOAT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	return make_float(bigfr_to_fpfloat(XBIGFR_DATA(number)));
 }

@@ -856,7 +856,7 @@ __nfam_perm_sum_size_a(size_t *sum, size_t *var, size_t *perm, size_t *midxsz,
  * dedicated subroutines for 2-combs and 3-combs because they are soooo easy
  */
 static void
-__2comb(Lisp_Object tgts[], size_t UNUSED(tlen),
+__2comb(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
 	Lisp_Object supp[], size_t slen,
 	Lisp_Object fun, glue_f gf)
 {
@@ -901,7 +901,7 @@ __2comb(Lisp_Object tgts[], size_t UNUSED(tlen),
 }
 
 static void
-__3comb(Lisp_Object tgts[], size_t UNUSED(tlen),
+__3comb(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
 	Lisp_Object supp[], size_t slen,
 	Lisp_Object fun, glue_f gf)
 {
@@ -1046,14 +1046,14 @@ __ncomb(Lisp_Object tgts[], size_t tlen,
  * as (), a, a^2, b, a*b, a^2*b where a is a 3-cycle and b a 2-cycle.
  */
 static inline size_t
-__2perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
-	    Lisp_Object supp[], size_t UNUSED(slen),
+__2perm_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	    Lisp_Object supp[], size_t SXE_UNUSED(slen),
 	    Lisp_Object fun,
 	    size_t offset)
 	__attribute__((always_inline));
 static inline size_t
-__2perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
-	    Lisp_Object supp[], size_t UNUSED(slen),
+__2perm_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	    Lisp_Object supp[], size_t SXE_UNUSED(slen),
 	    Lisp_Object fun,
 	    size_t offset)
 {
@@ -1075,14 +1075,14 @@ __2perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 }
 
 static inline size_t
-__2perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
-		 Lisp_Object supp[], size_t UNUSED(slen),
+__2perm_glue_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+		 Lisp_Object supp[], size_t SXE_UNUSED(slen),
 		 Lisp_Object fun, glue_f gf,
 		 size_t offset)
 	__attribute__((always_inline));
 static inline size_t
-__2perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
-		 Lisp_Object supp[], size_t UNUSED(slen),
+__2perm_glue_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+		 Lisp_Object supp[], size_t SXE_UNUSED(slen),
 		 Lisp_Object fun, glue_f gf,
 		 size_t offset)
 {
@@ -1108,14 +1108,14 @@ __2perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 }
 
 static inline size_t
-__2perm_glue(Lisp_Object tgts[], size_t UNUSED(tlen),
-	     Lisp_Object supp[], size_t UNUSED(slen),
+__2perm_glue(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	     Lisp_Object supp[], size_t SXE_UNUSED(slen),
 	     glue_f gf,
 	     size_t offset)
 	__attribute__((always_inline));
 static inline size_t
-__2perm_glue(Lisp_Object tgts[], size_t UNUSED(tlen),
-	     Lisp_Object supp[], size_t UNUSED(slen),
+__2perm_glue(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	     Lisp_Object supp[], size_t SXE_UNUSED(slen),
 	     glue_f gf,
 	     size_t offset)
 {
@@ -1195,14 +1195,14 @@ _comb_2perm(Lisp_Object *tgts, size_t tlen,
 
 /* 3 perms */
 static inline size_t
-__3perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
-	    Lisp_Object supp[], size_t UNUSED(slen),
+__3perm_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	    Lisp_Object supp[], size_t SXE_UNUSED(slen),
 	    Lisp_Object fun,
 	    size_t offset)
 	__attribute__((always_inline));
 static inline size_t
-__3perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
-	    Lisp_Object supp[], size_t UNUSED(slen),
+__3perm_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	    Lisp_Object supp[], size_t SXE_UNUSED(slen),
 	    Lisp_Object fun,
 	    size_t offset)
 {
@@ -1256,14 +1256,14 @@ __3perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 }
 
 static inline size_t
-__3perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
-		 Lisp_Object supp[], size_t UNUSED(slen),
+__3perm_glue_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+		 Lisp_Object supp[], size_t SXE_UNUSED(slen),
 		 Lisp_Object fun, glue_f gf,
 		 size_t offset)
 	__attribute__((always_inline));
 static inline size_t
-__3perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
-		 Lisp_Object supp[], size_t UNUSED(slen),
+__3perm_glue_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+		 Lisp_Object supp[], size_t SXE_UNUSED(slen),
 		 Lisp_Object fun, glue_f gf,
 		 size_t offset)
 {
@@ -1332,14 +1332,14 @@ __3perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 }
 
 static inline size_t
-__3perm_glue(Lisp_Object tgts[], size_t UNUSED(tlen),
-	     Lisp_Object supp[], size_t UNUSED(slen),
+__3perm_glue(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	     Lisp_Object supp[], size_t SXE_UNUSED(slen),
 	     glue_f gf,
 	     size_t offset)
 	__attribute__((always_inline));
 static inline size_t
-__3perm_glue(Lisp_Object tgts[], size_t UNUSED(tlen),
-	     Lisp_Object supp[], size_t UNUSED(slen),
+__3perm_glue(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	     Lisp_Object supp[], size_t SXE_UNUSED(slen),
 	     glue_f gf,
 	     size_t offset)
 {

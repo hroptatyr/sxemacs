@@ -160,7 +160,7 @@ EXFUN(Fdelete_audio_device, 1);	/* too dangerous at the moment */
 	static int _name##_record(audio_job_t);				\
 	/* we currently have no record support so define a nop here */	\
 	static int							\
-	_name##_record(audio_job_t UNUSED(foo))				\
+	_name##_record(audio_job_t SXE_UNUSED(foo))			\
 	{								\
 		return 0;						\
 	}

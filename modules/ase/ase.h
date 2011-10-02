@@ -58,13 +58,13 @@
 #define EMOD_ASE_DEBUG_GC(args...)	EMOD_ASE_DEBUG("[GC]: " args)
 #define EMOD_ASE_CRITICAL(args...)	__EMOD_ASE_DEBUG__("CRITICAL: " args)
 
-#ifdef UNUSED
+#ifdef SXE_UNUSED
 #elif defined(__GNUC__)
-#  define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#  define SXE_UNUSED(x) UNUSED_ ## x __attribute__((unused))
 #elif defined(__LCLINT__)
-#  define UNUSED(x) /*@unused@*/ x
+#  define SXE_UNUSED(x) /*@unused@*/ x
 #else
-#  define UNUSED(x) x
+#  define SXE_UNUSED(x) x
 #endif
 
 typedef long int Z_t;

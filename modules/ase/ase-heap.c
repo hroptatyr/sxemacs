@@ -188,7 +188,7 @@ _ase_yheap_prnt(ase_yheap_t a, Lisp_Object pcf)
 }
 
 static void
-ase_yheap_prnt(Lisp_Object obj, Lisp_Object pcf, int UNUSED(foo))
+ase_yheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
 {
 	char siz[128];
 	ase_yheap_t h = XASE_YHEAP(obj);
@@ -227,7 +227,7 @@ _ase_dheap_prnt(ase_dheap_t h, Lisp_Object pcf)
 }
 
 static void
-ase_dheap_prnt(Lisp_Object obj, Lisp_Object pcf, int UNUSED(foo))
+ase_dheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
 {
 	char siz[128];
 	ase_dheap_t h = XASE_DHEAP(obj);
@@ -269,7 +269,7 @@ _ase_wheap_prnt(ase_wheap_t h, Lisp_Object pcf)
 }
 
 static void
-ase_wheap_prnt(Lisp_Object obj, Lisp_Object pcf, int UNUSED(foo))
+ase_wheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
 {
 	char siz[128];
 	ase_wheap_t h = XASE_WHEAP(obj);
@@ -334,7 +334,7 @@ _ase_yheap_fini(ase_yheap_t h)
 }
 
 static void
-ase_yheap_fini(Lisp_Object obj, int UNUSED(foo))
+ase_yheap_fini(Lisp_Object obj, int SXE_UNUSED(foo))
 {
 	ase_yheap_t h = XASE_YHEAP(obj);
 
@@ -365,7 +365,7 @@ _ase_dheap_fini(ase_dheap_t h)
 }
 
 static void
-ase_dheap_fini(Lisp_Object obj, int UNUSED(foo))
+ase_dheap_fini(Lisp_Object obj, int SXE_UNUSED(foo))
 {
 	ase_dheap_t h = XASE_DHEAP(obj);
 
@@ -397,7 +397,7 @@ _ase_wheap_fini(ase_wheap_t h)
 }
 
 static void
-ase_wheap_fini(Lisp_Object obj, int UNUSED(foo))
+ase_wheap_fini(Lisp_Object obj, int SXE_UNUSED(foo))
 {
 	ase_wheap_t h = XASE_WHEAP(obj);
 
@@ -912,10 +912,10 @@ ase_wheap_cell_rbit_neg(ase_wheap_t h, int c)
 }
 
 static inline int
-ase_wheap_cell_mother(ase_wheap_t UNUSED(h), int c)
+ase_wheap_cell_mother(ase_wheap_t SXE_UNUSED(h), int c)
 	__attribute__((always_inline));
 static inline int
-ase_wheap_cell_mother(ase_wheap_t UNUSED(h), int c)
+ase_wheap_cell_mother(ase_wheap_t SXE_UNUSED(h), int c)
 {
 	return (c >> 1);
 }

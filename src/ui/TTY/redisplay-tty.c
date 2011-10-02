@@ -380,7 +380,7 @@ tty_output_display_block(struct window *w, struct display_line *dl, int block,
  Draw a vertical divider down the right side of the given window.
  ****************************************************************************/
 static void
-tty_output_vertical_divider(struct window *w, int UNUSED(clearp))
+tty_output_vertical_divider(struct window *w, int SXE_UNUSED(clearp))
 {
 	/* Divider width can either be 0 or 1 on TTYs */
 	if (window_divider_width(w)) {
@@ -1212,7 +1212,7 @@ int init_tty_for_redisplay(struct device *d, char *terminal_type)
 		   color, too. */
 
 		char foobuf[500];
-		char *UNUSED(fooptr) = foobuf;
+		char *SXE_UNUSED(fooptr) = foobuf;
 		int colors = tgetnum("Co");
 		int pairs =  tgetnum("pa");
 		if ((TTY_SD(c).set_aback_ && TTY_SD(c).set_afore_) ||

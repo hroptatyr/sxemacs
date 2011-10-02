@@ -123,7 +123,7 @@ ase_permutation_fini(Lisp_Object obj, int unused)
 }
 
 static inline void
-_ase_permutation_mark(ase_permutation_t UNUSED(unused))
+_ase_permutation_mark(ase_permutation_t SXE_UNUSED(unused))
 {
 	return;
 }

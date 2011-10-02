@@ -57,7 +57,7 @@ float_equal(Lisp_Object obj1, Lisp_Object obj2, int depth)
 }
 
 static inline unsigned long
-float_hash(Lisp_Object obj, int UNUSED(depth))
+float_hash(Lisp_Object obj, int SXE_UNUSED(depth))
 {
 #if 1
 	fpfloat h = 22.0/7.0*ent_float(obj);
@@ -383,7 +383,7 @@ ent_lift_INT_T_FLOAT_T(Lisp_Object number, unsigned long precision)
 	return make_float(ent_int(number));
 }
 static inline Lisp_Object
-_ent_lift_INT_T_FLOAT_T(Lisp_Object number, ent_lift_args_t UNUSED(unused))
+_ent_lift_INT_T_FLOAT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(unused))
 {
 	return make_float(ent_int(number));
 }
@@ -394,7 +394,7 @@ ent_lift_FLOAT_T_INT_T(Lisp_Object number, unsigned long precision)
 	return Ftruncate(number);
 }
 static inline Lisp_Object
-_ent_lift_FLOAT_T_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(unused))
+_ent_lift_FLOAT_T_INT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(unused))
 {
 	return Ftruncate(number);
 }
