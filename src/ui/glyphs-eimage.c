@@ -1193,11 +1193,7 @@ static toff_t tiff_memory_size(thandle_t data)
 }
 
 struct tiff_error_struct {
-#ifdef HAVE_VSNPRINTF
 	char err_str[256];
-#else
-	char err_str[1024];	/* return the error string */
-#endif
 	jmp_buf setjmp_buffer;	/* for return to caller */
 };
 
@@ -1209,15 +1205,14 @@ static struct tiff_error_struct tiff_err_data;
 
 static void tiff_error_func(const char *module, const char *fmt, ...)
 {
+	int n;
 	va_list vargs;
 
 	va_start(vargs, fmt);
-#ifdef HAVE_VSNPRINTF
-	vsnprintf(tiff_err_data.err_str, 255, fmt, vargs);
-#else
-	/* pray this doesn't overflow... */
-	vsprintf(tiff_err_data.err_str, fmt, vargs);
-#endif
+
+	n = vsnprintf(tiff_err_data.err_str, sizeof(tiff_err_data.err_str), fmt, vargs);
+	assert(n>=0 && n <  sizeof(tiff_err_data.err_str));
+
 	va_end(vargs);
 	/* return to setjmp point */
 	longjmp(tiff_err_data.setjmp_buffer, 1);
@@ -1226,18 +1221,13 @@ static void tiff_error_func(const char *module, const char *fmt, ...)
 static void tiff_warning_func(const char *module, const char *fmt, ...)
 {
 	va_list vargs;
-#ifdef HAVE_VSNPRINTF
 	char warn_str[256];
-#else
-	char warn_str[1024];
-#endif
+	int n;
 
 	va_start(vargs, fmt);
-#ifdef HAVE_VSNPRINTF
-	vsnprintf(warn_str, 255, fmt, vargs);
-#else
-	vsprintf(warn_str, fmt, vargs);
-#endif
+
+	n = vsnprintf(warn_str, sizeof(warn_str), fmt, vargs);
+	assert(n>=0 && n < sizeof(warn_str));
 	va_end(vargs);
 	warn_when_safe(Qtiff, Qinfo, "%s - %s", module, warn_str);
 }
