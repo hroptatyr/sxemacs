@@ -237,7 +237,7 @@ static int lstream_type_count;
 
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
 static void
-lstr_finaliser(void *obj, void *UNUSED(data))
+lstr_finaliser(void *obj, void *SXE_UNUSED(data))
 {
 	finalize_lstream(obj, 0);
 	return;

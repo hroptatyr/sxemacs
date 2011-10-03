@@ -188,7 +188,7 @@ worker_job_mark(Lisp_Object obj)
 }
 
 static void
-worker_job_finalise(void *header, int UNUSED(for_disksave))
+worker_job_finalise(void *header, int SXE_UNUSED(for_disksave))
 {
 	work_handler_t hdl;
 	worker_job_t job = header;
@@ -232,13 +232,13 @@ worker_job_print(Lisp_Object obj, Lisp_Object pcf, int escapeflag)
 }
 
 static int
-worker_job_equal(Lisp_Object obj1, Lisp_Object obj2, int UNUSED(depth))
+worker_job_equal(Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
 {
 	return (obj1 == obj2);
 }
 
 static unsigned long
-worker_job_hash (Lisp_Object obj, int UNUSED(depth))
+worker_job_hash (Lisp_Object obj, int SXE_UNUSED(depth))
 {
 	return (unsigned long)obj;
 }

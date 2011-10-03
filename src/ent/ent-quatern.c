@@ -34,7 +34,7 @@ static ase_nullary_operation_f Qent_quatern_zero, Qent_quatern_one;
 
 
 static void
-quatern_print(Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
+quatern_print(Lisp_Object obj, Lisp_Object printcharfun, int SXE_UNUSED(escapeflag))
 {
 	Bufbyte *fstr = quatern_to_string(XQUATERN_DATA(obj), 10);
 	write_c_string((char*)fstr, printcharfun);
@@ -44,19 +44,19 @@ quatern_print(Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
 }
 
 static int
-quatern_equal(Lisp_Object obj1, Lisp_Object obj2, int UNUSED(depth))
+quatern_equal(Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
 {
 	return quatern_eql(XQUATERN_DATA(obj1), XQUATERN_DATA(obj2));
 }
 
 static unsigned long
-quatern_hash(Lisp_Object obj, int UNUSED(depth))
+quatern_hash(Lisp_Object obj, int SXE_UNUSED(depth))
 {
 	return quatern_hashcode(XQUATERN_DATA(obj));
 }
 
 static Lisp_Object
-quatern_mark(Lisp_Object UNUSED(obj))
+quatern_mark(Lisp_Object SXE_UNUSED(obj))
 {
 	return Qnil;
 }
@@ -1042,7 +1042,7 @@ ent_valne_QUATERN_T(Lisp_Object l, Lisp_Object r)
 
 /* lifts */
 static inline Lisp_Object
-ent_lift_all_QUATERN_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+ent_lift_all_QUATERN_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	number = ent_lift(number, BIGZ_T, NULL);
 	bigz_set_long(ent_scratch_bigz, 0L);
@@ -1054,7 +1054,7 @@ ent_lift_all_QUATERN_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
 
 #ifdef HAVE_MPZ
 static Lisp_Object
-ent_lift_COMPLEX_QUATERN_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+ent_lift_COMPLEX_QUATERN_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	Lisp_Object z, i;
 

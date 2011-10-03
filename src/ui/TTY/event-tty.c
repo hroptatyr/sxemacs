@@ -50,7 +50,7 @@ static struct event_stream *tty_event_stream;
    absolute. */
 static struct low_level_timeout *tty_timer_queue;
 static Lisp_Object dispatch_event_queue;
-static Lisp_Object UNUSED(dispatch_event_queue_tail);
+static Lisp_Object SXE_UNUSED(dispatch_event_queue_tail);
 static int last_quit_check_signal_tick_count;
 
 static int

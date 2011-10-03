@@ -333,12 +333,8 @@ compile_pattern(Lisp_Object pattern,
 static void
 compre_prfun(Lisp_Object obj, Lisp_Object pcfun, int escflag)
 {
-	char buf[18];
-	write_c_string("#<compiled regexp ", pcfun);
-	snprintf(buf, 17, "%lx>",
-		 (long unsigned int)((COMPRE_GET(obj))->buffer));
-	write_c_string(buf, pcfun);
-
+	write_fmt_str(pcfun, "#<compiled regexp %lx", 
+		      (long unsigned int)((COMPRE_GET(obj))->buffer));
 	if (escflag);
 }
 
@@ -750,6 +746,8 @@ fast_string_match(Lisp_Object regexp, const Bufbyte * nonreloc,
 
 	fixup_internal_substring(nonreloc, reloc, offset, &length);
 
+
+	
 	if (!NILP(reloc)) {
 		if (no_quit) {
 			newnonreloc = XSTRING_DATA(reloc);
@@ -759,6 +757,13 @@ fast_string_match(Lisp_Object regexp, const Bufbyte * nonreloc,
 			   serious rewriting of re_search(). */
 			/* yeah, let's rewrite this bugger, the warning
 			   hereafter is inevitable too */
+			if ( length < 0)
+				/* By this point
+				   fixup_internal_substring should
+				   have updated length, if it didn't
+				   return with failure...
+				*/
+				return -1;
 			newnonreloc = alloca(length);
 			memcpy((void*)newnonreloc, (void*)XSTRING_DATA(reloc), length);
 		}

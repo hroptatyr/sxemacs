@@ -881,7 +881,6 @@ static Lisp_Object mark_image_instance(Lisp_Object obj)
 static void
 print_image_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[100];
 	Lisp_Image_Instance *ii = XIMAGE_INSTANCE(obj);
 
 	if (print_readably)
@@ -920,32 +919,25 @@ print_image_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 				print_internal(filename, printcharfun, 1);
 		}
 		if (IMAGE_INSTANCE_PIXMAP_DEPTH(ii) > 1)
-			sprintf(buf, " %dx%dx%d",
-				IMAGE_INSTANCE_PIXMAP_WIDTH(ii),
-				IMAGE_INSTANCE_PIXMAP_HEIGHT(ii),
-				IMAGE_INSTANCE_PIXMAP_DEPTH(ii));
+			write_fmt_str(printcharfun, " %dx%dx%d",
+				      IMAGE_INSTANCE_PIXMAP_WIDTH(ii),
+				      IMAGE_INSTANCE_PIXMAP_HEIGHT(ii),
+				      IMAGE_INSTANCE_PIXMAP_DEPTH(ii));
 		else
-			sprintf(buf, " %dx%d", IMAGE_INSTANCE_PIXMAP_WIDTH(ii),
-				IMAGE_INSTANCE_PIXMAP_HEIGHT(ii));
-		write_c_string(buf, printcharfun);
+			write_fmt_str(printcharfun, " %dx%d", IMAGE_INSTANCE_PIXMAP_WIDTH(ii),
+				      IMAGE_INSTANCE_PIXMAP_HEIGHT(ii));
 		if (!NILP(IMAGE_INSTANCE_PIXMAP_HOTSPOT_X(ii)) ||
 		    !NILP(IMAGE_INSTANCE_PIXMAP_HOTSPOT_Y(ii))) {
 			write_c_string(" @", printcharfun);
 			if (!NILP(IMAGE_INSTANCE_PIXMAP_HOTSPOT_X(ii))) {
-				long_to_string(buf,
-					       XINT
-					       (IMAGE_INSTANCE_PIXMAP_HOTSPOT_X
-						(ii)));
-				write_c_string(buf, printcharfun);
+				write_fmt_str(printcharfun,"%ld",
+					      XINT(IMAGE_INSTANCE_PIXMAP_HOTSPOT_X(ii)));
 			} else
 				write_c_string("??", printcharfun);
 			write_c_string(",", printcharfun);
 			if (!NILP(IMAGE_INSTANCE_PIXMAP_HOTSPOT_Y(ii))) {
-				long_to_string(buf,
-					       XINT
-					       (IMAGE_INSTANCE_PIXMAP_HOTSPOT_Y
-						(ii)));
-				write_c_string(buf, printcharfun);
+				write_fmt_str(printcharfun,"%ld",
+					      XINT(IMAGE_INSTANCE_PIXMAP_HOTSPOT_Y(ii)));
 			} else
 				write_c_string("??", printcharfun);
 		}
@@ -986,9 +978,8 @@ print_image_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		/* fallthrough */
 
 	case IMAGE_SUBWINDOW:
-		sprintf(buf, " %dx%d", IMAGE_INSTANCE_WIDTH(ii),
-			IMAGE_INSTANCE_HEIGHT(ii));
-		write_c_string(buf, printcharfun);
+		write_fmt_str(printcharfun, " %dx%d", IMAGE_INSTANCE_WIDTH(ii),
+			      IMAGE_INSTANCE_HEIGHT(ii));
 
 		/* This is stolen from frame.c.  Subwindows are strange in that they
 		   are specific to a particular frame so we want to print in their
@@ -1006,8 +997,7 @@ print_image_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 					       printcharfun);
 		}
 		write_c_string("-frame>", printcharfun);
-		sprintf(buf, " 0x%p", IMAGE_INSTANCE_SUBWINDOW_ID(ii));
-		write_c_string(buf, printcharfun);
+		write_hex_ptr( IMAGE_INSTANCE_SUBWINDOW_ID(ii), printcharfun);
 
 		break;
 
@@ -1018,8 +1008,7 @@ print_image_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 
 	MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain), print_image_instance,
 		      (ii, printcharfun, escapeflag));
-	sprintf(buf, " 0x%x>", ii->header.uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, " 0x%x>", ii->header.uid);
 }
 
 static void finalize_image_instance(void *header, int for_disksave)
@@ -3476,8 +3465,6 @@ static void
 print_glyph(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	Lisp_Glyph *glyph = XGLYPH(obj);
-	char buf[20];
-
 	if (print_readably)
 		error("printing unreadable object #<glyph 0x%x>",
 		      glyph->header.uid);
@@ -3486,8 +3473,7 @@ print_glyph(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	print_internal(Fglyph_type(obj), printcharfun, 0);
 	write_c_string(") ", printcharfun);
 	print_internal(glyph->image, printcharfun, 1);
-	sprintf(buf, "0x%x>", glyph->header.uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, "0x%x>", glyph->header.uid);
 }
 
 /* Glyphs are equal if all of their display attributes are equal.  We

@@ -99,7 +99,7 @@ void Blocktype_allocf(void *bbb)
 #endif	/* BDWGC */
 
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
-void Blocktype_free(void *UNUSED(bbb), void *el)
+void Blocktype_free(void *SXE_UNUSED(bbb), void *el)
 {
 	xfree(el);
 	return;

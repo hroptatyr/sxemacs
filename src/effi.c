@@ -1389,7 +1389,7 @@ ARGS should be foreign data objects or pointers to these.
 Lisp_Object Qffi_jobp;
 #define EFFI_DEBUG_JOB(args...)
 static Lisp_Object
-exec_sentinel_unwind(Lisp_Object UNUSED(datum))
+exec_sentinel_unwind(Lisp_Object SXE_UNUSED(datum))
 {
 	return Qnil;
 }

@@ -570,8 +570,10 @@ file-coding or Mule support.  Otherwise, they are ignored.
 	UNGCPRO;
 
 	md5_finish_ctx(&ctx, digest);
-	for (i = 0; i < 16; i++)
-		sprintf((char *)(thehash + (i * 2)), "%02x", digest[i]);
+	for (i = 0; i < 16; i++) {
+		int n = snprintf((char *)(thehash + (i * 2)), 3, "%02x", digest[i]);
+		assert(n>=0 && n < 3);
+	}
 
 	return make_string(thehash, 32);
 }

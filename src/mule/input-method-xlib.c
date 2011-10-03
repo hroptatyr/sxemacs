@@ -706,12 +706,15 @@ EmacsXtCvtStringToXIMStyles (
 		char buf[strlen(fromVal->addr) +
 			 strlen(DefaultXIMStyles) +
 			 100];
+		ssize_t len;
 		XrmValue new_from;
 		XtAppContext the_app_con = XtDisplayToApplicationContext (dpy);
 
-		sprintf(buf, "Cannot convert string \"%s\" to type XIMStyles.\n"
-			"Using default string \"%s\" instead.\n",
-			fromVal->addr, DefaultXIMStyles);
+		len = snprintf(buf, sizeof(buf), 
+			       "Cannot convert string \"%s\" to type XIMStyles.\n"
+			       "Using default string \"%s\" instead.\n",
+			       fromVal->addr, DefaultXIMStyles);
+		assert(len >= 0 && len < sizeof(buf));
 		XtAppWarningMsg(the_app_con, "wrongParameters",
 				"cvtStringToXIMStyle",
 				"XtToolkitError",
@@ -936,9 +939,15 @@ void
 describe_Window (Window win)
 {
 	char xwincmd[128];
-	sprintf (xwincmd, "xwininfo -id 0x%x >&2; xwininfo -events -id 0x%x >&2",
-		 (int) win, (int) win);
-	system (xwincmd);
+	if ( snprintf (xwincmd, sizeof(xwincmd), 
+		       "xwininfo -id 0x%x >&2; xwininfo -events -id 0x%x >&2",
+		       (int) win, (int) win) < sizeof(xwincmd) ) {
+		int exit_code = system (xwincmd);
+		if (  exit_code != 0 )
+			stderr_out("command '%s' failed with exit code %d", 
+				   xwincmd, exit_code);
+	} else
+		stderr_out("Could not generate wininfo command line");
 }
 
 void

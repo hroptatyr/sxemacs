@@ -1361,7 +1361,7 @@ ase_resclass_unitp(Lisp_Object elm)
 
 #if defined HAVE_MPZ && (defined WITH_GMP || defined WITH_MP)
 static Lisp_Object
-ase_resclass_lift_to_BIGZ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+ase_resclass_lift_to_BIGZ_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	if (XASE_RESC_ELM_SMALLP(number)) {
 		make_bigz(XASE_RESC_ELM_SDATA(number));
@@ -1373,7 +1373,7 @@ ase_resclass_lift_to_BIGZ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
 #endif
 
 static Lisp_Object
-ase_resclass_lift_to_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+ase_resclass_lift_to_INT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	if (XASE_RESC_ELM_SMALLP(number)) {
 		return make_int(XASE_RESC_ELM_SDATA(number));
@@ -1387,7 +1387,7 @@ ase_resclass_lift_to_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
 
 #ifdef HAVE_FPFLOAT
 static Lisp_Object
-ase_resclass_lift_to_FLOAT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+ase_resclass_lift_to_FLOAT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	if (XASE_RESC_ELM_SMALLP(number)) {
 		return make_float(XASE_RESC_ELM_SDATA(number));

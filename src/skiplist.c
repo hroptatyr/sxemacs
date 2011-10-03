@@ -417,7 +417,7 @@ print_skiplist(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 }
 
 static void
-finalise_skiplist(void *header, int UNUSED(for_disksave))
+finalise_skiplist(void *header, int SXE_UNUSED(for_disksave))
 {
 	skiplist_t sl = header;
 

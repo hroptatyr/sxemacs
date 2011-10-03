@@ -289,20 +289,15 @@ static Lisp_Object mark_ffi_data(Lisp_Object obj)
 static void
 ffi_object_printer(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[200];
-
 	if (print_readably)
 		error("printing unreadable object #<ffi %p",
 		      XFFI(obj)->function_ptr);
 
 	write_c_string("#<ffi ", printcharfun);
 	print_internal(XFFI(obj)->function_name, printcharfun, 1);
-	if (XFFI(obj)->n_args) {
-		sprintf(buf, " %d arguments", XFFI(obj)->n_args);
-		write_c_string(buf, printcharfun);
-	}
-	sprintf(buf, " %p>", (void *)XFFI(obj)->function_ptr);
-	write_c_string(buf, printcharfun);
+	if (XFFI(obj)->n_args)
+		write_fmt_str(printcharfun, " %d arguments", XFFI(obj)->n_args);
+	write_fmt_str(printcharfun, " %p>", (void *)XFFI(obj)->function_ptr);
 }
 
 DEFINE_LRECORD_IMPLEMENTATION("ffi", emacs_ffi,
@@ -747,8 +742,6 @@ static void
 emacs_gtk_object_printer(Lisp_Object obj, Lisp_Object printcharfun,
 			 int escapeflag)
 {
-	char buf[200];
-
 	if (print_readably)
 		error("printing unreadable object #<GtkObject %p>",
 		      XGTK_OBJECT(obj)->object);
@@ -760,8 +753,7 @@ emacs_gtk_object_printer(Lisp_Object obj, Lisp_Object printcharfun,
 			       printcharfun);
 	else
 		write_c_string("dead", printcharfun);
-	sprintf(buf, ") %p>", (void *)XGTK_OBJECT(obj)->object);
-	write_c_string(buf, printcharfun);
+	write_fmt_st(printcharfun, ") %p>", (void *)XGTK_OBJECT(obj)->object);
 }
 
 static Lisp_Object object_getprop(Lisp_Object obj, Lisp_Object prop)
@@ -1046,17 +1038,14 @@ static void
 emacs_gtk_boxed_printer(Lisp_Object obj, Lisp_Object printcharfun,
 			int escapeflag)
 {
-	char buf[200];
-
 	if (print_readably)
 		error("printing unreadable object #<GtkBoxed %p>",
 		      XGTK_BOXED(obj)->object);
 
-	write_c_string("#<GtkBoxed (", printcharfun);
-	write_c_string(gtk_type_name(XGTK_BOXED(obj)->object_type),
-		       printcharfun);
-	sprintf(buf, ") %p>", (void *)XGTK_BOXED(obj)->object);
-	write_c_string(buf, printcharfun);
+	write_fmt_string(printcharfun, "#<GtkBoxed (%s) %p>",
+			 gtk_type_name(XGTK_BOXED(obj)->object_type),
+			 (void *)XGTK_BOXED(obj)->object);
+
 }
 
 static int emacs_gtk_boxed_equality(Lisp_Object o1, Lisp_Object o2, int depth)

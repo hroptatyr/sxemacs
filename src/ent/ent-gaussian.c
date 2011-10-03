@@ -36,7 +36,7 @@ static ase_nullary_operation_f Qent_gaussian_zero, Qent_gaussian_one;
 
 
 static void
-bigg_print(Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
+bigg_print(Lisp_Object obj, Lisp_Object printcharfun, int SXE_UNUSED(escapeflag))
 {
 	Bufbyte *fstr = bigg_to_string(XBIGG_DATA(obj), 10);
 	write_c_string((char*)fstr, printcharfun);
@@ -852,7 +852,7 @@ ent_valne_BIGG_T(Lisp_Object l, Lisp_Object r)
 
 
 static Lisp_Object
-ent_lift_all_BIGG_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+ent_lift_all_BIGG_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	number = ent_lift(number, BIGZ_T, NULL);
 	bigg_set_bigz(ent_scratch_bigg, XBIGZ_DATA(number));
@@ -862,7 +862,7 @@ ent_lift_all_BIGG_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
 #if defined HAVE_MPC && defined WITH_MPC ||	\
 	defined HAVE_PSEUC && defined WITH_PSEUC
 static Lisp_Object
-ent_lift_BIGC_T_BIGG_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+ent_lift_BIGC_T_BIGG_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
 {
 	Lisp_Object re, im;
 

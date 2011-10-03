@@ -55,9 +55,9 @@ struct ent_lift_args_s {
 extern ase_lift_f ase_lifttable[ASE_OPTABLE_SIZE][ASE_OPTABLE_SIZE];
 
 extern Lisp_Object
-ase_lift_undefined(Lisp_Object number, ent_lift_args_t UNUSED(unused));
+ase_lift_undefined(Lisp_Object number, ent_lift_args_t SXE_UNUSED(unused));
 extern Lisp_Object
-ase_lift_trivial(Lisp_Object number, ent_lift_args_t UNUSED(unused));
+ase_lift_trivial(Lisp_Object number, ent_lift_args_t SXE_UNUSED(unused));
 
 extern_inline void
 ent_lift_register(ase_object_type_t t1, ase_object_type_t t2, ase_lift_f lf);

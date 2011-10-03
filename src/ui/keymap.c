@@ -836,7 +836,7 @@ of all keymaps.
 }
 
 static Lisp_Object
-traverse_keymaps_noop(Lisp_Object UNUSED(keymap), void *UNUSED(arg))
+traverse_keymaps_noop(Lisp_Object SXE_UNUSED(keymap), void *SXE_UNUSED(arg))
 {
 	return Qnil;
 }
@@ -921,7 +921,7 @@ when reading a key-sequence to be looked-up in this keymap.
 }
 
 static Lisp_Object
-keymap_prompt_mapper(Lisp_Object keymap, void *UNUSED(arg))
+keymap_prompt_mapper(Lisp_Object keymap, void *SXE_UNUSED(arg))
 {
 	return XKEYMAP(keymap)->prompt;
 }

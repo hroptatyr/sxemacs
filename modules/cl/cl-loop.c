@@ -367,7 +367,7 @@ cl_loop_accu_clause_mark(Lisp_Object obj)
 }
 
 static void
-cl_loop_generic_finaliser(Lisp_Object obj, int UNUSED(for_disksave))
+cl_loop_generic_finaliser(Lisp_Object obj, int SXE_UNUSED(for_disksave))
 {
 	void *free_me = get_dynacat(obj);
 
@@ -1353,7 +1353,7 @@ cl_loop_perform_accu_epi()
 	__attribute__((always_inline));
 static inline Lisp_Object
 cl_loop_perform_accu_epi(
-	Lisp_Object *UNUSED(result), cl_loop_accu_clause_t *ac)
+	Lisp_Object *SXE_UNUSED(result), cl_loop_accu_clause_t *ac)
 {
 	return symbol_value(XSYMBOL(ac->into));
 }
@@ -1363,7 +1363,7 @@ cl_loop_perform_finally_epi()
 	__attribute__((always_inline));
 static inline Lisp_Object
 cl_loop_perform_finally_epi(
-	Lisp_Object *UNUSED(result), cl_loop_inifinret_clause_t *rc)
+	Lisp_Object *SXE_UNUSED(result), cl_loop_inifinret_clause_t *rc)
 {
 	return Feval(rc->form);
 }

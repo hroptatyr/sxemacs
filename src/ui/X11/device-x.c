@@ -618,7 +618,7 @@ read_locale_specific_resources(Display *dpy)
 }
 #else  /* !LWLIB_MENUBARS_MOTIF && !HAVE_XIM && !USE_XFONTSET */
 static inline void
-read_locale_specific_resources(Display *UNUSED(dpy))
+read_locale_specific_resources(Display *SXE_UNUSED(dpy))
 {
 	return;
 }

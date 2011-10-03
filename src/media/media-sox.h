@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #ifndef INCLUDED_media_sox_h_
 #define INCLUDED_media_sox_h_
 
-#include "media.h"
 #if defined HAVE_SOX_H
 # include <sox.h>
 #elif defined HAVE_ST_H
@@ -77,6 +76,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #else
 # error "Nope! I'm upset now.  Gimme a pint or another to cheer me up!"
 #endif
+
+#include "media.h"
 
 #if defined SOX_SIZE_BYTE &&			\
 	defined SOX_SIZE_8BIT &&		\

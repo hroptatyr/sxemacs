@@ -392,7 +392,6 @@ static void
 print_charset(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	Lisp_Charset *cs = XCHARSET(obj);
-	char buf[200];
 
 	if (print_readably)
 		error("printing unreadable object #<charset %s 0x%x>",
@@ -407,17 +406,15 @@ print_charset(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	print_internal(CHARSET_LONG_NAME(cs), printcharfun, 1);
 	write_c_string(" ", printcharfun);
 	print_internal(CHARSET_DOC_STRING(cs), printcharfun, 1);
-	sprintf(buf, " %s %s cols=%d g%d final='%c' reg=",
-		CHARSET_TYPE(cs) == CHARSET_TYPE_94 ? "94" :
-		CHARSET_TYPE(cs) == CHARSET_TYPE_96 ? "96" :
-		CHARSET_TYPE(cs) == CHARSET_TYPE_94X94 ? "94x94" :
-		"96x96",
-		CHARSET_DIRECTION(cs) == CHARSET_LEFT_TO_RIGHT ? "l2r" : "r2l",
-		CHARSET_COLUMNS(cs), CHARSET_GRAPHIC(cs), CHARSET_FINAL(cs));
-	write_c_string(buf, printcharfun);
+	write_fmt_string(printcharfun, " %s %s cols=%d g%d final='%c' reg=",
+			 (CHARSET_TYPE(cs) == CHARSET_TYPE_94 ? "94" :
+			  CHARSET_TYPE(cs) == CHARSET_TYPE_96 ? "96" :
+			  CHARSET_TYPE(cs) == CHARSET_TYPE_94X94 ? "94x94" :
+			  "96x96"),
+			 (CHARSET_DIRECTION(cs) == CHARSET_LEFT_TO_RIGHT ? "l2r" : "r2l"),
+			 CHARSET_COLUMNS(cs), CHARSET_GRAPHIC(cs), CHARSET_FINAL(cs));
 	print_internal(CHARSET_REGISTRY(cs), printcharfun, 0);
-	sprintf(buf, " 0x%x>", cs->header.uid);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, " 0x%x>", cs->header.uid);
 }
 
 static const struct lrecord_description charset_description[] = {

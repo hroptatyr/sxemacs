@@ -242,9 +242,10 @@ the nearest available color.
 	}
 	if ( EQ(result,Qnil) ) {
 		/* Last resort: the default based on the colors */
-		char term_name[25];
-		snprintf(term_name,24,"default-%d-color",
-			 CONSOLE_TTY_DATA(console)->maxcolors);
+		char term_name[32];
+		int sz = snprintf(term_name,sizeof(term_name),"default-%d-color",
+				  CONSOLE_TTY_DATA(console)->maxcolors);
+		assert(sz >= 0 && sz < sizeof(term_name));
 		sym_term = Fintern(make_string((Bufbyte*)term_name,strlen(term_name)),Qnil);
 		default_color_slist = color_slist = get_term_color_alias_slist(sym_term,0);
 		if ( ! EQ(color_slist,Qnil) ) {
@@ -342,10 +343,11 @@ DEVICE defaults to the selected device if omitted.
 	}
 	if ( EQ(color_slist,Qnil) ) {
 		/* Last resort: the default based on the colors */
-		char term_name[25];
+		char term_name[32];
 		Lisp_Object sym_term;
-		snprintf(term_name,24,"default-%d-color",
-			 CONSOLE_TTY_DATA(console)->maxcolors);
+		int sz = snprintf(term_name,sizeof(term_name),"default-%d-color",
+				  CONSOLE_TTY_DATA(console)->maxcolors);
+		assert(sz>=0 && sz < sizeof(term_name));
 		sym_term = Fintern(make_string((Bufbyte*)term_name,strlen(term_name)),Qnil);
 		color_slist = get_term_color_alias_slist(sym_term,0);
 	}

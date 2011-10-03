@@ -224,10 +224,12 @@ static widget_value *dbox_descriptor_to_widget_value(Lisp_Object keys)
 	{
 		Extbyte type = (text_field_p ? 'P' : 'Q');
 		static Extbyte tmp_dbox_name[255];
-
 		widget_value *dbox;
-		sprintf(tmp_dbox_name, "%c%dBR%d", type, lbuttons + rbuttons,
-			rbuttons);
+		int sz = snprintf(tmp_dbox_name, sizeof(tmp_dbox_name),
+			      "%c%dBR%d", type, lbuttons + rbuttons,
+			      rbuttons);
+
+		assert(sz >= 0 && sz < sizeof(tmp_dbox_name));
 		dbox = xmalloc_widget_value();
 		dbox->name = xstrdup(tmp_dbox_name);
 		dbox->contents = kids;

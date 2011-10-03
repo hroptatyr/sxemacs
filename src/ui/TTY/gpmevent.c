@@ -480,15 +480,16 @@ Return non-nil if GPM mouse support is currently enabled on DEVICE.
 {
 	char *console_name = ttyname(DEVICE_INFD(decode_device(device)));
 	char process_name[1024];
+	int sz;
 	Lisp_Object proc;
 
 	if (!console_name) {
 		return (Qnil);
 	}
 
-	memset(process_name, '\0', sizeof(process_name));
-	snprintf(process_name, sizeof(process_name) - 1, "gpm for %s",
-		 console_name);
+	sz = snprintf(process_name, sizeof(process_name), "gpm for %s",
+		      console_name);
+	assert(sz >= 0 && sz < sizeof(process_name));
 
 	proc = Fget_process(build_string(process_name));
 
@@ -508,7 +509,7 @@ Toggle accepting of GPM mouse events.
       (device, arg))
 {
 	Gpm_Connect conn;
-	int rval;
+	int rval, sz;
 	Lisp_Object gpm_process;
 	Lisp_Object gpm_filter;
 	struct device *d = decode_device(device);
@@ -528,9 +529,9 @@ Toggle accepting of GPM mouse events.
 		return (Qnil);
 	}
 
-	memset(process_name, '\0', sizeof(process_name));
-	snprintf(process_name, sizeof(process_name) - 1, "gpm for %s",
-		 console_name);
+	sz = snprintf(process_name, sizeof(process_name), "gpm for %s",
+		      console_name);
+	assert(sz >= 0 && sz < sizeof(process_name));
 
 	if (NILP(arg)) {
 		turn_off_gpm(process_name);

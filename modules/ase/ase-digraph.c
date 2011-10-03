@@ -101,7 +101,7 @@ _ase_digraph_prnt(ase_digraph_t a, Lisp_Object pcf)
 }
 
 static void
-ase_digraph_prnt(Lisp_Object obj, Lisp_Object pcf, int UNUSED(foo))
+ase_digraph_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
 {
 	EMOD_ASE_DEBUG_DIGRAPH("h:0x%016lx@0x%016lx\n",
 			       (long unsigned int)(XASE_DIGRAPH(obj)),
@@ -112,7 +112,7 @@ ase_digraph_prnt(Lisp_Object obj, Lisp_Object pcf, int UNUSED(foo))
 }
 
 static void
-ase_digraph_fini(Lisp_Object UNUSED(obj), int UNUSED(foo))
+ase_digraph_fini(Lisp_Object SXE_UNUSED(obj), int SXE_UNUSED(foo))
 {
 }
 

@@ -46,7 +46,7 @@ Lisp_Object Vcomplex_infinity;
 
 
 static void
-indef_print (Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
+indef_print (Lisp_Object obj, Lisp_Object printcharfun, int SXE_UNUSED(escapeflag))
 {
 	Bufbyte *istr = indef_to_string(XINDEF_DATA(obj));
 	write_c_string((char*)istr, printcharfun);
@@ -56,7 +56,7 @@ indef_print (Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
 }
 
 static int
-indef_equal (Lisp_Object obj1, Lisp_Object obj2, int UNUSED(depth))
+indef_equal (Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
 {
 	return (XINDEF_DATA(obj1) == XINDEF_DATA(obj2));
 }
@@ -115,7 +115,7 @@ Bufbyte *indef_to_string(indef i)
 }
 
 static Lisp_Object
-ent_lift_indef(Lisp_Object number, ent_lift_args_t UNUSED(unused))
+ent_lift_indef(Lisp_Object number, ent_lift_args_t SXE_UNUSED(unused))
 {
 	if (INFINITYP(number))
 		return number;
@@ -126,7 +126,7 @@ ent_lift_indef(Lisp_Object number, ent_lift_args_t UNUSED(unused))
 }
 
 Lisp_Object
-ent_lift_INDEF_T_COMPARABLE(Lisp_Object number, ent_lift_args_t UNUSED(unused))
+ent_lift_INDEF_T_COMPARABLE(Lisp_Object number, ent_lift_args_t SXE_UNUSED(unused))
 {
 	if (COMPARABLE_INDEF_P(number))
 		return number;

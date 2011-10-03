@@ -329,7 +329,6 @@ static emodng_t
 __emodng_find(const char *name)
 {
 /* try to find the emodule named `name', return its pointer or NULL */
-	const lt_dlinfo *info;
 	emodng_t e;
 
 	for (e = emods; e; e = e->next) {
@@ -344,11 +343,14 @@ __emodng_find(const char *name)
 	}
 
 	/* get module info */
-	info = lt_dlgetinfo(e->dl);
+#ifdef EMOD_DEBUG_FLAG
+	{
+		const lt_dlinfo *info = lt_dlgetinfo(e->dl);
 
-	EMOD_DEBUG_LOADER("modinfo %s %s %d\n",
-			  info->filename, info->name, info->ref_count);
-
+		EMOD_DEBUG_LOADER("modinfo %s %s %d\n",
+				  info->filename, info->name, info->ref_count);
+	}
+#endif
 	return e;
 }
 
@@ -665,7 +667,7 @@ emodng_load_unwind(Lisp_Object unw)
 static Lisp_Object
 emodng_unload_unwind(Lisp_Object unw)
 {
-	lt_dlhandle UNUSED(mod_handle) = get_dynacat(unw);
+	lt_dlhandle SXE_UNUSED(mod_handle) = get_dynacat(unw);
 
 	/* if the handle's still vivid, drown him */
 	return Qnil;

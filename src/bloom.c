@@ -879,7 +879,7 @@ print_bloom(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 }
 
 static void
-finalise_bloom(void *header, int UNUSED(for_disksave))
+finalise_bloom(void *header, int SXE_UNUSED(for_disksave))
 {
 	Lisp_Bloom *free_me = header;
 
