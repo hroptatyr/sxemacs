@@ -133,7 +133,7 @@ static int lock_file_1(char *lfname, int force)
 		host_name = "";
 
 	maxlen = strlen(user_name) + strlen(host_name)
-		+ LOCK_PID_MAX + 5
+		+ LOCK_PID_MAX + 5;
 	lock_info_str = (char *)alloca(maxlen);
 
 	sz = snprintf(lock_info_str, maxlen, "%s@%s.%lu", user_name, host_name,
