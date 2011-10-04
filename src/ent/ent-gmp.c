@@ -226,19 +226,6 @@ bigf_to_string(mpf_t f, int base)
 		str[expt] = '\0';
 		len = expt + 1;
 	}
-#if 0
-	/* never want this here */
-	/* Computerized scientific notation */
-	/* We need room for a radix point, format identifier, and exponent */
-	const int space = (expt < 0)
-		? (int)(log(-expt) / log(base)) + 3
-		: (int)(log(expt) / log(base)) + 2;
-	xrealloc_array(str, Bufbyte, len + space);
-	memmove(&str[neg + 2], &str[neg + 1], len - neg);
-	str[len + 1] = 'l';
-	sprintf ((char *)&str[len + 2], "%ld", expt);
-}
-#endif
 	return str;
 }
 

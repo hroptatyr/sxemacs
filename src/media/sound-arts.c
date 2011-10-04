@@ -293,8 +293,9 @@ sound_arts_play(audio_job_t aj)
 
 	/* trigger arts */
 	if (arts_init() == 0) {
-		char tmp[16];
-		snprintf(tmp, 15, "SXEmacs%lx", pthread_self());
+		char tmp[48];
+		int sz = snprintf(tmp, sizeof(tmp), "SXEmacs%lx", pthread_self());
+		assert(sz>=0 && sz<sizeof(tmp));
 		sasd->as = arts_play_stream(sasd->mtap->samplerate,
 					    16 /* HARDCODED */,
 					    sasd->mtap->channels, tmp);

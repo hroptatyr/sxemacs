@@ -1238,11 +1238,9 @@ void
 print_symbol_value_magic(Lisp_Object obj,
 			 Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[200];
-	sprintf(buf, "#<INTERNAL OBJECT (SXEmacs bug?) (%s type %d) 0x%lx>",
-		XRECORD_LHEADER_IMPLEMENTATION(obj)->name,
-		XSYMBOL_VALUE_MAGIC_TYPE(obj), (long)XPNTR(obj));
-	write_c_string(buf, printcharfun);
+	write_fmt_str( printcharfun, "#<INTERNAL OBJECT (SXEmacs bug?) (%s type %d) 0x%lx>",
+		       XRECORD_LHEADER_IMPLEMENTATION(obj)->name,
+		       XSYMBOL_VALUE_MAGIC_TYPE(obj), (long)XPNTR(obj));
 }
 
 static const struct lrecord_description symbol_value_forward_description[] = {

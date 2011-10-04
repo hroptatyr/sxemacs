@@ -38,11 +38,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* SCO has ptys, but with weird names */
 #define HAVE_PTYS
 #define PTY_ITERATION \
-   for (i = 0; ; i++)
-#define PTY_NAME_SPRINTF \
-  sprintf (pty_name, "/dev/ptyp%d", i);
-#define PTY_TTY_NAME_SPRINTF \
-  sprintf (pty_name, "/dev/ttyp%d", i);
+	for (i = 0; ; i++)
+#define PTY_NAME_SPRINTF					\
+	do {							\
+		int sz = snprintf (pty_name, sizeof(pty_name),	\
+				   "/dev/ptyp%d", i);		\
+		assert(sz>=0 && sz<sizeof(pty_name));		\
+	} while(0)
+
+#define PTY_TTY_NAME_SPRINTF					\
+	do {							\
+		int sz = snprintf (pty_name, sizeof(pty_name),	\
+				   "/dev/ttyp%d", i);		\
+		assert(sz>=0 && sz<sizeof(pty_name));		\
+	} while(0)
+
 #define FORCE_ALLOCATE_PTY_THE_OLD_FASHIONED_WAY
 
 /* We have sockets. Always. */

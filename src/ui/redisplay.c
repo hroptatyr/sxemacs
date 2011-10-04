@@ -6580,7 +6580,7 @@ static char *window_line_number(struct window *w, int type)
 
 	line = buffer_line_number(b, pos, 1);
 
-	long_to_string(window_line_number_buf, line + 1);
+	long_to_string(window_line_number_buf, line + 1, sizeof(window_line_number_buf));
 
 	return window_line_number_buf;
 }
@@ -6627,7 +6627,7 @@ static void decode_mode_spec(struct window *w, Emchar spec, int type)
 					1) + !!column_number_start_at_one;
 		char buf[sizeof(long)*3+1];
 
-		long_to_string(buf, col);
+		long_to_string(buf, col, sizeof(buf));
 
 		Dynarr_add_many(mode_spec_bufbyte_string,
 				(const Bufbyte *)buf, strlen(buf));

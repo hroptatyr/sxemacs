@@ -3264,6 +3264,7 @@ assert_failed(const char *file, int line, const char *expr)
 			    ("\nFatal error: assertion failed, file %s, line %d, %s\n",
 			     file, line, expr);
 	}
+	fflush(stderr);
 
 	enter_debugger();
 #if !defined (ASSERTIONS_DONT_ABORT)

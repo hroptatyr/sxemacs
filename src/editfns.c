@@ -1349,9 +1349,10 @@ If you want them to stand for years in this century, you must do that yourself.
 			tzstring = (char *)XSTRING_DATA(zone);
 		} else if (INTP(zone)) {
 			int abszone = abs(XINT(zone));
-			snprintf(tzbuf, countof(tzbuf) - 1, "XXX%s%d:%02d:%02d",
-				 "-" + (XINT(zone) < 0), abszone / (60 * 60),
-				 (abszone / 60) % 60, abszone % 60);
+			int sz = snprintf(tzbuf, sizeof(tzbuf), "XXX%s%d:%02d:%02d",
+					  "-" + (XINT(zone) < 0), abszone / (60 * 60),
+					  (abszone / 60) % 60, abszone % 60);
+			assert(sz >= 0 && sz < sizeof(tzbuf));
 			tzstring = tzbuf;
 		} else {
 			error("Invalid time zone specification");
@@ -1423,9 +1424,10 @@ Like `encode-time' but return a big integer time instead.
 			tzstring = (char *)XSTRING_DATA(zone);
 		else if (INTP(zone)) {
 			int abszone = abs(XINT(zone));
-			sprintf(tzbuf, "XXX%s%d:%02d:%02d",
-				"-" + (XINT(zone) < 0), abszone / (60 * 60),
-				(abszone / 60) % 60, abszone % 60);
+			int sz = snprintf(tzbuf, sizeof(tzbuf), "XXX%s%d:%02d:%02d",
+					  "-" + (XINT(zone) < 0), abszone / (60 * 60),
+					  (abszone / 60) % 60, abszone % 60);
+			assert(sz>=0 && sz < sizeof(tzbuf));
 			tzstring = tzbuf;
 		} else
 			error("Invalid time zone specification");
@@ -1561,8 +1563,10 @@ the data it can't find.
 			/* No local time zone name is available; use "+-NNNN"
 			   instead.  */
 			int am = (offset < 0 ? -offset : offset) / 60;
-			sprintf(buf, "%c%02d%02d", (offset < 0 ? '-' : '+'),
-				am / 60, am % 60);
+			int sz = snprintf(buf, sizeof(buf), "%c%02d%02d", 
+					  (offset < 0 ? '-' : '+'),
+					  am / 60, am % 60);
+			assert(sz>=0 && sz < sizeof(buf));
 			s = buf;
 		}
 		return list2(make_int(offset), build_string(s));

@@ -370,10 +370,13 @@ static int allocate_pty_the_old_fashioned_way(void)
 #endif				/* PTY_ITERATION */
 
 		{
+			int sz;
+
 #ifdef PTY_NAME_SPRINTF
-			PTY_NAME_SPRINTF
+			PTY_NAME_SPRINTF;
 #else
-			sprintf(pty_name, "/dev/pty%c%x", c, i);
+			sz = snprintf(pty_name, sizeof(pty_name), "/dev/pty%c%x", c, i);
+			assert(sz >= 0 && sz < sizeof(pty_name));
 #endif				/* no PTY_NAME_SPRINTF */
 
 			if (sxemacs_stat(pty_name, &stb) < 0) {
@@ -386,9 +389,11 @@ static int allocate_pty_the_old_fashioned_way(void)
 
 			if (fd >= 0) {
 #ifdef PTY_TTY_NAME_SPRINTF
-				PTY_TTY_NAME_SPRINTF
+				PTY_TTY_NAME_SPRINTF;
 #else
-				sprintf(pty_name, "/dev/tty%c%x", c, i);
+				int sz = snprintf(pty_name, sizeof(pty_name),
+						  "/dev/tty%c%x", c, i);
+				assert(sz >= 0 && sz < sizeof(pty_name));
 #endif				/* no PTY_TTY_NAME_SPRINTF */
 				if (access(pty_name, R_OK | W_OK) == 0) {
 					setup_pty(fd);
@@ -1667,8 +1672,9 @@ unix_open_network_stream(Lisp_Object name, Lisp_Object host,
 		 * Convert to a C string for later use by getaddrinfo.
 		 */
 		if (INTP(service)) {
-			snprintf(portbuf, sizeof(portbuf), "%ld",
-				 (long)XINT(service));
+			int sz= snprintf(portbuf, sizeof(portbuf), "%ld",
+					 (long)XINT(service));
+			assert(sz >= 0 && sz < sizeof(portbuf));
 			portstring = portbuf;
 			port = htons((unsigned short)XINT(service));
 		} else {
@@ -2118,8 +2124,9 @@ unix_open_network_server_stream(Lisp_Object name, Lisp_Object host,
 		 * Convert to a C string for later use by getaddrinfo.
 		 */
 		if (INTP(service)) {
-			snprintf(portbuf, sizeof(portbuf), "%ld",
-				 (long)XINT(service));
+			int sz = snprintf(portbuf, sizeof(portbuf), "%ld",
+					  (long)XINT(service));
+			assert(sz >= 0 && sz < sizeof(portbuf));
 			portstring = portbuf;
 			port = htons((unsigned short)XINT(service));
 		} else {

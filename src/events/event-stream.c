@@ -1030,11 +1030,8 @@ static void
 print_timeout(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	const Lisp_Timeout *t = XTIMEOUT(obj);
-	char buf[64];
-
-	sprintf(buf, "#<INTERNAL OBJECT (SXEmacs bug?) (timeout) 0x%lx>",
-		(unsigned long)t);
-	write_c_string(buf, printcharfun);
+	write_fmt_string(printcharfun, "#<INTERNAL OBJECT (SXEmacs bug?) (timeout) 0x%lx>",
+			 (unsigned long)t);
 }
 
 static const struct lrecord_description timeout_description[] = {

@@ -743,7 +743,7 @@ emacs_doprnt_smZ(Lisp_Object stream, EMACS_INT Z, printf_spec_t s,  char ch)
 	} else /* ch == 'b' */ {
 		text_len = __ulong_to_bit_string(text, Z);
 	}
-
+	assert(text_len >= 0 && text_len < alloc_sz);
 	/* postprocess, move stuff around, insert naughts, etc. */
 	text_len = __postproc2(s, text, text_len, alloc_sz);
 
@@ -961,6 +961,7 @@ emacs_doprnt_number(Lisp_Object stream,
 		char *p = constructed_spec;
 		int length, alloca_sz = max_float_print_size;
 		int min = spec->minwidth, prec = spec->precision;
+		int max_spec = sizeof(constructed_spec);
 
 #if 0
 		/* absolute non-sense :O ...
@@ -996,20 +997,27 @@ emacs_doprnt_number(Lisp_Object stream,
 			*p++ = '0';
 
 		if (spec->minwidth >= 0) {
-			long_to_string(p, spec->minwidth);
+			long_to_string(p, spec->minwidth, max_spec);
+			max_spec -= strlen(p);
 			p += strlen (p);
 		}
 		if (spec->precision >= 0) {
 			*p++ = '.';
-			long_to_string(p, spec->precision);
+			--max_spec;
+			long_to_string(p, spec->precision, max_spec);
+			max_spec -= strlen(p);
 			p += strlen (p);
 		}
 
 #if fpfloat_long_double_p
 		*p++ = 'L';
+		--max_spec;
 #endif
 		*p++ = ch;
+		--max_spec;
 		*p++ = '\0';
+		--max_spec;
+		assert(max_spec >= 0);
 		if (NILP(obj))
 			length = snprintf(text_to_print, alloca_sz,
 					  constructed_spec, arg.d);
@@ -1017,9 +1025,10 @@ emacs_doprnt_number(Lisp_Object stream,
 			length = snprintf(text_to_print, alloca_sz,
 					  constructed_spec, XFLOAT_DATA(obj));
 
-		if (length > alloca_sz)
+		if (length > alloca_sz) {
+			/* should we really silently truncate?! */
 			length = alloca_sz;
-
+		}
 		doprnt_1(stream, (Bufbyte *)text_to_print, length, 0, -1, 0, 0);
 		return;
 

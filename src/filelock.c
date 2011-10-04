@@ -122,6 +122,7 @@ static int lock_file_1(char *lfname, int force)
 	char *lock_info_str;
 	char *host_name;
 	char *user_name = user_login_name(NULL);
+	int sz, maxlen;
 
 	if (user_name == NULL)
 		user_name = "";
@@ -131,11 +132,13 @@ static int lock_file_1(char *lfname, int force)
 	else
 		host_name = "";
 
-	lock_info_str = (char *)alloca(strlen(user_name) + strlen(host_name)
-				       + LOCK_PID_MAX + 5);
+	maxlen = strlen(user_name) + strlen(host_name)
+		+ LOCK_PID_MAX + 5;
+	lock_info_str = (char *)alloca(maxlen);
 
-	sprintf(lock_info_str, "%s@%s.%lu", user_name, host_name,
-		(unsigned long)getpid());
+	sz = snprintf(lock_info_str, maxlen, "%s@%s.%lu", user_name, host_name,
+		      (unsigned long)getpid());
+	assert(sz>=0 && sz < maxlen);
 
 	err = symlink(lock_info_str, lfname);
 	if (err != 0 && errno == EEXIST && force) {
@@ -294,6 +297,7 @@ void lock_file(Lisp_Object fn)
 	struct gcpro gcpro1, gcpro2, gcpro3;
 	Lisp_Object old_current_buffer;
 	Lisp_Object subject_buf;
+	int sz;
 
 	if (inhibit_clash_detection)
 		return;
@@ -329,8 +333,10 @@ void lock_file(Lisp_Object fn)
 	/* Else consider breaking the lock */
 	locker = (char *)alloca(strlen(lock_info.user) + strlen(lock_info.host)
 				+ LOCK_PID_MAX + 9);
-	sprintf(locker, "%s@%s (pid %lu)", lock_info.user, lock_info.host,
-		lock_info.pid);
+	sz = snprintf(locker, sizeof(locker), "%s@%s (pid %lu)", 
+		      lock_info.user, lock_info.host,
+		      lock_info.pid);
+	assert(sz>=0 && sz < sizeof(locker));
 	FREE_LOCK_INFO(lock_info);
 
 	attack = call2_in_buffer(BUFFERP(subject_buf) ? XBUFFER(subject_buf) :

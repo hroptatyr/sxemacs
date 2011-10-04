@@ -1934,12 +1934,13 @@ ccl_driver(struct ccl_program *ccl,
 		   specified and we still have a room to store the message
 		   there.  */
 		char msg[256];
-
+		int sz;
 		switch (ccl->status) {
 		case CCL_STAT_INVALID_CMD:
-			sprintf(msg,
-				"\nCCL: Invalid command %x (ccl_code = %x) at %d.",
-				code & 0x1F, code, this_ic);
+			sz = snprintf(msg, sizeof(msg),
+				     "\nCCL: Invalid command %x (ccl_code = %x) at %d.",
+				     code & 0x1F, code, this_ic);
+			assert(sz >= 0 && sz < sizeof(msg));
 #ifdef CCL_DEBUG
 			{
 				int i = ccl_backtrace_idx - 1;
@@ -1955,8 +1956,9 @@ ccl_driver(struct ccl_program *ccl,
 						i = CCL_DEBUG_BACKTRACE_LEN - 1;
 					if (ccl_backtrace_table[i] == 0)
 						break;
-					sprintf(msg, " %d",
-						ccl_backtrace_table[i]);
+					sz = snprintf(msg, sizeof(msg), " %d",
+						      ccl_backtrace_table[i]);
+					assert(sz >= 0 && sz < sizeof(msg));
 					Dynarr_add_many(destination,
 							(unsigned char *)msg,
 							strlen(msg));
@@ -1967,12 +1969,14 @@ ccl_driver(struct ccl_program *ccl,
 			break;
 
 		case CCL_STAT_QUIT:
-			sprintf(msg, "\nCCL: Exited.");
+			sz = snprintf(msg, sizeof(msg), "\nCCL: Exited.");
+			assert(sz >= 0 && sz < sizeof(msg));
 			break;
 
 		default:
-			sprintf(msg, "\nCCL: Unknown error type (%d).",
-				ccl->status);
+			sz = snprintf(msg, sizeof(msg), "\nCCL: Unknown error type (%d).",
+				      ccl->status);
+			assert(sz >= 0 && sz < sizeof(msg));
 		}
 
 		Dynarr_add_many(destination, (unsigned char *)msg, strlen(msg));

@@ -1264,15 +1264,16 @@ static int pdump_file_get(const char *path)
 static int pdump_file_try(char *exe_path, size_t size)
 {
         char *w = exe_path + strlen(exe_path);
+        int sz;
         size -= strlen(exe_path);
 
 	do {
 
 #ifdef EMACS_PATCH_LEVEL
-		snprintf(w, size, "-%d.%d.%d-%08x.dmp", 
+		sz = snprintf(w, size, "-%d.%d.%d-%08x.dmp", 
                          EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
                          EMACS_PATCH_LEVEL, dump_id);
-		if (pdump_file_get(exe_path)) {
+		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
 			if (pdump_load_check()) {
 				return 1;
 			}
@@ -1280,10 +1281,10 @@ static int pdump_file_try(char *exe_path, size_t size)
 		}
 #endif	/* EMACS_PATCH_LEVEL */
 #ifdef EMACS_BETA_VERSION
-		snprintf(w, size, "-%d.%d.%d-%08x.dmp", 
+		sz = snprintf(w, size, "-%d.%d.%d-%08x.dmp", 
                          EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
                          EMACS_BETA_VERSION, dump_id);
-		if (pdump_file_get(exe_path)) {
+		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
 			if (pdump_load_check()) {
 				return 1;
 			}
@@ -1291,16 +1292,16 @@ static int pdump_file_try(char *exe_path, size_t size)
 		}
 #endif	/* EMACS_BETA_VERSION */
 
-		snprintf(w, size, "-%08x.dmp", dump_id);
-		if (pdump_file_get(exe_path)) {
+		sz = snprintf(w, size, "-%08x.dmp", dump_id);
+		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
 			if (pdump_load_check()) {
 				return 1;
 			}
 			pdump_free();
 		}
 
-		snprintf(w, size, ".dmp");
-		if (pdump_file_get(exe_path)) {
+		sz = snprintf(w, size, ".dmp");
+		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
 			if (pdump_load_check()) {
 				return 1;
 			}
@@ -1419,8 +1420,9 @@ int pdump_load(const char *argv0)
 
 			if (!*p) {
 				/* Oh well, let's have some kind of default */
-				snprintf(exe_path, sizeof(exe_path),
-					 "./%s", name);
+				int sz = snprintf(exe_path, sizeof(exe_path),
+						  "./%s", name);
+				assert(sz >= 0 && sz < sizeof(exe_path));
 				break;
 			}
 			path = p + 1;
