@@ -1001,7 +1001,7 @@ NUMBER may be an integer or a floating point number.
 	if (FLOATP(number)) {
 		char pigbuf[350];	/* see comments in float_to_string */
 
-		float_to_string(pigbuf, XFLOAT_DATA(number));
+		float_to_string(pigbuf, XFLOAT_DATA(number), sizeof(pigbuf));
 		return build_string(pigbuf);
 	}
 #endif  /* HAVE_FPFLOAT */
@@ -1069,7 +1069,7 @@ NUMBER may be an integer or a floating point number.
 		return retval;
 	}
 
-	long_to_string(buffer, XINT(number));
+	long_to_string(buffer, XINT(number), sizeof(buffer));
 	return build_string(buffer);
 }
 

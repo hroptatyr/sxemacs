@@ -176,11 +176,8 @@ sound_nas_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 	write_c_string(" :server-handle ", pcfun);
 	if (snd->aud == NULL)
 		write_c_string("#b0rked", pcfun);
-	else {
-		char *tmp = alloca(32);
-		snprintf(tmp, 31, "0x%x", (unsigned int)snd->aud);
-		write_c_string(tmp, pcfun);
-	}
+	else 
+		write_fmt_str(pcfun, "0x%x", (unsigned int)snd->aud);
 
 	return;
 }

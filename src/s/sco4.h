@@ -46,10 +46,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #define PTY_ITERATION \
    for (i = 0; ; i++)
-#define PTY_NAME_SPRINTF \
-  sprintf (pty_name, "/dev/ptyp%d", i);
-#define PTY_TTY_NAME_SPRINTF \
-  sprintf (pty_name, "/dev/ttyp%d", i);
+#define PTY_NAME_SPRINTF				       \
+	do {						       \
+		int sz = snprintf (pty_name, sizeof(pty_name), \
+				   "/dev/ptyp%d", i);	       \
+		assert(sz>=0 && sz<sizeof(pty_name));	       \
+	} while(0)
+
+#define PTY_TTY_NAME_SPRINTF					\
+	do {							\
+		int sz = snprintf (pty_name, sizeof(pty_name),	\
+				   "/dev/ttyp%d", i);		\
+		assert(sz>=0 && sz<sizeof(pty_name));		\
+	} while(0)
 
 /* Must use 'cc' to link when build with motif toolkit. */
 #ifndef __GNUC__

@@ -1812,7 +1812,6 @@ mark_evp_pkey(Lisp_Object obj)
 static void
 print_evp_pkey(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[256];
 	EVP_PKEY *pkey;
 	X509 *x509;
 
@@ -1850,8 +1849,7 @@ print_evp_pkey(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 			write_c_string(" empty key", printcharfun); 
 
 		if (EVP_PKEY_size(pkey) > 0) {
-			snprintf(buf, 256, ", size %d", EVP_PKEY_size(pkey)*8);
-			write_c_string(buf, printcharfun); 
+			write_fmt_str(printcharfun, ", size %d", EVP_PKEY_size(pkey)*8);
 		}
 	}
 

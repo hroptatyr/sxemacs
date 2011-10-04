@@ -4960,6 +4960,8 @@ Garbage collection happens automatically if you cons more than
 			const char *name =
 			    lrecord_implementations_table[i]->name;
 			int len = strlen(name);
+			int sz;
+
 			/* save this for the FSFmacs-compatible part of the
 			   summary */
 			if (i == lrecord_type_vector)
@@ -4967,31 +4969,35 @@ Garbage collection happens automatically if you cons more than
 				    lcrecord_stats[i].bytes_in_use +
 				    lcrecord_stats[i].bytes_freed;
 
-			snprintf(buf, sizeof(buf), "%s-storage", name);
+			sz = snprintf(buf, sizeof(buf), "%s-storage", name);
+			assert(sz >=0  && sz < sizeof(buf));
 			pl = gc_plist_hack(buf, lcrecord_stats[i].bytes_in_use,
 					   pl);
 			/* Okay, simple pluralization check for
 			   `symbol-value-varalias' */
 			if (name[len - 1] == 's')
-                                snprintf(buf, sizeof(buf), "%ses-freed", name);
+                                sz = snprintf(buf, sizeof(buf), "%ses-freed", name);
 			else
-				snprintf(buf, sizeof(buf), "%ss-freed", name);
+				sz = snprintf(buf, sizeof(buf), "%ss-freed", name);
+			assert(sz >=0  && sz < sizeof(buf));
 			if (lcrecord_stats[i].instances_freed != 0)
 				pl = gc_plist_hack(buf,
 						   lcrecord_stats[i].
 						   instances_freed, pl);
 			if (name[len - 1] == 's')
-				snprintf(buf, sizeof(buf), "%ses-on-free-list", name);
+				sz = snprintf(buf, sizeof(buf), "%ses-on-free-list", name);
 			else
-				snprintf(buf, sizeof(buf), "%ss-on-free-list", name);
+				sz = snprintf(buf, sizeof(buf), "%ss-on-free-list", name);
+			assert(sz >=0  && sz < sizeof(buf));
 			if (lcrecord_stats[i].instances_on_free_list != 0)
 				pl = gc_plist_hack(buf,
 						   lcrecord_stats[i].
 						   instances_on_free_list, pl);
 			if (name[len - 1] == 's')
-				snprintf(buf, sizeof(buf), "%ses-used", name);
+				sz = snprintf(buf, sizeof(buf), "%ses-used", name);
 			else
-				snprintf(buf, sizeof(buf), "%ss-used", name);
+				sz = snprintf(buf, sizeof(buf), "%ss-used", name);
+			assert(sz >=0  && sz < sizeof(buf));
 			pl = gc_plist_hack(buf,
 					   lcrecord_stats[i].instances_in_use,
 					   pl);

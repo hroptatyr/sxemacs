@@ -82,7 +82,7 @@ print_float(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	char pigbuf[350];	/* see comments in float_to_string */
 
-	float_to_string(pigbuf, XFLOAT_DATA(obj));
+	float_to_string(pigbuf, XFLOAT_DATA(obj), sizeof(pigbuf));
 	write_c_string(pigbuf, printcharfun);
 }
 
@@ -587,10 +587,12 @@ The float closest in value to -infinity.
 
 	/* let's compute the array we need to print such a float */
 #if fpfloat_double_p
-	max_float_print_size = snprintf(NULL, 0, "%f", fp) + 10;
+	max_float_print_size = snprintf(NULL, 0, "%f", fp);
 #elif fpfloat_long_double_p
-	max_float_print_size = snprintf(NULL, 0, "%Lf", fp) + 10;
+	max_float_print_size = snprintf(NULL, 0, "%Lf", fp);
 #endif
+	assert(max_float_print_size>0);
+	max_float_print_size += 10;
 
 	DEFVAR_CONST_INT("max-float-print-size", &max_float_print_size /*
 The maximal string length of a printed float.

@@ -122,12 +122,8 @@ static void
 print_audio_job(worker_job_t job, Lisp_Object pcf)
 {
 	audio_job_t aj = audio_job(job);
-	char *str = alloca(64);
-
 	SXE_MUTEX_LOCK(&aj->mtx);
-	write_c_string(" carrying ", pcf);
-	snprintf(str, 63, " #<audio-job 0x%lx>", (long unsigned int)aj);
-	write_c_string(str, pcf);
+	write_fmt_string(pcf, " carrying  #<audio-job 0x%lx>", (long unsigned int)aj);
 	SXE_MUTEX_UNLOCK(&aj->mtx);
 	return;
 }

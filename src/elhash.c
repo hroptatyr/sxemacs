@@ -264,7 +264,6 @@ static void
 print_hash_table(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	hash_table_t ht = XHASH_TABLE(obj);
-	char buf[128];
 
 	write_c_string(print_readably ? "#s(hash-table" : "#<hash-table",
 		       printcharfun);
@@ -283,23 +282,21 @@ print_hash_table(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 
 	if (ht->count || !print_readably) {
 		if (print_readably)
-			sprintf(buf, " size %lu", (unsigned long)ht->count);
+			write_fmt_str(printcharfun, " size %lu", (unsigned long)ht->count);
 		else
-			sprintf(buf, " size %lu/%lu",
-				(unsigned long)ht->count,
-				(unsigned long)ht->size);
-		write_c_string(buf, printcharfun);
+			write_fmt_str(printcharfun, " size %lu/%lu",
+				      (unsigned long)ht->count,
+				      (unsigned long)ht->size);
 	}
 
 	if (ht->weakness != HASH_TABLE_NON_WEAK) {
-		sprintf(buf, " weakness %s",
-			(ht->weakness == HASH_TABLE_WEAK ? "key-and-value" :
-			 ht->weakness == HASH_TABLE_KEY_WEAK ? "key" :
-			 ht->weakness == HASH_TABLE_VALUE_WEAK ? "value" :
-			 ht->weakness ==
-			 HASH_TABLE_KEY_VALUE_WEAK ? "key-or-value" :
-			 "you-d-better-not-see-this"));
-		write_c_string(buf, printcharfun);
+		write_fmt_str(printcharfun, " weakness %s",
+			      (ht->weakness == HASH_TABLE_WEAK ? "key-and-value" :
+			       ht->weakness == HASH_TABLE_KEY_WEAK ? "key" :
+			       ht->weakness == HASH_TABLE_VALUE_WEAK ? "value" :
+			       ht->weakness ==
+			       HASH_TABLE_KEY_VALUE_WEAK ? "key-or-value" :
+			       "you-d-better-not-see-this"));
 	}
 
 	if (ht->count)
@@ -307,10 +304,8 @@ print_hash_table(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 
 	if (print_readably)
 		write_c_string(")", printcharfun);
-	else {
-		sprintf(buf, " 0x%x>", ht->header.uid);
-		write_c_string(buf, printcharfun);
-	}
+	else
+		write_fmt_str(printcharfun, " 0x%x>", ht->header.uid);
 }
 
 static void finalize_hash_table(void *header, int for_disksave)

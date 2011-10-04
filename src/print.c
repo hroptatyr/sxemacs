@@ -918,18 +918,19 @@ Lisp_Object Vfloat_output_format;
  * re-writing _doprnt to be more sane)?
  * 			-wsr
  */
-void float_to_string(char *buf, fpfloat data)
+void float_to_string(char *buf, fpfloat data, int maxlen)
 {
 	Bufbyte *cp, c;
-	int width;
+	int width, sz;
 
 	if (NILP(Vfloat_output_format) || !STRINGP(Vfloat_output_format)) {
 	lose:
 #if fpfloat_double_p
-		sprintf(buf, "%.16g", data);
+		sz = snprintf(buf, maxlen, "%.16g", data);
 #elif fpfloat_long_double_p
-		sprintf(buf, "%.16Lg", data);
+		sz = snprintf(buf, maxlen, "%.16Lg", data);
 #endif
+		assert(sz>=0 && sz<maxlen);
 	} else {			/* oink oink */
 
 		/* Check that the spec we have is fully valid.
@@ -958,7 +959,9 @@ void float_to_string(char *buf, fpfloat data)
 		if (cp[1] != 0)
 			goto lose;
 
-		sprintf(buf, (char *)XSTRING_DATA(Vfloat_output_format), data);
+		sz = snprintf(buf, maxlen,
+			      (char *)XSTRING_DATA(Vfloat_output_format), data);
+		assert(sz>=0 && sz < maxlen);
 	}
 
 	/* added by jwz: don't allow "1.0" to print as "1"; that destroys
@@ -969,14 +972,19 @@ void float_to_string(char *buf, fpfloat data)
 	{
 		Bufbyte *s = (Bufbyte *) buf;	/* don't use signed chars here!
 						   isdigit() can't hack them! */
-		if (*s == '-')
+		if (*s == '-') {
 			s++;
+			maxlen--;
+			assert(maxlen>0);
+		}
 		for (; *s; s++)
 			/* if there's a non-digit, then there is a decimal point, or
 			   it's in exponential notation, both of which are ok. */
 			if (!isdigit(*s))
 				goto DONE_LABEL;
 		/* otherwise, we need to hack it. */
+		maxlen-=2;
+		assert(maxlen>0);
 		*s++ = '.';
 		*s++ = '0';
 		*s = 0;
@@ -985,6 +993,7 @@ void float_to_string(char *buf, fpfloat data)
 
 	/* Some machines print "0.4" as ".4".  I don't like that. */
 	if (buf[0] == '.' || (buf[0] == '-' && buf[1] == '.')) {
+		assert(maxlen>0);
 		int i;
 		for (i = strlen(buf) + 1; i >= 0; i--)
 			buf[i + 1] = buf[i];
@@ -999,11 +1008,12 @@ void float_to_string(char *buf, fpfloat data)
    BUFFER should accept 24 bytes.  This should suffice for the longest
    numbers on 64-bit machines, including the `-' sign and the trailing
    '\0'.  Returns a pointer to the trailing '\0'. */
-char *long_to_string(char *buffer, long number)
+char *long_to_string(char *buffer, long number, int maxlen)
 {
 #if (SIZEOF_LONG != 4) && (SIZEOF_LONG != 8)
 	/* Huh? */
-	sprintf(buffer, "%ld", number);
+	int sz = snprintf(buffer, maxlen, "%ld", number);
+	assert(sz>=0 && sz < maxlen);
 	return buffer + strlen(buffer);
 #else				/* (SIZEOF_LONG == 4) || (SIZEOF_LONG == 8) */
 	char *p = buffer;
@@ -1013,10 +1023,16 @@ char *long_to_string(char *buffer, long number)
 		*p++ = '-';
 		number = -number;
 	}
-#define FROB(figure) do {						\
-    if (force || number >= figure)					\
-      *p++ = number / figure + '0', number %= figure, force = 1;	\
-    } while (0)
+#define FROB(figure) \
+	do {								\
+		if (force || number >= figure) {			\
+			*p++ = number / figure + '0';			\
+			number %= figure;				\
+			force = 1;					\
+			--maxlen;					\
+			assert(maxlen>0);				\
+		}							\
+	} while (0)
 #if SIZEOF_LONG == 8
 	FROB(1000000000000000000L);
 	FROB(100000000000000000L);
@@ -1314,7 +1330,7 @@ print_internal(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 			if (EQ(obj, being_printed[i])) {
 				char buf[32];
 				*buf = '#';
-				long_to_string(buf + 1, i);
+				long_to_string(buf + 1, i, sizeof(buf)-1);
 				write_c_string(buf, printcharfun);
 				return;
 			}
@@ -1333,7 +1349,7 @@ print_internal(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		/* ASCII Decimal representation uses 2.4 times as many bits as
 		   machine binary.  */
 		char buf[3 * sizeof(EMACS_INT) + 5];
-		long_to_string(buf, XINT(obj));
+		long_to_string(buf, XINT(obj),sizeof(buf));
 		write_c_string(buf, printcharfun);
 		break;
 	}
