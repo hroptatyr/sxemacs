@@ -293,12 +293,9 @@ print_chartab_two_byte_charset(Lisp_Object charset,
 		Lisp_Object jen = cte->level2[i - 32];
 
 		if (!CHAR_TABLE_ENTRYP(jen)) {
-			char buf[100];
-
 			write_c_string(" [", printcharfun);
 			print_internal(XCHARSET_NAME(charset), printcharfun, 0);
-			sprintf(buf, " %d] ", i);
-			write_c_string(buf, printcharfun);
+			write_fmt_str(printcharfun, " %d] ", i);
 			print_internal(jen, printcharfun, 0);
 		} else
 			print_chartab_charset_row(charset, i,
@@ -313,12 +310,10 @@ static void
 print_char_table(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	Lisp_Char_Table *ct = XCHAR_TABLE(obj);
-	char buf[200];
 	Lisp_Object tmp_sym = char_table_type_to_symbol(ct->type);
 
-	snprintf(buf, countof(buf)-1, "#s(char-table type %s data (",
-		 string_data(symbol_name(XSYMBOL(tmp_sym))));
-	write_c_string(buf, printcharfun);
+	write_fmt_string(printcharfun, "#s(char-table type %s data (",
+			 string_data(symbol_name(XSYMBOL(tmp_sym))));
 
 	/* Now write out the ASCII/Control-1 stuff. */
 	{

@@ -409,16 +409,13 @@ media_substream_print_audio(media_substream *mss, Lisp_Object printcharfun)
 
 	write_c_string("#<audio ", printcharfun);
 	if (mtap->name || mtap->codec_name) {
-		char *buf = alloca(64);
 		if (mtap->name && mtap->codec_name)
-			snprintf(buf, 63, "%s (%s)",
-				 mtap->name, mtap->codec_name);
+			write_fmt_str(printcharfun, "%s (%s)",
+				      mtap->name, mtap->codec_name);
 		else if (mtap->name)
-			snprintf(buf, 63, "%s [???]", mtap->name);
+			write_fmt_str(printcharfun, "%s [???]", mtap->name);
 		else if (mtap->codec_name)
-			snprintf(buf, 63, "??? (%s)", mtap->codec_name);
-
-		write_c_string(buf, printcharfun);
+			write_fmt_str(printcharfun, "??? (%s)", mtap->codec_name);
 	} else
 		write_c_string("???", printcharfun);
 
@@ -440,21 +437,13 @@ media_substream_print_audio(media_substream *mss, Lisp_Object printcharfun)
 		break;
 	}
 
-	if (mtap->samplerate) {
-		char *buf;
-		buf = alloca(48);
-		snprintf(buf, 47, ", %d Hz, %d Bit",
-			 mtap->samplerate,
-			 mtap->samplewidth);
-		write_c_string(buf, printcharfun);
-	}
+	if (mtap->samplerate) 
+		write_fmt_str(printcharfun, ", %d Hz, %d Bit",
+			      mtap->samplerate,
+			      mtap->samplewidth);
 
-	if (mtap->bitrate) {
-		char *buf;
-		buf = alloca(24);
-		snprintf(buf, 23, ", %d kb/s", mtap->bitrate/1000);
-		write_c_string(buf, printcharfun);
-	}
+	if (mtap->bitrate)
+		write_fmt_str(printcharfun, ", %d kb/s", mtap->bitrate/1000);
 
 	write_c_string(">", printcharfun);
 }
@@ -467,36 +456,28 @@ media_substream_print_video(media_substream *mss, Lisp_Object printcharfun)
 
 	write_c_string("#<video ", printcharfun);
 	if (mtvp->name || mtvp->codec_name) {
-		char *buf = alloca(64);
 		if (mtvp->name && mtvp->codec_name)
-			snprintf(buf, 63, "%s (%s)",
-				 mtvp->name, mtvp->codec_name);
+			write_fmt_str(printcharfun, "%s (%s)",
+				      mtvp->name, mtvp->codec_name);
 		else if (mtvp->name)
-			snprintf(buf, 63, "%s [???]", mtvp->name);
+			write_fmt_str(printcharfun, "%s [???]", mtvp->name);
 		else if (mtvp->codec_name)
-			snprintf(buf, 63, "??? (%s)", mtvp->codec_name);
-
-		write_c_string(buf, printcharfun);
+			write_fmt_str(printcharfun, "??? (%s)", mtvp->codec_name);
 	} else
 		write_c_string("???", printcharfun);
 
-	if (mtvp->bitrate) {
-		char *buf = alloca(24);
-		snprintf(buf, 23, ", %d kb/s", mtvp->bitrate);
-		write_c_string(buf, printcharfun);
-	}
+	if (mtvp->bitrate)
+		write_fmt_str(printcharfun, ", %d kb/s", mtvp->bitrate);
 
 	if (mtvp->width && mtvp->height) {
-		char *buf = alloca(48);
 		if (mtvp->aspect_num > 1 && mtvp->aspect_den >= 1)
-			snprintf(buf, 47, ", %dx%d (%d/%d)",
-				 mtvp->width, mtvp->height,
-				 mtvp->aspect_num, mtvp->aspect_den);
+			write_fmt_str(printcharfun, ", %dx%d (%d/%d)",
+				      mtvp->width, mtvp->height,
+				      mtvp->aspect_num, mtvp->aspect_den);
 		else
-			snprintf(buf, 47, ", %dx%d (%.2f/1)",
-				 mtvp->width, mtvp->height,
-				 (double)mtvp->width/(double)mtvp->height);
-		write_c_string(buf, printcharfun);
+			write_fmt_str(printcharfun, ", %dx%d (%.2f/1)",
+				      mtvp->width, mtvp->height,
+				      (double)mtvp->width/(double)mtvp->height);
 	}
 	write_c_string(">", printcharfun);
 }

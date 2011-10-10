@@ -837,19 +837,22 @@ static GtkWidget *menu_descriptor_to_widget_1(Lisp_Object descr,
 		if (!separator_string_p(XSTRING_DATA(name))) {
 			char *label_buffer = NULL;
 			char *temp_label = NULL;
+			int sz, maxsz;
 
 			if (STRINGP(suffix) && XSTRING_LENGTH(suffix)) {
-				label_buffer =
-				    alloca(XSTRING_LENGTH(name) + 15 +
-					   XSTRING_LENGTH(suffix));
-				sprintf(label_buffer, "%s %s ",
-					XSTRING_DATA(name),
-					XSTRING_DATA(suffix));
+				maxsz = XSTRING_LENGTH(name) + 15 +
+					XSTRING_LENGTH(suffix);
+				label_buffer = alloca(maxsz);
+				sz = snprintf(label_buffer, maxsz, "%s %s ",
+					      XSTRING_DATA(name),
+					      XSTRING_DATA(suffix));
+				assert(sz>=0 && sz<maxsz);
 			} else {
-				label_buffer =
-				    alloca(XSTRING_LENGTH(name) + 15);
-				sprintf(label_buffer, "%s ",
-					XSTRING_DATA(name));
+				maxsz = XSTRING_LENGTH(name) + 15;
+				label_buffer = alloca(maxsz);
+				sz = sprintf(label_buffer, maxsz, "%s ",
+					     XSTRING_DATA(name));
+				assert(sz>=0 && sz<maxsz);
 			}
 
 			temp_label = convert_underscores(label_buffer);

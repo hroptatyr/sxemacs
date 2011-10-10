@@ -58,6 +58,7 @@ char gnuserv_version[] = "gnuclient version " GNUSERV_VERSION;
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sysfile.h>
+#include <assert.h>
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -91,6 +92,7 @@ void initialize_signals(void);
 static void tell_emacs_to_resume(int sig)
 {
 	char buffer[GSERV_BUFSZ + 1];
+	int sz;
 	int s;			/* socket / msqid to server */
 	int connect_type;	/* CONN_UNIX, CONN_INTERNET, or
 				   ONN_IPC */
@@ -103,8 +105,9 @@ static void tell_emacs_to_resume(int sig)
 
 	connect_type = make_connection(NULL, 0, &s);
 
-	sprintf(buffer, "(gnuserv-eval '(resume-pid-console %d))",
-		(int)getpid());
+	sz = snprintf(buffer, sizeof(buffer), "(gnuserv-eval '(resume-pid-console %d))",
+		      (int)getpid());
+	assert(sz>=0 && sz<sizeof(buffer));
 	send_string(s, buffer);
 
 #ifdef SYSV_IPC
@@ -309,6 +312,7 @@ int main(int argc, char *argv[])
 	char buffer[GSERV_BUFSZ + 1];	/* buffer to read pid */
 	char result[GSERV_BUFSZ + 1];
 	int i;
+	int sz, msz;
 
 #ifdef INTERNET_DOMAIN_SOCKETS
 	memset(remotepath, 0, sizeof(remotepath));
@@ -442,8 +446,9 @@ int main(int argc, char *argv[])
 #else
 		connect_type = make_connection(NULL, 0, &s);
 #endif
-		sprintf(command, "(gnuserv-eval%s '(progn ",
-			quick ? "-quickly" : "");
+		sz = snprintf(command, sizeof(command), "(gnuserv-eval%s '(progn ",
+			 quick ? "-quickly" : "");
+		assert(sz>=0 && sz<sizeof(command));
 		send_string(s, command);
 		if (load_library) {
 			send_string(s, "(load-library ");
@@ -477,8 +482,10 @@ int main(int argc, char *argv[])
 #else
 		connect_type = make_connection(NULL, 0, &s);
 #endif
-		sprintf(command, "(gnuserv-eval%s '(progn ",
-			quick ? "-quickly" : "");
+		sz = snprintf(command, sizeof(command),
+			      "(gnuserv-eval%s '(progn ",
+			      quick ? "-quickly" : "");
+		assert(sz>=0 && sz<sizeof(command));
 		send_string(s, command);
 
 		while ((nb = read(fileno(stdin), buffer, GSERV_BUFSZ - 1)) > 0) {
@@ -575,23 +582,27 @@ int main(int argc, char *argv[])
 
 		if (suppress_windows_system) {
 			char *term = getenv("TERM");
+			int sz;
 			if (!term) {
 				fprintf(stderr, "%s: unknown terminal type\n",
 					progname);
 				exit(1);
 			}
-			sprintf(command,
-				"(gnuserv-edit-files '(tty %s %s %d) '(",
-				clean_string(tty), clean_string(term),
-				(int)getpid());
+			sz = snprintf(command, sizeof(command),
+				      "(gnuserv-edit-files '(tty %s %s %d) '(",
+				      clean_string(tty), clean_string(term),
+				      (int)getpid());
+			assert(sz>=0 && sz<sizeof(command));
 		} else {	/* !suppress_windows_system */
 
 			if (0) ;
 #ifdef HAVE_X_WINDOWS
-			else if (display)
-				sprintf(command,
-					"(gnuserv-edit-files '(x %s) '(",
-					clean_string(display));
+			else if (display) {
+				int sz = snprintf(command, sizeof(command),
+						  "(gnuserv-edit-files '(x %s) '(",
+						  clean_string(display));
+				assert(sz>=0 && sz<sizeof(command));
+			}
 #endif
 #ifdef HAVE_GTK
 			else if (display)
@@ -616,24 +627,28 @@ int main(int argc, char *argv[])
 			}
 			filename_expand(fullpath, argv[i], sizeof(fullpath));
 #ifdef INTERNET_DOMAIN_SOCKETS
-			path =
-			    (char *)malloc(strlen(remotepath) +
-					   strlen(fullpath) + 1);
-			sprintf(path, "%s%s", remotepath, fullpath);
+			msz = strlen(remotepath) + strlen(fullpath) + 1;
+			path = (char *)malloc(msz);
+			sz = snprintf(path, msz, "%s%s", remotepath, fullpath);
+			assert(sz>=0 && sz<msz);
 #else
 			path = my_strdup(fullpath);
 #endif
-			sprintf(command, "(%d . %s)", starting_line,
-				clean_string(path));
+			sz = snprintf(command, sizeof(command),
+				      "(%d . %s)", starting_line,
+				      clean_string(path));
+			assert(sz>=0 && sz<sizeof(command));
 			send_string(s, command);
 			free(path);
 		}		/* for */
-
-		sprintf(command, ")%s%s",
-			(quick
-			 || (nofiles
-			     && !suppress_windows_system)) ? " 'quick" : "",
-			view ? " 'view" : "");
+		
+		sz = snprintf(command, sizeof(command),
+			      ")%s%s",
+			      (quick
+			       || (nofiles
+				   && !suppress_windows_system)) ? " 'quick" : "",
+			      view ? " 'view" : "");
+		assert(sz>=0 && sz<sizeof(command));
 		send_string(s, command);
 		send_string(s, ")");
 

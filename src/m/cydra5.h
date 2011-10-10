@@ -74,8 +74,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* Explain how pty filenames work.  */
 
 #define PTY_ITERATION  for (i = 47; i >= 0; i--)
-#define PTY_NAME_SPRINTF  sprintf (ptyname, "/dev/pty%03x", i);
-#define PTY_TTY_NAME_SPRINTF  sprintf (ptyname, "/dev/ptm%03x", i);
+#define PTY_NAME_SPRINTF  snprintf (ptyname, sizeof(ptyname), "/dev/pty%03x", i);
+#define PTY_TTY_NAME_SPRINTF  snprintf (ptyname, sizeof(ptyname), "/dev/ptm%03x", i);
 
 /* We can't do interrupt-driven input, so don't let user try.  */
 

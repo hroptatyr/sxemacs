@@ -633,11 +633,17 @@ fatal_error_signal(int sig)
 			const char *pstack = "/usr/proc/bin/pstack";
 			if (access(pstack, X_OK) == 0) {
 				char buf[100];
+				int sz = snprintf(buf, sizeof(buf), "%s %d >&2", pstack,
+					(int)getpid());
 				stderr_out("\nC backtrace follows:\n"
 					   "(A real debugger may provide better information)\n\n");
-				sprintf(buf, "%s %d >&2", pstack,
-					(int)getpid());
-				system(buf);
+				if ( sz >= 0 && sz < sizeof(buf)) {
+					sz = system(buf);
+					if ( sz != 0 )
+						stderr_out("\nStacktrace utility execution error code: %d\n", sz);
+				} else {
+					stderr_out("\nCould not build command line for stacktrace utility.\n");
+				}
 			}
 		}
 # endif

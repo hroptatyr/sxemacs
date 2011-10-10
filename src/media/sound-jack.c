@@ -195,7 +195,8 @@ sound_jack_subthread_create(void)
 	/* create out output ports */
 	for (i = 0; i < sjsd->num_ports; i++) {
 		char pname[30];
-		snprintf(pname, 30, "SXEmacs out_%d", i);
+		int sz = snprintf(pname, sizeof(pname), "SXEmacs out_%d", i);
+		assert(sz>=0 && sz<sizeof(pname));
 		sjsd->ports[i] = jack_port_register(
 			client, pname,
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);

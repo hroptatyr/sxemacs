@@ -232,7 +232,6 @@ mark_pgconn(Lisp_Object obj)
 static void
 print_pgconn(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[256];
 	PGconn *P;
 	ConnStatusType cst;
 	char *host = "", *db = "", *user = "", *port = "";
@@ -241,7 +240,7 @@ print_pgconn(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 
 	if (P == NULL) {
 		/* this may happen since we allow PQfinish() to be called */
-		strncpy(buf, "#<PGconn DEAD>", countof(buf));
+		write_c_string("#<PGconn DEAD>", printcharfun);
 	} else if ((cst = PQstatus(P)) == CONNECTION_OK) {
 		if (!(host = PQhost(P)))
 			host = "";
@@ -250,14 +249,15 @@ print_pgconn(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		if (!(user = PQuser(P))) {
 			user = "";
 		}
-		snprintf(buf, sizeof(buf), "#<PGconn %s:%s %s/%s>",	/* evil! */
-			!strlen(host) ? "localhost" : host, port, user, db);
+		write_fmt_string(printcharfun, "#<PGconn %s:%s %s/%s>",	
+				 (!strlen(host) ? 
+				  "localhost" : host) /* evil! */, 
+				 port, user, db);
 	} else if (cst == CONNECTION_BAD) {
-		strncpy(buf, "#<PGconn BAD>", countof(buf));
+		write_c_string("#<PGconn BAD>", printcharfun);
 	} else {
-		strncpy(buf, "#<PGconn connecting>", countof(buf));
+		write_c_string("#<PGconn connecting>", printcharfun);
 	}
-	write_c_string(buf, printcharfun);
 	return;
 }
 
@@ -318,7 +318,6 @@ mark_pgresult(Lisp_Object obj)
 static void
 print_pgresult(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	char buf[1024];
 	PGresult *res;
 
 	res = (XPGRESULT(obj))->pgresult;
@@ -327,32 +326,30 @@ print_pgresult(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		switch (PQresultStatus(res)) {
 		case PGRES_TUPLES_OK:
 			/* Add number of tuples of result to output */
-			snprintf(buf, countof(buf), RESULT_TUPLES_FMT,
-				 PQresStatus(PQresultStatus(res)),
-				 PQntuples(res), PQcmdStatus(res));
+			write_fmt_string(printcharfun, RESULT_TUPLES_FMT,
+					 PQresStatus(PQresultStatus(res)),
+					 PQntuples(res), PQcmdStatus(res));
 			break;
 		case PGRES_COMMAND_OK:
 			/* Add number of tuples affected by output-less
 			   command */
 			if (!strlen(PQcmdTuples(res)))
 				goto notuples;
-			snprintf(buf, countof(buf), RESULT_CMD_TUPLES_FMT,
-				 PQresStatus(PQresultStatus(res)),
-				 PQcmdTuples(res), PQcmdStatus(res));
+			write_fmt_string(printcharfun, RESULT_CMD_TUPLES_FMT,
+					 PQresStatus(PQresultStatus(res)),
+					 PQcmdTuples(res), PQcmdStatus(res));
 			break;
 		default:
 		notuples:
 			/* No counts to print */
-			snprintf(buf, countof(buf), RESULT_DEFAULT_FMT,
-				 PQresStatus(PQresultStatus(res)),
-				 PQcmdStatus(res));
+			write_fmt_string(printcharfun, RESULT_DEFAULT_FMT,
+					 PQresStatus(PQresultStatus(res)),
+					 PQcmdStatus(res));
 			break;
 		}
 	} else {
-		strncpy(buf, "#<PGresult DEAD>", countof(buf));
+		write_c_string("#<PGresult DEAD>", printcharfun);
 	}
-
-	write_c_string(buf, printcharfun);
 	return;
 }
 

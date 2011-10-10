@@ -112,8 +112,7 @@ print_ldap(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	print_internal(ldap->host, printcharfun, 1);
 	if (!ldap->ld)
 		write_c_string("(dead) ", printcharfun);
-	sprintf(buf, " 0x%lx>", (long)ldap);
-	write_c_string(buf, printcharfun);
+	write_fmt_string(printcharfun, " 0x%lx>", (long)ldap);
 }
 
 static Lisp_LDAP *allocate_ldap(void)

@@ -17,7 +17,8 @@ void ScaleValueChangedCB(Widget scale, XtPointer app_data,
 	char labelarr[10];
 	XmString labelstr;
 #if 0
-	sprintf(labelarr, "%d", xms->value);
+	int sz = snprintf(labelarr, sizeof(labelarr), "%d", xms->value);
+	assert(sz>=0 && sz<sizeof(labelarr));
 	labelstr = XmStringCreateLocalized(labelarr);
 	XtVaSetValues(label, XmNlabelString, labelstr, NULL);
 	XmStringFree(labelstr);
@@ -68,7 +69,8 @@ main(int argc, char **argv)
 	pushbutton = XmCreatePushButton(paned, "pushbutton", NULL, 0);
 	text = XmCreateText(paned, "text", NULL, 0);
 	for (i = 0; i < no_ews; i++) {
-		sprintf(buf, "extcli%d", i);
+		int sz = snprintf(buf, sizeof(buf), "extcli%d", i);
+		assert(sz>=0 && sz < sizeof(buf));
 		emacscli[i] =
 		    XtVaCreateWidget(buf, externalClientWidgetClass, paned,
 				     XmNwidth, 500, XmNheight, 200,
@@ -93,7 +95,9 @@ main(int argc, char **argv)
 
 		strcpy(labarr, "window:");
 		for (i = 0; i < no_ews; i++) {
-			sprintf(tmpbuf, " %d", XtWindow(emacscli[i]));
+			int sz = snprintf(tmpbuf, sizeof(tmpbuf), 
+					  " %d", XtWindow(emacscli[i]));
+			assert(sz>=0 && sz<sizeof(tmpbuf));
 			strcat(labarr, tmpbuf);
 		}
 		lab = XmStringCreateLocalized(labarr);

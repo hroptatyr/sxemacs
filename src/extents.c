@@ -3127,6 +3127,7 @@ print_extent_1(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	EXTENT anc = extent_ancestor(ext);
 	Lisp_Object tail;
 	char buf[100], *bp = buf;
+	int sz;
 
 	/* Retrieve the ancestor and use it, for faster retrieval of properties */
 
@@ -3134,11 +3135,13 @@ print_extent_1(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		*bp++ = '*';
 	*bp++ = (extent_start_open_p(anc) ? '(' : '[');
 	if (extent_detached_p(ext))
-		strcpy(bp, "detached");
-	else
-		sprintf(bp, "%ld, %ld",
-			XINT(Fextent_start_position(obj)),
-			XINT(Fextent_end_position(obj)));
+		strncpy(bp, "detached", sizeof(buf)-1);
+	else {
+		sz=snprintf(bp, sizeof(buf)-2, "%ld, %ld",
+			    XINT(Fextent_start_position(obj)),
+			    XINT(Fextent_end_position(obj)));
+		assert(sz>=0 && sz<(sizeof(buf)-2));
+	}
 	bp += strlen(bp);
 	*bp++ = (extent_end_open_p(anc) ? ')' : ']');
 	if (!NILP(extent_end_glyph(anc)))
@@ -3173,8 +3176,7 @@ print_extent_1(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		write_c_string(" ", printcharfun);
 	}
 
-	sprintf(buf, "0x%lx", (long)ext);
-	write_c_string(buf, printcharfun);
+	write_fmt_str(printcharfun, "0x%lx", (long)ext);
 }
 
 static void
@@ -3222,17 +3224,11 @@ print_extent(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		if (!EXTENT_LIVE_P(XEXTENT(obj))) {
 			write_c_string("#<destroyed extent", printcharfun);
 		} else {
-			/* C99ified */
-			size_t bufsz = strlen(title) + strlen(name) +
-				strlen(posttitle) + 1;
-			char buf[bufsz];
-
 			write_c_string("#<extent ", printcharfun);
 			print_extent_1(obj, printcharfun, escapeflag);
 			write_c_string(extent_detached_p(XEXTENT(obj))
 				       ? " from " : " in ", printcharfun);
-			snprintf(buf, bufsz, "%s%s%s", title, name, posttitle);
-			write_c_string(buf, printcharfun);
+			write_fmt_string(printcharfun, "%s%s%s", title, name, posttitle);
 		}
 	} else {
 		if (print_readably)

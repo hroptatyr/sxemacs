@@ -472,11 +472,13 @@ Lisp_Object make_process_internal(Lisp_Object name)
 	/* If name is already in use, modify it until it is unused.  */
 	name1 = name;
 	for (i = 1;; i++) {
-		char suffix[10];
+		char suffix[24];
+		int sz;
 		Lisp_Object tem = Fget_process(name1);
 		if (NILP(tem))
 			break;
-		sprintf(suffix, "<%d>", i);
+		sz = snprintf(suffix, sizeof(suffix), "<%d>", i);
+		assert(sz>=0 && sz<sizeof(suffix));
 		name1 = concat2(name, build_string(suffix));
 	}
 	name = name1;

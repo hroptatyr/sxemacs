@@ -44,15 +44,16 @@ int main(int argc, char *argv[])
 	} else
 #ifdef PATH_DATA
 #ifdef vms
-		sprintf(file, "%s%s", PATH_DATA, YOW_FILE);
+		int sz = snprintf(file, sizeof(file), "%s%s", PATH_DATA, YOW_FILE);
 #else
-		sprintf(file, "%s/%s", PATH_DATA, YOW_FILE);
+	        int sz = snprintf(file, sizeof(file), "%s/%s", PATH_DATA, YOW_FILE);
 #endif
+		assert(sz>=0 && sz<sizeof(file));
 #else				/* !PATH_DATA */
 	{
 		fprintf(stderr,
 			"%s: the location of the \"%s\" file was not supplied at compile-time.\n\
-        You must supply it with the -f command-line option.\n",
+You must supply it with the -f command-line option.\n",
 			argv[0], YOW_FILE);
 		exit(1);
 	}

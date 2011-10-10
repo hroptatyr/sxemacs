@@ -80,6 +80,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../src/regex.h"
 #endif
 
+#include <assert.h>
+
 extern char *optarg;
 extern int optind, opterr;
 
@@ -594,10 +596,12 @@ static void lock_dot(char *filename)
 #endif
 
 		if (desc < 0) {
-			char *message = (char *)xmalloc(strlen(tempname) + 50);
-			sprintf(message,
-				"%s--see source file lib-src/movemail.c",
-				tempname);
+			int msz = strlen(tempname) + 50;
+			char *message = (char *)xmalloc(msz);
+			int sz = snprintf(message, msz,
+					  "%s--see source file lib-src/movemail.c",
+					  tempname);
+			assert(sz>=0 && sz < msz);
 			pfatal_with_name(message);
 		}
 		close(desc);

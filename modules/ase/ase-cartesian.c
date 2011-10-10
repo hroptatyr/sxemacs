@@ -95,12 +95,8 @@ ase_cartesian_prnt(Lisp_Object obj, Lisp_Object pcf, int unused)
 	if (!NILP(XASE_CARTESIAN_INTERIOR_TYPE(obj))) {
 		print_internal(XASE_CARTESIAN_INTERIOR_TYPE(obj), pcf, unused);
 	}
-	{
-		char dim[64];
-		snprintf(dim, 63, " of dimension %d, ",
-			 XASE_CARTESIAN_DIMENSION(obj));
-		write_c_string(dim, pcf);
-	}
+	write_fmt_str(pcf, " of dimension %d, ",
+		      XASE_CARTESIAN_DIMENSION(obj));
 	_ase_cartesian_prnt(XASE_CARTESIAN(obj), pcf);
 
 	write_c_string(">", pcf);
