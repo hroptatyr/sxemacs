@@ -2454,9 +2454,11 @@ FILE *sys_fopen(const char *path, const char *type)
 int sys_fclose(FILE * stream)
 {
 #ifdef INTERRUPTIBLE_CLOSE
-	int rtnval;
+	int fd     = fileno(stream);
+	int rtnval = fclose(stream);
 
-	while ((rtnval = fclose(stream)) == EOF && (errno == EINTR)) ;
+	if (rtnval == EOF && (errno == EINTR))
+		while (((rtnval=close(fd))<0) && (errno == EINTR));
 	return rtnval;
 #else
 	return fclose(stream);

@@ -885,6 +885,7 @@ x_font_spec_matches_charset(struct device *d, Lisp_Object charset,
 			the_nonreloc = XSTRING_DATA(reloc);
 		fixup_internal_substring(nonreloc, reloc, offset, &the_length);
 		the_nonreloc += offset;
+		assert(the_length>=0);
 		if (!memchr(the_nonreloc, '*', the_length)) {
 			for (i = 0;; i++) {
 				const Bufbyte *new_nonreloc = (const Bufbyte *)
