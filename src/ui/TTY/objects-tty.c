@@ -501,6 +501,7 @@ tty_font_spec_matches_charset(struct device *d, Lisp_Object charset,
 	if (!the_nonreloc)
 		the_nonreloc = XSTRING_DATA(reloc);
 	fixup_internal_substring(nonreloc, reloc, offset, &length);
+	assert(length>=0);
 	the_nonreloc += offset;
 
 	if (UNBOUNDP(charset))
