@@ -70,23 +70,21 @@ ase_metric_prnt(Lisp_Object obj, Lisp_Object pcf, int unused)
 	write_c_string("#<", pcf);
 	print_internal(XDYNACAT_TYPE(obj), pcf, unused);
 	{
-		char addr[64];
 		if (NILP(XASE_METRIC_LDIST(obj))) {
-			snprintf(addr, 63, " %p", XASE_METRIC_DIST(obj));
+			write_hex_ptr(XASE_METRIC_DIST(obj),pcf);
 		} else {
 			Lisp_Object ldist = XASE_METRIC_LDIST(obj);
 			if (SYMBOLP(ldist)) {
 				Lisp_String *name =
 					symbol_name(XSYMBOL(ldist));
-				snprintf(addr, 63, " #'%s", string_data(name));
+				write_fmt_string(pcf, " #'%s", string_data(name));
 			} else if (SUBRP(ldist)) {
 				const char *name = subr_name(XSUBR(ldist));
-				snprintf(addr, 63, " #'%s", name);
+				write_fmt_string(pcf, " #'%s", name);
 			} else {
-				snprintf(addr, 63, " #'(lambda ...)");
+			        write_c_string(" #'(lambda ...)", pcf);
 			}
 		}
-		write_c_string(addr, pcf);
 	}
 	write_c_string(">", pcf);
 	return;

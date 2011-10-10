@@ -130,7 +130,9 @@ static int connect_to_ipc_server(void)
 	key_t key;		/* message key */
 	char buf[GSERV_BUFSZ + 1];	/* buffer for filename */
 
-	sprintf(buf, "%s/gsrv%d", tmpdir, (int)geteuid());
+	int sz = snprintf(buf, sizeof(buf), 
+			  "%s/gsrv%d", tmpdir, (int)geteuid());
+	assert(sz>=0 && sz<sizeof(buf));
 	creat(buf, 0600);
 	if ((key = ftok(buf, 1)) == -1) {
 		perror(progname);
@@ -245,6 +247,7 @@ static int connect_to_unix_server(void)
 {
 	int s;			/* connected socket descriptor */
 	struct sockaddr_un server;	/* for unix connections */
+	int sz;
 
 	if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
 		perror(progname);
@@ -254,10 +257,13 @@ static int connect_to_unix_server(void)
 
 	server.sun_family = AF_UNIX;
 #ifdef HIDE_UNIX_SOCKET
-	sprintf(server.sun_path, "%s/gsrvdir%d/gsrv", tmpdir, (int)geteuid());
+	sz = snprintf(server.sun_path, sizeof(server.sun_path),
+		      "%s/gsrvdir%d/gsrv", tmpdir, (int)geteuid());
 #else				/* HIDE_UNIX_SOCKET */
-	sprintf(server.sun_path, "%s/gsrv%d", tmpdir, (int)geteuid());
+	sz = snprintf(server.sun_path, sizeof(server.sun_path),
+		      "%s/gsrv%d", tmpdir, (int)geteuid());
 #endif				/* HIDE_UNIX_SOCKET */
+	assert(sz>=0 && sz<sizeof(server.sun_path));
 	if (connect(s, (struct sockaddr *)&server, strlen(server.sun_path) + 2)
 	    < 0) {
 		perror(progname);

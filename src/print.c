@@ -1003,7 +1003,7 @@ void float_to_string(char *buf, fpfloat data, int maxlen)
 #endif				/* HAVE_FPFLOAT */
 
 /* Print NUMBER to BUFFER.
-   This is equivalent to sprintf (buffer, "%ld", number), only much faster.
+   This is equivalent to snprintf (buffer, maxlen, "%ld", number), only much faster.
 
    BUFFER should accept 24 bytes.  This should suffice for the longest
    numbers on 64-bit machines, including the `-' sign and the trailing

@@ -55,11 +55,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #  define SIGNAL_ERROR signal_error
 #  define FFIBYTE Bufbyte
 #  define WRITE_C_STRING(x,y) write_c_string((x),(y))
+#  define WRITE_FMT_STRING(x,y,...) write_fmt_string((x),(y),__VA_ARGS__)
 #  define LRECORD_DESCRIPTION lrecord_description
 #else
 #  define SIGNAL_ERROR Fsignal
 #  define FFIBYTE Ibyte
 #  define WRITE_C_STRING(x,y) write_c_string((y),(x))
+#  define WRITE_FMT_STRING(x,y,...)			\
+	do {						\
+		char wcsb[128];				\
+		int wcss = snprintf(wcsb, sizeof(wcsb),	\
+				    (y),__VA_ARGS__);	\
+		write_c_string((y),wcsb);		\
+	} while(0)
 #  define LRECORD_DESCRIPTION memory_description
 #endif	/* SXEMACS */
 
@@ -143,8 +151,6 @@ print_ffiobject(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	/* This function can GC */
 	Lisp_EffiObject *ffio = XEFFIO(obj);
-	char buf[256];
-
         escapeflag = escapeflag;        /* shutup compiler */
 	if (print_readably) {
 #ifdef SXEMACS
@@ -163,9 +169,8 @@ print_ffiobject(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
                 print_internal(ffio->type, printcharfun, 1);
                 WRITE_C_STRING(" ", printcharfun);
         }
-	snprintf(buf, 255, "size=%ld fotype=%d foptr=%p>",
-                 (long)XINT(ffio->size), ffio->fotype, ffio->fop.generic);
-	WRITE_C_STRING(buf, printcharfun);
+	WRITE_FMT_STRING(printcharfun,"size=%ld fotype=%d foptr=%p>",
+			 (long)XINT(ffio->size), ffio->fotype, ffio->fop.generic);
 }
 
 static const struct LRECORD_DESCRIPTION ffiobject_description[] = {
@@ -1497,12 +1502,10 @@ static void
 print_ffi_job(worker_job_t job, Lisp_Object pcf)
 {
 	ffi_job_t ffij = ffi_job(job);
-	char *str = alloca(64);
 
 	SXE_MUTEX_LOCK(&ffij->mtx);
-	WRITE_C_STRING(" carrying ", pcf);
-	snprintf(str, 63, " #<ffi-job 0x%lx>", (long unsigned int)ffij);
-	WRITE_C_STRING(str, pcf);
+	WRITE_FMT_STRING(pcf, " carrying  #<ffi-job 0x%lx>", 
+			 (long unsigned int)ffij);
 	SXE_MUTEX_UNLOCK(&ffij->mtx);
 	return;
 }

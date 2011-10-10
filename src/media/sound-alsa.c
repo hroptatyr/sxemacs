@@ -70,8 +70,6 @@ static void
 sound_alsa_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 {
 	sound_alsa_data_t *sad = NULL;
-	char *temp = alloca(48);
-
 	sad = get_audio_device_data(device);
 	/* cannot use incomplete or corrupt audio devices */
 	if (XAUDIO_DEVICE_DRIVER(device) != MYSELF || sad == NULL) {
@@ -89,16 +87,12 @@ sound_alsa_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 		print_internal(sad->device, pcfun, ef);
 
 	if (sad->keep_open) {
-		write_c_string(" :keep-open t", pcfun);
-		snprintf(temp, 47, " :handle 0x%lx",
-			 (long unsigned int)sad->handle);
-		write_c_string(temp, pcfun);
+		write_fmt_string(pcfun, " :keep-open t :handle 0x%lx",
+				 (long unsigned int)sad->handle);
 	} else
 		write_c_string(" :keep-open nil", pcfun);
 
-	snprintf(temp, 47, " :params 0x%lx", (long unsigned int)sad->hwparams);
-	write_c_string(temp, pcfun);
-
+	write_fmt_str(pcfun, " :params 0x%lx", (long unsigned int)sad->hwparams);
 	return;
 }
 

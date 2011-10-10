@@ -73,9 +73,10 @@ _resc_rng_buffer_size(ase_resc_rng_t a)
 static inline void
 _ase_resc_rng_to_string(char *buf, int len, ase_resc_rng_t a)
 {
-	if (ase_resc_rng_smallp(a))
-		snprintf(buf, len, "%ld", a->small_ring);
-	else
+	if (ase_resc_rng_smallp(a)) {
+		int sz = snprintf(buf, len, "%ld", a->small_ring);
+		assert(sz >= 0 && sz < len);
+	} else
 		resc_rng_to_string(buf, len, ase_resc_rng_ring(a));
 	return;
 }
@@ -124,9 +125,10 @@ _resc_elm_buffer_size(ase_resc_elm_t a)
 static inline void
 _ase_resc_elm_to_string(char *buf, int len, ase_resc_elm_t a)
 {
-	if (ase_resc_elm_smallp(a))
-		snprintf(buf, len, "%ld", a->small_data);
-	else
+	if (ase_resc_elm_smallp(a)) {
+		int sz = snprintf(buf, len, "%ld", a->small_data);
+		assert(sz>=0 && sz < len);
+	} else
 		resc_elm_to_string(buf, len, ase_resc_elm_data(a));
 	return;
 }

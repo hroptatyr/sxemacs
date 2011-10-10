@@ -57,17 +57,10 @@ static void
 _ase_permutation_prnt_cyc(unsigned long *p, unsigned long idx, Lisp_Object pcf)
 {
 	unsigned long q;
-	char *tmp = alloca_array(char, sane_small);
 
-	write_c_string("(", pcf);
-	snprintf(tmp, sane_small, "%ld", idx+1);
-	write_c_string(tmp, pcf);
-
-	for (q = p[idx]; q != idx; q = p[q]) {
-		write_c_string(" ", pcf);
-		snprintf(tmp, sane_small, "%ld", q+1);
-		write_c_string(tmp, pcf);
-	}
+	write_fmt_string(pcf, "(%ld", idx+1);
+	for (q = p[idx]; q != idx; q = p[q])
+		write_fmt_str(pcf, " %ld", q+1);
 	write_c_string(")", pcf);
 }
 

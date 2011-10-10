@@ -639,18 +639,18 @@ PRIVATE_EXTERNAL_LIST_LOOP_6 (elt, list, len, tail,			\
 
 #define PRIVATE_EXTERNAL_LIST_LOOP_6(elt, list, len, hare,		\
 				     tortoise, suspicion_length)	\
-  for (tortoise = hare = list, len = 0;					\
+	for (tortoise = hare = list, len = 0;				\
+	     								\
+	     (CONSP (hare) ? ((elt = XCAR (hare)), 1) :			\
+	      (NILP (hare) ? 0 :					\
+	       (signal_malformed_list_error (list), 0)));		\
 									\
-       (CONSP (hare) ? ((void)(elt = XCAR (hare)), 1) :			\
-	(NILP (hare) ? 0 :						\
-	 ((void)signal_malformed_list_error (list), 0)));		\
-									\
-       hare = XCDR (hare),						\
-	 (void)								\
-	 ((++len > suspicion_length)					\
-	  &&								\
-	  ((((len & 1) != 0) && (tortoise = XCDR (tortoise), 0)),	\
-	   (EQ (hare, tortoise) && (signal_circular_list_error (list), 0)))))
+	     (hare = XCDR (hare)),					\
+		     (void)((++len > suspicion_length) &&		\
+			    ((void)(((len & 1) != 0)&&			\
+				    ((tortoise = XCDR (tortoise)), 0)),	\
+			     (EQ (hare, tortoise) &&			\
+			      (signal_circular_list_error (list), 0)))))
 
 /* GET_LIST_LENGTH and GET_EXTERNAL_LIST_LENGTH:
 

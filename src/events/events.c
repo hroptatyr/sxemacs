@@ -256,7 +256,6 @@ print_event(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		print_event_1("#<magic-event ", obj, printcharfun);
 		break;
 	case pointer_motion_event: {
-		char buf[64];
 		Lisp_Object Vx, Vy;
 		Vx = Fevent_x_pixel(obj);
 		assert(INTP(Vx));

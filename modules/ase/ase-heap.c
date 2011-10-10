@@ -190,7 +190,6 @@ _ase_yheap_prnt(ase_yheap_t a, Lisp_Object pcf)
 static void
 ase_yheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
 {
-	char siz[128];
 	ase_yheap_t h = XASE_YHEAP(obj);
 
 	EMOD_ASE_DEBUG_HEAP("h:0x%08lx@0x%08lx shall be printed...\n",
@@ -198,8 +197,7 @@ ase_yheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
 	write_c_string("#<ase:heap :dynamic", pcf);
 
 	write_c_string(" :size ", pcf);
-	snprintf(siz, 127, "%u", (unsigned int)ase_yheap_size(h));
-	write_c_string(siz, pcf);
+	write_fmt_str(pcf, "%u", (unsigned int)ase_yheap_size(h));
 
 	if (ase_yheap_root(h) != NULL &&
 	    ase_yheap_cell_data(ase_yheap_root(h)) != Qnull_pointer) {
@@ -229,16 +227,13 @@ _ase_dheap_prnt(ase_dheap_t h, Lisp_Object pcf)
 static void
 ase_dheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
 {
-	char siz[128];
 	ase_dheap_t h = XASE_DHEAP(obj);
 
 	EMOD_ASE_DEBUG_HEAP("d:0x%08lx@0x%08lx shall be printed...\n",
 			    (long unsigned int)h, (long unsigned int)obj);
-	write_c_string("#<ase:heap :dense", pcf);
 
-	write_c_string(" :size ", pcf);
-	snprintf(siz, 127, "%u", (unsigned int)ase_dheap_size(h));
-	write_c_string(siz, pcf);
+	write_fmt_str(pcf, "#<ase:heap :dense :size %u", 
+		      (unsigned int)ase_dheap_size(h));
 
 	if (ase_heap_opts_coloured(h)) {
 		write_c_string(" :coloured", pcf);
@@ -271,16 +266,12 @@ _ase_wheap_prnt(ase_wheap_t h, Lisp_Object pcf)
 static void
 ase_wheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
 {
-	char siz[128];
 	ase_wheap_t h = XASE_WHEAP(obj);
 
 	EMOD_ASE_DEBUG_HEAP("w:0x%08lx@0x%08lx shall be printed...\n",
 			    (long unsigned int)h, (long unsigned int)obj);
-	write_c_string("#<ase:heap :weak", pcf);
-
-	write_c_string(" :size ", pcf);
-	snprintf(siz, 127, "%u", (unsigned int)ase_wheap_size(h));
-	write_c_string(siz, pcf);
+	write_fmt_string(pcf, "#<ase:heap :weak :size %u", 
+			 (unsigned int)ase_wheap_size(h));
 
 	if (ase_heap_opts_coloured(h)) {
 		write_c_string(" :coloured", pcf);

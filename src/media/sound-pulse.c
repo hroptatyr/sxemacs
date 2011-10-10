@@ -136,7 +136,6 @@ static void
 sound_pulse_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 {
 	sound_pulse_data_t spd = NULL;
-	char *temp = alloca(256);
 	pa_context_state_t st;
 
 	spd = get_audio_device_data(device);
@@ -209,17 +208,12 @@ sound_pulse_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 
 	write_c_string(" :api ", pcfun);
 	if (spd->ml_threaded_p) {
-		write_c_string("#threaded", pcfun);
-		snprintf(temp, 255, " :mainloop 0x%lx",
-			 (long unsigned int)spd->tml);
+		write_fmt_str(pcfun, "#threaded :mainloop 0x%lx",
+				 (long unsigned int)spd->tml);
 	} else {
-		write_c_string("#non-threaded", pcfun);
-		snprintf(temp, 255, " :mainloop 0x%lx",
-			 (long unsigned int)spd->ml);
+		write_fmt_str(pcfun, "#non-threaded :mainloop 0x%lx",
+			      (long unsigned int)spd->ml);
 	}
-
-	write_c_string(temp, pcfun);
-
 	return;
 }
 

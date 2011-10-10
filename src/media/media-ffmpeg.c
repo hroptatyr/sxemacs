@@ -157,9 +157,10 @@ char *media_ffmpeg_streaminfo(Lisp_Media_Stream *ms)
 	}
 	if (avfc->year) {
 		char year[12];
+		int sz = snprintf(year, sizeof(year), "%d", avfc->year);
+		assert(sz>=0 && sz<sizeof(year));
 		strncat(out, " :year ", chars_left);
 		chars_left -= 7;
-		snprintf(year, 12, "%d", avfc->year);
 		strncat(out, year, chars_left);
 	}
 
