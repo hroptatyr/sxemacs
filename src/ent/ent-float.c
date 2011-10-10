@@ -564,7 +564,7 @@ void syms_of_ent_float(void)
 void vars_of_ent_float(void)
 {
 	fpfloat f = 0.0, fp = 0.0;
-
+	
 	f = 1.0;
 	while ( (f > fp) &&
 		(f = 2.0 * (fp = f)) &&
@@ -585,12 +585,15 @@ The float closest in value to -infinity.
 								       */);
 	Vmost_negative_float = make_float(fp);
 
+	{
+		char tmp[] = "1.0";
 	/* let's compute the array we need to print such a float */
 #if fpfloat_double_p
-	max_float_print_size = snprintf(NULL, 0, "%f", fp);
+		max_float_print_size = snprintf(tmp, sizeof(tmp), "%f", fp);
 #elif fpfloat_long_double_p
-	max_float_print_size = snprintf(NULL, 0, "%Lf", fp);
+		max_float_print_size = snprintf(tmp, sizeof(tmp), "%Lf", fp);
 #endif
+	}
 	assert(max_float_print_size>0);
 	max_float_print_size += 10;
 
