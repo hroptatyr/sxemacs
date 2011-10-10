@@ -532,6 +532,9 @@ static void update_heap_bloc_correspondence(bloc_ptr bloc, heap_ptr heap)
 {
 	register bloc_ptr b;
 
+	if (heap == NULL)
+		return;
+
 	/* Initialize HEAP's status to reflect blocs before BLOC.  */
 	if (bloc != NIL_BLOC && bloc->prev != NIL_BLOC
 	    && bloc->prev->heap == heap) {
@@ -550,7 +553,8 @@ static void update_heap_bloc_correspondence(bloc_ptr bloc, heap_ptr heap)
 		/* Advance through heaps, marking them empty,
 		   till we get to the one that B is in.  */
 		while (heap) {
-			if (heap->bloc_start <= b->data && b->data <= heap->end)
+			if (heap->bloc_start <= b->data && 
+			    b->data <= heap->end)
 				break;
 			heap = heap->next;
 			/* We know HEAP is not null now,
@@ -559,7 +563,8 @@ static void update_heap_bloc_correspondence(bloc_ptr bloc, heap_ptr heap)
 			heap->last_bloc = NIL_BLOC;
 			heap->free = heap->bloc_start;
 		}
-
+		if (heap == NULL)
+			break;
 		/* Update HEAP's status for bloc B.  */
 		heap->free = b->data + b->size;
 		heap->last_bloc = b;
@@ -570,14 +575,16 @@ static void update_heap_bloc_correspondence(bloc_ptr bloc, heap_ptr heap)
 		b->heap = heap;
 	}
 
-	/* If there are any remaining heaps and no blocs left,
-	   mark those heaps as empty.  */
-	heap = heap->next;
-	while (heap) {
-		heap->first_bloc = NIL_BLOC;
-		heap->last_bloc = NIL_BLOC;
-		heap->free = heap->bloc_start;
+	if(heap) {
+		/* If there are any remaining heaps and no blocs left,
+		   mark those heaps as empty.  */
 		heap = heap->next;
+		while (heap) {
+			heap->first_bloc = NIL_BLOC;
+			heap->last_bloc = NIL_BLOC;
+			heap->free = heap->bloc_start;
+			heap = heap->next;
+		}
 	}
 }
 
