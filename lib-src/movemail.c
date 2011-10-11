@@ -418,7 +418,6 @@ int main(int argc, char *argv[])
 
 		{
 			char buf[1024];
-			int retries = 3;
 			while (1) {
 				nread = read(indesc, buf, sizeof buf);
 				if (nread < 0 ||  
