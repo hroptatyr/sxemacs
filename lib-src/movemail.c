@@ -418,16 +418,17 @@ int main(int argc, char *argv[])
 
 		{
 			char buf[1024];
-
+			int retries = 3;
 			while (1) {
 				nread = read(indesc, buf, sizeof buf);
-				if (nread != write(outdesc, buf, nread)) {
+				if (nread < 0 ||  
+				    nread != write(outdesc, buf, nread)) {
 					int saved_errno = errno;
 					unlink(outname);
 					errno = saved_errno;
 					pfatal_with_name(outname);
 				}
-				if (nread < (int)sizeof buf)
+				if (nread < (int)sizeof(buf))
 					break;
 			}
 		}
