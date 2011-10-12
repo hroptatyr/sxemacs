@@ -397,6 +397,10 @@ get_doprnt_args(printf_spec_dynarr *specs, va_list vargs)
 	printf_arg_t arg;
 	REGISTER int i;
 	int args_needed = get_args_needed(specs);
+	int spec_len = -1;
+
+	if (specs)
+		spec_len = Dynarr_length(specs);
 
 	xzero(arg);
 	for (i = 1; i <= args_needed; i++) {
@@ -404,14 +408,14 @@ get_doprnt_args(printf_spec_dynarr *specs, va_list vargs)
 		char ch;
 		printf_spec_t spec = 0;
 
-		for (j = 0; j < Dynarr_length(specs); j++) {
+		for (j = 0; j < spec_len; j++) {
 			spec = Dynarr_atp(specs, j);
 			if (spec->argnum == i) {
 				break;
 			}
 		}
 
-		if (j == Dynarr_length(specs))
+		if (j >= spec_len)
 			error("No conversion spec for argument %d", i);
 
 		ch = spec->converter;
@@ -1328,8 +1332,8 @@ emacs_doprnt_1(Lisp_Object stream, const Bufbyte * format_nonreloc,
 	} else {
 		args = get_doprnt_args(specs, vargs);
 	}
-
-	for (i = 0; i < Dynarr_length(specs); i++) {
+	
+	for (i = 0; specs && i < Dynarr_length(specs); i++) {
 		printf_spec_t spec = Dynarr_atp(specs, i);
 		char ch;
 

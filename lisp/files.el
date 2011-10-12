@@ -1223,26 +1223,27 @@ with the name of the interpreter specified in the first line.
 If it matches, mode MODE is selected.")
 
 (defvar binary-file-regexps
-  '(#r"\.\(?:bz2\|elc\|g\(if\|z\)\|jp\(eg\|g\)\|png\|t\(ar\|gz\|iff\)\|[Zo]\)\'")
+  '(#r"\.\(?:7[Zz]\|ARC\|E\(?:AR\|XE\)\|GIF\|J\(?:AR\|P\(?:E?G\)\)\|LZH\|PDF\|RAR\|WAR\|XPI\|Z\(?:IP\|OO\)\|arc\|bz2\|doc\|e\(?:ar\|lc\|xe\)\|g\(?:if\|z\)\|j\(?:ar\|p\(?:e?g\)\)\|l\(?:ha\|z\(?:h\|ma\)\)\|odt\|p\(?:bm\|df\|gm\|n[gm]\|pm\)\|s\(?:o\|x[cdimw]\)\|t\(?:ar\|gz\|iff\)\|war\|x\(?:pi\|z\)\|z\(?:ip\|oo\)\|[Zao]\)\'")
   "List of regexps of filenames containing binary (non-text) data.")
 
-;   (eval-when-compile
-;     (require 'regexp-opt)
-;     (list
-;      (format "\\.\\(?:%s\\)\\'"
-;	      (regexp-opt
-;	       '("tar"
-;		 "tgz"
-;		 "gz"
-;		 "bz2"
-;		 "Z"
-;		 "o"
-;		 "elc"
-;		 "png"
-;		 "gif"
-;		 "tiff"
-;		 "jpg"
-;		 "jpeg"))))))
+;(eval-when-compile
+;  (require 'regexp-opt)
+;  (list
+;   (format "\\.\\(?:%s\\)\\'" 
+;	   (regexp-opt
+;	    '(
+;	      ;; Compressed files
+;	      "7Z" "7z" "ARC" "EAR" "JAR" "LZH" "RAR" "WAR"
+;	      "XPI" "Z" "ZIP" "ZOO" "arc" "bz2" "ear" "gz" 
+;	      "jar" "tar" "tgz" "tiff" "war" "xpi" "zip" "zoo"
+;	      "zoo" "lha" "lzh" "lzma" "xz"
+;	      ;; Code
+;	      "EXE" "exe" "elc" "o" "so" "a"
+;	      ;; Images
+;	      "gif" "jpeg" "jpg" "pbm" "pgm" "png" "pnm" "ppm"
+;	      "GIF" "JPEG" "JPG"
+;	      ;; Documents
+;	      "PDF" "odt" "pdf" "sxc" "sxd" "sxi" "sxm" "sxw" "doc")))))
 
 (defvar inhibit-first-line-modes-regexps
   binary-file-regexps

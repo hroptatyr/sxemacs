@@ -1149,9 +1149,11 @@ x_to_emacs_keysym(XKeyPressedEvent * event, int simple_p)
 	int bufsiz = sizeof(buffer);
 	Status status;
 #ifdef XIM_XLIB
-	XIC xic = FRAME_X_XIC(x_any_window_to_frame
-			      (get_device_from_display(event->display),
-			       event->window));
+	XIC xic = NULL;
+	struct frame * f = 
+		x_any_window_to_frame(get_device_from_display(event->display),event->window);
+	if (f)
+		xic = FRAME_X_XIC(f);
 #endif				/* XIM_XLIB */
 #endif				/* HAVE_XIM */
 

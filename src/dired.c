@@ -361,7 +361,7 @@ dfr_inner(dirent_t *res,
 	}
 
 #if USE_MATCH_ARG
-	if (!NILP(match) && !pathname_matches_p(name, match, bufp)) {
+	if (!NILP(match) && bufp && !pathname_matches_p(name, match, bufp)) {
 		result_p = 0;
 	}
 #endif
