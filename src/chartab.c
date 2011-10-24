@@ -985,7 +985,9 @@ canonicalize_char_table_value(Lisp_Object value, enum char_table_type type)
 		break;
 
 	case CHAR_TABLE_TYPE_GENERIC:
+#ifdef MULE
 	case CHAR_TABLE_TYPE_CATEGORY:
+#endif
 	case CHAR_TABLE_TYPE_DISPLAY:
 	default:
 		break;
