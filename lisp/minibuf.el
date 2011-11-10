@@ -330,6 +330,9 @@ Each minibuffer output is added with
 (defvar current-minibuffer-contents)
 (defvar current-minibuffer-point)
 
+;; Added by lg:
+(defvar minibuffer-prompt-stack nil)
+
 (defcustom minibuffer-history-minimum-string-length nil
   "*If this variable is non-nil, a string will not be added to the
 minibuffer history if its length is less than that value."
@@ -483,13 +486,25 @@ See also the variable `completion-highlight-first-word-only' for
              ;(if minibuffer-setup-hook
              ;    (run-hooks 'minibuffer-setup-hook))
              ;(message nil)
+
+             ;; Adjust the prompt
+             (flet ((fmt-prompt-stack (p ps)
+                      (if (not ps)
+                          p
+                        (fmt-prompt-stack (concat "[" (car ps) "]" p) (cdr ps)))))
+               (push prompt minibuffer-prompt-stack)
+               (setq prompt (fmt-prompt-stack prompt (cdr minibuffer-prompt-stack))))
+
              (if (eq 't
                      (catch 'exit
-                       (if (> (recursion-depth) (minibuffer-depth))
-                           (let ((standard-output t)
-                                 (standard-input t))
+                       (unwind-protect
+                           (if (> (recursion-depth) (minibuffer-depth))
+                               (let ((standard-output t)
+                                     (standard-input t))
+                                 (read-minibuffer-internal prompt))
                              (read-minibuffer-internal prompt))
-                           (read-minibuffer-internal prompt))))
+                         (pop minibuffer-prompt-stack))))
+                       
                  ;; Translate an "abort" (throw 'exit 't)
                  ;;  into a real quit
                  (signal 'quit '())
