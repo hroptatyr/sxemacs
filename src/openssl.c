@@ -3478,18 +3478,38 @@ ossl_ssl_prepare_cmeth(Lisp_Object method)
 	SSL_library_init();
 	SSL_load_error_strings();
 
-	if (0);
-	else if (EQ(method, Qssl2))
+	if (0) {
+	} else if (EQ(method, Qssl2)) {
+#if HAVE_SSLV2_CLIENT_METHOD
 		meth = (SSL_METHOD *)SSLv2_client_method();
-	else if (EQ(method, Qssl3))
+#else
+		error("sslv2 client method not supported");
+#endif
+	} else if (EQ(method, Qssl3)) {
+#if HAVE_SSLV3_CLIENT_METHOD 
 		meth = (SSL_METHOD *)SSLv3_client_method();
-	else if (EQ(method, Qssl23))
+#else
+		error("sslv3 client method not supported");
+#endif
+	} else if (EQ(method, Qssl23)) {
+#if HAVE_SSLV23_CLIENT_METHOD 
 		meth = (SSL_METHOD *)SSLv23_client_method();
-	else if (EQ(method, Qtls1))
+#else
+		error("sslv23 client method not supported");
+#endif
+	} else if (EQ(method, Qtls1)) {
+#if HAVE_TLSV1_CLIENT_METHOD 
 		meth = (SSL_METHOD *)TLSv1_client_method();
-	else
+#else
+		error("tlsv1 client method not supported");
+#endif
+        } else {
+#if HAVE_TLSV1_CLIENT_METHOD 
 		meth = (SSL_METHOD *)TLSv1_client_method();
-
+#else
+		error("default tlsv1 client method not supported");
+#endif
+        }
 	if (!RAND_status())
 		error("OSSL: not enough random data");
 
@@ -3513,18 +3533,38 @@ ossl_ssl_prepare_smeth(Lisp_Object method)
 	SSL_library_init();
 	SSL_load_error_strings();
 
-	if (0);
-	else if (EQ(method, Qssl2))
+	if (0) {
+	} else if (EQ(method, Qssl2)) {
+#if HAVE_SSLV2_SERVER_METHOD
 		meth = (SSL_METHOD *)SSLv2_server_method();
-	else if (EQ(method, Qssl3))
+#else
+		error("sslv2 client method not supported");
+#endif
+	} else if (EQ(method, Qssl3)) {
+#if HAVE_SSLV3_SERVER_METHOD 
 		meth = (SSL_METHOD *)SSLv3_server_method();
-	else if (EQ(method, Qssl23))
+#else
+		error("sslv3 client method not supported");
+#endif
+	} else if (EQ(method, Qssl23)) {
+#if HAVE_SSLV23_SERVER_METHOD 
 		meth = (SSL_METHOD *)SSLv23_server_method();
-	else if (EQ(method, Qtls1))
+#else
+		error("sslv23 client method not supported");
+#endif
+	} else if (EQ(method, Qtls1)) {
+#if HAVE_TLSV1_SERVER_METHOD 
 		meth = (SSL_METHOD *)TLSv1_server_method();
-	else
+#else
+		error("tlsv1 client method not supported");
+#endif
+	} else {
+#if HAVE_SSLV23_SERVER_METHOD 
 		meth = (SSL_METHOD *)SSLv23_server_method();
-
+#else
+		error("default sslv23 client method not supported");
+#endif
+	}
 	if (!RAND_status())
 		error("OSSL: not enough random data");
 

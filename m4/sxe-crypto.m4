@@ -193,6 +193,30 @@ AC_DEFUN([SXE_CHECK_OPENSSL_FUNCS], [dnl
 		SSL_get_peer_cert_chain SSL_pending SSL_get_certificate dnl
 		SSL_get_peer_certificate X509_verify_cert_error_string dnl
 		SSL_get_verify_result SSL_get_current_cipher SSL_CIPHER_get_bits])
+	if test x"$ac_TLSv1_client_method" = xyes; then
+	        AC_DEFINE([HAVE_TLSV1_CLIENT_METHOD], 1, [TLSv1 client methods available])
+	fi
+	if test x"$ac_SSLv2_client_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV2_CLIENT_METHOD], 1, [SSLv2 client methods available])
+	fi
+	if test x"$ac_SSLv3_client_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV3_CLIENT_METHOD], 1, [SSLv3 client methods available])
+	fi
+	if test x"$ac_SSLv23_client_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV23_CLIENT_METHOD], 1, [SSLv23 client methods available])
+	fi
+	if test x"$ac_TLSv1_server_method" = xyes; then
+	        AC_DEFINE([HAVE_TLSV1_SERVER_METHOD], 1, [TLSv1 server methods available])
+	fi
+	if test x"$ac_SSLv2_server_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV2_SERVER_METHOD], 1, [SSLv2 server methods available])
+	fi
+	if test x"$ac_SSLv3_server_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV3_SERVER_METHOD], 1, [SSLv3 server methods available])
+	fi
+	if test x"$ac_SSLv23_server_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV23_SERVER_METHOD], 1, [SSLv23 server methods available])
+	fi
 	SXE_RESTORE_LIBS
 ])dnl SXE_CHECK_OPENSSL_FUNCS
 
