@@ -3990,7 +3990,11 @@ layout, or may also be an evp-pkey object.
 
 	if (fun && fun(ssl_conn, ca) &&
 	    (conn = XSSLCONN(ssl_conn)->ssl_conn)) {
+#if HAVE_SSL_VERIFY_CERT_CHAIN
 		ssl_verify_cert_chain(conn, SSL_get_peer_cert_chain(conn));
+#else
+		error("SSL certificate chain verification not supported");
+#endif
 		UNGCPRO;
 		return Qt;
 	}
