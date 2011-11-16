@@ -217,6 +217,9 @@ AC_DEFUN([SXE_CHECK_OPENSSL_FUNCS], [dnl
 	if test x"$ac_SSLv23_server_method" = xyes; then
 	        AC_DEFINE([HAVE_SSLV23_SERVER_METHOD], 1, [SSLv23 server methods available])
 	fi
+	if test x"$ac_ssl_verify_cert_chain" = xyes; then
+	        AC_DEFINE([HAVE_SSL_VERIFY_CERT_CHAIN], 1, [ssl_verify_cert_chain available])
+	fi
 	SXE_RESTORE_LIBS
 ])dnl SXE_CHECK_OPENSSL_FUNCS
 
