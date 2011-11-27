@@ -294,6 +294,25 @@
   :XorCompositeOp
   :DivideCompositeOp)
 
+(defun wand-camel-case-kw-string (kw n)
+  "Create a string from CamelCased keyword KW.
+Strips last N words."
+  (let ((case-fold-search nil)
+        (kws (substring (symbol-name kw) 1)))
+    (while (string-match "[A-Z]" kws 1)
+      (setq kws (replace-match (concat "-" (downcase (match-string 0 kws))) 
+                               t nil kws)))
+    (mapconcat 'identity (butlast (split-string (downcase kws) "-") n) "-")))
+
+(defmacro wand-camel-case-kw-completion (n)
+  `(lambda (x)
+     (cons (wand-camel-case-kw-string x ,n) x)))
+
+(defconst WandCompositeOperator-completion-table
+  (mapcar (wand-camel-case-kw-completion 2)
+          (mapcar #'car (ffi-enum-values 'WandCompositeOperator)))
+  "Completion table for composite operator.")
+
 (define-ffi-enum FillRule
   :UndefinedRule
   :EvenOddRule
@@ -427,6 +446,43 @@
   weight
   stretch
   style)
+
+(define-ffi-enum MagickPreviewType
+  :UndefinedPreview
+  :RotatePreview
+  :ShearPreview
+  :RollPreview
+  :HuePreview
+  :SaturationPreview
+  :BrightnessPreview
+  :GammaPreview
+  :SpiffPreview
+  :DullPreview
+  :GrayscalePreview
+  :QuantizePreview
+  :DespecklePreview
+  :ReduceNoisePreview
+  :AddNoisePreview
+  :SharpenPreview
+  :BlurPreview
+  :ThresholdPreview
+  :EdgeDetectPreview
+  :SpreadPreview
+  :SolarizePreview
+  :ShadePreview
+  :RaisePreview
+  :SegmentPreview
+  :SwirlPreview
+  :ImplodePreview
+  :WavePreview
+  :OilPaintPreview
+  :CharcoalDrawingPreview
+  :JPEGPrevie)
+
+(defconst MagickPreviewType-completion-table
+  (mapcar (wand-camel-case-kw-completion 1)
+          (mapcar #'car (ffi-enum-values 'MagickPreviewType)))
+  "Completion table for preview types.")
 
 ;;}}}
 ;;{{{  `-- Wand:version
@@ -720,7 +776,13 @@ Use \(setf \(Wand:image-format w\) FMT\) to set new one."
   MagickColorspaceType
   (wand MagickWand))
 
-(cffi:defcfun ("MagickSetImageColorspace" Wand:SetImageColorspace)
+;; ImageMagick changed API in favor for MagickTransformImageColorspace
+;(cffi:defcfun ("MagickSetImageColorspace" Wand:SetImageColorspace)
+;  MagickBooleanType
+;  (wand MagickWand)
+;  (cst MagickColorspaceType))
+
+(cffi:defcfun ("MagickTransformImageColorspace" Wand:SetImageColorspace)
   MagickBooleanType
   (wand MagickWand)
   (cst MagickColorspaceType))
@@ -1229,6 +1291,9 @@ effect to wipe hard contrasts."
 (cffi:defcfun ("MagickTrimImage" Wand:trim-image) MagickBooleanType
   (wand MagickWand) (fuzz double))
 
+(cffi:defcfun ("MagickPreviewImages" Wand:preview-images) MagickWand
+  (wand MagickWand) (ptype MagickPreviewType))
+
 ;;}}}
 ;;{{{  `-- Image size
 
@@ -1477,6 +1542,27 @@ If CM is nil or null-pointer then unset clip mask."
   (dw DrawingWand))
 
 (cffi:defcfun ("NewDrawingWand" Wand:make-drawing-wand) DrawingWand)
+
+;; MagickQueryFontMetrics() returns a 13 element array representing the
+;; following font metrics:
+;;
+;;   Element Description
+;;   -------------------------------------------------
+;;         0 character width
+;;         1 character height
+;;         2 ascender
+;;         3 descender
+;;         4 text width
+;;         5 text height
+;;         6 maximum horizontal advance
+;;         7 bounding box: x1
+;;         8 bounding box: y1
+;;         9 bounding box: x2
+;;        10 bounding box: y2
+;;        11 origin: x
+;;        12 origin: y
+(cffi:defcfun ("MagickQueryFontMetrics" Wand:query-font-metrics) (array double 13)
+  (wand MagickWand) (dw DrawingWand) (text c-string))
 
 (defmacro Wand-with-drawing-wand (dw &rest forms)
   "With allocated drawing wand DW do FORMS."
@@ -2293,6 +2379,13 @@ This is NOT lossless rotation for jpeg-like formats."
   "Chop REGION in the image."
   (apply #'Wand:chop-image wand region))
 
+(define-Wand-operation preview-op (wand ptype)
+  "Preview operation PTYPE.
+Return a new wand."
+  (Wand-possible-for-region wand
+    (Wand:preview-images
+     wand (cdr (assoc ptype MagickPreviewType-completion-table)))))
+
 (defun Wand:get-image-rgb-pixels (wand x y w h)
   "Extract RGB pixels from WAND."
   (let ((target (make-ffi-object 'c-data (* w h 3))))
@@ -2399,6 +2492,31 @@ BLUR is float, 0.25 for insane pixels, > 2.0 for excessively smoth."
 
 (define-Wand-operation liquid-rescale (wand width height)
   (Wand:liquid-rescale wand width height 0.0 0.0))
+
+(define-Wand-operation posterize (wand levels &optional ditherp)
+  (Wand:posterize-image wand levels ditherp))
+
+(defvar Wand-pattern-composite-op "dst-over")
+
+(defvar Wand-patterns
+  (mapcar (lambda (x) (list (symbol-name x)))
+         '(bricks checkerboard circles crosshatch crosshatch30 crosshatch45
+           fishscales gray0 gray5 gray10 gray15 gray20 gray25 gray30
+           gray35 gray40 gray45 gray50 gray55 gray60 gray65 gray70
+           gray75 gray80 gray85 gray90 gray95 gray100 hexagons horizontal
+           horizontalsaw hs_bdiagonal hs_cross
+           hs_diagcross hs_fdiagonal hs_horizontal hs_vertical left30
+           left45 leftshingle octagons right30 right45 rightshingle
+           smallfishscales vertical verticalbricks
+           verticalleftshingle verticalrightshingle verticalsaw)))
+
+(define-Wand-operation pattern (wand pattern op)
+  (Wand-with-wand cb-wand
+    (setf (Wand:image-size cb-wand)
+          (cons (Wand:image-width wand) (Wand:image-height wand)))
+    (Wand:MagickReadImage cb-wand (concat "pattern:" pattern))
+    (Wand:image-composite wand cb-wand
+                          (cdr (assoc op WandCompositeOperator-completion-table)) 0 0)))
 
 ;;}}}
 ;;{{{ Operations list functions
@@ -2633,14 +2751,17 @@ BLUR is float, 0.25 for insane pixels, > 2.0 for excessively smoth."
     (when preview-wand (Wand:delete-wand preview-wand))
     (setq preview-wand (Wand:get-image image-wand))
 
+    ;; NOTE:
+    ;; If last character is \n, try to remove it before calculating
+    ;; displayed-text-pixel-height, and then restore
     ;; Rescale preview to fit the window
     (let ((scale-h (- (window-text-area-pixel-height)
-                      ;; TODO: we need something to do to count pixels
-                      ;; used by displayed text.  Below constructions
-                      ;; does not work for some reason --lg
-                      (if t             ;(string= (buffer-substring) "")
-                          0
-                        (window-displayed-text-pixel-height))))
+                      (if (zerop (buffer-size)) 0
+                        (unwind-protect
+                            (progn
+                              (backward-delete-char)
+                              (window-displayed-text-pixel-height))
+                          (insert "\n")))))
           (scale-w (window-text-area-pixel-width)))
       (when (and (get image-wand 'fitting)
                  (Wand:fit-size preview-wand scale-w scale-h))
@@ -2671,7 +2792,14 @@ BLUR is float, 0.25 for insane pixels, > 2.0 for excessively smoth."
              preview-extent (point) (point) (current-buffer)))
         (when pwr (Wand:delete-wand pwr))))))
 
-(defun Wand-redisplay ()
+(defun Wand-redisplay (&optional wand)
+  "Redisplay Wand buffer with possible a new WAND."
+  (when wand
+    ;; A new wand in the air
+    (map-plist (lambda (k v) (put wand k v)) (object-plist image-wand))
+    (Wand:delete-wand image-wand)
+    (setq image-wand wand))
+
   (let ((inhibit-read-only t)
 	before-change-functions
 	after-change-functions)
@@ -2809,7 +2937,8 @@ Bindings are:
                       "Operation: " (Wand-mode-operations-table)
                       nil t)))
   (let ((op (assoc op-name (Wand-mode-operations-table))))
-    (call-interactively (cdr op))))
+    (let ((current-prefix-arg current-prefix-arg))
+      (call-interactively (cdr op)))))
 
 (defcustom Wand-formats-read-unsupported
   '("a" "b" "c" "g" "h" "o" "k" "m" "r" "x" "y" "txt" "text" "pm")
@@ -3005,6 +3134,7 @@ If negative then to the opposite."
   (interactive "nDegrees: ")
   (Wand-operation-apply 'rotate image-wand arg)
   (Wand-redisplay))
+(put 'Wand-mode-rotate 'can-preview :RotatePreview)
 (put 'Wand-mode-rotate 'transform-operation t)
 (put 'Wand-mode-rotate 'menu-name "Rotate")
 
@@ -3050,6 +3180,7 @@ If ARG is specified then rotate on ARG degree."
                                   nil (number-to-string Wand-mode-sigma))))
   (Wand-operation-apply 'sharpen image-wand radius sigma)
   (Wand-redisplay))
+(put 'Wand-mode-sharpen 'can-preview :SharpenPreview)
 (put 'Wand-mode-sharpen 'effect-operation t)
 (put 'Wand-mode-sharpen 'menu-name "Sharpen")
 
@@ -3060,6 +3191,7 @@ If ARG is specified then rotate on ARG degree."
                                   nil (number-to-string Wand-mode-sigma))))
   (Wand-operation-apply 'gauss-blur image-wand radius sigma)
   (Wand-redisplay))
+(put 'Wand-mode-gaussian-blur 'can-preview :BlurPreview)
 (put 'Wand-mode-gaussian-blur 'effect-operation t)
 (put 'Wand-mode-gaussian-blur 'menu-name "Gaussian Blur")
 
@@ -3068,6 +3200,7 @@ If ARG is specified then rotate on ARG degree."
   (interactive)
   (Wand-operation-apply 'despeckle image-wand)
   (Wand-redisplay))
+(put 'Wand-mode-despeckle 'can-preview :DespecklePreview)
 (put 'Wand-mode-despeckle 'effect-operation t)
 (put 'Wand-mode-despeckle 'menu-name "Despeckle")
 
@@ -3096,6 +3229,7 @@ Default is 1."
   (interactive "p")
   (Wand-operation-apply 'reduce-noise image-wand arg)
   (Wand-redisplay))
+(put 'Wand-mode-reduce-noise 'can-preview :ReduceNoisePreview)
 (put 'Wand-mode-reduce-noise 'effect-operation t)
 (put 'Wand-mode-reduce-noise 'menu-name "Reduce Noise")
 
@@ -3222,6 +3356,7 @@ Default radius is 3."
   (interactive (list (read-number "Radius [3.0]: " nil "3.0")))
   (Wand-operation-apply 'oil image-wand radius)
   (Wand-redisplay))
+(put 'Wand-mode-oil-paint 'can-preview :OilPaintPreview)
 (put 'Wand-mode-oil-paint 'f/x-operation t)
 (put 'Wand-mode-oil-paint 'menu-name "Oil Paint")
 
@@ -3233,6 +3368,7 @@ Default is 1."
                      (read-number "Sigma [1.0]: " nil "1.0")))
   (Wand-operation-apply 'charcoal image-wand radius sigma)
   (Wand-redisplay))
+(put 'Wand-mode-charcoal 'can-preview :CharcoalDrawingPreview)
 (put 'Wand-mode-charcoal 'f/x-operation t)
 (put 'Wand-mode-charcoal 'menu-name "Charcoal Draw")
 
@@ -3396,6 +3532,14 @@ RADIUS range is [-1.0, 1.0]."
 (put 'Wand-mode-redeye-remove 'region-operation t)
 (put 'Wand-mode-redeye-remove 'menu-name "Remove red eye")
 
+(defun Wand-mode-preview-op (op)
+  "Preview some operation OP with 8 subnails."
+  (interactive (list (completing-read "Operation: "
+                        MagickPreviewType-completion-table nil t)))
+  (Wand-redisplay (Wand-operation-apply 'preview-op image-wand op)))
+(put 'Wand-mode-preview-op 'region-operation t)
+(put 'Wand-mode-preview-op 'menu-name "Preview operation")
+
 ;;}}}
 ;;{{{ Zooming/Sampling
 
@@ -3457,6 +3601,88 @@ If FACTOR is nil, then `Wand-mode-zoom-factor' is used."
   (Wand-redisplay))
 (put 'Wand-mode-liquid-rescale 'transform-operation t)
 (put 'Wand-mode-liquid-rescale 'menu-name "Liquid rescale")
+
+(defun Wand-mode-posterize (levels &optional ditherp)
+  "Posterize image.
+Levels is a  number of color levels allowed in each channel.
+2, 3, or 4 have the most visible effect."
+  (interactive "nLevel: \nP")
+  (Wand-operation-apply 'posterize image-wand levels (not (not ditherp)))
+  (Wand-redisplay))
+(put 'Wand-mode-posterize 'transform-operation t)
+(put 'Wand-mode-posterize 'menu-name "Posterize")
+
+(defun Wand-mode-pattern (pattern &optional op)
+  "Enable checkerboard as tile background."
+  (interactive (list (completing-read "Pattern: " Wand-patterns nil t)
+                     (if current-prefix-arg
+                         (completing-read "Composite Op: "
+                            WandCompositeOperator-completion-table nil t)
+                       Wand-pattern-composite-op)))
+  (Wand-operation-apply 'pattern image-wand pattern op)
+  (Wand-redisplay))
+(put 'Wand-mode-pattern 'transform-operation t)
+(put 'Wand-mode-pattern 'menu-name "Pattern")
+
+(defun Wand-list-composite-ops ()
+  "Show composite operations.
+A-la `list-colors-display'."
+  (interactive)
+  (Wand-with-drawing-wand d-in
+    (Wand-with-pixel-wand pw
+      (setf (Wand:pixel-color pw) "red")
+      (setf (Wand:draw-fill-color d-in) pw))
+    (Wand:draw-rectangle d-in 0.0 4.0 26.0 26.0)
+
+    (Wand-with-drawing-wand d-out
+      (Wand-with-pixel-wand pw
+        (setf (Wand:pixel-color pw) "blue")
+        (setf (Wand:draw-fill-color d-out) pw))
+      (Wand:draw-rectangle d-out 10.0 0.0 42.0 32.0)
+
+      (Wand-with-wand w-out
+        (setf (Wand:image-size w-out)
+              (cons 80 (face-height 'default)))
+        (Wand:MagickReadImage w-out "pattern:horizontal")
+        (Wand:MagickDrawImage w-out d-out)
+
+        (flet ((draw-in-out (cop)
+                 (Wand-with-wand w-in
+                   (setf (Wand:image-size w-in)
+                         (cons 80 (face-height 'default)))
+                   (Wand:MagickReadImage w-in "pattern:vertical")
+                   (Wand:MagickDrawImage w-in d-in)
+                   (Wand:image-composite w-in w-out (cdr cop) 0 0)
+                   (let ((pnt (point)))
+                     (insert " " (car cop) "\n")
+                     (set-extent-end-glyph
+                      (make-extent pnt pnt)
+                      (Wand:glyph w-in))))))
+          (with-output-to-temp-buffer "*Wand-Composite-Ops*"
+            (set-buffer standard-output)
+            (mapc #'draw-in-out
+              (cdr WandCompositeOperator-completion-table))))))))
+
+(defun Wand-list-patterns ()
+  "Show available patterns in separate buffer.
+A-la `list-colors-display'."
+  (interactive)
+  (with-output-to-temp-buffer "*Wand-Patterns*"
+    (flet ((draw-pattern (pat-name)
+             (let ((pnt (point)))
+               (insert " " pat-name "\n")
+               (set-extent-end-glyph
+                (make-extent pnt pnt)
+                (Wand-with-wand wand
+                  (setf (Wand:image-size wand)
+                        (cons 80 (face-height 'default)))
+                  (Wand:MagickReadImage wand (concat "pattern:" pat-name))
+                  (Wand:glyph wand))))))
+      (save-excursion
+        (set-buffer standard-output)
+        (mapc #'draw-pattern (mapcar #'car Wand-patterns))))))
+(put 'Wand-list-patterns 'transform-operation t)
+(put 'Wand-list-patterns 'menu-name "List Patterns")
 
 ;;}}}
 ;;{{{ Toggle fit, Undo/Redo, Saving
