@@ -297,7 +297,7 @@ void lock_file(Lisp_Object fn)
 	struct gcpro gcpro1, gcpro2, gcpro3;
 	Lisp_Object old_current_buffer;
 	Lisp_Object subject_buf;
-	int sz;
+	int sz, maxsz;
 
 	if (inhibit_clash_detection)
 		return;
@@ -331,12 +331,13 @@ void lock_file(Lisp_Object fn)
 		goto done;
 
 	/* Else consider breaking the lock */
-	locker = (char *)alloca(strlen(lock_info.user) + strlen(lock_info.host)
-				+ LOCK_PID_MAX + 9);
-	sz = snprintf(locker, sizeof(locker), "%s@%s (pid %lu)", 
+	max_sz = strlen(lock_info.user) + strlen(lock_info.host)
+		+ LOCK_PID_MAX + 9;
+	locker = (char *)alloca(max_sz);
+	sz = snprintf(locker, max_sz, "%s@%s (pid %lu)", 
 		      lock_info.user, lock_info.host,
 		      lock_info.pid);
-	assert(sz>=0 && sz < sizeof(locker));
+	assert(sz>=0 && sz < max_sz);
 	FREE_LOCK_INFO(lock_info);
 
 	attack = call2_in_buffer(BUFFERP(subject_buf) ? XBUFFER(subject_buf) :
