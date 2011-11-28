@@ -297,7 +297,7 @@ void lock_file(Lisp_Object fn)
 	struct gcpro gcpro1, gcpro2, gcpro3;
 	Lisp_Object old_current_buffer;
 	Lisp_Object subject_buf;
-	int sz, maxsz;
+	int sz, max_sz;
 
 	if (inhibit_clash_detection)
 		return;
