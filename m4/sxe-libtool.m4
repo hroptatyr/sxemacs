@@ -11,7 +11,7 @@ AC_DEFUN([SXE_CHECK_LIBTOOL], [dnl
 	if test -n "$export_dynamic_flag_spec"; then
 		sxe_cv_export_dynamic=$(\
 			echo $(eval echo "$export_dynamic_flag_spec"))
-		SXE_APPEND([$sxe_cv_export_dynamic], [LDFLAGS])
+		SXE_APPEND_UNDUP([$sxe_cv_export_dynamic], [LDFLAGS])
 	else
 		AC_MSG_NOTICE([
 Neither -export-dynamic nor equivalent flags are supported by your linker.

@@ -41,6 +41,19 @@ fi
 echo "    - Compiler command:              $CC $CFLAGS"
 echo "    - Global CPPFLAGS:               $CPPFLAGS"
 echo "    - Global LDFLAGS:                $LDFLAGS"
+echo "    - C flags"
+echo "              General:               $c_switch_general"
+echo "              Window system:         $c_switch_window_system"
+echo "              All:                   $c_switch_all"
+echo "    - Linker flags"
+echo "              General:               $ld_switch_general"
+echo "              Window system:         $ld_switch_window_system"
+echo "              All:                   $ld_switch_all"
+echo "    - Linked libraries:"
+echo "              General:               $ld_libs_general"
+echo "              Window system:         $ld_libs_window_system"
+echo "              All:                   $ld_libs_all"
+echo ""
 echo "  libc version:                      $libc_version"
 echo "  Relocating allocator for buffers:  $with_rel_alloc"
 echo "  GNU version of malloc:             ${GNU_MALLOC}${GNU_MALLOC_reason}"
@@ -48,7 +61,6 @@ case "$ld_switch_site" in
   *nocombreloc*) echo "  Linking with \`-z nocombreloc'.
     - Consider configuring with --with-pdump." ;;
 esac
-
 echo "
 Build Options:"
 
@@ -74,12 +86,13 @@ fi
 if test "$with_modules" != "no"; then
   echo "
     - Module search path:"
-  echo -e "       ${MODULE_PATH//:/\\n       }"
+  echo "       "
+  echo ${MODULE_PATH} | sed -e 's/:/\\n/'
 fi
 echo "
     - Package search path:"
-echo -e "       ${PACKAGE_PATH//:/\\n       }"
-
+  echo "       "
+  echo ${PACKAGE_PATH} | sed -e 's/:/\\n/'
 
 echo "
 Debugging options:"

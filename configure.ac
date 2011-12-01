@@ -1262,7 +1262,7 @@ AC_MSG_CHECKING(whether the -xildoff compiler flag is required)
 if   ${CC-cc} '-###' -xildon  no_such_file.c 2>&1 | grep '^[^ ]*/ild ' > /dev/null ; then
   if ${CC-cc} '-###' -xildoff no_such_file.c 2>&1 | grep '^[^ ]*/ild ' > /dev/null ;
     then AC_MSG_RESULT(no);
-    else AC_MSG_RESULT(yes); SXE_APPEND(-xildoff, ld_switch_site)
+    else AC_MSG_RESULT(yes); SXE_APPEND_UNDUP(-xildoff, ld_switch_site)
   fi
   else AC_MSG_RESULT(no)
 fi
@@ -1273,7 +1273,7 @@ if test "$opsys" = "sol2"; then
     AC_MSG_CHECKING(for "-z ignore" linker flag)
     case "`ld -h 2>&1`" in
       *-z\ ignore\|record* ) AC_MSG_RESULT(yes)
-        SXE_PREPEND(-z ignore, ld_switch_site) ;;
+        SXE_PREPEND_UNDUP(-z ignore, ld_switch_site) ;;
       *) AC_MSG_RESULT(no) ;;
     esac
   fi
@@ -1604,14 +1604,14 @@ if test $ac_cv_lib_pthread_pthread_create = yes; then
       *unrecognized\ option*) have_pthreads_opt=no ;;
   esac
   if test "$have_pthreads_opt" = "yes"; then
-	SXE_PREPEND(-pthreads, c_switch_site)
+	SXE_PREPEND_UNDUP(-pthreads, c_switch_site)
   fi
   have_pthread_opt=yes
   case "`$CC -pthread 2>&1`" in
      *unrecognized\ option*) have_pthread_opt=no ;;
   esac
   if test "$have_pthread_opt" = "yes"; then
-	SXE_PREPEND(-pthread, c_switch_site)
+	SXE_PREPEND_UNDUP(-pthread, c_switch_site)
   fi
   SXE_PREPEND(-lpthread, MM_LIBS)
 fi
@@ -1645,8 +1645,8 @@ AC_CACHE_VAL(ac_cv_ldflag_pthread,
 if eval "test \"`echo $ac_cv_ldflag_pthread`\" = yes"; then
 	AC_MSG_RESULT(yes)
         have_threads=yes
-        SXE_PREPEND("-pthread", ld_switch_site)
-        SXE_PREPEND("-D_THREAD_SAFE", c_switch_site)
+        SXE_PREPEND_UNDUP("-pthread", ld_switch_site)
+        SXE_PREPEND_UNDUP("-D_THREAD_SAFE", c_switch_site)
 else
 	AC_MSG_RESULT(no)
 fi])
@@ -2241,7 +2241,7 @@ if test "${GNOME_CONFIG}" != "no"; then
       GNOME_CFLAGS=`${GNOME_CONFIG} --cflags gnomeui`
       AC_DEFINE([HAVE_GNOME], [1], [Description here!])
       SXE_APPEND(${GNOME_LIBS}, libs_gtk)
-      SXE_APPEND(${GNOME_CFLAGS}, c_switch_gtk)
+      SXE_APPEND_UNDUP(${GNOME_CFLAGS}, c_switch_gtk)
 fi
 
 if test "$with_gtk" != "no";then
@@ -2280,7 +2280,7 @@ if test "${GTK_CONFIG}" != "no"; then
       if test "$GCC" = "yes"; then
       	GTK_CFLAGS="${GTK_CFLAGS} -Wno-shadow"
       fi
-      SXE_APPEND(${GTK_CFLAGS}, c_switch_gtk)
+      SXE_APPEND_UNDUP(${GTK_CFLAGS}, c_switch_gtk)
       AC_MSG_RESULT(${GTK_CFLAGS})
 
       AC_CHECK_LIB(gdk_imlib, main, SXE_PREPEND(-lgdk_imlib, libs_gtk))
@@ -2468,7 +2468,7 @@ if test "$with_x11" = "yes"; then
 					;;
 				*)
 					x_includes="$inc_dir $x_includes"
-					SXE_PREPEND(["-I${inc_dir}"], [X_CFLAGS])
+					SXE_PREPEND_UNDUP(["-I${inc_dir}"], [X_CFLAGS])
 					;;
 				esac
 				break; dnl only need ONE Motif implementation!
@@ -2493,7 +2493,7 @@ if test "$with_x11" = "yes"; then
 				;;
 			*)
 				x_includes="$x_includes $inc_dir"
-				SXE_APPEND(["-I${inc_dir}"], [X_CFLAGS])
+				SXE_APPEND_UNDUP(["-I${inc_dir}"], [X_CFLAGS])
 				;;
 			esac
 			break; dnl Only need ONE X11 implementation !
@@ -2745,7 +2745,7 @@ AC_CHECK_HEADER([X11/Xauth.h], [:], [with_xauth=no])
 AC_CHECK_LIB([Xau], [XauGetAuthByAddr], [:], [with_xauth=no])
 if test "$with_xauth" = "yes"; then
   AC_DEFINE([HAVE_XAUTH], [1], [Description here!])
-  SXE_SPACE([libs_xauth], [$GTK_LIBS $X_EXTRA_LIBS -lXau $libs_x $X_PRE_LIBS])
+  SXE_CONSECUTIVE_UNDUP([libs_xauth], [$GTK_LIBS $X_EXTRA_LIBS -lXau $libs_x $X_PRE_LIBS])
 fi
 SXE_RESTORE_LIBS
 AC_SUBST(libs_xauth)
@@ -3070,8 +3070,8 @@ if test "$with_image_png" = "yes"; then
 	SXE_MSG_CHECKING([for sufficient PNG support])
 	SXE_MSG_RESULT([${sxe_cv_feat_png}])
 	if test "$sxe_cv_feat_png" = "yes"; then
-		SXE_PREPEND([$PNG_CPPFLAGS], [MM_CPPFLAGS])
-		SXE_PREPEND([$PNG_LDFLAGS], [MM_LDFLAGS])
+		SXE_PREPEND_UNDUP([$PNG_CPPFLAGS], [MM_CPPFLAGS])
+		SXE_PREPEND_UNDUP([$PNG_LDFLAGS], [MM_LDFLAGS])
 		SXE_PREPEND([$PNG_LIBS], [MM_LIBS])
 	fi
 fi
@@ -3113,7 +3113,7 @@ if test "$with_media_sndfile" != "no"; then
 		SNDFILE_CPPFLAGS=`$PKG_CONFIG --cflags sndfile`
 		SNDFILE_VERSION=`$PKG_CONFIG --modversion sndfile`
 		SXE_PREPEND([$SNDFILE_LIBS], [MM_LIBS])
-		SXE_PREPEND([$SNDFILE_CPPFLAGS], [MM_CPPFLAGS])
+		SXE_PREPEND_UNDUP([$SNDFILE_CPPFLAGS], [MM_CPPFLAGS])
 		SXE_ADD_MM_OBJS([media-sndfile.o])
 		AC_DEFINE([HAVE_SNDFILE], [1],
 			[Whether we appear to have support for the sndfile library!])
@@ -3136,7 +3136,7 @@ if test "$with_media_ffmpeg" != "no"; then
 		FFMPEG_LIBS=`$PKG_CONFIG --libs libavformat`
 		FFMPEG_CPPFLAGS=`$PKG_CONFIG --cflags libavformat`
 		SXE_PREPEND($FFMPEG_LIBS, MM_LIBS)
-		SXE_PREPEND($FFMPEG_CPPFLAGS, MM_CPPFLAGS)
+		SXE_PREPEND_UNDUP($FFMPEG_CPPFLAGS, MM_CPPFLAGS)
 		SXE_ADD_MM_OBJS([media-ffmpeg.o])
 		AC_DEFINE([HAVE_FFMPEG], [1], [Description here!])
 	else
@@ -3154,8 +3154,8 @@ if test "$with_media_sox" != "no"; then
 	if test "$sxe_cv_feat_sox" = "yes"; then
 		AC_MSG_RESULT([yes])
 		SXE_ADD_MM_OBJS([media-sox.o])
-		SXE_PREPEND([$sox_cppflags], [MM_CPPFLAGS])
-		SXE_PREPEND([$sox_ldflags], [MM_LDFLAGS])
+		SXE_PREPEND_UNDUP([$sox_cppflags], [MM_CPPFLAGS])
+		SXE_PREPEND_UNDUP([$sox_ldflags], [MM_LDFLAGS])
 		SXE_PREPEND([$sox_libs], [MM_LIBS])
 		AC_DEFINE([HAVE_SOX], [1], [Description here!])
 	else
@@ -3287,7 +3287,7 @@ if test "$with_sound_arts" != "no"; then
 		ARTS_CPPFLAGS=`$ARTSC_CONFIG --cflags`
 		SXE_ADD_MM_OBJS([sound-arts.o])
 		SXE_PREPEND([$ARTS_LIBS], [MM_LIBS])
-		SXE_PREPEND([$ARTS_CPPFLAGS], [MM_CPPFLAGS])
+		SXE_PREPEND_UNDUP([$ARTS_CPPFLAGS], [MM_CPPFLAGS])
 		AC_DEFINE([HAVE_ARTS_SOUND], [1], [Description here!])
 		AC_DEFINE_UNQUOTED([ARTS_VERSION], [$ARTS_VERSION],
 			[Version number of the underlying arts library])
@@ -3590,23 +3590,25 @@ dnl Compute SUBST-itutable variables
 dnl --------------------------------
 
 dnl We ignore (C|LD)_SWITCH_X_(MACHINE|SYSTEM)
-dnl Use SXE_SPACE instead of plain assignment statements to remove extraneous blanks
+dnl Use SXE_CONSECUTIVE_UNDUP instead of plain assignment statements to remove extraneous blanks
 if test "$with_module_support" = "yes"; then
 	ld_libs_module=
 else
-	SXE_SPACE(ld_libs_module, $ldap_libs $postgresql_libs)
+	SXE_CONSECUTIVE_UNDUP(ld_libs_module, $ldap_libs $postgresql_libs)
 fi
 
-SXE_SPACE(CFLAGS, $CFLAGS)
-SXE_SPACE(c_switch_general, -DHAVE_CONFIG_H $c_switch_site $c_switch_machine $c_switch_system)
-SXE_SPACE(c_switch_window_system, $c_switch_x_site $c_switch_gtk $X_CFLAGS)
-SXE_SPACE(c_switch_all, $c_switch_general $c_switch_window_system)
-SXE_SPACE(ld_switch_general, $ld_switch_site $ld_switch_machine $ld_switch_system $ld_switch_run)
-SXE_SPACE(ld_switch_window_system, $ld_switch_x_site)
-SXE_SPACE(ld_switch_all, $ld_switch_general $ld_switch_window_system)
-SXE_SPACE(ld_libs_general, $LIBS $libs_machine $libs_system $libs_standard)
-SXE_SPACE(ld_libs_window_system, $X_EXTRA_LIBS $libs_x $libs_gtk $X_PRE_LIBS)
-SXE_SPACE(ld_libs_all, $OPENSSL_LIBS $DB_LIBS $ENT_LIBS $MM_LIBS $ld_libs_window_system $ld_libs_general $ld_libs_module)
+SXE_UNDUP(CFLAGS, $CFLAGS)
+SXE_UNDUP(c_switch_general, -DHAVE_CONFIG_H $c_switch_site $c_switch_machine $c_switch_system)
+SXE_UNDUP(c_switch_window_system, $c_switch_x_site $c_switch_gtk $X_CFLAGS)
+SXE_UNDUP(c_switch_all, $c_switch_general $c_switch_window_system)
+SXE_UNDUP(ld_switch_general, $ld_switch_site $ld_switch_machine $ld_switch_system $ld_switch_run)
+SXE_UNDUP(ld_switch_window_system, $ld_switch_x_site)
+SXE_UNDUP(ld_switch_all, $ld_switch_general $ld_switch_window_system)
+dnl Since some systems need libs to be restated later, we can't just dedup, we can only safely dedup
+dnl consecutive occurrences
+SXE_CONSECUTIVE_UNDUP(ld_libs_general, $LIBS $libs_machine $libs_system $libs_standard)
+SXE_CONSECUTIVE_UNDUP(ld_libs_window_system, $X_EXTRA_LIBS $libs_x $libs_gtk $X_PRE_LIBS)
+SXE_CONSECUTIVE_UNDUP(ld_libs_all, $OPENSSL_LIBS $DB_LIBS $ENT_LIBS $MM_LIBS $ld_libs_window_system $ld_libs_general $ld_libs_module)
 
 dnl For no-module builds, make the src dir last
 if test "$with_module_support" = "no"; then
@@ -3636,15 +3638,6 @@ AC_SUBST(INSTALL_ARCH_DEP_SUBDIR)
 AC_SUBST(MAKE_SUBDIR)
 AC_SUBST(MAKE_AM_SUBDIR)
 AC_SUBST(SUBDIR_MAKEFILES)
-
-if test "$extra_verbose" = "yes"; then
-  echo ""
-  SXE_PRINT_VAR(
-   c_switch_general  c_switch_window_system  c_switch_all
-  ld_switch_general ld_switch_window_system ld_switch_all
-    ld_libs_general   ld_libs_window_system   ld_libs_all)
-  echo ""
-fi
 
 dnl ----------------------------------------------
 dnl Create some auxiliary files for developers.
