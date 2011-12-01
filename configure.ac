@@ -990,8 +990,11 @@ if test "$with_dynamic" = "yes"; then
 	decosf* )
 		ld_call_shared="-call_shared"
 		;;
-	darwin )
+	darwin* )
 		AC_DEFINE([DLSYM_NEEDS_UNDERSCORE], [1], [Description here!])
+		if test "x$have_ld_no_pie" != "x"; then
+			SXE_PREPEND_LINKER_FLAG([-no_pie], [ld_switch_site])
+		fi
 		;;
 	esac
 else dnl "$with_dynamic" = "no"
@@ -1006,6 +1009,12 @@ else dnl "$with_dynamic" = "no"
 		;;
 	decosf* )
 		ld_call_shared="-non_shared"
+		;;
+	darwin* )
+		AC_DEFINE([DLSYM_NEEDS_UNDERSCORE], [1], [Description here!])
+		if test "x$have_ld_no_pie" != "x"; then
+			SXE_PREPEND_LINKER_FLAG([-no_pie], [ld_switch_site])
+		fi
 		;;
 	esac
 fi
