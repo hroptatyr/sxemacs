@@ -379,7 +379,7 @@ AC_DEFUN([SXE_DO_CC_HACKS], [dnl
 
 	dnl DEC C `-std1' means ANSI C mode
 	if test "$__DECC" = "yes"; then
-		SXE_APPEND([-std1], [CFLAGS])
+		SXE_APPEND_UNDUP([-std1], [CFLAGS])
 	fi
 
 	dnl Some versions of SCO native compiler need -Kalloca
@@ -394,15 +394,17 @@ AC_DEFUN([SXE_DO_CC_HACKS], [dnl
 			SXE_RESTORE_LIBS])
 		AC_MSG_RESULT([$need_kalloca])
 		if test "$need_kalloca" = "yes"; then
-			SXE_APPEND([-Kalloca], [c_switch_system])
-			SXE_APPEND([-Kalloca], [CFLAGS])
+			SXE_APPEND_UNDUP([-Kalloca], [c_switch_system])
+			SXE_APPEND_UNDUP([-Kalloca], [CFLAGS])
 		fi
 	fi
 
-	## Die if g++
+	dnl Die if g++
 	if test "$CC" = "g++" -o "$SXE_CC" = "g++" ; then
 		SXE_DIE("Building with g++ is not supported")
 	fi
+
+	
 ])dnl SXE_DO_CC_HACKS
 
 AC_DEFUN([SXE_CHECK_CC_NESTED_FUNS], [dnl
@@ -1525,7 +1527,7 @@ return f != $2;
 AC_DEFUN([SXE_CHECK_C99_NJSF], [dnl
 	dnl If we have a compiler that could do c99 do try to add the flag
 	if test "$__GCC3" = "yes" ; then
-		SXE_APPEND("-std=c99", c_switch_site)
+		SXE_APPEND_UNDUP("-std=c99", c_switch_site)
 		AC_MSG_CHECKING([for C99 support])
 		save_c_switch_site=$c_switch_site
 		AC_LINK_IFELSE([AC_LANG_PROGRAM([[
@@ -1541,7 +1543,7 @@ return 0;
 	elif test "$__SUNPRO_C" = "yes" ; then
 		AC_MSG_CHECKING([for C99 support])
 		save_c_switch_site=$c_switch_site
-		SXE_APPEND("-xc99", c_switch_site)
+		SXE_APPEND_UNDUP("-xc99", c_switch_site)
 		AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <stdlib.h>
 ]],[[

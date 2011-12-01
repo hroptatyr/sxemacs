@@ -81,8 +81,8 @@ AC_DEFUN([SXE_COMPUTE_LD_RUN_PATH], [dnl
 		LD_RUN_PATH="`echo $with_site_runtime_libraries | sed -e 's/  */:/g'`"
 		export LD_RUN_PATH
 		for path in $with_site_runtime_libraries; do
-			dnl SXE_APPEND("-R$path ", $ld_switch_run)
-			SXE_APPEND(["-R${path} "], [LDFLAGS])
+			dnl SXE_APPEND_UNDUP("-R$path ", $ld_switch_run)
+			SXE_APPEND_UNDUP(["-R${path} "], [LDFLAGS])
 		done
 	fi
 
@@ -104,7 +104,7 @@ AC_DEFUN([SXE_COMPUTE_LD_RUN_PATH], [dnl
 
 	## if test -z "$LD_RUN_PATH" -a -r "/etc/ld.so.conf"; then
 	##   for dir in `cat /etc/ld.so.conf`; do
-	##     test -d "$dir" && SXE_APPEND(-L${dir}, ld_switch_system)
+	##     test -d "$dir" && SXE_APPEND_UNDUP(-L${dir}, ld_switch_system)
 	##   done
 	##   add_runtime_path=no
 	## fi
@@ -190,7 +190,7 @@ AC_DEFUN([SXE_COMPUTE_SITE_PREFIXES], [dnl
 				arg="-L${arg}"
 				;;
 			esac
-			SXE_APPEND($arg, ld_switch_site)
+			SXE_APPEND_UNDUP($arg, ld_switch_site)
 		done
 	fi
 
@@ -207,8 +207,8 @@ AC_DEFUN([SXE_COMPUTE_SITE_PREFIXES], [dnl
 				arg="-I${arg}"
 				;;
 			esac
-			SXE_APPEND($arg, c_switch_site)
-			SXE_APPEND($arg, CPPFLAGS)
+			SXE_APPEND_UNDUP($arg, c_switch_site)
+			SXE_APPEND_UNDUP($arg, CPPFLAGS)
 		done
 	fi
 
@@ -229,24 +229,24 @@ AC_DEFUN([SXE_COMPUTE_SITE_PREFIXES], [dnl
 				SXE_DIE("Invalid site prefix \`$dir': no such directory \`$lib_dir'")
 			else
 				if test -d "$inc_dir"; then
-					SXE_APPEND(["-I$inc_dir"], [CPPFLAGS])
+					SXE_APPEND_UNDUP(["-I$inc_dir"], [CPPFLAGS])
 				fi
-				SXE_APPEND(["-L$lib_dir"], [LDFLAGS])
+				SXE_APPEND_UNDUP(["-L$lib_dir"], [LDFLAGS])
 			fi
 		done
 	fi
 
 	dnl GNU software installs by default into /usr/local/{include,lib}
 	if test -d "/usr/local/include" -a -d "/usr/local/lib"; then
-		SXE_APPEND(["-L/usr/local/lib"], [LDFLAGS])
-		SXE_APPEND(["-I/usr/local/include"], [CPPFLAGS])
+		SXE_APPEND_UNDUP(["-L/usr/local/lib"], [LDFLAGS])
+		SXE_APPEND_UNDUP(["-I/usr/local/include"], [CPPFLAGS])
 	fi
 
 	dnl Extra system-specific library directories - please add to list
 	for dir in "/usr/ccs/lib"; do
-		dnl test -d "$dir" && SXE_APPEND(-L${dir}, ld_switch_system)
+		dnl test -d "$dir" && SXE_APPEND_UNDUP(-L${dir}, ld_switch_system)
 		if test -d "$dir"; then
-			SXE_APPEND([-L${dir}], [LDFLAGS])
+			SXE_APPEND_UNDUP([-L${dir}], [LDFLAGS])
 		fi
 	done
 ])dnl SXE_COMPUTE_SITE_PREFIXES

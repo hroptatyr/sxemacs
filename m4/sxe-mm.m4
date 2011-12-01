@@ -72,8 +72,8 @@ AC_DEFUN([SXE_MM_CHECK_XFACE], [
 
 	SXE_DUMP_LIBS
 	SXE_LANG_WERROR([off])
-	dnl SXE_PREPEND([-I$x_includes], [c_switch_site])
-	dnl SXE_PREPEND([-L$x_libraries], [ld_switch_site])
+	dnl SXE_PREPEND_UNDUP([-I$x_includes], [c_switch_site])
+	dnl SXE_PREPEND_UNDUP([-L$x_libraries], [ld_switch_site])
 	CPPFLAGS="$CPPFLAGS $X_CFLAGS"
 	LDFLAGS="$LDFLAGS $X_LIBS"
 
@@ -118,8 +118,8 @@ AC_DEFUN([SXE_MM_CHECK_JPEG], [
 
 	SXE_DUMP_LIBS
 	SXE_LANG_WERROR([off])
-	dnl SXE_PREPEND([-I$x_includes], [c_switch_site])
-	dnl SXE_PREPEND([-L$x_libraries], [ld_switch_site])
+	dnl SXE_PREPEND_UNDUP([-I$x_includes], [c_switch_site])
+	dnl SXE_PREPEND_UNDUP([-L$x_libraries], [ld_switch_site])
 	CPPFLAGS="$CPPFLAGS $X_CFLAGS"
 	LDFLAGS="$LDFLAGS $X_LIBS"
 
@@ -266,8 +266,8 @@ AC_DEFUN([SXE_MM_CHECK_TIFF], [
 
 	SXE_DUMP_LIBS
 	SXE_LANG_WERROR([off])
-	dnl SXE_PREPEND([-I$x_includes], [c_switch_site])
-	dnl SXE_PREPEND([-L$x_libraries], [ld_switch_site])
+	dnl SXE_PREPEND_UNDUP([-I$x_includes], [c_switch_site])
+	dnl SXE_PREPEND_UNDUP([-L$x_libraries], [ld_switch_site])
 	CPPFLAGS="$CPPFLAGS $X_CFLAGS"
 	LDFLAGS="$LDFLAGS $X_LIBS"
 
@@ -1009,7 +1009,7 @@ AC_DEFUN([SXE_MM_CHECK_ESD], [
 		SXE_DUMP_LIBS
 		ESD_CPPFLAGS="`$ESD_CONFIG --cflags`"
 		ESD_LDFLAGS="-L`$ESD_CONFIG --libs`"
-		dnl SXE_APPEND([$esd_c_switch], [c_switch_site])
+		dnl SXE_APPEND_UNDUP([$esd_c_switch], [c_switch_site])
 		dnl SXE_PREPEND([$esd_libs], [LIBS])
 		CPPFLAGS="$CPPFLAGS $ESD_CPPFLAGS"
 		LDFLAGS="$LDFLAGS $ESD_LDFLAGS"

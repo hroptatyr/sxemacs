@@ -38,8 +38,8 @@ AC_DEFUN([SXE_TRY_OPENSSL_HISTORICAL_PREFIX], [dnl
 
 	## now append these candidates to our c_switch and ld_switch
 	SXE_DUMP_LIBS
-	SXE_APPEND([$OPENSSL_CPPFLAGS], [CPPFLAGS])
-	SXE_APPEND([$OPENSSL_LDFLAGS], [LDFLAGS])
+	SXE_APPEND_UNDUP([$OPENSSL_CPPFLAGS], [CPPFLAGS])
+	SXE_APPEND_UNDUP([$OPENSSL_LDFLAGS], [LDFLAGS])
 
 	## check again
 	SXE_CHECK_HEADERS([openssl/crypto.h])
@@ -68,8 +68,8 @@ AC_DEFUN([SXE_TRY_OPENSSL_BIN_PREFIX], [dnl
 
 	## now append these candidates to our c_switch and ld_switch
 	SXE_DUMP_LIBS
-	SXE_APPEND([$OPENSSL_CPPFLAGS], [CPPFLAGS])
-	SXE_APPEND([$OPENSSL_LDFLAGS], [LDFLAGS])
+	SXE_APPEND_UNDUP([$OPENSSL_CPPFLAGS], [CPPFLAGS])
+	SXE_APPEND_UNDUP([$OPENSSL_LDFLAGS], [LDFLAGS])
 
 	## check again
 	SXE_CHECK_HEADERS([openssl/crypto.h])
