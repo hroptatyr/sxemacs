@@ -15,6 +15,22 @@ return 0;
 	SXE_RESTORE_LIBS
 ])dnl SXE_LD_EXPORT_DYNAMIC
 
+
+AC_DEFUN([SXE_LD_NO_PIE], [dnl
+	AC_MSG_CHECKING([if linker understands -no_pie])
+	SXE_DUMP_LIBS
+	LDFLAGS="-no_pie $LDFLAGS"
+        AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+#include <stdlib.h>
+]],[[
+return 0;
+]])],  [AC_MSG_RESULT([yes])
+        have_ld_no_pie="yes"], [
+	AC_MSG_RESULT([no])
+	have_ld_no_pie="no"])
+	SXE_RESTORE_LIBS
+])dnl SXE_LD_NO_PIE
+
 dnl SXE_RILLY_COMPUTE_LD_RUN_PATH()
 AC_DEFUN([SXE_RILLY_COMPUTE_LD_RUN_PATH], [dnl
 	if test "$add_runtime_path" = "yes" -a -n "$dash_r"; then

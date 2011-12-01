@@ -323,6 +323,8 @@ typedef __gnuc_va_list va_list;]],[[1]])], [dnl
 
 	dnl in case we need the modules
 	SXE_LD_EXPORT_DYNAMIC
+	dnl in case compiler issues PIE by default which breaks pdump
+	SXE_LD_NO_PIE
 
 	## check whether CC reacts to `extern inline' gnu89 inline declarations
 	## with a warning
