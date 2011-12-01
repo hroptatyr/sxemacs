@@ -79,20 +79,18 @@ fi
 
 echo "  Runtime behaviour:"
 if test "$with_prefix" = "yes"; then
-  echo "    - Value of \$prefix is compiled into the binary."
+  echo "    - Value of prefix ($prefix) is compiled into the binary."
 elif test "$with_prefix" = "no"; then
-  echo "    - Value of \$prefix is not compiled into the binary."
+  echo "    - Value of prefix ($prefix)is not compiled into the binary."
 fi
 if test "$with_modules" != "no"; then
   echo "
     - Module search path:"
-  echo "       "
-  echo ${MODULE_PATH} | sed -e 's/:/\\n/'
+  echo "       " `echo ${MODULE_PATH} | sed -e 's/:/\\n/'`
 fi
 echo "
     - Package search path:"
-  echo "       "
-  echo ${PACKAGE_PATH} | sed -e 's/:/\\n/'
+  echo "       " `echo ${PACKAGE_PATH} | sed -e 's/:/\\n/'`
 
 echo "
 Debugging options:"
