@@ -3732,7 +3732,7 @@ dnl Yo, Stephen Bourne!  I want to marry you!
 PREFIX=$prefix
 while true; do
   case "$PREFIX" in
-    *\$* ) eval "PREFIX=$PREFIX" ;;
+    *\$* ) eval "PREFIX=\"${PREFIX}\"" ;;
     *) break ;;
   esac
 done
@@ -3743,7 +3743,7 @@ AC_SUBST(EXEC_PREFIX_USER_DEFINED)
 EXEC_PREFIX=$exec_prefix
 while true; do
   case "$EXEC_PREFIX" in
-    *\$* ) eval "EXEC_PREFIX=$EXEC_PREFIX" ;;
+    *\$* ) eval "EXEC_PREFIX=\"${EXEC_PREFIX}\"" ;;
     *) break ;;
   esac
 done
@@ -3754,7 +3754,7 @@ AC_SUBST(INFODIR_USER_DEFINED)
 INFODIR=$infodir
 while true; do
   case "$INFODIR" in
-    *\$* ) eval "INFODIR=$INFODIR" ;;
+    *\$* ) eval "INFODIR=\"${INFODIR}\"" ;;
     *) break ;;
   esac
 done
@@ -3765,7 +3765,7 @@ AC_SUBST(INFOPATH_USER_DEFINED)
 INFOPATH=$with_infopath
 while true; do
   case "$INFOPATH" in
-    *\$* ) eval "INFOPATH=$INFOPATH" ;;
+    *\$* ) eval "INFOPATH=\"${INFOPATH}\"" ;;
     *) break ;;
   esac
 done
@@ -3780,7 +3780,7 @@ AC_SUBST(MODULE_PATH_USER_DEFINED)
 MODULE_PATH=$with_module_path
 while true; do
   case "$MODULE_PATH" in
-    *\$* ) eval "MODULE_PATH=$MODULE_PATH" ;;
+    *\$* ) eval "MODULE_PATH=\"${MODULE_PATH}\"" ;;
     *) break ;;
   esac
 done
@@ -3792,9 +3792,9 @@ fi
 
 if test -z "$with_package_path" && test -n "$with_package_prefix" ; then
   if test "$with_mule" = "yes" ; then
-    with_package_path="~/.sxemacs/site-packages:~/.sxemacs/xemacs-packages:~/.sxemacs/mule-packages:~/.sxemacs/sxemacs-packages::${with_package_prefix}/site-packages:${with_package_prefix}/xemacs-packages:${with_package_prefix}/mule-packages:${with_package_prefix}/sxemacs-packages"
+    with_package_path="~/.sxemacs/site-packages:~/.sxemacs/xemacs-packages:~/.sxemacs/mule-packages:~/.sxemacs/sxemacs-packages:${with_package_prefix}/site-packages:${with_package_prefix}/xemacs-packages:${with_package_prefix}/mule-packages:${with_package_prefix}/sxemacs-packages"
   else
-    with_package_path="~/.sxemacs/site-packages:~/.sxemacs/xemacs-packages:~/.sxemacs/sxemacs-packages::${with_package_prefix}/site-packages:${with_package_prefix}/xemacs-packages:${with_package_prefix}/sxemacs-packages"
+    with_package_path="~/.sxemacs/site-packages:~/.sxemacs/xemacs-packages:~/.sxemacs/sxemacs-packages:${with_package_prefix}/site-packages:${with_package_prefix}/xemacs-packages:${with_package_prefix}/sxemacs-packages"
   fi
 fi
 
@@ -3803,7 +3803,7 @@ AC_SUBST(PACKAGE_PATH_USER_DEFINED)
 PACKAGE_PATH=$with_package_path
 while true; do
   case "$PACKAGE_PATH" in
-    *\$* ) eval "PACKAGE_PATH=$PACKAGE_PATH" ;;
+    *\$* ) eval "PACKAGE_PATH=\"${PACKAGE_PATH}\"" ;;
     *) break ;;
   esac
 done
@@ -3814,7 +3814,7 @@ AC_SUBST(LISPDIR_USER_DEFINED)
 LISPDIR=$with_lispdir
 while true; do
   case "$LISPDIR" in
-    *\$* ) eval "LISPDIR=$LISPDIR" ;;
+    *\$* ) eval "LISPDIR=\"${LISPDIR}\"" ;;
     *) break ;;
   esac
 done
@@ -3825,7 +3825,7 @@ AC_SUBST(MODULEDIR_USER_DEFINED)
 MODULEDIR=$with_moduledir
 while true; do
   case "$MODULEDIR" in
-    *\$* ) eval "MODULEDIR=$MODULEDIR" ;;
+    *\$* ) eval "MODULEDIR=\"${MODULEDIR}\"" ;;
     *) break ;;
   esac
 done
@@ -3836,7 +3836,7 @@ AC_SUBST([SITELISPDIR_USER_DEFINED])
 SITELISPDIR=$sitelispdir
 while true; do
   case "$SITELISPDIR" in
-    *\$* ) eval "SITELISPDIR=$SITELISPDIR" ;;
+    *\$* ) eval "SITELISPDIR=\"${SITELISPDIR}\"" ;;
     *) break ;;
   esac
 done
@@ -3847,7 +3847,7 @@ AC_SUBST(SITEMODULEDIR_USER_DEFINED)
 SITEMODULEDIR=$with_sitemoduledir
 while true; do
   case "$SITEMODULEDIR" in
-    *\$* ) eval "SITEMODULEDIR=$SITEMODULEDIR" ;;
+    *\$* ) eval "SITEMODULEDIR=\"${SITEMODULEDIR}\"" ;;
     *) break ;;
   esac
 done
@@ -3858,7 +3858,7 @@ AC_SUBST(ETCDIR_USER_DEFINED)
 ETCDIR=$with_etcdir
 while true; do
   case "$ETCDIR" in
-    *\$* ) eval "ETCDIR=$ETCDIR" ;;
+    *\$* ) eval "ETCDIR=\"${ETCDIR}\"" ;;
     *) break ;;
   esac
 done
@@ -3869,7 +3869,7 @@ AC_SUBST(ARCHLIBDIR_USER_DEFINED)
 ARCHLIBDIR=$with_archlibdir
 while true; do
   case "$ARCHLIBDIR" in
-    *\$* ) eval "ARCHLIBDIR=$ARCHLIBDIR" ;;
+    *\$* ) eval "ARCHLIBDIR=\"${ARCHLIBDIR}\"" ;;
     *) break ;;
   esac
 done
@@ -3880,7 +3880,7 @@ AC_SUBST(DOCDIR_USER_DEFINED)
 DOCDIR=$with_docdir
 while true; do
   case "$DOCDIR" in
-    *\$* ) eval "DOCDIR=$DOCDIR" ;;
+    *\$* ) eval "DOCDIR=\"${DOCDIR}\"" ;;
     *) break ;;
   esac
 done
