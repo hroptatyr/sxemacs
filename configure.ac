@@ -3792,9 +3792,11 @@ fi
 
 if test -z "$with_package_path" && test -n "$with_package_prefix" ; then
   if test "$with_mule" = "yes" ; then
-    with_package_path="~/.sxemacs/site-packages:~/.sxemacs/xemacs-packages:~/.sxemacs/mule-packages:~/.sxemacs/sxemacs-packages:${with_package_prefix}/site-packages:${with_package_prefix}/xemacs-packages:${with_package_prefix}/mule-packages:${with_package_prefix}/sxemacs-packages"
+    with_package_path="~/.sxemacs/site-packages:~/.sxemacs/xemacs-packages:~/.sxemacs/mule-packages:~/.sxemacs/sxemacs-packages"
+    with_package_path="${with_package_path}:${with_package_prefix}/site-packages:${with_package_prefix}/sxemacs-packages:${with_package_prefix}/xemacs-packages:${with_package_prefix}/mule-packages"
   else
-    with_package_path="~/.sxemacs/site-packages:~/.sxemacs/xemacs-packages:~/.sxemacs/sxemacs-packages:${with_package_prefix}/site-packages:${with_package_prefix}/xemacs-packages:${with_package_prefix}/sxemacs-packages"
+    with_package_path="~/.sxemacs/site-packages:~/.sxemacs/xemacs-packages:~/.sxemacs/sxemacs-packages"
+    with_package_path="${with_package_path}:${with_package_prefix}/site-packages:${with_package_prefix}/sxemacs-packages:${with_package_prefix}/xemacs-packages"
   fi
 fi
 
