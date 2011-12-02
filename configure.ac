@@ -3772,7 +3772,7 @@ done
 AC_SUBST(INFOPATH)
 
 if test -z "$with_module_path"; then
-    with_module_path="~/.sxemacs/${configuration}/modules:${libdir}/${instvardir}/${configuration}/modules:${libdir}/${PROGNAME}/${configuration}/site-modules"
+    with_module_path="~/.sxemacs/${configuration}/modules:${libdir}/${PROGNAME}/${configuration}/site-modules:${libdir}/${instvardir}/${configuration}/modules"
 fi
 
 AC_SUBST(module_path,$with_module_path)
