@@ -672,13 +672,23 @@ AC_DEFUN([_SXE_CHECK_MPC], [dnl
 	AC_REQUIRE([SXE_CHECK_MPC_LIBS])
 	SXE_RESTORE_LIBS
 
+	if test "$ac_cv_lib_mpc_mpc_init" = "yes"; then
+		AC_DEFINE([HAVE_MPC_INIT], [1], [Whether simple mpc_init is available])
+	fi
+	if test "$ac_cv_lib_mpc_mpc_set_ui_fr" = "yes"; then
+		AC_DEFINE([HAVE_MPC_SET_UI_FR], [1], [Whether simple mpc_set_ui_fr is available])
+	fi
+	if test "$ac_cv_lib_mpc_mpc_init" = "yes" -o \
+	        "$ac_cv_lib_mpc_mpc_init2" = "yes"; then
+		mpc_can_be_initted="yes"
+	fi
 	if test "$ac_cv_header_mpc_h" = "yes" -a \
-		"$ac_cv_lib_mpc_mpc_init" = "yes" -a \
+		"$mpc_can_be_initted" = "yes" -a \
 		"$mpc_doth_need_mpfr" = "yes"; then
 		sxe_cv_feat_mpc="yes"
 		MPC_LIBS="-lmpfr -lmpc"
 	elif test "$ac_cv_header_mpc_h" = "yes" -a \
-		"$ac_cv_lib_mpc_mpc_init" = "yes" -a \
+		"$mpc_can_be_initted" = "yes" -a \
 		"$mpc_doth_need_mpfr" = "no"; then
 		sxe_cv_feat_mpc="yes"
 		MPC_LIBS="-lmpc"
@@ -703,12 +713,16 @@ AC_DEFUN([SXE_CHECK_MPC_LIBS], [dnl
 	AC_REQUIRE([SXE_CHECK_MPFR_LIBS])
 	if test "$ac_cv_lib_mpfr_mpfr_init" = "yes"; then
 		AC_CHECK_LIB([mpc], [mpc_init], [:], [:], [-lmpfr])
+		AC_CHECK_LIB([mpc], [mpc_init2], [:], [:], [-lmpfr])
+		AC_CHECK_LIB([mpc], [mpc_set_ui_fr], [:], [:], [-lmpfr])
 		mpc_doth_need_mpfr="yes"
 	else
 		## try without mpfr.h, but this is definitely going to fail
 		## unless you're a developer of mpc ...
-		## ... and in that case: Fix teh MPC build chain, Andreas!!!
+		## ... and in that case: Fix the MPC build chain, Andreas!!!
 		AC_CHECK_LIB([mpc], [mpc_init], [:])
+		AC_CHECK_LIB([mpc], [mpc_init2], [:])
+		AC_CHECK_LIB([mpc], [mpc_set_ui_fr], [:])
 		mpc_doth_need_mpfr="no"
 	fi
 ])dnl SXE_CHECK_MPC_LIBS
