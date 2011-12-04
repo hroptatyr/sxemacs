@@ -275,6 +275,32 @@ Install the GNU texinfo package on your system. You'll need at least
 version 4.8.
 
 
+** MacOS X warns of a crash during configure
+
+This is normal, as one of the tests made during configure (for the
+realpath call correctness) induces as crash.
+
+If you are developing SXEmacs and will do lots of runs of configure
+and that dialog annoys you, consider issuing:
+
+    # Disable crash reporting
+    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.ReportCrash.Root.plist
+    # Redo last configure
+    ./config.status --recheck 
+    # Enable crash reporting
+    sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.ReportCrash.Root.plist
+
+Another alternative (not recommended) is to launch
+
+	/Developer/Applications/Utilities/CrashReporterPrefs
+
+and configure the mode to server, but you will loose notifications of
+crashes on all applications.
+
+In order to give SXEmacs developers with good diagnosis information it
+is recommended the mode be Developer.
+
+
 * XEmacs Packages
 =================
 
