@@ -269,6 +269,12 @@ Or:
 Reconfigure and rebuild SXEmacs afterwards.
 
 
+** Build fails because of missing makeinfo
+
+Install the GNU texinfo package on your system. You'll need at least
+version 4.8.
+
+
 * XEmacs Packages
 =================
 
