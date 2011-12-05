@@ -1,5 +1,5 @@
 SXEmacs Installation Guide
-Copyright (C) 2005 - 2008 Steve Youngs
+Copyright (C) 2005 - 2011 Steve Youngs
 
 
 Building from tarball release: 
@@ -256,7 +256,7 @@ install them and incorporate them into SXEmacs.
     http://www.mpfr.org
 
   - MPC (Multi-Precision Complex numbers):
-    http://www.lix.polytechnique.fr/Labo/Andreas.Enge/mpc/mpc.html
+    http://www.multiprecision.org/index.php?prog=mpc
 
   The configure option to control ENT libraries is --with-ent.  It
   defaults to `all'.
@@ -352,6 +352,10 @@ particular that is:
 - your OS and machine architecture
 - the steps you have done
 
+There is a script under contrib called tar-build-failure.sh that
+will attempt to gather this information and create a tar file with
+helpful logs.
+
 Before submitting a report at http://issues.sxemacs.org/, please show
 up either on the mailing list or the IRC channel.  The developers can
 tell you in much greater detail what they need and how you can get the
@@ -380,6 +384,7 @@ You need at least...
 
   automake 1.9.4
   autoconf 2.60
+  texinfo 4.8
 
 Warnings from autogen.sh:
 ------------------------
@@ -395,7 +400,7 @@ The two most common warnings seen are...
     about quoting and you have some older style macros defined like:
     AC_DEFUN(NAME, ...) instead of AC_DEFUN([NAME], ...).
 
-  Warnings about ETAGS variable being redifined
+  Warnings about ETAGS variable being redefined
 
     These are because automake has a pre-defined ETAGS target that
     projects can use, unfortunately it doesn't fit in with our needs,
