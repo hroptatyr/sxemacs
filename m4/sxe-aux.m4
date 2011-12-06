@@ -342,12 +342,12 @@ $1="$T"
 
 dnl SXE_CONSECUTIVE_UNDUP(var, words)
 AC_DEFUN([SXE_CONSECUTIVE_UNDUP],[
-$1=`echo "$2" | awk -v RS=" " '{if([$]1[] != SXEL) {printf "%s ", [$]1[]} SXEL=[$]1[]}' `
+$1=`echo "$2" | ${AWK-awk} 'BEGIN {RS=" "} {if([$]1[] != SXEL) {printf "%s ", [$]1[]} SXEL=[$]1[]}' `
 ])dnl SXE_CONSECUTIVE_UNDUP
 
 dnl SXE_UNDUP(var, words)
 AC_DEFUN([SXE_UNDUP],[
-$1=`echo "$2" | awk -v RS=" " '{VAL=[$]1[]; if(VAL in SXEL){}else{printf "%s ", VAL} SXEL[[VAL]]=1}' `
+$1=`echo "$2" | ${AWK-awk} 'BEGIN {RS=" "} {VAL=[$]1[]; if(VAL in SXEL){}else{printf "%s ", VAL} SXEL[[VAL]]=1}' `
 ])dnl SXE_UNDUP
 
 

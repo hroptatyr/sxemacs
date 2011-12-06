@@ -23,7 +23,7 @@ AC_DEFUN([SXE_OPENSSL_VERSION], [dnl
 	allowed_versions="0.9.7[e-z] 0.9.8* 0.9.9* 1.0.0*"
 	OPENSSL_SANE_P=no
 	for ver in $allowed_versions; do
-		if echo "$OPENSSL_VERSION" | grep -q "$ver"; then
+               if echo "$OPENSSL_VERSION" | ${GREP-grep} -q "$ver"; then
 			OPENSSL_SANE_P="yes"
 			break;
 		fi
