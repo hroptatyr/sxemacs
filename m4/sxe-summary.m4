@@ -86,11 +86,11 @@ fi
 if test "$with_modules" != "no"; then
   echo "
     - Module search path:"
-  echo ${MODULE_PATH} | awk -v RS=":" '{ print "       ",[$]1[] }'
+  echo ${MODULE_PATH} | ${AWK-awk} 'BEGIN {RS=":"} { print "       ",[$]1[] }'
 fi
 echo "
     - Package search path:"
-  echo ${PACKAGE_PATH} | awk -v RS=":" '{ print "       ",[$]1[] }'
+  echo ${PACKAGE_PATH} | ${AWK-awk} 'BEGIN {RS=":"} { print "       ",[$]1[] }'
 
 echo "
 Debugging options:"
