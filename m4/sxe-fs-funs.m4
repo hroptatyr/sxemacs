@@ -48,8 +48,7 @@ AC_DEFUN([_SXE_CHECK_REALPATH_RETVAL], [dnl
 #define PATH_MAX 4096
 #endif
 
-int main()
-{
+int realpath_returns_]]ret_t[[() {
 	]]ret_t[[ r;
 	char p[8] = "/bin/sh\000";
 	char resv[PATH_MAX];
@@ -63,6 +62,11 @@ int main()
 		res = 0;
 	}
 	return res;
+}
+
+int main()
+{
+	return realpath_returns_]]ret_t[[();
 }
 		]])],
 		resvar[=yes],
@@ -109,7 +113,7 @@ AC_DEFUN([_SXE_CHECK_REALPATH_RETVAL_OWNER], [dnl
 #define FOLLOW_FREE_STRATEGY		1
 #define FOLLOW_REALLOC_STRATEGY		1
 
-int main()
+int owner_of_object_returned_by_realpath()
 {
 	void *r;  /* any pointer is just fine */
 	char p[8] = "/bin/sh\000";
@@ -128,6 +132,11 @@ int main()
 #else
 	return 1;
 #endif
+}
+
+int main()
+{
+	return owner_of_object_returned_by_realpath();
 }
 		]])],
 		resvar[=user],
@@ -164,12 +173,17 @@ AC_DEFUN([_SXE_CHECK_REALPATH_ON_PROTECTED_MEMORY], [dnl
 #define PATH_MAX 4096
 #endif
 
-int main()
+int realpath_can_operate_on_protected_mem_blocks() 
 {
 	char resv[PATH_MAX];
 	realpath("/bin/sh", NULL);
 	realpath("/bin/sh", resv);
 	return 0;
+}
+
+int main()
+{
+	return realpath_can_operate_on_protected_mem_blocks();
 }
 		]])],
 		resvar[=yes],
@@ -202,13 +216,18 @@ AC_DEFUN([_SXE_CHECK_REALPATH_SANE_ON_NON_EXISTENT], [dnl
 
 static char p[24] = "/nobody/has/this/file\000";
 
-int main()
+int realpath_survives_non_existent_path()
 {
 	char *r;
 	char resv[PATH_MAX];
 	r = realpath((char*)p, resv);
 
 	return ((r == NULL) == 0);
+}
+
+int main()
+{
+	return realpath_survives_non_existent_path();
 }
 		]])],
 		resvar[=yes],
@@ -287,11 +306,16 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_SIDE_EFFECT], [dnl
 #  include <libgen.h>
 #endif
 
-int main()
+int dirname_modifies_argument()
 {
 	char p[11] = "somefile\000";
 	dirname(p);
 	return ((p[0] == '.' && p[1] == '\0') == 0);
+}
+
+int main()
+{
+	return dirname_modifies_argument();
 }
 		]])],
 		resvar[=yes],
@@ -370,6 +394,9 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_RETVAL_OWNER], [dnl
 	## anything ... took me fucking ages to find out what's going on
 	## so let's drink to the morons responsible for THAT!
 	AC_MSG_CHECKING([to whom belongs the object returned by dirname])
+        if test "$opsys" = "darwin" ; then
+           resvar=sys
+        else
 	AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #ifdef HAVE_LIBGEN_H
 #  include <libgen.h>
@@ -378,7 +405,7 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_RETVAL_OWNER], [dnl
 #define FOLLOW_FREE_STRATEGY		1
 #define FOLLOW_REALLOC_STRATEGY		1
 
-int main()
+int owner_of_object_returned_by_dirname()
 {
 	void *r;  /* any pointer is just fine */
 	char p[11] = "./somefile\000";
@@ -398,10 +425,16 @@ int main()
 	return 1;
 #endif
 }
+
+int main()
+{
+	return owner_of_object_returned_by_dirname();
+}
 		]])],
 		resvar[=user],
 		resvar[=sys],
 		resvar[=sys])
+	fi
         if test "${malloc_check}" = "" ; then
 		unset MALLOC_CHECK_
         else 
@@ -430,10 +463,15 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_ON_PROTECTED_MEMORY], [dnl
 #  include <libgen.h>
 #endif
 
-int main()
+int dirname_can_operate_on_protected_mem_blocks()
 {
 	dirname("./somefile");
 	return 0;
+}
+
+int main()
+{
+	return dirname_can_operate_on_protected_mem_blocks();
 }
 		]])],
 		resvar[=yes],
@@ -464,11 +502,16 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_ON_C99_RESTRICT_MEMORY], [dnl
 
 static char f[11] = "./somefile\000";
 
-int main()
+int dirname_can_operate_on_c99_restrict()
 {
 	const char *restrict p = &f;
 	dirname((char*)p);
 	return 0;
+}
+
+int main()
+{
+	return dirname_can_operate_on_c99_restrict();
 }
 		]])],
 		resvar[=yes],
