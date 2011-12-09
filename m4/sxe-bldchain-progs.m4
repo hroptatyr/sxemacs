@@ -1,5 +1,24 @@
 dnl sxe-bldchain-progs.m4 -- Necessary build chain stuff
 
+AC_DEFUN([SXE_PROG_MAKEINFO], [dnl
+	AC_ARG_VAR([MAKEINFO], [the makeinfo command])
+	AC_CHECK_TOOL([MAKEINFO], [makeinfo], [:], [$PATH])
+	eval "$MAKEINFO --version > /dev/null 2>&1"
+	if  test $? != 0; then
+		if echo $MAKEINFO | grep -q "missing --run"; then
+			# libtool missing has a much nicer error message
+			$MAKEINFO
+		fi
+		# This should be a good enough error message even in complement
+		# to the libtool missing
+		AC_MSG_ERROR([
+Could not find the makeinfo program. Check your PATH or install the texinfo package. 
+For more details see the INSTALL and PROBLEMS files.
+SXEmacs generates the documentation during the build process.])
+		exit 1
+	fi
+	AC_SUBST(MAKEINFO)
+])dnl SXE_PROG_MAKEINFO
 
 
 AC_DEFUN([SXE_PROG_AR], [dnl
@@ -103,6 +122,7 @@ dnl 	dnl Soon ...
 dnl 	dnl m4_ifdef([LT_INIT], [LT_INIT], [AC_PROG_LIBTOOL])
 	AC_PROG_RANLIB
 	SXE_PROG_AR
+	SXE_PROG_MAKEINFO
 ])dnl SXE_CHECK_BUILDCHAIN
 
 dnl recommended interface macro for parser/lexer
