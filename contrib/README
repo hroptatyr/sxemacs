@@ -6,7 +6,6 @@ useful.
 File List:
 =========
 	do_builds.sh..............automate builds
-	hook......................tla master hook script
 	make-pkg.sh...............bash script to create a SXEmacs tar package
 	pop3.el.patch.............SXEmacs native OpenSSL goodies
 	report-build-failure.sh...bash script to send a build report failure
@@ -19,8 +18,6 @@ File List:
 More Info:
 =========
 
-
-Steve Youngs <steve@sxemacs.org>
 
 do_builds.sh:
 ------------
