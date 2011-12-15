@@ -1801,12 +1801,17 @@ if test "$opsys" != "darwin"; then
 	have_ase_perm="yes"
 	have_ase_resclass="yes"
 fi
-
-if test "$with_modules_cl" = "yes" -a "$have_bison" = "yes"; then
-	have_modules_cl="yes"
-fi
-if test "$with_static_modules_cl" = "yes" -a "$have_bison" = "yes"; then
-	have_static_modules_cl="yes"
+if test "$have_bison" = "yes"; then
+	if test "$with_modules_cl" = "yes" ; then
+		have_modules_cl="yes"
+	fi
+	if test "$with_static_modules_cl" = "yes"; then
+		have_static_modules_cl="yes"
+	fi
+else
+	if test "$with_modules_cl" = "yes" -o "$with_static_modules_cl" = "yes"; then
+		AC_MSG_WARN([Sorry no bison means no cl module for you.])
+	fi
 fi
 SXE_EMOD_STATMOD([cl])
 
