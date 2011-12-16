@@ -5,10 +5,7 @@ useful.
 
 File List:
 =========
-	10sendlog.................tla hook script
-	20mirror..................tla hook script
 	do_builds.sh..............automate builds
-	hook......................tla master hook script
 	make-pkg.sh...............bash script to create a SXEmacs tar package
 	pop3.el.patch.............SXEmacs native OpenSSL goodies
 	report-build-failure.sh...bash script to send a build report failure
@@ -21,70 +18,6 @@ File List:
 More Info:
 =========
 
-tla hook scripts (hook, 10sendlog, 20mirror):
---------------------------------------------
-These scripts let you automate parts of your tla'ing, leaving you more
-time for SXEmacs hacking. :-)
-
-This tla hook "system" is designed to work with multiple archives,
-categories, branches, versions, even revisions.  Allowing you to have
-different scripts run for each.  The master hook script makes the
-decisions as to which sub-scripts to run based on a directory
-hierarchy where the directory names match
-archive/category/branch/version/revision names.
-
-Installation and use of these scripts is fairly straight forward.
-First, put `hook' in ~/.arch-params directory.  Then create a
-~/.arch-hooks directory, under which you put the directory hierarchy
-where your "action" scripts go.  The scripts themselves go in
-directories named `=$ACTION' where $ACTION can be one of...
-
-  import, precommit, commit, tag, make-archive, make-category, make-branch,
-  make-version, find-pristine, make-pristine, make-tmp-pristine
-
-Here is an example of how my ~/.arch-hooks hierarchy is laid out...
-
-~/.arch-hooks/
-    |-/steve@emchat.org--2008/
-    |   |-/=commit/10mirror
-    |   |-/=precommit/10forcedefaults
-    |   |-/emchat/
-    |   |   |-/=commit/10sendlog
-    |   |   |-/emchat--main/
-    |   |       |-/=commit/10chglogweb
-    |   |       |-/=commit/20updftp
-    |   |-/emchat-web/
-    |   |   |-/=commit/10sendlog
-    |   |   |-/emchat-web--main/
-    |   |       |-/=commit/10updsite
-    |   |-/xetla/
-    |       |-/=commit/10sendlog
-    |       |-/xetla--main/
-    |           |-/=commit/10updftp
-    |-/steve@sxemacs.org--2008/
-        |-/=commit/10mirror
-        |-/=precommit/10forcedefaults
-        |-/digitxt/
-        |   |-/digitxt--main/
-        |       |-/=commit/10sendlog
-        |-/emoney/
-        |   |-/emoney--main/
-        |       |-/=commit/10updftp
-        |-/fresse/
-        |   |-/fresse--steve/
-        |       |-/=commit/10sendlog
-        |-/sxemacs/
-        |   |-/sxemacs--main/
-        |       |-/=commit/10sendlog
-        |       |-/=commit/20chglogweb
-        |       |-/=commit/30log2rss
-        |-/sxemacs-web/
-            |-/sxemacs-web--main/
-                |-/=commit/10sendlog
-                |-/=commit/20updsite
-                |-/=commit/30news2rss
-
-Steve Youngs <steve@sxemacs.org>
 
 do_builds.sh:
 ------------
