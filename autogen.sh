@@ -1,4 +1,27 @@
 #!/bin/sh
+# Configure script bootstrap for SXEmacs
+#
+# Copyright (C) 2005, 2006, 2007 Steve Youngs.
+# Copyright (C) 2006, 2007, 2008 Sebastian Freundt.
+# Copyright (C) 2007, 2010, 2011 Nelson Ferreira
+
+# This file is part of SXEmacs.
+
+# SXEmacs is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# SXEmacs is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Parts of SXEmacs are also distributed under a BSD-like licence.
+# Check file headers for more information.
 
 # BSD's m4 probably isn't gonna cut it, use gm4 if it is available
 type gm4 >/dev/null 2>&1 && M4=gm4 || M4=m4
