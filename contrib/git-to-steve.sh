@@ -1,5 +1,5 @@
 #!/bin/sh
 #
 # 
-git branch --track to-steve
-git checkout to-steve
+git branch --track for-steve origin/master
+git checkout for-steve
