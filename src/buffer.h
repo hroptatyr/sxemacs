@@ -33,10 +33,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef MULE
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "mule-charset.h"
 =======
 #include "mule/mule-charset.h"
 >>>>>>> origin/master
+=======
+#include "mule/mule-charset.h"
+>>>>>>> master
 #endif
 
 #include "casetab.h"

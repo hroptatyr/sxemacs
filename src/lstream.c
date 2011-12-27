@@ -27,7 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 
 #include "buffer.h"
+<<<<<<< HEAD
 #include "insdel.h"
+=======
+#include "ui/insdel.h"
+>>>>>>> master
 #include "lstream.h"
 
 #include "sysfile.h"
@@ -154,11 +158,16 @@ static void
 print_lstream(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	lstream_t lstr = XLSTREAM(obj);
+<<<<<<< HEAD
 	char buf[200];
 
 	sprintf(buf, "#<INTERNAL OBJECT (SXEmacs bug?) (%s lstream) 0x%lx>",
 		lstr->imp->name, (long)lstr);
 	write_c_string(buf, printcharfun);
+=======
+	write_fmt_string(printcharfun, "#<INTERNAL OBJECT (SXEmacs bug?) (%s lstream) 0x%lx>",
+			 lstr->imp->name, (long)lstr);
+>>>>>>> master
 }
 
 static void finalize_lstream(void *header, int for_disksave)
@@ -240,7 +249,11 @@ static int lstream_type_count;
 
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
 static void
+<<<<<<< HEAD
 lstr_finaliser(void *obj, void *UNUSED(data))
+=======
+lstr_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 {
 	finalize_lstream(obj, 0);
 	return;
@@ -985,7 +998,13 @@ static Lisp_Object
 make_filedesc_stream_1(int filedesc, int offset, int count, int flags,
 		       const char *mode)
 {
+<<<<<<< HEAD
 	Lisp_Object obj;
+=======
+	Lisp_Object obj = Qnil;
+        if (filedesc < 0)
+		return obj;
+>>>>>>> master
 	lstream_t lstr = Lstream_new(lstream_filedesc, mode);
 	filedesc_stream_t fstr = FILEDESC_STREAM_DATA(lstr);
 

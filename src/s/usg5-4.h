@@ -64,14 +64,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #undef COFF
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define UNEXEC "unexelf.o"
 =======
+=======
+>>>>>>> master
 /*
  * everything is pdump now. --SY
  * #define UNEXEC "unexelf.o"
  */
 #undef UNEXEC
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 /* Get <sys/ttold.h> to get struct
  * tchars. But get <termio.h> first to make sure ttold.h doesn't

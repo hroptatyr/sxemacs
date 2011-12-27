@@ -177,7 +177,11 @@ redirection, like so...
 
 (defcustom build-rpt-subject
   (concat "[%s] "
+<<<<<<< HEAD
 	  (gethash 'SXEMACS_ARCH_VERSION (config-value-hash-table))
+=======
+	  (gethash 'SXEMACS_GIT_VERSION (config-value-hash-table))
+>>>>>>> master
 	  " on " system-configuration)
   "*SXEmacs Build Report Subject Line. %s-sequences will be substituted
   with user input through `build-rpt' according to

@@ -135,12 +135,17 @@ char *media_ffmpeg_streaminfo(Lisp_Media_Stream *ms)
 	avfc = media_stream_data(ms);
 	out = xmalloc_atomic(chars_left+1);
 	out[0] = '\0';
+<<<<<<< HEAD
+=======
+	out[chars_left] = '\0';
+>>>>>>> master
 
 	/* cannot use ffmpeg on corrupt streams */
 	if (media_stream_driver(ms) != MYSELF || avfc == NULL)
 		return out;
 
 	if (avfc->author && *avfc->author) {
+<<<<<<< HEAD
 		strcat(out, " :author \"");
 		strncat(out, avfc->author, chars_left);
 		strcat(out, "\"");
@@ -158,6 +163,28 @@ char *media_ffmpeg_streaminfo(Lisp_Media_Stream *ms)
 		snprintf(year, 12, "%d", avfc->year);
 		strncat(out, year, chars_left);
 		chars_left -= 24;
+=======
+		strncat(out, " :author \"", chars_left);
+		chars_left -= 10;
+		strncat(out, avfc->author, chars_left);
+		chars_left -= strlen(avfc->author);
+	        strncat(out, "\"", chars_left--);
+	}
+	if (avfc->title && *avfc->title) {
+		strncat(out, " :title: \"", chars_left);
+		chars_left -= 10;
+		strncat(out, avfc->title, chars_left);
+		chars_left -= strlen(avfc->title);
+		strncat(out, "\"", chars_left--);
+	}
+	if (avfc->year) {
+		char year[12];
+		int sz = snprintf(year, sizeof(year), "%d", avfc->year);
+		assert(sz>=0 && sz<sizeof(year));
+		strncat(out, " :year ", chars_left);
+		chars_left -= 7;
+		strncat(out, year, chars_left);
+>>>>>>> master
 	}
 
 	return out;
@@ -379,12 +406,23 @@ media_ffmpeg_analyse_audio(media_substream *mss, AVFormatContext *avfc, int st)
 	const char *name = NULL;
 	const char *codec_name = NULL;
 	/* libavformat cruft */
+<<<<<<< HEAD
 	AVStream *avst;
 	AVCodecContext *avcc;
 
 	/* unpack the stream and codec context from the container, again */
 	avst = avfc->streams[st];
 	avcc = avst->codec;
+=======
+	AVStream *avst = NULL;
+	AVCodecContext *avcc = NULL;
+
+	/* unpack the stream and codec context from the container, again */
+	if (avfc)
+	  avst = avfc->streams[st];
+	if (avst)
+	  avcc = avst->codec;
+>>>>>>> master
 
 	/* initialise */
 	mtap = xnew_and_zero(mtype_audio_properties);
@@ -397,6 +435,7 @@ media_ffmpeg_analyse_audio(media_substream *mss, AVFormatContext *avfc, int st)
 
 	mtap->name = name;
 	mtap->codec_name = codec_name;
+<<<<<<< HEAD
 	mtap->channels = avcc->channels;
 	mtap->samplerate = avcc->sample_rate;
 	mtap->bitrate = media_ffmpeg_bitrate(avcc);
@@ -434,6 +473,47 @@ media_ffmpeg_analyse_audio(media_substream *mss, AVFormatContext *avfc, int st)
 	default:
 		mtap->samplewidth = 0;
 		break;
+=======
+	if (avcc ) {
+		mtap->channels = avcc->channels;
+		mtap->samplerate = avcc->sample_rate;
+		mtap->bitrate = media_ffmpeg_bitrate(avcc);
+
+		/* samplewidth and framesize */
+		switch (avcc->sample_fmt) {
+		case SAMPLE_FMT_U8:
+			mtap->samplewidth = 8;
+			mtap->framesize = mtap->channels * 1;
+			mtap->msf = sxe_msf_U8;
+			break;
+		case SAMPLE_FMT_S16:
+			mtap->samplewidth = 16;
+			mtap->framesize = mtap->channels * 2;
+			mtap->msf = sxe_msf_S16;
+			break;
+#if defined SAMPLE_FMT_S24
+		case SAMPLE_FMT_S24:
+			mtap->samplewidth = 32;
+			mtap->framesize = mtap->channels * 4;
+			mtap->msf = sxe_msf_S24;
+			break;
+#endif	/* SAMPLE_FMT_S24 */
+		case SAMPLE_FMT_S32:
+			mtap->samplewidth = 32;
+			mtap->framesize = mtap->channels * 4;
+			mtap->msf = sxe_msf_S32;
+			break;
+		case SAMPLE_FMT_FLT:
+			mtap->samplewidth = 8*sizeof(float);
+			mtap->framesize = mtap->channels * sizeof(float);
+			mtap->msf = sxe_msf_FLT;
+			break;
+		case SAMPLE_FMT_NONE:
+		default:
+			mtap->samplewidth = 0;
+			break;
+		}
+>>>>>>> master
 	}
 	mtap->endianness = 0;
 
@@ -449,12 +529,23 @@ media_ffmpeg_analyse_video(media_substream *mss, AVFormatContext *avfc, int st)
 	const char *name = NULL;
 	const char *codec_name = NULL;
 	/* libavformat cruft */
+<<<<<<< HEAD
 	AVStream *avst;
 	AVCodecContext *avcc;
 
 	/* unpack the stream and codec context from the container, again */
 	avst = avfc->streams[st];
 	avcc = avst->codec;
+=======
+	AVStream *avst = NULL;
+	AVCodecContext *avcc = NULL;
+
+	/* unpack the stream and codec context from the container, again */
+	if (avfc)
+	  avst = avfc->streams[st];
+	if (avst)
+	  avcc = avst->codec;
+>>>>>>> master
 
 	/* initialise */
 	mtvp = xnew_and_zero(mtype_video_properties);
@@ -467,11 +558,21 @@ media_ffmpeg_analyse_video(media_substream *mss, AVFormatContext *avfc, int st)
 
 	mtvp->name = name;
 	mtvp->codec_name = codec_name;
+<<<<<<< HEAD
 	mtvp->bitrate = avcc->bit_rate;
 	mtvp->width = avcc->width;
 	mtvp->height = avcc->height;
 	mtvp->aspect_num = avcc->sample_aspect_ratio.num;
 	mtvp->aspect_den = avcc->sample_aspect_ratio.den;
+=======
+	if (avcc) {
+	  mtvp->bitrate = avcc->bit_rate;
+	  mtvp->width = avcc->width;
+	  mtvp->height = avcc->height;
+	  mtvp->aspect_num = avcc->sample_aspect_ratio.num;
+	  mtvp->aspect_den = avcc->sample_aspect_ratio.den;
+	}
+>>>>>>> master
 
 	mtvp->endianness = 0;
 
@@ -542,6 +643,7 @@ media_ffmpeg_open(Lisp_Media_Stream *ms)
 		break;
 	}
 
+<<<<<<< HEAD
 	/* check if there is at least one usable stream */
 	for (size_t st = 0; st < avfc->nb_streams; st++) {
 		avst = avfc->streams[st];
@@ -578,6 +680,45 @@ media_ffmpeg_open(Lisp_Media_Stream *ms)
 		}
 	}
 
+=======
+	if (avfc)
+		/* check if there is at least one usable stream */
+		for (size_t st = 0; st < avfc->nb_streams; st++) {
+			avst = avfc->streams[st];
+			avcc = avst->codec;
+			if (avcc &&
+			    avcc->codec_id != CODEC_ID_NONE &&
+			    avcc->codec_type != CODEC_TYPE_DATA &&
+			    (avc = avcodec_find_decoder(avcc->codec_id)) &&
+			    (avc && (avcodec_open(avcc, avc) >= 0))) {
+				
+				/* create a substream */
+				mss = make_media_substream_append(ms);
+				
+				switch ((unsigned int)avcc->codec_type) {
+				case CODEC_TYPE_VIDEO:
+					/* assign substream props */
+					media_substream_type(mss) = MTYPE_VIDEO;
+					media_ffmpeg_analyse_video(mss, avfc, st);
+					break;
+				case CODEC_TYPE_AUDIO:
+					/* assign substream props */
+					media_substream_type(mss) = MTYPE_AUDIO;
+					media_ffmpeg_analyse_audio(mss, avfc, st);
+					/* set some stream handlers */
+					media_stream_set_meths(ms, media_ffmpeg);
+					break;
+				case CODEC_TYPE_DATA:
+					media_substream_type(mss) = MTYPE_IMAGE;
+					break;
+				default:
+					media_substream_type(mss) = MTYPE_UNKNOWN;
+					break;
+				}
+			}
+		}
+	
+>>>>>>> master
 	/* keep the format context */
 	media_stream_data(ms) = avfc;
 

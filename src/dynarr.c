@@ -134,6 +134,7 @@ void *Dynarr_newf(int elsize)
 
 void Dynarr_resize(void *d, int size)
 {
+<<<<<<< HEAD
 	int newsize;
 	double multiplier;
 	Dynarr *dy = (Dynarr *) d;
@@ -145,6 +146,21 @@ void Dynarr_resize(void *d, int size)
 
 	for (newsize = dy->max; newsize < size;)
 		newsize = max(Dynarr_min_size, (int)(multiplier * newsize));
+=======
+       Dynarr *dy = (Dynarr *) d;
+       int newsize = max(Dynarr_min_size,dy->max);
+
+       
+       if (dy->max <= 16)
+               while(newsize < size)
+                       /* newsize *= 2 */
+                       newsize <<= 1;
+       else
+               while(newsize < size)
+                       /* newsize *= 1.5 */
+                       newsize += (newsize>>1);
+       
+>>>>>>> master
 
 	/* Don't do anything if the array is already big enough. */
 	if (newsize > dy->max) {

@@ -167,6 +167,7 @@ version 18.59 released October 31, 1992.
 #include "backtrace.h"		/* run-emacs-from-temacs needs this */
 #include "buffer.h"
 #include "commands.h"
+<<<<<<< HEAD
 #include "console.h"
 #include "process.h"
 #include "redisplay.h"
@@ -175,6 +176,16 @@ version 18.59 released October 31, 1992.
 
 #include "syssignal.h"		/* Always include before systty.h */
 #include "systty.h"
+=======
+#include "ui/console.h"
+#include "process.h"
+#include "ui/redisplay.h"
+#include "ui/frame.h"
+#include "sysdep.h"
+
+#include "syssignal.h"		/* Always include before systty.h */
+#include "ui/systty.h"
+>>>>>>> master
 #include "sysfile.h"
 #include "systime.h"
 
@@ -203,10 +214,13 @@ version 18.59 released October 31, 1992.
 #include <locale.h>
 #endif
 
+<<<<<<< HEAD
 #ifdef TOOLTALK
 #include TT_C_H_FILE
 #endif
 
+=======
+>>>>>>> master
 /* For PATH_EXEC */
 #include <sxe-paths.h>
 
@@ -281,8 +295,12 @@ Lisp_Object Vemacs_major_version;
 Lisp_Object Vemacs_minor_version;
 Lisp_Object Vemacs_patch_level;
 Lisp_Object Vemacs_beta_version;
+<<<<<<< HEAD
 Lisp_Object Vsxemacs_arch_version;
 Lisp_Object Vsxemacs_main_arch_version;
+=======
+Lisp_Object Vsxemacs_git_version;
+>>>>>>> master
 Lisp_Object Vsxemacs_codename;
 #ifdef INFODOCK
 Lisp_Object Vinfodock_major_version;
@@ -575,6 +593,7 @@ abort() -- a sure-fire way to immediately get back to the debugger,
 but also a sure-fire way to kill SXEmacs (and dump core on Unix
 systems)!
 <<<<<<< HEAD
+<<<<<<< HEAD
 								  */
       (abort_)) {
 =======
@@ -582,6 +601,11 @@ systems)!
       (abort_))
 {
 >>>>>>> origin/master
+=======
+*/
+      (abort_))
+{
+>>>>>>> master
 	debugging_breakpoint();
 	if (!NILP(abort_))
 		abort();
@@ -643,11 +667,25 @@ fatal_error_signal(int sig)
 			const char *pstack = "/usr/proc/bin/pstack";
 			if (access(pstack, X_OK) == 0) {
 				char buf[100];
+<<<<<<< HEAD
 				stderr_out("\nC backtrace follows:\n"
 					   "(A real debugger may provide better information)\n\n");
 				sprintf(buf, "%s %d >&2", pstack,
 					(int)getpid());
 				system(buf);
+=======
+				int sz = snprintf(buf, sizeof(buf), "%s %d >&2", pstack,
+					(int)getpid());
+				stderr_out("\nC backtrace follows:\n"
+					   "(A real debugger may provide better information)\n\n");
+				if ( sz >= 0 && sz < sizeof(buf)) {
+					sz = system(buf);
+					if ( sz != 0 )
+						stderr_out("\nStacktrace utility execution error code: %d\n", sz);
+				} else {
+					stderr_out("\nCould not build command line for stacktrace utility.\n");
+				}
+>>>>>>> master
 			}
 		}
 # endif
@@ -746,10 +784,14 @@ DEFUN("invocation-name", Finvocation_name, 0, 0, 0, /*
 Return the program name that was used to run SXEmacs.
 Any directory names are omitted.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	return Fcopy_sequence(Vinvocation_name);
@@ -758,10 +800,14 @@ Any directory names are omitted.
 DEFUN("invocation-directory", Finvocation_directory, 0, 0, 0, /*
 Return the directory name in which the Emacs executable was located.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	return Fcopy_sequence(Vinvocation_directory);
@@ -836,6 +882,10 @@ make_docfile(int c, char **v)
 	size_t edlen = XSTRING_LENGTH(Vexec_directory);
 	char mdocfile[edlen+countof(make_docfile_prog)];
 	char **newargv = xnew_array_and_zero(char*, c), **p;
+<<<<<<< HEAD
+=======
+	int  ret = -1;
+>>>>>>> master
 
 	/* set up the program call */
 	xstrncpy(mdocfile,
@@ -858,7 +908,13 @@ make_docfile(int c, char **v)
 	for (char **o = p, **n = &newargv[1]; *o;) {
 		*n++ = *o++;
 	}
+<<<<<<< HEAD
 	return execv(mdocfile, newargv);
+=======
+	ret = execv(mdocfile, newargv);
+	xfree(newargv);
+	return ret;
+>>>>>>> master
 }
 
 static inline void*
@@ -1056,7 +1112,12 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 			close(1);
 			if (open(term, O_RDWR | OPEN_BINARY, 2) < 0)
 				fatal("%s: %s", term, strerror(errno));
+<<<<<<< HEAD
 			dup(0);
+=======
+			if( dup(0) < 0)
+				fatal("dup failed %s: %s", term, strerror(errno));
+>>>>>>> master
 			if (!isatty(0))
 				fatal("%s: not a tty", term);
 
@@ -1516,10 +1577,13 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		syms_of_free_hook();
 #endif
 
+<<<<<<< HEAD
 #ifdef TOOLTALK
 		syms_of_tooltalk();
 #endif
 
+=======
+>>>>>>> master
 #ifdef SUNPRO
 		syms_of_sunpro();
 #endif
@@ -1936,10 +2000,13 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 #endif				/* HAVE_CANNA */
 #endif				/* MULE */
 
+<<<<<<< HEAD
 #ifdef TOOLTALK
 		vars_of_tooltalk();
 #endif
 
+=======
+>>>>>>> master
 #ifdef SUNPRO
 		vars_of_sunpro();
 #endif
@@ -2592,10 +2659,14 @@ True if running temacs.  This means we are in the dumping stage.
 This is false during normal execution of the `sxemacs' program, and
 becomes false once `run-emacs-from-temacs' is run.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	return run_temacs_argc >= 0 ? Qt : Qnil;
@@ -2604,10 +2675,14 @@ becomes false once `run-emacs-from-temacs' is run.
 DEFUN("run-emacs-from-temacs", Frun_emacs_from_temacs, 0, MANY, 0, /*
 Do not call this.  It will reinitialize your SXEmacs.  You'll be sorry.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								   */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
 /* If this function is called from startup.el, it will be possible to run
    temacs as an editor using 'temacs -batch -l loadup.el run-temacs', instead
    of having to dump an emacs and then run that (when debugging emacs itself,
@@ -2833,10 +2908,14 @@ The value of `kill-emacs-hook', if not void,
 is a list of functions (of no args),
 all of which are called before SXEmacs is actually killed.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (arg))
 {
 	/* This function can GC */
@@ -3015,6 +3094,7 @@ static void shut_down_emacs(int sig, Lisp_Object stuff, int no_auto_save)
 	unlock_all_files();
 #endif
 
+<<<<<<< HEAD
 #ifdef TOOLTALK
 	tt_session_quit(tt_default_session());
 #if 0
@@ -3023,6 +3103,8 @@ static void shut_down_emacs(int sig, Lisp_Object stuff, int no_auto_save)
 #endif
 #endif				/* TOOLTALK */
 
+=======
+>>>>>>> master
 }
 
 #ifndef CANNOT_DUMP
@@ -3042,10 +3124,14 @@ Remember to set `command-line-processed' to nil before dumping
 if you want the dumped SXEmacs to process its command line
 and announce itself normally when it is run.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symfile, filename))
 {
 	/* This function can GC */
@@ -3207,10 +3293,14 @@ Lisp_Object decode_env_path(const char *evarname, /*const*/ char *default_)
 DEFUN("split-string-by-char", Fsplit_string_by_char, 2, 2, 0, /*
 Split STRING into a list of substrings originally separated by SEPCHAR.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (string, sepchar))
 {
 	CHECK_STRING(string);
@@ -3227,10 +3317,14 @@ Explode a search path into a list of strings.
 The path components are separated with the characters specified
 with `path-separator'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (path))
 {
 	CHECK_STRING(path);
@@ -3249,10 +3343,14 @@ with `path-separator'.
 DEFUN("noninteractive", Fnoninteractive, 0, 0, 0, /*
 Non-nil return value means SXEmacs is running without interactive terminal.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	return noninteractive ? Qt : Qnil;
@@ -3322,6 +3420,10 @@ assert_failed(const char *file, int line, const char *expr)
 			    ("\nFatal error: assertion failed, file %s, line %d, %s\n",
 			     file, line, expr);
 	}
+<<<<<<< HEAD
+=======
+	fflush(stderr);
+>>>>>>> master
 
 	enter_debugger();
 #if !defined (ASSERTIONS_DONT_ABORT)
@@ -3336,10 +3438,14 @@ assert_failed(const char *file, int line, const char *expr)
 DEFUN("quantify-start-recording-data", Fquantify_start_recording_data, 0, 0, "", /*
 Start recording Quantify data.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	quantify_start_recording_data();
@@ -3349,10 +3455,14 @@ Start recording Quantify data.
 DEFUN("quantify-stop-recording-data", Fquantify_stop_recording_data, 0, 0, "", /*
 Stop recording Quantify data.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									       */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	quantify_stop_recording_data();
@@ -3362,10 +3472,14 @@ Stop recording Quantify data.
 DEFUN("quantify-clear-data", Fquantify_clear_data, 0, 0, "", /*
 Clear all Quantify data.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							     */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	quantify_clear_data();
@@ -3500,6 +3614,7 @@ earlier than 20.3.
 	Vemacs_beta_version = Qnil;
 #endif
 
+<<<<<<< HEAD
 	DEFVAR_LISP("sxemacs-arch-version", &Vsxemacs_arch_version /*
 This is the fully qualified GNU/arch revision name of this SXEmacs.
 Warning: this variable does not exist in FSF Emacs or XEmacs.
@@ -3514,6 +3629,14 @@ Warning: this variable does not exist in FSF Emacs or XEmacs.
 								   */ );
 
 	Vsxemacs_main_arch_version = build_string(SXEMACS_MAIN_ARCH_VERSION);
+=======
+	DEFVAR_LISP("sxemacs-git-version", &Vsxemacs_git_version /*
+This revision name of this SXEmacs.
+Warning: this variable does not exist in FSF Emacs or XEmacs.
+								   */ );
+
+	Vsxemacs_git_version = build_string(SXEMACS_GIT_VERSION);
+>>>>>>> master
 
 #ifdef INFODOCK
 	DEFVAR_LISP("infodock-major-version", &Vinfodock_major_version /*

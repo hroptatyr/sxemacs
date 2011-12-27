@@ -89,15 +89,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /* Definitions for how to dump.  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 #define UNEXEC "unexnext.o"
 =======
+=======
+>>>>>>> master
 /*
  * everythign is pdump now. --SY
  * #define UNEXEC "unexnext.o"
  */
 #undef UNEXEC
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 /* start_of_text isn't actually used, so make it compile without error.  */
 #define TEXT_START 0

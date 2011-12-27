@@ -25,10 +25,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <config.h>
 #include <X11/Xlocale.h>	/* More portable than <locale.h> ? */
 #include "lisp.h"
+<<<<<<< HEAD
 #include "console-x.h"
 #include "device.h"
 #include "frame.h"
 #include "EmacsFrame.h"
+=======
+#include "ui/X11/console-x.h"
+#include "ui/device.h"
+#include "ui/frame.h"
+#include "ui/X11/EmacsFrame.h"
+>>>>>>> master
 #include <Xm/Xm.h>
 
 #ifndef XIM_MOTIF

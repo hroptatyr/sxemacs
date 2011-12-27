@@ -45,9 +45,18 @@ Emacs is told about this particular widget.  To do that, call the
 function @code{make-frame}, specifying a value for the frame parameter
 @code{window-id}.  This value should be a string containing the decimal
 representation of the widget's X window ID number (this can be obtained
+<<<<<<< HEAD
 by the Xt function @code{XtWindow()}).  In order for the client program
 to communicate this information to Emacs, a method such as sending a
 ToolTalk message needs to be used.
+=======
+by the Xt function @code{XtWindow()}).
+
+@c In order for the client program to communicate this information to
+@c Emacs, a method such as sending a ToolTalk message needs to be
+@c used.
+@c (this is from the bad old days of tooltalk)
+>>>>>>> master
 
 Once @code{make-frame} has been called, Emacs will create a frame
 that occupies the client widget's window.  This frame can be used just

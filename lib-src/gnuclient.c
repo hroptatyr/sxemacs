@@ -58,6 +58,10 @@ char gnuserv_version[] = "gnuclient version " GNUSERV_VERSION;
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sysfile.h>
+<<<<<<< HEAD
+=======
+#include <assert.h>
+>>>>>>> master
 
 #ifdef HAVE_STRING_H
 #include <string.h>
@@ -91,6 +95,10 @@ void initialize_signals(void);
 static void tell_emacs_to_resume(int sig)
 {
 	char buffer[GSERV_BUFSZ + 1];
+<<<<<<< HEAD
+=======
+	int sz;
+>>>>>>> master
 	int s;			/* socket / msqid to server */
 	int connect_type;	/* CONN_UNIX, CONN_INTERNET, or
 				   ONN_IPC */
@@ -103,8 +111,14 @@ static void tell_emacs_to_resume(int sig)
 
 	connect_type = make_connection(NULL, 0, &s);
 
+<<<<<<< HEAD
 	sprintf(buffer, "(gnuserv-eval '(resume-pid-console %d))",
 		(int)getpid());
+=======
+	sz = snprintf(buffer, sizeof(buffer), "(gnuserv-eval '(resume-pid-console %d))",
+		      (int)getpid());
+	assert(sz>=0 && sz<sizeof(buffer));
+>>>>>>> master
 	send_string(s, buffer);
 
 #ifdef SYSV_IPC
@@ -178,7 +192,11 @@ static char *get_current_working_directory(void)
   filename_expand -- try to convert the given filename into a fully-qualified
   		     pathname.
 */
+<<<<<<< HEAD
 static void filename_expand(char *fullpath, char *filename)
+=======
+static void filename_expand(char *fullpath, char *filename, size_t fullsize)
+>>>>>>> master
   /* fullpath - returned full pathname */
   /* filename - filename to expand */
 {
@@ -187,21 +205,36 @@ static void filename_expand(char *fullpath, char *filename)
 
 	if (filename[0] && filename[0] == '/') {
 		/* Absolute (unix-style) pathname.  Do nothing */
+<<<<<<< HEAD
 		strcat(fullpath, filename);
+=======
+	        strncat(fullpath, filename, fullsize-1);
+>>>>>>> master
 	} else {
 		/* Assume relative Unix style path.  Get the current directory
 		   and prepend it.  FIXME: need to fix the case of DOS paths like
 		   "\foo", where we need to get the current drive. */
 
+<<<<<<< HEAD
 		strcat(fullpath, get_current_working_directory());
+=======
+	        strncat(fullpath, get_current_working_directory(), fullsize-1);
+>>>>>>> master
 		len = strlen(fullpath);
 
 		if (len > 0 && fullpath[len - 1] == '/')	/* trailing slash already? */
 			;	/* yep */
+<<<<<<< HEAD
 		else
 			strcat(fullpath, "/");	/* nope, append trailing slash */
 		/* Don't forget to add the filename! */
 		strcat(fullpath, filename);
+=======
+		else if (len < fullsize-1)
+			strcat(fullpath, "/");	/* nope, append trailing slash */
+		/* Don't forget to add the filename! */
+		strncat(fullpath, filename, fullsize-len-1);
+>>>>>>> master
 	}
 }				/* filename_expand */
 
@@ -309,6 +342,10 @@ int main(int argc, char *argv[])
 	char buffer[GSERV_BUFSZ + 1];	/* buffer to read pid */
 	char result[GSERV_BUFSZ + 1];
 	int i;
+<<<<<<< HEAD
+=======
+	int sz, msz;
+>>>>>>> master
 
 #ifdef INTERNET_DOMAIN_SOCKETS
 	memset(remotepath, 0, sizeof(remotepath));
@@ -398,7 +435,12 @@ int main(int argc, char *argv[])
 					break;
 				case 'r':
 					GET_ARGUMENT(remotearg, "-r");
+<<<<<<< HEAD
 					strcpy(remotepath, remotearg);
+=======
+					strncpy(remotepath, remotearg, sizeof(remotepath));
+					remotepath[sizeof(remotepath)-1]='\0';
+>>>>>>> master
 					rflg = 1;
 					break;
 #endif				/* INTERNET_DOMAIN_SOCKETS */
@@ -441,8 +483,14 @@ int main(int argc, char *argv[])
 #else
 		connect_type = make_connection(NULL, 0, &s);
 #endif
+<<<<<<< HEAD
 		sprintf(command, "(gnuserv-eval%s '(progn ",
 			quick ? "-quickly" : "");
+=======
+		sz = snprintf(command, sizeof(command), "(gnuserv-eval%s '(progn ",
+			 quick ? "-quickly" : "");
+		assert(sz>=0 && sz<sizeof(command));
+>>>>>>> master
 		send_string(s, command);
 		if (load_library) {
 			send_string(s, "(load-library ");
@@ -476,8 +524,15 @@ int main(int argc, char *argv[])
 #else
 		connect_type = make_connection(NULL, 0, &s);
 #endif
+<<<<<<< HEAD
 		sprintf(command, "(gnuserv-eval%s '(progn ",
 			quick ? "-quickly" : "");
+=======
+		sz = snprintf(command, sizeof(command),
+			      "(gnuserv-eval%s '(progn ",
+			      quick ? "-quickly" : "");
+		assert(sz>=0 && sz<sizeof(command));
+>>>>>>> master
 		send_string(s, command);
 
 		while ((nb = read(fileno(stdin), buffer, GSERV_BUFSZ - 1)) > 0) {
@@ -540,9 +595,17 @@ int main(int argc, char *argv[])
 			gethostname(thishost, HOSTNAMSZ);
 			if (!rflg) {	/* attempt to generate a path
 					 * to this machine */
+<<<<<<< HEAD
 				if ((ptr = getenv("GNU_NODE")) != NULL)
 					/* user specified a path */
 					strcpy(remotepath, ptr);
+=======
+				if ((ptr = getenv("GNU_NODE")) != NULL) {
+					/* user specified a path */
+					strncpy(remotepath, ptr, sizeof(remotepath)-1);
+					remotepath[sizeof(remotepath)-1]='\0';
+				}
+>>>>>>> master
 			}
 #if 0				/* This is really bogus... re-enable it if you must have it! */
 #if defined (hp9000s300) || defined (hp9000s800)
@@ -572,23 +635,44 @@ int main(int argc, char *argv[])
 
 		if (suppress_windows_system) {
 			char *term = getenv("TERM");
+<<<<<<< HEAD
+=======
+			int sz;
+>>>>>>> master
 			if (!term) {
 				fprintf(stderr, "%s: unknown terminal type\n",
 					progname);
 				exit(1);
 			}
+<<<<<<< HEAD
 			sprintf(command,
 				"(gnuserv-edit-files '(tty %s %s %d) '(",
 				clean_string(tty), clean_string(term),
 				(int)getpid());
+=======
+			sz = snprintf(command, sizeof(command),
+				      "(gnuserv-edit-files '(tty %s %s %d) '(",
+				      clean_string(tty), clean_string(term),
+				      (int)getpid());
+			assert(sz>=0 && sz<sizeof(command));
+>>>>>>> master
 		} else {	/* !suppress_windows_system */
 
 			if (0) ;
 #ifdef HAVE_X_WINDOWS
+<<<<<<< HEAD
 			else if (display)
 				sprintf(command,
 					"(gnuserv-edit-files '(x %s) '(",
 					clean_string(display));
+=======
+			else if (display) {
+				int sz = snprintf(command, sizeof(command),
+						  "(gnuserv-edit-files '(x %s) '(",
+						  clean_string(display));
+				assert(sz>=0 && sz<sizeof(command));
+			}
+>>>>>>> master
 #endif
 #ifdef HAVE_GTK
 			else if (display)
@@ -611,6 +695,7 @@ int main(int argc, char *argv[])
 				starting_line = 1;
 				--i;
 			}
+<<<<<<< HEAD
 			filename_expand(fullpath, argv[i]);
 #ifdef INTERNET_DOMAIN_SOCKETS
 			path =
@@ -631,6 +716,32 @@ int main(int argc, char *argv[])
 			 || (nofiles
 			     && !suppress_windows_system)) ? " 'quick" : "",
 			view ? " 'view" : "");
+=======
+			filename_expand(fullpath, argv[i], sizeof(fullpath));
+#ifdef INTERNET_DOMAIN_SOCKETS
+			msz = strlen(remotepath) + strlen(fullpath) + 1;
+			path = (char *)malloc(msz);
+			sz = snprintf(path, msz, "%s%s", remotepath, fullpath);
+			assert(sz>=0 && sz<msz);
+#else
+			path = my_strdup(fullpath);
+#endif
+			sz = snprintf(command, sizeof(command),
+				      "(%d . %s)", starting_line,
+				      clean_string(path));
+			assert(sz>=0 && sz<sizeof(command));
+			send_string(s, command);
+			free(path);
+		}		/* for */
+		
+		sz = snprintf(command, sizeof(command),
+			      ")%s%s",
+			      (quick
+			       || (nofiles
+				   && !suppress_windows_system)) ? " 'quick" : "",
+			      view ? " 'view" : "");
+		assert(sz>=0 && sz<sizeof(command));
+>>>>>>> master
 		send_string(s, command);
 		send_string(s, ")");
 

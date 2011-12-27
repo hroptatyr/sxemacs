@@ -80,10 +80,14 @@ typedef unsigned long md5_uint32;
 #include "lstream.h"
 #ifdef FILE_CODING
 <<<<<<< HEAD
+<<<<<<< HEAD
 # include "file-coding.h"
 =======
 # include "mule/file-coding.h"
 >>>>>>> origin/master
+=======
+# include "mule/file-coding.h"
+>>>>>>> master
 #endif
 /* Structure to save state of computation between the single steps.  */
     struct md5_ctx {
@@ -506,10 +510,14 @@ fails.  Normally, an error is signaled in such case.
 CODING and NOERROR arguments are meaningful only in XEmacsen with
 file-coding or Mule support.  Otherwise, they are ignored.
 <<<<<<< HEAD
+<<<<<<< HEAD
 				 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object, start, end, coding, noerror))
 {
 	/* This function can GC */
@@ -578,8 +586,15 @@ file-coding or Mule support.  Otherwise, they are ignored.
 	UNGCPRO;
 
 	md5_finish_ctx(&ctx, digest);
+<<<<<<< HEAD
 	for (i = 0; i < 16; i++)
 		sprintf((char *)(thehash + (i * 2)), "%02x", digest[i]);
+=======
+	for (i = 0; i < 16; i++) {
+		int n = snprintf((char *)(thehash + (i * 2)), 3, "%02x", digest[i]);
+		assert(n>=0 && n < 3);
+	}
+>>>>>>> master
 
 	return make_string(thehash, 32);
 }

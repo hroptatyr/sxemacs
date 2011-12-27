@@ -33,11 +33,19 @@
 #include <config.h>
 #include <stdio.h>
 #include <stdlib.h>
+<<<<<<< HEAD
+=======
+#include <assert.h>
+>>>>>>> master
 #include "../src/systime.h"
 
 static struct timeval TV1, TV2;
 static int watch_not_started = 1;	/* flag */
+<<<<<<< HEAD
 static char time_string[30];
+=======
+static char time_string[64];
+>>>>>>> master
 
 /* Reset the stopwatch to zero.  */
 
@@ -53,6 +61,10 @@ static void reset_watch(void)
 
 static char *get_time(void)
 {
+<<<<<<< HEAD
+=======
+	int sz;
+>>>>>>> master
 	if (watch_not_started)
 		exit(1);	/* call reset_watch first ! */
 	EMACS_GET_TIME(TV2);
@@ -60,9 +72,16 @@ static char *get_time(void)
 		TV2.tv_usec += 1000000;
 		TV2.tv_sec--;
 	}
+<<<<<<< HEAD
 	sprintf(time_string, "%lu.%06lu",
 		(unsigned long)TV2.tv_sec - TV1.tv_sec,
 		(unsigned long)TV2.tv_usec - TV1.tv_usec);
+=======
+	sz = snprintf(time_string, sizeof(time_string), "%lu.%06lu",
+		      (unsigned long)TV2.tv_sec - TV1.tv_sec,
+		      (unsigned long)TV2.tv_usec - TV1.tv_usec);
+	assert(sz>=0 && sz<sizeof(time_string));
+>>>>>>> master
 	return time_string;
 }
 

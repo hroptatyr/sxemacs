@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
 	FILE *fp;
 	char file[BUFSIZ];
 
+<<<<<<< HEAD
 	if (argc > 2 && !strcmp(argv[1], "-f"))
 		strcpy(file, argv[2]);
 	else
@@ -47,11 +48,28 @@ int main(int argc, char *argv[])
 #else
 		sprintf(file, "%s/%s", PATH_DATA, YOW_FILE);
 #endif
+=======
+	if (argc > 2 && !strcmp(argv[1], "-f")) {
+		strncpy(file, argv[2], sizeof(file)-1);
+		file[sizeof(file)-1]='\0';
+	} else
+#ifdef PATH_DATA
+#ifdef vms
+		int sz = snprintf(file, sizeof(file), "%s%s", PATH_DATA, YOW_FILE);
+#else
+	        int sz = snprintf(file, sizeof(file), "%s/%s", PATH_DATA, YOW_FILE);
+#endif
+		assert(sz>=0 && sz<sizeof(file));
+>>>>>>> master
 #else				/* !PATH_DATA */
 	{
 		fprintf(stderr,
 			"%s: the location of the \"%s\" file was not supplied at compile-time.\n\
+<<<<<<< HEAD
         You must supply it with the -f command-line option.\n",
+=======
+You must supply it with the -f command-line option.\n",
+>>>>>>> master
 			argv[0], YOW_FILE);
 		exit(1);
 	}

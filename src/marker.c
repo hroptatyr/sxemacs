@@ -54,8 +54,11 @@ static void
 print_marker(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	Lisp_Marker *marker = XMARKER(obj);
+<<<<<<< HEAD
 	char buf[200];
 
+=======
+>>>>>>> master
 	if (print_readably)
 		error("printing unreadable object #<marker 0x%lx>",
 		      (long)marker);
@@ -64,12 +67,19 @@ print_marker(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	if (!marker->buffer)
 		write_c_string(GETTEXT("in no buffer"), printcharfun);
 	else {
+<<<<<<< HEAD
 		sprintf(buf, "at %ld in ", (long)marker_position(obj));
 		write_c_string(buf, printcharfun);
 		print_internal(marker->buffer->name, printcharfun, 0);
 	}
 	sprintf(buf, " 0x%lx>", (long)marker);
 	write_c_string(buf, printcharfun);
+=======
+		write_fmt_str(printcharfun, "at %ld in ", (long)marker_position(obj));
+		print_internal(marker->buffer->name, printcharfun, 0);
+	}
+	write_fmt_str(printcharfun, " 0x%lx>", (long)marker);
+>>>>>>> master
 }
 
 static int marker_equal(Lisp_Object obj1, Lisp_Object obj2, int depth)
@@ -109,10 +119,14 @@ DEFUN("marker-buffer", Fmarker_buffer, 1, 1, 0,	/*
 Return the buffer that MARKER points into, or nil if none.
 Return nil if MARKER points into a dead buffer or doesn't point anywhere.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (marker))
 {
 	struct buffer *buf;
@@ -130,10 +144,14 @@ DEFUN("marker-position", Fmarker_position, 1, 1, 0,	/*
 Return the position MARKER points at, as a character number.
 Return `nil' if marker doesn't point anywhere.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (marker))
 {
 	CHECK_MARKER(marker);
@@ -268,10 +286,14 @@ position moves point.  You cannot change its buffer or make it point
 nowhere.
 The return value is MARKER.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (marker, position, buffer))
 {
 	return set_marker_internal(marker, position, buffer, 0);
@@ -408,6 +430,7 @@ at that position in the current buffer.
 Optional argument MARKER-TYPE specifies the insertion type of the new
 marker; see `marker-insertion-type'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
       (marker_or_integer, marker_type)) {
 =======
@@ -415,6 +438,11 @@ marker; see `marker-insertion-type'.
       (marker_or_integer, marker_type))
 {
 >>>>>>> origin/master
+=======
+*/
+      (marker_or_integer, marker_type))
+{
+>>>>>>> master
 	return copy_marker_1(marker_or_integer, marker_type, 0);
 }
 
@@ -427,10 +455,14 @@ DEFUN("marker-insertion-type", Fmarker_insertion_type, 1, 1, 0,	/*
 Return insertion type of MARKER: t if it stays after inserted text.
 nil means the marker stays before text inserted there.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (marker))
 {
 	CHECK_MARKER(marker);
@@ -442,10 +474,14 @@ Set the insertion-type of MARKER to TYPE.
 If TYPE is t, it means the marker advances when you insert text at it.
 If TYPE is nil, it means the marker stays behind when you insert text at it.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (marker, type))
 {
 	CHECK_MARKER(marker);

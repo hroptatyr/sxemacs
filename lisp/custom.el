@@ -205,12 +205,16 @@ keyword in your own programs.  "
     (unless custom-dont-initialize
       (funcall initialize symbol default)))
 <<<<<<< HEAD
+<<<<<<< HEAD
   ;; #### This is a rough equivalent of LOADHIST_ATTACH.  However,
   ;; LOADHIST_ATTACH also checks for `initialized'.
   (push (cons 'defvar symbol) current-load-list)
 =======
   (push symbol current-load-list)
 >>>>>>> origin/master
+=======
+  (push symbol current-load-list)
+>>>>>>> master
   (run-hooks 'custom-define-hook)
   symbol)
 

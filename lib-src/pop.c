@@ -175,6 +175,10 @@ pop_open (host, username, password, flags)
      int flags;
 {
 	int sock;
+<<<<<<< HEAD
+=======
+	int sz;
+>>>>>>> master
 	popserver server;
 
 	/* Determine the user name */
@@ -287,7 +291,12 @@ pop_open (host, username, password, flags)
 			"recompile pop.c with larger ERROR_MAX");
 		return (0);
 	}
+<<<<<<< HEAD
 	sprintf (pop_error, "USER %s", username);
+=======
+	sz = snprintf (pop_error, sizeof(pop_error), "USER %s", username);
+	assert(sz>=0 && sz<sizeof(pop_error));
+>>>>>>> master
 
 	if (sendline (server, pop_error) || getok (server)) {
 		return (0);
@@ -300,7 +309,13 @@ pop_open (host, username, password, flags)
 			"recompile pop.c with larger ERROR_MAX");
 		return (0);
 	}
+<<<<<<< HEAD
 	sprintf (pop_error, "PASS %s", password);
+=======
+	sz = snprintf (pop_error, sizeof(pop_error),
+		       "PASS %s", password);
+	assert(sz>=0 && sz<sizeof(pop_error));
+>>>>>>> master
 
 	if (sendline (server, pop_error) || getok (server)) {
 		return (0);
@@ -417,7 +432,12 @@ pop_list (server, message, IDs, sizes)
 	}
 
 	if (message) {
+<<<<<<< HEAD
 		sprintf (pop_error, "LIST %d", message);
+=======
+		sz = snprintf (pop_error, sizeof(pop_error), "LIST %d", message);
+		assert(sz>=0 && sz<sizeof(pop_error));
+>>>>>>> master
 		if (sendline (server, pop_error)) {
 			free ((char *) *IDs);
 			free ((char *) *sizes);
@@ -594,7 +614,12 @@ pop_retrieve_first (server, message, response)
      int message;
      char **response;
 {
+<<<<<<< HEAD
 	sprintf (pop_error, "RETR %d", message);
+=======
+	int sz = snprintf (pop_error, sizeof(pop_error), "RETR %d", message);
+	assert(sz>=0 && sz<sizeof(pop_error));
+>>>>>>> master
 	return (pop_multi_first (server, pop_error, response));
 }
 
@@ -627,7 +652,13 @@ pop_top_first (server, message, lines, response)
      int message, lines;
      char **response;
 {
+<<<<<<< HEAD
 	sprintf (pop_error, "TOP %d %d", message, lines);
+=======
+	int sz = snprintf (pop_error, sizeof(pop_error),
+			   "TOP %d %d", message, lines);
+	assert(sz>=0 && sz<sizeof(pop_error));
+>>>>>>> master
 	return (pop_multi_first (server, pop_error, response));
 }
 
@@ -763,12 +794,23 @@ pop_delete (server, message)
      popserver server;
      int message;
 {
+<<<<<<< HEAD
+=======
+	int sz;
+
+>>>>>>> master
 	if (server->in_multi) {
 		strcpy (pop_error, "In multi-line query in pop_delete");
 		return (-1);
 	}
 
+<<<<<<< HEAD
 	sprintf (pop_error, "DELE %d", message);
+=======
+	sz = snprintf (pop_error, sizeof(pop_error),
+		       "DELE %d", message);
+	assert(sz>=0 && sz<sizeof(pop_error));
+>>>>>>> master
 
 	if (sendline (server, pop_error) || getok (server))
 		return (-1);

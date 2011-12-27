@@ -162,7 +162,11 @@ dllist_hash(Lisp_Object obj, int depth)
 
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
 static void
+<<<<<<< HEAD
 finalise_dllist(void *header, int UNUSED(for_disksave))
+=======
+finalise_dllist(void *header, int SXE_UNUSED(for_disksave))
+>>>>>>> master
 {
 	SXE_DEBUG_GC("finalising dllist %p\n", header);
 
@@ -176,7 +180,11 @@ finalise_dllist(void *header, int UNUSED(for_disksave))
 #else  /* !BDWGC */
 
 static void
+<<<<<<< HEAD
 finalise_dllist(void *header, int UNUSED(for_disksave))
+=======
+finalise_dllist(void *header, int SXE_UNUSED(for_disksave))
+>>>>>>> master
 {
 	volatile dllist_t dllist = header;
 
@@ -225,10 +233,14 @@ dllist_remprop(Lisp_Object obj, Lisp_Object property)
 DEFUN("dllist-plist", Fdllist_plist, 1, 1, 0, /*
 Return the property list of DLLIST.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
         CHECK_DLLIST(dllist);
@@ -406,10 +418,14 @@ Return a doubly-linked list.
 
 Optionally passed arguments are filled into the resulting dllist.
 <<<<<<< HEAD
+<<<<<<< HEAD
 				     */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object *args))
 {
 	dllist_t dllist = make_dllist();
@@ -427,10 +443,14 @@ Optionally passed arguments are filled into the resulting dllist.
 DEFUN("dllistp", Fdllistp, 1, 1, 0, /*
 Return non-nil if OBJECT is a dllist.
 <<<<<<< HEAD
+<<<<<<< HEAD
 				     */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	if (DLLISTP(object))
@@ -442,10 +462,14 @@ Return non-nil if OBJECT is a dllist.
 DEFUN("dllist-empty-p", Fdllist_empty_p, 1, 1, 0, /*
 Return non-nil if DLLIST is empty.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
 	CHECK_DLLIST(dllist);
@@ -460,10 +484,14 @@ Return non-nil if DLLIST is empty.
 DEFUN("dllist-car", Fdllist_car, 1, 1, 0, /*
 Return the front element of DLLIST.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
 	void *result;
@@ -477,10 +505,14 @@ Return the front element of DLLIST.
 DEFUN("dllist-rac", Fdllist_rac, 1, 1, 0, /*
 Return the back element of DLLIST.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
 	void *result;
@@ -503,10 +535,14 @@ dllist_prepend(dllist_t dllist, void *element)
 DEFUN("dllist-prepend", Fdllist_prepend, 2, 2, 0, /*
 Add ELEMENT to the front of DLLIST.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist, element))
 {
 	CHECK_DLLIST(dllist);
@@ -519,10 +555,14 @@ Add ELEMENT to the front of DLLIST.
 DEFUN("dllist-transfer-car-car", Fdllist_transfer_car_car, 2, 2, 0, /*
 Pop off SRC-DLL's car and prepend it to TGT-DLL.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (src_dll, tgt_dll))
 {
 	dllist_item_t item;
@@ -542,10 +582,14 @@ Pop off SRC-DLL's car and prepend it to TGT-DLL.
 DEFUN("dllist-transfer-rac-car", Fdllist_transfer_rac_car, 2, 2, 0, /*
 Pop off SRC-DLL's rac and prepend it to TGT-DLL.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (src_dll, tgt_dll))
 {
 	dllist_item_t item;
@@ -574,10 +618,14 @@ dllist_append(dllist_t dllist, void *element)
 DEFUN("dllist-append", Fdllist_append, 2, 2, 0, /*
 Add ELEMENT to the back of DLLIST.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist, element))
 {
 	CHECK_DLLIST(dllist);
@@ -591,10 +639,14 @@ Add ELEMENT to the back of DLLIST.
 DEFUN("dllist-transfer-car-rac", Fdllist_transfer_car_rac, 2, 2, 0, /*
 Pop off SRC-DLL's car and append it to TGT-DLL.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (src_dll, tgt_dll))
 {
 	dllist_item_t item;
@@ -614,10 +666,14 @@ Pop off SRC-DLL's car and append it to TGT-DLL.
 DEFUN("dllist-transfer-rac-rac", Fdllist_transfer_rac_rac, 2, 2, 0, /*
 Pop off SRC-DLL's rac and append it to TGT-DLL.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (src_dll, tgt_dll))
 {
 	dllist_item_t item;
@@ -652,10 +708,14 @@ dllist_pop_car(dllist_t dllist)
 DEFUN("dllist-pop-car", Fdllist_pop_car, 1, 1, 0, /*
 Remove the front element of DLLIST and return it.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
 	void *result;
@@ -684,10 +744,14 @@ dllist_pop_rac(dllist_t dllist)
 DEFUN("dllist-pop-rac", Fdllist_pop_rac, 1, 1, 0, /*
 Remove the back element of DLLIST and return it.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
 	void *result;
@@ -731,10 +795,14 @@ dllist_rrotate(dllist_t dllist)
 DEFUN("dllist-rrotate", Fdllist_rrotate, 1, 1, 0, /*
 Remove the back element of DLLIST and prepend it to the front.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
 	CHECK_DLLIST(dllist);
@@ -775,10 +843,14 @@ dllist_lrotate(dllist_t dllist)
 DEFUN("dllist-lrotate", Fdllist_lrotate, 1, 1, 0, /*
 Remove the head element of DLLIST and append it to the back.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
 	CHECK_DLLIST(dllist);
@@ -790,10 +862,14 @@ Remove the head element of DLLIST and append it to the back.
 DEFUN("dllist-size", Fdllist_size, 1, 1, 0, /*
 Return the size of DLLIST, that is the number of elements.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
 	int result;
@@ -826,10 +902,14 @@ Return a copy of dllist DLLIST.
 The elements of DLLIST are not copied; they are shared
 with the original.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
 	CHECK_DLLIST(dllist);
@@ -843,10 +923,14 @@ DEFUN("dllist-to-list", Fdllist_to_list, 1, 1, 0, /*
 Return the ordinary list induced by DLLIST, that is start with
 the first element in DLLIST and traverse through the back.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
 	/* this function can GC */
@@ -876,10 +960,14 @@ Return the ordinary list induced by DLLIST in reverse order,
 that is start with the last element in DLLIST and traverse through
 the front.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dllist))
 {
 	dllist_item_t tmp;

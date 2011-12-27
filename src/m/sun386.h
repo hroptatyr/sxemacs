@@ -87,11 +87,17 @@ NOTE-END  */
 #undef RUN_TIME_REMAP
 #undef UNEXEC
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define UNEXEC "unexec.o"
 =======
+=======
+>>>>>>> master
 
 /* 
  * everything is pdump now. --SY
  * #define UNEXEC "unexec.o"
  */
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master

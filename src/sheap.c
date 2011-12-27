@@ -119,6 +119,7 @@ void report_sheap_usage(int die_if_pure_storage_exceeded)
 	size_t lost = (STATIC_HEAP_BASE + STATIC_HEAP_SLOP + SHEAP_ADJUSTMENT)
 	    - (static_heap_ptr - static_heap_buffer);
 	char buf[200];
+<<<<<<< HEAD
 	sprintf(buf, "Static heap usage: %ld of %ld",
 		(long)(static_heap_ptr - static_heap_buffer),
 		(long)(STATIC_HEAP_BASE + STATIC_HEAP_SLOP + SHEAP_ADJUSTMENT));
@@ -126,6 +127,19 @@ void report_sheap_usage(int die_if_pure_storage_exceeded)
 	if (lost > STATIC_HEAP_SLOP) {
 		sprintf(buf + strlen(buf), " -- %ldk wasted",
 			(long)(lost / 1024));
+=======
+	int n = snprintf(buf, sizeof(buf), "Static heap usage: %ld of %ld",
+			 (long)(static_heap_ptr - static_heap_buffer),
+			 (long)(STATIC_HEAP_BASE + STATIC_HEAP_SLOP + SHEAP_ADJUSTMENT));
+	assert(n>=0 && n < sizeof(buf));
+
+	if (lost > STATIC_HEAP_SLOP) {
+		int len = strlen(buf);
+		n = snprintf(buf + len, sizeof(buf)-len, " -- %ldk wasted",
+			     (long)(lost / 1024));
+		assert(n>=0 && n < (sizeof(buf)-len));
+
+>>>>>>> master
 		if (die_if_pure_storage_exceeded) {
 			sheap_adjust_h();
 			rc = -1;

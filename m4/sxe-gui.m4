@@ -458,6 +458,7 @@ AC_DEFUN([SXE_CHECK_XT_DEPENDENCIES], [dnl
 		"$with_gnome" != "yes"; then
 
 		if test "$with_menubars" != "no"; then
+<<<<<<< HEAD
 			SXE_ADD_SXEUI_OBJS([menubar-x.o])
 		fi
 		if test "$with_scrollbars" != "no"; then
@@ -471,6 +472,21 @@ AC_DEFUN([SXE_CHECK_XT_DEPENDENCIES], [dnl
 		fi
 		if test "$all_widgets" != "no no no no no"; then
 			SXE_ADD_SXEUI_OBJS([gui-x.o])
+=======
+			SXE_ADD_SXEUIX11_OBJS([menubar-x.o])
+		fi
+		if test "$with_scrollbars" != "no"; then
+			SXE_ADD_SXEUIX11_OBJS([scrollbar-x.o])
+		fi
+		if test "$with_dialogs" != "no"; then
+			SXE_ADD_SXEUIX11_OBJS([dialog-x.o])
+		fi
+		if test "$with_toolbars" != "no"; then
+			SXE_ADD_SXEUIX11_OBJS([toolbar-x.o])
+		fi
+		if test "$all_widgets" != "no no no no no"; then
+			SXE_ADD_SXEUIX11_OBJS([gui-x.o])
+>>>>>>> master
 		fi
 	fi
 
@@ -480,6 +496,7 @@ AC_DEFUN([SXE_CHECK_GTK_DEPENDENCIES], [dnl
 
 	all_widgets="$with_menubars $with_scrollbars $with_dialogs $with_toolbars $with_widgets"
 	if test "$with_menubars" != "no"; then
+<<<<<<< HEAD
 		SXE_ADD_SXEUI_OBJS([menubar-gtk.o])
 	fi
 	if test "$with_scrollbars" != "no"; then
@@ -493,6 +510,21 @@ AC_DEFUN([SXE_CHECK_GTK_DEPENDENCIES], [dnl
 	fi
 	if test "$all_widgets" != "no no no no no"; then
 		SXE_ADD_SXEUI_OBJS([gui-gtk.o])
+=======
+		SXE_ADD_SXEUIGTK_OBJS([menubar-gtk.o])
+	fi
+	if test "$with_scrollbars" != "no"; then
+		SXE_ADD_SXEUIGTK_OBJS([scrollbar-gtk.o])
+	fi
+	if test "$with_dialogs" != "no"; then
+		SXE_ADD_SXEUIGTK_OBJS([dialog-gtk.o])
+	fi
+	if test "$with_toolbars" != "no"; then
+		SXE_ADD_SXEUIGTK_OBJS([toolbar-gtk.o])
+	fi
+	if test "$all_widgets" != "no no no no no"; then
+		SXE_ADD_SXEUIGTK_OBJS([gui-gtk.o])
+>>>>>>> master
 	fi
 
 	AS_MESSAGE([
@@ -534,6 +566,12 @@ AC_DEFUN([SXE_CHECK_UI_SUFFICIENCY], [dnl
 	fi
 	AC_SUBST([lwlib_objs])
 	SXE_SUBST_SXEUI_OBJS
+<<<<<<< HEAD
+=======
+	SXE_SUBST_SXEUITTY_OBJS
+	SXE_SUBST_SXEUIX11_OBJS
+	SXE_SUBST_SXEUIGTK_OBJS
+>>>>>>> master
 
 ])dnl SXE_CHECK_UI_SUFFICIENCY
 

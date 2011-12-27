@@ -31,7 +31,11 @@ ERROR ! This ought not be getting compiled if EXTERNAL_WIDGET
 #endif
 #endif
 #include <X11/Xlib.h>
+<<<<<<< HEAD
 #include "extw-Xlib.h"
+=======
+#include "ui/X11/extw-Xlib.h"
+>>>>>>> master
 	int extw_which_side;
 
 static int atoms_initialized;

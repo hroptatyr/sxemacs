@@ -82,7 +82,11 @@ EXFUN(Fffi_size_of_type, 1);
 EXFUN(Fffi_plist, 1);
 
 #ifdef EF_USE_ASYNEQ
+<<<<<<< HEAD
 #include "event-queue.h"
+=======
+#include "events/event-queue.h"
+>>>>>>> master
 
 typedef struct ffi_job_s *ffi_job_t;
 struct ffi_job_s {

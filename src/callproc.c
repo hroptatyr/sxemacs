@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "buffer.h"
 #include "commands.h"
+<<<<<<< HEAD
 #include "insdel.h"
 #include "lstream.h"
 #include "process.h"
@@ -45,13 +46,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 =======
 #include "mule/file-coding.h"
 >>>>>>> origin/master
+=======
+#include "ui/insdel.h"
+#include "lstream.h"
+#include "process.h"
+#include "sysdep.h"
+#include "ui/window.h"
+#ifdef FILE_CODING
+#include "mule/file-coding.h"
+>>>>>>> master
 #endif
 
 #include "systime.h"
 #include "sysproc.h"
 #include "sysfile.h"		/* Always include after sysproc.h */
 #include "syssignal.h"		/* Always include before systty.h */
+<<<<<<< HEAD
 #include "systty.h"
+=======
+#include "ui/systty.h"
+>>>>>>> master
 
 
 
@@ -125,6 +139,7 @@ static Lisp_Object call_process_cleanup(Lisp_Object fdpid)
 }
 
 static Lisp_Object fork_error;
+<<<<<<< HEAD
 #if 0				/* UNUSED */
 static void report_fork_error(char *string, Lisp_Object data)
 {
@@ -142,6 +157,10 @@ DEFUN("old-call-process-internal", Fold_call_process_internal, 1, MANY, 0,	/*
 =======
 DEFUN("old-call-process-internal", Fold_call_process_internal, 1, MANY, 0, /*
 >>>>>>> origin/master
+=======
+
+DEFUN("old-call-process-internal", Fold_call_process_internal, 1, MANY, 0, /*
+>>>>>>> master
 Call PROGRAM synchronously in separate process, with coding-system specified.
 Arguments are
 (PROGRAM &optional INFILE BUFFER DISPLAY &rest ARGS).
@@ -163,6 +182,7 @@ or a signal description string.
 If you quit, the process is killed with SIGINT, or SIGKILL if you
 quit again.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
       (int nargs, Lisp_Object * args)) {
 =======
@@ -170,6 +190,11 @@ quit again.
       (int nargs, Lisp_Object * args))
 {
 >>>>>>> origin/master
+=======
+*/
+      (int nargs, Lisp_Object * args))
+{
+>>>>>>> master
 	/* This function can GC */
 	Lisp_Object infile, buffer, current_dir, display, path;
 	int fd[2];
@@ -306,7 +331,14 @@ quit again.
 		fd[1] = open(NULL_DEVICE, O_WRONLY | OPEN_BINARY, 0);
 		fd[0] = -1;
 	} else {
+<<<<<<< HEAD
 		pipe(fd);
+=======
+		if( pipe(fd) < 0 )
+			report_file_error("Opening process input file pipe",
+					  Fcons(infile, Qnil));
+
+>>>>>>> master
 #if 0
 		/* Replaced by close_process_descs */
 		set_exclusive_use(fd[0]);
@@ -722,10 +754,14 @@ Return the value of environment variable VAR, as a string.
 VAR is a string, the name of the variable.
 When invoked interactively, prints the value in the echo area.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (var, interactivep))
 {
 	Bufbyte *value = NULL;

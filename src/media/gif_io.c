@@ -6,7 +6,11 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+<<<<<<< HEAD
 #include "gifrlib.h"
+=======
+#include "ui/gifrlib.h"
+>>>>>>> master
 #include "sysfile.h"
 
 /******************************************************************************

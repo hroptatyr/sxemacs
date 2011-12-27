@@ -39,14 +39,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 
 #include "buffer.h"
+<<<<<<< HEAD
 #include "events.h"
 #include "frame.h"
+=======
+#include "events/events.h"
+#include "ui/frame.h"
+>>>>>>> master
 #include "hash.h"
 #include "lstream.h"
 #include "opaque.h"
 #include "process.h"
 #include "procimpl.h"
 #include "sysdep.h"
+<<<<<<< HEAD
 #include "window.h"
 #ifdef FILE_CODING
 <<<<<<< HEAD
@@ -54,6 +60,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 =======
 #include "mule/file-coding.h"
 >>>>>>> origin/master
+=======
+#include "ui/window.h"
+#ifdef FILE_CODING
+#include "mule/file-coding.h"
+>>>>>>> master
 #endif
 
 #include <setjmp.h>
@@ -61,7 +72,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "sysproc.h"
 #include "systime.h"
 #include "syssignal.h"		/* Always include before systty.h */
+<<<<<<< HEAD
 #include "systty.h"
+=======
+#include "ui/systty.h"
+>>>>>>> master
 #include "syswait.h"
 
 #ifdef HPUX
@@ -78,7 +93,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  */
 
 struct unix_process_data {
+<<<<<<< HEAD
 	/* Non-0 if this is really a ToolTalk channel. */
+=======
+	/* Always 0.  Used to be for tooltalk only. */
+>>>>>>> master
 	int connected_via_filedesc_p;
 	/* Descriptor by which we read from this process.  -1 for dead process */
 	int infd;
@@ -374,10 +393,20 @@ static int allocate_pty_the_old_fashioned_way(void)
 #endif				/* PTY_ITERATION */
 
 		{
+<<<<<<< HEAD
 #ifdef PTY_NAME_SPRINTF
 			PTY_NAME_SPRINTF
 #else
 			sprintf(pty_name, "/dev/pty%c%x", c, i);
+=======
+			int sz;
+
+#ifdef PTY_NAME_SPRINTF
+			PTY_NAME_SPRINTF;
+#else
+			sz = snprintf(pty_name, sizeof(pty_name), "/dev/pty%c%x", c, i);
+			assert(sz >= 0 && sz < sizeof(pty_name));
+>>>>>>> master
 #endif				/* no PTY_NAME_SPRINTF */
 
 			if (sxemacs_stat(pty_name, &stb) < 0) {
@@ -390,9 +419,17 @@ static int allocate_pty_the_old_fashioned_way(void)
 
 			if (fd >= 0) {
 #ifdef PTY_TTY_NAME_SPRINTF
+<<<<<<< HEAD
 				PTY_TTY_NAME_SPRINTF
 #else
 				sprintf(pty_name, "/dev/tty%c%x", c, i);
+=======
+				PTY_TTY_NAME_SPRINTF;
+#else
+				int sz = snprintf(pty_name, sizeof(pty_name),
+						  "/dev/tty%c%x", c, i);
+				assert(sz >= 0 && sz < sizeof(pty_name));
+>>>>>>> master
 #endif				/* no PTY_TTY_NAME_SPRINTF */
 				if (access(pty_name, R_OK | W_OK) == 0) {
 					setup_pty(fd);
@@ -1118,6 +1155,7 @@ unix_create_process(Lisp_Process * p,
 	}
 }
 
+<<<<<<< HEAD
 /* Return nonzero if this process is a ToolTalk connection. */
 
 static int unix_tooltalk_connection_p(Lisp_Process * p)
@@ -1125,6 +1163,8 @@ static int unix_tooltalk_connection_p(Lisp_Process * p)
 	return UNIX_DATA(p)->connected_via_filedesc_p;
 }
 
+=======
+>>>>>>> master
 /* This is called to set process' virtual terminal size */
 
 static int unix_set_window_size(Lisp_Process * p, int cols, int rows)
@@ -1678,8 +1718,14 @@ unix_open_network_stream(Lisp_Object name, Lisp_Object host,
 		 * Convert to a C string for later use by getaddrinfo.
 		 */
 		if (INTP(service)) {
+<<<<<<< HEAD
 			snprintf(portbuf, sizeof(portbuf), "%ld",
 				 (long)XINT(service));
+=======
+			int sz= snprintf(portbuf, sizeof(portbuf), "%ld",
+					 (long)XINT(service));
+			assert(sz >= 0 && sz < sizeof(portbuf));
+>>>>>>> master
 			portstring = portbuf;
 			port = htons((unsigned short)XINT(service));
 		} else {
@@ -2129,8 +2175,14 @@ unix_open_network_server_stream(Lisp_Object name, Lisp_Object host,
 		 * Convert to a C string for later use by getaddrinfo.
 		 */
 		if (INTP(service)) {
+<<<<<<< HEAD
 			snprintf(portbuf, sizeof(portbuf), "%ld",
 				 (long)XINT(service));
+=======
+			int sz = snprintf(portbuf, sizeof(portbuf), "%ld",
+					  (long)XINT(service));
+			assert(sz >= 0 && sz < sizeof(portbuf));
+>>>>>>> master
 			portstring = portbuf;
 			port = htons((unsigned short)XINT(service));
 		} else {
@@ -2602,7 +2654,10 @@ void process_type_create_unix(void)
 #endif
 	PROCESS_HAS_METHOD(unix, init_process_io_handles);
 	PROCESS_HAS_METHOD(unix, create_process);
+<<<<<<< HEAD
 	PROCESS_HAS_METHOD(unix, tooltalk_connection_p);
+=======
+>>>>>>> master
 	PROCESS_HAS_METHOD(unix, set_window_size);
 #ifdef HAVE_WAITPID
 	PROCESS_HAS_METHOD(unix, update_status_if_terminated);

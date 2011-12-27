@@ -185,8 +185,11 @@ enum lrecord_type {
 	lrecord_type_glyph,
 	lrecord_type_face,
 	lrecord_type_database,
+<<<<<<< HEAD
 	lrecord_type_tooltalk_message, /* 50 */
 	lrecord_type_tooltalk_pattern,
+=======
+>>>>>>> master
 	lrecord_type_ldap,
 	lrecord_type_pgconn,
 	lrecord_type_pgresult,
@@ -610,7 +613,11 @@ DECLARE_LRECORD (toolbar_button, struct toolbar_button);
 
 ------------------------------ in toolbar.c -----------------------------
 
+<<<<<<< HEAD
 #include "toolbar.h"
+=======
+#include "ui/toolbar.h"
+>>>>>>> master
 
 ...
 
@@ -648,7 +655,11 @@ syms_of_toolbar (void)
 ------------------------------ in inline.c -----------------------------
 
 #ifdef HAVE_TOOLBARS
+<<<<<<< HEAD
 #include "toolbar.h"
+=======
+#include "ui/toolbar.h"
+>>>>>>> master
 #endif
 
 ------------------------------ in lrecord.h -----------------------------

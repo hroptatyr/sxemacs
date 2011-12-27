@@ -24,16 +24,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <dlfcn.h>
 #include <math.h>
+<<<<<<< HEAD
 
+=======
+#include "sysdep.h"
+>>>>>>> master
 #include "effi.h"
 
 #include "buffer.h"
 #ifdef FILE_CODING
 <<<<<<< HEAD
+<<<<<<< HEAD
 #  include "file-coding.h"
 =======
 #  include "mule/file-coding.h"
 >>>>>>> origin/master
+=======
+#  include "mule/file-coding.h"
+>>>>>>> master
 #endif
 
 #ifdef HAVE_LIBFFI
@@ -42,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif  /* HAVE_LIBFFI */
 
 #ifdef EF_USE_ASYNEQ
+<<<<<<< HEAD
 #  include "workers.h"
 #  include "worker-asyneq.h"
 #endif	/* EF_USE_ASYNEQ */
@@ -49,6 +58,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* For `x-device-display' */
 #include "console-x.h"
 #include "device.h"
+=======
+#  include "events/workers.h"
+#  include "events/worker-asyneq.h"
+#endif	/* EF_USE_ASYNEQ */
+
+/* For `x-device-display' */
+#include "ui/X11/console-x.h"
+#include "ui/device.h"
+>>>>>>> master
 
 #define EFFI_CODING	Qnative
 
@@ -59,11 +77,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #  define SIGNAL_ERROR signal_error
 #  define FFIBYTE Bufbyte
 #  define WRITE_C_STRING(x,y) write_c_string((x),(y))
+<<<<<<< HEAD
+=======
+#  define WRITE_FMT_STRING(x,y,...) write_fmt_string((x),(y),__VA_ARGS__)
+>>>>>>> master
 #  define LRECORD_DESCRIPTION lrecord_description
 #else
 #  define SIGNAL_ERROR Fsignal
 #  define FFIBYTE Ibyte
 #  define WRITE_C_STRING(x,y) write_c_string((y),(x))
+<<<<<<< HEAD
+=======
+#  define WRITE_FMT_STRING(x,y,...)			\
+	do {						\
+		char wcsb[128];				\
+		int wcss = snprintf(wcsb, sizeof(wcsb),	\
+				    (y),__VA_ARGS__);	\
+		write_c_string((y),wcsb);		\
+	} while(0)
+>>>>>>> master
 #  define LRECORD_DESCRIPTION memory_description
 #endif	/* SXEMACS */
 
@@ -147,8 +179,11 @@ print_ffiobject(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	/* This function can GC */
 	Lisp_EffiObject *ffio = XEFFIO(obj);
+<<<<<<< HEAD
 	char buf[256];
 
+=======
+>>>>>>> master
         escapeflag = escapeflag;        /* shutup compiler */
 	if (print_readably) {
 #ifdef SXEMACS
@@ -167,9 +202,14 @@ print_ffiobject(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
                 print_internal(ffio->type, printcharfun, 1);
                 WRITE_C_STRING(" ", printcharfun);
         }
+<<<<<<< HEAD
 	snprintf(buf, 255, "size=%ld fotype=%d foptr=%p>",
                  (long)XINT(ffio->size), ffio->fotype, ffio->fop.generic);
 	WRITE_C_STRING(buf, printcharfun);
+=======
+	WRITE_FMT_STRING(printcharfun,"size=%ld fotype=%d foptr=%p>",
+			 (long)XINT(ffio->size), ffio->fotype, ffio->fop.generic);
+>>>>>>> master
 }
 
 static const struct LRECORD_DESCRIPTION ffiobject_description[] = {
@@ -286,16 +326,22 @@ const struct lrecord_implementation lrecord_ffiobject = {
  *                        `------------------'
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 static void
 ffi_check_type(Lisp_Object type)
 {
         apply1(Vffi_type_checker, Fcons(type, Fcons(Qt, Qnil)));
 =======
+=======
+>>>>>>> master
 static Lisp_Object
 ffi_check_type(Lisp_Object type)
 {
         return apply1(Vffi_type_checker, Fcons(type, Fcons(Qt, Qnil)));
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 }
 
 DEFUN("ffi-basic-type-p", Fffi_basic_type_p, 1, 1, 0, /*
@@ -304,10 +350,14 @@ Return non-nil if TYPE is a basic FFI type.
 A type is said to be basic, if it is neither a pointer nor a
 function, and there is a corresponding built-in type in C.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                       */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (type))
 {
         if (EQ(type, Q_byte) || EQ(type, Q_unsigned_byte) || EQ(type, Q_char)
@@ -341,10 +391,14 @@ ffi_canonicalise_type(Lisp_Object type)
 DEFUN("ffi-canonicalise-type", Fffi_canonicalise_type, 1, 1, 0, /*
 Return FFI type TYPE in a canonical form.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (type))
 {
 	Lisp_Object canon_type = ffi_canonicalise_type(type);
@@ -366,10 +420,14 @@ Valid foreign types are: `byte', `unsigned-byte', `char',
 `long', `unsigned-long', `pointer', `float', `double', 
 `object', and `c-string'.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                         */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (type))
 {
         int tsize;
@@ -406,11 +464,14 @@ Valid foreign types are: `byte', `unsigned-byte', `char',
         else if (FFI_POINTERP(type))
                 tsize = sizeof(void *);
 <<<<<<< HEAD
+<<<<<<< HEAD
         else if (EQ(type, Q_c_data) ||
 		 (CONSP(type) && EQ(XCAR(type), Q_c_data)))
                 tsize = sizeof(void *);
         else if (CONSP(type) && EQ(XCAR(type), Q_function))
 =======
+=======
+>>>>>>> master
         else if (EQ(type, Q_c_data))
                 tsize = sizeof(void *);
         else if (CONSP(type) && EQ(XCAR(type), Q_c_data)) {
@@ -418,7 +479,10 @@ Valid foreign types are: `byte', `unsigned-byte', `char',
                 CHECK_INT(cdsize);
                 tsize = XINT(cdsize);
         } else if (CONSP(type) && EQ(XCAR(type), Q_function))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
                 tsize = sizeof(void(*));
         else if (CONSP(type) && EQ(XCAR(type), Q_array)) {
                 Lisp_Object atype = Fcar(XCDR(type));
@@ -458,16 +522,22 @@ If optional argument SIZE is non-nil it should be an
 integer, in this case additional storage size to hold data 
 of at least length SIZE is allocated.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                      */
       (type, size))
 {
 =======
+=======
+>>>>>>> master
 */
       (type, size))
 {
         int cs_or_cd;
         Lisp_Object ctype;
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 	Lisp_Object result = Qnil;
 	Lisp_EffiObject *ffio;
 	struct gcpro gcpro1;
@@ -475,15 +545,21 @@ of at least length SIZE is allocated.
         GCPRO1(result);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         ffi_check_type(type);
 =======
         /* NOTE: ffi_check_type returns canonical type */
         ctype = ffi_check_type(type);
 >>>>>>> origin/master
+=======
+        /* NOTE: ffi_check_type returns canonical type */
+        ctype = ffi_check_type(type);
+>>>>>>> master
         if (NILP(size))
                 size = Fffi_size_of_type(type);
         CHECK_INT(size);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	if (CONSP(type) && EQ(XCAR(type), Q_c_data) && INTP(XCDR(type)))
 		size = XCDR(type);
@@ -491,13 +567,18 @@ of at least length SIZE is allocated.
         if ((EQ(type, Q_c_string) && (XINT(size) < 1))
             || (!(EQ(type, Q_c_string) || FFI_POINTERP(type))
 =======
+=======
+>>>>>>> master
 	if (CONSP(ctype) && EQ(XCAR(ctype), Q_c_data) && INTP(XCDR(ctype)))
 		size = XCDR(type);
 
         cs_or_cd = EQ(ctype, Q_c_string) || (EQ(ctype, Q_c_data));
         if ((cs_or_cd && (XINT(size) < 1))
             || (!(cs_or_cd || FFI_POINTERP(ctype))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
                 && (XINT(size) < XINT(Fffi_size_of_type(type)))))
 #ifdef SXEMACS
                 signal_simple_error("storage size too small to store type",
@@ -535,15 +616,20 @@ of at least length SIZE is allocated.
 DEFUN("ffi-object-p", Fffi_object_p, 1, 1, 0, /*
 Return non-nil if FO is an FFI object, nil otherwise.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                               */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fo))
 {
         return (EFFIOP(fo) ? Qt : Qnil);
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 DEFUN("ffi-pointer-p", Fffi_pointer_p, 1, 1, 0, /*
 Return non-nil if FO is pointer.
@@ -571,6 +657,8 @@ Return the address pointed by PTR.
         }
         return make_float((long)XEFFIO(ptr)->fop.ptr);
 =======
+=======
+>>>>>>> master
 DEFUN("ffi-object-address", Fffi_object_address, 1, 1, 0, /*
 Return the address FO points to.
 */
@@ -578,16 +666,23 @@ Return the address FO points to.
 {
         CHECK_EFFIO(fo);
         return make_float((long)XEFFIO(fo)->fop.ptr);
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 }
 
 DEFUN("ffi-make-pointer", Fffi_make_pointer, 1, 1, 0, /*
   "Return a pointer pointing to ADDRESS."
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                       */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (address))
 {
         long addr;
@@ -614,10 +709,14 @@ DEFUN("ffi-make-pointer", Fffi_make_pointer, 1, 1, 0, /*
 DEFUN("ffi-object-canonical-type", Fffi_object_canonical_type, 1, 1, 0, /*
 Return FO's real type, that is after resolving user defined types.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fo))
 {
 	CHECK_EFFIO(fo);
@@ -627,10 +726,14 @@ Return FO's real type, that is after resolving user defined types.
 DEFUN("ffi-object-type", Fffi_object_type, 1, 1, 0, /*
 Return FO's type.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fo))
 {
         CHECK_EFFIO(fo);
@@ -640,10 +743,14 @@ Return FO's type.
 DEFUN("ffi-set-object-type", Fffi_set_object_type, 2, 2, 0, /*
 Cast FO to type TYPE and reassign the cast value.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                             */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fo, type))
 {
         CHECK_EFFIO(fo);
@@ -657,10 +764,14 @@ Cast FO to type TYPE and reassign the cast value.
 DEFUN("ffi-object-size", Fffi_object_size, 1, 1, 0, /*
 Return the size of the allocated space of FO.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                     */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fo))
 {
         CHECK_EFFIO(fo);
@@ -670,10 +781,14 @@ Return the size of the allocated space of FO.
 DEFUN("ffi-set-storage-size", Fffi_set_storage_size, 2, 2, 0, /*
 Set the size of the allocated space of FO.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fo, size))
 {
 	CHECK_EFFIO(fo);
@@ -694,16 +809,24 @@ if one is missing.
 The library should reside in one of the directories specified by the
 $LD_LIBRARY_PATH environment variable or the more global ld.so.cache.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (libname))
 {
 
 #ifdef LTDL_SHLIB_EXT
 #  define EXT LTDL_SHLIB_EXT
+<<<<<<< HEAD
 #elif defined(HAVE_DYLD)
+=======
+#elif defined(HAVE_DYLD) || defined(HAVE_MACH_O_DYLD_H)
+>>>>>>> master
 #    define EXT ".dylib"
 #  else
 #    define EXT ".so"
@@ -720,9 +843,17 @@ $LD_LIBRARY_PATH environment variable or the more global ld.so.cache.
 	/* Add an extension if we need to */
 	dotpos = strrchr((char *)XSTRING_DATA(libname),'.');
 	if ( dotpos == NULL || strncmp(dotpos, EXT, sizeof(EXT))) {
+<<<<<<< HEAD
 		soname = xmalloc(XSTRING_LENGTH(libname) + sizeof(EXT) + 1);
 		strcpy(soname, (char *)XSTRING_DATA(libname));
 		strcat(soname, EXT);
+=======
+		ssize_t liblen = XSTRING_LENGTH(libname);
+		ssize_t soname_len = liblen + sizeof(EXT);
+		soname = xmalloc( soname_len + 1);
+		strncpy(soname, (char *)XSTRING_DATA(libname), liblen+1);
+		strncat(soname, EXT, sizeof(EXT)+1);
+>>>>>>> master
 	}
 
 	if ( soname == NULL ) {
@@ -757,10 +888,14 @@ in one of the loaded libraries.
 If SYM does not exist in any of the loaded libraries, `nil' is
 returned.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                        */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (type, sym))
 {
         Lisp_Object fo = Qnil;
@@ -774,10 +909,14 @@ returned.
         fo = Fmake_ffi_object(type, Qnil);
         ffio = XEFFIO(fo);
 <<<<<<< HEAD
+<<<<<<< HEAD
         ffio->fop.ptr = dlsym(RTLD_NEXT, (const char*)XSTRING_DATA(sym));
 =======
         ffio->fop.ptr = dlsym(RTLD_DEFAULT, (const char*)XSTRING_DATA(sym));
 >>>>>>> origin/master
+=======
+        ffio->fop.ptr = dlsym(RTLD_DEFAULT, (const char*)XSTRING_DATA(sym));
+>>>>>>> master
         if (ffio->fop.ptr == NULL) {
                 UNGCPRO;
                 return Qnil;
@@ -791,10 +930,14 @@ returned.
 DEFUN("ffi-dlerror", Fffi_dlerror, 0, 0, 0, /*
 Return dl error string.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                             */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
         const char *dles = dlerror();
@@ -802,10 +945,14 @@ Return dl error string.
 	if (LIKELY(dles != NULL)) {
 		size_t sz = strlen(dles);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		return make_ext_string((const Bufbyte*)dles, sz, EFFI_CODING);
 =======
 		return make_ext_string((const Extbyte*)dles, sz, EFFI_CODING);
 >>>>>>> origin/master
+=======
+		return make_ext_string((const Extbyte*)dles, sz, EFFI_CODING);
+>>>>>>> master
 	} else {
 		return Qnil;
 	}
@@ -824,10 +971,14 @@ is indicated.
 
 This is like `ffi-bind' but for function objects.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                         */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (type, sym))
 {
         Lisp_Object fo = Qnil;
@@ -842,10 +993,14 @@ This is like `ffi-bind' but for function objects.
         fo = Fmake_ffi_object(type, Qnil);
         ffio = XEFFIO(fo);
 <<<<<<< HEAD
+<<<<<<< HEAD
         ffio->fop.fun = dlsym(RTLD_NEXT, (const char *)XSTRING_DATA(sym));
 =======
         ffio->fop.fun = dlsym(RTLD_DEFAULT, (const char *)XSTRING_DATA(sym));
 >>>>>>> origin/master
+=======
+        ffio->fop.fun = dlsym(RTLD_DEFAULT, (const char *)XSTRING_DATA(sym));
+>>>>>>> master
         if (ffio->fop.fun == NULL) {
 #ifdef SXEMACS
                 signal_simple_error("Can't define function", sym);
@@ -904,10 +1059,14 @@ ffi_type_align(Lisp_Object type)
 DEFUN("ffi-type-alignment", Fffi_type_alignment, 1, 1, 0, /*
 Return TYPE alignment.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                           */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (type))
 {
         return make_int(ffi_type_align(type));
@@ -918,10 +1077,14 @@ Return the offset of SLOT in TYPE.
 SLOT can be either a valid (named) slot in TYPE or `nil'.
 If SLOT is `nil' return the size of the struct.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (type, slot))
 {
         Lisp_Object slots;
@@ -1021,6 +1184,7 @@ ffi_fetch_foreign(void *ptr, Lisp_Object type)
                 retval = make_float(*(double*)ptr);
         else if (EQ(type, Q_c_string)) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		size_t tlen;
 		tlen = strlen((char*)ptr);
 #if 0
@@ -1035,6 +1199,9 @@ ffi_fetch_foreign(void *ptr, Lisp_Object type)
 =======
                 retval = build_ext_string((char*)ptr, Qbinary);
 >>>>>>> origin/master
+=======
+                retval = build_ext_string((char*)ptr, Qbinary);
+>>>>>>> master
         } else if (EQ(type, Q_void)) {
                 retval = Qnil;
         } else if (FFI_POINTERP(type)) {
@@ -1053,10 +1220,14 @@ DEFUN("ffi-fetch", Fffi_fetch, 3, 3, 0, /*
 Fetch value from the foreign object FO from OFFSET position.
 TYPE specifies value for data to be fetched.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fo, offset, type))
 {
         Lisp_Object origtype = type;
@@ -1089,11 +1260,16 @@ TYPE specifies value for data to be fetched.
                                 tlen = XUINT(XCDR(type));
                         }
 <<<<<<< HEAD
+<<<<<<< HEAD
                         retval = make_ext_string((char*)ptr, tlen, Qbinary);
 =======
 
                         retval = make_ext_string(ptr, tlen, Qbinary);
 >>>>>>> origin/master
+=======
+
+                        retval = make_ext_string(ptr, tlen, Qbinary);
+>>>>>>> master
                 } else {
 #ifdef SXEMACS
                         signal_simple_error("Can't fetch for this type", origtype);
@@ -1112,10 +1288,14 @@ TYPE specifies value for data to be fetched.
 DEFUN("ffi-aref", Fffi_aref, 2, 2, 0, /*
 Return the element of FARRAY at index IDX (starting with 0).
 <<<<<<< HEAD
+<<<<<<< HEAD
                                       */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (farray, idx))
 {
         Lisp_Object type;
@@ -1151,10 +1331,14 @@ ordinary, but suitable Emacs lisp object.
 If VAL-TYPE is an FFI pointer then VAL _must_ be an FFI
 object of the underlying type pointed to.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fo, offset, val_type, val))
 {
         Lisp_Object origtype = val_type;
@@ -1291,10 +1475,14 @@ object of the underlying type pointed to.
 DEFUN("ffi-aset", Fffi_aset, 3, 3, 0, /*
 Store the element VALUE in FARRAY at index IDX (starting with 0).
 <<<<<<< HEAD
+<<<<<<< HEAD
                                       */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (farray, idx, value))
 {
         Lisp_Object type;
@@ -1325,10 +1513,14 @@ Return the FFI object that stores the address of given FFI object FO.
 
 This is the equivalent of the `&' operator in C.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fo))
 {
         Lisp_Object newfo = Qnil;
@@ -1354,10 +1546,14 @@ This is the equivalent of the `&' operator in C.
 DEFUN("ffi-lisp-object-to-pointer", Fffi_lisp_object_to_pointer, 1, 1, 0, /*
 Convert lisp object to FFI pointer.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                                           */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
         Lisp_Object newfo = Qnil;
@@ -1380,10 +1576,14 @@ Convert lisp object to FFI pointer.
 DEFUN("ffi-pointer-to-lisp-object", Fffi_pointer_to_lisp_object, 1, 1, 0, /*
 Convert FFI pointer to lisp object.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                                           */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (ptr))
 {
         CHECK_EFFIO(ptr);
@@ -1393,10 +1593,14 @@ Convert FFI pointer to lisp object.
 DEFUN("ffi-plist", Fffi_plist, 1, 1, 0, /*
 Return properties list for FFI object FO.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                         */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fo))
 {
         CHECK_EFFIO(fo);
@@ -1530,8 +1734,15 @@ ffi_call_using_libffi(Lisp_Object fo_fun, Lisp_Object ret_fo,
         if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, in_nargs,
                          rtype, ex_ffitypes) == FFI_OK)
         {
+<<<<<<< HEAD
                 ffi_call(&cif, (void(*)(void))XEFFIO(fo_fun)->fop.fun, rvalue,
                          ex_values);
+=======
+		stop_async_timeouts();
+                ffi_call(&cif, (void(*)(void))XEFFIO(fo_fun)->fop.fun, rvalue,
+                         ex_values);
+		start_async_timeouts();
+>>>>>>> master
                 return 0;
         }
 
@@ -1550,10 +1761,14 @@ Arguments are: FO &rest FO-ARGS
 FO should be a foreign binding initiated by `ffi-defun', and
 ARGS should be foreign data objects or pointers to these.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                            */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object * args))
 {
         Lisp_Object faf = Qnil, retfo = Qnil;
@@ -1579,7 +1794,11 @@ ARGS should be foreign data objects or pointers to these.
 Lisp_Object Qffi_jobp;
 #define EFFI_DEBUG_JOB(args...)
 static Lisp_Object
+<<<<<<< HEAD
 exec_sentinel_unwind(Lisp_Object UNUSED(datum))
+=======
+exec_sentinel_unwind(Lisp_Object SXE_UNUSED(datum))
+>>>>>>> master
 {
 	return Qnil;
 }
@@ -1687,12 +1906,19 @@ static void
 print_ffi_job(worker_job_t job, Lisp_Object pcf)
 {
 	ffi_job_t ffij = ffi_job(job);
+<<<<<<< HEAD
 	char *str = alloca(64);
 
 	SXE_MUTEX_LOCK(&ffij->mtx);
 	WRITE_C_STRING(" carrying ", pcf);
 	snprintf(str, 63, " #<ffi-job 0x%lx>", (long unsigned int)ffij);
 	WRITE_C_STRING(str, pcf);
+=======
+
+	SXE_MUTEX_LOCK(&ffij->mtx);
+	WRITE_FMT_STRING(pcf, " carrying  #<ffi-job 0x%lx>", 
+			 (long unsigned int)ffij);
+>>>>>>> master
 	SXE_MUTEX_UNLOCK(&ffij->mtx);
 	return;
 }
@@ -1804,10 +2030,14 @@ SENTINEL is a lisp sentinel function called when the job finished,
   the function should take at least one argument JOB, further arguments
   may be specified by passing further SENTINEL-ARGS.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								       */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object *args))
 {
 	Lisp_Object job = Qnil;
@@ -1853,10 +2083,14 @@ extern struct device *decode_x_device(Lisp_Object device);
 DEFUN("x-device-display", Fx_device_display, 0, 1, 0,	/*
 Return DEVICE display as FFI object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (device))
 {
 #if HAVE_X_WINDOWS
@@ -2012,10 +2246,14 @@ ffi_make_callback_x86(Lisp_Object data, int cc_type)
 DEFUN("ffi-make-callback", Fffi_make_callback, 4, 4, 0, /*
 Create dynamic callback and return pointer to it.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								       */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fun, rtype, argtypes, cctype))
 {
         Lisp_Object data;
@@ -2073,11 +2311,15 @@ syms_of_ffi(void)
 	DEFSUBR(Fffi_object_p);
 	DEFSUBR(Fffi_make_pointer);
 <<<<<<< HEAD
+<<<<<<< HEAD
 	DEFSUBR(Fffi_pointer_p);
 	DEFSUBR(Fffi_pointer_address);
 =======
 	DEFSUBR(Fffi_object_address);
 >>>>>>> origin/master
+=======
+	DEFSUBR(Fffi_object_address);
+>>>>>>> master
 	DEFSUBR(Fffi_object_canonical_type);
 	DEFSUBR(Fffi_object_type);
 	DEFSUBR(Fffi_object_size);

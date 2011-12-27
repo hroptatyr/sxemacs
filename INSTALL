@@ -1,10 +1,18 @@
 SXEmacs Installation Guide
+<<<<<<< HEAD
 Copyright (C) 2005 - 2008 Steve Youngs
+=======
+Copyright (C) 2005 - 2011 Steve Youngs
+>>>>>>> master
 
 
 Building from tarball release: 
 -----------------------------
+<<<<<<< HEAD
 (See "Building from arch source" below if you got SXEmacs that way)
+=======
+(See "Building from git source" below if you got SXEmacs that way)
+>>>>>>> master
 
 In a nutshell:
 -------------
@@ -128,7 +136,10 @@ decided to make them optional.  That is, you can - but do not need to -
 install them and incorporate them into SXEmacs.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
   Failure to detect optional libraries:
   -------------------------------------
   If the optional libraries are in a non-standard location, use
@@ -147,7 +158,10 @@ install them and incorporate them into SXEmacs.
 	./configure --prefix=/opt/local --with-site-prefixes=/opt/local
 
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
   Multimedia Libraries:
   --------------------
@@ -259,7 +273,11 @@ install them and incorporate them into SXEmacs.
     http://www.mpfr.org
 
   - MPC (Multi-Precision Complex numbers):
+<<<<<<< HEAD
     http://www.lix.polytechnique.fr/Labo/Andreas.Enge/mpc/mpc.html
+=======
+    http://www.multiprecision.org/index.php?prog=mpc
+>>>>>>> master
 
   The configure option to control ENT libraries is --with-ent.  It
   defaults to `all'.
@@ -355,14 +373,26 @@ particular that is:
 - your OS and machine architecture
 - the steps you have done
 
+<<<<<<< HEAD
+=======
+There is a script under contrib called tar-build-failure.sh that
+will attempt to gather this information and create a tar file with
+helpful logs.
+
+>>>>>>> master
 Before submitting a report at http://issues.sxemacs.org/, please show
 up either on the mailing list or the IRC channel.  The developers can
 tell you in much greater detail what they need and how you can get the
 files and information you need.
 
 
+<<<<<<< HEAD
 Building from arch source:
 -------------------------
+=======
+Building from git source:
+------------------------
+>>>>>>> master
 This is identical to building from the tarball sources, with the
 addition of an extra step, and some extra requirements (that are most
 likely already on your system).
@@ -375,7 +405,11 @@ likely already on your system).
 
 Extra requirements:
 ------------------
+<<<<<<< HEAD
 The SXEmacs sources in the arch repo do not contain _any_ generated
+=======
+The SXEmacs sources in the git repo do not contain _any_ generated
+>>>>>>> master
 files.  You will need recent versions of the GNU autotools (automake,
 autoconf).
 
@@ -383,6 +417,10 @@ You need at least...
 
   automake 1.9.4
   autoconf 2.60
+<<<<<<< HEAD
+=======
+  texinfo 4.8
+>>>>>>> master
 
 Warnings from autogen.sh:
 ------------------------
@@ -398,13 +436,21 @@ The two most common warnings seen are...
     about quoting and you have some older style macros defined like:
     AC_DEFUN(NAME, ...) instead of AC_DEFUN([NAME], ...).
 
+<<<<<<< HEAD
   Warnings about ETAGS variable being redifined
+=======
+  Warnings about ETAGS variable being redefined
+>>>>>>> master
 
     These are because automake has a pre-defined ETAGS target that
     projects can use, unfortunately it doesn't fit in with our needs,
     and isn't easily customisable.  So we wrote our own ETAGS Makefile
     target.
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> origin/master
+=======
+
+>>>>>>> master

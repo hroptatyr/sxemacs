@@ -1823,18 +1823,24 @@ With argument, insert value in current buffer after the form."
   ;; it does not pay to first build the defalias in defmumble and then parse
   ;; it here.
 <<<<<<< HEAD
+<<<<<<< HEAD
   (if (and (memq (car-safe form) '(defun defmacro defvar defconst autoload))
 	   (stringp (nth 3 form)))
       (byte-compile-output-docform nil nil '("\n(" 3 ")") form nil
 				   (eq (car form) 'autoload))
 =======
+=======
+>>>>>>> master
   (if (and (memq (car-safe form) '(defun defmacro defvar defconst autoload
 				   custom-declare-variable))
 	   (stringp (nth 3 form)))
       (byte-compile-output-docform nil nil '("\n(" 3 ")") form nil
 				   (memq (car form)
 					 '(autoload custom-declare-variable)))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
     (let ((print-escape-newlines t)
 	  (print-length nil)
 	  (print-level nil)

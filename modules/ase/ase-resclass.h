@@ -162,8 +162,13 @@ extern Lisp_Object _ase_wrap_resc_elm(ase_resc_elm_t);
 #define resc_rng_to_string(_p, _n, _r)	mpz_get_str(_p, 10, _r)
 #define resc_elm_to_string(_p, _n, _e)	mpz_get_str(_p, 10, _e)
 #else
+<<<<<<< HEAD
 #define resc_rng_to_string(_p, _n, _r)	snprintf(_p, _n, "%ld", _r)
 #define resc_elm_to_string(_p, _n, _e)	snprintf(_p, _n, "%ld", _e)
+=======
+#define resc_rng_to_string(_p, _n, _r)	do { int sz = snprintf(_p, _n, "%ld", _r); assert(sz>=0 && sz<_n); } while(0)
+#define resc_elm_to_string(_p, _n, _e)	do { int sz = snprintf(_p, _n, "%ld", _e); assert(sz>=0 && sz<_n); } while(0)
+>>>>>>> master
 #endif
 
 

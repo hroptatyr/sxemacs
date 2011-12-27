@@ -215,7 +215,10 @@ Reference Manual, corresponding to SXEmacs version 22.1.
 * System Interface::        Getting the user id, system type, environment
                               variables, and other such things.
 * X-Windows::		    Functions specific to the X Window System.
+<<<<<<< HEAD
 * ToolTalk Support::        Interfacing with the ToolTalk message service.
+=======
+>>>>>>> master
 * LDAP Support::            Interfacing with the Lightweight Directory
                               Access Protocol.
 * PostgreSQL Support::      Interfacing to the PostgreSQL libpq library.
@@ -1159,12 +1162,15 @@ X-Windows
 * Grabs::			Restricting access to the server by other apps.
 * X Miscellaneous::             Other X-specific functions and variables.
 
+<<<<<<< HEAD
 ToolTalk Support
 
 * SXEmacs ToolTalk API Summary::
 * Sending Messages::
 * Receiving Messages::
 
+=======
+>>>>>>> master
 LDAP Support
 
 * Building SXEmacs with LDAP support::  How to add LDAP support to SXEmacs
@@ -1321,7 +1327,10 @@ Building SXEmacs and Object Allocation
 @include processes.texi
 @include os.texi
 @include x-windows.texi
+<<<<<<< HEAD
 @include tooltalk.texi
+=======
+>>>>>>> master
 @include ldap.texi
 @include postgresql.texi
 @include openssl.texi

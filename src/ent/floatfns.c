@@ -1850,6 +1850,69 @@ Rounds the value toward zero.
 #endif	/* HAVE_MPC */
 }
 
+<<<<<<< HEAD
+=======
+DEFUN("almost=", Falmost_eq, 2, 3, 0,	/*
+Return t if NUMBER1 is almost equal to NUMBER2.
+
+Optional argument THRES can be used to specify the threshold,
+float-epsilon by default.
+*/
+      (number1, number2, thres))
+{
+#if defined HAVE_FPFLOAT
+	if (NILP(thres)) {
+		thres = Vfloat_epsilon;
+	}
+	CHECK_FLOAT(thres);
+
+	if (FLOATP(number1) && FLOATP(number2)) {
+		fpfloat n1 = XFLOAT_DATA(number1);
+		fpfloat n2 = XFLOAT_DATA(number2);
+		fpfloat thr = XFLOAT_DATA(thres);
+		fpfloat d;
+		if (n1 >= n2) {
+			d = n1 - n2;
+		} else {
+			d = n2 - n1;
+		}
+		return d < thr ? Qt : Qnil;
+	}
+#endif	/* HAVE_FPFLOAT */
+	return ent_binrel(ASE_BINARY_REL_EQUALP, number1, number2) ? Qt : Qnil;
+}
+
+DEFUN("almost/=", Falmost_neq, 2, 3, 0,	/*
+Return t if NUMBER1 is clearly different from NUMBER2.
+
+Optional argument THRES can be used to specify the threshold,
+float-epsilon by default.
+*/
+      (number1, number2, thres))
+{
+#if defined HAVE_FPFLOAT
+	if (NILP(thres)) {
+		thres = Vfloat_epsilon;
+	}
+	CHECK_FLOAT(thres);
+
+	if (FLOATP(number1) && FLOATP(number2)) {
+		fpfloat n1 = XFLOAT_DATA(number1);
+		fpfloat n2 = XFLOAT_DATA(number2);
+		fpfloat thr = XFLOAT_DATA(thres);
+		fpfloat d;
+		if (n1 >= n2) {
+			d = n1 - n2;
+		} else {
+			d = n2 - n1;
+		}
+		return d < thr ? Qnil : Qt;
+	}
+#endif	/* HAVE_FPFLOAT */
+	return ent_binrel(ASE_BINARY_REL_NEQP, number1, number2) ? Qt : Qnil;
+}
+
+>>>>>>> master
 
 /* misc complex functions */
 DEFUN("conjugate", Fconjugate, 1, 1, 0,	/*
@@ -2300,6 +2363,11 @@ void syms_of_floatfns(void)
 	DEFSUBR(Ffloor);
 	DEFSUBR(Fround);
 	DEFSUBR(Ftruncate);
+<<<<<<< HEAD
+=======
+	DEFSUBR(Falmost_eq);
+	DEFSUBR(Falmost_neq);
+>>>>>>> master
 
 	/* misc complex functions */
 	DEFSUBR(Fconjugate);

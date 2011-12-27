@@ -1,10 +1,14 @@
 ;;; ffi-curl.el --- Emacs interface to libcurl.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ;; Copyright (C) 2005 by Zajcev Evgeny.
 =======
 ;; Copyright (C) 2005-2009 by Zajcev Evgeny.
 >>>>>>> origin/master
+=======
+;; Copyright (C) 2005-2009 by Zajcev Evgeny.
+>>>>>>> master
 
 ;; Author: Zajcev Evgeny <zevlg@yandex.ru>
 ;; Keywords: ffi, curl, ftp
@@ -29,10 +33,14 @@
 ;;; Commentary:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ;; 
 =======
 ;;
 >>>>>>> origin/master
+=======
+;;
+>>>>>>> master
 
 ;;; Code:
 
@@ -40,7 +48,10 @@
 (require 'ffi-libc)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 (ffi-load "libcurl")
 
 ;;{{{ Low-level FFI: types and functions
@@ -56,6 +67,10 @@
   (:header 42)                          ; throw the header out too
   (:nobody 44)                          ; use HEAD to get http document
   (:post 47)                            ; HTTP POST method
+<<<<<<< HEAD
+=======
+  (:nosignal 99)
+>>>>>>> master
   )
 
 (define-ffi-enum curl-info
@@ -81,7 +96,10 @@
 
 ;;{{{ Errors list
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 (defconst curl:errors-alist
   '((1 . "Unsupported protocol")
     (2 . "Failed init")
@@ -150,6 +168,7 @@
   "Alist of error codes and associated clear-text error messages.")
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 ;; exported ffi objects for curl easy functions
 (defvar curl:curl_easy_init nil)
@@ -163,6 +182,8 @@
   "Initialize curl easy interface and return a context handle."
   (let ((ret (ffi-call-function curl:curl_easy_init)))
 =======
+=======
+>>>>>>> master
 ;;}}}
 
 ;;{{{ High level API
@@ -170,7 +191,10 @@
 (defun curl:easy-init ()
   "Initialize curl easy interface and return a context handle."
   (let ((ret (curl:curl_easy_init)))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
     (when (ffi-null-p ret)
       (error "curl:easy-init: Can't init easy interface"))
     ret))
@@ -178,6 +202,7 @@
 (defun curl:easy-cleanup (ctx)
   "Clean up context CTX and free resources allocated with it.
 This function must be called after every easy session."
+<<<<<<< HEAD
 <<<<<<< HEAD
   (ffi-call-function curl:curl_easy_cleanup ctx)
   ;; Release url fo if any
@@ -187,12 +212,18 @@ This function must be called after every easy session."
   ;; Remove references to saved values
   (remprop ctx 'saved-values))
 >>>>>>> origin/master
+=======
+  (curl:curl_easy_cleanup ctx)
+  ;; Remove references to saved values
+  (remprop ctx 'saved-values))
+>>>>>>> master
 
 (defun curl:easy-setopt (ctx &rest options)
   "Set OPTIONS for curl transfer.
 Options are passed as keyword-value-pairs. Supported keywords are:
 :url string - a valid Uniform Resource Locator.
 :fstream ffi-fo - a file descriptor to which output is redirected."
+<<<<<<< HEAD
 <<<<<<< HEAD
   (let ((option (make-ffi-object 'int)))
     (while options
@@ -235,6 +266,8 @@ Options are passed as keyword-value-pairs. Supported keywords are:
 
         (setq options (cddr options))))))
 =======
+=======
+>>>>>>> master
   (while options
     (let ((option (car options))
           (value (cadr options))
@@ -253,7 +286,11 @@ Options are passed as keyword-value-pairs. Supported keywords are:
         ((:read-function :write-function)
          (setq value (ffi-callback-fo value)))
 
+<<<<<<< HEAD
         ((:nobody :header :post)
+=======
+        ((:nobody :header :post :nosignal)
+>>>>>>> master
          (setq value (ffi-create-fo 'int (if value 1 0)))))
 
       (setq error (curl:curl_easy_setopt ctx option value))
@@ -261,17 +298,24 @@ Options are passed as keyword-value-pairs. Supported keywords are:
         (error 'invalid-operation "curl:easy-setopt error" error))
 
       (setq options (cddr options)))))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 (defun curl:easy-perform (ctx)
   "Perform cURL operation on the context CTX.
 To control the behaviour of the session or set options into the
 context, see `curl:easy-setopt'."
 <<<<<<< HEAD
+<<<<<<< HEAD
   (let ((err (ffi-get (ffi-call-function curl:curl_easy_perform ctx))))
 =======
   (let ((err (curl:curl_easy_perform ctx)))
 >>>>>>> origin/master
+=======
+  (let ((err (curl:curl_easy_perform ctx)))
+>>>>>>> master
     (unless (zerop err)
       (error 'invalid-operation "curl:easy-perform error"
              (cdr (assq err curl:errors-alist))))
@@ -286,11 +330,16 @@ object with key 'ctx to keep it accessible."
   (if (featurep 'workers)
       (let* ((job (ffi-call-function&
 <<<<<<< HEAD
+<<<<<<< HEAD
 		   curl:curl_easy_perform ctx sentinel fs ctx)))
 =======
 		   (get 'curl:curl_easy_perform 'ffi-fun)
                    ctx sentinel fs ctx)))
 >>>>>>> origin/master
+=======
+		   (get 'curl:curl_easy_perform 'ffi-fun)
+                   ctx sentinel fs ctx)))
+>>>>>>> master
 	;; add ctx to plist of job
 	(put job 'ctx ctx)
 	job)
@@ -298,6 +347,7 @@ object with key 'ctx to keep it accessible."
 
 (defun curl:easy-perform-sentinel (job fs ctx)
   (curl:easy-cleanup ctx)
+<<<<<<< HEAD
 <<<<<<< HEAD
   (c:fclose fs)
   (run-hook-with-args 'curl:download&-post-hook job))
@@ -336,6 +386,8 @@ object with key 'ctx to keep it accessible."
     (:size-download
      (curl:easy-getinfo-internal ctx 'double 8))))
 =======
+=======
+>>>>>>> master
   (unless (car fs) (c:fclose (cdr fs)))
   (run-hook-with-args 'curl:download&-post-hook job))
 
@@ -351,16 +403,22 @@ object with key 'ctx to keep it accessible."
                     ctx what (ffi-address-of retfo)))
       (error 'invalid-operation "curl:easy-getinfo error"))
     (ffi-get retfo)))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 (defvar curl:download-history nil
   "History for `curl:download' and `curl:download&'.")
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ;;;###autoload
 (defun curl:download (url file &rest options)
   "Download the contents of URL and write them to FILE.
 =======
+=======
+>>>>>>> master
 (define-ffi-callback curl:cb-write-to-buffer int
   ((ptr pointer) (size int) (nmemb int) (stream pointer))
   "Writer to STREAM buffer."
@@ -374,7 +432,10 @@ object with key 'ctx to keep it accessible."
 ;;;###autoload
 (defun curl:download (url file-or-buffer &rest options)
   "Download the contents of URL and write them to FILE-OR-BUFFER.
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 Optionally you can specify keywords in OPTIONS.  The options are
 keyword-value-pairs and are set via `curl:easy-setopt'.
@@ -389,6 +450,7 @@ works with HTTP URLs."
 	 (read-file-name "Local file: " default-directory
 			 (expand-file-name (make-temp-name "curl:downloaded:")
 					   (temp-directory)))))
+<<<<<<< HEAD
 <<<<<<< HEAD
   (let ((fs (c:fopen (expand-file-name file) "w"))
         (ctx (curl:easy-init)))
@@ -405,6 +467,8 @@ works with HTTP URLs."
 ;;;###autoload
 (defun curl:download& (url file &rest options)
 =======
+=======
+>>>>>>> master
   (when current-prefix-arg
     ;; In case of C-u
     (and (y-or-n-p (format "Only download %s's HTTP header? "
@@ -420,6 +484,13 @@ works with HTTP URLs."
         (progn
           (when bufferp
             (curl:easy-setopt ctx :write-function 'curl:cb-write-to-buffer))
+<<<<<<< HEAD
+=======
+
+          ;; Avoid signalling!
+          (curl:easy-setopt ctx :nosignal t)
+
+>>>>>>> master
           (apply #'curl:easy-setopt ctx :fstream fs :url url options)
           (curl:easy-perform ctx))
       (unless bufferp (c:fclose fs))
@@ -427,7 +498,10 @@ works with HTTP URLs."
 
 ;;;###autoload
 (defun curl:download& (url file-or-buffer &rest options)
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
   "Download the contents of URL and write them to FILE asynchronously.
 
 Optionally you can specify keywords in OPTIONS.  The options are
@@ -447,6 +521,7 @@ is run.  Functions in there will be called with an argument JOB."
 			 (expand-file-name (make-temp-name "curl:downloaded:")
 					   (temp-directory)))))
 <<<<<<< HEAD
+<<<<<<< HEAD
   (if (featurep 'workers)
       (let* ((fs (c:fopen file "w"))
 	     (ctx (curl:easy-init)))
@@ -457,6 +532,8 @@ is run.  Functions in there will be called with an argument JOB."
 	(apply #'curl:easy-setopt ctx :fstream fs :url url options)
 	(curl:easy-perform& ctx #'curl:easy-perform-sentinel fs))
 =======
+=======
+>>>>>>> master
   (when current-prefix-arg
     (and (y-or-n-p (format "Only download %s's HTTP header? "
                            (file-basename file-or-buffer)))
@@ -472,6 +549,13 @@ is run.  Functions in there will be called with an argument JOB."
             (progn
               (when bufferp
                 (curl:easy-setopt ctx :write-function 'curl:cb-write-to-buffer))
+<<<<<<< HEAD
+=======
+
+              ;; Avoid signalling!
+              (curl:easy-setopt ctx :nosignal t)
+
+>>>>>>> master
               (apply #'curl:easy-setopt ctx :fstream fs :url url options)
               (curl:easy-perform& ctx #'curl:easy-perform-sentinel
                                   (cons bufferp fs)))
@@ -480,7 +564,10 @@ is run.  Functions in there will be called with an argument JOB."
           (t (unless bufferp (c:fclose fs))
              (curl:easy-cleanup ctx)
              (signal (car cerr) (cdr cerr)))))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
     (error 'unimplemented "Asynchronous Event Queues")))
 
 ;;;###autoload
@@ -489,6 +576,7 @@ is run.  Functions in there will be called with an argument JOB."
 Functions in here are called with one argument JOB containing
 the job which just finished.")
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 (provide 'ffi-curl)
@@ -508,10 +596,15 @@ the job which just finished.")
       (ffi-defun '(function int (pointer void) int) "curl_easy_getinfo"))
 
 =======
+=======
+>>>>>>> master
 ;;}}}
 
 
 (provide 'ffi-curl)
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 ;;; ffi-curl.el ends here

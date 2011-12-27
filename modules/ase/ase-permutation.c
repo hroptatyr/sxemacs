@@ -40,10 +40,14 @@
 #include "config.h"
 #include "sxemacs.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "ent.h"
 =======
 #include "ent/ent.h"
 >>>>>>> origin/master
+=======
+#include "ent/ent.h"
+>>>>>>> master
 #include "ase.h"
 #include "ase-permutation.h"
 
@@ -61,6 +65,7 @@ static void
 _ase_permutation_prnt_cyc(unsigned long *p, unsigned long idx, Lisp_Object pcf)
 {
 	unsigned long q;
+<<<<<<< HEAD
 	char *tmp = alloca_array(char, sane_small);
 
 	write_c_string("(", pcf);
@@ -72,6 +77,12 @@ _ase_permutation_prnt_cyc(unsigned long *p, unsigned long idx, Lisp_Object pcf)
 		snprintf(tmp, sane_small, "%ld", q+1);
 		write_c_string(tmp, pcf);
 	}
+=======
+
+	write_fmt_string(pcf, "(%ld", idx+1);
+	for (q = p[idx]; q != idx; q = p[q])
+		write_fmt_str(pcf, " %ld", q+1);
+>>>>>>> master
 	write_c_string(")", pcf);
 }
 
@@ -127,7 +138,11 @@ ase_permutation_fini(Lisp_Object obj, int unused)
 }
 
 static inline void
+<<<<<<< HEAD
 _ase_permutation_mark(ase_permutation_t UNUSED(unused))
+=======
+_ase_permutation_mark(ase_permutation_t SXE_UNUSED(unused))
+>>>>>>> master
 {
 	return;
 }
@@ -361,10 +376,14 @@ ase_make_permutation(Lisp_Object vec)
 DEFUN("ase-permutationp", Fase_permutationp, 1, 1, 0, /*
 Return non-`nil' iff OBJECT is an ase permutation.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	if (ASE_PERMUTATIONP(object))
@@ -380,10 +399,14 @@ with respect to METRIC (optional).
 
 If no special metric is given, the supremum metric is used.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (vector))
 {
 	return ase_make_permutation(vector);

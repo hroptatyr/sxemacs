@@ -23,9 +23,13 @@ eldap_ell_LDFLAGS = @LDFLAGS@
 
 top_builddir = @top_builddir@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 top_build_prefix = $(top_builddir)/
 >>>>>>> origin/master
+=======
+top_build_prefix = $(top_builddir)/
+>>>>>>> master
 
 ETAGS = $(top_builddir)/lib-src/etags
 TAGS_DEPENDENCIES = $(ETAGS)

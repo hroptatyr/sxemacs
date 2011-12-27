@@ -40,14 +40,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /* GNU now always uses the ELF format.  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define UNEXEC "unexelf.o"
 =======
+=======
+>>>>>>> master
 /*
  * everything is pdump now. --SY
  * #define UNEXEC "unexelf.o"
  */
 #undef UNEXEC
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 /* Some losing code fails to include this and then assumes
    that because it is braindead that O_RDONLY==0.  */

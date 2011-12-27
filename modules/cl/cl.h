@@ -59,6 +59,7 @@
 #endif
 #define EMOD_CL_CRITICAL(args...)	__EMOD_CL_DEBUG__("CRITICAL: " args)
 
+<<<<<<< HEAD
 #ifdef UNUSED
 #elif defined(__GNUC__)
 #  define UNUSED(x) UNUSED_ ## x __attribute__((unused))
@@ -66,6 +67,15 @@
 #  define UNUSED(x) /*@unused@*/ x
 #else
 #  define UNUSED(x) x
+=======
+#ifdef SXE_UNUSED
+#elif defined(__GNUC__)
+#  define SXE_UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#elif defined(__LCLINT__)
+#  define SXE_UNUSED(x) /*@unused@*/ x
+#else
+#  define SXE_UNUSED(x) x
+>>>>>>> master
 #endif
 
 extern void cl_LTX_init(void);

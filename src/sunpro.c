@@ -45,10 +45,14 @@ actually logged.  If usage-tracking support was not compiled in, this
 function has no effect and always returns `nil'.  See function
 `has-usage-tracking-p'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object * args))
 {
 #ifdef USAGE_TRACKING

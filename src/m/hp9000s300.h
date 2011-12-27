@@ -53,10 +53,13 @@ NOTE-END */
 
 /* Let the OS header file determine this if not HPUX. */
 <<<<<<< HEAD
+<<<<<<< HEAD
 #ifdef HPUX
 # define UNEXEC "unexhp9k3.o"
 #endif
 =======
+=======
+>>>>>>> master
 
 /*
  * everything is pdump now --SY
@@ -66,7 +69,10 @@ NOTE-END */
  */
 #undef UNEXEC
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 /* For University of Utah 4.3bsd implementation on HP300s.
    The #ifndef __GNUC__ definitions are required for the "standard" cc,

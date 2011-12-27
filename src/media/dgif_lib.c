@@ -16,7 +16,11 @@
 
 #include "sysfile.h"
 
+<<<<<<< HEAD
 #include "gifrlib.h"
+=======
+#include "ui/gifrlib.h"
+>>>>>>> master
 
 #define PROGRAM_NAME	"GIFLIB"
 

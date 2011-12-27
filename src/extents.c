@@ -214,6 +214,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "buffer.h"
 #include "debug.h"
+<<<<<<< HEAD
 #include "device.h"
 #include "elhash.h"
 #include "extents.h"
@@ -226,6 +227,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "process.h"
 #include "redisplay.h"
 #include "gutter.h"
+=======
+#include "ui/device.h"
+#include "elhash.h"
+#include "extents.h"
+#include "ui/faces.h"
+#include "ui/frame.h"
+#include "ui/glyphs.h"
+#include "ui/insdel.h"
+#include "ui/keymap.h"
+#include "opaque.h"
+#include "process.h"
+#include "ui/redisplay.h"
+#include "ui/gutter.h"
+>>>>>>> master
 
 /* ------------------------------- */
 /*            gap array            */
@@ -1073,13 +1088,21 @@ finalize_extent_info(void *header, int for_disksave)
 #else  /* BDWGC */
 /* just define dummies */
 static Lisp_Object
+<<<<<<< HEAD
 mark_extent_info(Lisp_Object UNUSED(obj))
+=======
+mark_extent_info(Lisp_Object SXE_UNUSED(obj))
+>>>>>>> master
 {
 	return Qnil;
 }
 
 static void
+<<<<<<< HEAD
 finalize_extent_info(void *UNUSED(header), int UNUSED(for_disksave))
+=======
+finalize_extent_info(void *SXE_UNUSED(header), int SXE_UNUSED(for_disksave))
+>>>>>>> master
 {
 	return;
 }
@@ -2934,6 +2957,10 @@ extent_fragment_update(struct window * w, struct extent_fragment * ef,
 
 				gb.glyph = glyph;
 				gb.active = 0; /* BEGIN_GLYPH */
+<<<<<<< HEAD
+=======
+				gb.width = 0;
+>>>>>>> master
 				XSETEXTENT(gb.extent, e);
 		    
 				if (zero_width) {
@@ -3126,6 +3153,10 @@ print_extent_1(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	EXTENT anc = extent_ancestor(ext);
 	Lisp_Object tail;
 	char buf[100], *bp = buf;
+<<<<<<< HEAD
+=======
+	int sz;
+>>>>>>> master
 
 	/* Retrieve the ancestor and use it, for faster retrieval of properties */
 
@@ -3133,11 +3164,21 @@ print_extent_1(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		*bp++ = '*';
 	*bp++ = (extent_start_open_p(anc) ? '(' : '[');
 	if (extent_detached_p(ext))
+<<<<<<< HEAD
 		strcpy(bp, "detached");
 	else
 		sprintf(bp, "%ld, %ld",
 			XINT(Fextent_start_position(obj)),
 			XINT(Fextent_end_position(obj)));
+=======
+		strncpy(bp, "detached", sizeof(buf)-1);
+	else {
+		sz=snprintf(bp, sizeof(buf)-2, "%ld, %ld",
+			    XINT(Fextent_start_position(obj)),
+			    XINT(Fextent_end_position(obj)));
+		assert(sz>=0 && sz<(sizeof(buf)-2));
+	}
+>>>>>>> master
 	bp += strlen(bp);
 	*bp++ = (extent_end_open_p(anc) ? ')' : ']');
 	if (!NILP(extent_end_glyph(anc)))
@@ -3172,8 +3213,12 @@ print_extent_1(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		write_c_string(" ", printcharfun);
 	}
 
+<<<<<<< HEAD
 	sprintf(buf, "0x%lx", (long)ext);
 	write_c_string(buf, printcharfun);
+=======
+	write_fmt_str(printcharfun, "0x%lx", (long)ext);
+>>>>>>> master
 }
 
 static void
@@ -3221,17 +3266,24 @@ print_extent(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		if (!EXTENT_LIVE_P(XEXTENT(obj))) {
 			write_c_string("#<destroyed extent", printcharfun);
 		} else {
+<<<<<<< HEAD
 			/* C99ified */
 			size_t bufsz = strlen(title) + strlen(name) +
 				strlen(posttitle) + 1;
 			char buf[bufsz];
 
+=======
+>>>>>>> master
 			write_c_string("#<extent ", printcharfun);
 			print_extent_1(obj, printcharfun, escapeflag);
 			write_c_string(extent_detached_p(XEXTENT(obj))
 				       ? " from " : " in ", printcharfun);
+<<<<<<< HEAD
 			snprintf(buf, bufsz, "%s%s%s", title, name, posttitle);
 			write_c_string(buf, printcharfun);
+=======
+			write_fmt_string(printcharfun, "%s%s%s", title, name, posttitle);
+>>>>>>> master
 		}
 	} else {
 		if (print_readably)
@@ -3439,10 +3491,14 @@ static Lisp_Object extent_endpoint_external(Lisp_Object extent_obj, int endp)
 DEFUN("extentp", Fextentp, 1, 1, 0,	/*
 Return t if OBJECT is an extent.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	return EXTENTP(object) ? Qt : Qnil;
@@ -3451,10 +3507,14 @@ Return t if OBJECT is an extent.
 DEFUN("extent-live-p", Fextent_live_p, 1, 1, 0,	/*
 Return t if OBJECT is an extent that has not been destroyed.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	return EXTENTP(object) && EXTENT_LIVE_P(XEXTENT(object)) ? Qt : Qnil;
@@ -3463,10 +3523,14 @@ Return t if OBJECT is an extent that has not been destroyed.
 DEFUN("extent-detached-p", Fextent_detached_p, 1, 1, 0,	/*
 Return t if EXTENT is detached.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	return extent_detached_p(decode_extent(extent, 0)) ? Qt : Qnil;
@@ -3475,10 +3539,14 @@ Return t if EXTENT is detached.
 DEFUN("extent-object", Fextent_object, 1, 1, 0,	/*
 Return object (buffer or string) that EXTENT refers to.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	return extent_object(decode_extent(extent, 0));
@@ -3487,10 +3555,14 @@ Return object (buffer or string) that EXTENT refers to.
 DEFUN("extent-start-position", Fextent_start_position, 1, 1, 0,	/*
 Return start position of EXTENT, or nil if EXTENT is detached.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	return extent_endpoint_external(extent, 0);
@@ -3499,10 +3571,14 @@ Return start position of EXTENT, or nil if EXTENT is detached.
 DEFUN("extent-end-position", Fextent_end_position, 1, 1, 0,	/*
 Return end position of EXTENT, or nil if EXTENT is detached.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	return extent_endpoint_external(extent, 1);
@@ -3511,10 +3587,14 @@ Return end position of EXTENT, or nil if EXTENT is detached.
 DEFUN("extent-length", Fextent_length, 1, 1, 0,	/*
 Return length of EXTENT in characters.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	EXTENT e = decode_extent(extent, DE_MUST_BE_ATTACHED);
@@ -3536,6 +3616,7 @@ extents in a buffer.
 Note: The display order is not necessarily the order that `map-extents'
 processes extents in!
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
       (extent)) {
 =======
@@ -3543,6 +3624,11 @@ processes extents in!
       (extent))
 {
 >>>>>>> origin/master
+=======
+*/
+      (extent))
+{
+>>>>>>> master
 	Lisp_Object val;
 	EXTENT next;
 
@@ -3563,6 +3649,7 @@ If EXTENT is a buffer return the last extent in the buffer; likewise
 for strings.
 This function is analogous to `next-extent'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (extent)) {
 =======
@@ -3570,6 +3657,11 @@ This function is analogous to `next-extent'.
       (extent))
 {
 >>>>>>> origin/master
+=======
+*/
+      (extent))
+{
+>>>>>>> master
 	Lisp_Object val;
 	EXTENT prev;
 
@@ -3592,6 +3684,7 @@ Find next extent after EXTENT using the "e" order.
 If EXTENT is a buffer return the first extent in the buffer; likewise
 for strings.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
       (extent)) {
 =======
@@ -3599,6 +3692,11 @@ for strings.
       (extent))
 {
 >>>>>>> origin/master
+=======
+*/
+      (extent))
+{
+>>>>>>> master
 	Lisp_Object val;
 	EXTENT next;
 
@@ -3620,6 +3718,7 @@ If EXTENT is a buffer return the last extent in the buffer; likewise
 for strings.
 This function is analogous to `next-e-extent'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (extent)) {
 =======
@@ -3627,6 +3726,11 @@ This function is analogous to `next-e-extent'.
       (extent))
 {
 >>>>>>> origin/master
+=======
+*/
+      (extent))
+{
+>>>>>>> master
 	Lisp_Object val;
 	EXTENT prev;
 
@@ -3651,6 +3755,7 @@ If POS is at the end of the buffer or string, POS will be returned;
 otherwise a position greater than POS will always be returned.
 If OBJECT is nil, the current buffer is assumed.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
       (pos, object)) {
 =======
@@ -3658,6 +3763,11 @@ If OBJECT is nil, the current buffer is assumed.
       (pos, object))
 {
 >>>>>>> origin/master
+=======
+*/
+      (pos, object))
+{
+>>>>>>> master
 	Lisp_Object obj = decode_buffer_or_string(object);
 	Bytind bpos;
 
@@ -3673,6 +3783,7 @@ If POS is at the beginning of the buffer or string, POS will be returned;
 otherwise a position less than POS will always be returned.
 If OBJECT is nil, the current buffer is assumed.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
       (pos, object)) {
 =======
@@ -3680,6 +3791,11 @@ If OBJECT is nil, the current buffer is assumed.
       (pos, object))
 {
 >>>>>>> origin/master
+=======
+*/
+      (pos, object))
+{
+>>>>>>> master
 	Lisp_Object obj = decode_buffer_or_string(object);
 	Bytind bpos;
 
@@ -3700,10 +3816,14 @@ and has no properties of its own. (The only "properties" that the
 extent keeps are the buffer/string it refers to and the start and end
 points.) It is possible for an extent's parent to itself have a parent.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 /* do I win the prize for the strangest split infinitive? */
 {
@@ -3717,10 +3837,14 @@ The children of an extent are all those extents whose parent is that extent.
 This function does not recursively trace children of children.
 \(To do that, use `extent-descendants'.)
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	EXTENT e = decode_extent(extent, 0);
@@ -3761,10 +3885,14 @@ DEFUN("set-extent-parent", Fset_extent_parent, 2, 2, 0,	/*
 Set the parent of EXTENT to PARENT (may be nil).
 See `extent-parent'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, parent))
 {
 	EXTENT e = decode_extent(extent, 0);
@@ -3951,10 +4079,14 @@ using `set-extent-property'.  The extent is initially detached if both
 FROM and TO are nil, and in this case BUFFER-OR-STRING defaults to nil,
 meaning the extent is in no buffer and no string.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (from, to, buffer_or_string))
 {
 	Lisp_Object extent_obj;
@@ -3979,10 +4111,14 @@ DEFUN("copy-extent", Fcopy_extent, 1, 2, 0,	/*
 Make a copy of EXTENT.  It is initially detached.
 Optional argument BUFFER-OR-STRING defaults to EXTENT's buffer or string.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, buffer_or_string))
 {
 	EXTENT ext = decode_extent(extent, 0);
@@ -4001,10 +4137,14 @@ Remove EXTENT from its buffer and destroy it.
 This does not modify the buffer's text, only its display properties.
 The extent cannot be used thereafter.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	EXTENT ext;
@@ -4033,10 +4173,14 @@ are not recorded.  This means that extent changes which are to be undo-able
 must be performed by character editing, or by insertion and detachment of
 duplicable extents.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	EXTENT ext = decode_extent(extent, 0);
@@ -4058,10 +4202,14 @@ be in, and defaults to EXTENT's buffer or string. (If nil, and EXTENT
 is in no buffer and no string, it defaults to the current buffer.)
 See documentation on `detach-extent' for a discussion of undo recording.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, start, end, buffer_or_string))
 {
 	EXTENT ext;
@@ -4156,10 +4304,14 @@ Return whether EXTENT overlaps a specified region.
 This is equivalent to whether `map-extents' would visit EXTENT when called
 with these args.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, from, to, flags))
 {
 	Bytind start, end;
@@ -4280,6 +4432,7 @@ If optional arg PROPERTY is non-nil, only extents with that property set
 on them will be visited.  If optional arg VALUE is non-nil, only extents
 whose value for that property is `eq' to VALUE will be visited.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
       (function, object, from, to, maparg, flags, property, value)) {
 =======
@@ -4287,6 +4440,11 @@ whose value for that property is `eq' to VALUE will be visited.
       (function, object, from, to, maparg, flags, property, value))
 {
 >>>>>>> origin/master
+=======
+*/
+      (function, object, from, to, maparg, flags, property, value))
+{
+>>>>>>> master
 	/* This function can GC */
 	struct slow_map_extents_arg closure;
 	unsigned int me_flags;
@@ -4419,10 +4577,14 @@ Thus, this function may be used to walk a tree of extents in a buffer:
 (defun walk-extents (buffer &optional ignore)
 (map-extent-children 'walk-extents buffer))
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (function, object, from, to, maparg, flags, property, value))
 {
 	/* This function can GC */
@@ -4633,6 +4795,7 @@ Note that in all cases, the start-openness and end-openness of the extents
 considered is ignored.  If you want to pay attention to those properties,
 you should use `map-extents', which gives you more control.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
       (pos, object, property, before, at_flag)) {
 =======
@@ -4640,6 +4803,11 @@ you should use `map-extents', which gives you more control.
       (pos, object, property, before, at_flag))
 {
 >>>>>>> origin/master
+=======
+*/
+      (pos, object, property, before, at_flag))
+{
+>>>>>>> master
 	Bytind position;
 	EXTENT before_extent;
 	enum extent_at_flag fl;
@@ -4691,6 +4859,7 @@ Note that in all cases, the start-openness and end-openness of the extents
 considered is ignored.  If you want to pay attention to those properties,
 you should use `map-extents', which gives you more control.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
       (pos, object, property, before, at_flag)) {
 =======
@@ -4698,6 +4867,11 @@ you should use `map-extents', which gives you more control.
       (pos, object, property, before, at_flag))
 {
 >>>>>>> origin/master
+=======
+*/
+      (pos, object, property, before, at_flag))
+{
+>>>>>>> master
 	Bytind position;
 	EXTENT before_extent;
 	enum extent_at_flag fl;
@@ -5172,10 +5346,14 @@ FUNCTION.
 The first time the EXTENT is (re)displayed, an eval event will be
 dispatched calling FUNCTION with EXTENT as its only argument.
 <<<<<<< HEAD
+<<<<<<< HEAD
 												 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, function))
 {
 	EXTENT e = decode_extent(extent, DE_MUST_BE_ATTACHED);
@@ -5194,10 +5372,14 @@ Return the name of the face in which EXTENT is displayed, or nil
 if the extent's face is unspecified.  This might also return a list
 of face names.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	Lisp_Object face;
@@ -5214,10 +5396,14 @@ FACE can also be a list of faces, and all faces listed will apply,
 with faces earlier in the list taking priority over those later in the
 list.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, face))
 {
 	EXTENT e = decode_extent(extent, 0);
@@ -5239,10 +5425,14 @@ Return the face used to highlight EXTENT when the mouse passes over it.
 The return value will be a face name, a list of face names, or nil
 if the extent's mouse face is unspecified.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	Lisp_Object face;
@@ -5259,10 +5449,14 @@ FACE can also be a list of faces, and all faces listed will apply,
 with faces earlier in the list taking priority over those later in the
 list.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, face))
 {
 	EXTENT e;
@@ -5354,10 +5548,14 @@ DEFUN("set-extent-begin-glyph", Fset_extent_begin_glyph, 2, 3, 0,	/*
 Display a bitmap, subwindow or string at the beginning of EXTENT.
 BEGIN-GLYPH must be a glyph object.  The layout policy defaults to `text'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, begin_glyph, layout))
 {
 	return set_extent_glyph_1(extent, begin_glyph, 0, layout);
@@ -5367,10 +5565,14 @@ DEFUN("set-extent-end-glyph", Fset_extent_end_glyph, 2, 3, 0,	/*
 Display a bitmap, subwindow or string at the end of EXTENT.
 END-GLYPH must be a glyph object.  The layout policy defaults to `text'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, end_glyph, layout))
 {
 	return set_extent_glyph_1(extent, end_glyph, 1, layout);
@@ -5380,10 +5582,14 @@ DEFUN("extent-begin-glyph", Fextent_begin_glyph, 1, 1, 0,	/*
 Return the glyph object displayed at the beginning of EXTENT.
 If there is none, nil is returned.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	return extent_begin_glyph(decode_extent(extent, 0));
@@ -5393,10 +5599,14 @@ DEFUN("extent-end-glyph", Fextent_end_glyph, 1, 1, 0,	/*
 Return the glyph object displayed at the end of EXTENT.
 If there is none, nil is returned.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	return extent_end_glyph(decode_extent(extent, 0));
@@ -5406,10 +5616,14 @@ DEFUN("set-extent-begin-glyph-layout", Fset_extent_begin_glyph_layout, 2, 2, 0,	
 Set the layout policy of EXTENT's begin glyph.
 Access this using the `extent-begin-glyph-layout' function.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, layout))
 {
 	EXTENT e = decode_extent(extent, 0);
@@ -5423,10 +5637,14 @@ DEFUN("set-extent-end-glyph-layout", Fset_extent_end_glyph_layout, 2, 2, 0,	/*
 Set the layout policy of EXTENT's end glyph.
 Access this using the `extent-end-glyph-layout' function.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, layout))
 {
 	EXTENT e = decode_extent(extent, 0);
@@ -5440,10 +5658,14 @@ DEFUN("extent-begin-glyph-layout", Fextent_begin_glyph_layout, 1, 1, 0,	/*
 Return the layout policy associated with EXTENT's begin glyph.
 Set this using the `set-extent-begin-glyph-layout' function.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	EXTENT e = decode_extent(extent, 0);
@@ -5455,10 +5677,14 @@ DEFUN("extent-end-glyph-layout", Fextent_end_glyph_layout, 1, 1, 0,	/*
 Return the layout policy associated with EXTENT's end glyph.
 Set this using the `set-extent-end-glyph-layout' function.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent))
 {
 	EXTENT e = decode_extent(extent, 0);
@@ -5474,6 +5700,7 @@ conflict (two extents whose faces both specify font, for example: the
 font of the extent with the higher priority will be used).
 Extents are created with priority 0; priorities may be negative.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
       (extent, priority)) {
 =======
@@ -5481,6 +5708,11 @@ Extents are created with priority 0; priorities may be negative.
       (extent, priority))
 {
 >>>>>>> origin/master
+=======
+*/
+      (extent, priority))
+{
+>>>>>>> master
 	EXTENT e = decode_extent(extent, 0);
 
 	CHECK_INT(priority);
@@ -5493,6 +5725,7 @@ Extents are created with priority 0; priorities may be negative.
 DEFUN("extent-priority", Fextent_priority, 1, 1, 0,	/*
 Return the display priority of EXTENT; see `set-extent-priority'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (extent)) {
 =======
@@ -5500,6 +5733,11 @@ Return the display priority of EXTENT; see `set-extent-priority'.
       (extent))
 {
 >>>>>>> origin/master
+=======
+*/
+      (extent))
+{
+>>>>>>> master
 	EXTENT e = decode_extent(extent, 0);
 	return make_int(extent_priority(e));
 }
@@ -5653,6 +5891,7 @@ characters in the extent is looked up in the syntax table.
 You should use the text property API to manipulate this
 property.  (This may be required in the future.)
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
       (extent, property, value)) {
 =======
@@ -5660,6 +5899,11 @@ property.  (This may be required in the future.)
       (extent, property, value))
 {
 >>>>>>> origin/master
+=======
+*/
+      (extent, property, value))
+{
+>>>>>>> master
 	/* This function can GC if property is `keymap' */
 	EXTENT e = decode_extent(extent, 0);
 
@@ -5735,10 +5979,14 @@ Change some properties of EXTENT.
 PLIST is a property list.
 For a list of built-in properties, see `set-extent-property'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, plist))
 {
 	/* This function can GC, if one of the properties is `keymap' */
@@ -5765,10 +6013,14 @@ Return EXTENT's value for property PROPERTY.
 If no such property exists, DEFAULT is returned.
 See `set-extent-property' for the built-in property names.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, property, default_))
 {
 	EXTENT e = decode_extent(extent, 0);
@@ -5834,6 +6086,7 @@ DEFUN("extent-properties", Fextent_properties, 1, 1, 0,	/*
 Return a property list of the attributes of EXTENT.
 Do not modify this list; use `set-extent-property' instead.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (extent)) {
 =======
@@ -5841,6 +6094,11 @@ Do not modify this list; use `set-extent-property' instead.
       (extent))
 {
 >>>>>>> origin/master
+=======
+*/
+      (extent))
+{
+>>>>>>> master
 	EXTENT e, anc;
 	Lisp_Object result, face, anc_obj;
 	glyph_layout layout;
@@ -5959,10 +6217,14 @@ If the second arg is non-nil, it will be highlighted, else dehighlighted.
 This is the same as `highlight-extent', except that it will work even
 on extents without the `mouse-face' property.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, highlight_p))
 {
 	if (NILP(extent))
@@ -5980,10 +6242,14 @@ If the second arg is non-nil, it will be highlighted, else dehighlighted.
 Highlighted extents are displayed as if they were merged with the face
 or faces specified by the `mouse-face' property.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, highlight_p))
 {
 	if (EXTENTP(extent) && NILP(extent_mouse_face(XEXTENT(extent))))
@@ -6112,10 +6378,14 @@ The fourth arg, NO-HOOKS, can be used to inhibit the running of the
 extent's `paste-function' property if it has one.
 See documentation on `detach-extent' for a discussion of undo recording.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, start, end, no_hooks, buffer_or_string))
 {
 	EXTENT ext = decode_extent(extent, 0);
@@ -6422,10 +6692,14 @@ a position, and has the same meaning as in `extent-at'.
 This examines only those properties added with `put-text-property'.
 See also `get-char-property'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (pos, prop, object, at_flag))
 {
 	return get_text_property_1(pos, prop, object, at_flag, 1);
@@ -6440,10 +6714,14 @@ a position, and has the same meaning as in `extent-at'.
 This examines properties on all extents.
 See also `get-text-property'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (pos, prop, object, at_flag))
 {
 	return get_text_property_1(pos, prop, object, at_flag, 0);
@@ -6740,10 +7018,14 @@ region.  The properties are copied when the characters are copied/pasted.
 Fifth argument OBJECT is the buffer or string containing the text, and
 defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (start, end, prop, value, object))
 {
 	/* This function can GC */
@@ -6763,10 +7045,14 @@ are copied.
 Fifth argument OBJECT is the buffer or string containing the text, and
 defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (start, end, prop, value, object))
 {
 	/* This function can GC */
@@ -6785,10 +7071,14 @@ to add.  The optional fourth argument, OBJECT, is the buffer or string
 containing the text and defaults to the current buffer.  Returns t if
 any property was changed, nil otherwise.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (start, end, props, object))
 {
 	/* This function can GC */
@@ -6814,10 +7104,14 @@ to add.  The optional fourth argument, OBJECT, is the buffer or string
 containing the text and defaults to the current buffer.  Returns t if
 any property was changed, nil otherwise.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (start, end, props, object))
 {
 	/* This function can GC */
@@ -6842,10 +7136,14 @@ as nil).  Returns t if any property was changed, nil otherwise.
 Fourth argument OBJECT is the buffer or string containing the text, and
 defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (start, end, props, object))
 {
 	/* This function can GC */
@@ -6877,10 +7175,14 @@ defaults to the current buffer.
 DEFUN("text-prop-extent-paste-function", Ftext_prop_extent_paste_function, 3, 3, 0,	/*
 Used as the `paste-function' property of `text-prop' extents.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (extent, from, to))
 {
 	/* This function can GC */
@@ -6926,6 +7228,7 @@ a particular character, it is undefined which value is considered to be
 the value of PROP. (Note that this situation will not happen if you always
 use the text-property primitives.)
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
       (pos, prop, object, limit)) {
 =======
@@ -6933,6 +7236,11 @@ use the text-property primitives.)
       (pos, prop, object, limit))
 {
 >>>>>>> origin/master
+=======
+*/
+      (pos, prop, object, limit))
+{
+>>>>>>> master
 	Bufpos bpos;
 	Bufpos blim;
 	Lisp_Object extent, value;
@@ -6994,6 +7302,7 @@ a particular character, it is undefined which value is considered to be
 the value of PROP. (Note that this situation will not happen if you always
 use the text-property primitives.)
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
       (pos, prop, object, limit)) {
 =======
@@ -7001,6 +7310,11 @@ use the text-property primitives.)
       (pos, prop, object, limit))
 {
 >>>>>>> origin/master
+=======
+*/
+      (pos, prop, object, limit))
+{
+>>>>>>> master
 	Bufpos bpos;
 	Bufpos blim;
 	Lisp_Object extent, value;

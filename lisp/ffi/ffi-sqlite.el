@@ -1,10 +1,14 @@
 ;;; ffi-sqlite.el --- FFI for sqlite3.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ;; Copyright (C) 2008 by Zajcev Evegny.
 =======
 ;; Copyright (C) 2008 by Zajcev Evgeny.
 >>>>>>> origin/master
+=======
+;; Copyright (C) 2008 by Zajcev Evgeny.
+>>>>>>> master
 
 ;; Author: Zajcev Evgeny <zevlg@yandex.ru>
 ;; Created: Sat Nov 22 01:08:31 2008
@@ -319,14 +323,22 @@ provide COPY-FLAG argument."
              (sqlite:bind-double statement key value))
             ((stringp value)
              (sqlite:bind-text statement key value (length value)
+<<<<<<< HEAD
                                (or copy-flag sqlite-TRANSIENT)))
+=======
+                               (or copy-flag sqlite-STATIC)))
+>>>>>>> master
             ((and (consp value) (eq (car value) 'blob)
                   (stringp (cdr value)))
              (let ((bval (ffi-create-fo `(c-data . ,(length (cdr value)))
                                         (cdr value))))
                (sqlite:bind-blob
                 statement key bval (length (cdr value))
+<<<<<<< HEAD
                 (or copy-flag sqlite-TRANSIENT))))
+=======
+                (or copy-flag sqlite-STATIC))))
+>>>>>>> master
             (t (error 'sqlite-datatype-error value
                       :comment (concat "Attempt to insert data not one of "
                                        "integer, float, text, or blob."))))

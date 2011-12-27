@@ -57,7 +57,11 @@ float_equal(Lisp_Object obj1, Lisp_Object obj2, int depth)
 }
 
 static inline unsigned long
+<<<<<<< HEAD
 float_hash(Lisp_Object obj, int UNUSED(depth))
+=======
+float_hash(Lisp_Object obj, int SXE_UNUSED(depth))
+>>>>>>> master
 {
 #if 1
 	fpfloat h = 22.0/7.0*ent_float(obj);
@@ -82,7 +86,11 @@ print_float(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	char pigbuf[350];	/* see comments in float_to_string */
 
+<<<<<<< HEAD
 	float_to_string(pigbuf, XFLOAT_DATA(obj));
+=======
+	float_to_string(pigbuf, XFLOAT_DATA(obj), sizeof(pigbuf));
+>>>>>>> master
 	write_c_string(pigbuf, printcharfun);
 }
 
@@ -383,7 +391,11 @@ ent_lift_INT_T_FLOAT_T(Lisp_Object number, unsigned long precision)
 	return make_float(ent_int(number));
 }
 static inline Lisp_Object
+<<<<<<< HEAD
 _ent_lift_INT_T_FLOAT_T(Lisp_Object number, ent_lift_args_t UNUSED(unused))
+=======
+_ent_lift_INT_T_FLOAT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(unused))
+>>>>>>> master
 {
 	return make_float(ent_int(number));
 }
@@ -394,7 +406,11 @@ ent_lift_FLOAT_T_INT_T(Lisp_Object number, unsigned long precision)
 	return Ftruncate(number);
 }
 static inline Lisp_Object
+<<<<<<< HEAD
 _ent_lift_FLOAT_T_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(unused))
+=======
+_ent_lift_FLOAT_T_INT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(unused))
+>>>>>>> master
 {
 	return Ftruncate(number);
 }
@@ -564,7 +580,11 @@ void syms_of_ent_float(void)
 void vars_of_ent_float(void)
 {
 	fpfloat f = 0.0, fp = 0.0;
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> master
 	f = 1.0;
 	while ( (f > fp) &&
 		(f = 2.0 * (fp = f)) &&
@@ -585,12 +605,26 @@ The float closest in value to -infinity.
 								       */);
 	Vmost_negative_float = make_float(fp);
 
+<<<<<<< HEAD
 	/* let's compute the array we need to print such a float */
 #if fpfloat_double_p
 	max_float_print_size = snprintf(NULL, 0, "%f", fp) + 10;
 #elif fpfloat_long_double_p
 	max_float_print_size = snprintf(NULL, 0, "%Lf", fp) + 10;
 #endif
+=======
+	{
+		char tmp[] = "1.0";
+	/* let's compute the array we need to print such a float */
+#if fpfloat_double_p
+		max_float_print_size = snprintf(tmp, sizeof(tmp), "%f", fp);
+#elif fpfloat_long_double_p
+		max_float_print_size = snprintf(tmp, sizeof(tmp), "%Lf", fp);
+#endif
+	}
+	assert(max_float_print_size>0);
+	max_float_print_size += 10;
+>>>>>>> master
 
 	DEFVAR_CONST_INT("max-float-print-size", &max_float_print_size /*
 The maximal string length of a printed float.
@@ -611,28 +645,49 @@ The float closest in value to -0.
 								       */);
 	Vleast_negative_float = make_float(fp);
 
+<<<<<<< HEAD
 	f = 1.0;
 	while ((fp = f, f /= 2) * 2 == fp && f != 0);
+=======
+	for( f = fp = 1.0; (f /= 2) * 2 == fp && f != 0; fp = f );
+>>>>>>> master
 	DEFVAR_CONST_LISP("least-positive-normalised-float",
 			  &Vleast_positive_normalised_float /*
 The float closest in value to +0 without rounding errors.
 							    */);
 	Vleast_positive_normalised_float = make_float(fp);
 
+<<<<<<< HEAD
 	f = -1.0;
 	while ((fp = f, f /= 2) * 2 == fp && f != 0);
+=======
+	for( f = fp = -1.0; ( f /= 2) * 2 == fp && f != 0; fp = f);
+>>>>>>> master
 	DEFVAR_CONST_LISP("least-negative-normalised-float",
 			  &Vleast_negative_normalised_float /*
 The float closest in value to -0 without rounding errors.
 							    */);
 	Vleast_negative_normalised_float = make_float(fp);
 
+<<<<<<< HEAD
 	f = 1.0;
 	while ((f = (fp = f) / 2) + 1 != 1);
 	DEFVAR_CONST_LISP("float-epsilon", &Vfloat_epsilon /*
 The least positive float which, added to 1, is still greater than 1.
 							   */);
 	Vfloat_epsilon = make_float(fp);
+=======
+	DEFVAR_CONST_LISP("float-epsilon", &Vfloat_epsilon /*
+The least positive float which, added to 1, is still greater than 1.
+							   */);
+#if defined DBL_EPSILON
+	Vfloat_epsilon = make_float(DBL_EPSILON);
+#else  /* !DBL_EPSILON */
+	f = 1.0;
+	while ((f = (fp = f) / 2) + 1 != 1);
+	Vfloat_epsilon = make_float(fp);
+#endif	/* DBL_EPSILON */
+>>>>>>> master
 
 	Fprovide(intern("fpfloat"));
 	Fprovide(intern("lisp-float-type"));

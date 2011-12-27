@@ -73,6 +73,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "commands.h"
 #include "elhash.h"
 #include "extents.h"
+<<<<<<< HEAD
 #include "faces.h"
 #ifdef FILE_CODING
 <<<<<<< HEAD
@@ -83,16 +84,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 #include "frame.h"
 #include "insdel.h"
+=======
+#include "ui/faces.h"
+#ifdef FILE_CODING
+#include "mule/file-coding.h"
+#endif
+#include "ui/frame.h"
+#include "ui/insdel.h"
+>>>>>>> master
 #include "lstream.h"
 #include "process.h"		/* for kill_buffer_processes */
 #ifdef REGION_CACHE_NEEDS_WORK
 #include "region-cache.h"
 #endif
+<<<<<<< HEAD
 #include "select.h"		/* for select_notify_buffer_kill */
 #include "specifier.h"
 #include "syntax.h"
 #include "sysdep.h"		/* for getwd */
 #include "window.h"
+=======
+#include "ui/select.h"		/* for select_notify_buffer_kill */
+#include "specifier.h"
+#include "syntax.h"
+#include "sysdep.h"		/* for getwd */
+#include "ui/window.h"
+>>>>>>> master
 
 #include "sysfile.h"
 
@@ -284,10 +301,14 @@ DEFINE_LRECORD_IMPLEMENTATION("buffer", buffer,
 DEFUN("bufferp", Fbufferp, 1, 1, 0,	/*
 Return t if OBJECT is an editor buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	return BUFFERP(object) ? Qt : Qnil;
@@ -296,10 +317,14 @@ Return t if OBJECT is an editor buffer.
 DEFUN("buffer-live-p", Fbuffer_live_p, 1, 1, 0,	/*
 Return t if OBJECT is an editor buffer that has not been deleted.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	return BUFFERP(object) && BUFFER_LIVE_P(XBUFFER(object)) ? Qt : Qnil;
@@ -319,10 +344,14 @@ argument is provided, the ordering for that frame is returned instead.
 If the FRAME argument is t, then the global (non-frame) ordering is
 returned instead.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (frame)) {
 	return Fmapcar(Qcdr,
 		       EQ(frame, Qt) ? Vbuffer_alist :
@@ -373,10 +402,14 @@ If BUFFER is a valid buffer or a string representing a valid buffer,
 the corresponding buffer object will be returned.  Otherwise an error
 will be signaled.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -410,10 +443,14 @@ DEFUN("get-buffer", Fget_buffer, 1, 1, 0,	/*
 Return the buffer named BUFFER-NAME (a string), or nil if there is none.
 BUFFER-NAME may also be a buffer; if so, the value is that buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer_name)) {
 #ifdef I18N3
 	/* #### Doc string should indicate that the buffer name will get
@@ -443,10 +480,14 @@ done on each buffer's value of `buffer-file-truename' instead of
 FILENAME will be converted to its truename and used for searching, but
 the search will still be done on `buffer-file-name'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (filename))
 {
 	/* This function can GC.  GC checked and fixed 7-11-2000 ben. */
@@ -605,10 +646,14 @@ If NAME starts with a space, the new buffer does not keep undo information.
 If NAME is a buffer instead of a string, then it is the value returned.
 The value is never nil.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (name))
 {
 	/* This function can GC */
@@ -647,10 +692,14 @@ If BASE-BUFFER is itself an indirect buffer, the base buffer for that buffer
 is made the base buffer for the newly created buffer. (Thus, there will
 never be indirect buffers whose base buffers are themselves indirect.)
 <<<<<<< HEAD
+<<<<<<< HEAD
 																 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (base_buffer, name))
 {
 	/* This function can GC */
@@ -720,6 +769,7 @@ Optional second argument IGNORE specifies a name that is okay to use
 \(if it is in the sequence to be tried)
 even if a buffer with that name exists.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
@@ -728,6 +778,13 @@ even if a buffer with that name exists.
 {
 	REGISTER Lisp_Object gentemp, tem;
 	int count;
+=======
+*/
+      (name, ignore))
+{
+	REGISTER Lisp_Object gentemp, tem;
+	int count, prt;
+>>>>>>> master
 	char number[23];
 
 	CHECK_STRING(name);
@@ -744,8 +801,13 @@ even if a buffer with that name exists.
 
 	count = 1;
 	while (1) {
+<<<<<<< HEAD
                 
                 snprintf(number, sizeof(number), "<%d>", ++count);
+=======
+                prt = snprintf(number, sizeof(number), "<%d>", ++count);
+	        assert(prt>=0 && prt < sizeof(number));
+>>>>>>> master
 		gentemp = concat2(name, build_string(number));
 		if (!NILP(ignore)) {
 			tem = Fstring_equal(gentemp, ignore);
@@ -763,10 +825,14 @@ Return the name of BUFFER, as a string.
 With no argument or nil as argument, return the name of the current
 buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	/* For compatibility, we allow a dead buffer here.
@@ -781,10 +847,14 @@ DEFUN("buffer-file-name", Fbuffer_file_name, 0, 1, 0,	/*
 Return name of file BUFFER is visiting, or nil if none.
 No argument or nil as argument means use the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	/* For compatibility, we allow a dead buffer here.  Yuck! */
@@ -798,10 +868,14 @@ DEFUN("buffer-base-buffer", Fbuffer_base_buffer, 0, 1, 0,	/*
 Return the base buffer of indirect buffer BUFFER.
 If BUFFER is not indirect, return nil.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -814,6 +888,7 @@ Return a list of all indirect buffers whose base buffer is BUFFER.
 If BUFFER is indirect, the return value will always be nil; see
 `make-indirect-buffer'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
       (buffer)) {
 =======
@@ -821,6 +896,11 @@ If BUFFER is indirect, the return value will always be nil; see
       (buffer))
 {
 >>>>>>> origin/master
+=======
+*/
+      (buffer))
+{
+>>>>>>> master
 	struct buffer *buf = decode_buffer(buffer, 0);
 
 	return Fcopy_sequence(buf->indirect_children);
@@ -833,10 +913,14 @@ For a symbol that is locally unbound, just the symbol appears in the value.
 Note that storing new VALUEs in these elements doesn't change the variables.
 No argument or nil as argument means use current buffer as BUFFER.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -885,10 +969,14 @@ DEFUN("buffer-modified-p", Fbuffer_modified_p, 0, 1, 0,	/*
 Return t if BUFFER was modified since its file was last read or saved.
 No argument or nil as argument means use current buffer as BUFFER.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -901,6 +989,7 @@ Mark BUFFER as modified or unmodified according to FLAG.
 A non-nil FLAG means mark the buffer modified.  No argument or nil
 as BUFFER means use current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
@@ -909,11 +998,22 @@ as BUFFER means use current buffer.
 {
 	/* This function can GC */
 	struct buffer *buf = decode_buffer(buffer, 0);
+=======
+*/
+      (flag, buffer))
+{
+	/* This function can GC */
+	struct buffer *buf;
+>>>>>>> master
 
 #ifdef CLASH_DETECTION
 	/* If buffer becoming modified, lock the file.
 	   If buffer becoming unmodified, unlock the file.  */
+<<<<<<< HEAD
 
+=======
+	buf =  decode_buffer(buffer, 0);
+>>>>>>> master
 	Lisp_Object fn = buf->file_truename;
 	if (!NILP(fn)) {
 		int already = BUF_SAVE_MODIFF(buf) < BUF_MODIFF(buf);
@@ -952,10 +1052,14 @@ Each buffer has a tick counter which is incremented each time the text in
 that buffer is changed.  It wraps around occasionally.
 No argument or nil as argument means use current buffer as BUFFER.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -973,10 +1077,14 @@ Interactively, one can set UNIQUE with a prefix argument.
 Returns the name we actually gave the buffer.
 This does not change the name of the visited file (if any).
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (newname, unique))
 {
 	/* This function can GC */
@@ -1044,6 +1152,7 @@ is t, then the global ordering is returned.
 Note: In FSF Emacs, this function takes the arguments in the order of
 BUFFER, VISIBLE-OK and FRAME.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
       (buffer, frame, visible_ok)) {
 =======
@@ -1051,6 +1160,11 @@ BUFFER, VISIBLE-OK and FRAME.
       (buffer, frame, visible_ok))
 {
 >>>>>>> origin/master
+=======
+*/
+      (buffer, frame, visible_ok))
+{
+>>>>>>> master
 	/* This function can GC */
 	Lisp_Object tail, buf, notsogood, tem;
 	Lisp_Object alist;
@@ -1103,10 +1217,14 @@ Stop keeping undo information for BUFFER.
 Any undo records it already has are discarded.
 No argument or nil as argument means do this for the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	/* Allowing nil is an RMSism */
@@ -1119,10 +1237,14 @@ DEFUN("buffer-enable-undo", Fbuffer_enable_undo, 0, 1, "",	/*
 Start keeping undo information for BUFFER.
 No argument or nil as argument means do this for the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	/* Allowing nil is an RMSism */
@@ -1148,10 +1270,14 @@ when the hook functions are called.
 Any processes that have this buffer as the `process-buffer' are killed
 with `delete-process'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	/* This function can call lisp */
@@ -1378,10 +1504,14 @@ order for the selected frame.  The buffer order keeps track of recency
 of selection so that `other-buffer' will return a recently selected
 buffer.  See `other-buffer' for more information.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	REGISTER Lisp_Object lynk, prev;
@@ -1442,10 +1572,14 @@ Set an appropriate major mode for BUFFER, according to `default-major-mode'.
 Use this function before selecting the buffer, since it may need to inspect
 the current buffer's major mode.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	int speccount = specpdl_depth();
@@ -1480,10 +1614,14 @@ void switch_to_buffer(Lisp_Object bufname, Lisp_Object norecord)
 DEFUN("current-buffer", Fcurrent_buffer, 0, 0, 0,	/*
 Return the current buffer as a Lisp object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	Lisp_Object buffer;
@@ -1562,10 +1700,14 @@ This function does not display the buffer, so its effect ends
 when the current command terminates.
 Use `switch-to-buffer' or `pop-to-buffer' to switch buffers permanently.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	buffer = emacs_get_buffer(buffer, 0);
@@ -1590,6 +1732,7 @@ closed on both ends); otherwise, the range checked is (START, END)
 [START, END] are not checked.  See `extent-in-region-p' for a fuller
 discussion.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
       (buffer, start, end)) {
 =======
@@ -1597,6 +1740,11 @@ discussion.
       (buffer, start, end))
 {
 >>>>>>> origin/master
+=======
+*/
+      (buffer, start, end))
+{
+>>>>>>> master
 	struct buffer *b = decode_buffer(buffer, 0);
 	Bufpos s, e;
 
@@ -1643,6 +1791,7 @@ BUFFER when calling from minibuffer.
 If BEFORE is non-nil, it specifies a buffer before which BUFFER
 will be placed, instead of being placed at the end.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
       (buffer, before)) {
 =======
@@ -1650,6 +1799,11 @@ will be placed, instead of being placed at the end.
       (buffer, before))
 {
 >>>>>>> origin/master
+=======
+*/
+      (buffer, before))
+{
+>>>>>>> master
 	/* This function can GC */
 	struct buffer *buf = decode_buffer(buffer, 1);
 	/* If we're burying the current buffer, unshow it.  */
@@ -1680,10 +1834,14 @@ Any clipping restriction in effect (see `narrow-to-region') is removed,
 so the buffer is truly empty after this.
 BUFFER defaults to the current buffer if omitted.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	/* This function can GC */
@@ -1731,10 +1889,14 @@ a non-nil `permanent-local' property are not eliminated by this function.
 The first thing this function does is run
 the normal hook `change-major-mode-hook'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	/* This function can GC */
@@ -1808,10 +1970,14 @@ particular way of partitioning it into groups.  Within a slice, there
 is no overlap between the groups of memory, and each slice collectively
 represents all the memory concerned.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	struct buffer_stats stats;

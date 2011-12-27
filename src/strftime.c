@@ -185,7 +185,12 @@ static int add_num_time_t(char *string, int max, time_t num)
 
 	if (sizeof(num) > 16)
 		abort();
+<<<<<<< HEAD
 	sprintf(buf, "%lu", (unsigned long)num);
+=======
+	length = snprintf(buf, sizeof(buf), "%lu", (unsigned long)num);
+	assert(length >= 0 && length<sizeof(buf));
+>>>>>>> master
 	length = add_str(string, buf, max);
 	return length;
 }

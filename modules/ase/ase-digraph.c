@@ -39,10 +39,14 @@
 #include "config.h"
 #include "sxemacs.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "ent.h"
 =======
 #include "ent/ent.h"
 >>>>>>> origin/master
+=======
+#include "ent/ent.h"
+>>>>>>> master
 #include "ase-digraph.h"
 
 #ifdef ALL_DEBUG_FLAGS
@@ -105,7 +109,11 @@ _ase_digraph_prnt(ase_digraph_t a, Lisp_Object pcf)
 }
 
 static void
+<<<<<<< HEAD
 ase_digraph_prnt(Lisp_Object obj, Lisp_Object pcf, int UNUSED(foo))
+=======
+ase_digraph_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
+>>>>>>> master
 {
 	EMOD_ASE_DEBUG_DIGRAPH("h:0x%016lx@0x%016lx\n",
 			       (long unsigned int)(XASE_DIGRAPH(obj)),
@@ -116,7 +124,11 @@ ase_digraph_prnt(Lisp_Object obj, Lisp_Object pcf, int UNUSED(foo))
 }
 
 static void
+<<<<<<< HEAD
 ase_digraph_fini(Lisp_Object UNUSED(obj), int UNUSED(foo))
+=======
+ase_digraph_fini(Lisp_Object SXE_UNUSED(obj), int SXE_UNUSED(foo))
+>>>>>>> master
 {
 }
 
@@ -304,10 +316,14 @@ ase_digraph_has_edge_p(ase_digraph_t dg, Lisp_Object n1, Lisp_Object n2)
 DEFUN("ase-digraph", Fase_digraph, 0, 1, 0, /*
 Return an empty directed graph.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (options))
 {
 	return ase_make_digraph();
@@ -316,10 +332,14 @@ Return an empty directed graph.
 DEFUN("ase-digraph-add-node", Fase_digraph_add_node, 2, 2, 0, /*
 Add NODE to DIGRAPH.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (digraph, node))
 {
 	CHECK_ASE_DIGRAPH(digraph);
@@ -330,10 +350,14 @@ Add NODE to DIGRAPH.
 DEFUN("ase-digraph-add-edge", Fase_digraph_add_edge, 3, 3, 0, /*
 Add edge between NODE1 and NODE2 (in that direction) to DIGRAPH.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (digraph, node1, node2))
 {
 	ase_digraph_t dg = NULL;
@@ -352,10 +376,14 @@ Add edge between NODE1 and NODE2 (in that direction) to DIGRAPH.
 DEFUN("ase-digraph-remove-edge", Fase_digraph_remove_edge, 3, 3, 0, /*
 Remove edge NODE1->NODE2 from DIGRAPH.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (digraph, node1, node2))
 {
 	ase_digraph_t dg = NULL;
@@ -374,10 +402,14 @@ Remove edge NODE1->NODE2 from DIGRAPH.
 DEFUN("ase-digraph-has-edge-p", Fase_digraph_has_edge_p, 3, 3, 0, /*
 Return non-`nil' if an edge between NODE1 and NODE2 exists in DIGRAPH.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (digraph, node1, node2))
 {
 	CHECK_ASE_DIGRAPH(digraph);

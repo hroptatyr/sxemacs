@@ -23,7 +23,11 @@ AC_DEFUN([SXE_OPENSSL_VERSION], [dnl
 	allowed_versions="0.9.7[e-z] 0.9.8* 0.9.9* 1.0.0*"
 	OPENSSL_SANE_P=no
 	for ver in $allowed_versions; do
+<<<<<<< HEAD
 		if echo "$OPENSSL_VERSION" | grep -q "$ver"; then
+=======
+               if echo "$OPENSSL_VERSION" | ${GREP-grep} -q "$ver"; then
+>>>>>>> master
 			OPENSSL_SANE_P="yes"
 			break;
 		fi
@@ -38,8 +42,13 @@ AC_DEFUN([SXE_TRY_OPENSSL_HISTORICAL_PREFIX], [dnl
 
 	## now append these candidates to our c_switch and ld_switch
 	SXE_DUMP_LIBS
+<<<<<<< HEAD
 	SXE_APPEND([$OPENSSL_CPPFLAGS], [CPPFLAGS])
 	SXE_APPEND([$OPENSSL_LDFLAGS], [LDFLAGS])
+=======
+	SXE_APPEND_UNDUP([$OPENSSL_CPPFLAGS], [CPPFLAGS])
+	SXE_APPEND_UNDUP([$OPENSSL_LDFLAGS], [LDFLAGS])
+>>>>>>> master
 
 	## check again
 	SXE_CHECK_HEADERS([openssl/crypto.h])
@@ -68,8 +77,13 @@ AC_DEFUN([SXE_TRY_OPENSSL_BIN_PREFIX], [dnl
 
 	## now append these candidates to our c_switch and ld_switch
 	SXE_DUMP_LIBS
+<<<<<<< HEAD
 	SXE_APPEND([$OPENSSL_CPPFLAGS], [CPPFLAGS])
 	SXE_APPEND([$OPENSSL_LDFLAGS], [LDFLAGS])
+=======
+	SXE_APPEND_UNDUP([$OPENSSL_CPPFLAGS], [CPPFLAGS])
+	SXE_APPEND_UNDUP([$OPENSSL_LDFLAGS], [LDFLAGS])
+>>>>>>> master
 
 	## check again
 	SXE_CHECK_HEADERS([openssl/crypto.h])
@@ -125,12 +139,18 @@ AC_DEFUN([SXE_CHECK_OPENSSL_FEATURES], [dnl
 	AC_CHECK_LIB([crypto], [RSA_new], [openssl_no_rsa=no], [openssl_no_rsa=yes])
 	AC_CHECK_LIB([crypto], [DSA_new], [openssl_no_dsa=no], [openssl_no_dsa=yes])
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 	AC_CHECK_LIB([crypto], [ECDSA_SIG_new], [openssl_no_ecdsa=no],
 						[openssl_no_ecdsa=yes])
 	AC_CHECK_LIB([crypto], [ECDH_OpenSSL], [openssl_no_ecdh=no],
 						[openssl_no_ecdh=yes])
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 	AC_CHECK_LIB([crypto], [EC_KEY_new], [openssl_no_ec=no], [openssl_no_ec=yes])
 	AC_CHECK_LIB([crypto], [DH_new], [openssl_no_dh=no], [openssl_no_dh=yes])
 	if test "$openssl_no_rsa" = "yes"; then
@@ -140,14 +160,20 @@ AC_DEFUN([SXE_CHECK_OPENSSL_FEATURES], [dnl
 		AC_DEFINE([OPENSSL_NO_DSA], [1], [Description here!])
 	fi
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 	if test "$openssl_no_ecdsa" = "yes"; then
 		AC_DEFINE([OPENSSL_NO_ECDSA], [1], [Description here!])
 	fi
 	if test "$openssl_no_ecdh" = "yes"; then
 		AC_DEFINE([OPENSSL_NO_ECDH], [1], [Description here!])
 	fi
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 	if test "$openssl_no_ec" = "yes"; then
 		AC_DEFINE([OPENSSL_NO_EC], [1], [Description here!])
 	fi
@@ -199,6 +225,36 @@ AC_DEFUN([SXE_CHECK_OPENSSL_FUNCS], [dnl
 		SSL_get_peer_cert_chain SSL_pending SSL_get_certificate dnl
 		SSL_get_peer_certificate X509_verify_cert_error_string dnl
 		SSL_get_verify_result SSL_get_current_cipher SSL_CIPHER_get_bits])
+<<<<<<< HEAD
+=======
+	if test x"$ac_TLSv1_client_method" = xyes; then
+	        AC_DEFINE([HAVE_TLSV1_CLIENT_METHOD], 1, [TLSv1 client methods available])
+	fi
+	if test x"$ac_SSLv2_client_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV2_CLIENT_METHOD], 1, [SSLv2 client methods available])
+	fi
+	if test x"$ac_SSLv3_client_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV3_CLIENT_METHOD], 1, [SSLv3 client methods available])
+	fi
+	if test x"$ac_SSLv23_client_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV23_CLIENT_METHOD], 1, [SSLv23 client methods available])
+	fi
+	if test x"$ac_TLSv1_server_method" = xyes; then
+	        AC_DEFINE([HAVE_TLSV1_SERVER_METHOD], 1, [TLSv1 server methods available])
+	fi
+	if test x"$ac_SSLv2_server_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV2_SERVER_METHOD], 1, [SSLv2 server methods available])
+	fi
+	if test x"$ac_SSLv3_server_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV3_SERVER_METHOD], 1, [SSLv3 server methods available])
+	fi
+	if test x"$ac_SSLv23_server_method" = xyes; then
+	        AC_DEFINE([HAVE_SSLV23_SERVER_METHOD], 1, [SSLv23 server methods available])
+	fi
+	if test x"$ac_ssl_verify_cert_chain" = xyes; then
+	        AC_DEFINE([HAVE_SSL_VERIFY_CERT_CHAIN], 1, [ssl_verify_cert_chain available])
+	fi
+>>>>>>> master
 	SXE_RESTORE_LIBS
 ])dnl SXE_CHECK_OPENSSL_FUNCS
 

@@ -33,7 +33,11 @@ static ase_nullary_operation_f Qent_mpc_zero, Qent_mpc_one;
 
 
 static void
+<<<<<<< HEAD
 bigc_print (Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
+=======
+bigc_print (Lisp_Object obj, Lisp_Object printcharfun, int SXE_UNUSED(escapeflag))
+>>>>>>> master
 {
 	Bufbyte *fstr = bigc_to_string(XBIGC_DATA(obj), 10);
 	write_c_string((char*)fstr, printcharfun);
@@ -43,19 +47,31 @@ bigc_print (Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
 }
 
 static int
+<<<<<<< HEAD
 bigc_equal (Lisp_Object obj1, Lisp_Object obj2, int UNUSED(depth))
+=======
+bigc_equal (Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
+>>>>>>> master
 {
 	return bigc_eq(XBIGC_DATA(obj1), XBIGC_DATA(obj2));
 }
 
 static unsigned long
+<<<<<<< HEAD
 bigc_hash (Lisp_Object obj, int UNUSED(depth))
+=======
+bigc_hash (Lisp_Object obj, int SXE_UNUSED(depth))
+>>>>>>> master
 {
 	return bigc_hashcode(XBIGC_DATA(obj));
 }
 
 static Lisp_Object
+<<<<<<< HEAD
 bigc_mark (Lisp_Object UNUSED(obj))
+=======
+bigc_mark (Lisp_Object SXE_UNUSED(obj))
+>>>>>>> master
 {
 	return Qnil;
 }
@@ -76,6 +92,18 @@ static const struct lrecord_description bigc_description[] = {
 	{ XD_END }
 };
 
+<<<<<<< HEAD
+=======
+#if ! HAVE_MPC_SET_UI_FR
+#if defined(MPC_SET_X_Y)
+int mpc_set_ui_fr (mpc_t rop, unsigned long int re, mpfr_t im, mpc_rnd_t rnd)
+              MPC_SET_X_Y (ui, fr, rop, re, im, rnd);
+#else
+#error Cannot derived mpc_set_ui_fr without MPC_SET_X_Y!
+#endif
+#endif
+
+>>>>>>> master
 DEFINE_BASIC_LRECORD_IMPLEMENTATION("bigc", bigc,
 				    bigc_mark, bigc_print, bigc_finalise,
 				    bigc_equal, bigc_hash,
@@ -301,7 +329,11 @@ ent_mpc_onep(Lisp_Object l)
 }
 
 static int
+<<<<<<< HEAD
 ent_mpc_unitp(Lisp_Object UNUSED(unused))
+=======
+ent_mpc_unitp(Lisp_Object SXE_UNUSED(unused))
+>>>>>>> master
 {
 	return 1;
 }
@@ -600,7 +632,11 @@ ent_inv_BIGC_T(Lisp_Object r)
 }
 
 static Lisp_Object
+<<<<<<< HEAD
 ent_rem_BIGC_T(Lisp_Object UNUSED(unused), Lisp_Object r)
+=======
+ent_rem_BIGC_T(Lisp_Object SXE_UNUSED(unused), Lisp_Object r)
+>>>>>>> master
 {
 	return Qent_mpc_zero;
 }

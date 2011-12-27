@@ -302,11 +302,16 @@ which more-or-less shadow %s's corresponding tables."
 		    ", as the final step\nduring initialization.")))
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     (unless (string-match #r"\\[{[]" docstring)
 =======
     (unless (or (string-match (regexp-quote "\\{") docstring)
                 (string-match (regexp-quote "\\[") docstring))
 >>>>>>> origin/master
+=======
+    (unless (or (string-match (regexp-quote "\\{") docstring)
+                (string-match (regexp-quote "\\[") docstring))
+>>>>>>> master
       ;; And don't forget to put the mode's keymap.
       (setq docstring (concat docstring "\n\n\\{" (symbol-name map) "}")))
 

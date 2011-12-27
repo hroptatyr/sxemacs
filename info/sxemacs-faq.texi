@@ -317,7 +317,10 @@ Other Mail & News:
 
 Sparcworks, EOS, and WorkShop:
 * Q4.4.1::      What is SPARCworks, EOS, and WorkShop
+<<<<<<< HEAD
 * Q4.4.2::      How do I start the Sun Workshop support in SXEmacs?
+=======
+>>>>>>> master
 
 Energize:
 * Q4.5.1::      What is/was Energize?
@@ -588,9 +591,12 @@ Packages at all.
 Marginal annotations.
 
 @item
+<<<<<<< HEAD
 ToolTalk support.
 
 @item
+=======
+>>>>>>> master
 XEmacs can be used as an Xt widget, and can be embedded within another
 application.
 
@@ -4072,7 +4078,10 @@ Other Mail & News:
 
 Sparcworks, EOS, and WorkShop:
 * Q4.4.1::      What is SPARCworks, EOS, and WorkShop
+<<<<<<< HEAD
 * Q4.4.2::      How do I start the Sun Workshop support in SXEmacs?
+=======
+>>>>>>> master
 
 Energize:
 * Q4.5.1::      What is/was Energize?
@@ -4587,6 +4596,7 @@ called Sun WorkShop.  For more details, check out
 @end quotation
 
 
+<<<<<<< HEAD
 @node Q4.4.2
 @unnumberedsec Q4.4.2: How do I start the Sun Workshop support in SXEmacs?
 
@@ -4608,6 +4618,8 @@ SXEmacs and put the following in one of your startup files
 @end lisp
 
 
+=======
+>>>>>>> master
 @node Q4.5.1
 @unnumberedsec 4.5: Energize
 @unnumberedsec Q4.5.1: What is/was Energize?

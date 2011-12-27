@@ -68,7 +68,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 extern Lisp_Object Qfloat;
 
 extern void print_float(Lisp_Object, Lisp_Object, int);
+<<<<<<< HEAD
 extern void float_to_string(char*, fpfloat);
+=======
+extern void float_to_string(char*, fpfloat, int);
+>>>>>>> master
 
 /* Note: the 'unused_next_' field exists only to ensure that the
    `next' pointer fits within the structure, for the purposes of the

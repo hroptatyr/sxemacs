@@ -80,6 +80,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../src/regex.h"
 #endif
 
+<<<<<<< HEAD
+=======
+#include <assert.h>
+
+>>>>>>> master
 extern char *optarg;
 extern int optind, opterr;
 
@@ -416,16 +421,27 @@ int main(int argc, char *argv[])
 
 		{
 			char buf[1024];
+<<<<<<< HEAD
 
 			while (1) {
 				nread = read(indesc, buf, sizeof buf);
 				if (nread != write(outdesc, buf, nread)) {
+=======
+			while (1) {
+				nread = read(indesc, buf, sizeof buf);
+				if (nread < 0 ||  
+				    nread != write(outdesc, buf, nread)) {
+>>>>>>> master
 					int saved_errno = errno;
 					unlink(outname);
 					errno = saved_errno;
 					pfatal_with_name(outname);
 				}
+<<<<<<< HEAD
 				if (nread < (int)sizeof buf)
+=======
+				if (nread < (int)sizeof(buf))
+>>>>>>> master
 					break;
 			}
 		}
@@ -446,7 +462,12 @@ int main(int argc, char *argv[])
 		case FLOCKING:
 		case LOCKING:
 #ifdef HAVE_FTRUNCATE
+<<<<<<< HEAD
 			ftruncate(indesc, 0L);
+=======
+			if(ftruncate(indesc, 0L)!=0)
+				pfatal_and_delete(inname);
+>>>>>>> master
 #else
 			close(open(inname, O_CREAT | O_TRUNC | O_RDWR, 0666));
 #endif
@@ -593,10 +614,19 @@ static void lock_dot(char *filename)
 #endif
 
 		if (desc < 0) {
+<<<<<<< HEAD
 			char *message = (char *)xmalloc(strlen(tempname) + 50);
 			sprintf(message,
 				"%s--see source file lib-src/movemail.c",
 				tempname);
+=======
+			int msz = strlen(tempname) + 50;
+			char *message = (char *)xmalloc(msz);
+			int sz = snprintf(message, msz,
+					  "%s--see source file lib-src/movemail.c",
+					  tempname);
+			assert(sz>=0 && sz < msz);
+>>>>>>> master
 			pfatal_with_name(message);
 		}
 		close(desc);
@@ -671,10 +701,17 @@ static char *concat(char *s1, char *s2, char *s3)
 	int len1 = strlen(s1), len2 = strlen(s2), len3 = strlen(s3);
 	char *result = (char *)xmalloc(len1 + len2 + len3 + 1);
 
+<<<<<<< HEAD
 	strcpy(result, s1);
 	strcpy(result + len1, s2);
 	strcpy(result + len1 + len2, s3);
 	*(result + len1 + len2 + len3) = 0;
+=======
+	strncpy(result, s1, len1+1);
+	strncpy(result + len1, s2, len2+1);
+	strncpy(result + len1 + len2, s3, len3+1);
+	*(result + len1 + len2 + len3) = '\0';
+>>>>>>> master
 
 	return result;
 }

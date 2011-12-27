@@ -471,11 +471,16 @@ int ase_optable_index(Lisp_Object arg)
 	case Lisp_Type_Record: {
 		enum lrecord_type type =
 			XRECORD_LHEADER_IMPLEMENTATION(arg)->lrecord_type_index;
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> master
 		switch ((unsigned int)type) {
 		case lrecord_type_marker:
 			return INT_T;
 		case lrecord_type_dynacat:
+<<<<<<< HEAD
 			if (SYMBOLP(XDYNACAT_TYPE(arg))) {
 				/* must be an dynacat */
 				/* now we've got two options, either compute a
@@ -487,6 +492,16 @@ int ase_optable_index(Lisp_Object arg)
 					XDYNACAT_TYPE(arg));
 			}
 			break;
+=======
+			assert(SYMBOLP(XDYNACAT_TYPE(arg)));
+			/* must be an dynacat */
+			/* now we've got two options, either compute a
+			 * hash-value from the symbol's address
+			 * or store a cookie in the plist of the symbol
+			 * for the moment, we prefer the latter option
+			 */
+			return ase_optable_index_typesym(XDYNACAT_TYPE(arg));
+>>>>>>> master
 		default:
 			return type;
 		}
@@ -494,17 +509,26 @@ int ase_optable_index(Lisp_Object arg)
 	default:
 		return INT_T;
 	}
+<<<<<<< HEAD
 	return -1;
+=======
+	return -1; /* Should not reach here */
+>>>>>>> master
 }
 
 int
 ase_optable_index_typesym(Lisp_Object typesym)
 {
 	Lisp_Object idx = Fget(typesym, Qoptable_index, Qnil);
+<<<<<<< HEAD
 	if (INTEGERP(idx))
 		return XINT(idx);
 	else
 		return -1;
+=======
+	assert(INTEGERP(idx));
+	return XINT(idx);
+>>>>>>> master
 }
 
 /* categorial subtleties */

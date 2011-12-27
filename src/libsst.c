@@ -206,7 +206,12 @@ int fd, value;
 
 	if ((value < -10) || (value > 18)) {
 		char buf[255];
+<<<<<<< HEAD
 		sprintf(buf, "sst_set_ger: GER %d out of range", value);
+=======
+		int sz = snprintf(buf, sizeof(buf), "sst_set_ger: GER %d out of range", value);
+		assert(sz >= 0 && sz < sizeof(buf));
+>>>>>>> master
 		warn(buf);
 		return;
 	}
@@ -237,7 +242,12 @@ int fd, value;
 
 	if ((value < -18) || (value > 12)) {
 		char buf[255];
+<<<<<<< HEAD
 		sprintf(buf, "sst_set_gr: GR %d out of range", value);
+=======
+		int sz = sprintf(buf, sizeof(buf), "sst_set_gr: GR %d out of range", value);
+		assert(sz >= 0 && sz < sizeof(buf));
+>>>>>>> master
 		warn(buf);
 		return;
 	}
@@ -267,7 +277,12 @@ int fd, value;
 	char buf[255];
 
 	if ((value < -18) || (value > 12)) {
+<<<<<<< HEAD
 		sprintf(buf, "sst_set_gx: GX %d out of range", value);
+=======
+		int sz = snprintf(buf, sizeof(buf), "sst_set_gx: GX %d out of range", value);
+		assert(sz >= 0 && sz < sizeof(buf));
+>>>>>>> master
 		warn(buf);
 		return;
 	}
@@ -306,7 +321,13 @@ int fd, dhz1, dhz2, thz, rhz, usec;
 	else {
 		dval1 = (dhz1 * 128 + 63) / 1000;
 		if ((dval1 < 1) || (dval1 > 255)) {
+<<<<<<< HEAD
 			sprintf(buf, "sst_tones: dhz1 %d out of range", dhz1);
+=======
+			int sz = snprintf(buf, sizeof(buf), 
+					  "sst_tones: dhz1 %d out of range", dhz1);
+			assert(sz >= 0 && sz < sizeof(buf));
+>>>>>>> master
 			warn(buf);
 			return;
 		}
@@ -317,7 +338,13 @@ int fd, dhz1, dhz2, thz, rhz, usec;
 	else {
 		dval2 = (dhz2 * 128 + 63) / 1000;
 		if ((dval2 < 1) || (dval2 > 255)) {
+<<<<<<< HEAD
 			sprintf(buf, "sst_tones: dhz2 %d out of range", dhz2);
+=======
+			int sz = snprintf(buf, sizeof(buf),
+					  "sst_tones: dhz2 %d out of range", dhz2);
+			assert(sz >= 0 && sz < sizeof(buf));
+>>>>>>> master
 			warn(buf);
 			return;
 		}
@@ -328,7 +355,13 @@ int fd, dhz1, dhz2, thz, rhz, usec;
 	else {
 		tval = (thz * 128 + 63) / 2000;
 		if ((tval < 1) || (tval > 255)) {
+<<<<<<< HEAD
 			sprintf(buf, "sst_tones: thz %d out of range", thz);
+=======
+			int sz = snprintf(buf, sizeof(buf),
+					  "sst_tones: thz %d out of range", thz);
+			assert(sz >= 0 && sz < sizeof(buf));
+>>>>>>> master
 			warn(buf);
 			return;
 		}
@@ -339,24 +372,44 @@ int fd, dhz1, dhz2, thz, rhz, usec;
 	else {
 		rval = (rhz * 128 + 63) / 2000;
 		if ((rval < 1) || (rval > 255)) {
+<<<<<<< HEAD
 			sprintf(buf, "sst_tones: rhz %d out of range", dhz2);
+=======
+			int sz = snprintf(buf, sizeof(buf),
+					  "sst_tones: rhz %d out of range", dhz2);
+			assert(sz >= 0 && sz < sizeof(buf));
+>>>>>>> master
 			warn(buf);
 			return;
 		}
 	}
 
 	if ((dval1 != 0 || dval2 != 0) && (tval != 0 || rval != 0)) {
+<<<<<<< HEAD
 		sprintf(buf,
 			"sst_tones: cannot use DTMF and TONE or RINGER at the same time",
 			dhz2);
+=======
+		int sz = snprintf(buf, sizeof(buf),
+				  "sst_tones: cannot use DTMF and TONE or RINGER "
+				  "at the same time",  dhz2);
+		assert(sz >= 0 && sz < sizeof(buf));
+>>>>>>> master
 		warn(buf);
 		return;
 	}
 
 	if (tval != 0 && rval != 0) {
+<<<<<<< HEAD
 		sprintf(buf,
 			"sst_tones: cannot use TONE and RINGER at the same time",
 			dhz2);
+=======
+		int sz = sprintf(buf, sizeof(buf),
+				 "sst_tones: cannot use TONE and RINGER at the same time",
+				 dhz2);
+		assert(sz >= 0 && sz < sizeof(buf));
+>>>>>>> master
 		warn(buf);
 		return;
 	}
@@ -482,9 +535,16 @@ char *dial;
 		default:
 			{
 				char buf[255];
+<<<<<<< HEAD
 				sprintf(buf,
 					"sst_dtmf: unknown dialing code '%c'",
 					*cp);
+=======
+				int sz = snprintf(buf, sizeof(buf),
+						  "sst_dtmf: unknown dialing code '%c'",
+						  *cp);
+				assert(sz >= 0 && sz < sizeof(buf));
+>>>>>>> master
 				warn(buf);
 			}
 		}

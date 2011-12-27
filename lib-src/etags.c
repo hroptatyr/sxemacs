@@ -1328,6 +1328,11 @@ char *argv[];
 	if (update)
 	{
 		char cmd[BUFSIZ];
+<<<<<<< HEAD
+=======
+		int len;
+
+>>>>>>> master
 		for (i = 0; i < current_arg; ++i)
 		{
 			switch (argbuffer[i].arg_type)
@@ -1338,9 +1343,17 @@ char *argv[];
 			default:
 				continue;		/* the for loop */
 			}
+<<<<<<< HEAD
 			sprintf (cmd,
 				 "mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
 				 tagfile, argbuffer[i].what, tagfile);
+=======
+			len = snprintf (cmd, sizeof(cmd),
+					"mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
+					tagfile, argbuffer[i].what, tagfile);
+			if (len >= 0 && len < sizeof(cmd))
+				fatal ("failed to build shell command line", (char *)NULL);
+>>>>>>> master
 			if (system (cmd) != EXIT_SUCCESS)
 				fatal ("failed to execute shell command", (char *)NULL);
 		}
@@ -1363,7 +1376,17 @@ char *argv[];
 			/* Maybe these should be used:
 			   setenv ("LC_COLLATE", "C", 1);
 			   setenv ("LC_ALL", "C", 1); */
+<<<<<<< HEAD
 			sprintf (cmd, "sort -u -o %.*s %.*s", BUFSIZ, tagfile, BUFSIZ, tagfile);
+=======
+			int len = snprintf (cmd, sizeof(cmd),
+					    "sort -u -o %.*s %.*s", 
+					    BUFSIZ, tagfile, 
+					    BUFSIZ, tagfile);
+			if (len >= 0 && len < sizeof(cmd))
+				fatal("failed to build sort shell command line", 
+				      (char *)NULL);
+>>>>>>> master
 			exit (system (cmd));
 		}
 	return EXIT_SUCCESS;
@@ -2664,8 +2687,13 @@ char *qualifier;
 	else
 	{
 		len = strlen (cstack.cname[0]);
+<<<<<<< HEAD
 		linebuffer_setlen (cn, len);
 		strcpy (cn->buffer, cstack.cname[0]);
+=======
+		linebuffer_setlen (cn, len+1);
+		strncpy (cn->buffer, cstack.cname[0],len+1);
+>>>>>>> master
 	}
 	for (i = 1; i < cstack.nl; i++)
 	{
@@ -4830,7 +4858,11 @@ FILE *inf;
 
 			/* Save all values for later tagging. */
 			linebuffer_setlen (&tline, lb.len);
+<<<<<<< HEAD
 			strcpy (tline.buffer, lb.buffer);
+=======
+			strncpy(tline.buffer, lb.buffer, lb.len-1);
+>>>>>>> master
 			save_lineno = lineno;
 			save_lcno = linecharno;
 			name = tline.buffer + (dbp - lb.buffer);
@@ -6351,7 +6383,11 @@ FILE *stream;
 	{
 		int match;
 		regexp *rp;
+<<<<<<< HEAD
 		char *name;
+=======
+		char *name = NULL;
+>>>>>>> master
 
 		/* Match against relevant regexps. */
 		if (lbp->len > 0)
@@ -6389,17 +6425,33 @@ FILE *stream;
 					break;
 				default:
 					/* Match occurred.  Construct a tag. */
+<<<<<<< HEAD
 					name = rp->name;
 					if (name[0] == '\0')
 						name = NULL;
 					else /* make a named tag */
+=======
+					if (rp->name[0] != '\0')
+						/* make a named tag */
+>>>>>>> master
 						name = substitute (lbp->buffer, rp->name, &rp->regs);
 					if (rp->force_explicit_name)
 						/* Force explicit tag name, if a name is there. */
 						pfnote (name, TRUE, lbp->buffer, match, lineno, linecharno);
+<<<<<<< HEAD
 					else
 						make_tag (name, strlen (name), TRUE,
 							  lbp->buffer, match, lineno, linecharno);
+=======
+					else if (name) {
+						make_tag (name, strlen (name), TRUE,
+							  lbp->buffer, match, lineno, linecharno);
+						free(name);
+						name = NULL;
+					} else 
+						make_tag (rp->name, strlen (rp->name), TRUE,
+							  lbp->buffer, match, lineno, linecharno);
+>>>>>>> master
 					break;
 				}
 			}
@@ -6587,9 +6639,15 @@ char *s1, *s2, *s3;
 	int len1 = strlen (s1), len2 = strlen (s2), len3 = strlen (s3);
 	char *result = xnew (len1 + len2 + len3 + 1, char);
 
+<<<<<<< HEAD
 	strcpy (result, s1);
 	strcpy (result + len1, s2);
 	strcpy (result + len1 + len2, s3);
+=======
+	strncpy(result, s1, len1+1);
+	strncpy(result + len1, s2, len2+1);
+	strncpy(result + len1 + len2, s3, len3+1);
+>>>>>>> master
 	result[len1 + len2 + len3] = '\0';
 
 	return result;
@@ -6639,6 +6697,10 @@ char *file, *dir;
 {
 	char *fp, *dp, *afn, *res;
 	int i;
+<<<<<<< HEAD
+=======
+	ssize_t res_left;
+>>>>>>> master
 
 	/* Find the common root of file and dir (with a trailing slash). */
 	afn = absolute_filename (file, cwd);
@@ -6650,11 +6712,16 @@ char *file, *dir;
 	do				/* look at the equal chars until '/' */
 		fp--, dp--;
 	while (*fp != '/');
+<<<<<<< HEAD
+=======
+	fp ++; /* Advance past the '/' */
+>>>>>>> master
 
 	/* Build a sequence of "../" strings for the resulting relative file name. */
 	i = 0;
 	while ((dp = etags_strchr (dp + 1, '/')) != NULL)
 		i += 1;
+<<<<<<< HEAD
 	res = xnew (3*i + strlen (fp + 1) + 1, char);
 	res[0] = '\0';
 	while (i-- > 0)
@@ -6663,6 +6730,17 @@ char *file, *dir;
 	/* Add the file name relative to the common root of file and dir. */
 	strcat (res, fp + 1);
 	free (afn);
+=======
+	res_left = 3 * i + strlen(fp);
+	res = xnew( res_left + 1, char);
+	res[0] = '\0';
+	for ( ; i-- > 0 ; res_left -= 4 )
+		strncat(res, "../", res_left );
+
+	/* Add the file name relative to the common root of file and dir. */
+	strncat(res, fp, res_left);
+	free(afn);
+>>>>>>> master
 
 	return res;
 }

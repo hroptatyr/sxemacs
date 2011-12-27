@@ -45,9 +45,12 @@ gtk_tests = gtk/event-stream-tests.el gtk/gnome-test.el			\
 	gtk/gtk-test.glade gtk/statusbar-test.el gtk/toolbar-test.el	\
 	gtk/xemacs-toolbar.el gtk/UNIMPLEMENTED
 mule_tests = mule/match.el
+<<<<<<< HEAD
 tooltalk_tests = tooltalk/beeps.el tooltalk/emacs-eval.c		\
 	tooltalk/load-file.c tooltalk/make-client-frame.c		\
 	tooltalk/Makefile tooltalk/simple.el
+=======
+>>>>>>> master
 DLL_tests = DLL/dltest.c
 automated_tests = automated/ase-cartesian-tests.el                      \
 	automated/ase-digraph-tests.el automated/ase-heap-tests.el      \
@@ -70,7 +73,11 @@ automated_tests = automated/ase-cartesian-tests.el                      \
 	automated/weak-tests.el automated/README
 
 EXTRA_DIST = $(misc_tests) $(gtk_tests) $(mule_tests)		\
+<<<<<<< HEAD
 	$(tooltalk_tests) $(DLL_tests) $(automated_tests)
+=======
+	$(DLL_tests) $(automated_tests)
+>>>>>>> master
 
 CLEANFILES = stage1 stage2
 

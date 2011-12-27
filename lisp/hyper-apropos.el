@@ -762,16 +762,22 @@ See also `hyper-apropos' and `hyper-describe-function'."
 			(princ (or (compiled-function-arglist newsym)
 				   "()")))
 <<<<<<< HEAD
+<<<<<<< HEAD
 		       ((and (eq symtype 'subr)
 			     (string-match
 			      "[\n\t ]*\narguments: ?\\((.*)\\)\n?\\'"
 			      doc))
 =======
+=======
+>>>>>>> master
 		       ((and (or (eq symtype 'subr) (eq symtype 'autoload))
 			     (string-match
                               "[\n\t ]*\narguments: ?(\\([^)]*\\))\n?\\'"
  			      doc))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 			(insert (substring doc
 					   (match-beginning 1)
 					   (match-end 1)))

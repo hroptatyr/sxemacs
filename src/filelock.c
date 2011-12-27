@@ -122,6 +122,10 @@ static int lock_file_1(char *lfname, int force)
 	char *lock_info_str;
 	char *host_name;
 	char *user_name = user_login_name(NULL);
+<<<<<<< HEAD
+=======
+	int sz, maxlen;
+>>>>>>> master
 
 	if (user_name == NULL)
 		user_name = "";
@@ -131,11 +135,21 @@ static int lock_file_1(char *lfname, int force)
 	else
 		host_name = "";
 
+<<<<<<< HEAD
 	lock_info_str = (char *)alloca(strlen(user_name) + strlen(host_name)
 				       + LOCK_PID_MAX + 5);
 
 	sprintf(lock_info_str, "%s@%s.%lu", user_name, host_name,
 		(unsigned long)getpid());
+=======
+	maxlen = strlen(user_name) + strlen(host_name)
+		+ LOCK_PID_MAX + 5;
+	lock_info_str = (char *)alloca(maxlen);
+
+	sz = snprintf(lock_info_str, maxlen, "%s@%s.%lu", user_name, host_name,
+		      (unsigned long)getpid());
+	assert(sz>=0 && sz < maxlen);
+>>>>>>> master
 
 	err = symlink(lock_info_str, lfname);
 	if (err != 0 && errno == EEXIST && force) {
@@ -294,6 +308,10 @@ void lock_file(Lisp_Object fn)
 	struct gcpro gcpro1, gcpro2, gcpro3;
 	Lisp_Object old_current_buffer;
 	Lisp_Object subject_buf;
+<<<<<<< HEAD
+=======
+	int sz, max_sz;
+>>>>>>> master
 
 	if (inhibit_clash_detection)
 		return;
@@ -327,10 +345,20 @@ void lock_file(Lisp_Object fn)
 		goto done;
 
 	/* Else consider breaking the lock */
+<<<<<<< HEAD
 	locker = (char *)alloca(strlen(lock_info.user) + strlen(lock_info.host)
 				+ LOCK_PID_MAX + 9);
 	sprintf(locker, "%s@%s (pid %lu)", lock_info.user, lock_info.host,
 		lock_info.pid);
+=======
+	max_sz = strlen(lock_info.user) + strlen(lock_info.host)
+		+ LOCK_PID_MAX + 9;
+	locker = (char *)alloca(max_sz);
+	sz = snprintf(locker, max_sz, "%s@%s (pid %lu)", 
+		      lock_info.user, lock_info.host,
+		      lock_info.pid);
+	assert(sz>=0 && sz < max_sz);
+>>>>>>> master
 	FREE_LOCK_INFO(lock_info);
 
 	attack = call2_in_buffer(BUFFERP(subject_buf) ? XBUFFER(subject_buf) :
@@ -382,10 +410,14 @@ Lock FILE, if current buffer is modified.
 FILE defaults to current buffer's visited file,
 or else nothing is done if current buffer isn't visiting a file.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (file))
 {
 	if (NILP(file))
@@ -401,10 +433,14 @@ DEFUN("unlock-buffer", Funlock_buffer, 0, 0, 0,	/*
 Unlock the file visited in the current buffer,
 if it should normally be locked.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	/* This function can GC */
@@ -435,10 +471,14 @@ DEFUN("file-locked-p", Ffile_locked_p, 0, 1, 0,	/*
 Return nil if the FILENAME is not locked,
 t if it is locked by you, else a string of the name of the locker.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (filename))
 {
 	Lisp_Object ret;

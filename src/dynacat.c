@@ -134,10 +134,14 @@ dynacat_remprop(Lisp_Object obj, Lisp_Object property)
 DEFUN("dynacat-plist", Fdynacat_plist, 1, 1, 0, /*
 Return the property list of DYNACAT.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (dynacat))
 {
         CHECK_DYNACAT(dynacat);
@@ -194,10 +198,14 @@ make_dynacat(void *ptr)
 DEFUN("dynacatp", Fdynacatp, 1, 1, 0, /*
 Return non-nil if OBJECT is an opaque emodule pointer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 				      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	if (DYNACATP(object))

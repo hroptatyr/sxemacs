@@ -29,9 +29,13 @@ builddir = @builddir@
 srcdir = @srcdir@
 top_builddir = @top_builddir@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 top_build_prefix = $(top_builddir)/
 >>>>>>> origin/master
+=======
+top_build_prefix = $(top_builddir)/
+>>>>>>> master
 top_srcdir = @top_srcdir@
 abs_builddir = @abs_builddir@
 abs_top_builddir = @abs_top_builddir@

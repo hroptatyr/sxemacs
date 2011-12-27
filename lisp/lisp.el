@@ -153,6 +153,7 @@ Negative arg -N means kill N sexps after the cursor."
   (interactive "p")
   (kill-sexp (- (or arg 1))))
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 (defun beginning-of-defun (&optional arg)
   "Move backward to the beginning of a defun.
@@ -171,6 +172,8 @@ open-parenthesis, and point ends up at the beginning of the line."
 
 (defun beginning-of-defun-raw (&optional arg)
 =======
+=======
+>>>>>>> master
 
 ;; XEmacs change (optional buffer parameter)
 (defun buffer-end (arg &optional buffer)
@@ -219,11 +222,15 @@ beginning of the line containing the beginning of defun."
        (progn (beginning-of-line) t)))
 
 (defun beginning-of-defun-raw (&optional count)
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
   "Move point to the character that starts a defun.
 This is identical to beginning-of-defun, except that point does not move
 to the beginning of the line when `defun-prompt-regexp' is non-nil."
   (interactive "p")
+<<<<<<< HEAD
 <<<<<<< HEAD
   (and arg (< arg 0) (not (eobp)) (forward-char 1))
   (and (re-search-backward (if defun-prompt-regexp
@@ -251,6 +258,8 @@ the open-parenthesis that starts a defun; see `beginning-of-defun'."
   (let ((first t))
     (while (and (> arg 0) (< (point) (point-max)))
 =======
+=======
+>>>>>>> master
   (unless count (setq count 1))
   (if beginning-of-defun-function
       (funcall beginning-of-defun-function count)
@@ -283,7 +292,10 @@ If COUNT < 1, nothing is done.  \(This is a bug.)"
 	    (funcall end-of-defun-function)))
   (let ((first t))
     (while (and (> count 0) (< (point) (point-max)))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
       (let ((pos (point))) ; XEmacs -- remove unused npos.
 	(while (progn
 		(if (and first
@@ -300,12 +312,17 @@ If COUNT < 1, nothing is done.  \(This is a bug.)"
 		    (forward-line 1))
 		(<= (point) pos))))
 <<<<<<< HEAD
+<<<<<<< HEAD
       (setq arg (1- arg)))
     (while (< arg 0)
 =======
       (setq count (1- count)))
     (while (< count 0)
 >>>>>>> origin/master
+=======
+      (setq count (1- count)))
+    (while (< count 0)
+>>>>>>> master
       (let ((pos (point)))
 	(beginning-of-defun-raw 1)
 	(forward-sexp 1)
@@ -319,10 +336,14 @@ If COUNT < 1, nothing is done.  \(This is a bug.)"
 		      (forward-line 1)))
 	      (goto-char (point-min)))))
 <<<<<<< HEAD
+<<<<<<< HEAD
       (setq arg (1+ arg)))))
 =======
       (setq count (1+ count))))))
 >>>>>>> origin/master
+=======
+      (setq count (1+ count))))))
+>>>>>>> master
 
 (defun mark-defun ()
   "Put mark at end of this defun, point at beginning.

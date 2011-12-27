@@ -244,8 +244,13 @@ XFontStruct *font_info;
 	XSetDashes(display, *gc, dash_offset, dash_list, list_length);
 }
 
+<<<<<<< HEAD
 load_font(font_info)
 XFontStruct **font_info;
+=======
+void
+load_font(XFontStruct **font_info)
+>>>>>>> master
 {
 	char *fontname = "9x15";
 
@@ -256,11 +261,16 @@ XFontStruct **font_info;
 	}
 }
 
+<<<<<<< HEAD
 draw_text(win, gc, font_info, win_width, win_height)
 Window win;
 GC gc;
 XFontStruct *font_info;
 unsigned int win_width, win_height;
+=======
+void
+draw_text(Window win, GC gc, XFontStruct *font_info, unsigned int win_width, unsigned int win_height)
+>>>>>>> master
 {
 	char *string1 = "Hi! I'm a window, who are you?";
 	char *string2 = "To terminate program; Press any key";
@@ -271,6 +281,10 @@ unsigned int win_width, win_height;
 	char cd_height[50], cd_width[50], cd_depth[50];
 	int font_height;
 	int initial_y_offset, x_offset;
+<<<<<<< HEAD
+=======
+	int sz;
+>>>>>>> master
 
 	/* need length for both XTextWidth and XDrawString */
 	len1 = strlen(string1);
@@ -293,12 +307,26 @@ unsigned int win_width, win_height;
 		    (int)(win_height - font_height), string3, len3);
 
 	/* copy numbers into string variables */
+<<<<<<< HEAD
 	(void)sprintf(cd_height, " Height - %d pixels",
 		      DisplayHeight(display, screen_num));
 	(void)sprintf(cd_width, " Width  - %d pixels",
 		      DisplayWidth(display, screen_num));
 	(void)sprintf(cd_depth, " Depth  - %d plane(s)",
 		      DefaultDepth(display, screen_num));
+=======
+	sz = snprintf(cd_height, sizeof(cd_height), " Height - %d pixels",
+		      DisplayHeight(display, screen_num));
+	assert(sz>=0 && sz<sizeof(cd_height));
+
+	sz = snprintf(cd_width, sizeof(cd_width), " Width  - %d pixels",
+		      DisplayWidth(display, screen_num));
+	assert(sz>=0 && sz<sizeof(cd_width));
+
+	sz = snprintf(cd_depth, sizeof(cd_depth), " Depth  - %d plane(s)",
+		      DefaultDepth(display, screen_num));
+	assert(sz>=0 && sz<sizeof(cd_depth));
+>>>>>>> master
 
 	/* reuse these for same purpose */
 	len4 = strlen(string4);

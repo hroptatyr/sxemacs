@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  /* Lisp functions for making directory listings.
+=======
+/* Lisp functions for making directory listings.
+>>>>>>> master
     Copyright (C) 1985, 1986, 1992, 1993, 1994 Free Software Foundation, Inc.
 
 This file is part of SXEmacs
@@ -39,10 +43,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef FILE_CODING
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "file-coding.h"
 =======
 #include "mule/file-coding.h"
 >>>>>>> origin/master
+=======
+#include "mule/file-coding.h"
+>>>>>>> master
 #endif
 
 #define USE_D_TYPE 1
@@ -134,8 +142,15 @@ dired_realpath(const char *file)
 {
 	char *result = xmalloc_atomic(4096); 	
 
+<<<<<<< HEAD
 	realpath(file, result);
 
+=======
+	if ( realpath(file, result) == NULL ) {
+		xfree(result);
+		result = NULL;
+	}
+>>>>>>> master
 	return result;
 }
 #endif
@@ -251,10 +266,18 @@ dfr_inner(dirent_t *res,
 		 * store it to our companion bloom filter
 		 */
 		canon_name = CANONICALISE_FILENAME(statnam);
+<<<<<<< HEAD
 
 		/* now, recycle full name */
 		fullname = make_ext_string(
 			canon_name, strlen(canon_name), Qfile_name);
+=======
+		if (canon_name) {
+			/* now, recycle full name */
+			fullname = make_ext_string(
+				canon_name, strlen(canon_name), Qfile_name);
+		}
+>>>>>>> master
 		fullname = fname_as_directory(fullname);
 
 		/* now stat statnam */
@@ -286,11 +309,21 @@ dfr_inner(dirent_t *res,
 		 * check against the bloom filter.
 		 */
 		canon_name = CANONICALISE_FILENAME(statnam);
+<<<<<<< HEAD
 
 		/* now, recycle full name */
 		fullname = make_ext_string(
 			canon_name, strlen(canon_name),
 			Qfile_name);
+=======
+		
+		if (canon_name) {
+			/* now, recycle full name */
+			fullname = make_ext_string(
+				canon_name, strlen(canon_name),
+				Qfile_name);
+		}
+>>>>>>> master
 		fullname = fname_as_directory(fullname);
 
 		/* now stat statnam */
@@ -360,7 +393,11 @@ dfr_inner(dirent_t *res,
 	}
 
 #if USE_MATCH_ARG
+<<<<<<< HEAD
 	if (!NILP(match) && !pathname_matches_p(name, match, bufp)) {
+=======
+	if (!NILP(match) && bufp && !pathname_matches_p(name, match, bufp)) {
+>>>>>>> master
 		result_p = 0;
 	}
 #endif
@@ -640,10 +677,14 @@ Optional argument FILES-ONLY can be one of:
 - subdir  to return only subdirectories -- but *NOT* symlinks to
   directories -- in DIRECTORY
 <<<<<<< HEAD
+<<<<<<< HEAD
 							*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (directory, full, match, result_type, files_only))
 {
 	Lisp_Object handler;
@@ -717,10 +758,14 @@ case symlinks to directories are not recurred.
 Optional argument BLOOM-FILTER specifies a bloom filter where
 to put results in addition to the ordinary result list.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (directory, full, match, result_type, files_only, maxdepth,
        symlink_is_file, bloom_filter))
 #if 0
@@ -794,10 +839,14 @@ are not considered as possible completions for PARTIAL-FILENAME unless
 there is no other possible completion. `completion-ignored-extensions'
 is not applied to the names of directories.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (partial_filename, directory))
 {
 	/* This function can GC.  GC checked 1996.04.06. */
@@ -825,10 +874,14 @@ DEFUN("file-name-all-completions", Ffile_name_all_completions, 2, 2, 0,	/*
 Return a list of all completions of PARTIAL-FILENAME in DIRECTORY.
 These are all file names in DIRECTORY which begin with PARTIAL-FILENAME.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (partial_filename, directory))
 {
 	/* This function can GC. GC checked 1997.06.04. */
@@ -871,7 +924,11 @@ file_name_completion_stat(Lisp_Object directory, DIRENTRY * dp,
 	   in case it is a directory.  */
 	value = lstat(fullname, st_addr);
 	if (S_ISLNK(st_addr->st_mode))
+<<<<<<< HEAD
 		sxemacs_stat(fullname, st_addr);
+=======
+		(void)sxemacs_stat(fullname, st_addr);
+>>>>>>> master
 #else
 	value = sxemacs_stat(fullname, st_addr);
 #endif
@@ -1125,10 +1182,14 @@ PARTIAL-USERNAME.  If there is only one and PARTIAL-USERNAME matches
 it exactly, returns t.  Return nil if there is no user name starting
 with PARTIAL-USERNAME.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (partial_username))
 {
 	return user_name_completion(partial_username, 0, NULL);
@@ -1148,10 +1209,14 @@ there is no user name starting with PARTIAL-USERNAME.  The cdr of the
 result is non-nil if and only if the completion returned in the car
 was unique.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (partial_username))
 {
 	int uniq;
@@ -1164,10 +1229,14 @@ DEFUN("user-name-all-completions", Fuser_name_all_completions, 1, 1, 0,	/*
 Return a list of all user name completions from PARTIAL-USERNAME.
 These are all the user names which begin with PARTIAL-USERNAME.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (partial_username))
 {
 	return user_name_completion(partial_username, 1, NULL);
@@ -1373,10 +1442,14 @@ First integer has high-order 16 bits of time, second has low 16 bits.
 
 If file does not exist, returns nil.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (filename))
 {
 	/* This function can GC. GC checked 1997.06.04. */

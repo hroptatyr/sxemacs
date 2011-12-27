@@ -136,7 +136,10 @@ void syms_of_symbols(void);
 void syms_of_syntax(void);
 void syms_of_tests(void);
 void syms_of_toolbar(void);
+<<<<<<< HEAD
 void syms_of_tooltalk(void);
+=======
+>>>>>>> master
 void syms_of_undo(void);
 void syms_of_widget(void);
 void syms_of_window(void);
@@ -348,7 +351,10 @@ void vars_of_symbols(void);
 void vars_of_syntax(void);
 void vars_of_tests(void);
 void vars_of_toolbar(void);
+<<<<<<< HEAD
 void vars_of_tooltalk(void);
+=======
+>>>>>>> master
 void vars_of_undo(void);
 void reinit_vars_of_undo(void);
 void vars_of_window(void);

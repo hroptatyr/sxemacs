@@ -28,12 +28,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "syssignal.h"
 
 #include "buffer.h"
+<<<<<<< HEAD
 #ifdef HAVE_X_WINDOWS
 #include "console-x.h"
 #endif
 
 #include "device.h"
 #include "redisplay.h"
+=======
+
+#include "ui/device.h"
+#include "ui/redisplay.h"
+>>>>>>> master
 #include "sysdep.h"
 
 #include "sysfile.h"
@@ -92,7 +98,11 @@ static inline void
 exec_sentinel(void *job, Lisp_Object, Lisp_Object, Lisp_Object);
 
 #ifdef EF_USE_ASYNEQ
+<<<<<<< HEAD
 #include "worker-asyneq.h"
+=======
+#include "events/worker-asyneq.h"
+>>>>>>> master
 
 /*****************************************************************/
 /* 			Audio Jobs				 */
@@ -125,12 +135,17 @@ static void
 print_audio_job(worker_job_t job, Lisp_Object pcf)
 {
 	audio_job_t aj = audio_job(job);
+<<<<<<< HEAD
 	char *str = alloca(64);
 
 	SXE_MUTEX_LOCK(&aj->mtx);
 	write_c_string(" carrying ", pcf);
 	snprintf(str, 63, " #<audio-job 0x%lx>", (long unsigned int)aj);
 	write_c_string(str, pcf);
+=======
+	SXE_MUTEX_LOCK(&aj->mtx);
+	write_fmt_string(pcf, " carrying  #<audio-job 0x%lx>", (long unsigned int)aj);
+>>>>>>> master
 	SXE_MUTEX_UNLOCK(&aj->mtx);
 	return;
 }
@@ -355,7 +370,11 @@ the playback volume.
 
 /* media thread sentinels */
 static Lisp_Object
+<<<<<<< HEAD
 exec_sentinel_unwind(Lisp_Object UNUSED(datum))
+=======
+exec_sentinel_unwind(Lisp_Object SXE_UNUSED(datum))
+>>>>>>> master
 {
 	return Qnil;
 }
@@ -961,7 +980,11 @@ audio_device_equal(Lisp_Object obj1, Lisp_Object obj2, int depth)
 }
 
 static unsigned long
+<<<<<<< HEAD
 audio_device_hash (Lisp_Object obj, int UNUSED(depth))
+=======
+audio_device_hash (Lisp_Object obj, int SXE_UNUSED(depth))
+>>>>>>> master
 {
 	return (unsigned long)obj;
 	/* audio_device_hashcode(XAUDIO_DEVICE_DATA(obj)); */

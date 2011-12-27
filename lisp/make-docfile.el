@@ -44,7 +44,10 @@
 (defvar docfile-out-of-date nil)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 (defvar build-directory (expand-file-name ".." (expand-file-name ".." invocation-directory)))
 (defvar build-lib-src (expand-file-name "lib-src" build-directory))
 (defvar source-lisp (file-name-directory #$))
@@ -54,7 +57,10 @@
   (princ (apply #'format fmt args))
   (terpri))
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 ;; Gobble up the stuff we don't wish to pass on.
 (setq command-line-args (cdr (cdr (cdr (cdr command-line-args)))))
 
@@ -113,6 +119,7 @@
 (load "process")
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 (let ((f (locate-file "dumped-lisp.el"
                       (cons (expand-file-name "lisp" invocation-directory)
                             load-path)))
@@ -146,6 +153,8 @@
 	      (setq processed (cons arg processed)))))
       (setq preloaded-file-list (cdr preloaded-file-list)))))
 =======
+=======
+>>>>>>> master
 (let (preloaded-file-list arg0 arg package-preloaded-file-list absolute)
   (load (expand-file-name "dumped-lisp.el" source-lisp))
 
@@ -192,7 +201,10 @@
 		(setq docfile-out-of-date t))
 	    (setq processed (cons arg processed)))))
     (setq preloaded-file-list (cdr preloaded-file-list))))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 ;; Finally process the list of site-loaded files.
 (if site-file-list

@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* ------------------------------- */
 
 #ifdef HAVE_TTY
+<<<<<<< HEAD
 #include "console-tty.h"
 #else
 #include "syssignal.h"
@@ -53,6 +54,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "process.h"
 #include "sysdep.h"
 #include "window.h"
+=======
+#include "ui/TTY/console-tty.h" /* for stuff in stuff_char and
+				   others. Seriously in need of
+				   refactoring... */
+#else
+#include "syssignal.h"
+#include "ui/systty.h"
+#endif				/* HAVE_TTY */
+
+#include "ui/console-stream.h"
+
+#include "buffer.h"
+#include "events/events.h"
+#include "ui/frame.h"
+#include "ui/redisplay.h"
+#include "process.h"
+#include "sysdep.h"
+#include "ui/window.h"
+>>>>>>> master
 
 #include <setjmp.h>
 #ifdef HAVE_LIBGEN_H		/* Must come before sysfile.h */
@@ -2126,11 +2146,18 @@ void init_system_name(void)
 			hints.ai_socktype = SOCK_STREAM;
 			hints.ai_protocol = 0;
 			if (!getaddrinfo(hostname, NULL, &hints, &res)) {
+<<<<<<< HEAD
 				hostname =
 				    (char *)alloca(strlen(res->ai_canonname) +
 						   1);
 				strcpy(hostname, res->ai_canonname);
 
+=======
+				ssize_t canon_len=strlen(res->ai_canonname)+1;
+
+				hostname = (char *)alloca(canon_len);
+				strncpy(hostname, res->ai_canonname, canon_len);
+>>>>>>> master
 				freeaddrinfo(res);
 			}
 #  endif			/* !(HAVE_GETADDRINFO && HAVE_GETNAMEINFO) */
@@ -2453,9 +2480,17 @@ FILE *sys_fopen(const char *path, const char *type)
 int sys_fclose(FILE * stream)
 {
 #ifdef INTERRUPTIBLE_CLOSE
+<<<<<<< HEAD
 	int rtnval;
 
 	while ((rtnval = fclose(stream)) == EOF && (errno == EINTR)) ;
+=======
+	int fd     = fileno(stream);
+	int rtnval = fclose(stream);
+
+	if (rtnval == EOF && (errno == EINTR))
+		while (((rtnval=close(fd))<0) && (errno == EINTR));
+>>>>>>> master
 	return rtnval;
 #else
 	return fclose(stream);
@@ -3027,10 +3062,18 @@ long get_random(void)
 /*               Strings corresponding to defined signals               */
 /************************************************************************/
 
+<<<<<<< HEAD
 #if !defined (SYS_SIGLIST_DECLARED) && !defined (HAVE_SYS_SIGLIST)
 
 #ifdef USG
 #ifdef AIX
+=======
+#if !defined (SYS_SIGLIST_DECLARED) && !defined (HAVE_SYS_SIGLIST) && !defined(HAVE_DECL_SYS_SIGLIST)
+
+#ifdef USG
+#ifdef AIX
+#define SXE_SYS_SIGLIST_DECLARED 1
+>>>>>>> master
 const char *sys_siglist[NSIG + 1] = {
 	/* AIX has changed the signals a bit */
 	DEFER_GETTEXT("bogus signal"),	/* 0 */
@@ -3070,6 +3113,10 @@ const char *sys_siglist[NSIG + 1] = {
 	0
 };
 #else				/* USG, not AIX */
+<<<<<<< HEAD
+=======
+#define SXE_SYS_SIGLIST_DECLARED 1
+>>>>>>> master
 const char *sys_siglist[NSIG + 1] = {
 	DEFER_GETTEXT("bogus signal"),	/* 0 */
 	DEFER_GETTEXT("hangup"),	/* 1  SIGHUP */
@@ -3118,6 +3165,10 @@ const char *sys_siglist[NSIG + 1] = {
 #endif				/* not AIX */
 #endif				/* USG */
 #ifdef DGUX
+<<<<<<< HEAD
+=======
+#define SXE_SYS_SIGLIST_DECLARED 1
+>>>>>>> master
 const char *sys_siglist[NSIG + 1] = {
 	DEFER_GETTEXT("null signal"),	/*  0 SIGNULL   */
 	DEFER_GETTEXT("hangup"),	/*  1 SIGHUP    */

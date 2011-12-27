@@ -48,8 +48,12 @@ AC_DEFUN([_SXE_CHECK_REALPATH_RETVAL], [dnl
 #define PATH_MAX 4096
 #endif
 
+<<<<<<< HEAD
 int main()
 {
+=======
+int realpath_returns_]]ret_t[[() {
+>>>>>>> master
 	]]ret_t[[ r;
 	char p[8] = "/bin/sh\000";
 	char resv[PATH_MAX];
@@ -64,6 +68,14 @@ int main()
 	}
 	return res;
 }
+<<<<<<< HEAD
+=======
+
+int main()
+{
+	return realpath_returns_]]ret_t[[();
+}
+>>>>>>> master
 		]])],
 		resvar[=yes],
 		resvar[=no],
@@ -109,7 +121,11 @@ AC_DEFUN([_SXE_CHECK_REALPATH_RETVAL_OWNER], [dnl
 #define FOLLOW_FREE_STRATEGY		1
 #define FOLLOW_REALLOC_STRATEGY		1
 
+<<<<<<< HEAD
 int main()
+=======
+int owner_of_object_returned_by_realpath()
+>>>>>>> master
 {
 	void *r;  /* any pointer is just fine */
 	char p[8] = "/bin/sh\000";
@@ -129,6 +145,14 @@ int main()
 	return 1;
 #endif
 }
+<<<<<<< HEAD
+=======
+
+int main()
+{
+	return owner_of_object_returned_by_realpath();
+}
+>>>>>>> master
 		]])],
 		resvar[=user],
 		resvar[=sys],
@@ -164,13 +188,25 @@ AC_DEFUN([_SXE_CHECK_REALPATH_ON_PROTECTED_MEMORY], [dnl
 #define PATH_MAX 4096
 #endif
 
+<<<<<<< HEAD
 int main()
+=======
+int realpath_can_operate_on_protected_mem_blocks() 
+>>>>>>> master
 {
 	char resv[PATH_MAX];
 	realpath("/bin/sh", NULL);
 	realpath("/bin/sh", resv);
 	return 0;
 }
+<<<<<<< HEAD
+=======
+
+int main()
+{
+	return realpath_can_operate_on_protected_mem_blocks();
+}
+>>>>>>> master
 		]])],
 		resvar[=yes],
 		resvar[=no],
@@ -202,7 +238,11 @@ AC_DEFUN([_SXE_CHECK_REALPATH_SANE_ON_NON_EXISTENT], [dnl
 
 static char p[24] = "/nobody/has/this/file\000";
 
+<<<<<<< HEAD
 int main()
+=======
+int realpath_survives_non_existent_path()
+>>>>>>> master
 {
 	char *r;
 	char resv[PATH_MAX];
@@ -210,6 +250,14 @@ int main()
 
 	return ((r == NULL) == 0);
 }
+<<<<<<< HEAD
+=======
+
+int main()
+{
+	return realpath_survives_non_existent_path();
+}
+>>>>>>> master
 		]])],
 		resvar[=yes],
 		resvar[=no],
@@ -287,12 +335,24 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_SIDE_EFFECT], [dnl
 #  include <libgen.h>
 #endif
 
+<<<<<<< HEAD
 int main()
+=======
+int dirname_modifies_argument()
+>>>>>>> master
 {
 	char p[11] = "somefile\000";
 	dirname(p);
 	return ((p[0] == '.' && p[1] == '\0') == 0);
 }
+<<<<<<< HEAD
+=======
+
+int main()
+{
+	return dirname_modifies_argument();
+}
+>>>>>>> master
 		]])],
 		resvar[=yes],
 		resvar[=no],
@@ -370,6 +430,12 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_RETVAL_OWNER], [dnl
 	## anything ... took me fucking ages to find out what's going on
 	## so let's drink to the morons responsible for THAT!
 	AC_MSG_CHECKING([to whom belongs the object returned by dirname])
+<<<<<<< HEAD
+=======
+        if test "$opsys" = "darwin" ; then
+           resvar=sys
+        else
+>>>>>>> master
 	AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #ifdef HAVE_LIBGEN_H
 #  include <libgen.h>
@@ -378,7 +444,11 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_RETVAL_OWNER], [dnl
 #define FOLLOW_FREE_STRATEGY		1
 #define FOLLOW_REALLOC_STRATEGY		1
 
+<<<<<<< HEAD
 int main()
+=======
+int owner_of_object_returned_by_dirname()
+>>>>>>> master
 {
 	void *r;  /* any pointer is just fine */
 	char p[11] = "./somefile\000";
@@ -398,15 +468,28 @@ int main()
 	return 1;
 #endif
 }
+<<<<<<< HEAD
+=======
+
+int main()
+{
+	return owner_of_object_returned_by_dirname();
+}
+>>>>>>> master
 		]])],
 		resvar[=user],
 		resvar[=sys],
 		resvar[=sys])
 <<<<<<< HEAD
+<<<<<<< HEAD
         if test "${malloc_check}" == "" ; then
 =======
         if test "${malloc_check}" = "" ; then
 >>>>>>> origin/master
+=======
+	fi
+        if test "${malloc_check}" = "" ; then
+>>>>>>> master
 		unset MALLOC_CHECK_
         else 
         	MALLOC_CHECK_=${malloc_check}
@@ -434,11 +517,23 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_ON_PROTECTED_MEMORY], [dnl
 #  include <libgen.h>
 #endif
 
+<<<<<<< HEAD
 int main()
+=======
+int dirname_can_operate_on_protected_mem_blocks()
+>>>>>>> master
 {
 	dirname("./somefile");
 	return 0;
 }
+<<<<<<< HEAD
+=======
+
+int main()
+{
+	return dirname_can_operate_on_protected_mem_blocks();
+}
+>>>>>>> master
 		]])],
 		resvar[=yes],
 		resvar[=no],
@@ -468,12 +563,24 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_ON_C99_RESTRICT_MEMORY], [dnl
 
 static char f[11] = "./somefile\000";
 
+<<<<<<< HEAD
 int main()
+=======
+int dirname_can_operate_on_c99_restrict()
+>>>>>>> master
 {
 	const char *restrict p = &f;
 	dirname((char*)p);
 	return 0;
 }
+<<<<<<< HEAD
+=======
+
+int main()
+{
+	return dirname_can_operate_on_c99_restrict();
+}
+>>>>>>> master
 		]])],
 		resvar[=yes],
 		resvar[=no],

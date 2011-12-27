@@ -330,6 +330,12 @@ Each minibuffer output is added with
 (defvar current-minibuffer-contents)
 (defvar current-minibuffer-point)
 
+<<<<<<< HEAD
+=======
+;; Added by lg:
+(defvar minibuffer-prompt-stack nil)
+
+>>>>>>> master
 (defcustom minibuffer-history-minimum-string-length nil
   "*If this variable is non-nil, a string will not be added to the
 minibuffer history if its length is less than that value."
@@ -483,6 +489,7 @@ See also the variable `completion-highlight-first-word-only' for
              ;(if minibuffer-setup-hook
              ;    (run-hooks 'minibuffer-setup-hook))
              ;(message nil)
+<<<<<<< HEAD
              (if (eq 't
                      (catch 'exit
                        (if (> (recursion-depth) (minibuffer-depth))
@@ -490,6 +497,27 @@ See also the variable `completion-highlight-first-word-only' for
                                  (standard-input t))
                              (read-minibuffer-internal prompt))
                            (read-minibuffer-internal prompt))))
+=======
+
+             ;; Adjust the prompt
+             (flet ((fmt-prompt-stack (p ps)
+                      (if (not ps)
+                          p
+                        (fmt-prompt-stack (concat "[" (car ps) "]" p) (cdr ps)))))
+               (push prompt minibuffer-prompt-stack)
+               (setq prompt (fmt-prompt-stack prompt (cdr minibuffer-prompt-stack))))
+
+             (if (eq 't
+                     (catch 'exit
+                       (unwind-protect
+                           (if (> (recursion-depth) (minibuffer-depth))
+                               (let ((standard-output t)
+                                     (standard-input t))
+                                 (read-minibuffer-internal prompt))
+                             (read-minibuffer-internal prompt))
+                         (pop minibuffer-prompt-stack))))
+                       
+>>>>>>> master
                  ;; Translate an "abort" (throw 'exit 't)
                  ;;  into a real quit
                  (signal 'quit '())
@@ -2179,11 +2207,17 @@ whether it is a file(/result) or a directory (/result/)."
   "Read the name of a face from the minibuffer and return it as a symbol."
   (intern (completing-read prompt obarray 'find-face must-match)))
 
+<<<<<<< HEAD
+=======
+(eval-when-compile
+  (defvar x-read-color-completion-table))
+>>>>>>> master
 
 (defun read-color-completion-table ()
   (case (device-type)
     ;; #### Evil device-type dependency
     ((x gtk)
+<<<<<<< HEAD
 <<<<<<< HEAD
      (if-boundp 'x-read-color-completion-table
 	 x-read-color-completion-table
@@ -2191,6 +2225,10 @@ whether it is a file(/result) or a directory (/result/)."
      (if-fboundp #'x-read-color-completion-table
 	 (x-read-color-completion-table)
 >>>>>>> origin/master
+=======
+     (if-fboundp #'x-read-color-completion-table
+	 (x-read-color-completion-table)
+>>>>>>> master
        (let ((rgb-file (locate-file "rgb.txt" x-library-search-path))
 	     clist color p)
 	 (if (not rgb-file)

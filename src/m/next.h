@@ -49,15 +49,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /* Use our own unexec routines */
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 #define UNEXEC "unexnext.o"
 =======
+=======
+>>>>>>> master
 /* 
  * everything is pdump now. --SY
  * #define UNEXEC "unexnext.o"
  */
 #undef UNEXEC
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 /* We don't have a g library either, so override the -lg LIBS_DEBUG switch */
 

@@ -93,14 +93,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
    which lives in a separate file.  Specify the file name.  */
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define UNEXEC "unexhp9k800.o"
 =======
+=======
+>>>>>>> master
 /* 
  * everything is pdump now --SY
  * #define UNEXEC "unexhp9k800.o"
  */
 #undef UNEXEC
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 #define LIBS_MACHINE
 #define LIBS_DEBUG

@@ -26,7 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "specifier.h"
 #include "elhash.h"
 #include "sysfile.h"
+<<<<<<< HEAD
 #include "console-stream.h"
+=======
+#include "ui/console-stream.h"
+>>>>>>> master
 #include "dumper.h"
 #include "sysdep.h"
 
@@ -194,7 +198,11 @@ typedef struct {
 
 char *pdump_start;
 char *pdump_end;
+<<<<<<< HEAD
 static size_t pdump_length;
+=======
+static off_t pdump_length;
+>>>>>>> master
 
 
 static void (*pdump_free) (void);
@@ -459,8 +467,13 @@ restart:
 		}
 		case XD_C_STRING: {
 			const char *str = *(const char *const*)rdata;
+<<<<<<< HEAD
 			size_t str_sz = strlen(str);
 			if (str) {
+=======
+			if (str) {
+				size_t str_sz = strlen(str);
+>>>>>>> master
 				pdump_add_entry(&pdump_opaque_data_list,
 						str, str_sz + 1, 1);
 			}
@@ -1069,7 +1082,19 @@ pdump(const char *dumpfile)
 #undef open
 	pdump_fd = open(dumpfile,
 			O_WRONLY | O_CREAT | O_TRUNC | OPEN_BINARY, 0666);
+<<<<<<< HEAD
 	pdump_out = fdopen(pdump_fd, "w");
+=======
+	if ( pdump_fd < 0 ) {
+		stderr_out("Could not open dump file: %s", dumpfile);
+		abort();
+	}
+	pdump_out = fdopen(pdump_fd, "w");
+	if ( pdump_out < 0 ) {
+		stderr_out("Could not fdopen dump file: %s %d", dumpfile, pdump_fd);
+		abort();
+	}
+>>>>>>> master
 
 	fwrite(&header, sizeof(header), 1, pdump_out);
 	PDUMP_ALIGN_OUTPUT(max_align_t);
@@ -1256,15 +1281,26 @@ static int pdump_file_get(const char *path)
 static int pdump_file_try(char *exe_path, size_t size)
 {
         char *w = exe_path + strlen(exe_path);
+<<<<<<< HEAD
+=======
+        int sz;
+>>>>>>> master
         size -= strlen(exe_path);
 
 	do {
 
 #ifdef EMACS_PATCH_LEVEL
+<<<<<<< HEAD
 		snprintf(w, size, "-%d.%d.%d-%08x.dmp", 
                          EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
                          EMACS_PATCH_LEVEL, dump_id);
 		if (pdump_file_get(exe_path)) {
+=======
+		sz = snprintf(w, size, "-%d.%d.%d-%08x.dmp", 
+                         EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
+                         EMACS_PATCH_LEVEL, dump_id);
+		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
+>>>>>>> master
 			if (pdump_load_check()) {
 				return 1;
 			}
@@ -1272,10 +1308,17 @@ static int pdump_file_try(char *exe_path, size_t size)
 		}
 #endif	/* EMACS_PATCH_LEVEL */
 #ifdef EMACS_BETA_VERSION
+<<<<<<< HEAD
 		snprintf(w, size, "-%d.%d.%d-%08x.dmp", 
                          EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
                          EMACS_BETA_VERSION, dump_id);
 		if (pdump_file_get(exe_path)) {
+=======
+		sz = snprintf(w, size, "-%d.%d.%d-%08x.dmp", 
+                         EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
+                         EMACS_BETA_VERSION, dump_id);
+		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
+>>>>>>> master
 			if (pdump_load_check()) {
 				return 1;
 			}
@@ -1283,16 +1326,26 @@ static int pdump_file_try(char *exe_path, size_t size)
 		}
 #endif	/* EMACS_BETA_VERSION */
 
+<<<<<<< HEAD
 		snprintf(w, size, "-%08x.dmp", dump_id);
 		if (pdump_file_get(exe_path)) {
+=======
+		sz = snprintf(w, size, "-%08x.dmp", dump_id);
+		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
+>>>>>>> master
 			if (pdump_load_check()) {
 				return 1;
 			}
 			pdump_free();
 		}
 
+<<<<<<< HEAD
 		snprintf(w, size, ".dmp");
 		if (pdump_file_get(exe_path)) {
+=======
+		sz = snprintf(w, size, ".dmp");
+		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
+>>>>>>> master
 			if (pdump_load_check()) {
 				return 1;
 			}
@@ -1349,6 +1402,10 @@ int pdump_load(const char *argv0)
 	if (dir[0] == '-') {
 		/* SXEmacs as a login shell, oh goody! */
 		dir = getenv("SHELL");
+<<<<<<< HEAD
+=======
+		assert(dir != NULL);
+>>>>>>> master
 	}
 
 	p = dir + strlen(dir);
@@ -1360,10 +1417,20 @@ int pdump_load(const char *argv0)
 		/* invocation-name includes a directory component -- presumably it
 		   is relative to cwd, not $PATH */
                 assert(strlen(dir) < sizeof(exe_path));
+<<<<<<< HEAD
                 strcpy(exe_path, dir);
 	} else {
 		const char *path = getenv("PATH");
 		const char *name = p;
+=======
+                strncpy(exe_path, dir, sizeof(exe_path)-1);
+		exe_path[sizeof(exe_path)-1]='\0';
+	} else {
+		const char *path = getenv("PATH");
+		const char *name = p;
+
+		assert(path != NULL);
+>>>>>>> master
 		for (;;) {
                         int remain = sizeof(exe_path)-1;
                         exe_path[remain] = '\0';
@@ -1407,8 +1474,14 @@ int pdump_load(const char *argv0)
 
 			if (!*p) {
 				/* Oh well, let's have some kind of default */
+<<<<<<< HEAD
 				snprintf(exe_path, sizeof(exe_path),
 					 "./%s", name);
+=======
+				int sz = snprintf(exe_path, sizeof(exe_path),
+						  "./%s", name);
+				assert(sz >= 0 && sz < sizeof(exe_path));
+>>>>>>> master
 				break;
 			}
 			path = p + 1;

@@ -29,12 +29,18 @@
  * ../etc/gnuserv.README relative to the directory containing this file)
  */
 
+<<<<<<< HEAD
 #if 0
 static char rcsid[] = "!Header: gnuslib.c,v 2.4 95/02/16 11:57:37 arup alpha !";
 #endif
 
 #include "gnuserv.h"
 #include <errno.h>
+=======
+#include "gnuserv.h"
+#include <errno.h>
+#include <assert.h>
+>>>>>>> master
 
 #ifdef SYSV_IPC
 static int connect_to_ipc_server(void);
@@ -133,7 +139,13 @@ static int connect_to_ipc_server(void)
 	key_t key;		/* message key */
 	char buf[GSERV_BUFSZ + 1];	/* buffer for filename */
 
+<<<<<<< HEAD
 	sprintf(buf, "%s/gsrv%d", tmpdir, (int)geteuid());
+=======
+	int sz = snprintf(buf, sizeof(buf), 
+			  "%s/gsrv%d", tmpdir, (int)geteuid());
+	assert(sz>=0 && sz<sizeof(buf));
+>>>>>>> master
 	creat(buf, 0600);
 	if ((key = ftok(buf, 1)) == -1) {
 		perror(progname);
@@ -248,6 +260,10 @@ static int connect_to_unix_server(void)
 {
 	int s;			/* connected socket descriptor */
 	struct sockaddr_un server;	/* for unix connections */
+<<<<<<< HEAD
+=======
+	int sz;
+>>>>>>> master
 
 	if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
 		perror(progname);
@@ -257,10 +273,20 @@ static int connect_to_unix_server(void)
 
 	server.sun_family = AF_UNIX;
 #ifdef HIDE_UNIX_SOCKET
+<<<<<<< HEAD
 	sprintf(server.sun_path, "%s/gsrvdir%d/gsrv", tmpdir, (int)geteuid());
 #else				/* HIDE_UNIX_SOCKET */
 	sprintf(server.sun_path, "%s/gsrv%d", tmpdir, (int)geteuid());
 #endif				/* HIDE_UNIX_SOCKET */
+=======
+	sz = snprintf(server.sun_path, sizeof(server.sun_path),
+		      "%s/gsrvdir%d/gsrv", tmpdir, (int)geteuid());
+#else				/* HIDE_UNIX_SOCKET */
+	sz = snprintf(server.sun_path, sizeof(server.sun_path),
+		      "%s/gsrv%d", tmpdir, (int)geteuid());
+#endif				/* HIDE_UNIX_SOCKET */
+	assert(sz>=0 && sz<sizeof(server.sun_path));
+>>>>>>> master
 	if (connect(s, (struct sockaddr *)&server, strlen(server.sun_path) + 2)
 	    < 0) {
 		perror(progname);
@@ -312,7 +338,11 @@ static int connect_to_internet_server(char *serverhost, unsigned short port)
 	struct sockaddr_in peeraddr_in;	/* for peer socket address */
 	char buf[512];		/* temporary buffer */
 
+<<<<<<< HEAD
 	int t;
+=======
+	int t, len;
+>>>>>>> master
 
 	/* clear out address structures */
 	memset((char *)&peeraddr_in, 0, sizeof(struct sockaddr_in));
@@ -368,17 +398,43 @@ static int connect_to_internet_server(char *serverhost, unsigned short port)
 			     strlen(MCOOKIE_X_NAME), MCOOKIE_X_NAME);
 
 	if (server_xauth && server_xauth->data) {
+<<<<<<< HEAD
 		sprintf(buf, "%s\n%d\n", MCOOKIE_NAME,
 			server_xauth->data_length);
 		write(s, buf, strlen(buf));
 		write(s, server_xauth->data, server_xauth->data_length);
 
+=======
+		len = snprintf(buf, sizeof(buf), "%s\n%d\n", MCOOKIE_NAME,
+			       server_xauth->data_length);
+		assert( len >=0 && len < sizeof(buf));
+		t = write(s, buf, len);
+		if(t != len) {
+			fprintf(stderr, "%s: unable to send auth", progname);
+			exit(1);
+		}
+		t = write(s, server_xauth->data, server_xauth->data_length);
+		if(t !=  server_xauth->data_length) {
+			fprintf(stderr, "%s: unable to send auth", progname);
+			exit(1);
+		}
+>>>>>>> master
 		return (s);
 	}
 #endif				/* AUTH_MAGIC_COOKIE */
 
+<<<<<<< HEAD
 	sprintf(buf, "%s\n", DEFAUTH_NAME);
 	write(s, buf, strlen(buf));
+=======
+	len = snprintf(buf, sizeof(buf), "%s\n", DEFAUTH_NAME);
+	assert(len >= 0 && len < sizeof(buf));
+	t = write(s, buf, len);
+	if(t != len) {
+		fprintf(stderr, "%s: unable to send auth", progname);
+		exit(1);
+	}
+>>>>>>> master
 
 	return (s);
 
@@ -428,7 +484,11 @@ void disconnect_from_server(int s, int echo)
 #else
 	while ((length = read(s, buffer, GSERV_BUFSZ)) > 0 ||
 	       (length == -1 && errno == EINTR)) {
+<<<<<<< HEAD
 		if (length) {
+=======
+		if (length>0) {
+>>>>>>> master
 			buffer[length] = '\0';
 			if (echo) {
 				fputs(buffer, stdout);

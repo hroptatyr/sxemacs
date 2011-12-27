@@ -71,9 +71,17 @@ Fixnum hp_play_gain;
 void player_error_internal(Audio * audio, char *text, long errorCode)
 {
 	char errorbuff[132], buf[256];
+<<<<<<< HEAD
 
 	AGetErrorText(audio, errorCode, errorbuff, 131);
 	sprintf(buf, "%s: %s\n", text, errorbuff);
+=======
+	int sz;
+
+	AGetErrorText(audio, errorCode, errorbuff, 131);
+	sz = sprintf(buf, sizeof(buf), "%s: %s\n", text, errorbuff);
+	assert(sz>=0 && sz<sizeof(buf));
+>>>>>>> master
 	error(buf);
 }
 

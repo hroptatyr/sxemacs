@@ -323,9 +323,18 @@
   (Assert (= (ase-interval-lebesgue-measure i13) 2))
   (Assert (= (ase-interval-lebesgue-measure huge) 10))
   (Assert (= (ase-interval-lebesgue-measure tiny) 3))
+<<<<<<< HEAD
   (Assert (= (ase-interval-lebesgue-measure (ase-interval 0.1 1.2)) 1.1))
   (Assert (= (ase-interval-lebesgue-measure (ase-interval -0.1 0.2)) 0.3))
   ;;(Assert (= (ase-interval-lebesgue-measure (ase-interval -1.2 -1.1)) 0.1))
+=======
+  (Assert
+   (almost= (ase-interval-lebesgue-measure (ase-interval 0.1 1.2)) 1.1 1e-4))
+  (Assert 
+   (almost= (ase-interval-lebesgue-measure (ase-interval -0.1 0.2)) 0.3 1e-4))
+  (Assert
+   (almost= (ase-interval-lebesgue-measure (ase-interval -1.2 -1.1)) 0.1 1e-4))
+>>>>>>> master
 
   (Assert (= (ase-interval-rational-measure i1) 2))
   (Assert (= (ase-interval-rational-measure i2) 2))

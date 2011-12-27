@@ -5,7 +5,11 @@
 @c See the file lispref.texi for copying conditions.
 @setfilename ../../info/x-windows.texinfo
 
+<<<<<<< HEAD
 @node X-Windows, ToolTalk Support, System Interface, Top
+=======
+@node X-Windows, LDAP Support, System Interface, Top
+>>>>>>> master
 @chapter Functions Specific to the X Window System
 @cindex X
 @cindex X-Windows

@@ -163,10 +163,14 @@ Starting and stopping profiling does not clear the currently recorded
 info.  Thus you can start and stop as many times as you want and everything
 will be properly accumulated.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (microsecs))
 {
 	/* This function can GC */
@@ -203,12 +207,17 @@ will be properly accumulated.
 
 DEFUN("stop-profiling", Fstop_profiling, 0, 0, 0,	/*
 <<<<<<< HEAD
+<<<<<<< HEAD
 							   Stop profiling.
 							 */
 =======
 Stop profiling.
 */
 >>>>>>> origin/master
+=======
+Stop profiling.
+*/
+>>>>>>> master
       ())
 {
 	/* This function does not GC */
@@ -252,12 +261,17 @@ get_profiling_info_maphash(const void *void_key,
 
 DEFUN("get-profiling-info", Fget_profiling_info, 0, 0, 0,	/*
 <<<<<<< HEAD
+<<<<<<< HEAD
 								   Return the profiling info as an alist.
 								 */
 =======
 Return the profiling info as an alist.
 */
 >>>>>>> origin/master
+=======
+Return the profiling info as an alist.
+*/
+>>>>>>> master
       ())
 {
 	/* This function does not GC */
@@ -298,12 +312,17 @@ void mark_profiling_info(void)
 
 DEFUN("clear-profiling-info", Fclear_profiling_info, 0, 0, "",	/*
 <<<<<<< HEAD
+<<<<<<< HEAD
 								   Clear out the recorded profiling info.
 								 */
 =======
 Clear out the recorded profiling info.
 */
 >>>>>>> origin/master
+=======
+Clear out the recorded profiling info.
+*/
+>>>>>>> master
       ())
 {
 	/* This function does not GC */
@@ -319,12 +338,17 @@ Clear out the recorded profiling info.
 
 DEFUN("profiling-active-p", Fprofiling_active_p, 0, 0, 0,	/*
 <<<<<<< HEAD
+<<<<<<< HEAD
 								   Return non-nil if profiling information is currently being recorded.
 								 */
 =======
 Return non-nil if profiling information is currently being recorded.
 */
 >>>>>>> origin/master
+=======
+Return non-nil if profiling information is currently being recorded.
+*/
+>>>>>>> master
       ())
 {
 	return profiling_active ? Qt : Qnil;

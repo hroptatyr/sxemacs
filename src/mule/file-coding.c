@@ -27,7 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "buffer.h"
 #include "elhash.h"
+<<<<<<< HEAD
 #include "insdel.h"
+=======
+#include "ui/insdel.h"
+>>>>>>> master
 #include "lstream.h"
 #include "opaque.h"
 #ifdef MULE

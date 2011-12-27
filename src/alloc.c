@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "buffer.h"
 #include "bytecode.h"
 #include "chartab.h"
+<<<<<<< HEAD
 #include "device.h"
 #include "elhash.h"
 #define INCLUDE_EVENTS_H_PRIVATE_SPHERE
@@ -59,6 +60,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "sysdep.h"
 #include "window.h"
 #include "console-stream.h"
+=======
+#include "ui/device.h"
+#include "elhash.h"
+#define INCLUDE_EVENTS_H_PRIVATE_SPHERE
+#include "events/events.h"
+#include "extents.h"
+#include "ui/frame.h"
+#include "ui/glyphs.h"
+#include "opaque.h"
+#include "ui/redisplay.h"
+#include "specifier.h"
+#include "sysfile.h"
+#include "sysdep.h"
+#include "ui/window.h"
+#include "ui/console-stream.h"
+>>>>>>> master
 
 #ifdef DOUG_LEA_MALLOC
 #include <malloc.h>
@@ -125,8 +142,13 @@ static Fixnum debug_allocation_backtrace_length;
 sxe_mutex_t cons_mutex;
 #endif	/* EF_USE_ASYNEQ && !BDWGC */
 #ifdef EF_USE_ASYNEQ
+<<<<<<< HEAD
 #include "event-queue.h"
 #include "workers.h"
+=======
+#include "events/event-queue.h"
+#include "events/workers.h"
+>>>>>>> master
 dllist_t workers = NULL;
 #endif
 
@@ -445,7 +467,11 @@ lcrec_register_finaliser(struct lcrecord_header *b)
 	void **bar = NULL;
 	auto void lcrec_finaliser();
 
+<<<<<<< HEAD
 	auto void lcrec_finaliser(void *obj, void *UNUSED(data))
+=======
+	auto void lcrec_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 	{
 		const struct lrecord_implementation *lrimp =
 			XRECORD_LHEADER_IMPLEMENTATION(obj);
@@ -465,7 +491,11 @@ lcrec_register_finaliser(struct lcrecord_header *b)
 }
 #else  /* !BDWGC */
 static inline void
+<<<<<<< HEAD
 lcrec_register_finaliser(struct lcrecord_header *UNUSED(b))
+=======
+lcrec_register_finaliser(struct lcrecord_header *SXE_UNUSED(b))
+>>>>>>> master
 {
 	return;
 }
@@ -968,7 +998,11 @@ cons_register_finaliser(Lisp_Cons *s)
 	void **bar = NULL;
 	auto void cons_finaliser();
 
+<<<<<<< HEAD
 	auto void cons_finaliser(void *obj, void *UNUSED(data))
+=======
+	auto void cons_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 	{
 		/* cleanse */
 		memset(obj, 0, sizeof(Lisp_Cons));
@@ -981,7 +1015,11 @@ cons_register_finaliser(Lisp_Cons *s)
 }
 #else  /* !BDWGC */
 static inline void
+<<<<<<< HEAD
 cons_register_finaliser(Lisp_Cons *UNUSED(b))
+=======
+cons_register_finaliser(Lisp_Cons *SXE_UNUSED(b))
+>>>>>>> master
 {
 	return;
 }
@@ -1099,10 +1137,14 @@ The pointers are accessed from Lisp with `car' and `cdr', and mutated with
 `setcar' and `setcdr' respectively.  For historical reasons, the aliases
 `rplaca' and `rplacd' (for `setcar' and `setcdr') are supported.
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (car, cdr))
 {
 	/* This cannot GC. */
@@ -1142,10 +1184,14 @@ DEFUN("list", Flist, 0, MANY, 0,	/*
 Return a newly created list with specified arguments as elements.
 Any number of arguments, even zero arguments, are allowed.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object * args))
 {
 	Lisp_Object val = Qnil;
@@ -1215,10 +1261,14 @@ list6(Lisp_Object obj0, Lisp_Object obj1, Lisp_Object obj2, Lisp_Object obj3,
 DEFUN("make-list", Fmake_list, 2, 2, 0,	/*
 Return a new list of length LENGTH, with each element being OBJECT.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (length, object))
 {
 	CHECK_NATNUM(length);
@@ -1287,7 +1337,11 @@ bigz_register_finaliser(Lisp_Bigz *b)
 	void **bar = NULL;
 	auto void bigz_finaliser();
 
+<<<<<<< HEAD
 	auto void bigz_finaliser(void *obj, void *UNUSED(data))
+=======
+	auto void bigz_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 	{
 		bigz_fini(bigz_data((Lisp_Bigz*)obj));
 		/* cleanse */
@@ -1300,7 +1354,11 @@ bigz_register_finaliser(Lisp_Bigz *b)
 }
 #else  /* !BDWGC */
 static inline void
+<<<<<<< HEAD
 bigz_register_finaliser(Lisp_Bigz *UNUSED(b))
+=======
+bigz_register_finaliser(Lisp_Bigz *SXE_UNUSED(b))
+>>>>>>> master
 {
 	return;
 }
@@ -1352,7 +1410,11 @@ bigq_register_finaliser(Lisp_Bigq *b)
 	void **bar = NULL;
 	auto void bigq_finaliser();
 
+<<<<<<< HEAD
 	auto void bigq_finaliser(void *obj, void *UNUSED(data))
+=======
+	auto void bigq_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 	{
 		bigq_fini(bigq_data((Lisp_Bigq*)obj));
 		/* cleanse */
@@ -1365,7 +1427,11 @@ bigq_register_finaliser(Lisp_Bigq *b)
 }
 #else  /* !BDWGC */
 static inline void
+<<<<<<< HEAD
 bigq_register_finaliser(Lisp_Bigq *UNUSED(b))
+=======
+bigq_register_finaliser(Lisp_Bigq *SXE_UNUSED(b))
+>>>>>>> master
 {
 	return;
 }
@@ -1429,7 +1495,11 @@ bigf_register_finaliser(Lisp_Bigf *b)
 	void **bar = NULL;
 	auto void bigf_finaliser();
 
+<<<<<<< HEAD
 	auto void bigf_finaliser(void *obj, void *UNUSED(data))
+=======
+	auto void bigf_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 	{
 		bigf_fini(bigf_data((Lisp_Bigf*)obj));
 		/* cleanse */
@@ -1442,7 +1512,11 @@ bigf_register_finaliser(Lisp_Bigf *b)
 }
 #else  /* !BDWGC */
 static inline void
+<<<<<<< HEAD
 bigf_register_finaliser(Lisp_Bigf *UNUSED(b))
+=======
+bigf_register_finaliser(Lisp_Bigf *SXE_UNUSED(b))
+>>>>>>> master
 {
 	return;
 }
@@ -1496,7 +1570,11 @@ bigfr_register_finaliser(Lisp_Bigfr *b)
 	void **bar = NULL;
 	auto void bigfr_finaliser();
 
+<<<<<<< HEAD
 	auto void bigfr_finaliser(void *obj, void *UNUSED(data))
+=======
+	auto void bigfr_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 	{
 		bigfr_fini(bigfr_data((Lisp_Bigfr*)obj));
 		/* cleanse */
@@ -1509,7 +1587,11 @@ bigfr_register_finaliser(Lisp_Bigfr *b)
 }
 #else  /* !BDWGC */
 static inline void
+<<<<<<< HEAD
 bigfr_register_finaliser(Lisp_Bigfr *UNUSED(b))
+=======
+bigfr_register_finaliser(Lisp_Bigfr *SXE_UNUSED(b))
+>>>>>>> master
 {
 	return;
 }
@@ -1583,7 +1665,11 @@ bigg_register_finaliser(Lisp_Bigg *b)
 	void **bar = NULL;
 	auto void bigg_finaliser();
 
+<<<<<<< HEAD
 	auto void bigg_finaliser(void *obj, void *UNUSED(data))
+=======
+	auto void bigg_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 	{
 		bigg_fini(bigg_data((Lisp_Bigg*)obj));
 		/* cleanse */
@@ -1596,7 +1682,11 @@ bigg_register_finaliser(Lisp_Bigg *b)
 }
 #else  /* !BDWGC */
 static inline void
+<<<<<<< HEAD
 bigg_register_finaliser(Lisp_Bigg *UNUSED(b))
+=======
+bigg_register_finaliser(Lisp_Bigg *SXE_UNUSED(b))
+>>>>>>> master
 {
 	return;
 }
@@ -1662,7 +1752,11 @@ bigc_register_finaliser(Lisp_Bigc *b)
 	void **bar = NULL;
 	auto void bigc_finaliser();
 
+<<<<<<< HEAD
 	auto void bigc_finaliser(void *obj, void *UNUSED(data))
+=======
+	auto void bigc_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 	{
 		bigc_fini(bigc_data((Lisp_Bigc*)obj));
 		/* cleanse */
@@ -1675,7 +1769,11 @@ bigc_register_finaliser(Lisp_Bigc *b)
 }
 #else  /* !BDWGC */
 static inline void
+<<<<<<< HEAD
 bigc_register_finaliser(Lisp_Bigc *UNUSED(b))
+=======
+bigc_register_finaliser(Lisp_Bigc *SXE_UNUSED(b))
+>>>>>>> master
 {
 	return;
 }
@@ -1749,7 +1847,11 @@ quatern_register_finaliser(Lisp_Quatern *b)
 	void **bar = NULL;
 	auto void quatern_finaliser();
 
+<<<<<<< HEAD
 	auto void quatern_finaliser(void *obj, void *UNUSED(data))
+=======
+	auto void quatern_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 	{
 		quatern_fini(quatern_data((Lisp_Quatern*)obj));
 		/* cleanse */
@@ -1762,7 +1864,11 @@ quatern_register_finaliser(Lisp_Quatern *b)
 }
 #else  /* !BDWGC */
 static inline void
+<<<<<<< HEAD
 quatern_register_finaliser(Lisp_Quatern *UNUSED(b))
+=======
+quatern_register_finaliser(Lisp_Quatern *SXE_UNUSED(b))
+>>>>>>> master
 {
 	return;
 }
@@ -1871,7 +1977,11 @@ dynacat_register_finaliser(dynacat_t b)
 	void **bar = NULL;
 	auto void dynacat_finaliser();
 
+<<<<<<< HEAD
 	auto void dynacat_finaliser(void *obj, void *UNUSED(data))
+=======
+	auto void dynacat_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 	{
 		SXE_DEBUG_GC("calling dynacat finaliser on %p\n", obj);
 		dynacat_fini(obj);
@@ -1886,7 +1996,11 @@ dynacat_register_finaliser(dynacat_t b)
 }
 #else  /* !BDWGC */
 static inline void
+<<<<<<< HEAD
 dynacat_register_finaliser(dynacat_t UNUSED(b))
+=======
+dynacat_register_finaliser(dynacat_t SXE_UNUSED(b))
+>>>>>>> master
 {
 	return;
 }
@@ -2069,10 +2183,14 @@ DEFUN("make-vector", Fmake_vector, 2, 2, 0,	/*
 Return a new vector of length LENGTH, with each element being OBJECT.
 See also the function `vector'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (length, object))
 {
 	CONCHECK_NATNUM(length);
@@ -2083,10 +2201,14 @@ DEFUN("vector", Fvector, 0, MANY, 0,	/*
 Return a newly created vector with specified arguments as elements.
 Any number of arguments, even zero arguments, are allowed.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object * args))
 {
 	Lisp_Vector *vecp = make_vector_internal(nargs);
@@ -2272,10 +2394,14 @@ DEFUN("make-bit-vector", Fmake_bit_vector, 2, 2, 0,	/*
 Return a new bit vector of length LENGTH. with each bit set to BIT.
 BIT must be one of the integers 0 or 1.  See also the function `bit-vector'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (length, bit))
 {
 	CONCHECK_NATNUM(length);
@@ -2288,10 +2414,14 @@ Return a newly created bit vector with specified arguments as elements.
 Any number of arguments, even zero arguments, are allowed.
 Each argument must be one of the integers 0 or 1.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object * args))
 {
 	int i;
@@ -2419,10 +2549,14 @@ specified, then that means the function is not interactive.
 This is terrible behavior which is retained for compatibility with old
 `.elc' files which expect these semantics.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object * args))
 {
 /* In a non-insane world this function would have this arglist...
@@ -2523,10 +2657,14 @@ DEFUN("make-symbol", Fmake_symbol, 1, 1, 0,	/*
 Return a newly allocated uninterned symbol whose name is NAME.
 Its value and function definition are void, and its property list is nil.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (name))
 {
 	Lisp_Object val;
@@ -2601,10 +2739,14 @@ DECLARE_FIXED_TYPE_ALLOC(marker, Lisp_Marker);
 DEFUN("make-marker", Fmake_marker, 0, 0, 0,	/*
 Return a new marker which does not point at any place.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	Lisp_Object val;
@@ -2667,7 +2809,11 @@ string_register_finaliser(Lisp_String *s)
 	void **bar = NULL;
 	auto void string_finaliser();
 
+<<<<<<< HEAD
 	auto void string_finaliser(void *obj, void *UNUSED(data))
+=======
+	auto void string_finaliser(void *obj, void *SXE_UNUSED(data))
+>>>>>>> master
 	{
 		if (!(((Lisp_String*)obj)->lheader.c_readonly)) {
 			yfree(((Lisp_String*)obj)->data);
@@ -2683,7 +2829,11 @@ string_register_finaliser(Lisp_String *s)
 }
 #else  /* !BDWGC */
 static inline void
+<<<<<<< HEAD
 string_register_finaliser(Lisp_String *UNUSED(b))
+=======
+string_register_finaliser(Lisp_String *SXE_UNUSED(b))
+>>>>>>> master
 {
 	return;
 }
@@ -3198,10 +3348,14 @@ DEFUN("make-string", Fmake_string, 2, 2, 0,	/*
 Return a new string consisting of LENGTH copies of CHARACTER.
 LENGTH must be a non-negative integer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (length, character))
 {
 	CHECK_NATNUM(length);
@@ -3242,10 +3396,14 @@ LENGTH must be a non-negative integer.
 DEFUN("string", Fstring, 0, MANY, 0,	/*
 Concatenate all the argument characters and make the result a string.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object * args))
 {
 	Bufbyte *storage, *p;
@@ -3306,7 +3464,11 @@ Lisp_Object build_string(const char *str)
 Lisp_Object build_ext_string(const char *str, Lisp_Object coding_system)
 {
 	/* Some strlen's crash and burn if passed null. */
+<<<<<<< HEAD
 	return make_ext_string((const Extbyte*)str, strlen(str), coding_system);
+=======
+	return make_ext_string((const Extbyte*)str, (str ? strlen(str) : 0), coding_system);
+>>>>>>> master
 }
 
 Lisp_Object build_translated_string(const char *str)
@@ -3413,7 +3575,11 @@ allocate_managed_lcrecord(Lisp_Object lcrecord_list)
 }
 
 void
+<<<<<<< HEAD
 free_managed_lcrecord(Lisp_Object UNUSED(lcrecord_list), Lisp_Object lcrecord)
+=======
+free_managed_lcrecord(Lisp_Object SXE_UNUSED(lcrecord_list), Lisp_Object lcrecord)
+>>>>>>> master
 {
 	struct free_lcrecord_header *free_header =
 		(struct free_lcrecord_header*)XPNTR(lcrecord);
@@ -3558,10 +3724,14 @@ Make a copy of OBJECT in pure storage.
 Recursively copies contents of vectors and cons cells.
 Does not copy symbols.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	return object;
@@ -3653,7 +3823,11 @@ void staticpro_nodump(Lisp_Object * varaddress)
    seen yet, recursively mark all the references contained in it. */
 
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
+<<<<<<< HEAD
 void mark_object(Lisp_Object UNUSED(obj))
+=======
+void mark_object(Lisp_Object SXE_UNUSED(obj))
+>>>>>>> master
 {
 	return;
 }
@@ -4992,10 +5166,14 @@ more detailed information.
 Garbage collection happens automatically if you cons more than
 `gc-cons-threshold' bytes of Lisp data since previous garbage collection.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
@@ -5016,6 +5194,11 @@ Garbage collection happens automatically if you cons more than
 			const char *name =
 			    lrecord_implementations_table[i]->name;
 			int len = strlen(name);
+<<<<<<< HEAD
+=======
+			int sz;
+
+>>>>>>> master
 			/* save this for the FSFmacs-compatible part of the
 			   summary */
 			if (i == lrecord_type_vector)
@@ -5023,31 +5206,57 @@ Garbage collection happens automatically if you cons more than
 				    lcrecord_stats[i].bytes_in_use +
 				    lcrecord_stats[i].bytes_freed;
 
+<<<<<<< HEAD
 			snprintf(buf, sizeof(buf), "%s-storage", name);
+=======
+			sz = snprintf(buf, sizeof(buf), "%s-storage", name);
+			assert(sz >=0  && sz < sizeof(buf));
+>>>>>>> master
 			pl = gc_plist_hack(buf, lcrecord_stats[i].bytes_in_use,
 					   pl);
 			/* Okay, simple pluralization check for
 			   `symbol-value-varalias' */
 			if (name[len - 1] == 's')
+<<<<<<< HEAD
                                 snprintf(buf, sizeof(buf), "%ses-freed", name);
 			else
 				snprintf(buf, sizeof(buf), "%ss-freed", name);
+=======
+                                sz = snprintf(buf, sizeof(buf), "%ses-freed", name);
+			else
+				sz = snprintf(buf, sizeof(buf), "%ss-freed", name);
+			assert(sz >=0  && sz < sizeof(buf));
+>>>>>>> master
 			if (lcrecord_stats[i].instances_freed != 0)
 				pl = gc_plist_hack(buf,
 						   lcrecord_stats[i].
 						   instances_freed, pl);
 			if (name[len - 1] == 's')
+<<<<<<< HEAD
 				snprintf(buf, sizeof(buf), "%ses-on-free-list", name);
 			else
 				snprintf(buf, sizeof(buf), "%ss-on-free-list", name);
+=======
+				sz = snprintf(buf, sizeof(buf), "%ses-on-free-list", name);
+			else
+				sz = snprintf(buf, sizeof(buf), "%ss-on-free-list", name);
+			assert(sz >=0  && sz < sizeof(buf));
+>>>>>>> master
 			if (lcrecord_stats[i].instances_on_free_list != 0)
 				pl = gc_plist_hack(buf,
 						   lcrecord_stats[i].
 						   instances_on_free_list, pl);
 			if (name[len - 1] == 's')
+<<<<<<< HEAD
 				snprintf(buf, sizeof(buf), "%ses-used", name);
 			else
 				snprintf(buf, sizeof(buf), "%ss-used", name);
+=======
+				sz = snprintf(buf, sizeof(buf), "%ses-used", name);
+			else
+				sz = snprintf(buf, sizeof(buf), "%ss-used", name);
+			assert(sz >=0  && sz < sizeof(buf));
+>>>>>>> master
 			pl = gc_plist_hack(buf,
 					   lcrecord_stats[i].instances_in_use,
 					   pl);
@@ -5168,10 +5377,14 @@ of all different kinds of objects, not just conses.
 
 If this value exceeds `gc-cons-threshold', a garbage collection happens.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
@@ -5346,7 +5559,11 @@ my_malloc(size_t bar)
 /* We need the next two functions since GNU MP insists on giving us an extra
    parameter. */
 static void*
+<<<<<<< HEAD
 my_realloc (void *ptr, size_t UNUSED(old_size), size_t new_size)
+=======
+my_realloc (void *ptr, size_t SXE_UNUSED(old_size), size_t new_size)
+>>>>>>> master
 {
 	void *foo = xrealloc(ptr, new_size);
 	SXE_DEBUG_GC_GMP("gmp realloc :was %p  :is %p\n", ptr, foo);

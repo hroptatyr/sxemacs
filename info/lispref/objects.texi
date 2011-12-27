@@ -204,10 +204,13 @@ symbol
 @item
 toolbar-button
 @item
+<<<<<<< HEAD
 tooltalk-message
 @item
 tooltalk-pattern
 @item
+=======
+>>>>>>> master
 vector
 @item
 weak-list
@@ -1375,8 +1378,11 @@ with editing.
                           under SXEmacs/MULE.
 * Coding System Type::  An object encapsulating a way of converting between
                           different textual encodings, under SXEmacs/MULE.
+<<<<<<< HEAD
 * ToolTalk Message Type:: A message, in the ToolTalk IPC protocol.
 * ToolTalk Pattern Type:: A pattern, in the ToolTalk IPC protocol.
+=======
+>>>>>>> master
 @end menu
 
 
@@ -1765,6 +1771,7 @@ table is actually a vector of length 256, although in SXEmacs and XEmacs
 (not yet documented)
 
 
+<<<<<<< HEAD
 @node ToolTalk Message Type
 @subsection ToolTalk Message Type
 
@@ -1777,6 +1784,8 @@ table is actually a vector of length 256, although in SXEmacs and XEmacs
 (not yet documented)
 
 
+=======
+>>>>>>> master
 @node Window-System Types
 @section Window-System Types
 @cindex window system types
@@ -2235,7 +2244,11 @@ This function returns a symbol naming the primitive type of
 @code{image-instance}, @code{integer}, @code{keymap}, @code{marker},
 @code{process}, @code{range-table}, @code{specifier}, @code{string},
 @code{subr}, @code{subwindow}, @code{symbol}, @code{toolbar-button},
+<<<<<<< HEAD
 @code{tooltalk-message}, @code{tooltalk-pattern}, @code{vector},
+=======
+@code{vector},
+>>>>>>> master
 @code{weak-list}, @code{window}, @code{window-configuration}, or
 @code{x-resource}.
 

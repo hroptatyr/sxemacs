@@ -33,7 +33,11 @@ static ase_nullary_operation_f Qent_mpc_zero, Qent_mpc_one;
 
 
 static void
+<<<<<<< HEAD
 bigc_print(Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
+=======
+bigc_print(Lisp_Object obj, Lisp_Object printcharfun, int SXE_UNUSED(escapeflag))
+>>>>>>> master
 {
 	Bufbyte *fstr = bigc_to_string(XBIGC_DATA(obj), 10);
 	write_c_string((char*)fstr, printcharfun);
@@ -43,25 +47,41 @@ bigc_print(Lisp_Object obj, Lisp_Object printcharfun, int UNUSED(escapeflag))
 }
 
 static int
+<<<<<<< HEAD
 bigc_equal (Lisp_Object obj1, Lisp_Object obj2, int UNUSED(depth))
+=======
+bigc_equal (Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
+>>>>>>> master
 {
 	return bigc_eq(XBIGC_DATA(obj1), XBIGC_DATA(obj2));
 }
 
 static unsigned long
+<<<<<<< HEAD
 bigc_hash (Lisp_Object obj, int UNUSED(depth))
+=======
+bigc_hash (Lisp_Object obj, int SXE_UNUSED(depth))
+>>>>>>> master
 {
 	return bigc_hashcode(XBIGC_DATA(obj));
 }
 
 static Lisp_Object
+<<<<<<< HEAD
 bigc_mark (Lisp_Object UNUSED(obj))
+=======
+bigc_mark (Lisp_Object SXE_UNUSED(obj))
+>>>>>>> master
 {
 	return Qnil;
 }
 
 static void
+<<<<<<< HEAD
 bigc_finalise (void *UNUSED(header), int for_disksave)
+=======
+bigc_finalise (void *SXE_UNUSED(header), int for_disksave)
+>>>>>>> master
 {
 	if (for_disksave)
 		signal_simple_error

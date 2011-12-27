@@ -149,16 +149,21 @@ ARGLIST allows full Common Lisp conventions."
 (defvar bind-block) (defvar bind-defs) (defvar bind-enquote)
 (defvar bind-inits) (defvar bind-lets) (defvar bind-forms)
 <<<<<<< HEAD
+<<<<<<< HEAD
 (defvar arglist-visited)
 =======
 
 >>>>>>> origin/master
+=======
+
+>>>>>>> master
 
 ;; npak@ispras.ru
 (defun cl-upcase-arg (arg)
   ;; Changes all non-keyword symbols in `ARG' to symbols
   ;; with name in upper case.
   ;; ARG is either symbol or list of symbols or lists
+<<<<<<< HEAD
 <<<<<<< HEAD
   (cond ;;((null arg) 'NIL)
         ((symbolp arg)
@@ -195,6 +200,8 @@ Supports Common Lisp lambda lists."
                      (t (wrong-type-argument 'listp arglist)))))
       (t "Not available"))))
 =======
+=======
+>>>>>>> master
   (cond ((symbolp arg)
 	 ;; Do not upcase &optional, &key etc.
 	 (if (memq arg lambda-list-keywords)
@@ -229,13 +236,17 @@ Supports Common Lisp lambda lists."
                         (cl-upcase-arg (list '&rest arglist)))
                        (t (wrong-type-argument 'listp arglist)))))
       (t "Not available")))))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 (defun cl-transform-lambda (form bind-block)
   (let* ((args (car form)) (body (cdr form))
 	 (bind-defs nil) (bind-enquote nil)
 	 (bind-inits nil) (bind-lets nil) (bind-forms nil)
 	 (header nil) (simple-args nil)
+<<<<<<< HEAD
 <<<<<<< HEAD
          (doc ""))
     ;; Add CL lambda list to documentation. npak@ispras.ru
@@ -251,11 +262,16 @@ Supports Common Lisp lambda lists."
     (while (or (stringp (car body)) (eq (car-safe (car body)) 'interactive))
       (cl-push (cl-pop body) header))
 =======
+=======
+>>>>>>> master
          (complex-arglist (cl-function-arglist bind-block args))
          (doc ""))
     (while (or (stringp (car body)) (eq (car-safe (car body)) 'interactive))
       (push (pop body) header))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
     (setq args (if (listp args) (copy-list args) (list '&rest args)))
     (let ((p (last args))) (if (cdr p) (setcdr p (list '&rest (cdr p)))))
     (if (setq bind-defs (cadr (memq '&cl-defs args)))
@@ -272,6 +288,7 @@ Supports Common Lisp lambda lists."
 		(not (and (eq (car args) '&optional)
 			  (or bind-defs (consp (cadr args))))))
 <<<<<<< HEAD
+<<<<<<< HEAD
       (cl-push (cl-pop args) simple-args))
     (or (eq bind-block 'cl-none)
 	(setq body (list (list* 'block bind-block body))))
@@ -279,6 +296,8 @@ Supports Common Lisp lambda lists."
 	(list* nil (nreverse simple-args) (nconc (nreverse header) body))
       (if (memq '&optional simple-args) (cl-push '&optional args))
 =======
+=======
+>>>>>>> master
       (push (pop args) simple-args))
     (or (eq bind-block 'cl-none)
 	(setq body (list (list* 'block bind-block body))))
@@ -296,23 +315,32 @@ Supports Common Lisp lambda lists."
     (if (null args)
 	(list* nil simple-args (nconc header body))
       (if (memq '&optional simple-args) (push '&optional args))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
       (cl-do-arglist args nil (- (length simple-args)
 				 (if (memq '&optional simple-args) 1 0)))
       (setq bind-lets (nreverse bind-lets))
       (list* (and bind-inits (list* 'eval-when '(compile load eval)
 				    (nreverse bind-inits)))
 <<<<<<< HEAD
+<<<<<<< HEAD
 	     (nconc (nreverse simple-args)
 		    (list '&rest (car (cl-pop bind-lets))))
 	     (nconc (nreverse header)
 =======
+=======
+>>>>>>> master
 	     (nconc simple-args
 		    (list '&rest (car (pop bind-lets))))
 	     ;; XEmacs change: we add usage information using Nickolay's
 	     ;; approach above
 	     (nconc header
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 		    (list (nconc (list 'let* bind-lets)
 				 (nreverse bind-forms) body)))))))
 

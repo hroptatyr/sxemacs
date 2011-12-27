@@ -1,10 +1,14 @@
 ;;; ffi.el --- FFI lisp layer.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ;; Copyright (C) 2005-2008 by Zajcev Evgeny
 =======
 ;; Copyright (C) 2005-2010 by Zajcev Evgeny
 >>>>>>> origin/master
+=======
+;; Copyright (C) 2005-2010 by Zajcev Evgeny
+>>>>>>> master
 
 ;; Author: Zajcev Evgeny <zevlg@yandex.ru>
 ;; Created: Fri Feb 18 18:56:43 MSK 2005
@@ -55,17 +59,23 @@
   (globally-declare-fboundp
    '(ffi-size-of-type make-ffi-object ffi-canonicalise-type
 <<<<<<< HEAD
+<<<<<<< HEAD
 		      ffi-basic-type-p ffi-load-library ffi-dlerror ffi-object-type
 		      ffi-fetch ffi-slot-offset ffi-store ffi-aref
                       ffi-make-pointer ffi-pointer-address)))
 
 =======
+=======
+>>>>>>> master
 		      ffi-basic-type-p ffi-load-library ffi-dlerror
                       ffi-object-type ffi-fetch ffi-slot-offset
                       ffi-store ffi-aref ffi-make-pointer
                       ffi-object-address ffi-call-function
                       ffi-defun ffi-bind)))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 
 (require 'alist)
@@ -89,10 +99,14 @@ Return created FFI object."
 
 (defun ffi-find-named-type (type-name)
 <<<<<<< HEAD
+<<<<<<< HEAD
   "Search for named FFI type."
 =======
   "Search for TYPE-NAME in named FFI types."
 >>>>>>> origin/master
+=======
+  "Search for TYPE-NAME in named FFI types."
+>>>>>>> master
   (cdr (assq type-name ffi-named-types)))
 
 (defmacro declare-ffi-type (name)
@@ -173,10 +187,14 @@ BODY should use `value' to reference typed value."
   "Associate NAME with FFI TYPE.
 When defining global structures or unions, NAME may be
 <<<<<<< HEAD
+<<<<<<< HEAD
 `nil', in that case NAME is derived from the name of
 =======
 nil, in that case NAME is derived from the name of
 >>>>>>> origin/master
+=======
+nil, in that case NAME is derived from the name of
+>>>>>>> master
 TYPE."
   `(ffi-define-type-internal ',name ',type))
 
@@ -206,41 +224,57 @@ SLOTS are in form (NAME TYPE &key :offset)."
   "Return non-nil if TYPE is a valid FFI type.
 If optional argument SIGNAL-P is non-nil and TYPE is not an
 <<<<<<< HEAD
+<<<<<<< HEAD
 FFI type, additionally signal an error."
   (setq type (ffi-canonicalise-type type))
   (if (cond ((ffi-basic-type-p type) t)
 =======
+=======
+>>>>>>> master
 FFI type, additionally signal an error.
 
 NOTE: returned non-nil value is actuall canonicalised type."
   (setq type (ffi-canonicalise-type type))
   (if (cond ((ffi-basic-type-p type) type)
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
             ;; Pointer
             ((or (eq type 'pointer)
                  (and (listp type)
                       (eq (car type) 'pointer)
 <<<<<<< HEAD
+<<<<<<< HEAD
                       (ffi-type-p (cadr type)))) t)
 
             ;; Maybe TYPE is declared
             ((ffi-declared-type-p type) t)
 =======
+=======
+>>>>>>> master
                       (ffi-type-p (cadr type)))) type)
 
             ;; Maybe TYPE is declared
             ((ffi-declared-type-p type) type)
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
             ;; Struct or Union
             ((and (listp type)
                   (memq (car type) '(struct union)))
 <<<<<<< HEAD
+<<<<<<< HEAD
              t)
 =======
              type)
 >>>>>>> origin/master
+=======
+             type)
+>>>>>>> master
 ;             (not (memq nil
 ;                        (mapcar #'(lambda (slot-type)
 ;                                    (ffi-type-p (cadr slot-type)))
@@ -250,10 +284,14 @@ NOTE: returned non-nil value is actuall canonicalised type."
             ((and (consp type) (eq (car type) 'c-data)
                   (or (numberp (cdr type)) (null (cdr type))))
 <<<<<<< HEAD
+<<<<<<< HEAD
              t)
 =======
              type)
 >>>>>>> origin/master
+=======
+             type)
+>>>>>>> master
 
             ;; Array
             ((and (listp type) (eq 'array (car type))
@@ -261,26 +299,35 @@ NOTE: returned non-nil value is actuall canonicalised type."
                   (integerp (caddr type))
                   (> (caddr type) 0))
 <<<<<<< HEAD
+<<<<<<< HEAD
              t)
 =======
              type)
 >>>>>>> origin/master
+=======
+             type)
+>>>>>>> master
 
             ;; Function
             ((and (listp type) (eq 'function (car type))
                   (ffi-type-p (cadr type)))
              (not (memq nil (mapcar 'ffi-type-p (cddr type))))))
 <<<<<<< HEAD
+<<<<<<< HEAD
       t                                 ; TYPE is valid FFI type
 =======
       type                              ; TYPE is valid FFI type
 >>>>>>> origin/master
+=======
+      type                              ; TYPE is valid FFI type
+>>>>>>> master
 
     (when signal-p
       (signal-error 'invalid-argument type))))
 
 ;;;###autoload
 (defun ffi-load (libname)
+<<<<<<< HEAD
 <<<<<<< HEAD
   "Load library LIBNAME and return a foreign object handle if successful,
 or indicate an error if the library cannot be loaded.
@@ -289,6 +336,11 @@ or indicate an error if the library cannot be loaded.
 Return a foreign object handle if successful, or indicate an error if
 the library cannot be loaded.
 >>>>>>> origin/master
+=======
+  "Load library LIBNAME.
+Return a foreign object handle if successful, or indicate an error if
+the library cannot be loaded.
+>>>>>>> master
 
 The argument LIBNAME should be the file-name string of a shared
 object library (usual extension is `.so').
@@ -303,6 +355,7 @@ $LD_LIBRARY_PATH environment variable or the more global ld.so.cache."
           (put-alist libname fo ffi-loaded-libraries))
     fo))
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 (defun* ffi-get (fo &key (type (ffi-object-type fo)) (off 0))
   "Return FO's value.
@@ -342,6 +395,8 @@ defaults to 0."
 
             (t (error "Unsupported type: %S" type))))))
 =======
+=======
+>>>>>>> master
 (defun* ffi-get (fo &key (type (ffi-object-type fo)) (off 0)
                     (from-call nil))
   "Return FO's value.
@@ -373,6 +428,14 @@ FROM-CALL is magic, do not use it!"
                             :off (+ off (ffi-slot-offset
                                          ctype (first sslot)))))))
 
+<<<<<<< HEAD
+=======
+          ;; Extremely special case for safe-string!
+          ((eq type 'safe-string)
+           (unless (ffi-null-p fo)
+             (ffi-fetch fo off 'c-string)))
+
+>>>>>>> master
           ((and (not from-call)
                 (or (eq ctype 'pointer)
                     (and (listp ctype)
@@ -386,7 +449,10 @@ FROM-CALL is magic, do not use it!"
            ;; Can't get value in proper form,
            ;; just return FO unmodified
            fo))))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 (defun ffi-slot-type (type slot)
   "Return TYPE's SLOT type.
@@ -414,10 +480,13 @@ FO's SLOT."
   (let* ((type (ffi-object-type fo))
          (ctype (ffi-canonicalise-type type)))
 <<<<<<< HEAD
+<<<<<<< HEAD
     (if (ffi-basic-type-p ctype)
         (ffi-store fo 0 type val)
 
 =======
+=======
+>>>>>>> master
     (if (or (ffi-basic-type-p ctype)
             (eq ctype 'pointer))
         (ffi-store fo 0 type val)
@@ -427,7 +496,10 @@ FO's SLOT."
                 (and (listp ctype) (eq (car ctype) 'pointer)))
         (ffi-store fo 0 type val))
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
       ;; TODO: Compound type
       )))
 
@@ -458,12 +530,16 @@ Error will be signaled if FO-POINTER is not of pointer type."
          (setq ffiargs (nreverse ffiargs))
          (setq ret (apply #'ffi-call-function ,fsym ffiargs))
 <<<<<<< HEAD
+<<<<<<< HEAD
          (if (ffi-basic-type-p (ffi-canonicalise-type (cadr ,ftype)))
              (ffi-get ret)
            ret)))))
 =======
          (ffi-get ret :from-call t)))))
 >>>>>>> origin/master
+=======
+         (ffi-get ret :from-call t)))))
+>>>>>>> master
 
 (put 'define-ffi-function 'lisp-indent-function 'defun)
 
@@ -500,10 +576,14 @@ defined.  The first one is a simple lookup function returning the
 C-value of a passed symbol.  The second does basically the same
 but returns the representing \(elisp\) integer of a symbol.
 <<<<<<< HEAD
+<<<<<<< HEAD
 Both functions return `nil' if the symbol is not in the enumeration."
 =======
 Both functions return nil if the symbol is not in the enumeration."
 >>>>>>> origin/master
+=======
+Both functions return nil if the symbol is not in the enumeration."
+>>>>>>> master
 
   ;; first check if we were passed a docstring
   (unless (stringp docstring)
@@ -636,11 +716,15 @@ For example:
     \(Boris 0\)
     Vova
 <<<<<<< HEAD
+<<<<<<< HEAD
     Micha\)
 "
 =======
     Micha\)"
 >>>>>>> origin/master
+=======
+    Micha\)"
+>>>>>>> master
   `(progn
      (define-ffi-type ,type-name int)
      (let* ((cv 0)
@@ -680,12 +764,17 @@ function.
 For example:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 \(define-ffi-callback my-nice-cb 'int
   \(\(proname 'c-string\) \(event 'pointer\)\)
 =======
 \(define-ffi-callback my-nice-cb int
   \(\(proname c-string\) \(event pointer\)\)
 >>>>>>> origin/master
+=======
+\(define-ffi-callback my-nice-cb int
+  \(\(proname c-string\) \(event pointer\)\)
+>>>>>>> master
   \"Print nice message in the minibuffer and return 10000.\"
   \(message \"nice message\"\)
   10000\)
@@ -698,10 +787,14 @@ and pass the name of the callback."
      (defun ,sym ,argnames
        ,@body)
 <<<<<<< HEAD
+<<<<<<< HEAD
      (let ((cfo (ffi-make-callback ',sym ,retype (list ,@argtypes) 0)))
 =======
      (let ((cfo (ffi-make-callback ',sym ',retype ',argtypes 0)))
 >>>>>>> origin/master
+=======
+     (let ((cfo (ffi-make-callback ',sym ',retype ',argtypes 0)))
+>>>>>>> master
        (put ',sym 'ffi-callback-fo cfo)
        cfo))))
 
@@ -726,6 +819,7 @@ and pass the name of the callback."
   (ffi-pointer-to-lisp-object value))
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 (define-ffi-type safe-string pointer)
 (define-ffi-translator-to-foreign safe-string
@@ -735,12 +829,19 @@ and pass the name of the callback."
 (define-ffi-translator-from-foreign safe-string
   (unless (ffi-null-p value)
     (ffi-get value :type 'c-string)))
+=======
+;; NOTE: use only for return values
+(define-ffi-type safe-string pointer)
+>>>>>>> master
 
 (define-ffi-type callback pointer)
 (define-ffi-translator-to-foreign callback
   (ffi-callback-fo value))
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 ;;; CFFI
 (define-ffi-type :byte byte)
@@ -766,11 +867,20 @@ and pass the name of the callback."
 
 ;;;# Accessing Foreign Globals
 
+<<<<<<< HEAD
 (defun cffi:lisp-var-name (name)
   "Return the Lisp symbol for foreign var NAME."
   (etypecase name
     (list (second name))
     (string (intern (format "*%s*" (downcase (substitute ?- ?_ name)))))
+=======
+(defun cffi:lisp-var-name (name &optional fun-p)
+  "Return the Lisp symbol for foreign var NAME."
+  (etypecase name
+    (list (second name))
+    (string (intern (format "%s%s%s" (if fun-p "" "*")
+                            (downcase (substitute ?- ?_ name)) (if fun-p "" "*"))))
+>>>>>>> master
     (symbol name)))
 
 (defun cffi:foreign-var-name (name)
@@ -803,7 +913,11 @@ and pass the name of the callback."
           (format "Lisp variant for `%s' foreign function."
                   (cffi:foreign-var-name name))))
 
+<<<<<<< HEAD
   (let* ((nsl (cffi:lisp-var-name name))
+=======
+  (let* ((nsl (cffi:lisp-var-name name t))
+>>>>>>> master
          (nsf (cffi:foreign-var-name name))
          (with-rest (when (eq (car (last in-args)) '&rest)
                       (setq in-args (butlast in-args))
@@ -816,6 +930,7 @@ and pass the name of the callback."
                   (when with-rest
                     (list '(while rest-args
 <<<<<<< HEAD
+<<<<<<< HEAD
                              (setarg (car rest-args) (cadr rest-args))
                              (setq rest-args (cddr rest-args)))))
                   (list '(setq ffiargs (nreverse ffiargs)))
@@ -826,6 +941,8 @@ and pass the name of the callback."
                              (ffi-get ret)
                            ret))))
 =======
+=======
+>>>>>>> master
                              (if (ffi-object-p (car rest-args))
                                  (progn
                                    (setarg (ffi-object-type (car rest-args))
@@ -837,7 +954,10 @@ and pass the name of the callback."
                   (list `(setq ret (apply #'ffi-call-function
                                           (get ',nsl 'ffi-fun) ffiargs)))
                   (list `(ffi-get ret :from-call t))))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
     (setq defun-form
           (append `(defun ,nsl)
                   (list (if with-rest
@@ -898,8 +1018,11 @@ SIZE-VAR is supplied, it will be bound to SIZE during BODY."
 ;;;# Misc. Pointer Operations
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 (defalias 'cffi:make-pointer 'ffi-make-pointer)
 =======
+=======
+>>>>>>> master
 (defun ffi-pointer-p (fo)
   "Return non-nil if ffi objct FO has pointer type."
   (let ((ctype (ffi-canonicalise-type (ffi-object-type fo))))
@@ -910,7 +1033,10 @@ SIZE-VAR is supplied, it will be bound to SIZE during BODY."
 
 (defalias 'cffi:make-pointer 'ffi-make-pointer)
 (defalias 'ffi-pointer-address 'ffi-object-address)
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 (defalias 'cffi:pointer-address 'ffi-pointer-address)
 (defalias 'cffi:pointerp 'ffi-pointer-p)
 (defalias 'cffi:null-pointer 'ffi-null-pointer)
@@ -919,18 +1045,24 @@ SIZE-VAR is supplied, it will be bound to SIZE during BODY."
 (defun cffi:inc-pointer (ptr offset)
   "Return a pointer OFFSET bytes past PTR."
 <<<<<<< HEAD
+<<<<<<< HEAD
   (ffi-make-pointer (+ (ffi-pointer-address ptr) offset)))
 
 (defun cffi:pointer-eq (ptr1 ptr2)
   "Return true if PTR1 and PTR2 point to the same address."
   (= (ffi-pointer-address ptr1) (ffi-pointer-address ptr2)))
 =======
+=======
+>>>>>>> master
   (ffi-make-pointer (+ (ffi-object-address ptr) offset)))
 
 (defun cffi:pointer-eq (ptr1 ptr2)
   "Return true if PTR1 and PTR2 point to the same address."
   (= (ffi-object-address ptr1) (ffi-object-address ptr2)))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 ;;;# Dereferencing
 

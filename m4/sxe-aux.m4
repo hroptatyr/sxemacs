@@ -126,6 +126,17 @@ __SXE_MAKE_ADDER([MULE], [libmule])
 dnl creates SXE_ADD_SXEUI_{OBJ,OBJS}
 __SXE_MAKE_ADDER([SXEUI], [libsxeui])
 
+<<<<<<< HEAD
+=======
+dnl creates SXE_ADD_SXEUI_{OBJ,OBJS}
+__SXE_MAKE_ADDER([SXEUITTY], [libsxeuiTTY])
+
+dnl creates SXE_ADD_SXEUI_{OBJ,OBJS}
+__SXE_MAKE_ADDER([SXEUIX11], [libsxeuiX11])
+
+dnl creates SXE_ADD_SXEUI_{OBJ,OBJS}
+__SXE_MAKE_ADDER([SXEUIGTK], [libsxeuiGtk])
+>>>>>>> master
 
 dnl SXE_ADD_STATMOD_A(foo.o ...)
 AC_DEFUN([SXE_ADD_STATMOD_A], [
@@ -138,6 +149,7 @@ AC_DEFUN([SXE_SUBST_STATMOD_A], [AC_SUBST(statmod_archives)])
 
 dnl SXE_APPEND(value, varname)
 AC_DEFUN([SXE_APPEND],
+<<<<<<< HEAD
 [[$2]="$[$2] [$1]" && dnl
  if test "$extra_verbose" = "yes"; then echo "    Appending \"[$1]\" to \$[$2]"; fi])
 
@@ -145,6 +157,37 @@ dnl SXE_PREPEND(value, varname)
 AC_DEFUN([SXE_PREPEND],
 [[$2]="[$1] $[$2]" && dnl
  if test "$extra_verbose" = "yes"; then echo "    Prepending \"[$1]\" to \$[$2]"; fi])
+=======
+[SXE_CONSECUTIVE_UNDUP($2,"$[$2] [$1]")
+ if test "$extra_verbose" = "yes"; then 
+	echo "    Appending \"[$1]\" to [$2]
+        (now \"$[$2]\")"
+ fi])
+
+dnl SXE_PREPEND(value, varname)
+AC_DEFUN([SXE_PREPEND],
+[SXE_CONSECUTIVE_UNDUP($2,"[$1] $[$2]")
+ if test "$extra_verbose" = "yes"; then 
+	echo "    Prepending \"[$1]\" to [$2]
+        (now \"$[$2]\")"
+ fi])
+
+dnl SXE_APPEND(value, varname)
+AC_DEFUN([SXE_APPEND_UNDUP],
+[SXE_UNDUP($2,"$[$2] [$1]")
+ if test "$extra_verbose" = "yes"; then 
+	echo "    Appending and dedupping \"[$1]\" to [$2]
+        (now \"$[$2]\")"
+ fi])
+
+dnl SXE_PREPEND(value, varname)
+AC_DEFUN([SXE_PREPEND_UNDUP],
+[SXE_UNDUP($2,"[$1] $[$2]")
+ if test "$extra_verbose" = "yes"; then 
+	echo "    Prepending and dedupping \"[$1]\" to [$2]
+        (now \"$[$2]\")"
+ fi])
+>>>>>>> master
 
 dnl SXE_DIE(message)
 AC_DEFUN([SXE_DIE], [{ echo "Error:" $1 >&2; exit 1; }])
@@ -310,6 +353,18 @@ for W in $2; do if test -z "$T"; then T="$W"; else T="$T $W"; fi; done
 $1="$T"
 ])dnl SXE_SPACE
 
+<<<<<<< HEAD
+=======
+dnl SXE_CONSECUTIVE_UNDUP(var, words)
+AC_DEFUN([SXE_CONSECUTIVE_UNDUP],[
+$1=`echo "$2" | ${AWK-awk} 'BEGIN {RS=" "} {if([$]1[] != SXEL) {printf "%s ", [$]1[]} SXEL=[$]1[]}' `
+])dnl SXE_CONSECUTIVE_UNDUP
+
+dnl SXE_UNDUP(var, words)
+AC_DEFUN([SXE_UNDUP],[
+$1=`echo "$2" | ${AWK-awk} 'BEGIN {RS=" "} {VAL=[$]1[]; if(VAL in SXEL){}else{printf "%s ", VAL} SXEL[[VAL]]=1}' `
+])dnl SXE_UNDUP
+>>>>>>> master
 
 
 AC_DEFUN([SXE_LANG_WERROR], [dnl
@@ -492,8 +547,13 @@ AC_DEFUN([_SXE_MM_CHECK_pkgconfig_based], [
 		SXE_DUMP_LIBS
 		MM_MOD_LIBS_SITE=`$PKG_CONFIG --libs-only-L []MM_MOD[]`
 		MM_MOD_HDRS_SITE=`$PKG_CONFIG --cflags-only-I []MM_MOD[]`
+<<<<<<< HEAD
 		SXE_PREPEND([$MM_MOD_HDRS_SITE], [CPPFLAGS])
 		SXE_PREPEND([$MM_MOD_LIBS_SITE], [LDFLAGS])
+=======
+		SXE_PREPEND_UNDUP([$MM_MOD_HDRS_SITE], [CPPFLAGS])
+		SXE_PREPEND_UNDUP([$MM_MOD_LIBS_SITE], [LDFLAGS])
+>>>>>>> master
 
 		MM_SUCC
 		SXE_CHECK_HEADERS([]MM_MOD_HDRS[], [:], [MM_FAIL])

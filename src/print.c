@@ -30,11 +30,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "backtrace.h"
 #include "buffer.h"
 #include "bytecode.h"
+<<<<<<< HEAD
 #include "console-tty.h"
 #include "console-stream.h"
 #include "extents.h"
 #include "frame.h"
 #include "insdel.h"
+=======
+#include "ui/TTY/console-tty.h" /* for stuff in
+				   write_string_to_stdio_stream. Needs
+				   refacturing */
+#include "ui/console-stream.h"
+#include "extents.h"
+#include "ui/frame.h"
+#include "ui/insdel.h"
+>>>>>>> master
 #include "lstream.h"
 #include "sysfile.h"
 
@@ -115,11 +125,16 @@ std_handle_out_external(FILE * stream, Lisp_Object lstream,
 		return;
 	}
 	if (stream) {
+<<<<<<< HEAD
 		{
 			fwrite(extptr, 1, extlen, stream);
 			if (must_flush)
 				fflush(stream);
 		}
+=======
+		fwrite(extptr, 1, extlen, stream);
+		if (must_flush)	fflush(stream);
+>>>>>>> master
 	} else
 		Lstream_write(XLSTREAM(lstream), extptr, extlen);
 
@@ -128,10 +143,92 @@ std_handle_out_external(FILE * stream, Lisp_Object lstream,
 			fwrite(extptr, 1, extlen, termscript);
 			fflush(termscript);
 		}
+<<<<<<< HEAD
 		stdout_needs_newline = extlen ? (extptr[extlen - 1] != '\n') : 1;
 	}
 }
 
+=======
+		stdout_needs_newline = extptr[extlen - 1] != '\n';
+	}
+}
+
+
+#define SXE_VSNPRINT_VA(ret,sbuf,buf,size,spec,tries,type,fmt,args)	\
+	do {								\
+		--tries;						\
+		ret = vsnprintf((char*)buf,size,fmt,args);		\
+		if ( retval == 0 ) {					\
+			/* Nothing to write */				\
+			break;						\
+		} else if ( ret < 0 ) {					\
+			XMALLOC_UNBIND(buf,size,spec);			\
+			size *= 2;					\
+			XMALLOC_OR_ALLOCA(buf,size,type);		\
+			ret = 0;					\
+		} else if ( ret > size ) {				\
+		    /* We need more space, so we need to allocate it */ \
+			XMALLOC_UNBIND(buf,size,spec);			\
+			size = ret + 1;					\
+			XMALLOC_OR_ALLOCA(buf,size,type);		\
+			ret = 0;					\
+		}							\
+	} while( ret == 0 && tries > 0 )
+
+
+int write_fmt_str(Lisp_Object stream, const char* fmt, ...)
+{
+	char   *kludge;
+	va_list args;
+	int	bufsize, retval, tries = 3;
+        /* write_fmt_str is used for small prints usually... */
+	char	buffer[64+1];   
+	int speccount = specpdl_depth();
+
+	va_start(args, fmt);
+	kludge = buffer;
+	bufsize = sizeof(buffer);
+
+	SXE_VSNPRINT_VA(retval,buffer,kludge,bufsize,speccount,tries,char,fmt,args);
+
+	if (retval>0)
+		write_c_string(kludge,stream);
+
+	XMALLOC_UNBIND(kludge, bufsize, speccount);
+	va_end(args);
+
+	if (retval < 0)
+		error("Error attempting to write write format string '%s'",
+		      fmt);
+	return retval;
+}
+
+int write_fmt_string(Lisp_Object stream, const char *fmt, ...)
+{
+	char   *kludge;
+	va_list args;
+	int	bufsize, retval, tries = 3;
+	/* write_va is used for small prints usually... */
+	char	buffer[128+1];
+	int speccount = specpdl_depth();
+
+	va_start(args, fmt);
+	kludge = buffer;
+	bufsize = sizeof(buffer);
+
+	SXE_VSNPRINT_VA(retval,buffer,kludge,bufsize,speccount,tries,char,fmt,args);
+	if (retval>0)
+		write_c_string(kludge,stream);
+	XMALLOC_UNBIND(kludge, bufsize, speccount);
+	va_end(args);
+
+	if (retval < 0)
+		error("Error attempting to write write format string '%s'",
+		      fmt);
+	return retval;
+}
+
+>>>>>>> master
 /* #### The following function should be replaced a call to the
    emacs_doprnt_*() functions.  This is the only way to ensure that
    I18N3 works properly (many implementations of the *printf()
@@ -149,6 +246,7 @@ std_handle_out_external(FILE * stream, Lisp_Object lstream,
 
 static int std_handle_out_va(FILE * stream, const char *fmt, va_list args)
 {
+<<<<<<< HEAD
 	Bufbyte buffer[16384],
 		*kludge = buffer;
 <<<<<<< HEAD
@@ -199,10 +297,55 @@ static int std_handle_out_va(FILE * stream, const char *fmt, va_list args)
 	} else if (fatal_error_in_progress || !inhibit_non_essential_printing_operations)
 		fprintf(stream,(char*)kludge);
 >>>>>>> origin/master
+=======
+	int      retval, tries = 3;
+	size_t   bufsize;
+	int      use_fprintf;
+	Bufbyte *kludge;
+	Bufbyte  buffer[1024]; /* Tax stack lightly, used to be 16KiB */
+	int      speccount = specpdl_depth();
+
+	bufsize = sizeof(buffer);
+	kludge = buffer;
+
+	SXE_VSNPRINT_VA(retval,buffer,kludge,bufsize,speccount,tries,Bufbyte,fmt,args);
+	
+	if (retval == 0)
+		/* nothing to write */
+		return retval;
+
+	use_fprintf = ! initialized ||fatal_error_in_progress || 
+		inhibit_non_essential_printing_operations;
+
+	if (retval > 0) {
+		if (use_fprintf) {
+			fprintf(stream,"%s",(char*)kludge);
+		} else {
+			Extbyte	 *extptr = NULL;
+			Extcount extlen = retval;
+
+			TO_EXTERNAL_FORMAT(DATA, (kludge, strlen((char *)kludge)),
+					   ALLOCA, (extptr, extlen), Qnative);
+			std_handle_out_external(stream, Qnil, extptr, extlen, 1, 1);
+		}
+	} else {
+		if (use_fprintf) {
+			fprintf(stream,"Error attempting to write format string '%s'",
+				fmt);
+		} else {
+			const Extbyte *msg = "Error attempting to write format string";
+			std_handle_out_external(stream, Qnil, msg, strlen(msg), 1, 1);
+		}
+	}
+>>>>>>> master
 	XMALLOC_UNBIND(kludge, bufsize, speccount);
 	return retval;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 /* Output portably to stderr or its equivalent; call GETTEXT on the
    format string.  Automatically flush when done. */
 
@@ -227,10 +370,17 @@ int stdout_out(const char *fmt, ...)
 	int retval;
 	va_list args;
 	va_start(args, fmt);
+<<<<<<< HEAD
 	retval =
 	    std_handle_out_va
 	    (stdout, initialized
 	     && !fatal_error_in_progress ? GETTEXT(fmt) : fmt, args);
+=======
+	retval = std_handle_out_va(stdout, 
+				   (initialized && !fatal_error_in_progress 
+				    ? GETTEXT(fmt) : fmt), 
+				   args);
+>>>>>>> master
 	va_end(args);
 	return retval;
 }
@@ -241,7 +391,14 @@ DOESNT_RETURN fatal(const char *fmt, ...)
 	va_start(args, fmt);
 
 	stderr_out("\nSXEmacs: ");
+<<<<<<< HEAD
 	std_handle_out_va(stderr, GETTEXT(fmt), args);
+=======
+	std_handle_out_va(stderr, 
+			  (initialized && !fatal_error_in_progress 
+			   ? GETTEXT(fmt) : fmt), 
+			  args);
+>>>>>>> master
 	stderr_out("\n");
 
 	va_end(args);
@@ -493,12 +650,25 @@ void write_string_1(const Bufbyte * str, Bytecount size, Lisp_Object stream)
 	output_string(stream, str, Qnil, 0, size);
 }
 
+<<<<<<< HEAD
+=======
+
+void write_hex_ptr(void* value, Lisp_Object stream)
+{
+	char buf[sizeof(value)*2+1];
+	int n = snprintf(buf,sizeof(buf),"0x%p",value);
+	assert(n>=0 && n<sizeof(buf));
+	write_c_string(buf,stream);
+}
+
+>>>>>>> master
 void write_c_string(const char *str, Lisp_Object stream)
 {
 	/* This function can GC */
 	write_string_1((const Bufbyte *)str, strlen(str), stream);
 }
 
+<<<<<<< HEAD
 static void write_fmt_string(Lisp_Object stream, const char *fmt, ...)
 {
 	va_list va;
@@ -509,15 +679,21 @@ static void write_fmt_string(Lisp_Object stream, const char *fmt, ...)
 	va_end(va);
 	write_c_string(bigbuf, stream);
 }
+=======
+>>>>>>> master
 
 DEFUN("write-char", Fwrite_char, 1, 2, 0,	/*
 Output character CHARACTER to stream STREAM.
 STREAM defaults to the value of `standard-output' (which see).
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (character, stream))
 {
 	/* This function can GC */
@@ -585,10 +761,14 @@ If BODY does not finish normally, the buffer BUFNAME is not displayed.
 If variable `temp-buffer-show-function' is non-nil, call it at the end
 to get the buffer displayed.  It gets one argument, the buffer to display.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (args))
 {
 	/* This function can GC */
@@ -620,10 +800,14 @@ DEFUN("terpri", Fterpri, 0, 1, 0,	/*
 Output a newline to STREAM.
 If STREAM is omitted or nil, the value of `standard-output' is used.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (stream))
 {
 	/* This function can GC */
@@ -637,10 +821,14 @@ Quoting characters are printed when needed to make output that `read'
 can handle, whenever this is possible.
 Output stream is STREAM, or value of `standard-output' (which see).
 <<<<<<< HEAD
+<<<<<<< HEAD
 				 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object, stream))
 {
 	/* This function can GC */
@@ -663,10 +851,14 @@ any Lisp object.  Quoting characters are used when needed to make output
 that `read' can handle, whenever this is possible, unless the optional
 second argument NOESCAPE is non-nil.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object, noescape))
 {
 	/* This function can GC */
@@ -695,6 +887,7 @@ No quoting characters are used; no delimiters are printed around
 the contents of strings.
 Output stream is STREAM, or value of `standard-output' (which see).
 <<<<<<< HEAD
+<<<<<<< HEAD
 				 */
       (object, stream)) {
 =======
@@ -702,6 +895,11 @@ Output stream is STREAM, or value of `standard-output' (which see).
       (object, stream))
 {
 >>>>>>> origin/master
+=======
+*/
+      (object, stream))
+{
+>>>>>>> master
 	/* This function can GC */
 	Lisp_Object frame = Qnil;
 	struct gcpro gcpro1, gcpro2;
@@ -721,10 +919,14 @@ Quoting characters are printed when needed to make output that `read'
 can handle, whenever this is possible.
 Output stream is STREAM, or value of `standard-output' (which see).
 <<<<<<< HEAD
+<<<<<<< HEAD
 				 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object, stream))
 {
 	/* This function can GC */
@@ -836,10 +1038,14 @@ The format of ERROR-OBJECT should be (ERROR-SYMBOL . DATA).  The
 message is equivalent to the one that would be issued by
 `display-error' with the same argument.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (error_object))
 {
 	/* This function can GC */
@@ -861,10 +1067,14 @@ message is equivalent to the one that would be issued by
 DEFUN("display-error", Fdisplay_error, 2, 2, 0,	/*
 Display ERROR-OBJECT on STREAM in a user-friendly way.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (error_object, stream))
 {
 	/* This function can GC */
@@ -889,18 +1099,33 @@ Lisp_Object Vfloat_output_format;
  * re-writing _doprnt to be more sane)?
  * 			-wsr
  */
+<<<<<<< HEAD
 void float_to_string(char *buf, fpfloat data)
 {
 	Bufbyte *cp, c;
 	int width;
+=======
+void float_to_string(char *buf, fpfloat data, int maxlen)
+{
+	Bufbyte *cp, c;
+	int width, sz;
+>>>>>>> master
 
 	if (NILP(Vfloat_output_format) || !STRINGP(Vfloat_output_format)) {
 	lose:
 #if fpfloat_double_p
+<<<<<<< HEAD
 		sprintf(buf, "%.16g", data);
 #elif fpfloat_long_double_p
 		sprintf(buf, "%.16Lg", data);
 #endif
+=======
+		sz = snprintf(buf, maxlen, "%.16g", data);
+#elif fpfloat_long_double_p
+		sz = snprintf(buf, maxlen, "%.16Lg", data);
+#endif
+		assert(sz>=0 && sz<maxlen);
+>>>>>>> master
 	} else {			/* oink oink */
 
 		/* Check that the spec we have is fully valid.
@@ -929,7 +1154,13 @@ void float_to_string(char *buf, fpfloat data)
 		if (cp[1] != 0)
 			goto lose;
 
+<<<<<<< HEAD
 		sprintf(buf, (char *)XSTRING_DATA(Vfloat_output_format), data);
+=======
+		sz = snprintf(buf, maxlen,
+			      (char *)XSTRING_DATA(Vfloat_output_format), data);
+		assert(sz>=0 && sz < maxlen);
+>>>>>>> master
 	}
 
 	/* added by jwz: don't allow "1.0" to print as "1"; that destroys
@@ -940,14 +1171,27 @@ void float_to_string(char *buf, fpfloat data)
 	{
 		Bufbyte *s = (Bufbyte *) buf;	/* don't use signed chars here!
 						   isdigit() can't hack them! */
+<<<<<<< HEAD
 		if (*s == '-')
 			s++;
+=======
+		if (*s == '-') {
+			s++;
+			maxlen--;
+			assert(maxlen>0);
+		}
+>>>>>>> master
 		for (; *s; s++)
 			/* if there's a non-digit, then there is a decimal point, or
 			   it's in exponential notation, both of which are ok. */
 			if (!isdigit(*s))
 				goto DONE_LABEL;
 		/* otherwise, we need to hack it. */
+<<<<<<< HEAD
+=======
+		maxlen-=2;
+		assert(maxlen>0);
+>>>>>>> master
 		*s++ = '.';
 		*s++ = '0';
 		*s = 0;
@@ -956,6 +1200,10 @@ void float_to_string(char *buf, fpfloat data)
 
 	/* Some machines print "0.4" as ".4".  I don't like that. */
 	if (buf[0] == '.' || (buf[0] == '-' && buf[1] == '.')) {
+<<<<<<< HEAD
+=======
+		assert(maxlen>0);
+>>>>>>> master
 		int i;
 		for (i = strlen(buf) + 1; i >= 0; i--)
 			buf[i + 1] = buf[i];
@@ -965,16 +1213,29 @@ void float_to_string(char *buf, fpfloat data)
 #endif				/* HAVE_FPFLOAT */
 
 /* Print NUMBER to BUFFER.
+<<<<<<< HEAD
    This is equivalent to sprintf (buffer, "%ld", number), only much faster.
+=======
+   This is equivalent to snprintf (buffer, maxlen, "%ld", number), only much faster.
+>>>>>>> master
 
    BUFFER should accept 24 bytes.  This should suffice for the longest
    numbers on 64-bit machines, including the `-' sign and the trailing
    '\0'.  Returns a pointer to the trailing '\0'. */
+<<<<<<< HEAD
 char *long_to_string(char *buffer, long number)
 {
 #if (SIZEOF_LONG != 4) && (SIZEOF_LONG != 8)
 	/* Huh? */
 	sprintf(buffer, "%ld", number);
+=======
+char *long_to_string(char *buffer, long number, int maxlen)
+{
+#if (SIZEOF_LONG != 4) && (SIZEOF_LONG != 8)
+	/* Huh? */
+	int sz = snprintf(buffer, maxlen, "%ld", number);
+	assert(sz>=0 && sz < maxlen);
+>>>>>>> master
 	return buffer + strlen(buffer);
 #else				/* (SIZEOF_LONG == 4) || (SIZEOF_LONG == 8) */
 	char *p = buffer;
@@ -984,10 +1245,23 @@ char *long_to_string(char *buffer, long number)
 		*p++ = '-';
 		number = -number;
 	}
+<<<<<<< HEAD
 #define FROB(figure) do {						\
     if (force || number >= figure)					\
       *p++ = number / figure + '0', number %= figure, force = 1;	\
     } while (0)
+=======
+#define FROB(figure) \
+	do {								\
+		if (force || number >= figure) {			\
+			*p++ = number / figure + '0';			\
+			number %= figure;				\
+			force = 1;					\
+			--maxlen;					\
+			assert(maxlen>0);				\
+		}							\
+	} while (0)
+>>>>>>> master
 #if SIZEOF_LONG == 8
 	FROB(1000000000000000000L);
 	FROB(100000000000000000L);
@@ -1176,27 +1450,41 @@ default_object_printer(Lisp_Object obj, Lisp_Object printcharfun,
 		       int escapeflag)
 {
 	struct lcrecord_header *header = (struct lcrecord_header *)XPNTR(obj);
+<<<<<<< HEAD
 	char buf[200];
+=======
+>>>>>>> master
 
 	if (print_readably)
 		error("printing unreadable object #<%s 0x%x>",
 		      LHEADER_IMPLEMENTATION(&header->lheader)->name,
 		      header->uid);
 
+<<<<<<< HEAD
 	sprintf(buf, "#<%s 0x%x>",
 		LHEADER_IMPLEMENTATION(&header->lheader)->name, header->uid);
 	write_c_string(buf, printcharfun);
+=======
+	write_fmt_string(printcharfun, "#<%s 0x%x>",
+			 LHEADER_IMPLEMENTATION(&header->lheader)->name, header->uid);
+>>>>>>> master
 }
 
 void
 internal_object_printer(Lisp_Object obj, Lisp_Object printcharfun,
 			int escapeflag)
 {
+<<<<<<< HEAD
 	char buf[200];
 	sprintf(buf, "#<INTERNAL OBJECT (SXEmacs bug?) (%s) 0x%lx>",
 		XRECORD_LHEADER_IMPLEMENTATION(obj)->name,
 		(unsigned long)XPNTR(obj));
 	write_c_string(buf, printcharfun);
+=======
+	write_fmt_string(printcharfun, "#<INTERNAL OBJECT (SXEmacs bug?) (%s) 0x%lx>",
+			 XRECORD_LHEADER_IMPLEMENTATION(obj)->name,
+			 (unsigned long)XPNTR(obj));
+>>>>>>> master
 }
 
 enum printing_badness {
@@ -1211,6 +1499,7 @@ printing_major_badness(Lisp_Object printcharfun,
 		       enum printing_badness badness)
 {
 	char buf[666];
+<<<<<<< HEAD
 
 	switch (badness) {
 	case BADNESS_INTEGER_OBJECT:
@@ -1228,6 +1517,29 @@ printing_major_badness(Lisp_Object printcharfun,
 	default:
 		break;
 	}
+=======
+	ssize_t len;
+
+	switch (badness) {
+	case BADNESS_INTEGER_OBJECT:
+		len = snprintf(buf, sizeof(buf), "%s %d object %ld", badness_string, type,
+			       (EMACS_INT) val);
+		break;
+
+	case BADNESS_POINTER_OBJECT:
+		len = snprintf(buf, sizeof(buf), "%s %d object %p", badness_string, type, val);
+		break;
+
+	case BADNESS_NO_TYPE:
+		len = snprintf(buf, sizeof(buf), "%s object %p", badness_string, val);
+		break;
+	default:
+		len = snprintf(buf, sizeof(buf), "%s unknown badness %d", 
+			       badness_string, badness);
+		break;
+	}
+	assert(len >= 0 && len < sizeof(buf));
+>>>>>>> master
 
 	/* Don't abort or signal if called from debug_print() or already
 	   crashing */
@@ -1285,7 +1597,11 @@ print_internal(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 			if (EQ(obj, being_printed[i])) {
 				char buf[32];
 				*buf = '#';
+<<<<<<< HEAD
 				long_to_string(buf + 1, i);
+=======
+				long_to_string(buf + 1, i, sizeof(buf)-1);
+>>>>>>> master
 				write_c_string(buf, printcharfun);
 				return;
 			}
@@ -1304,7 +1620,11 @@ print_internal(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		/* ASCII Decimal representation uses 2.4 times as many bits as
 		   machine binary.  */
 		char buf[3 * sizeof(EMACS_INT) + 5];
+<<<<<<< HEAD
 		long_to_string(buf, XINT(obj));
+=======
+		long_to_string(buf, XINT(obj),sizeof(buf));
+>>>>>>> master
 		write_c_string(buf, printcharfun);
 		break;
 	}
@@ -1654,10 +1974,14 @@ This can be used in place of `external-debugging-output' as a function
 to be passed to `print'.  Before calling `print', set `alternate_do_pointer'
 to 0.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (character))
 {
 	Bufbyte str[MAX_EMCHAR_LEN];
@@ -1688,6 +2012,7 @@ created, if necessary), unless SXEmacs is being run noninteractively
 If you have opened a termscript file (using `open-termscript'), then
 the output also will be logged to this file.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
       (char_or_string, stdout_p, device)) {
 =======
@@ -1695,6 +2020,11 @@ the output also will be logged to this file.
       (char_or_string, stdout_p, device))
 {
 >>>>>>> origin/master
+=======
+*/
+      (char_or_string, stdout_p, device))
+{
+>>>>>>> master
 	FILE *file = 0;
 	struct console *con = 0;
 
@@ -1741,10 +2071,14 @@ DEFUN("open-termscript", Fopen_termscript, 1, 1, "FOpen termscript file: ",	/*
 Start writing all terminal output to FILENAME as well as the terminal.
 FILENAME = nil means just close any termscript file currently open.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (filename))
 {
 	/* This function can GC */

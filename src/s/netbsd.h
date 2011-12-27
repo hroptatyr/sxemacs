@@ -58,12 +58,15 @@
    converting from a.out to elf - x86 and Sparc are using ELF.
    But we're clever and let the compiler tell us which one to use.  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 #ifdef __ELF__
 #define UNEXEC "unexelf.o"
 #else
 #define UNEXEC "unexfreebsd.o"	/* ironic, considering history of unexfreebsd */
 #endif
 =======
+=======
+>>>>>>> master
 
 /*
  * everything is pdump now. --SY
@@ -74,7 +77,10 @@
  * #endif
  */
 #undef UNEXEC
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 #if 0
 /* Try to make this work for both 0.9 and >0.9.  */

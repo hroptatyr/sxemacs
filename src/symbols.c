@@ -55,7 +55,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 
 #include "buffer.h"		/* for Vbuffer_defaults */
+<<<<<<< HEAD
 #include "console.h"
+=======
+#include "ui/console.h"
+>>>>>>> master
 #include "elhash.h"
 
 Lisp_Object Qad_advice_info, Qad_activate;
@@ -201,6 +205,7 @@ If there is none, one is created by this function and returned.
 Optional second argument OBARRAY specifies the obarray to use;
 it defaults to the value of the variable `obarray'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
       (string, obarray)) {
 =======
@@ -208,6 +213,11 @@ it defaults to the value of the variable `obarray'.
       (string, obarray))
 {
 >>>>>>> origin/master
+=======
+*/
+      (string, obarray))
+{
+>>>>>>> master
 	Lisp_Object object, *ptr;
 	Lisp_Symbol *symbol;
 	Bytecount len;
@@ -253,6 +263,7 @@ symbol is searched for.
 Optional second argument OBARRAY specifies the obarray to use;
 it defaults to the value of the variable `obarray'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
       (name, obarray)) {
 =======
@@ -260,6 +271,11 @@ it defaults to the value of the variable `obarray'.
       (name, obarray))
 {
 >>>>>>> origin/master
+=======
+*/
+      (name, obarray))
+{
+>>>>>>> master
 	/* #### Bug!  (intern-soft "nil") returns nil.  Perhaps we should
 	   add a DEFAULT-IF-NOT-FOUND arg, like in get.  */
 	Lisp_Object tem;
@@ -289,10 +305,14 @@ NAME may be a string or a symbol.  If it is a symbol, that symbol
 is deleted, if it belongs to OBARRAY--no other symbol is deleted.
 OBARRAY defaults to the value of the variable `obarray'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (name, obarray))
 {
 	Lisp_Object tem;
@@ -621,7 +641,10 @@ hash_string(const Bufbyte * ptr, Bytecount len)
 #endif
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 DEFUN ("subr-name", Fsubr_name, 1, 1, 0, /*
 Return name of function SUBR.
 SUBR must be a built-in function.  
@@ -635,7 +658,10 @@ SUBR must be a built-in function.
         return make_string ((Bufbyte *)name, strlen (name));
 }
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 /* Map FN over OBARRAY.  The mapping is stopped when FN returns a
    non-zero value.  */
@@ -670,10 +696,14 @@ DEFUN("mapatoms", Fmapatoms, 1, 2, 0,	/*
 Call FUNCTION on every symbol in OBARRAY.
 OBARRAY defaults to the value of `obarray'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (function, obarray))
 {
 	struct gcpro gcpro1;
@@ -718,10 +748,14 @@ Return a list of all symbols whose names contain match for REGEXP.
 If optional 2nd arg PREDICATE is non-nil, only symbols for which
 \(funcall PREDICATE SYMBOL) returns non-nil are returned.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (regexp, predicate))
 {
 	struct appropos_mapper_closure closure;
@@ -749,10 +783,14 @@ static void set_up_buffer_local_cache(Lisp_Object sym,
 DEFUN("boundp", Fboundp, 1, 1, 0,	/*
 Return t if SYMBOL's value is not void.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol))
 {
 	CHECK_SYMBOL(symbol);
@@ -763,6 +801,7 @@ DEFUN("globally-boundp", Fglobally_boundp, 1, 1, 0,	/*
 Return t if SYMBOL has a global (non-bound) value.
 This is for the byte-compiler; you really shouldn't be using this.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (symbol)) {
 =======
@@ -770,6 +809,11 @@ This is for the byte-compiler; you really shouldn't be using this.
       (symbol))
 {
 >>>>>>> origin/master
+=======
+*/
+      (symbol))
+{
+>>>>>>> master
 	CHECK_SYMBOL(symbol);
 	return UNBOUNDP(top_level_value(symbol)) ? Qnil : Qt;
 }
@@ -777,10 +821,14 @@ This is for the byte-compiler; you really shouldn't be using this.
 DEFUN("fboundp", Ffboundp, 1, 1, 0,	/*
 Return t if SYMBOL's function definition is not void.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol))
 {
 	CHECK_SYMBOL(symbol);
@@ -912,10 +960,14 @@ verify_ok_for_buffer_local(Lisp_Object sym, Lisp_Object follow_past_lisp_magic)
 DEFUN("makunbound", Fmakunbound, 1, 1, 0,	/*
 Make SYMBOL's value be void.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol))
 {
 	Fset(symbol, Qunbound);
@@ -925,10 +977,14 @@ Make SYMBOL's value be void.
 DEFUN("fmakunbound", Ffmakunbound, 1, 1, 0,	/*
 Make SYMBOL's function definition be void.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol))
 {
 	CHECK_SYMBOL(symbol);
@@ -940,10 +996,14 @@ Make SYMBOL's function definition be void.
 DEFUN("symbol-function", Fsymbol_function, 1, 1, 0,	/*
 Return SYMBOL's function definition.  Error if that is void.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol))
 {
 	CHECK_SYMBOL(symbol);
@@ -955,10 +1015,14 @@ Return SYMBOL's function definition.  Error if that is void.
 DEFUN("symbol-plist", Fsymbol_plist, 1, 1, 0,	/*
 Return SYMBOL's property list.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol))
 {
 	CHECK_SYMBOL(symbol);
@@ -968,10 +1032,14 @@ Return SYMBOL's property list.
 DEFUN("symbol-name", Fsymbol_name, 1, 1, 0,	/*
 Return SYMBOL's name, a string.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol))
 {
 	Lisp_Object name;
@@ -989,10 +1057,14 @@ Return SYMBOL's name, a string.
 DEFUN("fset", Ffset, 2, 2, 0,	/*
 Set SYMBOL's function definition to NEWDEF, and return NEWDEF.
 <<<<<<< HEAD
+<<<<<<< HEAD
 				 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol, newdef))
 {
 	/* This function can GC */
@@ -1017,19 +1089,27 @@ DEFUN("define-function", Fdefine_function, 2, 2, 0,	/*
 Set SYMBOL's function definition to NEWDEF, and return NEWDEF.
 Associates the function with the current load file, if any.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol, newdef))
 {
 	/* This function can GC */
 	Ffset(symbol, newdef);
 <<<<<<< HEAD
+<<<<<<< HEAD
 	LOADHIST_ATTACH(symbol);
 =======
         LOADHIST_ATTACH (Fcons (Qdefun, symbol));
 >>>>>>> origin/master
+=======
+        LOADHIST_ATTACH (Fcons (Qdefun, symbol));
+>>>>>>> master
 	return newdef;
 }
 
@@ -1056,10 +1136,14 @@ implementations) way to go about it is to write a macro instead.  See
 DEFUN("setplist", Fsetplist, 2, 2, 0,	/*
 Set SYMBOL's property list to NEWPLIST, and return NEWPLIST.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol, newplist))
 {
 	CHECK_SYMBOL(symbol);
@@ -1312,11 +1396,17 @@ void
 print_symbol_value_magic(Lisp_Object obj,
 			 Lisp_Object printcharfun, int escapeflag)
 {
+<<<<<<< HEAD
 	char buf[200];
 	sprintf(buf, "#<INTERNAL OBJECT (SXEmacs bug?) (%s type %d) 0x%lx>",
 		XRECORD_LHEADER_IMPLEMENTATION(obj)->name,
 		XSYMBOL_VALUE_MAGIC_TYPE(obj), (long)XPNTR(obj));
 	write_c_string(buf, printcharfun);
+=======
+	write_fmt_str( printcharfun, "#<INTERNAL OBJECT (SXEmacs bug?) (%s type %d) 0x%lx>",
+		       XRECORD_LHEADER_IMPLEMENTATION(obj)->name,
+		       XSYMBOL_VALUE_MAGIC_TYPE(obj), (long)XPNTR(obj));
+>>>>>>> master
 }
 
 static const struct lrecord_description symbol_value_forward_description[] = {
@@ -2064,10 +2154,14 @@ Lisp_Object find_symbol_value_quickly(Lisp_Object symbol_cons, int find_it_p)
 DEFUN("symbol-value", Fsymbol_value, 1, 1, 0,	/*
 Return SYMBOL's value.  Error if that is void.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol))
 {
 	Lisp_Object val = find_symbol_value(symbol);
@@ -2085,10 +2179,14 @@ Return SYMBOL's value.  Error if that is void.
 DEFUN("set", Fset, 2, 2, 0,	/*
 Set SYMBOL's value to NEWVAL, and return NEWVAL.
 <<<<<<< HEAD
+<<<<<<< HEAD
 				 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol, newval))
 {
 	REGISTER Lisp_Object valcontents;
@@ -2374,10 +2472,14 @@ Return t if SYMBOL has a non-void default value.
 This is the value that is seen in buffers that do not have their own values
 for this variable.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol))
 {
 	return UNBOUNDP(default_value(symbol)) ? Qnil : Qt;
@@ -2389,10 +2491,14 @@ This is the value that is seen in buffers that do not have their own values
 for this variable.  The default value is meaningful for variables with
 local bindings in certain buffers.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol))
 {
 	Lisp_Object value = default_value(symbol);
@@ -2405,10 +2511,14 @@ Set SYMBOL's default value to VALUE.  SYMBOL and VALUE are evaluated.
 The default value is seen in buffers that do not have their own values
 for this variable.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol, value))
 {
 	Lisp_Object valcontents;
@@ -2490,6 +2600,7 @@ This sets each SYMBOL's default value to the corresponding VALUE.
 The VALUE for the Nth SYMBOL can refer to the new default values
 of previous SYMBOLs.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (args)) {
 =======
@@ -2497,6 +2608,11 @@ of previous SYMBOLs.
       (args))
 {
 >>>>>>> origin/master
+=======
+*/
+      (args))
+{
+>>>>>>> master
 	/* This function can GC */
 	Lisp_Object symbol, tail, val = Qnil;
 	int nargs;
@@ -2531,10 +2647,14 @@ for the current buffer if it was previously using the default value.
 The function `default-value' gets the default value and `set-default'
 sets it.
 <<<<<<< HEAD
+<<<<<<< HEAD
 													 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (variable))
 {
 	Lisp_Object valcontents;
@@ -2646,10 +2766,14 @@ just as setting the variable would do.
 Do not use `make-local-variable' to make a hook variable buffer-local.
 Use `make-local-hook' instead.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (variable))
 {
 	Lisp_Object valcontents;
@@ -2813,10 +2937,14 @@ DEFUN("kill-local-variable", Fkill_local_variable, 1, 1, "vKill Local Variable: 
 Make VARIABLE no longer have a separate value in the current buffer.
 From now on the default value will apply in this buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (variable))
 {
 	Lisp_Object valcontents;
@@ -2929,10 +3057,14 @@ DEFUN("kill-console-local-variable", Fkill_console_local_variable, 1, 1,
 Make VARIABLE no longer have a separate value in the selected console.
 From now on the default value will apply in this console.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (variable))
 {
 	Lisp_Object valcontents;
@@ -3094,10 +3226,14 @@ int symbol_value_buffer_local_info(Lisp_Object symbol, struct buffer *buffer)
 DEFUN("symbol-value-in-buffer", Fsymbol_value_in_buffer, 2, 3, 0,	/*
 Return the value of SYMBOL in BUFFER, or UNBOUND-VALUE if it is unbound.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol, buffer, unbound_value))
 {
 	Lisp_Object value;
@@ -3110,10 +3246,14 @@ Return the value of SYMBOL in BUFFER, or UNBOUND-VALUE if it is unbound.
 DEFUN("symbol-value-in-console", Fsymbol_value_in_console, 2, 3, 0,	/*
 Return the value of SYMBOL in CONSOLE, or UNBOUND-VALUE if it is unbound.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol, console, unbound_value))
 {
 	Lisp_Object value;
@@ -3143,6 +3283,7 @@ nsole' Same, but cannot be set.
 Forwards to the default value of a built-in
 console-local variable.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
       (symbol)) {
 =======
@@ -3150,6 +3291,11 @@ console-local variable.
       (symbol))
 {
 >>>>>>> origin/master
+=======
+*/
+      (symbol))
+{
+>>>>>>> master
 	REGISTER Lisp_Object valcontents;
 
 	CHECK_SYMBOL(symbol);
@@ -3229,10 +3375,14 @@ buffer-local. (This includes `buffer-file-name', `buffer-read-only',
 If BUFFER is nil and AFTER-SET is t, a return value of t indicates that
 the variable has had `make-variable-buffer-local' applied to it.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (symbol, buffer, after_set))
 {
 	int local_info;
@@ -3528,10 +3678,14 @@ If you do, suffer the wrath of Ben, who is likely to rename
 this function (or change the semantics of its arguments) without
 pity, thereby invalidating your code.
 <<<<<<< HEAD
+<<<<<<< HEAD
 												 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (variable, handler_type, handler, harg, keep_existing))
 {
 	Lisp_Object valcontents;
@@ -3653,10 +3807,14 @@ Currently VARIABLE cannot be a built-in variable, a variable that
 has a buffer-local value in any buffer, or the symbols nil or t.
 \(ALIAS, however, can be any type of variable.)
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (variable, alias))
 {
 	struct symbol_value_varalias *bfwd;
@@ -3707,10 +3865,14 @@ VARIABLE should be a symbol.  If VARIABLE is not aliased, return nil.
 Variable aliases are created with `defvaralias'.  See also
 `indirect-variable'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (variable, follow_past_lisp_magic))
 {
 	Lisp_Object valcontents;
@@ -3740,10 +3902,14 @@ If OBJECT is not a symbol, just return it.
 Signal a cyclic-variable-indirection error if there is a loop in the
 variable chain of symbols.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object, follow_past_lisp_magic))
 {
 	if (!SYMBOLP(object))
@@ -3760,10 +3926,14 @@ Return a value indicating where VARIABLE's current binding comes from.
 If the current binding is buffer-local, the value is the current buffer.
 If the current binding is global (the default), the value is nil. 
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (variable))
 {
 	Lisp_Object valcontents;
@@ -3901,7 +4071,12 @@ defsymbol_massage_name_1(Lisp_Object * location, const char *name, int dump_p,
 		assert(len + 1 < sizeof(temp));
 	else
 		assert(len < sizeof(temp));
+<<<<<<< HEAD
 	strcpy(temp, name + 1);	/* Remove initial Q */
+=======
+        temp[0]='\0';
+	strncat(temp, name + 1, sizeof(temp)-1);	/* Remove initial Q */
+>>>>>>> master
 	if (multiword_predicate_p) {
                 /* Overwrite the 'p' which is the last char of name
                    and put "_p" instead. */
@@ -4075,12 +4250,21 @@ void
 deferror_massage_name_and_message(Lisp_Object * symbol, char *name,
 				  Lisp_Object inherits_from)
 {
+<<<<<<< HEAD
 	char temp[500];
+=======
+	char temp[1024];
+>>>>>>> master
 	size_t i;
 	size_t len = strlen(name) - 1;
 
 	assert(len < sizeof(temp));
+<<<<<<< HEAD
 	strcpy(temp, name + 1);	/* Remove initial Q */
+=======
+	temp[0]='\0';
+	strncat(temp, name + 1, sizeof(temp)-1);	/* Remove initial Q */
+>>>>>>> master
 	temp[0] = toupper(temp[0]);
 	for (i = 0; i < len; i++)
 		if (temp[i] == '_')
@@ -4151,9 +4335,13 @@ void syms_of_symbols(void)
 	Ffset(intern("defalias"), intern("define-function"));
 	DEFSUBR (Fspecial_form_p);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         DEFSUBR (Fsubr_name);
 >>>>>>> origin/master
+=======
+        DEFSUBR (Fsubr_name);
+>>>>>>> master
 	DEFSUBR(Fsetplist);
 	DEFSUBR(Fsymbol_value_in_buffer);
 	DEFSUBR(Fsymbol_value_in_console);

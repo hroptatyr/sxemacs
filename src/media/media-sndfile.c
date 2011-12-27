@@ -190,6 +190,10 @@ media_sndfile_open(Lisp_Media_Stream *ms)
 		break;
         default:
 		xfree(sfinfo);
+<<<<<<< HEAD
+=======
+		xfree(mtap);
+>>>>>>> master
 		media_stream_set_meths(ms, NULL);
 		media_stream_driver(ms) = MDRIVER_UNKNOWN;
 		return NULL;

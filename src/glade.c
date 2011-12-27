@@ -64,10 +64,14 @@ static int __almost_functionp(Lisp_Object obj)
 DEFUN("glade-xml-signal-connect", Fglade_xml_signal_connect, 3, 3, 0,	/*
 Connect a glade handler.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (xml, handler_name, func))
 {
 	CHECK_GTK_OBJECT(xml);
@@ -86,10 +90,14 @@ Connect a glade handler.
 DEFUN("glade-xml-signal-autoconnect", Fglade_xml_signal_autoconnect, 1, 1, 0,	/*
 Connect all glade handlers.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (xml))
 {
 	CHECK_GTK_OBJECT(xml);
@@ -102,10 +110,14 @@ Connect all glade handlers.
 DEFUN("glade-xml-textdomain", Fglade_xml_textdomain, 1, 1, 0,	/*
 Return the textdomain of a GladeXML object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (xml))
 {
 	gchar *the_domain = NULL;

@@ -266,7 +266,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 
 #include "buffer.h"
+<<<<<<< HEAD
 #include "window.h"
+=======
+#include "ui/window.h"
+>>>>>>> master
 #include "sysdep.h"
 
 #include "wnn/commonhd.h"

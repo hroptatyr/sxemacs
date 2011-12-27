@@ -28,6 +28,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 # include <stdbool.h>
 #endif	/* HAVE_STDBOOL_H */
 
+<<<<<<< HEAD
+=======
+#if defined HAVE_IEEEFP_H
+# include <ieeefp.h>
+#endif /* HAVE_IEEEFP_H */
+
+>>>>>>> master
 #if defined HAVE_MATHS_ISNAN || defined HAVE_ISNAN
 # define sxe_isnan	isnan
 #else  /* !HAVE_ISNAN */
@@ -38,14 +45,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #if defined HAVE_MATHS_ISINF || defined HAVE_ISINF
 # define sxe_isinf	isinf
+<<<<<<< HEAD
 #else  /* !HAVE_ISINF */
 /* anyone? */
 # define sxe_isinf(x)	(false)
+=======
+#elif defined HAVE_MATHS_FINITE || defined HAVE_FINITE
+# define sxe_isinf(x)	(!finite(x))
+#elif defined HAVE_MATHS_FPCLASSIFY || defined HAVE_FPCLASSIFY
+# define sxe_isinf(x)	(fpclassify(x) == FP_INFINITE)
+#elif defined HAVE_MATHS_FPCLASS || defined HAVE_FPCLASS
+# define sxe_isinf(x)	(fpclass(x) == FP_PINF || fpclass(x) == FP_NINF)
+#else /* anyone? */
+>>>>>>> master
 # warning Your isinf() supply disgusts me.  How about grilling your box?
 #endif	/* HAVE_ISINF */
 
 #if defined HAVE_MATHS_SIGNBIT || defined HAVE_SIGNBIT
 # define sxe_signbit	signbit
+<<<<<<< HEAD
+=======
+#elif defined HAVE_MATHS_FPCLASS || defined HAVE_FPCLASS
+# define sxe_signbit(x) (fpclass(x) == FP_NINF || fpclass(x) == FP_NDENORM || fpclass(x) == FP_NZERO || fpclass(x) == FP_NNORM) 
+>>>>>>> master
 #else  /* !HAVE_SIGNBIT */
 # define sxe_signbit(x)	((x) < 0)
 # warning Your signbit() computation is vile.  Consider scrapping your machine.
@@ -61,6 +83,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #elif defined HAVE_MATHS_FPCLASSIFY || defined HAVE_FPCLASSIFY
 # define ENT_FLOAT_INF_P(_val)	(fpclassify(_val) == FP_INFINITE)
 
+<<<<<<< HEAD
+=======
+#elif defined HAVE_MATHS_FINITE || defined HAVE_FINITE
+/* this one next, as gcc seems to have optimised built-ins for this */
+# define ENT_FLOAT_INF_P(_val)	(!finite(_val))
+
+#elif defined HAVE_MATHS_FPCLASS || defined HAVE_FPCLASS
+# define ENT_FLOAT_INF_P(_val)	(fpclass(_val) == FP_PINF || fpclass(_val) == FP_NINF)
+
+>>>>>>> master
 #elif defined(HAVE_MATHS_INFINITY) && 0
 /* very ugly as INFINITY is actually of type float */
 # define ENT_FLOAT_INF_P(_val)	((_val) == INFINITY || (_val) == -INFINITY)
@@ -90,6 +122,12 @@ ent_float_inf_p(fpfloat x)
 # define ENT_FLOAT_PINF_P(_val)						\
 	(fpclassify(_val) == FP_INFINITE && sxe_signbit(_val) == 0)
 
+<<<<<<< HEAD
+=======
+#elif defined HAVE_MATHS_FPCLASS || defined HAVE_FPCLASS
+# define ENT_FLOAT_PINF_P(_val)	(fpclass(_val) == FP_PINF)
+
+>>>>>>> master
 #elif defined(HAVE_MATHS_INFINITY) && 0
 /* deprecated since types do not match */
 # define ENT_FLOAT_PINF_P(_val)	((_val) == INFINITY)
@@ -117,6 +155,12 @@ ent_float_pinf_p(fpfloat x)
 # define ENT_FLOAT_NINF_P(_val)						\
 	(fpclassify(_val) == FP_INFINITE && sxe_signbit(_val) != 0)
 
+<<<<<<< HEAD
+=======
+#elif defined HAVE_MATHS_FPCLASS || defined HAVE_FPCLASS
+# define ENT_FLOAT_NINF_P(_val)	(fpclass(_val) == FP_NINF)
+
+>>>>>>> master
 #elif defined(HAVE_MATHS_INFINITY) && 0
 /* type mismatch hence deprecated */
 # define ENT_FLOAT_NINF_P(_val)	((_val) == -INFINITY)
@@ -142,6 +186,12 @@ ent_float_ninf_p(fpfloat x)
 #elif defined HAVE_MATHS_FPCLASSIFY || defined HAVE_FPCLASSIFY
 # define ENT_FLOAT_NAN_P(_val)	(fpclassify(_val) == FP_NAN)
 
+<<<<<<< HEAD
+=======
+#elif defined HAVE_MATHS_FPCLASS || defined HAVE_FPCLASS
+# define ENT_FLOAT_NAN_P(_val)	(fpclass(_val) == FP_QNAN || fpclass(_val) == FP_SNAN)
+
+>>>>>>> master
 #elif defined(HAVE_MATHS_NAN) && 0
 /* disabled because of a type mismatch */
 # define ENT_FLOAT_NAN_P(_val)	((_val) == NAN)
@@ -165,8 +215,16 @@ ent_float_nan_p(fpfloat x)
 #elif defined HAVE_MATHS_FPCLASSIFY || defined HAVE_FPCLASSIFY
 # define ENT_FLOAT_INDEFINITE_P(_val)	(fpclassify(_val) != FP_NORMAL)
 
+<<<<<<< HEAD
 #elif (defined HAVE_MATHS_ISNAN || defined HAVE_ISNAN) &&	\
 	(defined HAVE_MATHS_ISINF || defined HAVE_ISINF)
+=======
+#elif defined HAVE_MATHS_FPCLASS || defined HAVE_FPCLASS
+# define ENT_FLOAT_INDEFINITE_P(_val)	(fpclass(_val) == FP_NINF || fpclass(_val) == FP_PINF || fpclass(_val) == FP_SNAN || fpclass(_val) == FP_SNAN)
+
+#elif (defined HAVE_MATHS_ISNAN || defined HAVE_ISNAN) &&	\
+	(defined HAVE_MATHS_ISINF || defined HAVE_ISINF || defined HAVE_MATHS_FINITE || defined HAVE_FINITE)
+>>>>>>> master
 # define ENT_FLOAT_INDEFINITE_P(_val)	(isnan(_val) || isinf(_val))
 
 #elif defined(HAVE_MATHS_NAN) && defined(HAVE_MATHS_INFINITY) && 0

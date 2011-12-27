@@ -96,9 +96,13 @@ the author instead of in the original English.
 SXEmacs is the extensible, customizable, self-documenting real-time
 display editor.  This Info file describes how to edit with Emacs
 and some of how to customize it, but not how to extend it.  It
+<<<<<<< HEAD
 corresponds to:
 
 steve@@sxemacs.org--2008/sxemacs--main--22.1.10--version-0
+=======
+corresponds to: v22.1.14
+>>>>>>> master
 
 Although, it hasn't had a complete rewrite for quite some time.
 
@@ -670,6 +674,7 @@ This manual is for SXEmacs installed on UNIX systems.
 @comment  node-name,  next,  previous,  up
 @node License, Distrib, Top, Top
 <<<<<<< HEAD
+<<<<<<< HEAD
 @unnumbered GNU GENERAL PUBLIC LICENSE
 @center Version 1, February 1989
 @cindex license to copy SXEmacs
@@ -976,6 +981,9 @@ That's all there is to it!
 =======
 @include gpl.texi
 >>>>>>> origin/master
+=======
+@include gpl.texi
+>>>>>>> master
 @node Distrib, Intro, License, Top
 @unnumbered Distribution
 

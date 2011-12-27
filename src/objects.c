@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <config.h>
 #include "lisp.h"
 
+<<<<<<< HEAD
 #include "device.h"
 #include "elhash.h"
 #include "faces.h"
@@ -31,6 +32,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "objects.h"
 #include "specifier.h"
 #include "window.h"
+=======
+#include "ui/device.h"
+#include "elhash.h"
+#include "ui/faces.h"
+#include "ui/frame.h"
+#include "ui/objects.h"
+#include "specifier.h"
+#include "ui/window.h"
+>>>>>>> master
 
 /* Objects that are substituted when an instantiation fails.
    If we leave in the Qunbound value, we will probably get crashes. */
@@ -66,7 +76,10 @@ static Lisp_Object mark_color_instance(Lisp_Object obj)
 static void
 print_color_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
+<<<<<<< HEAD
 	char buf[100];
+=======
+>>>>>>> master
 	Lisp_Color_Instance *c = XCOLOR_INSTANCE(obj);
 	if (print_readably)
 		error("printing unreadable object #<color-instance 0x%x>",
@@ -78,8 +91,12 @@ print_color_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	if (!NILP(c->device))	/* Vthe_null_color_instance */
 		MAYBE_DEVMETH(XDEVICE(c->device), print_color_instance,
 			      (c, printcharfun, escapeflag));
+<<<<<<< HEAD
 	sprintf(buf, " 0x%x>", c->header.uid);
 	write_c_string(buf, printcharfun);
+=======
+	write_fmt_str(printcharfun, " 0x%x>", c->header.uid);
+>>>>>>> master
 }
 
 static void finalize_color_instance(void *header, int for_disksave)
@@ -138,6 +155,7 @@ you drop all pointers to it and allow it to be garbage collected.  When
 these objects are GCed, the underlying window-system data (e.g. X object)
 is deallocated as well.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
       (name, device, noerror)) {
 =======
@@ -145,6 +163,11 @@ is deallocated as well.
       (name, device, noerror))
 {
 >>>>>>> origin/master
+=======
+*/
+      (name, device, noerror))
+{
+>>>>>>> master
 	Lisp_Color_Instance *c;
 	Lisp_Object val = Qnil;
 	Lisp_Object dev = Qnil;
@@ -180,10 +203,14 @@ is deallocated as well.
 DEFUN("color-instance-p", Fcolor_instance_p, 1, 1, 0,	/*
 Return non-nil if OBJECT is a color instance.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	return COLOR_INSTANCEP(object) ? Qt : Qnil;
@@ -192,10 +219,14 @@ Return non-nil if OBJECT is a color instance.
 DEFUN("color-instance-name", Fcolor_instance_name, 1, 1, 0,	/*
 Return the name used to allocate COLOR-INSTANCE.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (color_instance))
 {
 	CHECK_COLOR_INSTANCE(color_instance);
@@ -207,10 +238,14 @@ Return a three element list containing the red, green, and blue
 color components of COLOR-INSTANCE, or nil if unknown.
 Component values range from 0 to 65535.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (color_instance))
 {
 	Lisp_Color_Instance *c;
@@ -235,10 +270,14 @@ Valid color names for TTY are those which have an ISO 6429 (ANSI) sequence.
 In addition to being a color this may be one of a number of attributes
 such as `blink'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (color, device))
 {
 	struct device *d = decode_device(device);
@@ -270,7 +309,10 @@ static Lisp_Object mark_font_instance(Lisp_Object obj)
 static void
 print_font_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
+<<<<<<< HEAD
 	char buf[200];
+=======
+>>>>>>> master
 	Lisp_Font_Instance *f = XFONT_INSTANCE(obj);
 	if (print_readably)
 		error("printing unreadable object #<font-instance 0x%x>",
@@ -282,8 +324,12 @@ print_font_instance(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	if (!NILP(f->device))
 		MAYBE_DEVMETH(XDEVICE(f->device), print_font_instance,
 			      (f, printcharfun, escapeflag));
+<<<<<<< HEAD
 	sprintf(buf, " 0x%x>", f->header.uid);
 	write_c_string(buf, printcharfun);
+=======
+	write_fmt_str(printcharfun, " 0x%x>", f->header.uid);
+>>>>>>> master
 }
 
 static void finalize_font_instance(void *header, int for_disksave)
@@ -333,6 +379,7 @@ The returned object is a normal, first-class lisp object.  The way you
 you drop all pointers to it and allow it to be garbage collected.  When
 these objects are GCed, the underlying X data is deallocated as well.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
       (name, device, noerror)) {
 =======
@@ -340,6 +387,11 @@ these objects are GCed, the underlying X data is deallocated as well.
       (name, device, noerror))
 {
 >>>>>>> origin/master
+=======
+*/
+      (name, device, noerror))
+{
+>>>>>>> master
 	Lisp_Font_Instance *f;
 	Lisp_Object val;
 	int retval = 0;
@@ -377,10 +429,14 @@ these objects are GCed, the underlying X data is deallocated as well.
 DEFUN("font-instance-p", Ffont_instance_p, 1, 1, 0,	/*
 Return non-nil if OBJECT is a font instance.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	return FONT_INSTANCEP(object) ? Qt : Qnil;
@@ -389,10 +445,14 @@ Return non-nil if OBJECT is a font instance.
 DEFUN("font-instance-name", Ffont_instance_name, 1, 1, 0,	/*
 Return the name used to allocate FONT-INSTANCE.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (font_instance))
 {
 	CHECK_FONT_INSTANCE(font_instance);
@@ -405,10 +465,14 @@ The returned value is the maximum ascent for all characters in the font,
 where a character's ascent is the number of pixels above (and including)
 the baseline.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (font_instance))
 {
 	CHECK_FONT_INSTANCE(font_instance);
@@ -422,10 +486,14 @@ where a character's descent is the number of pixels below the baseline.
 \(Many characters to do not have any descent.  Typical characters with a
 descent are lowercase p and lowercase g.)
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (font_instance))
 {
 	CHECK_FONT_INSTANCE(font_instance);
@@ -436,10 +504,14 @@ DEFUN("font-instance-width", Ffont_instance_width, 1, 1, 0,	/*
 Return the width in pixels of FONT-INSTANCE.
 The returned value is the average width for all characters in the font.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (font_instance))
 {
 	CHECK_FONT_INSTANCE(font_instance);
@@ -450,10 +522,14 @@ DEFUN("font-instance-proportional-p", Ffont_instance_proportional_p, 1, 1, 0,	/*
 Return whether FONT-INSTANCE is proportional.
 This means that different characters in the font have different widths.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (font_instance))
 {
 	CHECK_FONT_INSTANCE(font_instance);
@@ -481,10 +557,14 @@ Font names are patterns which may match any number of fonts, of which
 the first found is used.  This returns an unambiguous name for that font
 \(but not necessarily its only unambiguous name).
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (font_instance))
 {
 	CHECK_FONT_INSTANCE(font_instance);
@@ -494,10 +574,14 @@ the first found is used.  This returns an unambiguous name for that font
 DEFUN("font-instance-properties", Ffont_instance_properties, 1, 1, 0,	/*
 Return the properties (an alist or nil) of FONT-INSTANCE.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (font_instance))
 {
 	Lisp_Font_Instance *f;
@@ -517,10 +601,14 @@ Return a list of font names matching the given pattern.
 DEVICE specifies which device to search for names, and defaults to the
 currently selected device.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (pattern, device))
 {
 	CHECK_STRING(pattern);
@@ -687,10 +775,14 @@ Return t if OBJECT is a color specifier.
 
 See `make-color-specifier' for a description of possible color instantiators.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	return COLOR_SPECIFIERP(object) ? Qt : Qnil;
@@ -881,10 +973,14 @@ Return non-nil if OBJECT is a font specifier.
 
 See `make-font-specifier' for a description of possible font instantiators.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	return FONT_SPECIFIERP(object) ? Qt : Qnil;
@@ -1021,10 +1117,14 @@ Return non-nil if OBJECT is a face-boolean specifier.
 See `make-face-boolean-specifier' for a description of possible
 face-boolean instantiators.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	return FACE_BOOLEAN_SPECIFIERP(object) ? Qt : Qnil;

@@ -112,7 +112,11 @@ init_device(int volume, unsigned char *data, int fd,
 			char buf1[100], buf2[100], buf3[250];
 			audio_enc_to_str(&file_hdr, buf1);
 			audio_enc_to_str(&new_hdr, buf2);
+<<<<<<< HEAD
 			sprintf(buf3, "wanted %s, got %s", buf1, buf2);
+=======
+			(void)snprintf(buf3, sizeof(buf3), "wanted %s, got %s", buf1, buf2);
+>>>>>>> master
 			warn(buf3);
 			return 1;
 		}
@@ -120,8 +124,14 @@ init_device(int volume, unsigned char *data, int fd,
 
 	if (volume < 0 || volume > 100) {
 		char buf[255];
+<<<<<<< HEAD
 		sprintf(buf, "volume must be between 0 and 100 (not %d)",
 			volume);
+=======
+		int sz = sprintf(buf, sizeof(buf), "volume must be between 0 and 100 (not %d)",
+				 volume);
+		assert(sz>=0 && sz<sizeof(buf));
+>>>>>>> master
 		warn(buf);
 		return 1;
 	}
@@ -198,8 +208,14 @@ void play_sound_file(char *sound_file, int volume)
 		}
 		if (wrtn != rrtn) {
 			char warn_buf[255];
+<<<<<<< HEAD
 			sprintf(warn_buf, "play: rrtn = %d, wrtn = %d", rrtn,
 				wrtn);
+=======
+			int sz = sprintf(warn_buf, sizeof(warn_buf), "play: rrtn = %d, wrtn = %d", rrtn,
+					 wrtn);
+			assert(warn_buf>=0 && warn_buf<sizeof(warn_buf));
+>>>>>>> master
 			warn(warn_buf);
 			goto END_OF_PLAY;
 		}
@@ -271,7 +287,13 @@ int play_sound_data(unsigned char *data, int length, int volume)
 	}
 	if (wrtn != length) {
 		char buf[255];
+<<<<<<< HEAD
 		sprintf(buf, "play: rrtn = %d, wrtn = %d", length, wrtn);
+=======
+		int sz = snprintf(buf, sizeof(buf),
+				  "play: rrtn = %d, wrtn = %d", length, wrtn);
+		assert(sz>=0 && sz < sizeof(buf));
+>>>>>>> master
 		warn(buf);
 		goto END_OF_PLAY;
 	}
@@ -352,7 +374,11 @@ sound_native_audio_init(int audio_fd)
 			char buf1[100], buf2[100], buf3[250];
 			audio_enc_to_str(&file_hdr, buf1);
 			audio_enc_to_str(&new_hdr, buf2);
+<<<<<<< HEAD
 			sprintf(buf3, "wanted %s, got %s", buf1, buf2);
+=======
+			(void)snprintf(buf3, sizeof(buf3), "wanted %s, got %s", buf1, buf2);
+>>>>>>> master
 			warn(buf3);
 			return 0;
 		}
@@ -362,8 +388,15 @@ sound_native_audio_init(int audio_fd)
 #if 0
 	if (volume < 0 || volume > 100) {
 		char buf[255];
+<<<<<<< HEAD
 		sprintf(buf, "volume must be between 0 and 100 (not %d)",
 			volume);
+=======
+		int sz = snprintf(buf, sizeof(buf),
+				  "volume must be between 0 and 100 (not %d)",
+				  volume);
+		assert(sz>=0 && sz<sizeof(buf));
+>>>>>>> master
 		warn(buf);
 		return 0;
 	}

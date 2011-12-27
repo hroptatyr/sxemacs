@@ -872,6 +872,7 @@ mark_bloom(Lisp_Object obj)
 static void
 print_bloom(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
+<<<<<<< HEAD
 	char *tmp = alloca(96);
 
 	snprintf(tmp, 95, "#<bloom-filter :order %u :degree %u :size %u>",
@@ -879,11 +880,20 @@ print_bloom(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 
 	write_c_string(tmp, printcharfun);
 
+=======
+	write_fmt_string(printcharfun,
+			 "#<bloom-filter :order %u :degree %u :size %u>",
+			 XBLOOM_ORDER(obj), XBLOOM_DEGREE(obj), XBLOOM_SIZE(obj));
+>>>>>>> master
 	if (escapeflag);
 }
 
 static void
+<<<<<<< HEAD
 finalise_bloom(void *header, int UNUSED(for_disksave))
+=======
+finalise_bloom(void *header, int SXE_UNUSED(for_disksave))
+>>>>>>> master
 {
 	Lisp_Bloom *free_me = header;
 
@@ -970,10 +980,14 @@ Optional argument ORDER (a positive integer) specifies the
 Optional argument DEGREE (a positive integer) specifies the
 number of hash slices, defaults to 8.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (order, degree))
 {
 	uint32_t o = 1024, d = 8;
@@ -1004,10 +1018,14 @@ Optional argument ORDER (a positive integer) specifies the
 Optional argument DEGREE (a positive integer) specifies the
 number of hash slices, defaults to 8.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (order, degree))
 {
 	uint32_t o = 1024, d = 8;
@@ -1033,10 +1051,14 @@ number of hash slices, defaults to 8.
 DEFUN("bloomp", Fbloomp, 1, 1, 0, /*
 Return non-nil if OBJECT is a bloom filter.
 <<<<<<< HEAD
+<<<<<<< HEAD
 				  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	if (BLOOMP(object))
@@ -1097,10 +1119,14 @@ int bloom_owns_p(Lisp_Bloom *bloom, Lisp_Object element)
 DEFUN("bloom-owns-p", Fbloom_owns_p, 2, 2, 0, /*
 Return non-nil if ELEMENT is in the bloom-filter BLOOM.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (bloom, element))
 {
 	CHECK_BLOOM(bloom);
@@ -1126,10 +1152,14 @@ void bloom_add(Lisp_Bloom *bloom, Lisp_Object element)
 DEFUN("bloom-add", Fbloom_add, 2, 2, 0, /*
 Add ELEMENT to the bloom-filter BLOOM.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (bloom, element))
 {
 	CHECK_BLOOM(bloom);
@@ -1159,10 +1189,14 @@ void bloom_remove(Lisp_Bloom *bloom, Lisp_Object element)
 DEFUN("bloom-remove", Fbloom_remove, 2, 2, 0, /*
 Remove ELEMENT from the bloom-filter BLOOM.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (bloom, element))
 {
 	CHECK_BLOOM(bloom);
@@ -1188,10 +1222,14 @@ void bloom_union(Lisp_Bloom *bloom1, Lisp_Bloom *bloom2)
 DEFUN("bloom-union", Fbloom_union, 0, MANY, 0, /*
 Return the union Bloom filter of all arguments.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					       */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object *args))
 {
 	Lisp_Object result;
@@ -1252,10 +1290,14 @@ void bloom_intersection(Lisp_Bloom *bloom1, Lisp_Bloom *bloom2)
 DEFUN("bloom-intersection", Fbloom_intersection, 0, MANY, 0, /*
 Return the intersection Bloom filter of all arguments.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							     */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object *args))
 {
 	Lisp_Object result;
@@ -1291,10 +1333,14 @@ Return the intersection Bloom filter of all arguments.
 DEFUN("bloom-order", Fbloom_order, 1, 1, 0, /*
 Return the order of the bloom-filter BLOOM.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (bloom))
 {
 	CHECK_BLOOM(bloom);
@@ -1304,10 +1350,14 @@ Return the order of the bloom-filter BLOOM.
 DEFUN("bloom-degree", Fbloom_degree, 1, 1, 0, /*
 Return the degree of the bloom-filter BLOOM.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (bloom))
 {
 	CHECK_BLOOM(bloom);
@@ -1318,10 +1368,14 @@ DEFUN("bloom-size", Fbloom_size, 1, 1, 0, /*
 Return the size of the bloom-filter BLOOM, that is the number
 of elements in it.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (bloom))
 {
 	CHECK_BLOOM(bloom);

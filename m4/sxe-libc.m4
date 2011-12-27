@@ -132,16 +132,22 @@ AC_DEFUN([SXE_CHECK_LIBC_VERSION], [dnl
 			libc_version="GNU libc $libc_version (Debian)"
 		elif test -f /etc/slackware-version ; then
 <<<<<<< HEAD
+<<<<<<< HEAD
 			libc_version=`/lib/libc.so.6|head -1|cut -d ' ' -f7|tr -d ,`
 			libc_version="GNU libc $libc_version (Slackware)"
 =======
+=======
+>>>>>>> master
                         slackver=`cat /etc/slackware-version`
 			libc_version=`/lib/libc.so.6|head -1|cut -d ' ' -f7|tr -d ,`
                         if test "x$libc_version" = "x"; then
                                 libc_version=`/lib64/libc.so.6|head -1|cut -d ' ' -f7|tr -d ,`
                         fi
 			libc_version="GNU libc $libc_version ($slackver)"
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 		dnl need SuSE et al checks here...
 		fi
 		dnl #### Tested on Debian, does this actually work elsewhere?  ;-)
@@ -180,10 +186,14 @@ libc_file_we_use=`$LDD ./conftest | grep libc | sed -e "s/.*=>\(.*\) .*$/\1/"`],
 		;;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	powerpc-apple-darwin*)
 =======
 	*-apple-darwin*)
 >>>>>>> origin/master
+=======
+	*-apple-darwin*)
+>>>>>>> master
 		dnl MacOS guys, does this work?
 		libc_version="`$LDD /usr/lib/libc.dylib | head -n1 | sed -e 's/.*current version[ ]*\([0-9.]*\).*$/\1/'`"
 		;;
@@ -346,6 +356,11 @@ AC_DEFUN([SXE_CHECK_BASIC_FUNS], [dnl
 
 
 AC_DEFUN([SXE_CHECK_SIGNALS], [dnl
+<<<<<<< HEAD
+=======
+	SXE_CHECK_HEADERS([string.h])
+        AC_CHECK_FUNCS([strsignal])
+>>>>>>> master
 	AC_CHECK_DECLS([sys_siglist], [], [], [
 #include <signal.h>
 /* NetBSD declares sys_siglist in unistd.h.  */

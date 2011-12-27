@@ -68,10 +68,15 @@ in dumped-lisp.el and is not itself listed.")
 	"lisp-initd"
 	"misc"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	"loadhist"		; Must be dumped before loaddefs is loaded
 				; Used by help. 
 >>>>>>> origin/master
+=======
+	"loadhist"		; Must be dumped before loaddefs is loaded
+				; Used by help. 
+>>>>>>> master
 	;; (pureload "profile")
 	(unless-feature mule "help-nomule")
 	"help"
@@ -230,6 +235,7 @@ in dumped-lisp.el and is not itself listed.")
 
 ;; preload the TTY init code.
 	(when-feature tty "tty-init")
+<<<<<<< HEAD
 ;;; Formerly in tooltalk/tooltalk-load.el
 	;; Moved to tooltalk package
 	;; (when-feature tooltalk "tooltalk-macros")
@@ -237,6 +243,8 @@ in dumped-lisp.el and is not itself listed.")
 	;; (when-feature tooltalk "tooltalk-init")
 	;; "vc-hooks"		; Packaged.  Available in two versions.
 	;; "ediff-hook"		; Packaged.
+=======
+>>>>>>> master
         "x-color"
         "cus-face"
         "font-lock"
@@ -244,6 +252,7 @@ in dumped-lisp.el and is not itself listed.")
 	"auto-show"
 	(when-feature ldap "ldap")
 
+<<<<<<< HEAD
 ;; (when-feature energize "energize/energize-load.el")
 ;;; formerly in sunpro/sunpro-load.el
 ;;	(when-feature (and mule sparcworks) "mime-setup")
@@ -267,5 +276,7 @@ in dumped-lisp.el and is not itself listed.")
 	"loadhist"		; Must be dumped before loaddefs is loaded
 =======
 >>>>>>> origin/master
+=======
+>>>>>>> master
 	"loaddefs"		; <=== autoloads get loaded here
 ))

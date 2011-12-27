@@ -11,7 +11,11 @@ AC_DEFUN([SXE_CHECK_LIBTOOL], [dnl
 	if test -n "$export_dynamic_flag_spec"; then
 		sxe_cv_export_dynamic=$(\
 			echo $(eval echo "$export_dynamic_flag_spec"))
+<<<<<<< HEAD
 		SXE_APPEND([$sxe_cv_export_dynamic], [LDFLAGS])
+=======
+		SXE_APPEND_UNDUP([$sxe_cv_export_dynamic], [LDFLAGS])
+>>>>>>> master
 	else
 		AC_MSG_NOTICE([
 Neither -export-dynamic nor equivalent flags are supported by your linker.
@@ -103,10 +107,14 @@ AC_DEFUN([SXE_CHECK_LIBLTDL], [dnl
 	## if the user wants to use the included libltdl, descend
 	if test -z "$with_included_ltdl" -a \
 <<<<<<< HEAD
+<<<<<<< HEAD
 		-d "libltdl" -a \
 =======
 		-d "${sxe_srcdir}/libltdl" -a \
 >>>>>>> origin/master
+=======
+		-d "${sxe_srcdir}/libltdl" -a \
+>>>>>>> master
 		"$with_module_support" != "no" -a \
 		"$sxe_cv_feat_libltdl" != "yes"; then
 		with_included_ltdl="yes"
@@ -119,10 +127,14 @@ AC_DEFUN([SXE_CHECK_LIBLTDL], [dnl
 		## and assume we've seen ltdl.h
 		AC_DEFINE([HAVE_LTDL_H], [1], [Whether ltdl.h is somewhere])
 <<<<<<< HEAD
+<<<<<<< HEAD
 	elif test -d "libltdl" -a \
 =======
 	elif test -d "${sxe_srcdir}/libltdl" -a \
 >>>>>>> origin/master
+=======
+	elif test -d "${sxe_srcdir}/libltdl" -a \
+>>>>>>> master
 		"$with_included_ltdl" = "yes"; then
 		## the user WANTS to use the included ltdl
 		## assume we have a working ltdl lib afterwards

@@ -297,10 +297,14 @@ AC_DEFUN([SXE_CHECK_CC_CHAR], [dnl
 	## Checking for gnuc va list need in solaris
 	## ----------------------------------------------------------------
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if test "$GCC" == "yes" -a "$opsys" == "sol2" ; then
 =======
 	if test "$GCC" = "yes" -a "$opsys" = "sol2" ; then
 >>>>>>> origin/master
+=======
+	if test "$GCC" = "yes" -a "$opsys" = "sol2" ; then
+>>>>>>> master
 		AC_MSG_CHECKING(for need to define gnuc_va_list)
 		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #include <stdarg.h>
@@ -327,6 +331,11 @@ typedef __gnuc_va_list va_list;]],[[1]])], [dnl
 
 	dnl in case we need the modules
 	SXE_LD_EXPORT_DYNAMIC
+<<<<<<< HEAD
+=======
+	dnl in case compiler issues PIE by default which breaks pdump
+	SXE_LD_NO_PIE
+>>>>>>> master
 
 	## check whether CC reacts to `extern inline' gnu89 inline declarations
 	## with a warning
@@ -383,7 +392,11 @@ AC_DEFUN([SXE_DO_CC_HACKS], [dnl
 
 	dnl DEC C `-std1' means ANSI C mode
 	if test "$__DECC" = "yes"; then
+<<<<<<< HEAD
 		SXE_APPEND([-std1], [CFLAGS])
+=======
+		SXE_APPEND_UNDUP([-std1], [CFLAGS])
+>>>>>>> master
 	fi
 
 	dnl Some versions of SCO native compiler need -Kalloca
@@ -398,6 +411,7 @@ AC_DEFUN([SXE_DO_CC_HACKS], [dnl
 			SXE_RESTORE_LIBS])
 		AC_MSG_RESULT([$need_kalloca])
 		if test "$need_kalloca" = "yes"; then
+<<<<<<< HEAD
 			SXE_APPEND([-Kalloca], [c_switch_system])
 			SXE_APPEND([-Kalloca], [CFLAGS])
 		fi
@@ -407,6 +421,19 @@ AC_DEFUN([SXE_DO_CC_HACKS], [dnl
 	if test "$CC" = "g++" -o "$SXE_CC" = "g++" ; then
 		SXE_DIE("Building with g++ is not supported")
 	fi
+=======
+			SXE_APPEND_UNDUP([-Kalloca], [c_switch_system])
+			SXE_APPEND_UNDUP([-Kalloca], [CFLAGS])
+		fi
+	fi
+
+	dnl Die if g++
+	if test "$CC" = "g++" -o "$SXE_CC" = "g++" ; then
+		SXE_DIE("Building with g++ is not supported")
+	fi
+
+	
+>>>>>>> master
 ])dnl SXE_DO_CC_HACKS
 
 AC_DEFUN([SXE_CHECK_CC_NESTED_FUNS], [dnl
@@ -1529,7 +1556,11 @@ return f != $2;
 AC_DEFUN([SXE_CHECK_C99_NJSF], [dnl
 	dnl If we have a compiler that could do c99 do try to add the flag
 	if test "$__GCC3" = "yes" ; then
+<<<<<<< HEAD
 		SXE_APPEND("-std=c99", c_switch_site)
+=======
+		SXE_APPEND_UNDUP("-std=c99", c_switch_site)
+>>>>>>> master
 		AC_MSG_CHECKING([for C99 support])
 		save_c_switch_site=$c_switch_site
 		AC_LINK_IFELSE([AC_LANG_PROGRAM([[
@@ -1545,7 +1576,11 @@ return 0;
 	elif test "$__SUNPRO_C" = "yes" ; then
 		AC_MSG_CHECKING([for C99 support])
 		save_c_switch_site=$c_switch_site
+<<<<<<< HEAD
 		SXE_APPEND("-xc99", c_switch_site)
+=======
+		SXE_APPEND_UNDUP("-xc99", c_switch_site)
+>>>>>>> master
 		AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <stdlib.h>
 ]],[[
@@ -1707,6 +1742,11 @@ using
 or
   make CFLAGS=<your-own-flags> [target]
 respectively
+<<<<<<< HEAD
+=======
+
+NOTE: -C <directory> option is not available on all systems
+>>>>>>> master
 		])
 
 ])dnl SXE_CHECK_CFLAGS

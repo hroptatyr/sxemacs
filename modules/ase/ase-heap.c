@@ -39,10 +39,14 @@
 #include "config.h"
 #include "sxemacs.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "ent.h"
 =======
 #include "ent/ent.h"
 >>>>>>> origin/master
+=======
+#include "ent/ent.h"
+>>>>>>> master
 #include "ase-heap.h"
 #include "opaque.h"
 
@@ -192,9 +196,14 @@ _ase_yheap_prnt(ase_yheap_t a, Lisp_Object pcf)
 }
 
 static void
+<<<<<<< HEAD
 ase_yheap_prnt(Lisp_Object obj, Lisp_Object pcf, int UNUSED(foo))
 {
 	char siz[128];
+=======
+ase_yheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
+{
+>>>>>>> master
 	ase_yheap_t h = XASE_YHEAP(obj);
 
 	EMOD_ASE_DEBUG_HEAP("h:0x%08lx@0x%08lx shall be printed...\n",
@@ -202,8 +211,12 @@ ase_yheap_prnt(Lisp_Object obj, Lisp_Object pcf, int UNUSED(foo))
 	write_c_string("#<ase:heap :dynamic", pcf);
 
 	write_c_string(" :size ", pcf);
+<<<<<<< HEAD
 	snprintf(siz, 127, "%u", (unsigned int)ase_yheap_size(h));
 	write_c_string(siz, pcf);
+=======
+	write_fmt_str(pcf, "%u", (unsigned int)ase_yheap_size(h));
+>>>>>>> master
 
 	if (ase_yheap_root(h) != NULL &&
 	    ase_yheap_cell_data(ase_yheap_root(h)) != Qnull_pointer) {
@@ -231,18 +244,29 @@ _ase_dheap_prnt(ase_dheap_t h, Lisp_Object pcf)
 }
 
 static void
+<<<<<<< HEAD
 ase_dheap_prnt(Lisp_Object obj, Lisp_Object pcf, int UNUSED(foo))
 {
 	char siz[128];
+=======
+ase_dheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
+{
+>>>>>>> master
 	ase_dheap_t h = XASE_DHEAP(obj);
 
 	EMOD_ASE_DEBUG_HEAP("d:0x%08lx@0x%08lx shall be printed...\n",
 			    (long unsigned int)h, (long unsigned int)obj);
+<<<<<<< HEAD
 	write_c_string("#<ase:heap :dense", pcf);
 
 	write_c_string(" :size ", pcf);
 	snprintf(siz, 127, "%u", (unsigned int)ase_dheap_size(h));
 	write_c_string(siz, pcf);
+=======
+
+	write_fmt_str(pcf, "#<ase:heap :dense :size %u", 
+		      (unsigned int)ase_dheap_size(h));
+>>>>>>> master
 
 	if (ase_heap_opts_coloured(h)) {
 		write_c_string(" :coloured", pcf);
@@ -273,18 +297,28 @@ _ase_wheap_prnt(ase_wheap_t h, Lisp_Object pcf)
 }
 
 static void
+<<<<<<< HEAD
 ase_wheap_prnt(Lisp_Object obj, Lisp_Object pcf, int UNUSED(foo))
 {
 	char siz[128];
+=======
+ase_wheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
+{
+>>>>>>> master
 	ase_wheap_t h = XASE_WHEAP(obj);
 
 	EMOD_ASE_DEBUG_HEAP("w:0x%08lx@0x%08lx shall be printed...\n",
 			    (long unsigned int)h, (long unsigned int)obj);
+<<<<<<< HEAD
 	write_c_string("#<ase:heap :weak", pcf);
 
 	write_c_string(" :size ", pcf);
 	snprintf(siz, 127, "%u", (unsigned int)ase_wheap_size(h));
 	write_c_string(siz, pcf);
+=======
+	write_fmt_string(pcf, "#<ase:heap :weak :size %u", 
+			 (unsigned int)ase_wheap_size(h));
+>>>>>>> master
 
 	if (ase_heap_opts_coloured(h)) {
 		write_c_string(" :coloured", pcf);
@@ -338,7 +372,11 @@ _ase_yheap_fini(ase_yheap_t h)
 }
 
 static void
+<<<<<<< HEAD
 ase_yheap_fini(Lisp_Object obj, int UNUSED(foo))
+=======
+ase_yheap_fini(Lisp_Object obj, int SXE_UNUSED(foo))
+>>>>>>> master
 {
 	ase_yheap_t h = XASE_YHEAP(obj);
 
@@ -369,7 +407,11 @@ _ase_dheap_fini(ase_dheap_t h)
 }
 
 static void
+<<<<<<< HEAD
 ase_dheap_fini(Lisp_Object obj, int UNUSED(foo))
+=======
+ase_dheap_fini(Lisp_Object obj, int SXE_UNUSED(foo))
+>>>>>>> master
 {
 	ase_dheap_t h = XASE_DHEAP(obj);
 
@@ -401,7 +443,11 @@ _ase_wheap_fini(ase_wheap_t h)
 }
 
 static void
+<<<<<<< HEAD
 ase_wheap_fini(Lisp_Object obj, int UNUSED(foo))
+=======
+ase_wheap_fini(Lisp_Object obj, int SXE_UNUSED(foo))
+>>>>>>> master
 {
 	ase_wheap_t h = XASE_WHEAP(obj);
 
@@ -916,10 +962,17 @@ ase_wheap_cell_rbit_neg(ase_wheap_t h, int c)
 }
 
 static inline int
+<<<<<<< HEAD
 ase_wheap_cell_mother(ase_wheap_t UNUSED(h), int c)
 	__attribute__((always_inline));
 static inline int
 ase_wheap_cell_mother(ase_wheap_t UNUSED(h), int c)
+=======
+ase_wheap_cell_mother(ase_wheap_t SXE_UNUSED(h), int c)
+	__attribute__((always_inline));
+static inline int
+ase_wheap_cell_mother(ase_wheap_t SXE_UNUSED(h), int c)
+>>>>>>> master
 {
 	return (c >> 1);
 }
@@ -1855,10 +1908,14 @@ Arguments: &rest keys
 :kind  kind of the heap, can be one of 'weak (default), 'dense, or 'dynamic
 :relation
 <<<<<<< HEAD
+<<<<<<< HEAD
 				      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object *args))
 {
 	ase_heap_options_t opts = xnew(struct ase_heap_options_s);
@@ -1896,10 +1953,14 @@ Arguments: &rest keys
 DEFUN("ase-add-heap", Fase_add_heap, 2, 3, 0, /*
 Add OBJECT to HEAP and (optionally) COLOUR it.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (heap, object, colour))
 {
 	void *h = NULL;
@@ -1924,10 +1985,14 @@ Add OBJECT to HEAP and (optionally) COLOUR it.
 DEFUN("ase-pop-heap", Fase_pop_heap, 1, 1, 0, /*
 Pop off and return the most extreme element of HEAP.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (heap))
 {
 	void *h = NULL;
@@ -1953,10 +2018,14 @@ Pop off and return the most extreme element of HEAP.
 DEFUN("ase-heap-size", Fase_heap_size, 1, 1, 0, /*
 Return the number of elements inside HEAP.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -1974,10 +2043,14 @@ Return the number of elements inside HEAP.
 DEFUN("ase-heap-top", Fase_heap_top, 1, 1, 0, /*
 Return the topmost element of HEAP.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -1995,10 +2068,14 @@ Return the topmost element of HEAP.
 DEFUN("ase-heap-top-rank", Fase_heap_top_rank, 1, 1, 0, /*
 Return the rank (priority) of the topmost element of HEAP.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -2017,10 +2094,14 @@ DEFUN("ase-heap-to-list", Fase_heap_to_list, 1, 1, 0, /*
 Return a (sorted) list with the elements of HEAP.
 HEAP is kept alive.  See also `ase-heap-to-list*'
 <<<<<<< HEAD
+<<<<<<< HEAD
 						      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -2039,10 +2120,14 @@ Return a (sorted) list with the elements of HEAP.
 HEAP is destroyed by side-effect, each element from HEAP is
 popped off and consed to the result list.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -2060,10 +2145,14 @@ DEFUN("ase-heap-to-vector", Fase_heap_to_vector, 1, 1, 0, /*
 Return a (sorted) vector with the elements of HEAP.
 HEAP is kept alive hereby.  See also `ase-heap-to-vector*'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -2082,10 +2171,14 @@ Return a (sorted) vector with the elements of HEAP.
 HEAP is destroyed by side-effect, each element from HEAP is
 popped off and written into the result vector.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -2103,10 +2196,14 @@ DEFUN("ase-heap-to-dllist", Fase_heap_to_dllist, 1, 1, 0, /*
 Return a (sorted) list with the elements of HEAP.
 HEAP is kept intact.  See also `ase-heap-to-dllist*'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);
@@ -2125,10 +2222,14 @@ Return a (sorted) list with the elements of HEAP.
 HEAP is destroyed by side-effect, each element from HEAP is
 popped off and appended to the result dllist.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (heap))
 {
 	CHECK_ASE_HEAP(heap);

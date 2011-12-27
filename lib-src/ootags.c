@@ -897,8 +897,13 @@ int main(int argc, char *argv[])
 		case 'o':
 			if (tagfile) {
 				/* convert char to string, to call error with */
+<<<<<<< HEAD
 				char buf[2];
 				sprintf(buf, "%c", opt);
+=======
+				char buf[]=" ";
+				buf[0]=opt;
+>>>>>>> master
 				error("-%s option may only be given once.",
 				      buf);
 				suggest_asking_for_help();
@@ -1094,12 +1099,24 @@ if (cxref_style) {
 
 if (update) {
 	char cmd[BUFSIZ];
+<<<<<<< HEAD
 	for (i = 0; i < current_arg; ++i) {
 		if (argbuffer[i].arg_type != at_filename)
 			continue;
 		sprintf(cmd,
 			"mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
 			tagfile, argbuffer[i].what, tagfile);
+=======
+	int sz;
+	for (i = 0; i < current_arg; ++i) {
+		if (argbuffer[i].arg_type != at_filename)
+			continue;
+		sz = snprintf(cmd, sizeof(cmd),
+			      "mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
+			      tagfile, argbuffer[i].what, tagfile);
+		if(sz >= 0 && sz < sizeof(cmd))
+			fatal("failed to build shell command line", (char *)NULL);
+>>>>>>> master
 		if (system(cmd) != GOOD)
 			fatal("failed to execute shell command", (char *)NULL);
 	}
@@ -1114,7 +1131,13 @@ fclose(tagf);
 
 if (update) {
 	char cmd[BUFSIZ];
+<<<<<<< HEAD
 	sprintf(cmd, "sort %s -o %s", tagfile, tagfile);
+=======
+	int sz = snprintf(cmd, sizeof(cmd), "sort %s -o %s", tagfile, tagfile);
+	if(sz >= 0 && sz < sizeof(cmd))
+		fatal("failed to build sort command line", (char *)NULL);
+>>>>>>> master
 	exit(system(cmd));
 }
 return GOOD;
@@ -3896,7 +3919,11 @@ FILE *inf;
 
 			/* save all values for later tagging */
 			grow_linebuffer(&tline, lb.len + 1);
+<<<<<<< HEAD
 			strcpy(tline.buffer, lb.buffer);
+=======
+			strncpy(tline.buffer, lb.buffer, lb.len);
+>>>>>>> master
 			save_lineno = lineno;
 			save_lcno = linecharno;
 
@@ -4289,6 +4316,10 @@ FILE *inf;
 			last[len] = '\0';
 		}
 	}
+<<<<<<< HEAD
+=======
+	free(last);
+>>>>>>> master
 }
 
 void prolog_skip_comment(plb, inf)
@@ -5059,6 +5090,10 @@ char *file, *dir;
 {
 	char *fp, *dp, *afn, *res;
 	int i;
+<<<<<<< HEAD
+=======
+	ssize_t res_left;
+>>>>>>> master
 
 	/* Find the common root of file and dir (with a trailing slash). */
 	afn = absolute_filename(file, cwd);
@@ -5070,11 +5105,16 @@ char *file, *dir;
 	do			/* look at the equal chars until '/' */
 		fp--, dp--;
 	while (*fp != '/');
+<<<<<<< HEAD
+=======
+	fp ++; /* Advance past the '/' */
+>>>>>>> master
 
 	/* Build a sequence of "../" strings for the resulting relative file name. */
 	i = 0;
 	while ((dp = etags_strchr(dp + 1, '/')) != NULL)
 		i += 1;
+<<<<<<< HEAD
 	res = xnew(3 * i + strlen(fp + 1) + 1, char);
 	res[0] = '\0';
 	while (i-- > 0)
@@ -5082,6 +5122,16 @@ char *file, *dir;
 
 	/* Add the file name relative to the common root of file and dir. */
 	strcat(res, fp + 1);
+=======
+	res_left = 3 * i + strlen(fp);
+	res = xnew( res_left + 1, char);
+	res[0] = '\0';
+	for ( ; i-- > 0 ; res_left -= 4 )
+		strncat(res, "../", res_left );
+
+	/* Add the file name relative to the common root of file and dir. */
+	strncat(res, fp, res_left);
+>>>>>>> master
 	free(afn);
 
 	return res;

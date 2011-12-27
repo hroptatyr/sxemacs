@@ -1,5 +1,10 @@
 #!/bin/sh
 #
+<<<<<<< HEAD
+=======
+echo "Complain bitterly to njsf@sxemacs.org that he has still NOT updated this script to use git"
+exit 1
+>>>>>>> master
 if [ -z "$1"  ]; then
     echo "Usage: $0 <from address>"
     echo "Example: $0 superhacker@sxemacs.org"

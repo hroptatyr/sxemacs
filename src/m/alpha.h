@@ -27,10 +27,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 # define DATA_START    0x140000000
   /* The program to be used for unexec. */
 <<<<<<< HEAD
+<<<<<<< HEAD
 # define UNEXEC "unexalpha.o"
 =======
   /* everything is pdump now --SY. */
   /* # define UNEXEC "unexalpha.o" */
 # undef UNEXEC
 >>>>>>> origin/master
+=======
+  /* everything is pdump now --SY. */
+  /* # define UNEXEC "unexalpha.o" */
+# undef UNEXEC
+>>>>>>> master
 #endif

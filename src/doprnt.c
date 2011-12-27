@@ -397,6 +397,13 @@ get_doprnt_args(printf_spec_dynarr *specs, va_list vargs)
 	printf_arg_t arg;
 	REGISTER int i;
 	int args_needed = get_args_needed(specs);
+<<<<<<< HEAD
+=======
+	int spec_len = -1;
+
+	if (specs)
+		spec_len = Dynarr_length(specs);
+>>>>>>> master
 
 	xzero(arg);
 	for (i = 1; i <= args_needed; i++) {
@@ -404,14 +411,22 @@ get_doprnt_args(printf_spec_dynarr *specs, va_list vargs)
 		char ch;
 		printf_spec_t spec = 0;
 
+<<<<<<< HEAD
 		for (j = 0; j < Dynarr_length(specs); j++) {
+=======
+		for (j = 0; j < spec_len; j++) {
+>>>>>>> master
 			spec = Dynarr_atp(specs, j);
 			if (spec->argnum == i) {
 				break;
 			}
 		}
 
+<<<<<<< HEAD
 		if (j == Dynarr_length(specs))
+=======
+		if (j >= spec_len)
+>>>>>>> master
 			error("No conversion spec for argument %d", i);
 
 		ch = spec->converter;
@@ -527,10 +542,17 @@ __nnaughts(printf_spec_t s, int nlen, int tlen)
 }
 
 static inline int
+<<<<<<< HEAD
 __bsize_smZ(printf_spec_t s, EMACS_INT UNUSED(Z))
 	__attribute__((always_inline));
 static inline int
 __bsize_smZ(printf_spec_t s, EMACS_INT UNUSED(Z))
+=======
+__bsize_smZ(printf_spec_t s, EMACS_INT SXE_UNUSED(Z))
+	__attribute__((always_inline));
+static inline int
+__bsize_smZ(printf_spec_t s, EMACS_INT SXE_UNUSED(Z))
+>>>>>>> master
 {
 	return 32 + s->minwidth + sizeof(long int) *
 		/* if binary representation is wanted, use an
@@ -743,7 +765,11 @@ emacs_doprnt_smZ(Lisp_Object stream, EMACS_INT Z, printf_spec_t s,  char ch)
 	} else /* ch == 'b' */ {
 		text_len = __ulong_to_bit_string(text, Z);
 	}
+<<<<<<< HEAD
 
+=======
+	assert(text_len >= 0 && text_len < alloc_sz);
+>>>>>>> master
 	/* postprocess, move stuff around, insert naughts, etc. */
 	text_len = __postproc2(s, text, text_len, alloc_sz);
 
@@ -961,6 +987,10 @@ emacs_doprnt_number(Lisp_Object stream,
 		char *p = constructed_spec;
 		int length, alloca_sz = max_float_print_size;
 		int min = spec->minwidth, prec = spec->precision;
+<<<<<<< HEAD
+=======
+		int max_spec = sizeof(constructed_spec);
+>>>>>>> master
 
 #if 0
 		/* absolute non-sense :O ...
@@ -996,20 +1026,41 @@ emacs_doprnt_number(Lisp_Object stream,
 			*p++ = '0';
 
 		if (spec->minwidth >= 0) {
+<<<<<<< HEAD
 			long_to_string(p, spec->minwidth);
+=======
+			long_to_string(p, spec->minwidth, max_spec);
+			max_spec -= strlen(p);
+>>>>>>> master
 			p += strlen (p);
 		}
 		if (spec->precision >= 0) {
 			*p++ = '.';
+<<<<<<< HEAD
 			long_to_string(p, spec->precision);
+=======
+			--max_spec;
+			long_to_string(p, spec->precision, max_spec);
+			max_spec -= strlen(p);
+>>>>>>> master
 			p += strlen (p);
 		}
 
 #if fpfloat_long_double_p
 		*p++ = 'L';
+<<<<<<< HEAD
 #endif
 		*p++ = ch;
 		*p++ = '\0';
+=======
+		--max_spec;
+#endif
+		*p++ = ch;
+		--max_spec;
+		*p++ = '\0';
+		--max_spec;
+		assert(max_spec >= 0);
+>>>>>>> master
 		if (NILP(obj))
 			length = snprintf(text_to_print, alloca_sz,
 					  constructed_spec, arg.d);
@@ -1017,9 +1068,16 @@ emacs_doprnt_number(Lisp_Object stream,
 			length = snprintf(text_to_print, alloca_sz,
 					  constructed_spec, XFLOAT_DATA(obj));
 
+<<<<<<< HEAD
 		if (length > alloca_sz)
 			length = alloca_sz;
 
+=======
+		if (length > alloca_sz) {
+			/* should we really silently truncate?! */
+			length = alloca_sz;
+		}
+>>>>>>> master
 		doprnt_1(stream, (Bufbyte *)text_to_print, length, 0, -1, 0, 0);
 		return;
 
@@ -1319,8 +1377,13 @@ emacs_doprnt_1(Lisp_Object stream, const Bufbyte * format_nonreloc,
 	} else {
 		args = get_doprnt_args(specs, vargs);
 	}
+<<<<<<< HEAD
 
 	for (i = 0; i < Dynarr_length(specs); i++) {
+=======
+	
+	for (i = 0; specs && i < Dynarr_length(specs); i++) {
+>>>>>>> master
 		printf_spec_t spec = Dynarr_atp(specs, i);
 		char ch;
 

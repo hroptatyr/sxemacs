@@ -35,9 +35,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "buffer.h"
 #include "commands.h"
+<<<<<<< HEAD
 #include "insdel.h"
 #include "syntax.h"
 #include "window.h"
+=======
+#include "ui/insdel.h"
+#include "syntax.h"
+#include "ui/window.h"
+>>>>>>> master
 
 /* An abbrev table is an obarray.
    Each defined abbrev is represented by a symbol in that obarray
@@ -257,10 +263,14 @@ Returns the abbrev symbol, if expansion took place.
 If no abbrev matched, but `pre-abbrev-expand-hook' changed the buffer,
 returns t.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	/* This function can GC */

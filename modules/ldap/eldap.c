@@ -63,6 +63,7 @@ static Lisp_Object Qnever, Qalways, Qfind;
 
 DEFUN("ldap-search-internal", Fldap_search_internal, 1, 1, 0,	/*
 <<<<<<< HEAD
+<<<<<<< HEAD
 								   Perform a search on a LDAP server.
 								   SEARCH-PLIST is a property list describing the search request.
 								   Valid keys in that list are:
@@ -86,6 +87,8 @@ DEFUN("ldap-search-internal", Fldap_search_internal, 1, 1, 0,	/*
 								   an alist of attribute/values.
 								 */
 =======
+=======
+>>>>>>> master
 Perform a search on a LDAP server.
 
 SEARCH-PLIST is a property list describing the search request.
@@ -126,7 +129,10 @@ Valid keys in that list are:
 The function returns a list of matching entries.  Each entry is itself
 an alist of attribute/values.
 */
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
       (search_plist))
 {
 	/* This function calls lisp */

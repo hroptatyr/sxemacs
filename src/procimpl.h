@@ -43,7 +43,10 @@ struct process_methods {
 	int (*create_process) (Lisp_Process * p,
 			       Lisp_Object * argv, int nargv,
 			       Lisp_Object program, Lisp_Object cur_dir);
+<<<<<<< HEAD
 	int (*tooltalk_connection_p) (Lisp_Process * p);
+=======
+>>>>>>> master
 #ifdef HAVE_SOCKETS
 	void (*open_network_stream) (Lisp_Object name, Lisp_Object host,
 				     Lisp_Object service, Lisp_Object protocol,

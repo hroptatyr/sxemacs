@@ -328,6 +328,7 @@ skiplist_find_hash_path(skiplist_t slist, hcode_t hash, skiplist_level_t p[])
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	p[result++] = tmp; /* just push the skiplist head */
 	for (; tmp; tmp = next_level(tmp)) {
 		while (next_node(tmp) &&
@@ -340,6 +341,8 @@ skiplist_find_hash_path(skiplist_t slist, hcode_t hash, skiplist_level_t p[])
 
 	p[result--] = NULL;	/* last element is assigned NULL */
 =======
+=======
+>>>>>>> master
 	p[result] = tmp; /* just push the skiplist head */
 	for (; tmp; tmp = next_level(tmp)) {
 		for (; next_node(tmp) &&
@@ -348,7 +351,10 @@ skiplist_find_hash_path(skiplist_t slist, hcode_t hash, skiplist_level_t p[])
 		     tmp = next_node(tmp)) { }
 		p[++result] = tmp;
 	}
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 	return result;
 }
 
@@ -363,6 +369,7 @@ skiplist_find_hash_return_level(skiplist_t slist, hcode_t hash)
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	while (tmp) {
 		while (next_node(tmp) &&
 		       (tmphash = next_hash(tmp)) &&
@@ -373,6 +380,8 @@ skiplist_find_hash_return_level(skiplist_t slist, hcode_t hash)
 		tmp = next_level(tmp);
 	}
 =======
+=======
+>>>>>>> master
 	for (; tmp; tmp = next_level(tmp)) {
 		for (; next_node(tmp) &&
 			     (tmphash = next_hash(tmp)) &&
@@ -380,7 +389,10 @@ skiplist_find_hash_return_level(skiplist_t slist, hcode_t hash)
 		     tmp = next_node(tmp) ) {}
 		result = tmp;
  	}
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 	return result;
 }
@@ -409,10 +421,14 @@ list_skiplist(skiplist_t sl)
 DEFUN("list-skiplist", Flist_skiplist, 1, 1, 0, /*
 Do not use me!
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (skiplist))
 {
 	list_skiplist(XSKIPLIST(skiplist));
@@ -441,6 +457,7 @@ mark_skiplist(Lisp_Object obj)
 static void
 print_skiplist(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
+<<<<<<< HEAD
 	char num[16];
 
 	write_c_string("#<skiplist :size ", printcharfun);
@@ -454,6 +471,15 @@ print_skiplist(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 
 static void
 finalise_skiplist(void *header, int UNUSED(for_disksave))
+=======
+	write_fmt_str(printcharfun, "#<skiplist :size %lu  :levels %lu >", 
+		      (long unsigned int)XSKIPLIST_NNODES(obj), 
+		      (long unsigned int)XSKIPLIST_NLEVELS(obj));
+}
+
+static void
+finalise_skiplist(void *header, int SXE_UNUSED(for_disksave))
+>>>>>>> master
 {
 	skiplist_t sl = header;
 
@@ -498,10 +524,14 @@ skiplist_remprop(Lisp_Object obj, Lisp_Object property)
 DEFUN("skiplist-plist", Fskiplist_plist, 1, 1, 0, /*
 Return the property list of SKIPLIST.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (skiplist))
 {
         CHECK_SKIPLIST(skiplist);
@@ -561,10 +591,14 @@ make_skiplist(void)
 DEFUN("make-skiplist", Fmake_skiplist, 0, 0, 0, /*
 Return a new empty skiplist object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	/* gotta seed our oracle; this is a stupid seed value though */
@@ -576,10 +610,14 @@ Return a new empty skiplist object.
 DEFUN("skiplistp", Fskiplistp, 1, 1, 0, /*
 Return non-nil if OBJECT is a skiplist.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	if (SKIPLISTP(object)) {
@@ -592,10 +630,14 @@ Return non-nil if OBJECT is a skiplist.
 DEFUN("skiplist-empty-p", Fskiplist_empty_p, 1, 1, 0, /*
 Return non-nil if SKIPLIST is empty.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (skiplist))
 {
 	CHECK_SKIPLIST(skiplist);
@@ -662,10 +704,14 @@ put_skiplist(skiplist_t sl, Lisp_Object key, Lisp_Object value)
 	skiplist_level_t last;
 	/* C99 we need you */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	skiplist_level_t path[skiplist_nlevels(sl)+1];
 =======
 	skiplist_level_t path[skiplist_nlevels(sl)+2];
 >>>>>>> origin/master
+=======
+	skiplist_level_t path[skiplist_nlevels(sl)+2];
+>>>>>>> master
 	hcode_t hkey = skiplist_hash(key);
 	int lastidx;
 	hcode_t h;
@@ -707,10 +753,14 @@ put_skiplist(skiplist_t sl, Lisp_Object key, Lisp_Object value)
 DEFUN("put-skiplist", Fput_skiplist, 3, 3, 0, /*
 Add KEY to the SKIPLIST and assign VALUE.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (skiplist, key, value))
 {
 	CHECK_SKIPLIST(skiplist);
@@ -751,10 +801,14 @@ Return the value of KEY in SKIPLIST.
 If KEY is not an element, return `nil' instead or --
 if specified -- DEFAULT.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (skiplist, key, default_))
 {
 	CHECK_SKIPLIST(skiplist);
@@ -770,10 +824,14 @@ remove_skiplist(skiplist_t sl, Lisp_Object key)
 	skiplist_level_t level, last;
 	/* C99 we need you! */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	skiplist_level_t path[skiplist_nlevels(sl)+1];
 =======
 	skiplist_level_t path[skiplist_nlevels(sl)+2];
 >>>>>>> origin/master
+=======
+	skiplist_level_t path[skiplist_nlevels(sl)+2];
+>>>>>>> master
 	hcode_t hkey = skiplist_hash(key);
 	int lastidx;
 
@@ -817,10 +875,14 @@ DEFUN("remove-skiplist", Fremove_skiplist, 2, 2, 0, /*
 Remove the element specified by KEY from SKIPLIST.
 If KEY is not an element, this is a no-op.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (skiplist, key))
 {
 	CHECK_SKIPLIST(skiplist);
@@ -863,10 +925,14 @@ skiplist_owns_p(skiplist_t skiplist, Lisp_Object key)
 DEFUN("skiplist-owns-p", Fskiplist_owns_p, 2, 2, 0, /*
 Return non-nil if KEY is associated with a value in SKIPLIST.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (skiplist, key))
 {
 	CHECK_SKIPLIST(skiplist);
@@ -879,10 +945,14 @@ Return non-nil if KEY is associated with a value in SKIPLIST.
 DEFUN("skiplist-size", Fskiplist_size, 1, 1, 0, /*
 Return the size of SKIPLIST, that is the number of elements.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (skiplist))
 {
 	CHECK_SKIPLIST(skiplist);
@@ -914,10 +984,14 @@ Return a copy of skiplist SKIPLIST.
 The elements of SKIPLIST are not copied; they are shared
 with the original.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (skiplist))
 {
 
@@ -952,10 +1026,14 @@ Note: Key-value-pairs with equal keys and distinct values are
 processed from left to right, that is the final union for such pairs
 contains the value of the rightmost skiplist in @var{skiplists}.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						     */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object *args))
 {
 	int i;
@@ -1000,10 +1078,14 @@ Note: Key-value-pairs with equal keys and distinct values are
 processed from right to left, that is the final intersection for such
 pairs contains the value of the leftmost skiplist in SKIPLISTS.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								   */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object *args))
 {
 	int i;
@@ -1063,10 +1145,14 @@ each key and value in SKIPLIST.
 FUNCTION may not modify SKIPLIST, with the one exception that FUNCTION
 may remove or reput the entry currently being processed by FUNCTION.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (function, skiplist))
 {
 	skiplist_t sl;
@@ -1097,10 +1183,14 @@ may remove or reput the entry currently being processed by FUNCTION.
 DEFUN("skiplist-to-alist", Fskiplist_to_alist, 1, 1, 0, /*
 Return the ordinary association list induced by SKIPLIST.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (skiplist))
 {
 	Lisp_Object result = Qnil;
@@ -1124,10 +1214,14 @@ Return the ordinary association list induced by SKIPLIST.
 DEFUN("skiplist-to-plist", Fskiplist_to_plist, 1, 1, 0, /*
 Return the ordinary association list induced by SKIPLIST.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (skiplist))
 {
 	Lisp_Object result = Qnil;
@@ -1152,10 +1246,14 @@ Return the ordinary association list induced by SKIPLIST.
 DEFUN("alist-to-skiplist", Falist_to_skiplist, 1, 1, 0, /*
 Return a skiplist from ALIST with equal key space and image.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (alist))
 {
 	Lisp_Object result = make_skiplist();
@@ -1181,10 +1279,14 @@ Return a skiplist from ALIST with equal key space and image.
 DEFUN("plist-to-skiplist", Fplist_to_skiplist, 1, 1, 0, /*
 Return a skiplist from PLIST with equal key space and image.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (plist))
 {
 	Lisp_Object result = make_skiplist();

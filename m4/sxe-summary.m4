@@ -14,6 +14,7 @@ AC_DEFUN([SXE_SUMMARY], [dnl
 (
 echo "
 
+<<<<<<< HEAD
 SXEmacs $sxemacs_arch_version \"[]CODENAME[]\" configured for \`$ac_cv_build'.
 "
 if test "$sxemacs_arch_version" != "$sxemacs_main_arch_version"
@@ -21,6 +22,10 @@ then
 echo "(Last sync with sxemacs main: $sxemacs_main_arch_version)
 "
 fi
+=======
+SXEmacs $sxemacs_git_version \"[]CODENAME[]\" configured for \`$ac_cv_build'.
+"
+>>>>>>> master
 echo "
 Compilation Environment and Installation Defaults:"
 echo "  Source code location:              $sxe_srcdir"
@@ -46,6 +51,22 @@ fi
 echo "    - Compiler command:              $CC $CFLAGS"
 echo "    - Global CPPFLAGS:               $CPPFLAGS"
 echo "    - Global LDFLAGS:                $LDFLAGS"
+<<<<<<< HEAD
+=======
+echo "    - C flags"
+echo "              General:               $c_switch_general"
+echo "              Window system:         $c_switch_window_system"
+echo "              All:                   $c_switch_all"
+echo "    - Linker flags"
+echo "              General:               $ld_switch_general"
+echo "              Window system:         $ld_switch_window_system"
+echo "              All:                   $ld_switch_all"
+echo "    - Linked libraries:"
+echo "              General:               $ld_libs_general"
+echo "              Window system:         $ld_libs_window_system"
+echo "              All:                   $ld_libs_all"
+echo ""
+>>>>>>> master
 echo "  libc version:                      $libc_version"
 echo "  Relocating allocator for buffers:  $with_rel_alloc"
 echo "  GNU version of malloc:             ${GNU_MALLOC}${GNU_MALLOC_reason}"
@@ -53,7 +74,10 @@ case "$ld_switch_site" in
   *nocombreloc*) echo "  Linking with \`-z nocombreloc'.
     - Consider configuring with --with-pdump." ;;
 esac
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 echo "
 Build Options:"
 
@@ -72,19 +96,33 @@ fi
 
 echo "  Runtime behaviour:"
 if test "$with_prefix" = "yes"; then
+<<<<<<< HEAD
   echo "    - Value of \$prefix is compiled into the binary."
 elif test "$with_prefix" = "no"; then
   echo "    - Value of \$prefix is not compiled into the binary."
+=======
+  echo "    - Value of prefix ($prefix) is compiled into the binary."
+elif test "$with_prefix" = "no"; then
+  echo "    - Value of prefix ($prefix)is not compiled into the binary."
+>>>>>>> master
 fi
 if test "$with_modules" != "no"; then
   echo "
     - Module search path:"
+<<<<<<< HEAD
   echo -e "       ${MODULE_PATH//:/\\n       }"
 fi
 echo "
     - Package search path:"
 echo -e "       ${PACKAGE_PATH//:/\\n       }"
 
+=======
+  echo ${MODULE_PATH} | ${AWK-awk} 'BEGIN {RS=":"} { print "       ",[$]1[] }'
+fi
+echo "
+    - Package search path:"
+  echo ${PACKAGE_PATH} | ${AWK-awk} 'BEGIN {RS=":"} { print "       ",[$]1[] }'
+>>>>>>> master
 
 echo "
 Debugging options:"
@@ -227,9 +265,13 @@ dnl
 OG_MULTIARG_SUMMARY([image], [Image Formats], [  ])
 OG_MULTIARG_SUMMARY([sound], [Audio Outputs], [  ])
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 test "$with_pulseaudio" = yes && echo "    PulseAudio has been enabled.  Good luck!"
 >>>>>>> origin/master
+=======
+test "$with_pulseaudio" = yes && echo "    PulseAudio has been enabled.  Good luck!"
+>>>>>>> master
 OG_MULTIARG_SUMMARY([media], [Media Stream Handlers], [  ])
 
 dnl old stuff ... originally these were elifs
@@ -296,8 +338,11 @@ OG_MULTIARG_SUMMARY([static-modules], [Static Modules], [  ])
 echo "
 Other Features:"
 test "$with_ipv6_cname" = no && echo "  Inhibiting IPv6 canonicalization at startup."
+<<<<<<< HEAD
 test "$with_tooltalk" = yes && echo "  Compiling in support for ToolTalk."
 test "$with_workshop" = yes && echo "  Compiling in support for Sun WorkShop."
+=======
+>>>>>>> master
 test "$with_socks" = yes && echo "  Compiling in support for SOCKS."
 test "$with_dnet" = yes && echo "  Compiling in support for DNET."
 if test "$with_regex_malloc" = no; then

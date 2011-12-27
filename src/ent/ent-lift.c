@@ -44,14 +44,22 @@ ase_lift_f ase_lifttable[ASE_OPTABLE_SIZE][ASE_OPTABLE_SIZE];
 
 
 Lisp_Object
+<<<<<<< HEAD
 ase_lift_undefined(Lisp_Object number, ent_lift_args_t UNUSED(unused))
+=======
+ase_lift_undefined(Lisp_Object number, ent_lift_args_t SXE_UNUSED(unused))
+>>>>>>> master
 {
 	signal_error(Qdomain_error, list1(number));
 	return Qnil;
 }
 
 Lisp_Object
+<<<<<<< HEAD
 ase_lift_trivial(Lisp_Object number, ent_lift_args_t UNUSED(unused))
+=======
+ase_lift_trivial(Lisp_Object number, ent_lift_args_t SXE_UNUSED(unused))
+>>>>>>> master
 {
 	return number;
 }

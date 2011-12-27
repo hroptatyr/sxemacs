@@ -195,7 +195,12 @@ sound_jack_subthread_create(void)
 	/* create out output ports */
 	for (i = 0; i < sjsd->num_ports; i++) {
 		char pname[30];
+<<<<<<< HEAD
 		snprintf(pname, 30, "SXEmacs out_%d", i);
+=======
+		int sz = snprintf(pname, sizeof(pname), "SXEmacs out_%d", i);
+		assert(sz>=0 && sz<sizeof(pname));
+>>>>>>> master
 		sjsd->ports[i] = jack_port_register(
 			client, pname,
 			JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
@@ -370,7 +375,11 @@ sound_jack_error(const char *errmsg)
 static void
 sound_jack_shutdown_cbfun(void *arg)
 {
+<<<<<<< HEAD
 	JACK_CRITICAL("Shutdown: 0x%x\n", (unsigned int)arg);
+=======
+	JACK_CRITICAL("Shutdown: %p\n", arg);
+>>>>>>> master
 
 	LONGJMP(jack_server_sig, 1);
 

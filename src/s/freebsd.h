@@ -58,14 +58,20 @@
 #define LD_SWITCH_SYSTEM
 #define START_FILES pre-crt0.o /usr/lib/crt1.o /usr/lib/crti.o /usr/lib/crtbegin.o
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define UNEXEC "unexelf.o"
 =======
+=======
+>>>>>>> master
 /*
  * everything is pdump now. --SY
  * #define UNEXEC "unexelf.o"
  */
 #undef UNEXEC
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 #define LIB_STANDARD -lgcc -lc -lgcc /usr/lib/crtend.o /usr/lib/crtn.o
 #define LINKER "$(CC) -nostdlib"
 #undef LIB_GCC
@@ -87,10 +93,14 @@
 
 #define HAVE_TEXT_START		/* No need to define `start_of_text'. */
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define UNEXEC "unexfreebsd.o"
 =======
 /* #define UNEXEC "unexfreebsd.o" */
 >>>>>>> origin/master
+=======
+/* #define UNEXEC "unexfreebsd.o" */
+>>>>>>> master
 #define RUN_TIME_REMAP
 
 #ifndef N_TRELOFF

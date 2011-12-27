@@ -99,8 +99,13 @@ static size_t parseraw(void **data, size_t * sz, void **outbuf)
 
 /* Currently we cannot cope with files in VOC format; if you really need
    to play these files, they should be converted by using SOX */
+<<<<<<< HEAD
 static size_t parsevoc(void **UNUSED(data), size_t *UNUSED(sz),
 		       void **UNUSED(outbuf))
+=======
+static size_t parsevoc(void **SXE_UNUSED(data), size_t *SXE_UNUSED(sz),
+		       void **SXE_UNUSED(outbuf))
+>>>>>>> master
 {
 	return (0);
 }

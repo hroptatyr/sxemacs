@@ -103,7 +103,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 /* This is needed for sysdep.c */
 #define NO_SIOCTL_H		/* don't have sioctl.h */
+<<<<<<< HEAD
 #define HAVE_SYS_SIGLIST
+=======
+>>>>>>> master
 #define HAVE_WAIT_HEADER
 #define POSIX			/* affects getpagesize.h and systty.h */
 /* Best not to include -lg, unless it is last on the command line */
@@ -131,14 +134,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 #ifdef LINUX_ELF
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define UNEXEC "unexelf.o"
 =======
+=======
+>>>>>>> master
 /* 
  * everything is pdump now. --SY
  * #define UNEXEC "unexelf.o"
  */
 #undef UNEXEC
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 #define UNEXEC_USE_MAP_PRIVATE
 /* Although slb thinks ORDINARY_LINK does not work on linux, ORDINARY_LINK
    has been enabled in 21.5 for some time with no ill effects. */
@@ -156,11 +165,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #ifdef LINUX_QMAGIC
 #define HAVE_TEXT_START
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define UNEXEC "unexsunos4.o"
 =======
 /* #define UNEXEC "unexsunos4.o" */
 #undef UNEXEC
 >>>>>>> origin/master
+=======
+/* #define UNEXEC "unexsunos4.o" */
+#undef UNEXEC
+>>>>>>> master
 #define N_PAGSIZ(x) PAGE_SIZE
 #else				/* not LINUX_QMAGIC */
 #define A_TEXT_OFFSET(hdr) (N_MAGIC(hdr) == QMAGIC ? sizeof (struct exec) : 0)

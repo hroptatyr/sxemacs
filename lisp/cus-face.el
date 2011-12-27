@@ -51,11 +51,17 @@
 	  (face-display-set face value frame '(custom)))
 	(init-face-from-resources face)))
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     ;; Don't record SPEC until we see it causes no errors.
     (put face 'face-defface-spec spec)
     (push (cons 'defface face) current-load-list)
 >>>>>>> origin/master
+=======
+    ;; Don't record SPEC until we see it causes no errors.
+    (put face 'face-defface-spec spec)
+    (push (cons 'defface face) current-load-list)
+>>>>>>> master
     (when (and doc (null (face-doc-string face)))
       (set-face-doc-string face doc))
     (custom-handle-all-keywords face args 'custom-face)

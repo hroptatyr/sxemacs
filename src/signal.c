@@ -23,9 +23,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <config.h>
 #include "lisp.h"
 
+<<<<<<< HEAD
 #include "console.h"
 #include "events.h"		/* for signal_fake_event() */
 #include "frame.h"
+=======
+#include "ui/console.h"
+#include "events/events.h"		/* for signal_fake_event() */
+#include "ui/frame.h"
+>>>>>>> master
 #include "sysdep.h"
 #include "syssignal.h"
 #include "systime.h"
@@ -210,7 +216,11 @@ static void init_async_timeouts(void)
 
 /* Turn off async timeouts.  */
 
+<<<<<<< HEAD
 static void stop_async_timeouts(void)
+=======
+extern void stop_async_timeouts(void)
+>>>>>>> master
 {
 	if (async_timer_suppress_count == 0) {
 		/* If timer was on, turn it off. */
@@ -223,7 +233,11 @@ static void stop_async_timeouts(void)
 
 /* Turn on async timeouts again. */
 
+<<<<<<< HEAD
 static void start_async_timeouts(void)
+=======
+extern void start_async_timeouts(void)
+>>>>>>> master
 {
 	assert(async_timer_suppress_count > 0);
 	async_timer_suppress_count--;
@@ -334,10 +348,14 @@ asynchronous process output filters and sentinels (not yet implemented
 in SXEmacs).  It will always be nil if SXEmacs is not inside of
 an asynchronous timeout or process callback.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	return waiting_for_user_input_p ? Qt : Qnil;

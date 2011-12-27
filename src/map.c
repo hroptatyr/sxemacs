@@ -856,7 +856,11 @@ __nfam_perm_sum_size_a(size_t *sum, size_t *var, size_t *perm, size_t *midxsz,
  * dedicated subroutines for 2-combs and 3-combs because they are soooo easy
  */
 static void
+<<<<<<< HEAD
 __2comb(Lisp_Object tgts[], size_t UNUSED(tlen),
+=======
+__2comb(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+>>>>>>> master
 	Lisp_Object supp[], size_t slen,
 	Lisp_Object fun, glue_f gf)
 {
@@ -901,7 +905,11 @@ __2comb(Lisp_Object tgts[], size_t UNUSED(tlen),
 }
 
 static void
+<<<<<<< HEAD
 __3comb(Lisp_Object tgts[], size_t UNUSED(tlen),
+=======
+__3comb(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+>>>>>>> master
 	Lisp_Object supp[], size_t slen,
 	Lisp_Object fun, glue_f gf)
 {
@@ -1046,14 +1054,24 @@ __ncomb(Lisp_Object tgts[], size_t tlen,
  * as (), a, a^2, b, a*b, a^2*b where a is a 3-cycle and b a 2-cycle.
  */
 static inline size_t
+<<<<<<< HEAD
 __2perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 	    Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__2perm_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	    Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 	    Lisp_Object fun,
 	    size_t offset)
 	__attribute__((always_inline));
 static inline size_t
+<<<<<<< HEAD
 __2perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 	    Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__2perm_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	    Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 	    Lisp_Object fun,
 	    size_t offset)
 {
@@ -1075,14 +1093,24 @@ __2perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 }
 
 static inline size_t
+<<<<<<< HEAD
 __2perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 		 Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__2perm_glue_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+		 Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 		 Lisp_Object fun, glue_f gf,
 		 size_t offset)
 	__attribute__((always_inline));
 static inline size_t
+<<<<<<< HEAD
 __2perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 		 Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__2perm_glue_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+		 Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 		 Lisp_Object fun, glue_f gf,
 		 size_t offset)
 {
@@ -1108,14 +1136,24 @@ __2perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 }
 
 static inline size_t
+<<<<<<< HEAD
 __2perm_glue(Lisp_Object tgts[], size_t UNUSED(tlen),
 	     Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__2perm_glue(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	     Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 	     glue_f gf,
 	     size_t offset)
 	__attribute__((always_inline));
 static inline size_t
+<<<<<<< HEAD
 __2perm_glue(Lisp_Object tgts[], size_t UNUSED(tlen),
 	     Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__2perm_glue(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	     Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 	     glue_f gf,
 	     size_t offset)
 {
@@ -1195,14 +1233,24 @@ _comb_2perm(Lisp_Object *tgts, size_t tlen,
 
 /* 3 perms */
 static inline size_t
+<<<<<<< HEAD
 __3perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 	    Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__3perm_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	    Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 	    Lisp_Object fun,
 	    size_t offset)
 	__attribute__((always_inline));
 static inline size_t
+<<<<<<< HEAD
 __3perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 	    Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__3perm_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	    Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 	    Lisp_Object fun,
 	    size_t offset)
 {
@@ -1256,14 +1304,24 @@ __3perm_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 }
 
 static inline size_t
+<<<<<<< HEAD
 __3perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 		 Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__3perm_glue_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+		 Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 		 Lisp_Object fun, glue_f gf,
 		 size_t offset)
 	__attribute__((always_inline));
 static inline size_t
+<<<<<<< HEAD
 __3perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 		 Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__3perm_glue_fun(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+		 Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 		 Lisp_Object fun, glue_f gf,
 		 size_t offset)
 {
@@ -1332,14 +1390,24 @@ __3perm_glue_fun(Lisp_Object tgts[], size_t UNUSED(tlen),
 }
 
 static inline size_t
+<<<<<<< HEAD
 __3perm_glue(Lisp_Object tgts[], size_t UNUSED(tlen),
 	     Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__3perm_glue(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	     Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 	     glue_f gf,
 	     size_t offset)
 	__attribute__((always_inline));
 static inline size_t
+<<<<<<< HEAD
 __3perm_glue(Lisp_Object tgts[], size_t UNUSED(tlen),
 	     Lisp_Object supp[], size_t UNUSED(slen),
+=======
+__3perm_glue(Lisp_Object tgts[], size_t SXE_UNUSED(tlen),
+	     Lisp_Object supp[], size_t SXE_UNUSED(slen),
+>>>>>>> master
 	     glue_f gf,
 	     size_t offset)
 {
@@ -3870,10 +3938,14 @@ requires a `different separator'.
   => "the inverse_of-#'split-string."
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 				     */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object *args))
 {
 /* this is just one, huuuuge case distinctor */
@@ -4083,10 +4155,14 @@ Each result, and SEPARATOR, should be strings.  Thus, using " " as SEPARATOR
 results in spaces between the values returned by FUNCTION.  SEQUENCE itself
 may be a list, a vector, a dllist, a bit vector, or a string.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (function, sequence, separator))
 {
 	EMACS_INT len = XINT(Flength(sequence));
@@ -4119,6 +4195,7 @@ Apply FUNCTION to each element of SEQUENCE; return a list of the results.
 The result is a list of the same length as SEQUENCE.
 SEQUENCE may be a list, a vector, a dllist, a bit vector, or a string.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
       (function, sequence)) {
 =======
@@ -4126,6 +4203,11 @@ SEQUENCE may be a list, a vector, a dllist, a bit vector, or a string.
       (function, sequence))
 {
 >>>>>>> origin/master
+=======
+*/
+      (function, sequence))
+{
+>>>>>>> master
 	size_t len = XINT(Flength(sequence));
 	Lisp_Object *args = NULL;
         Lisp_Object result;
@@ -4145,10 +4227,14 @@ Apply FUNCTION to each element of SEQUENCE; return a dllist of the results.
 The result is a list of the same length as SEQUENCE.
 SEQUENCE may be a list, a vector, a dllist, a bit vector, or a string.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (function, sequence)) 
 {
 	size_t len = XINT(Flength(sequence));
@@ -4170,6 +4256,7 @@ Apply FUNCTION to each element of SEQUENCE; return a vector of the results.
 The result is a vector of the same length as SEQUENCE.
 SEQUENCE may be a list, a vector, a dllist, a bit vector, or a string.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
       (function, sequence)) {
 =======
@@ -4177,6 +4264,11 @@ SEQUENCE may be a list, a vector, a dllist, a bit vector, or a string.
       (function, sequence))
 {
 >>>>>>> origin/master
+=======
+*/
+      (function, sequence))
+{
+>>>>>>> master
 	size_t len = XINT(Flength(sequence));
 	Lisp_Object result = make_vector(len, Qnil);
 	struct gcpro gcpro1;
@@ -4197,10 +4289,14 @@ which is more efficient if you do not use the results.
 The difference between this and `mapc' is that `mapc' supports all
 the spiffy Common Lisp arguments.  You should normally use `mapc'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (function, sequence))
 {
 	mapcar1(XINT(Flength(sequence)), 0, function, sequence);
@@ -4223,10 +4319,14 @@ if the function yields anything else, the bit is set to 1.
 Similarly in the string case any non-char result of FUNCTION sets
 the currently processed character to ^@ (octal value: 000).
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (function, sequence))
 {
 	if (0);

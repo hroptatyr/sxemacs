@@ -409,6 +409,7 @@ media_substream_print_audio(media_substream *mss, Lisp_Object printcharfun)
 
 	write_c_string("#<audio ", printcharfun);
 	if (mtap->name || mtap->codec_name) {
+<<<<<<< HEAD
 		char *buf = alloca(64);
 		if (mtap->name && mtap->codec_name)
 			snprintf(buf, 63, "%s (%s)",
@@ -419,6 +420,15 @@ media_substream_print_audio(media_substream *mss, Lisp_Object printcharfun)
 			snprintf(buf, 63, "??? (%s)", mtap->codec_name);
 
 		write_c_string(buf, printcharfun);
+=======
+		if (mtap->name && mtap->codec_name)
+			write_fmt_str(printcharfun, "%s (%s)",
+				      mtap->name, mtap->codec_name);
+		else if (mtap->name)
+			write_fmt_str(printcharfun, "%s [???]", mtap->name);
+		else if (mtap->codec_name)
+			write_fmt_str(printcharfun, "??? (%s)", mtap->codec_name);
+>>>>>>> master
 	} else
 		write_c_string("???", printcharfun);
 
@@ -440,6 +450,7 @@ media_substream_print_audio(media_substream *mss, Lisp_Object printcharfun)
 		break;
 	}
 
+<<<<<<< HEAD
 	if (mtap->samplerate) {
 		char *buf;
 		buf = alloca(48);
@@ -455,6 +466,15 @@ media_substream_print_audio(media_substream *mss, Lisp_Object printcharfun)
 		snprintf(buf, 23, ", %d kb/s", mtap->bitrate/1000);
 		write_c_string(buf, printcharfun);
 	}
+=======
+	if (mtap->samplerate) 
+		write_fmt_str(printcharfun, ", %d Hz, %d Bit",
+			      mtap->samplerate,
+			      mtap->samplewidth);
+
+	if (mtap->bitrate)
+		write_fmt_str(printcharfun, ", %d kb/s", mtap->bitrate/1000);
+>>>>>>> master
 
 	write_c_string(">", printcharfun);
 }
@@ -467,6 +487,7 @@ media_substream_print_video(media_substream *mss, Lisp_Object printcharfun)
 
 	write_c_string("#<video ", printcharfun);
 	if (mtvp->name || mtvp->codec_name) {
+<<<<<<< HEAD
 		char *buf = alloca(64);
 		if (mtvp->name && mtvp->codec_name)
 			snprintf(buf, 63, "%s (%s)",
@@ -497,6 +518,30 @@ media_substream_print_video(media_substream *mss, Lisp_Object printcharfun)
 				 mtvp->width, mtvp->height,
 				 (double)mtvp->width/(double)mtvp->height);
 		write_c_string(buf, printcharfun);
+=======
+		if (mtvp->name && mtvp->codec_name)
+			write_fmt_str(printcharfun, "%s (%s)",
+				      mtvp->name, mtvp->codec_name);
+		else if (mtvp->name)
+			write_fmt_str(printcharfun, "%s [???]", mtvp->name);
+		else if (mtvp->codec_name)
+			write_fmt_str(printcharfun, "??? (%s)", mtvp->codec_name);
+	} else
+		write_c_string("???", printcharfun);
+
+	if (mtvp->bitrate)
+		write_fmt_str(printcharfun, ", %d kb/s", mtvp->bitrate);
+
+	if (mtvp->width && mtvp->height) {
+		if (mtvp->aspect_num > 1 && mtvp->aspect_den >= 1)
+			write_fmt_str(printcharfun, ", %dx%d (%d/%d)",
+				      mtvp->width, mtvp->height,
+				      mtvp->aspect_num, mtvp->aspect_den);
+		else
+			write_fmt_str(printcharfun, ", %dx%d (%.2f/1)",
+				      mtvp->width, mtvp->height,
+				      (double)mtvp->width/(double)mtvp->height);
+>>>>>>> master
 	}
 	write_c_string(">", printcharfun);
 }
@@ -826,7 +871,11 @@ Return a list of input formats in the underlying media libraries.
 	return formats;
 }
 
+<<<<<<< HEAD
 static inline void __attribute__((always_inline, artificial))
+=======
+static inline void __attribute__((always_inline))
+>>>>>>> master
 __add_prop(Lisp_Object *reslist, Lisp_Object key, Lisp_Object val)
 {
 	*reslist = Fcons(Fcons(key, val), *reslist);

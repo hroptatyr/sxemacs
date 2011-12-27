@@ -71,6 +71,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 #include <X11/Xlocale.h>        /* More portable than <locale.h> ? */
 #include <X11/Xlib.h>
+<<<<<<< HEAD
 #include "frame.h"
 #include "device.h"
 #include "window.h"
@@ -79,6 +80,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "EmacsFrame.h"
 #define INCLUDE_EVENTS_H_PRIVATE_SPHERE
 #include "events.h"
+=======
+#include "ui/frame.h"
+#include "ui/device.h"
+#include "ui/window.h"
+#include "buffer.h"
+#include "ui/X11/console-x.h"
+#include "ui/X11/EmacsFrame.h"
+#define INCLUDE_EVENTS_H_PRIVATE_SPHERE
+#include "events/events.h"
+>>>>>>> master
 
 #if !defined (XIM_XLIB) && !defined (USE_XFONTSET)
 #error  neither XIM_XLIB nor USE_XFONTSET is defined??
@@ -158,7 +169,11 @@ Initialize_Locale (void)
 			   "Using C Locale instead\n", locale);
 		putenv ("LANG=C");
 		putenv ("LC_ALL=C");
+<<<<<<< HEAD
 		if ((locale = setlocale (LC_ALL, "C")) == NULL) {
+=======
+		if (setlocale (LC_ALL, "C") == NULL) {
+>>>>>>> master
 			xim_warn ("Can't set locale to `C'!\n");
 			return;
 		}
@@ -706,12 +721,24 @@ EmacsXtCvtStringToXIMStyles (
 		char buf[strlen(fromVal->addr) +
 			 strlen(DefaultXIMStyles) +
 			 100];
+<<<<<<< HEAD
 		XrmValue new_from;
 		XtAppContext the_app_con = XtDisplayToApplicationContext (dpy);
 
 		sprintf(buf, "Cannot convert string \"%s\" to type XIMStyles.\n"
 			"Using default string \"%s\" instead.\n",
 			fromVal->addr, DefaultXIMStyles);
+=======
+		ssize_t len;
+		XrmValue new_from;
+		XtAppContext the_app_con = XtDisplayToApplicationContext (dpy);
+
+		len = snprintf(buf, sizeof(buf), 
+			       "Cannot convert string \"%s\" to type XIMStyles.\n"
+			       "Using default string \"%s\" instead.\n",
+			       fromVal->addr, DefaultXIMStyles);
+		assert(len >= 0 && len < sizeof(buf));
+>>>>>>> master
 		XtAppWarningMsg(the_app_con, "wrongParameters",
 				"cvtStringToXIMStyle",
 				"XtToolkitError",
@@ -936,9 +963,21 @@ void
 describe_Window (Window win)
 {
 	char xwincmd[128];
+<<<<<<< HEAD
 	sprintf (xwincmd, "xwininfo -id 0x%x >&2; xwininfo -events -id 0x%x >&2",
 		 (int) win, (int) win);
 	system (xwincmd);
+=======
+	if ( snprintf (xwincmd, sizeof(xwincmd), 
+		       "xwininfo -id 0x%x >&2; xwininfo -events -id 0x%x >&2",
+		       (int) win, (int) win) < sizeof(xwincmd) ) {
+		int exit_code = system (xwincmd);
+		if (  exit_code != 0 )
+			stderr_out("command '%s' failed with exit code %d", 
+				   xwincmd, exit_code);
+	} else
+		stderr_out("Could not generate wininfo command line");
+>>>>>>> master
 }
 
 void

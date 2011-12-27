@@ -38,7 +38,11 @@ static void fatal(char *msg);
 #include <X11/IntrinsicP.h>
 #include <stdlib.h>
 #include <stdio.h>
+<<<<<<< HEAD
 #include "extw-Xt.h"
+=======
+#include "ui/X11/extw-Xt.h"
+>>>>>>> master
 
 /* Yeah, that's portable!
 

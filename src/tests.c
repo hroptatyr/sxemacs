@@ -34,10 +34,14 @@ static Lisp_Object Vtest_function_list;
 DEFUN("test-data-format-conversion", Ftest_data_format_conversion, 0, 0, "",	/*
 Test TO_EXTERNAL_FORMAT() and TO_INTERNAL_FORMAT()
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	void *ptr;

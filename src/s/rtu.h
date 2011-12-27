@@ -80,12 +80,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #define fsync(x) 0		/* "Comment out" fsync calls */
 
 /* This is how to get the device name of the tty end of a pty.  */
+<<<<<<< HEAD
 #define PTY_TTY_NAME_SPRINTF \
             sprintf (pty_name, "/dev/ttyp%x", i);
 
 /* This is how to get the device name of the control end of a pty.  */
 #define PTY_NAME_SPRINTF \
 	sprintf (pty_name, "/dev/pty%x", i);
+=======
+#define PTY_TTY_NAME_SPRINTF					\
+	do {							\
+		int sz = snprintf (pty_name, sizeof(pty_name),	\
+				   "/dev/ttyp%x", i);		\
+		assert(sz>=0 && sz<sizeof(pty_name));		\
+	} while(0)
+
+/* This is how to get the device name of the control end of a pty.  */
+#define PTY_NAME_SPRINTF					\
+	do {							\
+		int sz = snprintf (pty_name, sizeof(pty_name),	\
+				   "/dev/pty%x", i);		\
+		assert(sz>=0 && sz<sizeof(pty_name));		\
+	} while(0)
+>>>>>>> master
 
 /* Formerly "BSD_PGRPS" */
 

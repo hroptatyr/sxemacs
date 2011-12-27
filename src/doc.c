@@ -27,25 +27,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "buffer.h"
 #include "bytecode.h"
+<<<<<<< HEAD
 #include "insdel.h"
 #include "keymap.h"
+=======
+#include "ui/insdel.h"
+#include "ui/keymap.h"
+>>>>>>> master
 #include "sysfile.h"
 
 Lisp_Object Vinternal_doc_file_name;
 Lisp_Object Vinternal_doc_fd;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Lisp_Object QSsubstitute;
 =======
 Lisp_Object QSsubstitute, Qdefvar;
 >>>>>>> origin/master
+=======
+Lisp_Object QSsubstitute, Qdefvar;
+>>>>>>> master
 
 #ifdef WITH_PDUMP
 extern unsigned int dump_id;
 #endif
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 /* Work out what source file a function or variable came from, taking the
    information from the documentation file. */
 
@@ -145,7 +157,10 @@ done:
         return return_me;
 }
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 /* Read and return doc string from open file descriptor FD
    at position POSITION.  Does not close the file.  Returns
    string; or if error, returns a cons holding the error
@@ -156,7 +171,11 @@ Lisp_Object
 unparesseuxify_doc_string(int fd, EMACS_INT position,
 			  char *name_nonreloc, Lisp_Object name_reloc)
 {
+<<<<<<< HEAD
 	char buf[512 * 32 + 1];
+=======
+	char buf[512 * 8 + 1];
+>>>>>>> master
 	char *buffer = buf;
 	int buffer_size = sizeof(buf)-1;
 	char *from, *to;
@@ -381,7 +400,10 @@ Lisp_Object read_doc_string(Lisp_Object filepos)
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 static Lisp_Object get_object_file_name (Lisp_Object filepos) {
         REGISTER int fd = -1;
         REGISTER SBufbyte *name_nonreloc = 0;
@@ -558,16 +580,23 @@ If TYPE is `defvar', then variable definitions are acceptable.
         return Qnil;
 }
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 DEFUN("documentation", Fdocumentation, 1, 2, 0,	/*
 Return the documentation string of FUNCTION.
 Unless a non-nil second argument RAW is given, the
 string is passed through `substitute-command-keys'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (function, raw))
 {
 	/* This function can GC */
@@ -658,6 +687,7 @@ This is like `get', but it can refer to strings stored in the
 through `substitute-command-keys'.  A non-nil third argument avoids this
 translation.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
       (symbol, prop, raw)) {
 =======
@@ -665,6 +695,11 @@ translation.
       (symbol, prop, raw))
 {
 >>>>>>> origin/master
+=======
+*/
+      (symbol, prop, raw))
+{
+>>>>>>> master
 	/* This function can GC */
 	REGISTER Lisp_Object doc = Qnil;
 #ifdef I18N3
@@ -696,6 +731,7 @@ translation.
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 static void
 weird_doc(Lisp_Object sym, const char *weirdness, const char *type, int pos)
 {
@@ -706,6 +742,8 @@ weird_doc(Lisp_Object sym, const char *weirdness, const char *type, int pos)
 }
 =======
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 DEFUN("Snarf-documentation", Fsnarf_documentation, 1, 1, 0,	/*
 Used during Emacs initialization, before dumping runnable Emacs,
@@ -715,10 +753,14 @@ One arg, FILENAME, a string which does not include a directory.
 The file is written to `../lib-src', and later found in `exec-directory'
 when doc strings are referred to in the dumped Emacs.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (filename))
 {
 	/* !!#### This function has not been Mule-ized */
@@ -742,18 +784,36 @@ when doc strings are referred to in the dumped Emacs.
 	if (!NILP(Vdoc_directory)) {
 		int alloca_sz = XSTRING_LENGTH(filename)
 			+ XSTRING_LENGTH(Vdoc_directory) + 1 + 9;
+<<<<<<< HEAD
 		CHECK_STRING(Vdoc_directory);
 		name = (char *)alloca(alloca_sz);
 		snprintf(name, alloca_sz, "%s%s",
 			 (char*)XSTRING_DATA(Vdoc_directory),
 			 (char*)XSTRING_DATA(filename))
+=======
+		int prt;
+		CHECK_STRING(Vdoc_directory);
+		name = (char *)alloca(alloca_sz);
+		prt = snprintf(name, alloca_sz, "%s%s",
+			       (char*)XSTRING_DATA(Vdoc_directory),
+			       (char*)XSTRING_DATA(filename));
+		assert(prt>=0 && prt < alloca_sz);
+>>>>>>> master
 	} else
 #endif				/* CANNOT_DUMP */
 	{
 		int alloca_sz = 2 + XSTRING_LENGTH(filename) + 3 + 9 + 1;
+<<<<<<< HEAD
 		name = (char *)alloca(alloca_sz);
 		snprintf(name, alloca_sz, "./%s",
 			 (char*)XSTRING_DATA(filename));
+=======
+		int prt;
+		name = (char *)alloca(alloca_sz);
+		prt = snprintf(name, alloca_sz, "./%s",
+			 (char*)XSTRING_DATA(filename));
+		assert(prt >= 0 && prt < alloca_sz);
+>>>>>>> master
 	}
 
 	fd = open(name, O_RDONLY | OPEN_BINARY, 0);
@@ -1040,10 +1100,14 @@ DEFUN("Verify-documentation", Fverify_documentation, 0, 0, 0,	/*
 Used to make sure everything went well with Snarf-documentation.
 Writes to stderr if not.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	Lisp_Object closure = Fcons(Qnil, Qnil);
@@ -1070,10 +1134,14 @@ as the keymap for future \\=\\[COMMAND] substrings.
 \\=\\= quotes the following character and is discarded;
 thus, \\=\\=\\=\\= puts \\=\\= into the output, and \\=\\=\\=\\[ puts \\=\\[ into the output.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (string)) 
 {
 	/* This function can GC */
@@ -1307,11 +1375,17 @@ void syms_of_doc(void)
 	DEFSUBR(Fverify_documentation);
 	DEFSUBR(Fsubstitute_command_keys);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         DEFSUBR(Fbuilt_in_symbol_file);
 
         DEFSYMBOL (Qdefvar);
 >>>>>>> origin/master
+=======
+        DEFSUBR(Fbuilt_in_symbol_file);
+
+        DEFSYMBOL (Qdefvar);
+>>>>>>> master
 }
 
 void vars_of_doc(void)

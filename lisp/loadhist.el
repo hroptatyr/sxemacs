@@ -36,6 +36,7 @@
 ;; ("outline" outline-regexp ... (require . wid-edit) ... (provide . outline) ...)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 (defun symbol-file (sym)
   "Return the input source from which SYM was loaded.
 This is a file name, or nil if the source was a buffer with no associated file."
@@ -44,6 +45,8 @@ This is a file name, or nil if the source was a buffer with no associated file."
     (when (memq sym (cdr entry))
       (return (car entry)))))
 =======
+=======
+>>>>>>> master
 ;; XEmacs; this function is in subr.el in GNU, and does not deal with
 ;; built-in symbols.
 (defun* symbol-file (sym &optional type)
@@ -97,7 +100,10 @@ with `defface' and `custom-declare-face'."
         (if (string-match "\.elc?$" built-in-file)
             (concat lisp-directory built-in-file)
           (concat source-directory "/src/" built-in-file))))))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 (defun feature-symbols (feature)
   "Return the file and list of symbols associated with a given FEATURE."

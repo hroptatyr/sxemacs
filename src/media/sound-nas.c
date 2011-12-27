@@ -41,7 +41,11 @@
 
 #include "media.h"
 #include "sound-nas.h"
+<<<<<<< HEAD
 #include "device.h"
+=======
+#include "ui/device.h"
+>>>>>>> master
 
 static JMP_BUF nas_server_sig;
 static AuBool nas_error_handler(AuServer* aud, AuErrorEvent* ev);
@@ -176,11 +180,16 @@ sound_nas_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 	write_c_string(" :server-handle ", pcfun);
 	if (snd->aud == NULL)
 		write_c_string("#b0rked", pcfun);
+<<<<<<< HEAD
 	else {
 		char *tmp = alloca(32);
 		snprintf(tmp, 31, "0x%x", (unsigned int)snd->aud);
 		write_c_string(tmp, pcfun);
 	}
+=======
+	else 
+		write_fmt_str(pcfun, "0x%x", (unsigned int)snd->aud);
+>>>>>>> master
 
 	return;
 }

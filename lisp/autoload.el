@@ -224,7 +224,10 @@ the section of autoloads for a file.")
 ;; Parsing the source file text.
 ;; Autoloads in C source differ from those in Lisp source.
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 ; Add operator definitions to autoload-operators.el in the xemacs-base
 ; package.
 (ignore-errors (require 'autoload-operators))
@@ -259,7 +262,10 @@ the section of autoloads for a file.")
       (put 'define-generic-mode 'doc-string-elt 7)
       ;; defin-global-mode has no explicit docstring.
       (put 'easy-mmode-define-global-mode 'doc-string-elt 1000)))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 (defun make-autoload (form file)
   "Turn FORM into an autoload or defvar for source file FILE.
@@ -269,11 +275,15 @@ or macro definition or a defcustom)."
     (cond
      ;; For complex cases, try again on the macro-expansion.
 <<<<<<< HEAD
+<<<<<<< HEAD
      ((and (memq car '(easy-mmode-define-global-mode
 		       easy-mmode-define-minor-mode define-minor-mode))
 =======
      ((and (memq car autoload-make-autoload-complex-operators)
 >>>>>>> origin/master
+=======
+     ((and (memq car autoload-make-autoload-complex-operators)
+>>>>>>> master
 	   (setq expand (let ((load-file-name file)) (macroexpand form)))
 	   (eq (car expand) 'progn)
 	   (memq :autoload-end expand))
@@ -286,6 +296,7 @@ or macro definition or a defcustom)."
 
      ;; For special function-like operators, use the `autoload' function.
 <<<<<<< HEAD
+<<<<<<< HEAD
      ((memq car '(defun define-skeleton defmacro define-derived-mode
 		   define-generic-mode easy-mmode-define-minor-mode
 		   easy-mmode-define-global-mode
@@ -293,12 +304,18 @@ or macro definition or a defcustom)."
 =======
      ((memq car autoload-make-autoload-operators)
 >>>>>>> origin/master
+=======
+     ((memq car autoload-make-autoload-operators)
+>>>>>>> master
       (let* ((macrop (memq car '(defmacro defmacro*)))
 	     (name (nth 1 form))
 	     (body (nthcdr (get car 'doc-string-elt) form))
 	     (doc (if (stringp (car body)) (pop body))))
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 	(if (memq car '(defmacro defmacro* defun defun*))
 	    (let ((arglist (nth 2 form))
 		  (placeholder (eval-when-compile (gensym))))
@@ -308,7 +325,10 @@ or macro definition or a defcustom)."
 				 (cl-function-arglist placeholder arglist)
 				 (format "^(%s ?" placeholder)
 				 "(") "\n"))))
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 	;; `define-generic-mode' quotes the name, so take care of that
 	(list 'autoload (if (listp name) name (list 'quote name)) file doc
 	      (or (and (memq car '(define-skeleton define-derived-mode

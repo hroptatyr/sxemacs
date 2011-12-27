@@ -5,10 +5,14 @@ useful.
 
 File List:
 =========
+<<<<<<< HEAD
 	10sendlog.................tla hook script
 	20mirror..................tla hook script
 	do_builds.sh..............automate builds
 	hook......................tla master hook script
+=======
+	do_builds.sh..............automate builds
+>>>>>>> master
 	make-pkg.sh...............bash script to create a SXEmacs tar package
 	pop3.el.patch.............SXEmacs native OpenSSL goodies
 	report-build-failure.sh...bash script to send a build report failure
@@ -21,6 +25,7 @@ File List:
 More Info:
 =========
 
+<<<<<<< HEAD
 tla hook scripts (hook, 10sendlog, 20mirror):
 --------------------------------------------
 These scripts let you automate parts of your tla'ing, leaving you more
@@ -85,6 +90,8 @@ Here is an example of how my ~/.arch-hooks hierarchy is laid out...
                 |-/=commit/30news2rss
 
 Steve Youngs <steve@sxemacs.org>
+=======
+>>>>>>> master
 
 do_builds.sh:
 ------------
@@ -242,4 +249,8 @@ Invoke with:
        -bs	Force the use of both bold and standout codes
        -q	Try to query the color map from the terminal
 
+<<<<<<< HEAD
 Nelson Ferreira <njsf@sxemacs.org>
+=======
+Nelson Ferreira <njsf@sxemacs.org>
+>>>>>>> master

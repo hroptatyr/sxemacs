@@ -72,8 +72,13 @@ AC_DEFUN([SXE_MM_CHECK_XFACE], [
 
 	SXE_DUMP_LIBS
 	SXE_LANG_WERROR([off])
+<<<<<<< HEAD
 	dnl SXE_PREPEND([-I$x_includes], [c_switch_site])
 	dnl SXE_PREPEND([-L$x_libraries], [ld_switch_site])
+=======
+	dnl SXE_PREPEND_UNDUP([-I$x_includes], [c_switch_site])
+	dnl SXE_PREPEND_UNDUP([-L$x_libraries], [ld_switch_site])
+>>>>>>> master
 	CPPFLAGS="$CPPFLAGS $X_CFLAGS"
 	LDFLAGS="$LDFLAGS $X_LIBS"
 
@@ -118,8 +123,13 @@ AC_DEFUN([SXE_MM_CHECK_JPEG], [
 
 	SXE_DUMP_LIBS
 	SXE_LANG_WERROR([off])
+<<<<<<< HEAD
 	dnl SXE_PREPEND([-I$x_includes], [c_switch_site])
 	dnl SXE_PREPEND([-L$x_libraries], [ld_switch_site])
+=======
+	dnl SXE_PREPEND_UNDUP([-I$x_includes], [c_switch_site])
+	dnl SXE_PREPEND_UNDUP([-L$x_libraries], [ld_switch_site])
+>>>>>>> master
 	CPPFLAGS="$CPPFLAGS $X_CFLAGS"
 	LDFLAGS="$LDFLAGS $X_LIBS"
 
@@ -266,8 +276,13 @@ AC_DEFUN([SXE_MM_CHECK_TIFF], [
 
 	SXE_DUMP_LIBS
 	SXE_LANG_WERROR([off])
+<<<<<<< HEAD
 	dnl SXE_PREPEND([-I$x_includes], [c_switch_site])
 	dnl SXE_PREPEND([-L$x_libraries], [ld_switch_site])
+=======
+	dnl SXE_PREPEND_UNDUP([-I$x_includes], [c_switch_site])
+	dnl SXE_PREPEND_UNDUP([-L$x_libraries], [ld_switch_site])
+>>>>>>> master
 	CPPFLAGS="$CPPFLAGS $X_CFLAGS"
 	LDFLAGS="$LDFLAGS $X_LIBS"
 
@@ -380,7 +395,11 @@ dnl 	_SXE_CHECK_pkgconfig_based([ffmpeg], [libavformat], [49.0.0])
 
 	SXE_DUMP_LIBS
 	CPPFLAGS="$CPPFLAGS ${FFMPEG_CPPFLAGS}"
+<<<<<<< HEAD
 	SXE_LANG_WERROR([on])
+=======
+	SXE_LANG_WERROR([off])
+>>>>>>> master
 	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #if defined HAVE_ERRNO_H
 # include <errno.h>
@@ -847,8 +866,47 @@ AC_DEFUN([SXE_MM_CHECK_OSS], [
 
 	SXE_DUMP_LIBS
 	MM_FAIL
+<<<<<<< HEAD
 	SXE_CHECK_HEADERS([machine/soundcard.h sys/soundcard.h linux/soundcard.h],
 		[MM_SUCC])
+=======
+	SXE_CHECK_HEADERS([machine/soundcard.h sys/soundcard.h linux/soundcard.h soundcard.h])
+        if test "$ac_cv_header_linux_soundcard_h"="yes" -o	\
+		"$ac_cv_header_machine_soundcard_h"="yes" -o	\
+		"$ac_cv_header_soundcard_h"="yes" -o		\
+		"$ac_cv_header_sys_soundcard_h"="yes"
+	then
+		AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+#if defined HAVE_MACHINE_SOUNDCARD_H && HAVE_MACHINE_SOUNDCARD_H
+#include <machine/soundcard.h>
+#elif defined HAVE_SYS_SOUNDCARD_H && HAVE_SYS_SOUNDCARD_H
+#include <sys/soundcard.h>
+#elif defined HAVE_LINUX_SOUNDCARD_H && HAVE_LINUX_SOUNDCARD_H
+#include <linux/soundcard.h>
+#else
+#include <soundcard.h>
+#endif
+]], 
+		[[ ioctl(0, SNDCTL_DSP_RESET, 0); ]])],
+  			[oss_ioctl_linked=yes],
+  			[oss_ioctl_linked=no])
+		if test	"${oss_ioctl_linked}" = "no" 
+		then
+			if test "${opsys}" = "netbsd"
+			then
+				AC_CHECK_LIB([ossaudio],[_oss_ioctl],
+					[
+						# netbsd needs this Linux OSS emulator library, just a ioctl
+						# wrapper really
+						MM_SUCC
+						SXE_PREPEND([-lossaudio], [MM_LIBS])
+					])
+			fi
+		else
+			MM_SUCC
+		fi
+	fi
+>>>>>>> master
 	SXE_RESTORE_LIBS
 
 	popdef([MM_SUCC])
@@ -975,7 +1033,11 @@ AC_DEFUN([SXE_MM_CHECK_ESD], [
 		SXE_DUMP_LIBS
 		ESD_CPPFLAGS="`$ESD_CONFIG --cflags`"
 		ESD_LDFLAGS="-L`$ESD_CONFIG --libs`"
+<<<<<<< HEAD
 		dnl SXE_APPEND([$esd_c_switch], [c_switch_site])
+=======
+		dnl SXE_APPEND_UNDUP([$esd_c_switch], [c_switch_site])
+>>>>>>> master
 		dnl SXE_PREPEND([$esd_libs], [LIBS])
 		CPPFLAGS="$CPPFLAGS $ESD_CPPFLAGS"
 		LDFLAGS="$LDFLAGS $ESD_LDFLAGS"
@@ -1137,10 +1199,14 @@ int main(int c, char *v[])
 		sxe_mm_alsa_version_supported_p="no"
 		;;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	1.0.2* | 1.0.4* | 1.0.5* | 1.0.6* | 1.0.7* | 1.0.8* ) 
 =======
 	1.0.2 | 1.0.4* | 1.0.5* | 1.0.6* | 1.0.7* | 1.0.8* ) 
 >>>>>>> origin/master
+=======
+	1.0.2 | 1.0.4* | 1.0.5* | 1.0.6* | 1.0.7* | 1.0.8* ) 
+>>>>>>> master
 		AC_MSG_RESULT([${sxe_mm_alsa_version} (suspicious to break)])
 		AC_MSG_WARN([Your ALSA version has not been tested. Do not be surprised if it fails!])
 		sxe_mm_alsa_version_supported_p="no"

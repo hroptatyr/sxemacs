@@ -29,6 +29,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <errno.h>
 #include <string.h>
 
+<<<<<<< HEAD
+=======
+/* 
+lisp.h defined UNUSED which also gets defined in some versions of SoX
+in an incompatible fashion.  We don't need that macro here...
+*/
+#undef UNUSED 
+>>>>>>> master
 #include "media-sox.h"
 
 #define MYSELF MDRIVER_SOX

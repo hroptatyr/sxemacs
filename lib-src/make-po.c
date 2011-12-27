@@ -274,6 +274,7 @@ int buf_putc(buffer_struct * buffer, int c)
 */
 int buf_print(buffer_struct * buffer, const char *s)
 {
+<<<<<<< HEAD
 	register int len;
 
 	len = strlen(s);
@@ -281,6 +282,16 @@ int buf_print(buffer_struct * buffer, const char *s)
 		return -1;
 
 	sprintf(&(buffer->buf[buffer->index]), s);
+=======
+	register int len, sz, msz = buffer->size - buffer->index;
+
+	len = strlen(s);
+	if ( len >= msz)
+		return -1;
+
+	sz = snprintf(&(buffer->buf[buffer->index]), msz, "%s", s);
+	assert(sz>=0 && sz<msz);
+>>>>>>> master
 	buffer->index += len;
 	return len;
 }

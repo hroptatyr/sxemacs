@@ -39,10 +39,14 @@
 #include "config.h"
 #include "sxemacs.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "ent.h"
 =======
 #include "ent/ent.h"
 >>>>>>> origin/master
+=======
+#include "ent/ent.h"
+>>>>>>> master
 #include "ase.h"
 #include "ase-cartesian.h"
 
@@ -99,12 +103,17 @@ ase_cartesian_prnt(Lisp_Object obj, Lisp_Object pcf, int unused)
 	if (!NILP(XASE_CARTESIAN_INTERIOR_TYPE(obj))) {
 		print_internal(XASE_CARTESIAN_INTERIOR_TYPE(obj), pcf, unused);
 	}
+<<<<<<< HEAD
 	{
 		char dim[64];
 		snprintf(dim, 63, " of dimension %d, ",
 			 XASE_CARTESIAN_DIMENSION(obj));
 		write_c_string(dim, pcf);
 	}
+=======
+	write_fmt_str(pcf, " of dimension %d, ",
+		      XASE_CARTESIAN_DIMENSION(obj));
+>>>>>>> master
 	_ase_cartesian_prnt(XASE_CARTESIAN(obj), pcf);
 
 	write_c_string(">", pcf);
@@ -254,10 +263,14 @@ DOESNT_RETURN ase_cartesian_embedding_error(Lisp_Object o1, Lisp_Object o2)
 DEFUN("ase-cartesianp", Fase_cartesianp, 1, 1, 0, /*
 Return non-`nil' iff OBJECT is a cartesian product of objects.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	if (ASE_CARTESIANP(object))
@@ -269,10 +282,14 @@ Return non-`nil' iff OBJECT is a cartesian product of objects.
 DEFUN("ase-cartesian*p", Fase_cartesianXp, 1, 1, 0, /*
 Return non-`nil' iff OBJECT is an interior cartesian product of objects.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	if (ASE_CARTESIAN_INTERIOR_P(object))
@@ -285,10 +302,14 @@ Return non-`nil' iff OBJECT is an interior cartesian product of objects.
 DEFUN("ase-cartesian", Fase_cartesian, 0, MANY, 0, /*
 Return a cartesian (exterior) product of OBJECTS.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						   */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object *args))
 {
 	if (nargs == 0)
@@ -303,10 +324,14 @@ Return a cartesian (exterior) product of OBJECTS.
 DEFUN("ase-cartesian*", Fase_cartesianX, 0, MANY, 0, /*
 Return an interior cartesian product of OBJECTS.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						     */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (int nargs, Lisp_Object *args))
 {
 	Lisp_Object tmp;
@@ -331,10 +356,14 @@ Return an interior cartesian product of OBJECTS.
 DEFUN("ase-cartesian-ground-domain", Fase_cartesian_ground_domain, 1, 1, 0, /*
 Return the ground domain (the type) of an interior product OBJECT.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	CHECK_ASE_CARTESIAN_INTERIOR(object);
@@ -344,10 +373,14 @@ Return the ground domain (the type) of an interior product OBJECT.
 DEFUN("ase-cartesian-projection", Fase_cartesian_projection, 2, 2, 0, /*
 Return the projection of CARTESIAN onto the DIMENSION-th component.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (cartesian, dimension))
 {
 	CHECK_ASE_UBERCARTESIAN(cartesian);
@@ -365,10 +398,14 @@ Return the embedding of CARTESIAN according to the DIMENSION vector.
 Use dimension indexes in DIMENSION vector to embed the specified
 dimension, use 0 to denote a free subspace.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (cartesian, dimension))
 {
 	int i, dim, newdim;

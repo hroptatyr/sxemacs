@@ -34,10 +34,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "opaque.h"
 #ifdef FILE_CODING
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "file-coding.h"
 =======
 #include "mule/file-coding.h"
 >>>>>>> origin/master
+=======
+#include "mule/file-coding.h"
+>>>>>>> master
 #endif
 
 #include "sysfile.h"
@@ -578,10 +582,14 @@ system that was used for the decoding is stored into it.  It will in
 general be different from CODESYS if CODESYS specifies automatic
 encoding detection or end-of-line detection.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (file, noerror, nomessage, nosuffix, codesys, used_codesys))
 {
 	/* This function can GC */
@@ -648,9 +656,16 @@ encoding detection or end-of-line detection.
 			}
 		}
 
+<<<<<<< HEAD
 		foundstr = (char *)alloca(XSTRING_LENGTH(found) + 1);
 		strcpy(foundstr, (char *)XSTRING_DATA(found));
 		foundlen = strlen(foundstr);
+=======
+		foundlen = XSTRING_LENGTH(found);
+		foundstr = (char *)alloca( foundlen+ 1);
+		strncpy(foundstr, (char *)XSTRING_DATA(found), foundlen+1);
+
+>>>>>>> master
 
 		/* The omniscient JWZ thinks this is worthless, but I beg to
 		   differ. --ben */
@@ -724,6 +739,12 @@ encoding detection or end-of-line detection.
 		struct gcpro ngcpro1;
 
 		NGCPRO1(lstrm);
+<<<<<<< HEAD
+=======
+               if (fd < 0)
+                      signal_file_error("Cannot open load file", file);
+
+>>>>>>> master
 		lstrm = make_filedesc_input_stream(fd, 0, -1, LSTR_CLOSING);
 		/* 64K is used for normal files; 8K should be OK here because
 		 * Lisp files aren't really all that big. */
@@ -897,10 +918,14 @@ get tripped up.  In this case, you will have to call
 `locate-file-clear-hashing' to get it back on track.  See that function
 for details.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (filename, path_list, suffixes, mode))
 {
 	/* This function can GC */
@@ -1186,10 +1211,14 @@ In this case, you must call `locate-file-clear-hashing'.
 If PATH is t, it means to fully clear all the accumulated hashes.  This
 can be used if the internal tables grow too large, or when dumping.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (path))
 {
 	if (EQ(path, Qt))
@@ -1488,6 +1517,7 @@ nil means discard it; anything else is a stream for printing.
 If there is no error, point does not move.  If there is an error,
 point remains at the end of the last character read from the buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (buffer, printflag)) {
 =======
@@ -1495,6 +1525,11 @@ point remains at the end of the last character read from the buffer.
       (buffer, printflag))
 {
 >>>>>>> origin/master
+=======
+*/
+      (buffer, printflag))
+{
+>>>>>>> master
 	/* This function can GC */
 	int speccount = specpdl_depth();
 	Lisp_Object tem, buf;
@@ -1547,6 +1582,7 @@ Note:  Before evaling the region, this function narrows the buffer to it.
 If the code being eval'd should happen to trigger a redisplay you may
 see some text temporarily disappear because of this.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
       (start, end, stream)) {
 =======
@@ -1554,6 +1590,11 @@ see some text temporarily disappear because of this.
       (start, end, stream))
 {
 >>>>>>> origin/master
+=======
+*/
+      (start, end, stream))
+{
+>>>>>>> master
 	/* This function can GC */
 	int speccount = specpdl_depth();
 	Lisp_Object tem;
@@ -1590,10 +1631,14 @@ call it with a char as argument to push a char back)
 a string (takes text from string, starting at the beginning)
 t (read text line using minibuffer and use it).
 <<<<<<< HEAD
+<<<<<<< HEAD
 				 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (stream))
 {
 	if (NILP(stream))
@@ -1625,6 +1670,7 @@ Returns a cons: (OBJECT-READ . FINAL-STRING-INDEX).
 START and END optionally delimit a substring of STRING from which to read;
 they default to 0 and (length STRING) respectively.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (string, start, end)) {
 =======
@@ -1632,6 +1678,11 @@ they default to 0 and (length STRING) respectively.
       (string, start, end))
 {
 >>>>>>> origin/master
+=======
+*/
+      (string, start, end))
+{
+>>>>>>> master
 	Bytecount startval, endval;
 	Lisp_Object tem;
 	Lisp_Object lispstream = Qnil;

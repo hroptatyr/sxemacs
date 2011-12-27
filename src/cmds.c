@@ -24,7 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "commands.h"
 #include "buffer.h"
 #include "syntax.h"
+<<<<<<< HEAD
 #include "insdel.h"
+=======
+#include "ui/insdel.h"
+>>>>>>> master
 
 Lisp_Object Qkill_forward_chars;
 Lisp_Object Qself_insert_command;
@@ -55,6 +59,7 @@ The characters that are moved over may be added to the current selection
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (count, buffer)) {
 =======
@@ -62,6 +67,11 @@ the documentation for this variable for more details.
       (count, buffer))
 {
 >>>>>>> origin/master
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> master
 	struct buffer *buf = decode_buffer(buffer, 1);
 	EMACS_INT n;
 
@@ -107,6 +117,7 @@ The characters that are moved over may be added to the current selection
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (count, buffer)) {
 =======
@@ -114,6 +125,11 @@ the documentation for this variable for more details.
       (count, buffer))
 {
 >>>>>>> origin/master
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> master
 	if (NILP(count))
 		count = make_int(-1);
 	else {
@@ -138,6 +154,7 @@ The characters that are moved over may be added to the current selection
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (count, buffer)) {
 =======
@@ -145,6 +162,11 @@ the documentation for this variable for more details.
       (count, buffer))
 {
 >>>>>>> origin/master
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> master
 	struct buffer *buf = decode_buffer(buffer, 1);
 	Bufpos pos2 = BUF_PT(buf);
 	Bufpos pos;
@@ -173,10 +195,14 @@ With argument COUNT not nil or 1, move forward COUNT - 1 lines first.
 If scan reaches end of buffer, return that position.
 This function does not move point.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (count, buffer))
 {
 	struct buffer *b = decode_buffer(buffer, 1);
@@ -209,6 +235,7 @@ The characters that are moved over may be added to the current selection
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
       (count, buffer)) {
 =======
@@ -216,6 +243,11 @@ the documentation for this variable for more details.
       (count, buffer))
 {
 >>>>>>> origin/master
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> master
 	struct buffer *b = decode_buffer(buffer, 1);
 
 	BUF_SET_PT(b, XINT(Fpoint_at_bol(count, buffer)));
@@ -228,10 +260,14 @@ With argument COUNT not nil or 1, move forward COUNT - 1 lines first.
 If scan reaches end of buffer, return that position.
 This function does not move point.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (count, buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 1);
@@ -259,6 +295,7 @@ The characters that are moved over may be added to the current selection
 to invoke this command, and `shifted-motion-keys-select-region' is t; see
 the documentation for this variable for more details.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
       (count, buffer)) {
 =======
@@ -266,6 +303,11 @@ the documentation for this variable for more details.
       (count, buffer))
 {
 >>>>>>> origin/master
+=======
+*/
+      (count, buffer))
+{
+>>>>>>> master
 	struct buffer *b = decode_buffer(buffer, 1);
 
 	BUF_SET_PT(b, XINT(Fpoint_at_eol(count, buffer)));
@@ -278,10 +320,14 @@ Optional second arg KILLP non-nil means kill instead (save in kill ring).
 Interactively, COUNT is the prefix arg, and KILLP is set if
 COUNT was explicitly specified.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (count, killp))
 {
 	/* This function can GC */
@@ -321,10 +367,14 @@ Optional second arg KILLP non-nil means kill instead (save in kill ring).
 Interactively, COUNT is the prefix arg, and KILLP is set if
 COUNT was explicitly specified.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (count, killp))
 {
 	/* This function can GC */
@@ -347,10 +397,14 @@ Insert the character you type.
 Whichever character you type to run this command is inserted.
 If a prefix arg COUNT is specified, the character is inserted COUNT times.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (count))
 {
 	/* This function can GC */
@@ -508,10 +562,14 @@ static void internal_self_insert(Emchar c1, int noautofill)
 DEFUN("self-insert-internal", Fself_insert_internal, 1, 1, 0,	/*
 Invoke `self-insert-command' as if CHARACTER is entered from keyboard.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (character))
 {
 	/* This function can GC */

@@ -381,12 +381,15 @@ define pobj
   if $lrecord_type == lrecord_type_toolbar_button
     pstructtype toolbar_button
   else
+<<<<<<< HEAD
   if $lrecord_type == lrecord_type_tooltalk_message
     ptype Lisp_Tooltalk_Message
   else
   if $lrecord_type == lrecord_type_tooltalk_pattern
     ptype Lisp_Tooltalk_Pattern
   else
+=======
+>>>>>>> master
   if $lrecord_type == lrecord_type_weak_list
     pstructtype weak_list
   else

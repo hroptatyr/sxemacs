@@ -162,7 +162,10 @@ static Lisp_Object mark_database(Lisp_Object object)
 static void
 print_database(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
+<<<<<<< HEAD
 	char buf[85];
+=======
+>>>>>>> master
 	Lisp_Database *db = XDATABASE(obj);
 	Lisp_Object tmp1, tmp2;
 
@@ -175,6 +178,7 @@ print_database(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 
 	tmp1 = db->funcs->get_type(db);
 	tmp2 = db->funcs->get_subtype(db);
+<<<<<<< HEAD
 	snprintf(buf, sizeof(buf), "\" (%s/%s/%s) 0x%x>",
                  (char *)string_data(XSYMBOL(tmp1)->name),
                  (char *)string_data(XSYMBOL(tmp2)->name),
@@ -183,6 +187,16 @@ print_database(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
                   (db->access_ & O_RDWR) ? "readwrite" : "readonly"),
                  db->header.uid);
 	write_c_string(buf, printcharfun);
+=======
+	write_fmt_string(printcharfun, 
+			 "\" (%s/%s/%s) 0x%x>",
+			 (char *)string_data(XSYMBOL(tmp1)->name),
+			 (char *)string_data(XSYMBOL(tmp2)->name),
+			 (!DATABASE_LIVE_P(db) ? "closed" :
+			  (db->access_ & O_WRONLY) ? "writeonly" :
+			  (db->access_ & O_RDWR) ? "readwrite" : "readonly"),
+			 db->header.uid);
+>>>>>>> master
 }
 
 static void finalize_database(void *header, int for_disksave)

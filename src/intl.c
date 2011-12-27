@@ -25,7 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 
 #include "bytecode.h"
+<<<<<<< HEAD
 #include "device.h"
+=======
+#include "ui/device.h"
+>>>>>>> master
 
 #if defined (HAVE_X_WINDOWS) && defined (HAVE_X11_XLOCALE_H)
 #include <X11/Xlocale.h>
@@ -164,10 +168,14 @@ If OBJECT is of the form (defer-gettext "string"), return the string.
 The purpose of the defer-gettext symbol is to identify strings which
 are translated when they are referenced instead of when they are defined.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	if (CONSP(object)) {
@@ -183,10 +191,14 @@ DEFUN("gettext", Fgettext, 1, 1, 0,	/*
 Look up STRING in the default message domain and return its translation.
 This function does nothing if I18N3 was not enabled when Emacs was compiled.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (string))
 {
 #ifdef I18N3
@@ -231,10 +243,14 @@ DEFUN("dgettext", Fdgettext, 2, 2, 0,	/*
 Look up STRING in the specified message domain and return its translation.
 This function does nothing if I18N3 was not enabled when Emacs was compiled.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (domain, string))
 {
 	CHECK_STRING(domain);
@@ -253,10 +269,14 @@ Here's how the path to message files is constructed under SunOS 5.0:
 {pathname}/{LANG}/LC_MESSAGES/{domain}.mo
 This function does nothing if I18N3 was not enabled when Emacs was compiled.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (domain, pathname))
 {
 	CHECK_STRING(domain);
@@ -280,10 +300,14 @@ The presence of this declaration in a compiled file effectively sets the
 domain of all functions and variables which are defined in that file.
 Bug: it has no effect on source (.el) files, only compiled (.elc) files.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (domain_name))
 {
 	CHECK_STRING(domain_name);

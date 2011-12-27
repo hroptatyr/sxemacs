@@ -1423,11 +1423,14 @@ used when you enter the Info system using @kbd{C-h i} or through the
 Help menu.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 The @file{dynodump/} directory contains auxiliary code used to build
 SXEmacs on Solaris platforms.
 
 =======
 >>>>>>> origin/master
+=======
+>>>>>>> master
 The other directories contain various miscellaneous code and information
 that is not normally used or needed.
 
@@ -1811,10 +1814,13 @@ An object that encapsulate a @dfn{subwindow} resource, i.e. a
 window-system child window that is drawn into by an external process;
 this object should be integrated into the glyph system but isn't yet,
 and may change form when this is done.
+<<<<<<< HEAD
 @item tooltalk-message
 @itemx tooltalk-pattern
 Objects that represent resources used in the ToolTalk interprocess
 communication protocol.
+=======
+>>>>>>> master
 @item toolbar-button
 An object used in conjunction with the toolbar.
 @end table
@@ -4920,6 +4926,7 @@ currently in use.
 
 
 @example
+<<<<<<< HEAD
 tooltalk.c
 tooltalk.h
 @end example
@@ -4937,6 +4944,8 @@ parts of the SPARCWorks development environment.
 
 
 @example
+=======
+>>>>>>> master
 getloadavg.c
 @end example
 
@@ -5838,7 +5847,11 @@ coding-system, frame, image-instance, glyph, popup-data, gui-item,
 keymap, charset, color_instance, font_instance, opaque, opaque-list,
 process, range-table, specifier, symbol-value-buffer-local,
 symbol-value-lisp-magic, symbol-value-varalias, toolbar-button,
+<<<<<<< HEAD
 tooltalk-message, tooltalk-pattern, window, and window-configuration. We
+=======
+window, and window-configuration. We
+>>>>>>> master
 take care of them in the fist place
 in order to be able to handle and to finalize items stored in them more
 easily. The function @code{sweep_lcrecords_1} as described below is

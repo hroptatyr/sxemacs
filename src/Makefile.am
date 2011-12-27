@@ -29,9 +29,13 @@ builddir = @builddir@
 srcdir = @srcdir@
 top_builddir = @top_builddir@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 top_build_prefix = $(top_builddir)/
 >>>>>>> origin/master
+=======
+top_build_prefix = $(top_builddir)/
+>>>>>>> master
 top_srcdir = @top_srcdir@
 abs_builddir = @abs_builddir@
 abs_top_builddir = @abs_top_builddir@
@@ -50,8 +54,13 @@ sxesrcdir = $(sxe_srcdir)/src
 bldsrcdir = $(builddir)
 sxelispdir = $(top_srcdir)/lisp
 bldlispdir = $(top_builddir)/lisp
+<<<<<<< HEAD
 sxelwlibdir = $(top_srcdir)/lwlib
 bldlwlibdir = $(top_builddir)/lwlib
+=======
+sxelwlibdir = $(top_srcdir)/src/ui/lwlib
+bldlwlibdir = $(top_builddir)/src/ui/lwlib
+>>>>>>> master
 sxeemoddir = $(top_srcdir)/modules
 bldemoddir = $(top_builddir)/modules
 sxelibsrcdir = $(abs_top_srcdir)/lib-src
@@ -65,6 +74,7 @@ bin_SCRIPTS = sxemacs.dmp
 archlib_DATA = config.values DOC
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 pdumplibs = libsxecore.a libsxeui.a libsxeevents.a libent.a libmm.a libsxemem.a
 if NEED_LIBMULE
 pdumplibs += libmule.a
@@ -77,10 +87,18 @@ nodumplibs = libcruft.a
 =======
 pdumplibs = libsxecore.a libsxeui.a libsxeevents.a libsxemem.a
 nodumplibs=
+=======
+pdumplibs = 
+noinst_pdumplibs=
+nodumplibs=
+noinst_nodumplibs=
+pdump_ldadd =
+>>>>>>> master
 
 SUBDIRS=
 sxe_subdirs=
 
+<<<<<<< HEAD
 # @FIXME@ Should probably be conditional on whether we really have media
 # things or not :-)
 AM_LDFLAGS += -L$(builddir)/media
@@ -119,10 +137,88 @@ SUBDIRS += $(sxe_subdirs)
 
 >>>>>>> origin/master
 noinst_LIBRARIES = $(pdumplibs) $(nodumplibs)
+=======
+pdumplibs        += libsxecore.a 
+noinst_pdumplibs += libsxecore.a 
+pdump_ldadd      += $(libsxecore_a_ldflags) 
+
+# Inverse order of dependency for order dependendant
+# linkers...
+
+if NEED_LIBSXEUIGTK
+pdumplibs += $(builddir)/ui/Gtk/libsxeuiGtk.a 
+# sxe_subdirs += ui
+endif
+
+if NEED_LIBSXEUIX11
+pdumplibs += $(builddir)/ui/X11/libsxeuiX11.a 
+# sxe_subdirs += ui
+endif
+
+if NEED_LIBSXEUITTY
+pdumplibs += $(builddir)/ui/TTY/libsxeuiTTY.a 
+# sxe_subdirs += ui
+endif
+
+pdumplibs += $(builddir)/ui/libsxeui.a 
+# pdump_ldadd +=
+sxe_subdirs += ui
+
+pdumplibs += $(builddir)/events/libsxeevents.a 
+# pdump_ldadd +=
+sxe_subdirs += events
+
+# @FIXME@ Should probably be conditional on whether we really have ent
+# things or not :-)
+pdumplibs += $(builddir)/ent/libent.a
+pdump_ldadd += $(ENT_LIBS)
+sxe_subdirs += ent
+
+# @FIXME@ Should probably be conditional on whether we really have media
+# things or not :-)
+pdumplibs += $(builddir)/media/libmm.a
+pdump_ldadd += $(MM_LIBS)
+sxe_subdirs += media
+
+
+pdumplibs   += $(builddir)/mem/libsxemem.a
+sxe_subdirs += mem
+pdump_ldadd += $(libsxemem_a_ldflags)
+
+if NEED_LIBMULE
+pdumplibs += $(builddir)/mule/libmule.a
+# pdump_ldadd +=
+sxe_subdirs += mule
+endif
+
+if NEED_LIBSXEDB
+pdumplibs += $(builddir)/database/libsxedb.a
+pdump_ldadd += $(DB_LDFLAGS) $(DB_LIBS)
+sxe_subdirs += database
+endif
+
+nodumplibs += libcruft.a
+noinst_nodumplibs += libcruft.a
+if USE_MEMALLOC
+nodumplibs  += $(builddir)/mem/libmemalloc.a
+# No need to add
+# sxe_subdirs += mem
+# because libsxemem already is there
+endif
+if DESCEND_LWLIB
+nodumplibs += $(builddir)/ui/X11/libsxeX.a
+endif
+
+SUBDIRS += $(sxe_subdirs)
+
+noinst_LIBRARIES = $(noinst_pdumplibs) $(noinst_nodumplibs)
+
+>>>>>>> master
 
 acgen_headers = config.h sxe-paths.h
 header_HEADERS = $(acgen_headers)		\
 	$(libsxecore_a_headers)			\
+<<<<<<< HEAD
 	$(libsxeui_a_headers)			\
 <<<<<<< HEAD
 	$(libent_a_headers)			\
@@ -132,13 +228,20 @@ header_HEADERS = $(acgen_headers)		\
 >>>>>>> origin/master
 	$(libmemalloc_a_headers)		\
 	$(libsxeevents_a_headers)		\
+=======
+>>>>>>> master
 	emodules-ng.h
 
 sheader_HEADERS = $(srcdir)/s/*.h
 mheader_HEADERS = $(srcdir)/m/*.h
 
+<<<<<<< HEAD
 BUILT_SOURCES = Emacs.ad.h sheap-adjust.h dump-id.c
 EXTRA_DIST = Emacs.ad.h sheap-adjust.h
+=======
+BUILT_SOURCES = sheap-adjust.h dump-id.c
+EXTRA_DIST = sheap-adjust.h
+>>>>>>> master
 CLEANFILES = core* stage1 stage2 *.stamp $(BUILT_SOURCES) \
 	sxemacs.dmp DOC config.values
 
@@ -166,6 +269,7 @@ sxemacs_LDFLAGS = $(AM_LDFLAGS) $(start_flags)
 ## hm, rpath is gross, says njsf
 #sxemacs_LDFLAGS += -Wl,-rpath,$(abs_top_builddir)/lwlib/$(LT_OBJDIR)
 sxemacs_LDADD = $(sxemacs_lddep) $(OPENSSL_LIBS)
+<<<<<<< HEAD
 sxemacs_LDADD +=							\
 <<<<<<< HEAD
 	$(libsxecore_a_ldflags)						\
@@ -177,6 +281,12 @@ sxemacs_LDADD +=							\
 	$(ld_switch_all) $(ld_libs_all) $(lib_gcc) $(FFI_LIBS)		\
 >>>>>>> origin/master
 	$(LIBLTDL)
+=======
+sxemacs_LDADD += $(sxemacs_ldadd) 		\
+		 $(ld_switch_all) $(ld_libs_all)\
+	 	 $(lib_gcc) $(FFI_LIBS)		\
+		 $(LIBLTDL)
+>>>>>>> master
 if WITH_BDWGC
 sxemacs_CPPFLAGS += $(BDWGC_CPPFLAGS)
 sxemacs_LDFLAGS += $(BDWGC_LDFLAGS) $(BDWGC_LIBS)
@@ -186,6 +296,7 @@ sxemacs_DEPENDENCIES = $(sxemacs_lddep)
 all_sources =
 
 ## library stuff
+<<<<<<< HEAD
 libsxeevents_a_headers =						\
 	events-mod.h events.h event-queue.h workers.h worker-asyneq.h
 libsxeevents_a_sources =						\
@@ -205,6 +316,8 @@ libsxemem_a_sources =							\
 libsxemem_a_SOURCES = $(libsxemem_a_headers) $(libsxemem_a_sources)
 all_sources += $(libsxemem_a_sources) $(libsxemem_objs:.o=.c)
 
+=======
+>>>>>>> master
 libsxecore_a_headers =							\
 	backtrace.h bloom.h broken-sun.h buffer.h dllist.h		\
 	bufslots.h bytecode.h casetab.h category.h			\
@@ -232,6 +345,7 @@ libsxecore_a_sources =							\
 	strftime.c symbols.c syntax.c sysdep.c undo.c
 libsxecore_a_SOURCES = $(libsxecore_a_headers) $(libsxecore_a_sources)
 <<<<<<< HEAD
+<<<<<<< HEAD
 EXTRA_libsxecore_a_SOURCES =					     \
 	dumper.c realpath.c					     \
 	unexaix.c unexalpha.c unexapollo.c unexconvex.c unexec.c     \
@@ -241,11 +355,15 @@ EXTRA_libsxecore_a_SOURCES =					     \
 =======
 EXTRA_libsxecore_a_SOURCES = dumper.c realpath.c
 >>>>>>> origin/master
+=======
+EXTRA_libsxecore_a_SOURCES = dumper.c realpath.c
+>>>>>>> master
 libsxecore_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_CFLAGS)
 libsxecore_a_LIBADD = $(libsxecore_objs)
 libsxecore_a_DEPENDENCIES = $(libsxecore_a_LIBADD)
 all_sources += $(libsxecore_a_sources) $(libsxecore_objs:.o=.c)
 
+<<<<<<< HEAD
 libsxeui_a_headers =							   \
 	balloon_help.h bitmaps.h					   \
 	cm.h conslots.h console-gtk.h console-stream.h console-tty.h	   \
@@ -369,6 +487,8 @@ libmemalloc_a_DEPENDENCIES = $(libmemalloc_a_LIBADD)
 libmemalloc_a_ldflags = $(MEMALLOC_LIBS)
 all_sources += $(libmemalloc_a_sources) $(libmemalloc_objs:.o=.c)
 
+=======
+>>>>>>> master
 libcruft_a_headers = debug.h effi.h emodules-ng.h openssl.h
 libcruft_a_sources =
 libcruft_a_SOURCES = $(libcruft_a_headers) $(libcruft_a_sources)
@@ -381,6 +501,7 @@ libcruft_a_LIBADD = $(libcruft_objs)
 libcruft_a_DEPENDENCIES = $(libcruft_a_LIBADD)
 all_sources += $(libcruft_a_sources) $(extra_objs:.o=.c)
 
+<<<<<<< HEAD
 ## just a trick :( we create these libraries to get the object files
 if DESCEND_LWLIB
 noinst_LIBRARIES += libTopLevelEmacsShell.a libTransientEmacsShell.a
@@ -408,6 +529,8 @@ libsxeX_a_LIBADD =				\
 libsxeX_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_CFLAGS)
 libsxeX_a_DEPENDENCIES = libTopLevelEmacsShell.a libTransientEmacsShell.a
 all_sources += $(libsxeX_a_sources) $(libsxeX_a_LIBADD:.o=.c)
+=======
+>>>>>>> master
 
 ### custom rules
 SXEMACS = $(bldsrcdir)/sxemacs
@@ -426,12 +549,15 @@ BATCHGDB = $(BITCHENV) gdb --args $(BITCH)
 RM = rm -f
 CROSSMAKE = (cd $$(dirname $@) && $(MAKE) $(AM_MAKEFLAGS) $$(basename $@))
 
+<<<<<<< HEAD
 Emacs.ad.h: $(top_srcdir)/etc/Emacs.ad
 	@echo "Producing \`src/Emacs.ad.h' from \`etc/Emacs.ad'."
 	@(echo "/*	Do not edit this file!" ; \
 	  echo "  	Automatically generated from $(top_srcdir)/etc/Emacs.ad" ; \
 	  echo " */" ; \
 	  $(SHELL) $(sxelibsrcdir)/ad2c $(top_srcdir)/etc/Emacs.ad ) > $@
+=======
+>>>>>>> master
 
 sheap-adjust.h:
 	@echo "Resetting \`src/sheap-adjust.h'."; \
@@ -457,10 +583,17 @@ DOC: $(SXEMACS) $(bldlispdir)/auto.stamp
 			-o $(bldsrcdir)/DOC -d $(sxesrcdir) \
 			-i $(sxe_srcdir)/site-packages \
 <<<<<<< HEAD
+<<<<<<< HEAD
 			$(sxesrcdir)/*.c $(sxeemoddir)/*/*.c; \
 =======
 			$(sxesrcdir)/*.c $(sxesrcdir)/*/*.c $(sxeemoddir)/*/*.c; \
 >>>>>>> origin/master
+=======
+			$(sxesrcdir)/*.c \
+	                $(sxesrcdir)/*/*.c \
+	                $(sxesrcdir)/*/*/*.c \
+	                $(sxeemoddir)/*/*.c; \
+>>>>>>> master
 		touch $@; \
 	fi
 
@@ -473,10 +606,14 @@ config.values: config.h
 	@echo "Building config.values ..."
 	@echo ";;; Do not edit this file!" > $@
 <<<<<<< HEAD
+<<<<<<< HEAD
 	$(EGREP) '^[^ ]*='\''.*'\''$$\|^#define ' $(top_builddir)/config.log | \
 =======
 	grep '^[^ ]*='\''.*'\''$$\|^#define ' $(top_builddir)/config.log | \
 >>>>>>> origin/master
+=======
+	grep '^[^ ]*='\''.*'\''$$\|^#define ' $(top_builddir)/config.log | \
+>>>>>>> master
 		grep -v 'lt_lt_' | \
 		sed \
 		-e 's/='\''\(.*\)'\''/ "\1"/g' \

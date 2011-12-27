@@ -46,12 +46,19 @@ static void
 print_opaque(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	const Lisp_Opaque *p = XOPAQUE(obj);
+<<<<<<< HEAD
 	char buf[200];
 
 	sprintf(buf,
 		"#<INTERNAL OBJECT (SXEmacs bug?) (opaque, size=%lu) 0x%lx>",
 		(long)(p->size), (unsigned long)p);
 	write_c_string(buf, printcharfun);
+=======
+
+	write_fmt_str(printcharfun,
+		      "#<INTERNAL OBJECT (SXEmacs bug?) (opaque, size=%lu) 0x%lx>",
+		      (long)(p->size), (unsigned long)p);
+>>>>>>> master
 }
 
 static inline size_t
@@ -130,12 +137,19 @@ static void
 print_opaque_ptr(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	const Lisp_Opaque_Ptr *p = XOPAQUE_PTR(obj);
+<<<<<<< HEAD
 	char buf[200];
 
 	sprintf(buf,
 		"#<INTERNAL OBJECT (SXEmacs bug?) "
 		"(opaque-ptr, adr=%p) %p>", p->ptr, p);
 	write_c_string(buf, printcharfun);
+=======
+	
+	write_fmt_string(printcharfun,
+			 "#<INTERNAL OBJECT (SXEmacs bug?) "
+			 "(opaque-ptr, adr=%p) %p>", p->ptr, p);
+>>>>>>> master
 }
 
 static int equal_opaque_ptr(Lisp_Object obj1, Lisp_Object obj2, int depth)

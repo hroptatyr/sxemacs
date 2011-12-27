@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <config.h>
 #include "lisp.h"
+<<<<<<< HEAD
 #include "events.h"
 #include "macros.h"
 #include "commands.h"
@@ -37,6 +38,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "window.h"
 #include "frame.h"
 #include "keymap.h"
+=======
+#include "events/events.h"
+#include "macros.h"
+#include "commands.h"
+#include "ui/console.h"
+#include "buffer.h"
+#include "ui/window.h"
+#include "ui/frame.h"
+#include "ui/keymap.h"
+>>>>>>> master
 
 Lisp_Object Qexecute_kbd_macro;
 
@@ -55,6 +66,7 @@ Use \\[name-last-kbd-macro] to give it a permanent name.
 Non-nil arg (prefix arg) means append to last macro defined;
 This begins by re-executing that macro as if you typed it again.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (append)) {
 =======
@@ -62,6 +74,11 @@ This begins by re-executing that macro as if you typed it again.
       (append))
 {
 >>>>>>> origin/master
+=======
+*/
+      (append))
+{
+>>>>>>> master
 	/* This function can GC */
 	struct console *con = XCONSOLE(Vselected_console);
 	if (!NILP(con->defining_kbd_macro))
@@ -98,10 +115,14 @@ With numeric arg, repeat macro now that many times,
 counting the definition just completed as the first repetition.
 An argument of zero means repeat until error.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (arg))
 {
 	/* This function can GC */
@@ -147,10 +168,14 @@ An argument of zero means repeat until error.
 DEFUN("zap-last-kbd-macro-event", Fzap_last_kbd_macro_event, 0, 0, 0,	/*
 Don't look at this lest you vomit or spontaneously combust.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	struct console *con = XCONSOLE(Vselected_console);
@@ -212,10 +237,14 @@ void finalize_kbd_macro_chars(struct console *con)
 DEFUN("cancel-kbd-macro-events", Fcancel_kbd_macro_events, 0, 0, 0,	/*
 Cancel the events added to a keyboard macro for this command.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	struct console *con = XCONSOLE(Vselected_console);
@@ -233,10 +262,14 @@ A prefix argument serves as a repeat count.  Zero means repeat until error.
 To make a macro permanent so you can call it even after
 defining others, use \\[name-last-kbd-macro].
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (prefix))
 {
 	/* This function can GC */
@@ -270,10 +303,14 @@ Execute MACRO as string of editor command characters.
 If MACRO is a symbol, its function definition is used.
 COUNT is a repeat count, or nil for once, or 0 for infinite loop.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (macro, count))
 {
 	/* This function can GC */

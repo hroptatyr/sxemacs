@@ -1307,7 +1307,10 @@ error
         end-of-file
       process-error
       network-error
+<<<<<<< HEAD
       tooltalk-error
+=======
+>>>>>>> master
       gui-error
         dialog-box-error
       sound-error

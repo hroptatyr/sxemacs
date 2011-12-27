@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 
 #include "buffer.h"
+<<<<<<< HEAD
 #include "device.h"
 #include "extents.h"
 #include "faces.h"
@@ -37,6 +38,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "region-cache.h"
 #endif
 #include "window.h"
+=======
+#include "ui/device.h"
+#include "extents.h"
+#include "ui/faces.h"
+#include "ui/frame.h"
+#include "ui/glyphs.h"
+#include "ui/insdel.h"
+#ifdef REGION_CACHE_NEEDS_WORK
+#include "region-cache.h"
+#endif
+#include "ui/window.h"
+>>>>>>> master
 
 Lisp_Object Qcoerce;
 
@@ -252,6 +265,7 @@ Whether the line is visible (if `selective-display' is t) has no effect;
 however, ^M is treated as end of line when `selective-display' is t.
 If BUFFER is nil, the current buffer is assumed.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (buffer)) {
 =======
@@ -259,6 +273,11 @@ If BUFFER is nil, the current buffer is assumed.
       (buffer))
 {
 >>>>>>> origin/master
+=======
+*/
+      (buffer))
+{
+>>>>>>> master
 	return make_int(current_column(decode_buffer(buffer, 0)));
 }
 
@@ -268,6 +287,7 @@ Optional second argument MINIMUM says always do at least MINIMUM spaces
 even if that goes past COLUMN; by default, MINIMUM is zero.
 If BUFFER is nil, the current buffer is assumed.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
       (column, minimum, buffer)) {
 =======
@@ -275,6 +295,11 @@ If BUFFER is nil, the current buffer is assumed.
       (column, minimum, buffer))
 {
 >>>>>>> origin/master
+=======
+*/
+      (column, minimum, buffer))
+{
+>>>>>>> master
 	/* This function can GC */
 	int mincol;
 	int fromcol;
@@ -360,10 +385,14 @@ Return the indentation of the current line.
 This is the horizontal position of the character
 following any initial whitespace.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (buffer))
 {
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -395,6 +424,7 @@ reach column COLUMN, then add spaces/tabs to get there.
 
 Returns the actual column that it moved to.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (column, force, buffer)) {
 =======
@@ -402,6 +432,11 @@ Returns the actual column that it moved to.
       (column, force, buffer))
 {
 >>>>>>> origin/master
+=======
+*/
+      (column, force, buffer))
+{
+>>>>>>> master
 	/* This function can GC */
 	Bufpos pos;
 	struct buffer *buf = decode_buffer(buffer, 0);
@@ -759,6 +794,7 @@ Note that `vertical-motion' sets WINDOW's buffer's point, not
 WINDOW's point. (This differs from FSF Emacs, which buggily always
 sets current buffer's point, regardless of WINDOW.)
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (lines, window, pixels)) {
 =======
@@ -766,6 +802,11 @@ sets current buffer's point, regardless of WINDOW.)
       (lines, window, pixels))
 {
 >>>>>>> origin/master
+=======
+*/
+      (lines, window, pixels))
+{
+>>>>>>> master
 	return vertical_motion_1(lines, window, !NILP(pixels));
 }
 
@@ -882,10 +923,14 @@ than PIXELS.  A value greater than zero indicates that the
 motion should be at least PIXELS.  Any other value indicates
 that the motion should be as close as possible to PIXELS.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (pixels, window, how))
 {
 	Bufpos bufpos;

@@ -1,5 +1,6 @@
                                                   -*- mode:outline -*-
 
+<<<<<<< HEAD
 At the time of this release (SXEmacs 22.1.10), SXEmacs has the
 <<<<<<< HEAD
 following idiosyncrasies in addition to what is in the XEmacs
@@ -7,6 +8,10 @@ PROBLEMS:
 =======
 following idiosyncrasies: 
 >>>>>>> origin/master
+=======
+At the time of this release (SXEmacs 22.1.14), SXEmacs has the
+following idiosyncrasies: 
+>>>>>>> master
 
 * File Locations
 ================
@@ -106,6 +111,7 @@ configure with `--with-cflags='-mcpu=ultrasparc -m64''.  Apparently
 GCC on Solaris 9 defaults to building 32-bit, so you lose if you have
 64-bit PostgreSQL.
 
+<<<<<<< HEAD
 ** Tooltalk
 
 Tooltalk seems to be very broken, and to be honest, we don't know of
@@ -113,6 +119,8 @@ anyone who actually uses it.  So we're defaulting it to `off'.  It may
 disappear entirely in a future release, but the jury is still out on
 that one.
 
+=======
+>>>>>>> master
 ** 64-bit test suite failure
 
 We have had a couple of reports of the test suite failing on 64-bit
@@ -147,6 +155,7 @@ tools.
 
 To cut it really short, here is the minimum known-to-work combination:
 <<<<<<< HEAD
+<<<<<<< HEAD
 - autoconf 2.60, automake 1.9.6, libtool 1.5.22, m4 1.4.6
 
 In general we support (as of Dec 2007):
@@ -154,13 +163,18 @@ In general we support (as of Dec 2007):
 - automake 1.9.6, 1.10, 1.10a, and current git versions
 - libtool 1.5.N with N >= 22, libtool 2.1a (current CVS version)
 =======
+=======
+>>>>>>> master
 - autoconf 2.62, automake 1.9.6, libtool 1.5.22, m4 1.4.6
 
 In general we support (as of April, 2010):
 - autoconf >= 2.62, including current git versions
 - automake 1.9.6, 1.10, 1.10a, 1.11.1, and current git versions
 - libtool 1.5.N with N >= 22, libtool >= 2.1a (current CVS version)
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 - m4 1.4.M with M >= 6 plus current git versions
 
 Note that many libtool packages shipped with the distros (OpenSuSE,
@@ -177,7 +191,10 @@ Sometimes it helps just to copy over the libtool script manually:
 cp -a $(type -p libtool) ${top_builddir}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 *** ylwrap fails with sed errors
 
 Some versions of the ylwrap script provided by autotools uses commas
@@ -195,7 +212,10 @@ sed: 1: "s,/Users/njsf/Projects/ ...": bad flag in substitute command: 'm'
 The workaround is to use a path without commas in it.
 
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 *** Missing libltdl.la (Solaris 2.8)
 
 We've had a report that missing libtool on Solaris 2.8 isn't detected
@@ -208,21 +228,28 @@ with...
 ** configure
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 *** configure on FreeBSD
 
 Building SXEmacs on FreeBSD as far as we know requires the GNU Bourne
 Again SHell (bash) versions 3 or 4 - the /bin/sh supplied with FreeBSD 
 is the Almquist Shell and will not work correctly.
 =======
+=======
+>>>>>>> master
 *** configure on FreeBSD, NetBSD, OpenBSD, etc.
 
 Building SXEmacs on *BSD as far as we know requires the GNU Bourne
 Again SHell (bash) versions 3 or 4.
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 bash is available for all tier 1 architectures as a binary package and 
 and for tier 2/3 as a port.
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 To run configure successfully, simply replace `./configure ${ARGS}` 
 with `bash configure ${ARGS}` and proceed as normal.
@@ -231,6 +258,11 @@ To run configure successfully...
 
     CONFIG_SHELL=/path/to/bash $CONFIG_SHELL configure [option, ...]
 >>>>>>> origin/master
+=======
+To run configure successfully...
+
+    CONFIG_SHELL=/path/to/bash $CONFIG_SHELL configure [option, ...]
+>>>>>>> master
 
 ** bdwgc and gcc and code optimisation
 
@@ -260,7 +292,10 @@ use a recent C compiler.  ATTOW, all GCC 4.x compilers (including SVN)
 should work.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 ** ENT
 
 ENT is basically a conglomerate of internally and externally implemented
@@ -307,7 +342,42 @@ Or:
 
 Reconfigure and rebuild SXEmacs afterwards.
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+
+** Build fails because of missing makeinfo
+
+Install the GNU texinfo package on your system. You'll need at least
+version 4.8.
+
+
+** MacOS X warns of a crash during configure
+
+This is normal, as one of the tests made during configure (for the
+realpath call correctness) induces as crash.
+
+If you are developing SXEmacs and will do lots of runs of configure
+and that dialog annoys you, consider issuing:
+
+    # Disable crash reporting
+    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.ReportCrash.Root.plist
+    # Redo last configure
+    ./config.status --recheck 
+    # Enable crash reporting
+    sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.ReportCrash.Root.plist
+
+Another alternative (not recommended) is to launch
+
+	/Developer/Applications/Utilities/CrashReporterPrefs
+
+and configure the mode to server, but you will loose notifications of
+crashes on all applications.
+
+In order to give SXEmacs developers with good diagnosis information it
+is recommended the mode be Developer.
+
+>>>>>>> master
 
 * XEmacs Packages
 =================
@@ -328,11 +398,17 @@ here.
 Here is the patch to make EFS work with SXEmacs:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 (Note: the current EFS package that XEmacs distributes has this
 patch installed) 
 
 >>>>>>> origin/master
+=======
+(Note: the current EFS package that XEmacs distributes has this
+patch installed) 
+
+>>>>>>> master
 Index: ChangeLog
 ===================================================================
 RCS file: /pack/xemacscvs/XEmacs/packages/xemacs-packages/efs/ChangeLog,v
@@ -470,6 +546,7 @@ diff -u -u -r1.7 dired.el
    (if (>= ver 19)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ** ENT
 
 ENT is basically a conglomerate of internally and externally implemented
@@ -518,6 +595,8 @@ Reconfigure and rebuild SXEmacs afterwards.
 
 =======
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 * Problems with running SXEmacs
 ===============================
@@ -602,10 +681,15 @@ We're keeping it here for prosperity, or until somebody finds the time
 to go through it all and remove the irrelevant stuff. :-)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 Note: Some irrelevant stuff purged (mostly windows rubbish) 2010-04-01
 
 >>>>>>> origin/master
+=======
+Note: Some irrelevant stuff purged (mostly windows rubbish) 2010-04-01
+
+>>>>>>> master
 This file describes various problems that have been encountered
 in compiling, installing and running XEmacs.  It has been updated for
 XEmacs 21.5.
@@ -676,6 +760,7 @@ config.h to point to it.
 It may also work to use the GCC version of `ld' instead of the standard one.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 *** Excessive optimization with pgcc can break XEmacs
 
 It has been reported on some systems that compiling with -O6 can lead
@@ -689,11 +774,14 @@ glibc-2.
 
 =======
 >>>>>>> origin/master
+=======
+>>>>>>> master
 *** src/Makefile and lib-src/Makefile are truncated--most of the file missing.
 
 This can happen if configure uses GNU sed version 2.03.  That version
 had a bug.  GNU sed version 2.05 works properly.
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 *** When compiling with X11, you get "undefined symbol _XtStrings".
 
@@ -769,6 +857,8 @@ libz.a in the X11 binary directory.
 
 =======
 >>>>>>> origin/master
+=======
+>>>>>>> master
 ** Motif
 
 Motif is the X11 version of the Gnus torture test: if there's a way to
@@ -976,6 +1066,7 @@ Valdis.Kletnieks@vt.edu writes:
 
 ** SunOS/Solaris
 <<<<<<< HEAD
+<<<<<<< HEAD
 *** Don't use -O2 with gcc 2.8.1 and egcs 1.0 under SPARC architectures
 without also using `-fno-schedule-insns'.
 
@@ -989,6 +1080,8 @@ merely told it to assume a 64-bit instruction set.
 
 =======
 >>>>>>> origin/master
+=======
+>>>>>>> master
 *** Dumping error when using GNU binutils / GNU ld on a Sun.
 
 Errors similar to the following:
@@ -1120,6 +1213,7 @@ The solution is to install Patch-ID# 100267-03 from Sun.
 See also Intel Architecture General, above.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 *** egcs-1.1 on Alpha Linux
 
 There have been reports of egcs-1.1 not compiling XEmacs correctly on
@@ -1127,6 +1221,8 @@ Alpha Linux.  There have also been reports that egcs-1.0.3a is O.K.
 
 =======
 >>>>>>> origin/master
+=======
+>>>>>>> master
 *** Under Linux, you get "too many arguments to function `getpgrp'".
 
 You have probably installed LessTiff under `/usr/local' and `libXm.so'
@@ -1143,6 +1239,7 @@ This error message has been observed with lesstif-0.75a.  It does not
 appear to cause any harm.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 *** xemacs: can't resolve symbol '__malloc_hook'
 
 This is a Linux problem where you've compiled the XEmacs binary on a libc
@@ -1151,6 +1248,8 @@ an earlier version.  The solution is to upgrade your old library.
 
 =======
 >>>>>>> origin/master
+=======
+>>>>>>> master
 ** IRIX
 
 *** More coredumping in Irix (6.5 known to be vulnerable)
@@ -1384,6 +1483,7 @@ Note: Much of the above entry is probably not valid for XEmacs 21.0
 and later.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ** Windows
 
 *** XEmacs complains "No such file or directory, diff"
@@ -1474,6 +1574,8 @@ using the default Cygwin shell. (See above.)
 
 =======
 >>>>>>> origin/master
+=======
+>>>>>>> master
 * Problems with running XEmacs
 ==============================
 ** General
@@ -2651,6 +2753,7 @@ GCC.
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ** Windows
 *** Conflicts with FSF NTEmacs
 
@@ -2807,6 +2910,8 @@ microsoft website.
 
 =======
 >>>>>>> origin/master
+=======
+>>>>>>> master
 * Compatibility problems (with Emacs 18, GNU Emacs, or previous XEmacs/lemacs)
 ==============================================================================
 

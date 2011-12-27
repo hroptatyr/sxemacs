@@ -7,11 +7,14 @@
 #include <Xm/PanedW.h>
 #include "ExternalClient.h"
 
+<<<<<<< HEAD
 #ifdef TOOLTALK
 #include <desktop/tt_c.h>
 char *HxProcID;
 #endif
 
+=======
+>>>>>>> master
 XtAppContext xt_app_con;
 
 void ScaleValueChangedCB(Widget scale, XtPointer app_data,
@@ -22,13 +25,19 @@ void ScaleValueChangedCB(Widget scale, XtPointer app_data,
 	char labelarr[10];
 	XmString labelstr;
 #if 0
+<<<<<<< HEAD
 	sprintf(labelarr, "%d", xms->value);
+=======
+	int sz = snprintf(labelarr, sizeof(labelarr), "%d", xms->value);
+	assert(sz>=0 && sz<sizeof(labelarr));
+>>>>>>> master
 	labelstr = XmStringCreateLocalized(labelarr);
 	XtVaSetValues(label, XmNlabelString, labelstr, NULL);
 	XmStringFree(labelstr);
 #endif
 }
 
+<<<<<<< HEAD
 #ifdef TOOLTALK
 static void handle_tt_input(XtPointer client_data, int *source, XtInputId * id)
 {
@@ -60,6 +69,8 @@ Tt_status HxInitializeToolTalk()
 }
 #endif
 
+=======
+>>>>>>> master
 main(int argc, char **argv)
 {
 	Widget shell, rowcolumn, scale, pushbutton, label1, label2, text;
@@ -77,10 +88,13 @@ main(int argc, char **argv)
 	shell = XtAppInitialize(&xt_app_con, "Testmotif", NULL, 0,
 				&argc, argv, NULL, NULL, 0);
 
+<<<<<<< HEAD
 #ifdef TOOLTALK
 	HxInitializeToolTalk();
 #endif
 
+=======
+>>>>>>> master
 	rowcolumn = XmCreateRowColumn(shell, "rowcolumn", NULL, 0);
 	XtManageChild(rowcolumn);
 
@@ -108,14 +122,22 @@ main(int argc, char **argv)
 	pushbutton = XmCreatePushButton(paned, "pushbutton", NULL, 0);
 	text = XmCreateText(paned, "text", NULL, 0);
 	for (i = 0; i < no_ews; i++) {
+<<<<<<< HEAD
 		sprintf(buf, "extcli%d", i);
+=======
+		int sz = snprintf(buf, sizeof(buf), "extcli%d", i);
+		assert(sz>=0 && sz < sizeof(buf));
+>>>>>>> master
 		emacscli[i] =
 		    XtVaCreateWidget(buf, externalClientWidgetClass, paned,
 				     XmNwidth, 500, XmNheight, 200,
 				     XmNtraversalOn, TRUE,
+<<<<<<< HEAD
 #ifdef TOOLTALK
 				     XtNuseToolTalk, TRUE,
 #endif
+=======
+>>>>>>> master
 				     NULL);
 	}
 	text2 = XmCreateText(paned, "text2", NULL, 0);
@@ -136,7 +158,13 @@ main(int argc, char **argv)
 
 		strcpy(labarr, "window:");
 		for (i = 0; i < no_ews; i++) {
+<<<<<<< HEAD
 			sprintf(tmpbuf, " %d", XtWindow(emacscli[i]));
+=======
+			int sz = snprintf(tmpbuf, sizeof(tmpbuf), 
+					  " %d", XtWindow(emacscli[i]));
+			assert(sz>=0 && sz<sizeof(tmpbuf));
+>>>>>>> master
 			strcat(labarr, tmpbuf);
 		}
 		lab = XmStringCreateLocalized(labarr);

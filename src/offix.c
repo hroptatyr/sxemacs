@@ -21,7 +21,11 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 /* #define DEBUG */
 
+<<<<<<< HEAD
 #include "offix.h"
+=======
+#include "ui/X11/offix.h"
+>>>>>>> master
 #include <X11/cursorfont.h>
 #include <X11/Xatom.h>
 #include <X11/Xmu/WinUtil.h>
@@ -48,7 +52,11 @@ static XColor Black, White;	/* For the cursors              */
 /*=========================================================================
  * Data for the standard Dnd cursors
  *=========================================================================*/
+<<<<<<< HEAD
 #include "offix-cursors.h"
+=======
+#include "ui/X11/offix-cursors.h"
+>>>>>>> master
 
 /*=============================================================== CursorData
  * CursorData contains all the data for the cursors bitmaps

@@ -329,7 +329,10 @@ static emodng_t
 __emodng_find(const char *name)
 {
 /* try to find the emodule named `name', return its pointer or NULL */
+<<<<<<< HEAD
 	const lt_dlinfo *info;
+=======
+>>>>>>> master
 	emodng_t e;
 
 	for (e = emods; e; e = e->next) {
@@ -344,11 +347,22 @@ __emodng_find(const char *name)
 	}
 
 	/* get module info */
+<<<<<<< HEAD
 	info = lt_dlgetinfo(e->dl);
 
 	EMOD_DEBUG_LOADER("modinfo %s %s %d\n",
 			  info->filename, info->name, info->ref_count);
 
+=======
+#ifdef EMOD_DEBUG_FLAG
+	{
+		const lt_dlinfo *info = lt_dlgetinfo(e->dl);
+
+		EMOD_DEBUG_LOADER("modinfo %s %s %d\n",
+				  info->filename, info->name, info->ref_count);
+	}
+#endif
+>>>>>>> master
 	return e;
 }
 
@@ -665,7 +679,11 @@ emodng_load_unwind(Lisp_Object unw)
 static Lisp_Object
 emodng_unload_unwind(Lisp_Object unw)
 {
+<<<<<<< HEAD
 	lt_dlhandle UNUSED(mod_handle) = get_dynacat(unw);
+=======
+	lt_dlhandle SXE_UNUSED(mod_handle) = get_dynacat(unw);
+>>>>>>> master
 
 	/* if the handle's still vivid, drown him */
 	return Qnil;
@@ -698,10 +716,14 @@ SXEmacs, and then reload those new or changed modules that are required.
 Messages informing you of the progress of the load are displayed unless
 the variable `load-modules-quietly' is non-NIL.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								   */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (file, unused1, unused2))
 {
 /* not mt-safe */
@@ -739,10 +761,14 @@ the safest way.
 One last little gotcha... FOO is the _internal_ name of the emodule.
 The internal name is listed in `list-modules'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (foo))
 {
 /* not mt-safe */
@@ -766,10 +792,14 @@ The internal name is listed in `list-modules'.
 DEFUN("list-loaded-modules", Flist_loaded_modules, 0, 0, 0,	/*
 Return a list of loaded modules.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	Lisp_Object mlist = Qnil;

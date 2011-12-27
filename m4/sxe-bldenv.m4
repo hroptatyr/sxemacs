@@ -15,6 +15,25 @@ return 0;
 	SXE_RESTORE_LIBS
 ])dnl SXE_LD_EXPORT_DYNAMIC
 
+<<<<<<< HEAD
+=======
+
+AC_DEFUN([SXE_LD_NO_PIE], [dnl
+	AC_MSG_CHECKING([if linker understands -no_pie])
+	SXE_DUMP_LIBS
+	LDFLAGS="-no_pie $LDFLAGS"
+        AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+#include <stdlib.h>
+]],[[
+return 0;
+]])],  [AC_MSG_RESULT([yes])
+        have_ld_no_pie="yes"], [
+	AC_MSG_RESULT([no])
+	have_ld_no_pie="no"])
+	SXE_RESTORE_LIBS
+])dnl SXE_LD_NO_PIE
+
+>>>>>>> master
 dnl SXE_RILLY_COMPUTE_LD_RUN_PATH()
 AC_DEFUN([SXE_RILLY_COMPUTE_LD_RUN_PATH], [dnl
 	if test "$add_runtime_path" = "yes" -a -n "$dash_r"; then
@@ -81,8 +100,13 @@ AC_DEFUN([SXE_COMPUTE_LD_RUN_PATH], [dnl
 		LD_RUN_PATH="`echo $with_site_runtime_libraries | sed -e 's/  */:/g'`"
 		export LD_RUN_PATH
 		for path in $with_site_runtime_libraries; do
+<<<<<<< HEAD
 			dnl SXE_APPEND("-R$path ", $ld_switch_run)
 			SXE_APPEND(["-R${path} "], [LDFLAGS])
+=======
+			dnl SXE_APPEND_UNDUP("-R$path ", $ld_switch_run)
+			SXE_APPEND_UNDUP(["-R${path} "], [LDFLAGS])
+>>>>>>> master
 		done
 	fi
 
@@ -104,7 +128,11 @@ AC_DEFUN([SXE_COMPUTE_LD_RUN_PATH], [dnl
 
 	## if test -z "$LD_RUN_PATH" -a -r "/etc/ld.so.conf"; then
 	##   for dir in `cat /etc/ld.so.conf`; do
+<<<<<<< HEAD
 	##     test -d "$dir" && SXE_APPEND(-L${dir}, ld_switch_system)
+=======
+	##     test -d "$dir" && SXE_APPEND_UNDUP(-L${dir}, ld_switch_system)
+>>>>>>> master
 	##   done
 	##   add_runtime_path=no
 	## fi
@@ -190,7 +218,11 @@ AC_DEFUN([SXE_COMPUTE_SITE_PREFIXES], [dnl
 				arg="-L${arg}"
 				;;
 			esac
+<<<<<<< HEAD
 			SXE_APPEND($arg, ld_switch_site)
+=======
+			SXE_APPEND_UNDUP($arg, ld_switch_site)
+>>>>>>> master
 		done
 	fi
 
@@ -207,8 +239,13 @@ AC_DEFUN([SXE_COMPUTE_SITE_PREFIXES], [dnl
 				arg="-I${arg}"
 				;;
 			esac
+<<<<<<< HEAD
 			SXE_APPEND($arg, c_switch_site)
 			SXE_APPEND($arg, CPPFLAGS)
+=======
+			SXE_APPEND_UNDUP($arg, c_switch_site)
+			SXE_APPEND_UNDUP($arg, CPPFLAGS)
+>>>>>>> master
 		done
 	fi
 
@@ -229,24 +266,41 @@ AC_DEFUN([SXE_COMPUTE_SITE_PREFIXES], [dnl
 				SXE_DIE("Invalid site prefix \`$dir': no such directory \`$lib_dir'")
 			else
 				if test -d "$inc_dir"; then
+<<<<<<< HEAD
 					SXE_APPEND(["-I$inc_dir"], [CPPFLAGS])
 				fi
 				SXE_APPEND(["-L$lib_dir"], [LDFLAGS])
+=======
+					SXE_APPEND_UNDUP(["-I$inc_dir"], [CPPFLAGS])
+				fi
+				SXE_APPEND_UNDUP(["-L$lib_dir"], [LDFLAGS])
+>>>>>>> master
 			fi
 		done
 	fi
 
 	dnl GNU software installs by default into /usr/local/{include,lib}
 	if test -d "/usr/local/include" -a -d "/usr/local/lib"; then
+<<<<<<< HEAD
 		SXE_APPEND(["-L/usr/local/lib"], [LDFLAGS])
 		SXE_APPEND(["-I/usr/local/include"], [CPPFLAGS])
+=======
+		SXE_APPEND_UNDUP(["-L/usr/local/lib"], [LDFLAGS])
+		SXE_APPEND_UNDUP(["-I/usr/local/include"], [CPPFLAGS])
+>>>>>>> master
 	fi
 
 	dnl Extra system-specific library directories - please add to list
 	for dir in "/usr/ccs/lib"; do
+<<<<<<< HEAD
 		dnl test -d "$dir" && SXE_APPEND(-L${dir}, ld_switch_system)
 		if test -d "$dir"; then
 			SXE_APPEND([-L${dir}], [LDFLAGS])
+=======
+		dnl test -d "$dir" && SXE_APPEND_UNDUP(-L${dir}, ld_switch_system)
+		if test -d "$dir"; then
+			SXE_APPEND_UNDUP([-L${dir}], [LDFLAGS])
+>>>>>>> master
 		fi
 	done
 ])dnl SXE_COMPUTE_SITE_PREFIXES

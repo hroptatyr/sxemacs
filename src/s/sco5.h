@@ -38,11 +38,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* SCO has ptys, but with weird names */
 #define HAVE_PTYS
 #define PTY_ITERATION \
+<<<<<<< HEAD
    for (i = 0; ; i++)
 #define PTY_NAME_SPRINTF \
   sprintf (pty_name, "/dev/ptyp%d", i);
 #define PTY_TTY_NAME_SPRINTF \
   sprintf (pty_name, "/dev/ttyp%d", i);
+=======
+	for (i = 0; ; i++)
+#define PTY_NAME_SPRINTF					\
+	do {							\
+		int sz = snprintf (pty_name, sizeof(pty_name),	\
+				   "/dev/ptyp%d", i);		\
+		assert(sz>=0 && sz<sizeof(pty_name));		\
+	} while(0)
+
+#define PTY_TTY_NAME_SPRINTF					\
+	do {							\
+		int sz = snprintf (pty_name, sizeof(pty_name),	\
+				   "/dev/ttyp%d", i);		\
+		assert(sz>=0 && sz<sizeof(pty_name));		\
+	} while(0)
+
+>>>>>>> master
 #define FORCE_ALLOCATE_PTY_THE_OLD_FASHIONED_WAY
 
 /* We have sockets. Always. */
@@ -126,14 +144,20 @@ could #define sco and I think everything would work. rjl */
 #ifdef _SCO_ELF
 #undef COFF			/* coz we're NOT */
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define UNEXEC "unexelf.o"
 =======
+=======
+>>>>>>> master
 /*
  * everythign is pdump now. --SY
  * #define UNEXEC "unexelf.o"
  */
 #undef UNEXEC
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 #endif
 
 /* For GCC 2.7.2.3 we require the "JKJ" version of gcc.

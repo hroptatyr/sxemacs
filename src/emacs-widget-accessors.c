@@ -1,10 +1,14 @@
 DEFUN("gtk-adjustment-lower", Fgtk_adjustment_lower, 1, 1, 0,	/*
 Access the `lower' slot of OBJ, a GtkAdjustment object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkAdjustment *the_obj = NULL;
@@ -25,10 +29,14 @@ Access the `lower' slot of OBJ, a GtkAdjustment object.
 DEFUN("gtk-adjustment-upper", Fgtk_adjustment_upper, 1, 1, 0,	/*
 Access the `upper' slot of OBJ, a GtkAdjustment object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkAdjustment *the_obj = NULL;
@@ -49,10 +57,14 @@ Access the `upper' slot of OBJ, a GtkAdjustment object.
 DEFUN("gtk-adjustment-value", Fgtk_adjustment_value, 1, 1, 0,	/*
 Access the `value' slot of OBJ, a GtkAdjustment object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkAdjustment *the_obj = NULL;
@@ -73,10 +85,14 @@ Access the `value' slot of OBJ, a GtkAdjustment object.
 DEFUN("gtk-adjustment-step-increment", Fgtk_adjustment_step_increment, 1, 1, 0,	/*
 Access the `step_increment' slot of OBJ, a GtkAdjustment object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkAdjustment *the_obj = NULL;
@@ -97,10 +113,14 @@ Access the `step_increment' slot of OBJ, a GtkAdjustment object.
 DEFUN("gtk-adjustment-page-increment", Fgtk_adjustment_page_increment, 1, 1, 0,	/*
 Access the `page_increment' slot of OBJ, a GtkAdjustment object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkAdjustment *the_obj = NULL;
@@ -121,10 +141,14 @@ Access the `page_increment' slot of OBJ, a GtkAdjustment object.
 DEFUN("gtk-adjustment-page-size", Fgtk_adjustment_page_size, 1, 1, 0,	/*
 Access the `page_size' slot of OBJ, a GtkAdjustment object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkAdjustment *the_obj = NULL;
@@ -145,10 +169,14 @@ Access the `page_size' slot of OBJ, a GtkAdjustment object.
 DEFUN("gtk-widget-style", Fgtk_widget_style, 1, 1, 0,	/*
 Access the `style' slot of OBJ, a GtkWidget object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkWidget *the_obj = NULL;
@@ -169,10 +197,14 @@ Access the `style' slot of OBJ, a GtkWidget object.
 DEFUN("gtk-widget-window", Fgtk_widget_window, 1, 1, 0,	/*
 Access the `window' slot of OBJ, a GtkWidget object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkWidget *the_obj = NULL;
@@ -193,10 +225,14 @@ Access the `window' slot of OBJ, a GtkWidget object.
 DEFUN("gtk-widget-state", Fgtk_widget_state, 1, 1, 0,	/*
 Access the `state' slot of OBJ, a GtkWidget object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkWidget *the_obj = NULL;
@@ -217,10 +253,14 @@ Access the `state' slot of OBJ, a GtkWidget object.
 DEFUN("gtk-widget-name", Fgtk_widget_name, 1, 1, 0,	/*
 Access the `name' slot of OBJ, a GtkWidget object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkWidget *the_obj = NULL;
@@ -241,10 +281,14 @@ Access the `name' slot of OBJ, a GtkWidget object.
 DEFUN("gtk-widget-parent", Fgtk_widget_parent, 1, 1, 0,	/*
 Access the `parent' slot of OBJ, a GtkWidget object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkWidget *the_obj = NULL;
@@ -265,10 +309,14 @@ Access the `parent' slot of OBJ, a GtkWidget object.
 DEFUN("gtk-button-child", Fgtk_button_child, 1, 1, 0,	/*
 Access the `child' slot of OBJ, a GtkButton object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkButton *the_obj = NULL;
@@ -289,10 +337,14 @@ Access the `child' slot of OBJ, a GtkButton object.
 DEFUN("gtk-button-in-button", Fgtk_button_in_button, 1, 1, 0,	/*
 Access the `in_button' slot of OBJ, a GtkButton object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkButton *the_obj = NULL;
@@ -313,10 +365,14 @@ Access the `in_button' slot of OBJ, a GtkButton object.
 DEFUN("gtk-button-button-down", Fgtk_button_button_down, 1, 1, 0,	/*
 Access the `button_down' slot of OBJ, a GtkButton object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkButton *the_obj = NULL;
@@ -337,10 +393,14 @@ Access the `button_down' slot of OBJ, a GtkButton object.
 DEFUN("gtk-combo-entry", Fgtk_combo_entry, 1, 1, 0,	/*
 Access the `entry' slot of OBJ, a GtkCombo object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCombo *the_obj = NULL;
@@ -361,10 +421,14 @@ Access the `entry' slot of OBJ, a GtkCombo object.
 DEFUN("gtk-combo-button", Fgtk_combo_button, 1, 1, 0,	/*
 Access the `button' slot of OBJ, a GtkCombo object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCombo *the_obj = NULL;
@@ -385,10 +449,14 @@ Access the `button' slot of OBJ, a GtkCombo object.
 DEFUN("gtk-combo-popup", Fgtk_combo_popup, 1, 1, 0,	/*
 Access the `popup' slot of OBJ, a GtkCombo object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCombo *the_obj = NULL;
@@ -409,10 +477,14 @@ Access the `popup' slot of OBJ, a GtkCombo object.
 DEFUN("gtk-combo-popwin", Fgtk_combo_popwin, 1, 1, 0,	/*
 Access the `popwin' slot of OBJ, a GtkCombo object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCombo *the_obj = NULL;
@@ -433,10 +505,14 @@ Access the `popwin' slot of OBJ, a GtkCombo object.
 DEFUN("gtk-combo-list", Fgtk_combo_list, 1, 1, 0,	/*
 Access the `list' slot of OBJ, a GtkCombo object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCombo *the_obj = NULL;
@@ -457,10 +533,14 @@ Access the `list' slot of OBJ, a GtkCombo object.
 DEFUN("gtk-gamma-curve-table", Fgtk_gamma_curve_table, 1, 1, 0,	/*
 Access the `table' slot of OBJ, a GtkGammaCurve object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkGammaCurve *the_obj = NULL;
@@ -481,10 +561,14 @@ Access the `table' slot of OBJ, a GtkGammaCurve object.
 DEFUN("gtk-gamma-curve-curve", Fgtk_gamma_curve_curve, 1, 1, 0,	/*
 Access the `curve' slot of OBJ, a GtkGammaCurve object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkGammaCurve *the_obj = NULL;
@@ -505,10 +589,14 @@ Access the `curve' slot of OBJ, a GtkGammaCurve object.
 DEFUN("gtk-gamma-curve-gamma", Fgtk_gamma_curve_gamma, 1, 1, 0,	/*
 Access the `gamma' slot of OBJ, a GtkGammaCurve object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkGammaCurve *the_obj = NULL;
@@ -529,10 +617,14 @@ Access the `gamma' slot of OBJ, a GtkGammaCurve object.
 DEFUN("gtk-gamma-curve-gamma-dialog", Fgtk_gamma_curve_gamma_dialog, 1, 1, 0,	/*
 Access the `gamma_dialog' slot of OBJ, a GtkGammaCurve object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkGammaCurve *the_obj = NULL;
@@ -553,10 +645,14 @@ Access the `gamma_dialog' slot of OBJ, a GtkGammaCurve object.
 DEFUN("gtk-gamma-curve-gamma-text", Fgtk_gamma_curve_gamma_text, 1, 1, 0,	/*
 Access the `gamma_text' slot of OBJ, a GtkGammaCurve object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkGammaCurve *the_obj = NULL;
@@ -577,10 +673,14 @@ Access the `gamma_text' slot of OBJ, a GtkGammaCurve object.
 DEFUN("gtk-check-menu-item-active", Fgtk_check_menu_item_active, 1, 1, 0,	/*
 Access the `active' slot of OBJ, a GtkCheckMenuItem object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCheckMenuItem *the_obj = NULL;
@@ -601,10 +701,14 @@ Access the `active' slot of OBJ, a GtkCheckMenuItem object.
 DEFUN("gtk-notebook-tab-pos", Fgtk_notebook_tab_pos, 1, 1, 0,	/*
 Access the `tab_pos' slot of OBJ, a GtkNotebook object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkNotebook *the_obj = NULL;
@@ -625,10 +729,14 @@ Access the `tab_pos' slot of OBJ, a GtkNotebook object.
 DEFUN("gtk-text-hadj", Fgtk_text_hadj, 1, 1, 0,	/*
 Access the `hadj' slot of OBJ, a GtkText object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkText *the_obj = NULL;
@@ -649,10 +757,14 @@ Access the `hadj' slot of OBJ, a GtkText object.
 DEFUN("gtk-text-vadj", Fgtk_text_vadj, 1, 1, 0,	/*
 Access the `vadj' slot of OBJ, a GtkText object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkText *the_obj = NULL;
@@ -673,10 +785,14 @@ Access the `vadj' slot of OBJ, a GtkText object.
 DEFUN("gtk-file-selection-dir-list", Fgtk_file_selection_dir_list, 1, 1, 0,	/*
 Access the `dir_list' slot of OBJ, a GtkFileSelection object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFileSelection *the_obj = NULL;
@@ -697,10 +813,14 @@ Access the `dir_list' slot of OBJ, a GtkFileSelection object.
 DEFUN("gtk-file-selection-file-list", Fgtk_file_selection_file_list, 1, 1, 0,	/*
 Access the `file_list' slot of OBJ, a GtkFileSelection object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFileSelection *the_obj = NULL;
@@ -719,6 +839,7 @@ Access the `file_list' slot of OBJ, a GtkFileSelection object.
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 DEFUN("gtk-file-selection-selection-entry", Fgtk_file_selection_selection_entry, 1, 1, 0,	/*
 Access the `selection_entry' slot of OBJ, a GtkFileSelection object.
 												 */
@@ -727,6 +848,11 @@ DEFUN("gtk-file-selection-selection-entry", Fgtk_file_selection_selection_entry,
 Access the `selection_entry' slot of OBJ, a GtkFileSelection object.
 */
 >>>>>>> origin/master
+=======
+DEFUN("gtk-file-selection-selection-entry", Fgtk_file_selection_selection_entry, 1, 1, 0, /*
+Access the `selection_entry' slot of OBJ, a GtkFileSelection object.
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFileSelection *the_obj = NULL;
@@ -747,10 +873,14 @@ Access the `selection_entry' slot of OBJ, a GtkFileSelection object.
 DEFUN("gtk-file-selection-selection-text", Fgtk_file_selection_selection_text, 1, 1, 0,	/*
 Access the `selection_text' slot of OBJ, a GtkFileSelection object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFileSelection *the_obj = NULL;
@@ -771,10 +901,14 @@ Access the `selection_text' slot of OBJ, a GtkFileSelection object.
 DEFUN("gtk-file-selection-main-vbox", Fgtk_file_selection_main_vbox, 1, 1, 0,	/*
 Access the `main_vbox' slot of OBJ, a GtkFileSelection object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFileSelection *the_obj = NULL;
@@ -795,10 +929,14 @@ Access the `main_vbox' slot of OBJ, a GtkFileSelection object.
 DEFUN("gtk-file-selection-ok-button", Fgtk_file_selection_ok_button, 1, 1, 0,	/*
 Access the `ok_button' slot of OBJ, a GtkFileSelection object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFileSelection *the_obj = NULL;
@@ -819,10 +957,14 @@ Access the `ok_button' slot of OBJ, a GtkFileSelection object.
 DEFUN("gtk-file-selection-cancel-button", Fgtk_file_selection_cancel_button, 1, 1, 0,	/*
 Access the `cancel_button' slot of OBJ, a GtkFileSelection object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFileSelection *the_obj = NULL;
@@ -843,10 +985,14 @@ Access the `cancel_button' slot of OBJ, a GtkFileSelection object.
 DEFUN("gtk-file-selection-help-button", Fgtk_file_selection_help_button, 1, 1, 0,	/*
 Access the `help_button' slot of OBJ, a GtkFileSelection object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFileSelection *the_obj = NULL;
@@ -867,10 +1013,14 @@ Access the `help_button' slot of OBJ, a GtkFileSelection object.
 DEFUN("gtk-file-selection-action-area", Fgtk_file_selection_action_area, 1, 1, 0,	/*
 Access the `action_area' slot of OBJ, a GtkFileSelection object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFileSelection *the_obj = NULL;
@@ -891,10 +1041,14 @@ Access the `action_area' slot of OBJ, a GtkFileSelection object.
 DEFUN("gtk-font-selection-dialog-fontsel", Fgtk_font_selection_dialog_fontsel, 1, 1, 0,	/*
 Access the `fontsel' slot of OBJ, a GtkFontSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFontSelectionDialog *the_obj = NULL;
@@ -916,10 +1070,14 @@ Access the `fontsel' slot of OBJ, a GtkFontSelectionDialog object.
 DEFUN("gtk-font-selection-dialog-main-vbox", Fgtk_font_selection_dialog_main_vbox, 1, 1, 0,	/*
 Access the `main_vbox' slot of OBJ, a GtkFontSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 												 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFontSelectionDialog *the_obj = NULL;
@@ -941,10 +1099,14 @@ Access the `main_vbox' slot of OBJ, a GtkFontSelectionDialog object.
 DEFUN("gtk-font-selection-dialog-action-area", Fgtk_font_selection_dialog_action_area, 1, 1, 0,	/*
 Access the `action_area' slot of OBJ, a GtkFontSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 												 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFontSelectionDialog *the_obj = NULL;
@@ -966,10 +1128,14 @@ Access the `action_area' slot of OBJ, a GtkFontSelectionDialog object.
 DEFUN("gtk-font-selection-dialog-ok-button", Fgtk_font_selection_dialog_ok_button, 1, 1, 0,	/*
 Access the `ok_button' slot of OBJ, a GtkFontSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 												 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFontSelectionDialog *the_obj = NULL;
@@ -991,10 +1157,14 @@ Access the `ok_button' slot of OBJ, a GtkFontSelectionDialog object.
 DEFUN("gtk-font-selection-dialog-apply-button", Fgtk_font_selection_dialog_apply_button, 1, 1, 0,	/*
 Access the `apply_button' slot of OBJ, a GtkFontSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 													 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFontSelectionDialog *the_obj = NULL;
@@ -1016,10 +1186,14 @@ Access the `apply_button' slot of OBJ, a GtkFontSelectionDialog object.
 DEFUN("gtk-font-selection-dialog-cancel-button", Fgtk_font_selection_dialog_cancel_button, 1, 1, 0,	/*
 Access the `cancel_button' slot of OBJ, a GtkFontSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 													 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkFontSelectionDialog *the_obj = NULL;
@@ -1041,10 +1215,14 @@ Access the `cancel_button' slot of OBJ, a GtkFontSelectionDialog object.
 DEFUN("gtk-color-selection-dialog-colorsel", Fgtk_color_selection_dialog_colorsel, 1, 1, 0,	/*
 Access the `colorsel' slot of OBJ, a GtkColorSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 												 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkColorSelectionDialog *the_obj = NULL;
@@ -1066,10 +1244,14 @@ Access the `colorsel' slot of OBJ, a GtkColorSelectionDialog object.
 DEFUN("gtk-color-selection-dialog-main-vbox", Fgtk_color_selection_dialog_main_vbox, 1, 1, 0,	/*
 Access the `main_vbox' slot of OBJ, a GtkColorSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 												 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkColorSelectionDialog *the_obj = NULL;
@@ -1091,10 +1273,14 @@ Access the `main_vbox' slot of OBJ, a GtkColorSelectionDialog object.
 DEFUN("gtk-color-selection-dialog-ok-button", Fgtk_color_selection_dialog_ok_button, 1, 1, 0,	/*
 Access the `ok_button' slot of OBJ, a GtkColorSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 												 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkColorSelectionDialog *the_obj = NULL;
@@ -1116,10 +1302,14 @@ Access the `ok_button' slot of OBJ, a GtkColorSelectionDialog object.
 DEFUN("gtk-color-selection-dialog-reset-button", Fgtk_color_selection_dialog_reset_button, 1, 1, 0,	/*
 Access the `reset_button' slot of OBJ, a GtkColorSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 													 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkColorSelectionDialog *the_obj = NULL;
@@ -1141,10 +1331,14 @@ Access the `reset_button' slot of OBJ, a GtkColorSelectionDialog object.
 DEFUN("gtk-color-selection-dialog-cancel-button", Fgtk_color_selection_dialog_cancel_button, 1, 1, 0,	/*
 Access the `cancel_button' slot of OBJ, a GtkColorSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 													 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkColorSelectionDialog *the_obj = NULL;
@@ -1166,10 +1360,14 @@ Access the `cancel_button' slot of OBJ, a GtkColorSelectionDialog object.
 DEFUN("gtk-color-selection-dialog-help-button", Fgtk_color_selection_dialog_help_button, 1, 1, 0,	/*
 Access the `help_button' slot of OBJ, a GtkColorSelectionDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 													 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkColorSelectionDialog *the_obj = NULL;
@@ -1191,10 +1389,14 @@ Access the `help_button' slot of OBJ, a GtkColorSelectionDialog object.
 DEFUN("gtk-dialog-vbox", Fgtk_dialog_vbox, 1, 1, 0,	/*
 Access the `vbox' slot of OBJ, a GtkDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkDialog *the_obj = NULL;
@@ -1215,10 +1417,14 @@ Access the `vbox' slot of OBJ, a GtkDialog object.
 DEFUN("gtk-dialog-action-area", Fgtk_dialog_action_area, 1, 1, 0,	/*
 Access the `action_area' slot of OBJ, a GtkDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkDialog *the_obj = NULL;
@@ -1239,10 +1445,14 @@ Access the `action_area' slot of OBJ, a GtkDialog object.
 DEFUN("gtk-input-dialog-close-button", Fgtk_input_dialog_close_button, 1, 1, 0,	/*
 Access the `close_button' slot of OBJ, a GtkInputDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkInputDialog *the_obj = NULL;
@@ -1263,10 +1473,14 @@ Access the `close_button' slot of OBJ, a GtkInputDialog object.
 DEFUN("gtk-input-dialog-save-button", Fgtk_input_dialog_save_button, 1, 1, 0,	/*
 Access the `save_button' slot of OBJ, a GtkInputDialog object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkInputDialog *the_obj = NULL;
@@ -1287,10 +1501,14 @@ Access the `save_button' slot of OBJ, a GtkInputDialog object.
 DEFUN("gtk-plug-socket-window", Fgtk_plug_socket_window, 1, 1, 0,	/*
 Access the `socket_window' slot of OBJ, a GtkPlug object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkPlug *the_obj = NULL;
@@ -1311,10 +1529,14 @@ Access the `socket_window' slot of OBJ, a GtkPlug object.
 DEFUN("gtk-plug-same-app", Fgtk_plug_same_app, 1, 1, 0,	/*
 Access the `same_app' slot of OBJ, a GtkPlug object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkPlug *the_obj = NULL;
@@ -1335,10 +1557,14 @@ Access the `same_app' slot of OBJ, a GtkPlug object.
 DEFUN("gtk-object-flags", Fgtk_object_flags, 1, 1, 0,	/*
 Access the `flags' slot of OBJ, a GtkObject object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkObject *the_obj = NULL;
@@ -1359,10 +1585,14 @@ Access the `flags' slot of OBJ, a GtkObject object.
 DEFUN("gtk-object-ref-count", Fgtk_object_ref_count, 1, 1, 0,	/*
 Access the `ref_count' slot of OBJ, a GtkObject object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkObject *the_obj = NULL;
@@ -1383,10 +1613,14 @@ Access the `ref_count' slot of OBJ, a GtkObject object.
 DEFUN("gtk-paned-child1", Fgtk_paned_child1, 1, 1, 0,	/*
 Access the `child1' slot of OBJ, a GtkPaned object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkPaned *the_obj = NULL;
@@ -1407,10 +1641,14 @@ Access the `child1' slot of OBJ, a GtkPaned object.
 DEFUN("gtk-paned-child2", Fgtk_paned_child2, 1, 1, 0,	/*
 Access the `child2' slot of OBJ, a GtkPaned object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkPaned *the_obj = NULL;
@@ -1431,10 +1669,14 @@ Access the `child2' slot of OBJ, a GtkPaned object.
 DEFUN("gtk-paned-child1-resize", Fgtk_paned_child1_resize, 1, 1, 0,	/*
 Access the `child1_resize' slot of OBJ, a GtkPaned object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkPaned *the_obj = NULL;
@@ -1455,10 +1697,14 @@ Access the `child1_resize' slot of OBJ, a GtkPaned object.
 DEFUN("gtk-paned-child2-resize", Fgtk_paned_child2_resize, 1, 1, 0,	/*
 Access the `child2_resize' slot of OBJ, a GtkPaned object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkPaned *the_obj = NULL;
@@ -1479,10 +1725,14 @@ Access the `child2_resize' slot of OBJ, a GtkPaned object.
 DEFUN("gtk-paned-child1-shrink", Fgtk_paned_child1_shrink, 1, 1, 0,	/*
 Access the `child1_shrink' slot of OBJ, a GtkPaned object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkPaned *the_obj = NULL;
@@ -1503,10 +1753,14 @@ Access the `child1_shrink' slot of OBJ, a GtkPaned object.
 DEFUN("gtk-paned-child2-shrink", Fgtk_paned_child2_shrink, 1, 1, 0,	/*
 Access the `child2_shrink' slot of OBJ, a GtkPaned object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkPaned *the_obj = NULL;
@@ -1527,10 +1781,14 @@ Access the `child2_shrink' slot of OBJ, a GtkPaned object.
 DEFUN("gtk-clist-rows", Fgtk_clist_rows, 1, 1, 0,	/*
 Access the `rows' slot of OBJ, a GtkCList object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCList *the_obj = NULL;
@@ -1551,10 +1809,14 @@ Access the `rows' slot of OBJ, a GtkCList object.
 DEFUN("gtk-clist-columns", Fgtk_clist_columns, 1, 1, 0,	/*
 Access the `columns' slot of OBJ, a GtkCList object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCList *the_obj = NULL;
@@ -1575,10 +1837,14 @@ Access the `columns' slot of OBJ, a GtkCList object.
 DEFUN("gtk-clist-hadjustment", Fgtk_clist_hadjustment, 1, 1, 0,	/*
 Access the `hadjustment' slot of OBJ, a GtkCList object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCList *the_obj = NULL;
@@ -1599,10 +1865,14 @@ Access the `hadjustment' slot of OBJ, a GtkCList object.
 DEFUN("gtk-clist-vadjustment", Fgtk_clist_vadjustment, 1, 1, 0,	/*
 Access the `vadjustment' slot of OBJ, a GtkCList object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCList *the_obj = NULL;
@@ -1623,10 +1893,14 @@ Access the `vadjustment' slot of OBJ, a GtkCList object.
 DEFUN("gtk-clist-sort-type", Fgtk_clist_sort_type, 1, 1, 0,	/*
 Access the `sort_type' slot of OBJ, a GtkCList object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCList *the_obj = NULL;
@@ -1647,10 +1921,14 @@ Access the `sort_type' slot of OBJ, a GtkCList object.
 DEFUN("gtk-clist-focus-row", Fgtk_clist_focus_row, 1, 1, 0,	/*
 Access the `focus_row' slot of OBJ, a GtkCList object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCList *the_obj = NULL;
@@ -1671,10 +1949,14 @@ Access the `focus_row' slot of OBJ, a GtkCList object.
 DEFUN("gtk-clist-sort-column", Fgtk_clist_sort_column, 1, 1, 0,	/*
 Access the `sort_column' slot of OBJ, a GtkCList object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkCList *the_obj = NULL;
@@ -1695,10 +1977,14 @@ Access the `sort_column' slot of OBJ, a GtkCList object.
 DEFUN("gtk-list-children", Fgtk_list_children, 1, 1, 0,	/*
 Access the `children' slot of OBJ, a GtkList object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkList *the_obj = NULL;
@@ -1719,10 +2005,14 @@ Access the `children' slot of OBJ, a GtkList object.
 DEFUN("gtk-list-selection", Fgtk_list_selection, 1, 1, 0,	/*
 Access the `selection' slot of OBJ, a GtkList object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkList *the_obj = NULL;
@@ -1743,10 +2033,14 @@ Access the `selection' slot of OBJ, a GtkList object.
 DEFUN("gtk-tree-children", Fgtk_tree_children, 1, 1, 0,	/*
 Access the `children' slot of OBJ, a GtkTree object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkTree *the_obj = NULL;
@@ -1767,10 +2061,14 @@ Access the `children' slot of OBJ, a GtkTree object.
 DEFUN("gtk-tree-root-tree", Fgtk_tree_root_tree, 1, 1, 0,	/*
 Access the `root_tree' slot of OBJ, a GtkTree object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkTree *the_obj = NULL;
@@ -1791,10 +2089,14 @@ Access the `root_tree' slot of OBJ, a GtkTree object.
 DEFUN("gtk-tree-tree-owner", Fgtk_tree_tree_owner, 1, 1, 0,	/*
 Access the `tree_owner' slot of OBJ, a GtkTree object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkTree *the_obj = NULL;
@@ -1815,10 +2117,14 @@ Access the `tree_owner' slot of OBJ, a GtkTree object.
 DEFUN("gtk-tree-selection", Fgtk_tree_selection, 1, 1, 0,	/*
 Access the `selection' slot of OBJ, a GtkTree object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkTree *the_obj = NULL;
@@ -1839,10 +2145,14 @@ Access the `selection' slot of OBJ, a GtkTree object.
 DEFUN("gtk-tree-item-subtree", Fgtk_tree_item_subtree, 1, 1, 0,	/*
 Access the `subtree' slot of OBJ, a GtkTreeItem object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkTreeItem *the_obj = NULL;
@@ -1863,10 +2173,14 @@ Access the `subtree' slot of OBJ, a GtkTreeItem object.
 DEFUN("gtk-scrolled-window-hscrollbar", Fgtk_scrolled_window_hscrollbar, 1, 1, 0,	/*
 Access the `hscrollbar' slot of OBJ, a GtkScrolledWindow object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkScrolledWindow *the_obj = NULL;
@@ -1887,10 +2201,14 @@ Access the `hscrollbar' slot of OBJ, a GtkScrolledWindow object.
 DEFUN("gtk-scrolled-window-vscrollbar", Fgtk_scrolled_window_vscrollbar, 1, 1, 0,	/*
 Access the `vscrollbar' slot of OBJ, a GtkScrolledWindow object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 											 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkScrolledWindow *the_obj = NULL;
@@ -1911,10 +2229,14 @@ Access the `vscrollbar' slot of OBJ, a GtkScrolledWindow object.
 DEFUN("gtk-scrolled-window-hscrollbar-visible", Fgtk_scrolled_window_hscrollbar_visible, 1, 1, 0,	/*
 Access the `hscrollbar_visible' slot of OBJ, a GtkScrolledWindow object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 													 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkScrolledWindow *the_obj = NULL;
@@ -1935,10 +2257,14 @@ Access the `hscrollbar_visible' slot of OBJ, a GtkScrolledWindow object.
 DEFUN("gtk-scrolled-window-vscrollbar-visible", Fgtk_scrolled_window_vscrollbar_visible, 1, 1, 0,	/*
 Access the `vscrollbar_visible' slot of OBJ, a GtkScrolledWindow object.
 <<<<<<< HEAD
+<<<<<<< HEAD
 													 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (obj))
 {
 	GtkScrolledWindow *the_obj = NULL;

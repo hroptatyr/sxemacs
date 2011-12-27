@@ -39,10 +39,14 @@
 #include "config.h"
 #include "sxemacs.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "ent.h"
 =======
 #include "ent/ent.h"
 >>>>>>> origin/master
+=======
+#include "ent/ent.h"
+>>>>>>> master
 #include "ase.h"
 #include "ase-metric.h"
 #include "ase-cartesian.h"
@@ -74,15 +78,21 @@ ase_metric_prnt(Lisp_Object obj, Lisp_Object pcf, int unused)
 	write_c_string("#<", pcf);
 	print_internal(XDYNACAT_TYPE(obj), pcf, unused);
 	{
+<<<<<<< HEAD
 		char addr[64];
 		if (NILP(XASE_METRIC_LDIST(obj))) {
 			snprintf(addr, 63, " 0x%x",
 				 (unsigned int)XASE_METRIC_DIST(obj));
+=======
+		if (NILP(XASE_METRIC_LDIST(obj))) {
+			write_hex_ptr(XASE_METRIC_DIST(obj),pcf);
+>>>>>>> master
 		} else {
 			Lisp_Object ldist = XASE_METRIC_LDIST(obj);
 			if (SYMBOLP(ldist)) {
 				Lisp_String *name =
 					symbol_name(XSYMBOL(ldist));
+<<<<<<< HEAD
 				snprintf(addr, 63, " #'%s", string_data(name));
 			} else if (SUBRP(ldist)) {
 				const char *name = subr_name(XSUBR(ldist));
@@ -92,6 +102,16 @@ ase_metric_prnt(Lisp_Object obj, Lisp_Object pcf, int unused)
 			}
 		}
 		write_c_string(addr, pcf);
+=======
+				write_fmt_string(pcf, " #'%s", string_data(name));
+			} else if (SUBRP(ldist)) {
+				const char *name = subr_name(XSUBR(ldist));
+				write_fmt_string(pcf, " #'%s", name);
+			} else {
+			        write_c_string(" #'(lambda ...)", pcf);
+			}
+		}
+>>>>>>> master
 	}
 	write_c_string(">", pcf);
 	return;
@@ -412,10 +432,14 @@ ase_metric_p_p(void *data, Lisp_Object a, Lisp_Object b)
 DEFUN("ase-p-metric", Fase_p_metric, 1, 1, 0, /*
 Return a p-metric for some natural number P.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					      */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (p))
 #ifndef HAVE_MPFR
 {
@@ -437,10 +461,14 @@ Return a p-metric for some natural number P.
 DEFUN("ase-p-metric*", Fase_p_metricX, 1, 1, 0, /*
 Return a p-metric without the final root for some natural number P.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						*/
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (p))
 {
 	ase_pmetric_data_t data;
@@ -458,10 +486,14 @@ Return a metric from a distance function FN.
 FN should take two arguments and return the distance between those,
 a distance by definition lives in the reals.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (fn))
 {
 	if (!SUBRP(fn) && !SYMBOLP(fn) &&
@@ -477,10 +509,14 @@ a distance by definition lives in the reals.
 DEFUN("ase-metric-distance", Fase_metric_distance, 3, 3, 0, /*
 Return the distance of P1 and P2 with respect to METRIC.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (metric, p1, p2))
 {
 	ase_distance_f dist;

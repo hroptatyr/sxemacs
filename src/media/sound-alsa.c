@@ -70,8 +70,11 @@ static void
 sound_alsa_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 {
 	sound_alsa_data_t *sad = NULL;
+<<<<<<< HEAD
 	char *temp = alloca(48);
 
+=======
+>>>>>>> master
 	sad = get_audio_device_data(device);
 	/* cannot use incomplete or corrupt audio devices */
 	if (XAUDIO_DEVICE_DRIVER(device) != MYSELF || sad == NULL) {
@@ -89,6 +92,7 @@ sound_alsa_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 		print_internal(sad->device, pcfun, ef);
 
 	if (sad->keep_open) {
+<<<<<<< HEAD
 		write_c_string(" :keep-open t", pcfun);
 		snprintf(temp, 47, " :handle 0x%lx",
 			 (long unsigned int)sad->handle);
@@ -99,6 +103,14 @@ sound_alsa_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 	snprintf(temp, 47, " :params 0x%lx", (long unsigned int)sad->hwparams);
 	write_c_string(temp, pcfun);
 
+=======
+		write_fmt_string(pcfun, " :keep-open t :handle 0x%lx",
+				 (long unsigned int)sad->handle);
+	} else
+		write_c_string(" :keep-open nil", pcfun);
+
+	write_fmt_str(pcfun, " :params 0x%lx", (long unsigned int)sad->hwparams);
+>>>>>>> master
 	return;
 }
 
@@ -625,7 +637,13 @@ sound_alsa_play(audio_job_t aj)
 				mss, aj->buffer, resolution);
 			if (!len) {
 				ALSA_DEBUG_S("finished\n");
+<<<<<<< HEAD
 				aj->play_state = MTPSTATE_STOP;
+=======
+				SXE_MUTEX_LOCK(&aj->mtx);
+				aj->play_state = MTPSTATE_STOP;
+				SXE_MUTEX_UNLOCK(&aj->mtx);
+>>>>>>> master
 				break;
 			}
 

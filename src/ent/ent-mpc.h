@@ -88,19 +88,36 @@ extern bigc ent_scratch_bigc;
 
 /********************************* Bigcs ********************************/
 
+<<<<<<< HEAD
 #define HAVE_MPC 1
 
 /***** Bigc: basic functions *****/
 #define bigc_init(f)                mpc_init(f)
 #define bigc_init_prec(f,prec)      mpc_init2(f, prec)
 #define bigc_init_2prec(f,p1,p2)    mpc_init3(f, p1, p2)
+=======
+
+/***** Bigc: basic functions *****/
+#if HAVE_MPC_INIT
+#define bigc_init(f)                mpc_init(f)
+#else
+#define bigc_init(f)                mpc_init2((f),internal_get_precision(Qnil))
+#endif
+#define bigc_init_prec(f,prec)      mpc_init2((f), (prec))
+#define bigc_init_2prec(f,p1,p2)    mpc_init3((f), (p1), (p2))
+>>>>>>> master
 #define bigc_fini(f)                mpc_clear(f)
 #define bigc_hashcode(f)            (bigfr_hashcode(bigc_re(f)) ^ \
 				     bigfr_hashcode(bigc_im(f)))
 #define bigc_get_prec(f)            max(bigfr_get_prec(bigc_re(f)), \
 					bigfr_get_prec(bigc_im(f)))
+<<<<<<< HEAD
 #define bigc_set_prec(f, prec)      mpc_set_prec(f, prec)
 #define bigc_set_default_prec(prec) mpc_set_default_prec(prec)
+=======
+#define bigc_set_prec(f, prec)      mpc_set_prec((f), (prec))
+#define bigc_set_default_prec(prec) mpc_set_default_prec((prec))
+>>>>>>> master
 #define bigc_get_default_prec()     mpc_get_default_prec()
 
 /***** Bigc: conversions *****/
@@ -132,8 +149,18 @@ extern Bufbyte *bigc_to_string(bigc, int);
 	mpc_add_fr(c, c, bf1, GMP_RNDN);				\
 } while (0)
 
+<<<<<<< HEAD
 #define bigc_re(z)                  MPC_RE(z)
 #define bigc_im(z)                  MPC_IM(z)
+=======
+#if defined mpc_realref
+#define bigc_re(z)                  mpc_realref(z)
+#define bigc_im(z)                  mpc_imagref(z)
+#else
+#define bigc_re(z)                  MPC_RE(z)
+#define bigc_im(z)                  MPC_IM(z)
+#endif
+>>>>>>> master
 
 /***** Bigc: comparisons *****/
 #define bigc_cmp(f1,f2)             mpc_cmp(f1, f2)

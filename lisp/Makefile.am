@@ -73,7 +73,11 @@ corelispels =								\
 	abbrev.el about.el alist.el apropos.el auto-save.el		\
 	auto-show.el backquote.el blessmail.el buff-menu.el buffer.el	\
 	build-rpt.el byte-optimize.el bytecomp-runtime.el bytecomp.el	\
+<<<<<<< HEAD
 	callers-of-rpt.el check-features.el cl-compat.el cl-extra.el	\
+=======
+	callers-of-rpt.el cl-compat.el cl-extra.el              	\
+>>>>>>> master
 	cl-macs.el cl-seq.el cl.el cmdloop.el code-cmds.el		\
 	code-files.el code-process.el coding.el compat.el config.el	\
 	console.el cus-dep.el cus-edit.el cus-face.el cus-file.el	\

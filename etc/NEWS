@@ -21,8 +21,60 @@ in each release should look at the appropriate section of this file.
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 * Changes in SXEmacs 22.1.10 (Excalibur)
 =======
+=======
+* Changes in SXEmacs 22.1.14 (Geo)
+==================================
+
+We switched to git!  And this release cycle was all about updating the
+build chain, version strings, and docs and whatnot from tla-isms to
+git-isms. 
+
+You can now grab the SXEmacs sources via git with...
+
+   git clone http://git.sxemacs.org/sxemacs
+
+
+* Changes in SXEmacs 22.1.12 (Fiat)
+===================================
+
+** Bugs closed in this release:
+
+69, 86, 107, 109, 110, 111, 113, 114, 115, 117, 118, 120
+
+** Build chain fixes and updates -- Ferreira, Freundt, Youngs.
+
+*** Fix building without eye-candy (*bars, widgets, etc)
+*** Begin work on getting SXEmacs built on Arm Linux
+*** Fix NetBSD 5 build
+*** Mac OS build fixes
+
+** Source tree reorganisation -- Ferreira.
+
+Nelson put a lot of working into reorganising the SXEmacs source tree
+hierarchy.  There are now several subdirectories under `src'...
+
+	src/database -- has the database code
+	src/ent      -- has the "Enhance Number Types" code
+	src/events   -- has the "events" code
+	src/media    -- has all the multimedia code
+	src/mem      -- has memory related code
+	src/mule     -- has the MULE stuff
+	src/ui       -- has the UI code common to all toolkits
+	src/ui/Gtk   -- has the old (non-working) GTK 1 code
+	src/ui/TTY   -- has the TTY UI code
+	src/ui/X11   -- has the X11 UI code
+	src/ui/lwlib -- has the Lucid stuff
+
+This was done with the view to making maintenance and debugging
+easier, and also to simplify adding new features.
+
+** FFI improvements, updates, and enhancements -- Zajcev
+
+
+>>>>>>> master
 * SXEmacs 22.1.11 was never released.
 
 See ChangeLog.d/ChangeLog-22.1.11 for all the changes in the
@@ -30,7 +82,10 @@ See ChangeLog.d/ChangeLog-22.1.11 for all the changes in the
 
 * Changes in SXEmacs 22.1.10 (Excalibur)
 ========================================
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 
 ** Bugs closed in this release:
 

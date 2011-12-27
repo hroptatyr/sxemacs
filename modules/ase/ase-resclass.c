@@ -40,10 +40,14 @@
 #include "config.h"
 #include "sxemacs.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "ent.h"
 =======
 #include "ent/ent.h"
 >>>>>>> origin/master
+=======
+#include "ent/ent.h"
+>>>>>>> master
 #include "ase-resclass.h"
 
 #define EMOD_ASE_DEBUG_RESC(args...)	EMOD_ASE_DEBUG("[RESC]: " args)
@@ -77,9 +81,16 @@ _resc_rng_buffer_size(ase_resc_rng_t a)
 static inline void
 _ase_resc_rng_to_string(char *buf, int len, ase_resc_rng_t a)
 {
+<<<<<<< HEAD
 	if (ase_resc_rng_smallp(a))
 		snprintf(buf, len, "%ld", a->small_ring);
 	else
+=======
+	if (ase_resc_rng_smallp(a)) {
+		int sz = snprintf(buf, len, "%ld", a->small_ring);
+		assert(sz >= 0 && sz < len);
+	} else
+>>>>>>> master
 		resc_rng_to_string(buf, len, ase_resc_rng_ring(a));
 	return;
 }
@@ -128,9 +139,16 @@ _resc_elm_buffer_size(ase_resc_elm_t a)
 static inline void
 _ase_resc_elm_to_string(char *buf, int len, ase_resc_elm_t a)
 {
+<<<<<<< HEAD
 	if (ase_resc_elm_smallp(a))
 		snprintf(buf, len, "%ld", a->small_data);
 	else
+=======
+	if (ase_resc_elm_smallp(a)) {
+		int sz = snprintf(buf, len, "%ld", a->small_data);
+		assert(sz>=0 && sz < len);
+	} else
+>>>>>>> master
 		resc_elm_to_string(buf, len, ase_resc_elm_data(a));
 	return;
 }
@@ -1365,7 +1383,11 @@ ase_resclass_unitp(Lisp_Object elm)
 
 #if defined HAVE_MPZ && (defined WITH_GMP || defined WITH_MP)
 static Lisp_Object
+<<<<<<< HEAD
 ase_resclass_lift_to_BIGZ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+=======
+ase_resclass_lift_to_BIGZ_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
+>>>>>>> master
 {
 	if (XASE_RESC_ELM_SMALLP(number)) {
 		make_bigz(XASE_RESC_ELM_SDATA(number));
@@ -1377,7 +1399,11 @@ ase_resclass_lift_to_BIGZ_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
 #endif
 
 static Lisp_Object
+<<<<<<< HEAD
 ase_resclass_lift_to_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+=======
+ase_resclass_lift_to_INT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
+>>>>>>> master
 {
 	if (XASE_RESC_ELM_SMALLP(number)) {
 		return make_int(XASE_RESC_ELM_SDATA(number));
@@ -1391,7 +1417,11 @@ ase_resclass_lift_to_INT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
 
 #ifdef HAVE_FPFLOAT
 static Lisp_Object
+<<<<<<< HEAD
 ase_resclass_lift_to_FLOAT_T(Lisp_Object number, ent_lift_args_t UNUSED(la))
+=======
+ase_resclass_lift_to_FLOAT_T(Lisp_Object number, ent_lift_args_t SXE_UNUSED(la))
+>>>>>>> master
 {
 	if (XASE_RESC_ELM_SMALLP(number)) {
 		return make_float(XASE_RESC_ELM_SDATA(number));
@@ -1524,10 +1554,14 @@ ent_resclass_lifttable_init(void)
 DEFUN("make-residue-class-ring", Fmake_residue_class_ring, 1, 1, 0, /*
 Return a residue class ring of size MODULUS (>= 2).
 <<<<<<< HEAD
+<<<<<<< HEAD
 								    */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
        (modulus))
 {
 	CHECK_INTEGER(modulus);
@@ -1545,10 +1579,14 @@ Return a residue class ring of size MODULUS (>= 2).
 DEFUN("make-residue-class", Fmake_residue_class, 2, 2, 0, /*
 Return the residue class of ELEMENT in RING.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (element, ring))
 {
 	CHECK_ASE_RESC_RNG(ring);
@@ -1561,10 +1599,14 @@ Return the residue class of ELEMENT in RING.
 DEFUN("residue-class-ring", Fresidue_class_ring, 1, 1, 0, /*
 Return the parental residue class ring (the world) of RESCLASS.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							  */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (resclass))
 {
 	CHECK_ASE_RESC_ELM(resclass);
@@ -1614,10 +1656,14 @@ to the ring of rational integers.
 DEFUN ("residue-class-ring-p", Fresidue_class_ring_p, 1, 1, 0, /*
 Return t if OBJECT is a residue class ring, nil otherwise.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							       */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
        (object))
 {
 	return ASE_RESC_RNG_P(object) ? Qt : Qnil;
@@ -1627,10 +1673,14 @@ Return t if OBJECT is a residue class ring, nil otherwise.
 DEFUN ("residue-class-p", Fresidue_class_p, 1, 1, 0, /*
 Return t if OBJECT is a residue class, nil otherwise.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						     */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
        (object))
 {
 	return ASE_RESC_ELM_P(object) ? Qt : Qnil;

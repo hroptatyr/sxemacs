@@ -33,9 +33,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "bytecode.h"
 #include "commands.h"
 #define INCLUDE_EVENTS_H_PRIVATE_SPHERE
+<<<<<<< HEAD
 #include "events.h"
 #include "insdel.h"
 #include "window.h"
+=======
+#include "events/events.h"
+#include "ui/insdel.h"
+#include "ui/window.h"
+>>>>>>> master
 
 extern Charcount num_input_chars;
 
@@ -140,6 +146,7 @@ set to t when the command exits successfully.
 You may use any of `@', `*' and `_' at the beginning of the string;
 they are processed in the order that they appear.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       (args)) {
 =======
@@ -147,6 +154,11 @@ they are processed in the order that they appear.
       (args))
 {
 >>>>>>> origin/master
+=======
+*/
+      (args))
+{
+>>>>>>> master
 	return Qnil;
 }
 
@@ -156,10 +168,14 @@ they are processed in the order that they appear.
 DEFUN("quote-maybe", Fquote_maybe, 1, 1, 0,	/*
 Quote EXPR if it is not self quoting.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (expr))
 {
 	return ((NILP(expr)
@@ -238,10 +254,14 @@ the minibuffer.
 The argument KEYS specifies the value to use instead of (this-command-keys)
 when reading the arguments.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (function, record_flag, keys))
 {
 	/* This function can GC */
@@ -995,10 +1015,14 @@ Return numeric meaning of raw prefix argument RAW.
 A raw prefix argument is what you get from `(interactive "P")'.
 Its numeric meaning is what you would get from `(interactive "p")'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (raw))
 {
 	if (NILP(raw))

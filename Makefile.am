@@ -31,9 +31,13 @@ builddir = @builddir@
 srcdir = @srcdir@
 top_builddir = .
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 top_build_prefix = $(top_builddir)/
 >>>>>>> origin/master
+=======
+top_build_prefix = $(top_builddir)/
+>>>>>>> master
 top_srcdir = @top_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
@@ -55,6 +59,7 @@ sxe_subdirs += libltdl
 endif
 sxe_subdirs += lib-src
 <<<<<<< HEAD
+<<<<<<< HEAD
 if DESCEND_DYNODUMP
 sxe_subdirs += dynodump
 endif
@@ -63,6 +68,8 @@ endif
 if DESCEND_LWLIB
 sxe_subdirs += lwlib
 endif
+=======
+>>>>>>> master
 if DESCEND_MODULES
 sxe_subdirs += modules
 endif
@@ -88,7 +95,11 @@ RECURSE =								\
 	@for subdir in $(sxe_subdirs); do				\
 		test "$$subdir" = . ||					\
 			(cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $@);	\
+<<<<<<< HEAD
         done
+=======
+        done ;                                                          \
+>>>>>>> master
 	@$(TOUCH) $@
 
 CROSSMAKE = (cd `dirname $@` && $(MAKE) $(AM_MAKEFLAGS) `basename $@`)
@@ -101,9 +112,13 @@ modules/auto-autoloads.elc: $(EMACS)
 	$(CROSSMAKE)
 endif
 
+<<<<<<< HEAD
 bldlwlibdir = $(abs_top_builddir)/lwlib
 SXE_SHOW_DUMP = $$(LD_LIBRARY_PATH=$(bldlwlibdir)/$(LT_OBJDIR):$(bldlwlibdir) \
 	$(DESTDIR)$(bindir)/sxemacs -sd)
+=======
+SXE_SHOW_DUMP = $(DESTDIR)$(bindir)/sxemacs -sd)
+>>>>>>> master
 
 install-exec-hook:
 	mv -f $(DESTDIR)$(bindir)/sxemacs $(DESTDIR)$(bindir)/sxemacs-$(old_version)
@@ -116,7 +131,12 @@ uninstall-hook:
 check-recursive: all-recursive
 
 $(ETAGS):
+<<<<<<< HEAD
 	make -C $(top_builddir)/lib-src etags
+=======
+	cd $(top_builddir)/lib-src 
+	$(MAKE) $(AM_MAKEFLAGS) etags
+>>>>>>> master
 
 .PHONY: stage1 stage2 build-report time-build-report time-check beta
 ## Convenience target for SXEmacs beta testers

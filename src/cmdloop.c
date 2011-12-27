@@ -32,9 +32,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "buffer.h"
 #include "commands.h"
+<<<<<<< HEAD
 #include "frame.h"
 #include "events.h"
 #include "window.h"
+=======
+#include "ui/frame.h"
+#include "events/events.h"
+#include "ui/window.h"
+>>>>>>> master
 
 /* Current depth in recursive edits.  */
 Fixnum command_loop_level;
@@ -99,10 +105,14 @@ static Lisp_Object default_error_handler(Lisp_Object data)
 DEFUN("really-early-error-handler", Freally_early_error_handler, 1, 1, 0,	/*
 You should almost certainly not be using this.
 <<<<<<< HEAD
+<<<<<<< HEAD
 										 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (x))
 {
 	/* This is an error handler used when we're running temacs and when
@@ -339,6 +349,7 @@ To get out of the recursive edit, a command can do `(throw 'exit nil)';
 that tells this function to return.
 Alternately, `(throw 'exit t)' makes this function signal an error.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
       ()) {
 =======
@@ -346,6 +357,11 @@ Alternately, `(throw 'exit t)' makes this function signal an error.
       ())
 {
 >>>>>>> origin/master
+=======
+*/
+      ())
+{
+>>>>>>> master
 	/* This function can GC */
 	Lisp_Object val;
 	int speccount = specpdl_depth();
@@ -496,10 +512,14 @@ DEFUN("command-loop-1", Fcommand_loop_1, 0, 0, 0,	/*
 Invoke the internals of the canonical editor command loop.
 Don't call this unless you know what you're doing.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	/* This function can GC */

@@ -23,7 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 
 #include "buffer.h"
+<<<<<<< HEAD
 #include "insdel.h"
+=======
+#include "ui/insdel.h"
+>>>>>>> master
 #include "syntax.h"
 
 enum case_action { CASE_UP, CASE_DOWN, CASE_CAPITALIZE, CASE_CAPITALIZE_UP };
@@ -102,10 +106,14 @@ See also `capitalize', `downcase' and `upcase-initials'.
 Optional second arg BUFFER specifies which buffer's case tables to use,
 and defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (string_or_char, buffer))
 {
 	return casify_object(CASE_UP, string_or_char, buffer);
@@ -118,10 +126,14 @@ STRING-OR-CHAR is not altered--the value is a copy.
 Optional second arg BUFFER specifies which buffer's case tables to use,
 and defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 					 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (string_or_char, buffer))
 {
 	return casify_object(CASE_DOWN, string_or_char, buffer);
@@ -136,10 +148,14 @@ STRING-OR-CHAR is not altered--the value is a copy.
 Optional second arg BUFFER specifies which buffer's case tables to use,
 and defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (string_or_char, buffer))
 {
 	return casify_object(CASE_CAPITALIZE, string_or_char, buffer);
@@ -155,10 +171,14 @@ STRING-OR-CHAR is not altered--the value is a copy.
 Optional second arg BUFFER specifies which buffer's case tables to use,
 and defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (string_or_char, buffer))
 {
 	return casify_object(CASE_CAPITALIZE_UP, string_or_char, buffer);
@@ -243,10 +263,14 @@ point and the mark is operated on.
 See also `capitalize-region'.
 Optional third arg BUFFER defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (start, end, buffer))
 {
 	/* This function can GC */
@@ -260,10 +284,14 @@ the region to operate on.  When used as a command, the text between
 point and the mark is operated on.
 Optional third arg BUFFER defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (start, end, buffer))
 {
 	/* This function can GC */
@@ -278,10 +306,14 @@ In programs, give two arguments, the starting and ending
 character positions to operate on.
 Optional third arg BUFFER defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (start, end, buffer))
 {
 	/* This function can GC */
@@ -297,10 +329,14 @@ In programs, give two arguments, the starting and ending
 character positions to operate on.
 Optional third arg BUFFER defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 									 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (start, end, buffer))
 {
 	return casify_region(CASE_CAPITALIZE_UP, start, end, buffer);
@@ -330,10 +366,14 @@ With negative argument, convert previous words but do not move.
 See also `capitalize-word'.
 Optional second arg BUFFER defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (count, buffer))
 {
 	/* This function can GC */
@@ -345,10 +385,14 @@ Convert following word (or COUNT words) to lower case, moving over.
 With negative argument, convert previous words but do not move.
 Optional second arg BUFFER defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (count, buffer))
 {
 	/* This function can GC */
@@ -362,10 +406,14 @@ and the rest lower case.
 With negative argument, capitalize previous words but do not move.
 Optional second arg BUFFER defaults to the current buffer.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (count, buffer))
 {
 	/* This function can GC */

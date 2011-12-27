@@ -55,7 +55,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <sys/param.h>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 /* How long can a source filename be in DOC (including "\037S" at the start
     and "\n" at the end) ? */
 #define DOC_MAX_FILENAME_LENGTH 2048
@@ -65,7 +68,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
    __eprintf on linking */
 #define assert(x) ((x) ? (void) 0 : (void) abort ())
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 #define READ_TEXT "r"
 #define READ_BINARY "r"
 #define WRITE_BINARY "w"
@@ -82,9 +88,13 @@ enum {
 } Current_file_type;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 static void put_filename (const char *filename);
 >>>>>>> origin/master
+=======
+static void put_filename (const char *filename);
+>>>>>>> master
 static int scan_file(const char *filename);
 static int read_c_string(FILE *, int, int);
 static void write_c_args(FILE * out, const char *func, char *buf, int minargs,
@@ -147,7 +157,15 @@ static char *next_extra_elc(char *extra_elcs)
 			/*fatal("error opening site package file list", 0); */
 			return NULL;
 		}
+<<<<<<< HEAD
 		fgets(line_buf, BUFSIZ, fp);
+=======
+		if(!fgets(line_buf, BUFSIZ, fp)) {
+			fclose(fp);
+			fp = NULL;
+			return NULL;
+		}
+>>>>>>> master
 	}
 
       again:
@@ -232,7 +250,12 @@ int main(int argc, char **argv)
 			outfile = fopen(argv[++i], WRITE_BINARY);
 		}
 		if (!strcmp(argv[i], "-d")) {
+<<<<<<< HEAD
 			chdir(argv[++i]);
+=======
+			if (chdir(argv[++i]) < 0)
+				fatal("Could not change to directory ",argv[i]);
+>>>>>>> master
 		}
 
 		if (!strcmp(argv[i], "-i")) {
@@ -256,18 +279,28 @@ int main(int argc, char **argv)
 		int j;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if (argv[i][0] == '-') {
 =======
+=======
+>>>>>>> master
                 if (argc > i + 1 && !strcmp (argv[i], "-d")) {
                         /* XEmacs change; allow more than one chdir. The
                            idea is that the second chdir is to source-lisp,
                            and that any Lisp files not under there have the
                            full path specified.  */
                         i += 1;
+<<<<<<< HEAD
                         chdir (argv[i]);
                         continue;
                 } else if (argv[i][0] == '-') {
 >>>>>>> origin/master
+=======
+                        if (chdir (argv[i]) < 0)
+				fatal("Could not change to directory ", argv[i]);
+                        continue;
+                } else if (argv[i][0] == '-') {
+>>>>>>> master
 			i++;
 			continue;
 		}
@@ -299,7 +332,10 @@ int main(int argc, char **argv)
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 /* Add a source file name boundary in the output file.  */
 static void put_filename (const char *filename)
 {
@@ -324,7 +360,10 @@ static void put_filename (const char *filename)
         fprintf (outfile, "%s\n", filename);
 }
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 /* Read file FILENAME and output its doc strings to outfile.  */
 /* Return 1 if file is not found, 0 if it is found.  */
 
@@ -659,12 +698,23 @@ static int scan_c_file(const char *filename, const char *mode)
 					if (c < 0)
 						goto eof;
 					ungetc(c, infile);
+<<<<<<< HEAD
 					if (commas == 2)	/* pick up minargs */
 						fscanf(infile, "%d", &minargs);
 					else /* pick up maxargs */ if (c == 'M' || c == 'U')	/* MANY || UNEVALLED */
 						maxargs = -1;
 					else
 						fscanf(infile, "%d", &maxargs);
+=======
+					if (commas == 2) {	/* pick up minargs */
+						if ( fscanf(infile, "%d", &minargs) != 1)
+							fprintf(stderr, "Failed to read minargs\n");
+					} else /* pick up maxargs */ if (c == 'M' || c == 'U')	/* MANY || UNEVALLED */
+						maxargs = -1;
+					else
+						if ( fscanf(infile, "%d", &maxargs) != 1)
+							fprintf(stderr, "Failed to read maxargs\n");;
+>>>>>>> master
 				}
 			}
 			if (c < 0)
@@ -697,9 +747,13 @@ static int scan_c_file(const char *filename, const char *mode)
 					defvarflag ? "SYM" : "SUBR", buf);
 			} else {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                                 put_filename (filename); /* XEmacs addition */
 >>>>>>> origin/master
+=======
+                                put_filename (filename); /* XEmacs addition */
+>>>>>>> master
 				putc(037, outfile);
 				putc(defvarflag ? 'V' : 'F', outfile);
 				fprintf(outfile, "%s\n", buf);
@@ -779,12 +833,18 @@ static int scan_c_file(const char *filename, const char *mode)
  NAME is preceded by `F' for a function or `V' for a variable.
  An entry is output only if DOCSTRING has \ newline just after the opening "
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 
  Adds the filename a symbol or function was found in before its docstring;
  there's no need for this with the load-history available, but we do it for
  consistency with the C parsing code. 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
  */
 
 static void skip_white(FILE * infile)
@@ -862,7 +922,11 @@ static int scan_lisp_file(const char *filename, const char *mode)
 				length--;
 
 				/* Read in the contents.  */
+<<<<<<< HEAD
 				if (saved_string != 0)
+=======
+				if (saved_string != 0) 
+>>>>>>> master
 					free(saved_string);
 				saved_string = (char *)xmalloc(length);
 				for (i = 0; i < length; i++)
@@ -935,8 +999,13 @@ static int scan_lisp_file(const char *filename, const char *mode)
 				while (c != '\n' && c >= 0) {
 					/* #### Kludge -- Ignore any ESC x x ISO2022 sequences */
 					if (c == 27) {
+<<<<<<< HEAD
 						getc(infile);
 						getc(infile);
+=======
+						(void)getc(infile);
+						(void)getc(infile);
+>>>>>>> master
 						goto nextchar;
 					}
 
@@ -960,7 +1029,10 @@ static int scan_lisp_file(const char *filename, const char *mode)
 		}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
                 else if (! strcmp (buffer, "custom-declare-variable"))
                 {
                         char c1 = 0, c2 = 0;
@@ -1024,7 +1096,10 @@ static int scan_lisp_file(const char *filename, const char *mode)
                         }
                 }
 
+<<<<<<< HEAD
 >>>>>>> origin/master
+=======
+>>>>>>> master
 		else if (!strcmp(buffer, "fset") || !strcmp(buffer, "defalias")) {
 			char c1 = 0, c2 = 0;
 			type = 'F';
@@ -1151,10 +1226,14 @@ static int scan_lisp_file(const char *filename, const char *mode)
 		   In the latter case, the opening quote (and leading
 		   backslash-newline) have already been read.  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 		putc('\n', outfile);	/* XEmacs addition */
 =======
                 put_filename (filename); /* XEmacs addition */
 >>>>>>> origin/master
+=======
+                put_filename (filename); /* XEmacs addition */
+>>>>>>> master
 		putc(037, outfile);
 		putc(type, outfile);
 		fprintf(outfile, "%s\n", buffer);
@@ -1166,6 +1245,18 @@ static int scan_lisp_file(const char *filename, const char *mode)
 		} else
 			read_c_string(infile, 1, 0);
 	}
+<<<<<<< HEAD
+=======
+	if (saved_string) {
+		/* If this is true then a dynamic doc string was
+		   detected without a next expression. We should not
+		   emit anything since the input was badly formed,
+		   but lets free the string...
+		*/
+		free(saved_string);
+		saved_string = 0;
+	}
+>>>>>>> master
 	fclose(infile);
 	return 0;
 }

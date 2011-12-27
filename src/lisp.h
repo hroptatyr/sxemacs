@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /*			  general definitions				*/
 /************************************************************************/
 
+<<<<<<< HEAD
 /* ------------------------ include files ------------------- */
 
 /* We include the following generally useful header files so that you
@@ -135,6 +136,10 @@ void assert_failed(const char *, int, const char *);
 #define SXE_LONG_LONG_BITS (SIZEOF_LONG_LONG_INT * BITS_PER_CHAR)
 #define SXE_VOID_P_BITS (SIZEOF_VOID_P * BITS_PER_CHAR)
 
+=======
+/* the old SXEmacs general includes and utility macros moved here: */
+#include "sxe-utils.h"
+>>>>>>> master
 
 /* ------------------------ dynamic arrays ------------------- */
 
@@ -191,6 +196,7 @@ struct overhead_stats;
 size_t Dynarr_memory_usage(void *d, struct overhead_stats *stats);
 #endif
 
+<<<<<<< HEAD
 /* Also define min() and max(). (Some compilers put them in strange
    places that won't be referenced by the above include files, such
    as 'macros.h' under Solaris.) */
@@ -447,6 +453,12 @@ template < typename T > struct alignment_trick {
 #ifndef DECLARE_NOTHING
 #define DECLARE_NOTHING struct nosuchstruct
 #endif
+=======
+
+
+
+
+>>>>>>> master
 
 /*#ifdef DEBUG_SXEMACS*/
 #define REGISTER
@@ -995,6 +1007,7 @@ PRIVATE_EXTERNAL_LIST_LOOP_6 (elt, list, len, tail,			\
 
 #define PRIVATE_EXTERNAL_LIST_LOOP_6(elt, list, len, hare,		\
 				     tortoise, suspicion_length)	\
+<<<<<<< HEAD
   for (tortoise = hare = list, len = 0;					\
 									\
        (CONSP (hare) ? ((elt = XCAR (hare)), 1) :			\
@@ -1007,6 +1020,20 @@ PRIVATE_EXTERNAL_LIST_LOOP_6 (elt, list, len, tail,			\
 	  &&								\
 	  ((((len & 1) != 0) && (tortoise = XCDR (tortoise), 0)),	\
 	   (EQ (hare, tortoise) && (signal_circular_list_error (list), 0)))))
+=======
+	for (tortoise = hare = list, len = 0;				\
+	     								\
+	     (CONSP (hare) ? ((elt = XCAR (hare)), 1) :			\
+	      (NILP (hare) ? 0 :					\
+	       (signal_malformed_list_error (list), 0)));		\
+									\
+	     (hare = XCDR (hare)),					\
+		     (void)((++len > suspicion_length) &&		\
+			    ((void)(((len & 1) != 0)&&			\
+				    ((tortoise = XCDR (tortoise)), 0)),	\
+			     (EQ (hare, tortoise) &&			\
+			      (signal_circular_list_error (list), 0)))))
+>>>>>>> master
 
 /* GET_LIST_LENGTH and GET_EXTERNAL_LIST_LENGTH:
 
@@ -2058,7 +2085,11 @@ struct gcpro {
 };
 
 #if defined(EF_USE_ASYNEQ)
+<<<<<<< HEAD
 #include "workers.h"
+=======
+#include "events/workers.h"
+>>>>>>> master
 
 extern void init_threads(int, sxe_thread_f);
 extern void fini_threads(int);
@@ -2827,10 +2858,14 @@ void staticpro_nodump(Lisp_Object *);
 #include "opaque.h"
 /* for size computation */
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "ent.h"
 =======
 #include "ent/ent.h"
 >>>>>>> origin/master
+=======
+#include "ent/ent.h"
+>>>>>>> master
 
 /* also generally useful if you want to avoid arbitrary size limits
    but don't need a full dynamic array.  Assumes that BASEVAR points
@@ -3614,12 +3649,22 @@ void temp_output_buffer_show(Lisp_Object, Lisp_Object);
  * Note: stream should be defaulted before calling
  *  (eg Qnil means stdout, not Vstandard_output, etc) */
 void write_c_string(const char *, Lisp_Object);
+<<<<<<< HEAD
+=======
+void write_hex_ptr(void*, Lisp_Object);
+int write_fmt_str(Lisp_Object,const char *,...) PRINTF_ARGS(2, 3);
+int write_fmt_string(Lisp_Object,const char *,...) PRINTF_ARGS(2, 3);
+>>>>>>> master
 /* Same goes for this function. */
 void write_string_1(const Bufbyte *, Bytecount, Lisp_Object);
 void print_cons(Lisp_Object, Lisp_Object, int);
 void print_vector(Lisp_Object, Lisp_Object, int);
 void print_string(Lisp_Object, Lisp_Object, int);
+<<<<<<< HEAD
 char *long_to_string(char *, long);
+=======
+char *long_to_string(char *, long, int);
+>>>>>>> master
 void print_internal(Lisp_Object, Lisp_Object, int);
 void print_symbol(Lisp_Object, Lisp_Object, int);
 /* The number of bytes required to store the decimal printed
@@ -3757,9 +3802,13 @@ EXFUN(Fcar, 1);
 EXFUN(Fcar_safe, 1);
 EXFUN(Fcdr, 1);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 EXFUN (Fcdr_safe, 1);
 >>>>>>> origin/master
+=======
+EXFUN (Fcdr_safe, 1);
+>>>>>>> master
 EXFUN(Fchar_after, 2);
 EXFUN(Fchar_to_string, 1);
 EXFUN(Fcheck_valid_plist, 1);
@@ -4030,10 +4079,14 @@ extern Lisp_Object Qinteger_or_marker_p, Qintegerp, Qinteractive;
 extern Lisp_Object Qinternal_error, Qinvalid_argument;
 extern Lisp_Object Qinvalid_change, Qinvalid_function, Qinvalid_operation;
 <<<<<<< HEAD
+<<<<<<< HEAD
 extern Lisp_Object Qinvalid_read_syntax, Qinvalid_state;
 =======
 extern Lisp_Object Qinvalid_byte_code, Qinvalid_read_syntax, Qinvalid_state;
 >>>>>>> origin/master
+=======
+extern Lisp_Object Qinvalid_byte_code, Qinvalid_read_syntax, Qinvalid_state;
+>>>>>>> master
 extern Lisp_Object Qio_error;
 extern Lisp_Object Qiso2022;
 extern Lisp_Object Qip_any;

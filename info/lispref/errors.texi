@@ -138,11 +138,14 @@ This is a @code{file-error}.@*
 @code{"Arithmetic singularity error"}@*
 
 @c SXEmacs feature
+<<<<<<< HEAD
 @item tooltalk-error
 @code{"ToolTalk error"}@*
 @xref{ToolTalk Support}.
 
 @c SXEmacs feature
+=======
+>>>>>>> master
 @item undefined-keystroke-sequence
 @code{"Undefined keystroke sequence"}@*
 

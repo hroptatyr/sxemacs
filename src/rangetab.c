@@ -52,7 +52,10 @@ static void
 print_range_table(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	Lisp_Range_Table *rt = XRANGE_TABLE(obj);
+<<<<<<< HEAD
 	char buf[200];
+=======
+>>>>>>> master
 	int i;
 
 	write_c_string("#s(range-table data (", printcharfun);
@@ -61,11 +64,19 @@ print_range_table(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		if (i > 0)
 			write_c_string(" ", printcharfun);
 		if (rte->first == rte->last)
+<<<<<<< HEAD
 			sprintf(buf, "%ld ", (long)(rte->first));
 		else
 			sprintf(buf, "(%ld %ld) ", (long)(rte->first),
 				(long)(rte->last));
 		write_c_string(buf, printcharfun);
+=======
+			write_fmt_str(printcharfun, "%ld ", (long)(rte->first));
+		else
+			write_fmt_str(printcharfun, "(%ld %ld) ", 
+				      (long)(rte->first),
+				      (long)(rte->last));
+>>>>>>> master
 		print_internal(rte->val, printcharfun, 1);
 	}
 	write_c_string("))", printcharfun);
@@ -213,10 +224,14 @@ get_range_table(EMACS_INT pos, int nentries, struct range_table_entry *tab,
 DEFUN("range-table-p", Frange_table_p, 1, 1, 0,	/*
 Return non-nil if OBJECT is a range table.
 <<<<<<< HEAD
+<<<<<<< HEAD
 						 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (object))
 {
 	return RANGE_TABLEP(object) ? Qt : Qnil;
@@ -227,10 +242,14 @@ Return a new, empty range table.
 You can manipulate it using `put-range-table', `get-range-table',
 `remove-range-table', and `clear-range-table'.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       ())
 {
 	Lisp_Object obj;
@@ -246,10 +265,14 @@ Return a new range table which is a copy of RANGE-TABLE.
 It will contain the same values for the same ranges as RANGE-TABLE.
 The values will not themselves be copied.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (range_table))
 {
 	Lisp_Range_Table *rt, *rtnew;
@@ -271,10 +294,14 @@ DEFUN("get-range-table", Fget_range_table, 2, 3, 0,	/*
 Find value for position POS in RANGE-TABLE.
 If there is no corresponding value, return DEFAULT (defaults to nil).
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (pos, range_table, default_))
 {
 	Lisp_Range_Table *rt;
@@ -407,10 +434,14 @@ put_range_table(Lisp_Object table, EMACS_INT first,
 DEFUN("put-range-table", Fput_range_table, 4, 4, 0,	/*
 Set the value for range (START, END) to be VALUE in RANGE-TABLE.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (start, end, value, range_table))
 {
 	EMACS_INT first, last;
@@ -431,10 +462,14 @@ Set the value for range (START, END) to be VALUE in RANGE-TABLE.
 DEFUN("remove-range-table", Fremove_range_table, 3, 3, 0,	/*
 Remove the value for range (START, END) in RANGE-TABLE.
 <<<<<<< HEAD
+<<<<<<< HEAD
 								 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (start, end, range_table))
 {
 	return Fput_range_table(start, end, Qunbound, range_table);
@@ -443,10 +478,14 @@ Remove the value for range (START, END) in RANGE-TABLE.
 DEFUN("clear-range-table", Fclear_range_table, 1, 1, 0,	/*
 Flush RANGE-TABLE.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (range_table))
 {
 	CHECK_RANGE_TABLE(range_table);
@@ -463,10 +502,14 @@ exactly once) if FUNCTION modifies or deletes the current entry
 \(i.e. passes the current range to `put-range-table' or
 `remove-range-table'), but not otherwise.
 <<<<<<< HEAD
+<<<<<<< HEAD
 							 */
 =======
 */
 >>>>>>> origin/master
+=======
+*/
+>>>>>>> master
       (function, range_table))
 {
 	Lisp_Range_Table *rt;

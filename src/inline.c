@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "bytecode.h"
 #include "casetab.h"
 #include "chartab.h"
+<<<<<<< HEAD
 #include "console.h"
 #include "device.h"
 #include "elhash.h"
@@ -57,12 +58,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "keymap.h"
 #include "lstream.h"
 #include "objects.h"
+=======
+#include "ui/console.h"
+#include "ui/device.h"
+#include "elhash.h"
+#include "events/events.h"
+#include "extents.h"
+#include "ui/faces.h"
+#include "ui/frame.h"
+#include "ui/glyphs.h"
+#include "ui/gui.h"
+#include "ui/keymap.h"
+#include "lstream.h"
+#include "ui/objects.h"
+>>>>>>> master
 #include "opaque.h"
 #include "process.h"
 #include "rangetab.h"
 #include "specifier.h"
 #include "syntax.h"
+<<<<<<< HEAD
 #include "window.h"
+=======
+#include "ui/window.h"
+>>>>>>> master
 #include "bloom.h"
 #include "dllist.h"
 
@@ -75,7 +94,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 
 #ifdef HAVE_TOOLBARS
+<<<<<<< HEAD
 #include "toolbar.h"
+=======
+#include "ui/toolbar.h"
+>>>>>>> master
 #endif
 
 #ifdef HAVE_DATABASE
@@ -83,6 +106,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 
 #ifdef HAVE_X_WINDOWS
+<<<<<<< HEAD
 #include "glyphs-x.h"
 #include "gui-x.h"
 #endif
@@ -102,6 +126,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef TOOLTALK
 #include "tooltalk.h"
+=======
+#include "ui/X11/glyphs-x.h"
+#include "ui/X11/gui-x.h"
+#endif
+
+#ifdef HAVE_GTK
+#include "ui/Gtk/console-gtk.h"
+#include "ui/Gtk/ui-gtk.h"
+#endif
+
+#ifdef FILE_CODING
+#include "mule/file-coding.h"
+>>>>>>> master
 #endif
 
 #ifdef HAVE_OPENSSL
@@ -110,10 +147,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef WITH_NUMBER_TYPES
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "ent.h"
 =======
 #include "ent/ent.h"
 >>>>>>> origin/master
+=======
+#include "ent/ent.h"
+>>>>>>> master
 #endif
 
 #ifdef HAVE_LIBFFI

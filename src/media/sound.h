@@ -25,7 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "media.h"
 #include "semaphore.h"
 #ifdef EF_USE_ASYNEQ
+<<<<<<< HEAD
 #include "event-queue.h"
+=======
+#include "events/event-queue.h"
+>>>>>>> master
 #endif
 
 extern Lisp_Object Q_device, Q_keep_open, Q_server, Q_client;
@@ -160,7 +164,11 @@ EXFUN(Fdelete_audio_device, 1);	/* too dangerous at the moment */
 	static int _name##_record(audio_job_t);				\
 	/* we currently have no record support so define a nop here */	\
 	static int							\
+<<<<<<< HEAD
 	_name##_record(audio_job_t UNUSED(foo))				\
+=======
+	_name##_record(audio_job_t SXE_UNUSED(foo))			\
+>>>>>>> master
 	{								\
 		return 0;						\
 	}

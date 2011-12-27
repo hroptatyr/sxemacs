@@ -81,6 +81,10 @@
 #if defined USE_SXEMACS_CONFIG_H
 # include "config.h"
 #endif
+<<<<<<< HEAD
+=======
+#include "sxe-utils.h"
+>>>>>>> master
 #include "lisp.h"
 
 #include "sysfile.h"
@@ -99,7 +103,11 @@
 #include "dynacat.h"
 
 #if defined EF_USE_ASYNEQ
+<<<<<<< HEAD
 # include "worker-asyneq.h"
+=======
+# include "events/worker-asyneq.h"
+>>>>>>> master
 #endif
 
 #include "emodules-ng.h"

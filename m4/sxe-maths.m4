@@ -61,7 +61,11 @@ AC_DEFUN([_SXE_MATH_ASSIGN_IFELSE], [
 
 AC_DEFUN([SXE_CHECK_MATHS_HEADERS], [dnl
 	## just check for the bugger, no need to introduce new dependencies
+<<<<<<< HEAD
 	SXE_CHECK_HEADERS([cfloat.h float.h inttypes.h limits.h math.h])
+=======
+	SXE_CHECK_HEADERS([cfloat.h float.h inttypes.h limits.h math.h ieeefp.h])
+>>>>>>> master
 	SXE_CHECK_HEADERS([values.h])
 	SXE_CHECK_HEADERS([monetary.h])
 ])dnl SXE_CHECK_MATHS_HEADERS
@@ -299,6 +303,47 @@ AC_DEFUN([SXE_CHECK_MATHS_VALUES], [dnl
 ])dnl SXE_CHECK_MATHS_VALUES
 
 
+<<<<<<< HEAD
+=======
+AC_DEFUN([SXE_MATHS_FINITE], [
+	## could be an ordinary function, at least it should be
+	AC_CHECK_FUNCS([finite])
+
+        SXE_MSG_CHECKING([for working finite])
+	_SXE_MATH_ASSIGN_IFELSE([float], [0.0; finit(__test_assign);],
+		[sxe_cv_maths_finite="yes"], [sxe_cv_maths_finite="no"])
+	SXE_MSG_RESULT([$sxe_cv_maths_fpclassify])
+
+	if test "$sxe_cv_maths_finite" = "yes"; then
+		AC_DEFINE_UNQUOTED([HAVE_MATHS_FINITE], [1],
+			[Whether finite() is defined])
+		$1
+	else
+		:
+		$2
+	fi
+])dnl SXE_MATHS_FINITE
+
+AC_DEFUN([SXE_MATHS_FPCLASS], [
+	## could be an ordinary function, at least it should be
+	AC_CHECK_FUNCS([fpclass])
+
+        SXE_MSG_CHECKING([for working fpclass])
+	_SXE_MATH_ASSIGN_IFELSE([float], [0.0; fpclass(__test_assign);],
+		[sxe_cv_maths_fpclass="yes"], [sxe_cv_maths_fpclass="no"])
+	SXE_MSG_RESULT([$sxe_cv_maths_fpclass])
+
+	if test "$sxe_cv_maths_fpclass" = "yes"; then
+		AC_DEFINE_UNQUOTED([HAVE_MATHS_FPCLASS], [1],
+			[Whether fpclass() is defined])
+		$1
+	else
+		:
+		$2
+	fi
+])dnl SXE_MATHS_FPCLASS
+
+>>>>>>> master
 AC_DEFUN([SXE_MATHS_FPCLASSIFY], [
 	## could be an ordinary function, at least it should be
 	AC_CHECK_FUNCS([fpclassify __fpclassifyf __fpclassify __fpclassifyl])
@@ -310,7 +355,11 @@ AC_DEFUN([SXE_MATHS_FPCLASSIFY], [
 
 	if test "$sxe_cv_maths_fpclassify" = "yes"; then
 		AC_DEFINE_UNQUOTED([HAVE_MATHS_FPCLASSIFY], [1],
+<<<<<<< HEAD
 			[Whether isinf() is defined in math.h])
+=======
+			[Whether fpclassify() is defined in math.h])
+>>>>>>> master
 		$1
 	else
 		:
@@ -634,13 +683,32 @@ AC_DEFUN([_SXE_CHECK_MPC], [dnl
 	AC_REQUIRE([SXE_CHECK_MPC_LIBS])
 	SXE_RESTORE_LIBS
 
+<<<<<<< HEAD
 	if test "$ac_cv_header_mpc_h" = "yes" -a \
 		"$ac_cv_lib_mpc_mpc_init" = "yes" -a \
+=======
+	if test "$ac_cv_lib_mpc_mpc_init" = "yes"; then
+		AC_DEFINE([HAVE_MPC_INIT], [1], [Whether simple mpc_init is available])
+	fi
+	if test "$ac_cv_lib_mpc_mpc_set_ui_fr" = "yes"; then
+		AC_DEFINE([HAVE_MPC_SET_UI_FR], [1], [Whether simple mpc_set_ui_fr is available])
+	fi
+	if test "$ac_cv_lib_mpc_mpc_init" = "yes" -o \
+	        "$ac_cv_lib_mpc_mpc_init2" = "yes"; then
+		mpc_can_be_initted="yes"
+	fi
+	if test "$ac_cv_header_mpc_h" = "yes" -a \
+		"$mpc_can_be_initted" = "yes" -a \
+>>>>>>> master
 		"$mpc_doth_need_mpfr" = "yes"; then
 		sxe_cv_feat_mpc="yes"
 		MPC_LIBS="-lmpfr -lmpc"
 	elif test "$ac_cv_header_mpc_h" = "yes" -a \
+<<<<<<< HEAD
 		"$ac_cv_lib_mpc_mpc_init" = "yes" -a \
+=======
+		"$mpc_can_be_initted" = "yes" -a \
+>>>>>>> master
 		"$mpc_doth_need_mpfr" = "no"; then
 		sxe_cv_feat_mpc="yes"
 		MPC_LIBS="-lmpc"
@@ -665,12 +733,24 @@ AC_DEFUN([SXE_CHECK_MPC_LIBS], [dnl
 	AC_REQUIRE([SXE_CHECK_MPFR_LIBS])
 	if test "$ac_cv_lib_mpfr_mpfr_init" = "yes"; then
 		AC_CHECK_LIB([mpc], [mpc_init], [:], [:], [-lmpfr])
+<<<<<<< HEAD
+=======
+		AC_CHECK_LIB([mpc], [mpc_init2], [:], [:], [-lmpfr])
+		AC_CHECK_LIB([mpc], [mpc_set_ui_fr], [:], [:], [-lmpfr])
+>>>>>>> master
 		mpc_doth_need_mpfr="yes"
 	else
 		## try without mpfr.h, but this is definitely going to fail
 		## unless you're a developer of mpc ...
+<<<<<<< HEAD
 		## ... and in that case: Fix teh MPC build chain, Andreas!!!
 		AC_CHECK_LIB([mpc], [mpc_init], [:])
+=======
+		## ... and in that case: Fix the MPC build chain, Andreas!!!
+		AC_CHECK_LIB([mpc], [mpc_init], [:])
+		AC_CHECK_LIB([mpc], [mpc_init2], [:])
+		AC_CHECK_LIB([mpc], [mpc_set_ui_fr], [:])
+>>>>>>> master
 		mpc_doth_need_mpfr="no"
 	fi
 ])dnl SXE_CHECK_MPC_LIBS
@@ -766,6 +846,11 @@ AC_DEFUN([SXE_CHECK_CLEAN_FLOATOPS], [dnl
 	AC_CHECK_FUNCS([strtoq])
 
 	SXE_MATHS_FPCLASSIFY
+<<<<<<< HEAD
+=======
+	SXE_MATHS_FPCLASS
+	SXE_MATHS_FINITE
+>>>>>>> master
 	SXE_MATHS_ISINF
 	SXE_MATHS_ISNAN
 	SXE_MATHS_SIGNBIT

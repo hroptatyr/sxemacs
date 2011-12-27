@@ -1,6 +1,7 @@
 dnl sxe-linker.m4 -- Linker stuff, esp. dynamic linking
 dnl needed for emodules for one
 
+<<<<<<< HEAD
 dnl that's a too fucking long thing, split it!
 AC_DEFUN([SXE_SHLIB_STUFF],[
 dll_ld=
@@ -593,6 +594,8 @@ AC_SUBST(dll_ldo)
 AC_SUBST(ld_dynamic_link_flags)
 ])dnl SXE_SHLIB_STUFF
 
+=======
+>>>>>>> master
 
 AC_DEFUN([SXE_CHECK_LD_ZFLAG], [dnl
 	pushdef([LD_ZFLAG], [$1])
@@ -611,10 +614,14 @@ AC_DEFUN([_SXE_CHECK_LD_ZFLAG], [dnl
 	pushdef([cv_zflag], [sxe_cv_ld__z_]translit(LD_ZFLAG,[-.=],[___]))
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if test "$GCC" == "yes"; then
 =======
 	if test "$GCC" = "yes"; then
 >>>>>>> origin/master
+=======
+	if test "$GCC" = "yes"; then
+>>>>>>> master
 		if test "($CC -Xlinker --help 2>&1 | \
 			grep \"-z []LD_ZFLAG[]\" > /dev/null 2>&1 ) "; then
 			cv_zflag="yes"
