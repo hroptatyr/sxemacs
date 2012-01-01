@@ -1607,23 +1607,18 @@ dnl special pthread handling
 dnl AIX uses pthreads instead of pthread, and HP/UX uses cma
 dnl FreeBSD uses -pthread
 AC_CHECK_LIB(pthread, pthread_create)
-if test $ac_cv_lib_pthread_pthread_create = yes; then
-  have_threads=yes
-  have_pthreads_opt=yes
-  case "`$CC -pthreads 2>&1`" in
-      *unrecognized\ option*) have_pthreads_opt=no ;;
-  esac
-  if test "$have_pthreads_opt" = "yes"; then
-	SXE_PREPEND_UNDUP(-pthreads, c_switch_site)
-  fi
-  have_pthread_opt=yes
-  case "`$CC -pthread 2>&1`" in
-     *unrecognized\ option*) have_pthread_opt=no ;;
-  esac
-  if test "$have_pthread_opt" = "yes"; then
-	SXE_PREPEND_UNDUP(-pthread, c_switch_site)
-  fi
-  SXE_PREPEND(-lpthread, MM_LIBS)
+if test "${ac_cv_lib_pthread_pthread_create}" = "yes"; then
+	have_threads=yes
+
+	SXE_CHECK_COMPILER_FLAGS([-pthreads])
+	SXE_CHECK_COMPILER_FLAGS([-pthread])
+	if test "${sxe_cv_c_flags__pthreads}" = "yes"; then
+		SXE_PREPEND_UNDUP([-pthreads], [c_switch_site])
+	fi
+	if test "${sxe_cv_c_flags__pthread}" = "yes"; then
+		SXE_PREPEND_UNDUP([-pthread], [c_switch_site])
+	fi
+	SXE_PREPEND([-lpthread], [MM_LIBS])
 fi
 
 dnl test for AIX pthreads
