@@ -603,107 +603,77 @@ AC_DEFUN([SXE_WARNFLAGS], [dnl
 	## by default we want the -Wall level
 	SXE_CHECK_COMPILER_FLAGS([-Wall], [warnflags="-Wall"])
 
-	## If this stays nil, it will be set to warnflags before use.
-	dnl Following warning flags are known to work well.
-	if test "$__SUNPRO_C" = "yes"; then
-		warnflags=""
+	SXE_CHECK_COMPILER_FLAGS([-qinfo], [
+		warnflags="${warnflags} -qinfo"])
 
-	elif test "$CC" = "xlc"; then
-		warnflags="-qinfo"
+	## Yuck, bad compares have been worth at
+	## least 3 crashes!
+	## Warnings about char subscripts are pretty
+	## pointless, though,
+	## and we use them in various places.
+	SXE_CHECK_COMPILER_FLAGS([-Wsign-compare], [
+		warnflags="$warnflags -Wsign-compare"])
+	SXE_CHECK_COMPILER_FLAGS([-Wno-char-subscripts], [
+		warnflags="$warnflags -Wno-char-subscripts"])
+	SXE_CHECK_COMPILER_FLAGS([-Wundef], [
+		warnflags="$warnflags -Wundef"])
 
-	elif test "$GCC" = "yes" -a \
-		"$with_maximum_warning_output" = "yes"; then
-		warnflags="-Wall"
+	## too much at the moment, we rarely define protos
+	#warnflags="$warnflags -Wmissing-prototypes -Wstrict-prototypes"
+	SXE_CHECK_COMPILER_FLAGS([-Wpacked], [
+		warnflags="$warnflags -Wpacked"])
 
-		## Yuck, bad compares have been worth at
-		## least 3 crashes!
-		## Warnings about char subscripts are pretty
-		## pointless, though,
-		## and we use them in various places.
-		SXE_CHECK_COMPILER_FLAGS([-Wsign-compare], [
-			warnflags="$warnflags -Wsign-compare"])
-		SXE_CHECK_COMPILER_FLAGS([-Wno-char-subscripts], [
-			warnflags="$warnflags -Wno-char-subscripts"])
-		SXE_CHECK_COMPILER_FLAGS([-Wundef], [
-			warnflags="$warnflags -Wundef"])
+	## glibc is intentionally not `-Wpointer-arith'-clean.
+	## Ulrich Drepper has rejected patches to fix
+	## the glibc header files.
+	## we dont care
+	SXE_CHECK_COMPILER_FLAGS([-Wpointer-arith], [
+		warnflags="$warnflags -Wpointer-arith"])
 
-		## too much at the moment, we rarely define protos
-		#warnflags="$warnflags -Wmissing-prototypes -Wstrict-prototypes"
-		SXE_CHECK_COMPILER_FLAGS([-Wpacked], [
-			warnflags="$warnflags -Wpacked"])
+	SXE_CHECK_COMPILER_FLAGS([-Wshadow], [
+		warnflags="$warnflags -Wshadow"])
 
-		## glibc is intentionally not `-Wpointer-arith'-clean.
-		## Ulrich Drepper has rejected patches to fix
-		## the glibc header files.
-		## we dont care
-		SXE_CHECK_COMPILER_FLAGS([-Wpointer-arith], [
-			warnflags="$warnflags -Wpointer-arith"])
+	## our code lacks declarations almost all the time
+	SXE_CHECK_COMPILER_FLAGS([-Wmissing-declarations], [
+		warnflags="$warnflags -Wmissing-declarations"])
+	SXE_CHECK_COMPILER_FLAGS([-Wmissing-prototypes], [
+		warnflags="$warnflags -Wmissing-prototypes"])
+	SXE_CHECK_COMPILER_FLAGS([-Winline], [
+		warnflags="$warnflags -Winline"])
+	SXE_CHECK_COMPILER_FLAGS([-Wbad-function-cast], [
+		warnflags="$warnflags -Wbad-function-cast"])
+	SXE_CHECK_COMPILER_FLAGS([-Wcast-qual], [
+		warnflags="$warnflags -Wcast-qual"])
+	SXE_CHECK_COMPILER_FLAGS([-Wcast-align], [
+		warnflags="$warnflags -Wcast-align"])
 
-		SXE_CHECK_COMPILER_FLAGS([-Wshadow], [
-			warnflags="$warnflags -Wshadow"])
+	## warn about incomplete switches
+	SXE_CHECK_COMPILER_FLAGS([-Wswitch], [
+		warnflags="$warnflags -Wswitch"])
+	SXE_CHECK_COMPILER_FLAGS([-Wswitch-default], [
+		warnflags="$warnflags -Wswitch-default"])
+	SXE_CHECK_COMPILER_FLAGS([-Wswitch-enum], [
+		warnflags="$warnflags -Wswitch-enum"])
 
-		## our code lacks declarations almost all the time
-		SXE_CHECK_COMPILER_FLAGS([-Wmissing-declarations], [
-			warnflags="$warnflags -Wmissing-declarations"])
+	## Wunused's
+	SXE_CHECK_COMPILER_FLAGS([-Wunused-function], [
+		warnflags="$warnflags -Wunused-function"])
+	SXE_CHECK_COMPILER_FLAGS([-Wunused-variable], [
+		warnflags="$warnflags -Wunused-variable"])
+	SXE_CHECK_COMPILER_FLAGS([-Wunused-parameter], [
+		warnflags="$warnflags -Wunused-parameter"])
+	SXE_CHECK_COMPILER_FLAGS([-Wunused-value], [
+		warnflags="$warnflags -Wunused-value"])
+	SXE_CHECK_COMPILER_FLAGS([-Wunused], [
+		warnflags="$warnflags -Wunused"])
 
-		case "$compiler_version" in
-		gcc*\ 4.5.0*)
-			## gcc 4.5.0 cannot cope with -Winline
-			;;
-		*)
-			SXE_CHECK_COMPILER_FLAGS([-Winline], [
-				warnflags="$warnflags -Winline"])
-			;;
-		esac
-
-		SXE_CHECK_COMPILER_FLAGS([-Wbad-function-cast], [
-			warnflags="$warnflags -Wbad-function-cast"])
-		SXE_CHECK_COMPILER_FLAGS([-Wcast-qual], [
-			warnflags="$warnflags -Wcast-qual"])
-		SXE_CHECK_COMPILER_FLAGS([-Wcast-align], [
-			warnflags="$warnflags -Wcast-align"])
-
-		## warn about incomplete switches
-		SXE_CHECK_COMPILER_FLAGS([-Wswitch], [
-			warnflags="$warnflags -Wswitch"])
-		SXE_CHECK_COMPILER_FLAGS([-Wswitch-default], [
-			warnflags="$warnflags -Wswitch-default"])
-		SXE_CHECK_COMPILER_FLAGS([-Wswitch-enum], [
-			warnflags="$warnflags -Wswitch-enum"])
-
-		if test "$sxe_cv_c_flags__save_temps" = "yes"; then
-			: ##warnflags="$warnflags -save-temps"
-		fi
-
-		## for upcoming openmp support
-		## which is of course configurable but shut the compiler
-		## up in case we dont want/have omp, pragmas are a PITA
-		SXE_CHECK_COMPILER_FLAGS([-Wnopragma], [
-			warnflags="$warnflags -Wnopragma"])
-
-	elif test "$__ICC" = "yes" -a \
-		"$with_maximum_warning_output" = "yes"; then
-		SXE_CHECK_COMPILER_FLAGS([-Wunused-function], [
-			warnflags="$warnflags -Wunused-function"])
-		SXE_CHECK_COMPILER_FLAGS([-Wunused-variable], [
-			warnflags="$warnflags -Wunused-variable"])
-		SXE_CHECK_COMPILER_FLAGS([-Wunknown-pragmas], [
-			warnflags="$warnflags -Wunknown-pragmas"])
-		SXE_CHECK_COMPILER_FLAGS([-Wuninitialized], [
-			warnflags="$warnflags -Wuninitialized"])
-		SXE_CHECK_COMPILER_FLAGS([-Wshadow], [
-			warnflags="$warnflags -Wshadow"])
-		SXE_CHECK_COMPILER_FLAGS([-Wmissing-declarations], [
-			warnflags="$warnflags -Wmissing-declarations"])
-		SXE_CHECK_COMPILER_FLAGS([-Wmissing-prototypes], [
-			warnflags="$warnflags -Wmissing-prototypes"])
-		SXE_CHECK_COMPILER_FLAGS([-Wreorder], [
-			warnflags="$warnflags -Wreorder"])
-		SXE_CHECK_COMPILER_FLAGS([-Wdeprecated], [
-			warnflags="$warnflags -Wdeprecated"])
-		SXE_CHECK_COMPILER_FLAGS([-Wnopragma], [
-			warnflags="$warnflags -Wnopragma"])
-	fi
+	## icc
+	SXE_CHECK_COMPILER_FLAGS([-Wreorder], [
+		warnflags="$warnflags -Wreorder"])
+	SXE_CHECK_COMPILER_FLAGS([-Wdeprecated], [
+		warnflags="$warnflags -Wdeprecated"])
+	SXE_CHECK_COMPILER_FLAGS([-Wnopragma], [
+		warnflags="$warnflags -Wnopragma"])
 
 	## for upcoming libev support
 	## libev is a warning emitting cow, the developers can't
@@ -787,6 +757,14 @@ AC_DEFUN([SXE_FEATFLAGS], [dnl
 	SXE_CHECK_COMPILER_FLAGS([-nopie],
 		[featflags="$featflags -nopie"])
 
+	## if libtool then
+	dnl XFLAG="-XCClinker"
+
+	## default flags for needed features
+	SXE_CHECK_COMPILER_FLAGS([-static-intel], [
+		ldflags="${ldflags} ${XFLAG} -static-intel"])
+	SXE_CHECK_COMPILER_FLAGS([-static-libgcc], [
+		ldflags="${ldflags} ${XFLAG} -static-libgcc"])
 ])dnl SXE_FEATFLAGS
 
 
@@ -1711,6 +1689,9 @@ respectively
 NOTE: -C <directory> option is not available on all systems
 		])
 
+	LDFLAGS="${ldflags} ${ac_cv_env_LDFLAGS_value}"
+	AC_MSG_CHECKING([for preferred LDFLAGS])
+	AC_MSG_RESULT([${LDFLAGS}])
 ])dnl SXE_CHECK_CFLAGS
 
 
