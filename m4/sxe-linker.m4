@@ -3,6 +3,8 @@ dnl needed for emodules for one
 
 AC_DEFUN([SXE_CHECK_LINKER_FLAGS], [dnl
 dnl just like SXE_CHECK_COMPILER_FLAGS but calls the linker
+dnl SXE_CHECK_LINKER_FLAGS(<FLAG>, <ACTION-IF-FOUND>, <ACTION-IF-NOT-FOUND>,
+dnl     <ADDITIONAL-FLAGS>)
 	AC_MSG_CHECKING([whether linker accepts $1])
 
 	dnl Some hackery here since AC_CACHE_VAL can't handle a non-literal varname:
@@ -10,13 +12,13 @@ dnl just like SXE_CHECK_COMPILER_FLAGS but calls the linker
 	AS_LITERAL_IF([$1], [
 		AC_CACHE_VAL(AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1), [
 			sxe_save_FLAGS=$[]_AC_LANG_PREFIX[]FLAGS
-			_AC_LANG_PREFIX[]FLAGS="${_AC_LANG_PREFIX[]FLAGS} ${XFLAG} $1"
+			_AC_LANG_PREFIX[]FLAGS="$4 ${XFLAG} $1"
 			AC_LINK_IFELSE([AC_LANG_PROGRAM()],
 				AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="yes",
 				AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="no")
 			_AC_LANG_PREFIX[]FLAGS=$sxe_save_FLAGS])], [
 		sxe_save_FLAGS=$[]_AC_LANG_PREFIX[]FLAGS
-		_AC_LANG_PREFIX[]FLAGS="${_AC_LANG_PREFIX[]FLAGS} $1"
+		_AC_LANG_PREFIX[]FLAGS="$4 ${XFLAG} $1"
 		AC_LINK_IFELSE([AC_LANG_PROGRAM()],
 			eval AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="yes",
 			eval AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="no")
