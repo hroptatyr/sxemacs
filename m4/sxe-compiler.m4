@@ -681,6 +681,12 @@ AC_DEFUN([SXE_WARNFLAGS], [dnl
 	SXE_CHECK_COMPILER_FLAGS([-fno-strict-aliasing], [
 		warnflags="$warnflags -fno-strict-aliasing"])
 
+	## icc specific
+	SXE_CHECK_COMPILER_FLAGS([-diag-disable 10237], [dnl
+		warnflags="${warnflags} -diag-disable 10237"], [
+		SXE_CHECK_COMPILER_FLAGS([-wd 10237], [dnl
+			warnflags="${warnflags} -wd 10237"])])
+
 	AC_MSG_CHECKING([for preferred warning flags])
 	AC_MSG_RESULT([${warnflags}])
 ])dnl SXE_WARNFLAGS
@@ -756,6 +762,15 @@ AC_DEFUN([SXE_FEATFLAGS], [dnl
 	## (and hence PIE off) and hope bug 16 remains fixed
 	SXE_CHECK_COMPILER_FLAGS([-nopie],
 		[featflags="$featflags -nopie"])
+
+	## icc and gcc related
+	## check if some stuff can be staticalised
+	## actually requires SXE_WARNFLAGS so warnings would be disabled
+	## that affect the outcome of the following tests
+	SXE_CHECK_COMPILER_FLAGS([-static-intel], [
+		featflags="${featflags} -static-intel"], [:], [${SXE_CFLAGS}])
+	SXE_CHECK_COMPILER_FLAGS([-static-libgcc], [
+		featflags="${featflags} -static-libgcc"], [:], [${SXE_CFLAGS}])
 ])dnl SXE_FEATFLAGS
 
 
@@ -1029,6 +1044,8 @@ dnl 	fi
 ##### http://autoconf-archive.cryp.to/ax_check_compiler_flags.html
 ## renamed the prefix to SXE_
 AC_DEFUN([SXE_CHECK_COMPILER_FLAGS], [dnl
+dnl SXE_CHECK_COMPILER_FLAGS(<FLAG>, <ACTION-IF-FOUND>, <ACTION-IF-NOT-FOUND>,
+dnl     <ADDITIONAL-FLAGS>)
 	AC_MSG_CHECKING([whether _AC_LANG compiler accepts $1])
 
 	dnl Some hackery here since AC_CACHE_VAL can't handle a non-literal varname:
@@ -1036,13 +1053,13 @@ AC_DEFUN([SXE_CHECK_COMPILER_FLAGS], [dnl
 	AS_LITERAL_IF([$1], [
 		AC_CACHE_VAL(AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1), [
 			sxe_save_FLAGS=$[]_AC_LANG_PREFIX[]FLAGS
-			_AC_LANG_PREFIX[]FLAGS="$1"
+			_AC_LANG_PREFIX[]FLAGS="$4 $1"
 			AC_COMPILE_IFELSE([AC_LANG_PROGRAM()],
 				AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="yes",
 				AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="no")
 			_AC_LANG_PREFIX[]FLAGS=$sxe_save_FLAGS])], [
 		sxe_save_FLAGS=$[]_AC_LANG_PREFIX[]FLAGS
-		_AC_LANG_PREFIX[]FLAGS="$1"
+		_AC_LANG_PREFIX[]FLAGS="$4 $1"
 		AC_COMPILE_IFELSE([AC_LANG_PROGRAM()],
 			eval AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="yes",
 			eval AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="no")
@@ -1057,6 +1074,27 @@ AC_DEFUN([SXE_CHECK_COMPILER_FLAGS], [dnl
 		m4_default([$3], :)
 	fi
 ])dnl SXE_CHECK_COMPILER_FLAGS
+
+
+AC_DEFUN([SXE_CHECK_COMPILER_XFLAG], [dnl
+	## if libtool then
+	case "${LD}" in
+	*"libtool"*)
+		SXE_CHECK_COMPILER_FLAGS([-XCClinker], [
+			XFLAG="-XCClinker"], [
+			XFLAG=""])
+		;;
+	*"ld"*)
+		## no XFLAG needed
+		XFLAG=""
+		;;
+	*)
+		SXE_CHECK_COMPILER_FLAGS([-Xlinker], [
+			XFLAG="-Xlinker"], [
+			XFLAG=""])
+		;;
+	esac
+])dnl SXE_CHECK_COMPILER_XFLAG
 
 
 AC_DEFUN([SXE_CHECK_CPU], [dnl
@@ -1620,35 +1658,53 @@ AC_DEFUN([SXE_CHECK_CFLAGS], [dnl
 		SXE_DEBUGFLAGS
 		SXE_WARNFLAGS
 		SXE_OPTIFLAGS
+		SXE_CFLAGS="$debugflags $optiflags $warnflags"
+
 		SXE_FEATFLAGS
 		SXE_CFLAGS="$debugflags $featflags $optiflags $warnflags"
+
 	elif test "$CFLAGS_uspecified_p" = "no" -o \
 		"$ac_test_CFLAGS" != "set"; then
 		SXE_DEBUGFLAGS
 		SXE_WARNFLAGS
-		SXE_FEATFLAGS
 
 		## the old settings
 		## Following values of CFLAGS are known to work well.
 		## Should we take debugging options into consideration?
-		if test "$GCC" = "yes"; then
-			optiflags="-O3"
-		elif test "$__SUNPRO_C" = "yes"; then
-			case "$opsys" in
-			sol2    ) optiflags="-xO4" ;;
-			sunos4* ) optiflags="-xO2" ;;
-			esac
-		elif test "$__DECC" = "yes"; then
-			optiflags="-O3"
-		elif test "$CC" = "xlc"; then
-			optiflags="-g -O3 -qstrict -qnoansialias -qlibansi -qro -qmaxmem=20000"
-		elif test "$__ICC" = "yes"; then
-			optiflags="-g -O3 -Ob2"
-		### Add optimal CFLAGS support for other compilers HERE!
-		else
-			optiflags="-O" ## The only POSIX-approved flag
+		SXE_CHECK_COMPILER_FLAGS([-xO4], [dnl
+			## ah, it's sunos4*
+			optiflags="${optiflags} -xO4"], [dnl
+			SXE_CHECK_COMPILER_FLAGS([-xO2], [dnl
+				## oh, a sol2
+				optiflags="${optiflags} -xO2"])])
+		SXE_CHECK_COMPILER_FLAGS([-O3], [dnl
+			## gcc, icc, decc, et al.
+			optiflags="${optiflags} -O3"])
+
+		## xlc specific
+		SXE_CHECK_COMPILER_FLAGS([-qnoansialias -qlibansi], [dnl
+			optiflags="${optiflags} -qnoansialias -qlibansi"])
+		SXE_CHECK_COMPILER_FLAGS([-qro -qmaxmem=20000], [dnl
+			optiflags="${optiflags} -qro -qmaxmem=20000"])
+
+		## icc specific
+		SXE_CHECK_COMPILER_FLAGS([-inline-level=2], [dnl
+			## ah, one of the new flavours, tasty
+			optiflags="${optiflags} -inline-level=2"], [dnl
+			SXE_CHECK_COMPILER_FLAGS([-Ob2], [dnl
+				## deprecated nowadays
+				optiflags="${optiflags} -Ob2"])])
+
+		## final check
+		if test -z "${optiflags}"; then
+			SXE_CHECK_COMPILER_FLAGS([-O], [dnl
+				## The only POSIX-approved flag
+				optiflags="-O"])
 		fi
 
+		SXE_CFLAGS="$debugflags $optiflags $warnflags"
+
+		SXE_FEATFLAGS
 		SXE_CFLAGS="$debugflags $featflags $optiflags $warnflags"
 	else
 		SXE_CFLAGS=${USER_CFLAGS}
