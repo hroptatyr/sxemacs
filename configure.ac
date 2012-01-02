@@ -3254,7 +3254,8 @@ if test "$with_sound_esd" != "no"; then
 		AC_MSG_RESULT([yes])
 		need_internal_media=yes
 		SXE_ADD_MM_OBJS([sound-esd.o])
-		SXE_PREPEND([`$ESD_CONFIG --libs`], MM_LIBS)
+		ESD_LIBS=$("${ESD_CONFIG}" --libs)
+		SXE_PREPEND(["${ESD_LIBS}"], [MM_LIBS])
 		AC_DEFINE([HAVE_ESD_SOUND], [1], [Description here!])
 	else
 		AC_MSG_RESULT([no])
