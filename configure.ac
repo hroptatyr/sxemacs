@@ -874,6 +874,8 @@ AS_MESSAGE([Let's look for the entire C build chain])
 SXE_CHECK_CC
 SXE_CHECK_CFLAGS
 
+AM_PROG_AR
+
 ## check machine chars
 AS_MESSAGE([Let's have a detailed glance at your machine])
 SXE_PROC_CPUID
