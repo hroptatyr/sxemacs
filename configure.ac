@@ -1138,7 +1138,7 @@ SXE_DO_CC_HACKS
 SXE_CHECK_SIMD_EXTENSIONS
 
 ## some linker flags that might come in handy
-SXE_CHECK_LINKER_FLAGS
+SXE_CHECK_LDFLAGS
 
 ## suffices to be defined late, for instance here
 SXE_CHECK_PARSER_LEXER
@@ -1151,7 +1151,7 @@ if test "$with_pdump" != "yes"; then
 	## enough.  Please report it, though.
 	## #### Should make this Solaris-friendly.
 	## Link with -z nocombreloc for now.
-	SXE_CHECK_LD_NOCOMBRELOC
+	SXE_CHECK_LD_ZFLAG([nocombreloc])
 	if test "$sxe_cv_ld__z_nocombreloc" = "yes"; then
 		SXE_PREPEND_LINKER_FLAG([-z nocombreloc], [ld_switch_site])
 	fi

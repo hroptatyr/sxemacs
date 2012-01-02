@@ -756,15 +756,6 @@ AC_DEFUN([SXE_FEATFLAGS], [dnl
 	## (and hence PIE off) and hope bug 16 remains fixed
 	SXE_CHECK_COMPILER_FLAGS([-nopie],
 		[featflags="$featflags -nopie"])
-
-	## if libtool then
-	dnl XFLAG="-XCClinker"
-
-	## default flags for needed features
-	SXE_CHECK_COMPILER_FLAGS([-static-intel], [
-		ldflags="${ldflags} ${XFLAG} -static-intel"])
-	SXE_CHECK_COMPILER_FLAGS([-static-libgcc], [
-		ldflags="${ldflags} ${XFLAG} -static-libgcc"])
 ])dnl SXE_FEATFLAGS
 
 
@@ -1688,10 +1679,6 @@ respectively
 
 NOTE: -C <directory> option is not available on all systems
 		])
-
-	LDFLAGS="${ldflags} ${ac_cv_env_LDFLAGS_value}"
-	AC_MSG_CHECKING([for preferred LDFLAGS])
-	AC_MSG_RESULT([${LDFLAGS}])
 ])dnl SXE_CHECK_CFLAGS
 
 
