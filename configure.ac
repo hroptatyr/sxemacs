@@ -3613,7 +3613,7 @@ else
 fi
 
 SXE_UNDUP(CFLAGS, $CFLAGS)
-SXE_UNDUP(c_switch_general, -DHAVE_CONFIG_H $c_switch_site $c_switch_machine $c_switch_system)
+SXE_UNDUP(c_switch_general, -DHAVE_CONFIG_H $c_switch_site $c_switch_machine $c_switch_system $CFLAGS $CPPFLAGS)
 SXE_UNDUP(c_switch_window_system, $c_switch_x_site $c_switch_gtk $X_CFLAGS)
 SXE_UNDUP(c_switch_all, $c_switch_general $c_switch_window_system)
 SXE_UNDUP(ld_switch_general, $ld_switch_site $ld_switch_machine $ld_switch_system $ld_switch_run)

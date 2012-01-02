@@ -36,7 +36,7 @@ abs_top_srcdir = @abs_top_srcdir@
 sxelibsrcdir = $(abs_top_srcdir)/lib-src
 
 AM_CFLAGS = -Demacs $(OPENSSL_CFLAGS) -DUSE_SXEMACS_CONFIG_H -DXTSTRINGDEFINES
-AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir)/src -I$(top_builddir)/src -I$(top_builddir) $(c_switch_system) $(LTDLINCL)
+AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir)/src -I$(top_builddir)/src -I$(top_builddir) $(c_switch_general) $(LTDLINCL)
 
 headerdir = $(includedir)/$(instvarsepdir)
 archlibdir = ${libdir}/${instvardir}/${configuration}
@@ -57,7 +57,7 @@ libsxeuiTTY_a_sources =  						\
 libsxeuiTTY_a_SOURCES = $(libsxeuiTTY_a_headers) $(libsxeuiTTY_a_sources) 
 EXTRA_libsxeuiTTY_a_SOURCES=                     \
 	gpmevent.c termcap.c terminfo.c tparam.c
-libsxeuiTTY_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_system) $(X_CFLAGS)
+libsxeuiTTY_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general)
 libsxeuiTTY_a_LIBADD=$(libsxeuiTTY_objs)
 libsxeuiTTY_a_DEPENDENCIES = $(libsxeuiTTY_a_LIBADD)
 all_sources += $(libsxeuiTTY_a_sources) $(libsxeuiTTY_objs:.o=.c)

@@ -36,7 +36,7 @@ abs_top_srcdir = @abs_top_srcdir@
 sxelibsrcdir = $(abs_top_srcdir)/lib-src
 
 AM_CFLAGS = -Demacs $(OPENSSL_CFLAGS) -DUSE_SXEMACS_CONFIG_H -DXTSTRINGDEFINES
-AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir)/src -I$(top_builddir)/src -I$(top_builddir) $(c_switch_system) $(LTDLINCL)
+AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir)/src -I$(top_builddir)/src -I$(top_builddir) $(c_switch_general) $(LTDLINCL)
 
 headerdir = $(includedir)/$(instvarsepdir)
 archlibdir = ${libdir}/${instvardir}/${configuration}
@@ -91,7 +91,7 @@ libsxeuiX11_a_sources =  \
 	menubar-x.c scrollbar-x.c dialog-x.c toolbar-x.c gui-x.c
 libsxeuiX11_a_SOURCES = $(libsxeuiX11_a_headers) $(libsxeuiX11_a_sources)
 EXTRA_libsxeuiX11_a_SOURCES=xmu.c
-libsxeuiX11_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_system) $(X_CFLAGS)
+libsxeuiX11_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general) $(X_CFLAGS)
 libsxeuiX11_a_LIBADD = $(libsxeuiX11_objs)
 libsxeuiX11_a_DEPENDENCIES = $(libsxeuiX11_a_LIBADD)
 all_sources += $(libsxeuiX11_a_sources) $(libsxeuiX11_objs:.o=.c)

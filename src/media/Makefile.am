@@ -35,7 +35,7 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 
 AM_CFLAGS = -Demacs $(OPENSSL_CFLAGS) -DUSE_SXEMACS_CONFIG_H -DXTSTRINGDEFINES
-AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir)/src -I$(top_builddir)/src -I$(top_builddir) $(c_switch_system) $(LTDLINCL)
+AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir)/src -I$(top_builddir)/src -I$(top_builddir) $(c_switch_general) $(LTDLINCL)
 
 headerdir = $(includedir)/$(instvarsepdir)
 archlibdir = ${libdir}/${instvardir}/${configuration}
@@ -62,7 +62,7 @@ EXTRA_libmm_a_SOURCES = \
 	sound-jack.c sound-nas.c sound-oss.c sound-pulse.c \
 	dgif_lib.c gif_io.c
 libmm_a_CFLAGS = $(AM_CFLAGS) -Wall
-libmm_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_system) $(MM_CPPFLAGS) $(X_CFLAGS) 
+libmm_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general) $(MM_CPPFLAGS) $(X_CFLAGS) 
 libmm_a_LIBADD = $(libmm_objs)
 libmm_a_DEPENDENCIES = $(libmm_a_LIBADD)
 libmm_a_ldflags = $(MM_LIBS)

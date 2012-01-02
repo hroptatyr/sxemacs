@@ -36,7 +36,7 @@ abs_top_srcdir = @abs_top_srcdir@
 sxelibsrcdir = $(abs_top_srcdir)/lib-src
 
 AM_CFLAGS = -Demacs $(OPENSSL_CFLAGS) -DUSE_SXEMACS_CONFIG_H -DXTSTRINGDEFINES
-AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir)/src -I$(top_builddir)/src -I$(top_builddir) $(c_switch_system) $(LTDLINCL)
+AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir)/src -I$(top_builddir)/src -I$(top_builddir) $(c_switch_general) $(LTDLINCL)
 
 headerdir = $(includedir)/$(instvarsepdir)
 archlibdir = ${libdir}/${instvardir}/${configuration}
@@ -59,7 +59,7 @@ libsxeuiGTK_a_sources = 					 \
 	menubar-gtk.c scrollbar-gtk.c dialog-gtk.c toolbar-gtk.c \
 	gui-gtk.c ui-byhand.c
 libsxeuiGtk_a_SOURCES = $(libsxeuiGtk_a_headers) $(libsxeuiGTK_a_sources)
-libsxeuiGtk_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_system) $(X_CFLAGS)
+libsxeuiGtk_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general) $(X_CFLAGS)
 libsxeuiGtk_a_LIBADD=$(libsxeuiGtk_objs)
 libsxeuiGtk_a_DEPENDENCIES = $(libsxeuiGtk_a_LIBADD)
 all_sources += $(libsxeuiGtk_objs:.o=.c)
