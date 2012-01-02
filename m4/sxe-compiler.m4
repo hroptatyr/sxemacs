@@ -681,6 +681,12 @@ AC_DEFUN([SXE_WARNFLAGS], [dnl
 	SXE_CHECK_COMPILER_FLAGS([-fno-strict-aliasing], [
 		warnflags="$warnflags -fno-strict-aliasing"])
 
+	## icc specific
+	SXE_CHECK_COMPILER_FLAGS([-diag-disable 10237], [dnl
+		warnflags="${warnflags} -diag-disable 10237"], [
+		SXE_CHECK_COMPILER_FLAGS([-wd 10237], [dnl
+			warnflags="${warnflags} -wd 10237"])])
+
 	AC_MSG_CHECKING([for preferred warning flags])
 	AC_MSG_RESULT([${warnflags}])
 ])dnl SXE_WARNFLAGS
