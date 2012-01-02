@@ -39,6 +39,8 @@ bldlispdir = $(abs_top_builddir)/lisp
 bldffidir = $(bldlispdir)/ffi
 bldmuledir = $(bldlispdir)/mule
 bldtermdir = $(bldlispdir)/term
+sxelwlibdir = $(top_srcdir)/src/ui/lwlib
+bldlwlibdir = $(top_builddir)/src/ui/lwlib
 
 lispffidir = $(lispdir)/ffi
 lispmuledir = $(lispdir)/mule
@@ -182,8 +184,10 @@ SXEMACS_DMP = $(SXEMACS).dmp
 AALFILE = $(bldlispdir)/auto-autoloads.el
 BITCH = $(SXEMACS) -batch
 SXE_DYLD_PATH = $(bldsrcdir):$(bldsrcdir)/$(LT_OBJDIR):$(bldlwlibdir):$(bldlwlibdir)/$(LT_OBJDIR):$(DESTDIR)$(libdir)
-BITCHENV = DYLD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$DYLD_LIBRARY_PATH:$(DYLD_LIBRARY_PATH) \
+BATCHENV = DYLD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$DYLD_LIBRARY_PATH:$(DYLD_LIBRARY_PATH) \
 	LD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$LD_LIBRARY_PATH:$(LD_LIBRARY_PATH) \
+	SHLIB_PATH=$(SXE_DYLD_PATH):$$SHLIB_PATH:$(SHLIB_PATH)
+BITCHENV = $(BATCHENV) \
 	EMACSPACKAGEPATH= \
 	SOURCE_TREE_ROOT=$(abs_top_srcdir) \
 	BUILD_TREE_ROOT=$(abs_top_builddir)
@@ -238,7 +242,7 @@ autoc.stamp: $(SXEMACS) auto.stamp update-elc.stamp
 	$(BATCH) -vanilla -no-autoloads \
 		-l finder -f finder-compile-keywords
 	@echo "Building finder database ...(done)"
-	$(BITCH) -no-autoloads -l config \
+	$(BATCHENV) $(BITCH) -no-autoloads -l config \
 		-l bytecomp -f batch-byte-compile $(builtels)
 	@touch $@
 @make_endif@
