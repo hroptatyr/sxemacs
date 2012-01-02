@@ -46,6 +46,7 @@ ylwrap
 Makefile.in
 sxemacs_version.m4
 src/config.h.in
+ar-lib
 
 ## configure generated
 .deps
