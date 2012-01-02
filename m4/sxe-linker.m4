@@ -74,20 +74,8 @@ AC_DEFUN([_SXE_CHECK_LD_ZFLAG], [dnl
 	popdef([LD_ZFLAG])
 ])dnl _SXE_CHECK_LD_ZFLAG
 
-
 AC_DEFUN([SXE_CHECK_LDFLAGS], [dnl
-	## if libtool then
-	case "${LD}" in
-	*"libtool"*)
-		XFLAG="-XCClinker"
-		;;
-	*"ld"*)
-		## no XFLAG needed
-		;;
-	*)
-		XFLAG="-Xlinker"
-		;;
-	esac
+	AC_REQUIRE([SXE_CHECK_COMPILER_XFLAG])
 
 	## relocation
 	SXE_CHECK_LD_ZFLAG([combreloc])

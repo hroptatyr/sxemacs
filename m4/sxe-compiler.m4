@@ -1059,6 +1059,27 @@ AC_DEFUN([SXE_CHECK_COMPILER_FLAGS], [dnl
 ])dnl SXE_CHECK_COMPILER_FLAGS
 
 
+AC_DEFUN([SXE_CHECK_COMPILER_XFLAG], [dnl
+	## if libtool then
+	case "${LD}" in
+	*"libtool"*)
+		SXE_CHECK_COMPILER_FLAGS([-XCClinker], [
+			XFLAG="-XCClinker"], [
+			XFLAG=""])
+		;;
+	*"ld"*)
+		## no XFLAG needed
+		XFLAG=""
+		;;
+	*)
+		SXE_CHECK_COMPILER_FLAGS([-Xlinker], [
+			XFLAG="-Xlinker"], [
+			XFLAG=""])
+		;;
+	esac
+])dnl SXE_CHECK_COMPILER_XFLAG
+
+
 AC_DEFUN([SXE_CHECK_CPU], [dnl
 	case "$host_cpu" in
 	dnl (
