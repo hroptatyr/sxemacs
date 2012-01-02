@@ -89,13 +89,6 @@ AC_DEFUN([SXE_CHECK_LDFLAGS], [dnl
 	SXE_CHECK_LD_ZFLAG([lazy])
 	SXE_CHECK_LD_ZFLAG([now])
 
-	## icc related
-	## default flags for needed features
-	SXE_CHECK_LINKER_FLAGS([-static-intel], [
-		ldflags="${ldflags} ${XFLAG} -static-intel"])
-	SXE_CHECK_LINKER_FLAGS([-static-libgcc], [
-		ldflags="${ldflags} ${XFLAG} -static-libgcc"])
-
 	LDFLAGS="${ldflags} ${ac_cv_env_LDFLAGS_value}"
 	AC_MSG_CHECKING([for preferred LDFLAGS])
 	AC_MSG_RESULT([${LDFLAGS}])

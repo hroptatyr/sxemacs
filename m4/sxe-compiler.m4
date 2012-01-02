@@ -762,6 +762,15 @@ AC_DEFUN([SXE_FEATFLAGS], [dnl
 	## (and hence PIE off) and hope bug 16 remains fixed
 	SXE_CHECK_COMPILER_FLAGS([-nopie],
 		[featflags="$featflags -nopie"])
+
+	## icc and gcc related
+	## check if some stuff can be staticalised
+	## actually requires SXE_WARNFLAGS so warnings would be disabled
+	## that affect the outcome of the following tests
+	SXE_CHECK_COMPILER_FLAGS([-static-intel], [
+		featflags="${featflags} -static-intel"], [:], [${SXE_CFLAGS}])
+	SXE_CHECK_COMPILER_FLAGS([-static-libgcc], [
+		featflags="${featflags} -static-libgcc"], [:], [${SXE_CFLAGS}])
 ])dnl SXE_FEATFLAGS
 
 
@@ -1035,6 +1044,8 @@ dnl 	fi
 ##### http://autoconf-archive.cryp.to/ax_check_compiler_flags.html
 ## renamed the prefix to SXE_
 AC_DEFUN([SXE_CHECK_COMPILER_FLAGS], [dnl
+dnl SXE_CHECK_COMPILER_FLAGS(<FLAG>, <ACTION-IF-FOUND>, <ACTION-IF-NOT-FOUND>,
+dnl     <ADDITIONAL-FLAGS>)
 	AC_MSG_CHECKING([whether _AC_LANG compiler accepts $1])
 
 	dnl Some hackery here since AC_CACHE_VAL can't handle a non-literal varname:
@@ -1042,13 +1053,13 @@ AC_DEFUN([SXE_CHECK_COMPILER_FLAGS], [dnl
 	AS_LITERAL_IF([$1], [
 		AC_CACHE_VAL(AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1), [
 			sxe_save_FLAGS=$[]_AC_LANG_PREFIX[]FLAGS
-			_AC_LANG_PREFIX[]FLAGS="$1"
+			_AC_LANG_PREFIX[]FLAGS="$4 $1"
 			AC_COMPILE_IFELSE([AC_LANG_PROGRAM()],
 				AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="yes",
 				AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="no")
 			_AC_LANG_PREFIX[]FLAGS=$sxe_save_FLAGS])], [
 		sxe_save_FLAGS=$[]_AC_LANG_PREFIX[]FLAGS
-		_AC_LANG_PREFIX[]FLAGS="$1"
+		_AC_LANG_PREFIX[]FLAGS="$4 $1"
 		AC_COMPILE_IFELSE([AC_LANG_PROGRAM()],
 			eval AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="yes",
 			eval AS_TR_SH(sxe_cv_[]_AC_LANG_ABBREV[]_flags_$1)="no")
@@ -1647,13 +1658,15 @@ AC_DEFUN([SXE_CHECK_CFLAGS], [dnl
 		SXE_DEBUGFLAGS
 		SXE_WARNFLAGS
 		SXE_OPTIFLAGS
+		SXE_CFLAGS="$debugflags $optiflags $warnflags"
+
 		SXE_FEATFLAGS
 		SXE_CFLAGS="$debugflags $featflags $optiflags $warnflags"
+
 	elif test "$CFLAGS_uspecified_p" = "no" -o \
 		"$ac_test_CFLAGS" != "set"; then
 		SXE_DEBUGFLAGS
 		SXE_WARNFLAGS
-		SXE_FEATFLAGS
 
 		## the old settings
 		## Following values of CFLAGS are known to work well.
@@ -1689,6 +1702,9 @@ AC_DEFUN([SXE_CHECK_CFLAGS], [dnl
 				optiflags="-O"])
 		fi
 
+		SXE_CFLAGS="$debugflags $optiflags $warnflags"
+
+		SXE_FEATFLAGS
 		SXE_CFLAGS="$debugflags $featflags $optiflags $warnflags"
 	else
 		SXE_CFLAGS=${USER_CFLAGS}
