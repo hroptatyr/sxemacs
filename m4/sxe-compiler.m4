@@ -1658,22 +1658,35 @@ AC_DEFUN([SXE_CHECK_CFLAGS], [dnl
 		## the old settings
 		## Following values of CFLAGS are known to work well.
 		## Should we take debugging options into consideration?
-		if test "$GCC" = "yes"; then
-			optiflags="-O3"
-		elif test "$__SUNPRO_C" = "yes"; then
-			case "$opsys" in
-			sol2    ) optiflags="-xO4" ;;
-			sunos4* ) optiflags="-xO2" ;;
-			esac
-		elif test "$__DECC" = "yes"; then
-			optiflags="-O3"
-		elif test "$CC" = "xlc"; then
-			optiflags="-g -O3 -qstrict -qnoansialias -qlibansi -qro -qmaxmem=20000"
-		elif test "$__ICC" = "yes"; then
-			optiflags="-g -O3 -Ob2"
-		### Add optimal CFLAGS support for other compilers HERE!
-		else
-			optiflags="-O" ## The only POSIX-approved flag
+		SXE_CHECK_COMPILER_FLAGS([-xO4], [dnl
+			## ah, it's sunos4*
+			optiflags="${optiflags} -xO4"], [dnl
+			SXE_CHECK_COMPILER_FLAGS([-xO2], [dnl
+				## oh, a sol2
+				optiflags="${optiflags} -xO2"])])
+		SXE_CHECK_COMPILER_FLAGS([-O3], [dnl
+			## gcc, icc, decc, et al.
+			optiflags="${optiflags} -O3"])
+
+		## xlc specific
+		SXE_CHECK_COMPILER_FLAGS([-qnoansialias -qlibansi], [dnl
+			optiflags="${optiflags} -qnoansialias -qlibansi"])
+		SXE_CHECK_COMPILER_FLAGS([-qro -qmaxmem=20000], [dnl
+			optiflags="${optiflags} -qro -qmaxmem=20000"])
+
+		## icc specific
+		SXE_CHECK_COMPILER_FLAGS([-inline-level=2], [dnl
+			## ah, one of the new flavours, tasty
+			optiflags="${optiflags} -inline-level=2"], [dnl
+			SXE_CHECK_COMPILER_FLAGS([-Ob2], [dnl
+				## deprecated nowadays
+				optiflags="${optiflags} -Ob2"])])
+
+		## final check
+		if test -z "${optiflags}"; then
+			SXE_CHECK_COMPILER_FLAGS([-O], [dnl
+				## The only POSIX-approved flag
+				optiflags="-O"])
 		fi
 
 		SXE_CFLAGS="$debugflags $featflags $optiflags $warnflags"
