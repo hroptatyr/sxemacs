@@ -41,6 +41,8 @@ sxesrcdir = $(top_srcdir)/src
 bldsrcdir = $(top_builddir)/src
 sxelispdir = $(abs_top_srcdir)/lisp
 bldlispdir = $(abs_top_builddir)/lisp
+sxelwlibdir = $(top_srcdir)/src/ui/lwlib
+bldlwlibdir = $(top_builddir)/src/ui/lwlib
 
 sitemodule_DATA = 
 
@@ -63,7 +65,14 @@ CLEANFILES = auto-autoloads.el* stage1 stage2
 
 SXEMACS = $(top_builddir)/src/sxemacs
 BITCH = $(SXEMACS) -batch
-BITCHENV = EMACSPACKAGEPATH= SOURCE_TREE_ROOT=$(abs_top_srcdir) BUILD_TREE_ROOT=$(abs_top_builddir)
+SXE_DYLD_PATH = $(bldsrcdir):$(bldsrcdir)/$(LT_OBJDIR):$(bldlwlibdir):$(bldlwlibdir)/$(LT_OBJDIR):$(DESTDIR)$(libdir)
+BATCHENV = DYLD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$DYLD_LIBRARY_PATH:$(DYLD_LIBRARY_PATH) \
+	LD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$LD_LIBRARY_PATH:$(LD_LIBRARY_PATH) \
+	SHLIB_PATH=$(SXE_DYLD_PATH):$$SHLIB_PATH:$(SHLIB_PATH)
+BITCHENV = $(BATCHENV) \
+	EMACSPACKAGEPATH= \
+	SOURCE_TREE_ROOT=$(abs_top_srcdir) \
+	BUILD_TREE_ROOT=$(abs_top_builddir)
 BATCH = $(BITCHENV) $(BITCH)
 PUREBATCH = $(BITCHENV) $(PITCH)
 
@@ -73,7 +82,8 @@ auto-autoloads.el: $(SXEMACS)
 
 SUFFIXES = .el .elc
 .el.elc: $(SXEMACS)
-	$(BATCH) -vanilla -l bytecomp -f batch-byte-compile-one-file-here $<
+	$(BATCHENV) $(BATCH) -vanilla -l bytecomp \
+		-f batch-byte-compile-one-file-here $<
 
 #stage1: all-am
 #	@touch $@
