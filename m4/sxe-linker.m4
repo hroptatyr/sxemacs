@@ -37,8 +37,11 @@ AC_DEFUN([SXE_CHECK_LD_ZFLAG], [dnl
 	pushdef([LD_ZFLAG], [$1])
 	pushdef([cv_zflag], [sxe_cv_ld__z_]translit(LD_ZFLAG,[-.=],[___]))
 
-	AC_CACHE_CHECK([whether linker supports -z ]LD_ZFLAG[],
-		[]cv_zflag[], [_SXE_CHECK_LD_ZFLAG(LD_ZFLAG)])
+	SXE_CHECK_LINKER_FLAGS([-z ]LD_ZFLAG[])
+
+dnl Use the check that actually calls the compiler/linker to examine the flags
+dnl	AC_CACHE_CHECK([whether linker supports -z ]LD_ZFLAG[],
+dnl		[]cv_zflag[], [_SXE_CHECK_LD_ZFLAG(LD_ZFLAG)])
 
 	popdef([cv_zflag])
 	popdef([LD_ZFLAG])
@@ -49,25 +52,23 @@ AC_DEFUN([_SXE_CHECK_LD_ZFLAG], [dnl
 	pushdef([LD_ZFLAG], [$1])
 	pushdef([cv_zflag], [sxe_cv_ld__z_]translit(LD_ZFLAG,[-.=],[___]))
 
-	SXE_CHECK_LINKER_FLAGS([-z ]LD_ZFLAG[])
-
-dnl	if test "$GCC" = "yes"; then
-dnl		if test "($CC -Xlinker --help 2>&1 | \
-dnl			grep \"-z []LD_ZFLAG[]\" > /dev/null 2>&1 ) "; then
-dnl			cv_zflag="yes"
-dnl		else
-dnl			cv_zflag="no"
-dnl		fi
-dnl	elif test -n "$LD"; then
-dnl		if test "($LD --help 2>&1 | \
-dnl			grep \"-z []LD_ZFLAG[]\" > /dev/null 2>&1 )"; then
-dnl			cv_zflag="yes"
-dnl		else
-dnl			cv_zflag="no"
-dnl		fi
-dnl	else
-dnl		cv_zflag="no"
-dnl	fi
+	if test "$GCC" = "yes"; then
+		if test "($CC -Xlinker --help 2>&1 | \
+			grep \"-z []LD_ZFLAG[]\" > /dev/null 2>&1 ) "; then
+			cv_zflag="yes"
+		else
+			cv_zflag="no"
+		fi
+	elif test -n "$LD"; then
+		if test "($LD --help 2>&1 | \
+			grep \"-z []LD_ZFLAG[]\" > /dev/null 2>&1 )"; then
+			cv_zflag="yes"
+		else
+			cv_zflag="no"
+		fi
+	else
+		cv_zflag="no"
+	fi
 
 	popdef([cv_zflag])
 	popdef([LD_ZFLAG])
