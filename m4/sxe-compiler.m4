@@ -768,9 +768,13 @@ AC_DEFUN([SXE_FEATFLAGS], [dnl
 	## actually requires SXE_WARNFLAGS so warnings would be disabled
 	## that affect the outcome of the following tests
 	SXE_CHECK_COMPILER_FLAGS([-static-intel], [
-		featflags="${featflags} -static-intel"], [:], [${SXE_CFLAGS}])
+		featflags="${featflags} -static-intel"
+		XCCLDFLAGS="${XCCLDFLAGS} -static-intel"], [:], [${SXE_CFLAGS}])
 	SXE_CHECK_COMPILER_FLAGS([-static-libgcc], [
-		featflags="${featflags} -static-libgcc"], [:], [${SXE_CFLAGS}])
+		featflags="${featflags} -static-libgcc"
+		XCCLDFLAGS="${XCCLDFLAGS} -static-libgcc"], [:], [${SXE_CFLAGS}])
+
+	AC_SUBST([XCCLDFLAGS])
 ])dnl SXE_FEATFLAGS
 
 

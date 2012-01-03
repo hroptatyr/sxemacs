@@ -36,6 +36,12 @@ might be wrong as well.
 	## seems to be a consistent choice throughout all libtools
 	LT_CONVENIENCE_PREFIX="lt-"
 	AC_SUBST([LT_CONVENIENCE_PREFIX])
+
+	## prefix all the stuff in XCCLDFLAGS with XCCFLAG
+	## assume XCCFLAG = -XCClinker for now
+	XCCFLAG="-XCClinker"
+	XCCLDFLAGS=$(echo "${XCCLDFLAGS}" | \
+		sed -e 's/\B-/'${XCCFLAG}' -/g')
 ])dnl SXE_CHECK_LIBTOOL
 
 AC_DEFUN([_SXE_CHECK_LT2], [dnl

@@ -50,7 +50,7 @@ headerdir = $(includedir)/$(instvarsepdir)
 AM_CFLAGS = $(dll_cflags) -DIMA_MODULE -DUSE_SXEMACS_CONFIG_H
 AM_CPPFLAGS = -I$(srcdir) -I$(builddir)  -I$(top_srcdir)/src \
 	-I$(top_builddir)/src $(SXEMACS_INCLUDES) $(c_switch_all)
-AM_LDFLAGS = -module
+AM_LDFLAGS = -module $(XCCLDFLAGS)
 
 ## all the mods
 module_LTLIBRARIES =
