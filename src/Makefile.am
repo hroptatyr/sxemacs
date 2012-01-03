@@ -35,8 +35,8 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 
 AM_CFLAGS = -Demacs $(OPENSSL_CFLAGS) -DUSE_SXEMACS_CONFIG_H -DXTSTRINGDEFINES
-AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_builddir) $(c_switch_general) $(LTDLINCL)
-AM_LDFLAGS = $(OPENSSL_LDFLAGS) $(ENT_LDFLAGS) $(LIBLTDL)
+AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_builddir) $(c_switch_system) $(LTDLINCL)
+AM_LDFLAGS = $(OPENSSL_LDFLAGS) $(ENT_LDFLAGS) $(LIBLTDL) $(XCCLDFLAGS)
 
 headerdir = $(includedir)/$(instvarsepdir)
 sheaderdir = $(headerdir)/s
@@ -247,9 +247,10 @@ AALFILE = $(bldlispdir)/auto-autoloads.el
 AALCFILE = $(bldlispdir)/auto-autoloads.elc
 BITCH = $(SXEMACS) -batch
 SXE_DYLD_PATH = $(bldsrcdir):$(bldsrcdir)/$(LT_OBJDIR):$(bldlwlibdir):$(bldlwlibdir)/$(LT_OBJDIR):$(DESTDIR)$(libdir)
-BITCHENV = DYLD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$DYLD_LIBRARY_PATH:$(DYLD_LIBRARY_PATH) \
+BATCHENV = DYLD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$DYLD_LIBRARY_PATH:$(DYLD_LIBRARY_PATH) \
 	LD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$LD_LIBRARY_PATH:$(LD_LIBRARY_PATH) \
-	SHLIB_PATH=$(SXE_DYLD_PATH):$$SHLIB_PATH:$(SHLIB_PATH) \
+	SHLIB_PATH=$(SXE_DYLD_PATH):$$SHLIB_PATH:$(SHLIB_PATH)
+BITCHENV = $(BATCHENV) \
 	EMACSDEBUGPATHS=1 EMACSPACKAGEPATH= \
 	SOURCE_TREE_ROOT=$(sxe_srcdir) \
 	BUILD_TREE_ROOT=$(sxe_blddir)
@@ -339,6 +340,7 @@ sxemacs.dmp: $(SXEMACS) $(archlib_DATA) $(bldlispdir)/update-elc.stamp
 			(cd $(LT_OBJDIR); \
 			$(LN_S) -f ../$@ $@); \
 		fi; \
+		$(BATCHENV) \
 		SOURCE_TREE_ROOT= BUILD_TREE_ROOT= \
 			$(BITCH) -f list-load-path-shadows; \
 	fi

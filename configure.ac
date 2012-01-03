@@ -874,6 +874,8 @@ AS_MESSAGE([Let's look for the entire C build chain])
 SXE_CHECK_CC
 SXE_CHECK_CFLAGS
 
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+
 ## check machine chars
 AS_MESSAGE([Let's have a detailed glance at your machine])
 SXE_PROC_CPUID
@@ -1136,7 +1138,7 @@ SXE_DO_CC_HACKS
 SXE_CHECK_SIMD_EXTENSIONS
 
 ## some linker flags that might come in handy
-SXE_CHECK_LINKER_FLAGS
+SXE_CHECK_LDFLAGS
 
 ## suffices to be defined late, for instance here
 SXE_CHECK_PARSER_LEXER
@@ -1149,7 +1151,7 @@ if test "$with_pdump" != "yes"; then
 	## enough.  Please report it, though.
 	## #### Should make this Solaris-friendly.
 	## Link with -z nocombreloc for now.
-	SXE_CHECK_LD_NOCOMBRELOC
+	SXE_CHECK_LD_ZFLAG([nocombreloc])
 	if test "$sxe_cv_ld__z_nocombreloc" = "yes"; then
 		SXE_PREPEND_LINKER_FLAG([-z nocombreloc], [ld_switch_site])
 	fi
@@ -1607,23 +1609,18 @@ dnl special pthread handling
 dnl AIX uses pthreads instead of pthread, and HP/UX uses cma
 dnl FreeBSD uses -pthread
 AC_CHECK_LIB(pthread, pthread_create)
-if test $ac_cv_lib_pthread_pthread_create = yes; then
-  have_threads=yes
-  have_pthreads_opt=yes
-  case "`$CC -pthreads 2>&1`" in
-      *unrecognized\ option*) have_pthreads_opt=no ;;
-  esac
-  if test "$have_pthreads_opt" = "yes"; then
-	SXE_PREPEND_UNDUP(-pthreads, c_switch_site)
-  fi
-  have_pthread_opt=yes
-  case "`$CC -pthread 2>&1`" in
-     *unrecognized\ option*) have_pthread_opt=no ;;
-  esac
-  if test "$have_pthread_opt" = "yes"; then
-	SXE_PREPEND_UNDUP(-pthread, c_switch_site)
-  fi
-  SXE_PREPEND(-lpthread, MM_LIBS)
+if test "${ac_cv_lib_pthread_pthread_create}" = "yes"; then
+	have_threads=yes
+
+	SXE_CHECK_COMPILER_FLAGS([-pthreads])
+	SXE_CHECK_COMPILER_FLAGS([-pthread])
+	if test "${sxe_cv_c_flags__pthreads}" = "yes"; then
+		SXE_PREPEND_UNDUP([-pthreads], [c_switch_site])
+	fi
+	if test "${sxe_cv_c_flags__pthread}" = "yes"; then
+		SXE_PREPEND_UNDUP([-pthread], [c_switch_site])
+	fi
+	SXE_PREPEND([-lpthread], [MM_LIBS])
 fi
 
 dnl test for AIX pthreads
@@ -3257,7 +3254,8 @@ if test "$with_sound_esd" != "no"; then
 		AC_MSG_RESULT([yes])
 		need_internal_media=yes
 		SXE_ADD_MM_OBJS([sound-esd.o])
-		SXE_PREPEND([`$ESD_CONFIG --libs`], MM_LIBS)
+		ESD_LIBS=$("${ESD_CONFIG}" --libs)
+		SXE_PREPEND(["${ESD_LIBS}"], [MM_LIBS])
 		AC_DEFINE([HAVE_ESD_SOUND], [1], [Description here!])
 	else
 		AC_MSG_RESULT([no])
