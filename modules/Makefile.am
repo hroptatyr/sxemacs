@@ -52,6 +52,9 @@ endif
 if DESCEND_CL
 SUBDIRS += cl
 endif
+if DESCEND_DBUS
+SUBDIRS += dbus
+endif
 ## ldap is fucking broken, we dont add it
 
 ### handled in master Makefile.am
