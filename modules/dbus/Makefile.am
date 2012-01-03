@@ -52,6 +52,23 @@ AM_CPPFLAGS = -I$(srcdir) -I$(builddir)  -I$(top_srcdir)/src \
 	-I$(top_builddir)/src $(SXEMACS_INCLUDES) $(c_switch_all)
 AM_LDFLAGS = -module
 
+## mods
+module_LTLIBRARIES = 
+
+BUILT_SOURCES = 
+
+header_HEADERS =
+
+module_LTLIBRARIES += sxe-dbus.la
+
+sxe_dbus_la_SOURCES = dbusbind.c
+
+nodist_sxe_dbus_la_SOURCES = dbusbind.doc.c
+
+sxe_dbus_la_CFLAGS = $(AM_CFLAGS) -DEMOD_SXE_DBUS
+
+CLEANFILES = $(BUILT_SOURCES) auto-autoloads.el{,c} libsxe-dbus.a
+
 ## custom rules
 SXEMACS = $(top_builddir)/src/sxemacs
 make_docfile = $(MAKE_DOCFILE)
