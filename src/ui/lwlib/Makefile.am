@@ -59,7 +59,7 @@ libsxelw_Xt_la_DEPENDENCIES = $(lwlib_objs:.o=.lo)
 libsxelw_Xt_la_LIBADD = $(lwlib_objs:.o=.lo) \
 	$(X_LIBS) $(ld_libs_window_system)
 libsxelw_Xt_la_CPPFLAGS = $(AM_CPPFLAGS)
-libsxelw_Xt_la_LDFLAGS = $(AM_LDFLAGS) $(lib_gcc)
+libsxelw_Xt_la_LDFLAGS = $(AM_LDFLAGS) $(lib_gcc) $(XCCLDFLAGS)
 if WITH_BDWGC
 libsxelw_Xt_la_CPPFLAGS += $(BDWGC_CPPFLAGS)
 libsxelw_Xt_la_LDFLAGS += $(BDWGC_LDFLAGS) $(BDWGC_LIBS)

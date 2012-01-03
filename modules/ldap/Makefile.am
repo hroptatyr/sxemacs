@@ -19,7 +19,7 @@ eldap_ell_DEPENDENCIES = eldap_i.o eldap_i.c
 eldap_ell_CPPFLAGS = @SXEMACS_INCLUDES@
 eldap_ell_LINK = $(CCLD) --mod-output=$@
 eldap_ell_LDADD = eldap_i.o
-eldap_ell_LDFLAGS = @LDFLAGS@
+eldap_ell_LDFLAGS = @LDFLAGS@ $(XCCLDFLAGS)
 
 top_builddir = @top_builddir@
 top_build_prefix = $(top_builddir)/
