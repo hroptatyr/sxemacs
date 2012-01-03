@@ -333,6 +333,7 @@ OG_MULTIARG_WITH([modules], [dnl
 	[all], [all], [dnl
 	OG_MULTIARG_ITEM([ase], [ase], [algebraic structures])
 	OG_MULTIARG_ITEM([cl], [cl], [fast Common Lisp implementation])
+	OG_MULTIARG_ITEM([dbus], [dbus], [D-BUS bindings])
 ])
 
 OG_MULTIARG_WITH([static-modules], [dnl
@@ -344,6 +345,7 @@ OG_MULTIARG_WITH([static-modules], [dnl
 	[none], [NONE], [dnl
 	OG_MULTIARG_ITEM([ase], [ase], [algebraic structures])
 	OG_MULTIARG_ITEM([cl], [cl], [fast Common Lisp implementation])
+	OG_MULTIARG_ITEM([dbus], [dbus], [D-BUS bindings])
 ])
 
 dnl _OG_MULTIARG_ITEM([ent], [int], [int], [native integer arithmetics])
@@ -1814,6 +1816,7 @@ else
 	fi
 fi
 SXE_EMOD_STATMOD([cl])
+SXE_EMOD_STATMOD([dbus])
 
 AM_CONDITIONAL([AUTARKIC], [test "0" = "1"])
 MODARCHDIR=
