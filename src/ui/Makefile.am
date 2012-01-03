@@ -36,7 +36,7 @@ abs_top_srcdir = @abs_top_srcdir@
 sxelibsrcdir = $(abs_top_srcdir)/lib-src
 
 AM_CFLAGS = -Demacs $(OPENSSL_CFLAGS) -DUSE_SXEMACS_CONFIG_H -DXTSTRINGDEFINES
-AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir)/src -I$(top_builddir)/src -I$(top_builddir) $(c_switch_system) $(LTDLINCL)
+AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_srcdir)/src -I$(top_builddir)/src -I$(top_builddir) $(c_switch_general) $(LTDLINCL)
 
 headerdir = $(includedir)/$(instvarsepdir)
 archlibdir = ${libdir}/${instvardir}/${configuration}
@@ -68,7 +68,7 @@ libsxeui_a_sources = 							\
 	imgproc.c keymap.c insdel.c minibuf.c redisplay.c               \
 	redisplay-output.c select.c specifier.c widget.c window.c 
 libsxeui_a_SOURCES = $(libsxeui_a_headers) $(libsxeui_a_sources)
-libsxeui_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_system) $(X_CFLAGS)
+libsxeui_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general) $(X_CFLAGS)
 EXTRA_libsxeui_a_SOURCES=scrollbar.c menubar.c dialog.c toolbar.c
 libsxeui_a_LIBADD = $(libsxeui_objs)
 libsxeui_a_DEPENDENCIES = $(libsxeui_objs)

@@ -35,7 +35,7 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 
 AM_CFLAGS = -Demacs $(OPENSSL_CFLAGS) -DUSE_SXEMACS_CONFIG_H -DXTSTRINGDEFINES
-AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_builddir) $(c_switch_system) $(LTDLINCL)
+AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_builddir) $(c_switch_general) $(LTDLINCL)
 AM_LDFLAGS = $(OPENSSL_LDFLAGS) $(ENT_LDFLAGS) $(LIBLTDL)
 
 headerdir = $(includedir)/$(instvarsepdir)
@@ -223,7 +223,7 @@ libsxecore_a_sources =							\
 	strftime.c symbols.c syntax.c sysdep.c undo.c
 libsxecore_a_SOURCES = $(libsxecore_a_headers) $(libsxecore_a_sources)
 EXTRA_libsxecore_a_SOURCES = dumper.c realpath.c
-libsxecore_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_CFLAGS)
+libsxecore_a_CPPFLAGS = $(AM_CPPFLAGS) 
 libsxecore_a_LIBADD = $(libsxecore_objs)
 libsxecore_a_DEPENDENCIES = $(libsxecore_a_LIBADD)
 all_sources += $(libsxecore_a_sources) $(libsxecore_objs:.o=.c)
@@ -235,7 +235,7 @@ EXTRA_libcruft_a_SOURCES =						\
 	alloca.c debug.c effi.c emodules-ng.c				\
 	filelock.c getloadavg.c inline.c openssl.c strcat.c tests.c
 libcruft_a_CPPFLAGS = 							\
-	$(AM_CPPFLAGS) $(DB_CPPFLAGS) $(FFI_CPPFLAGS) $(X_CFLAGS)
+	$(AM_CPPFLAGS) $(DB_CPPFLAGS) $(FFI_CPPFLAGS) 
 libcruft_a_LIBADD = $(libcruft_objs)
 libcruft_a_DEPENDENCIES = $(libcruft_a_LIBADD)
 all_sources += $(libcruft_a_sources) $(extra_objs:.o=.c)
