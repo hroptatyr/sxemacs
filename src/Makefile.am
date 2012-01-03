@@ -340,7 +340,7 @@ sxemacs.dmp: $(SXEMACS) $(archlib_DATA) $(bldlispdir)/update-elc.stamp
 			(cd $(LT_OBJDIR); \
 			$(LN_S) -f ../$@ $@); \
 		fi; \
-		$(BITCHENV) \
+		$(BATCHENV) \
 		SOURCE_TREE_ROOT= BUILD_TREE_ROOT= \
 			$(BITCH) -f list-load-path-shadows; \
 	fi

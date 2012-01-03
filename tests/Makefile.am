@@ -37,6 +37,8 @@ LC_ALL=C
 
 sxesrcdir = $(top_srcdir)/src
 bldsrcdir = $(top_builddir)/src
+sxelwlibdir = $(top_srcdir)/src/ui/lwlib
+bldlwlibdir = $(top_builddir)/src/ui/lwlib
 
 misc_tests = frame.el glyph-test.el gutter-test.el			\
 	redisplay-tests.el reproduce-bugs.el
@@ -72,32 +74,37 @@ EXTRA_DIST = $(misc_tests) $(gtk_tests) $(mule_tests)		\
 CLEANFILES = stage1 stage2
 
 
+SXE_DYLD_PATH = $(bldsrcdir):$(bldsrcdir)/$(LT_OBJDIR):$(bldlwlibdir):$(bldlwlibdir)/$(LT_OBJDIR):$(DESTDIR)$(libdir)
+BATCHENV = DYLD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$DYLD_LIBRARY_PATH:$(DYLD_LIBRARY_PATH) \
+	LD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$LD_LIBRARY_PATH:$(LD_LIBRARY_PATH) \
+	SHLIB_PATH=$(SXE_DYLD_PATH):$$SHLIB_PATH:$(SHLIB_PATH)
 ### Produces strange banner
 SXEMACS = $(bldsrcdir)/sxemacs
 SXEDMP = $(SXEMACS).dmp
 testdir = $(srcdir)
 testautomdir = $(testdir)/automated
-tests_environment = $(SXEMACS) -batch -l ${testautomdir}/test-harness.el \
-	-f batch-test-emacs $(testautomdir)
+tests_environment = $(BATCHENV) \
+	$(SXEMACS) -batch -l ${testautomdir}/test-harness.el \
+		-f batch-test-emacs $(testautomdir)
 
 ## Use our former check target
 check-am: $(SXEMACS) $(SXEDMP)
 	$(tests_environment)
 
 check-formats: $(SXEMACS) $(SXEDMP)
-	$(SXEMACS) -l ${testautomdir}/test-harness.el \
+	$(BATCHENV) $(SXEMACS) -l ${testautomdir}/test-harness.el \
 	-f batch-test-emacs $(testautomdir)/format-tests.el
 
 check-map: $(SXEMACS) $(SXEDMP)
-	$(SXEMACS) -l ${testautomdir}/test-harness.el \
+	$(BATCHENV) $(SXEMACS) -l ${testautomdir}/test-harness.el \
 	-f batch-test-emacs $(testautomdir)/map-tests.el
 
 check-skiplists: $(SXEMACS) $(SXEDMP)
-	$(SXEMACS) -l ${testautomdir}/test-harness.el \
+	$(BATCHENV) $(SXEMACS) -l ${testautomdir}/test-harness.el \
 	-f batch-test-emacs $(testautomdir)/skiplist-tests.el
 
 check-%: $(SXEMACS) $(SXEDMP)
-	$(SXEMACS) -l ${testautomdir}/test-harness.el \
+	$(BATCHENV) $(SXEMACS) -l ${testautomdir}/test-harness.el \
 	-f batch-test-emacs $(testautomdir)/$*-tests.el
 
 
