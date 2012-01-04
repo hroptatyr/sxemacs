@@ -2101,14 +2101,9 @@ regex_compile(re_char * pattern, int size, reg_syntax_t syntax,
 	   matching close-group on the compile stack, so the same register
 	   number is put in the stop_memory as the start_memory.  */
 	regnum_t regnum = 0;
-	auto inline void free_stack(void) __attribute__((always_inline));
 
 	/* we need to close over compile_stack */
-	auto inline void free_stack(void)
-	{
-		xfree(compile_stack.stack);
-		return;
-	}
+#	define free_stack(args...)	xfree(compile_stack.stack)
 
 #ifdef REGEX_DEBUG_FLAG
 	DEBUG_PRINT1("\nCompiling pattern: ");
