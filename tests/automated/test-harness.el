@@ -256,6 +256,36 @@ BODY is a sequence of expressions and may contain several tests."
 	      (incf other-failures)
 	      )))
 
+      (defmacro Assert-Equal (object1 object2)
+	`(condition-case error-info
+	     (progn
+	       (assert (equal ,object1 ,object2))
+	       (Print-Pass "(equal %S %S)" (quote ,object1) (quote ,object2))
+	       (incf passes))
+	   (cl-assertion-failed
+	    (Print-Failure "Assertion failed: (equal %S %S) => (equal %S %S)"
+			   (quote ,object1) (quote ,object2) ,object1 ,object2)
+	    (incf assertion-failures))
+	   (t (Print-Failure "(equal %S %S) ==> error: %S" 
+			     (quote ,object1) (quote ,object2) error-info)
+	      (incf other-failures)
+	      )))
+
+      (defmacro Assert-Not-Equal (object1 object2)
+	`(condition-case error-info
+	     (progn
+	       (assert (not (equal ,object1 ,object2)))
+	       (Print-Pass "(not (equal %S %S))" (quote ,object1) (quote ,object2))
+	       (incf passes))
+	   (cl-assertion-failed
+	    (Print-Failure "Assertion failed: (not (equal %S %S)) => (not (equal %S %S))"
+			   (quote ,object1) (quote ,object2) ,object1 ,object2)
+	    (incf assertion-failures))
+	   (t (Print-Failure "(not (equal %S %S)) ==> error: %S" 
+			     (quote ,object1) (quote ,object2) error-info)
+	      (incf other-failures)
+	      )))
+
       (defmacro Check-Error (expected-error &rest body)
 	(let ((quoted-body (if (= 1 (length body))
 			       `(quote ,(car body)) `(quote (progn ,@body)))))

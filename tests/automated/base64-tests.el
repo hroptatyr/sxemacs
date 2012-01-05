@@ -51,7 +51,7 @@
       (insert string)
       (setq length (base64-encode-region (point-min) (point-max) no-line-break))
       (Assert (eq length (- (point-max) (point-min))))
-      (Assert (equal (buffer-string) string-result))
+      (Assert-Equal (buffer-string) string-result)
       ;; partial
       (erase-buffer)
       (insert "random junk........\0\0';'eqwrkw[erpqf")
@@ -61,7 +61,7 @@
 	(insert "...more random junk.q,f3/.qrm314.r,m2typ' 2436T@W$^@$#^T@")
 	(setq length (base64-encode-region p1 p2 no-line-break))
 	(Assert (eq length (- p2 p1)))
-	(Assert (equal (buffer-substring p1 p2) string-result))))
+	(Assert-Equal (buffer-substring p1 p2) string-result)))
     string-result))
 
 (defun bt-base64-decode-string (string)
@@ -74,11 +74,11 @@
       (setq length (base64-decode-region (point-min) (point-max)))
       (cond (string-result
 	     (Assert (eq length (- (point-max) (point-min))))
-	     (Assert (equal (buffer-string) string-result)))
+	     (Assert-Equal (buffer-string) string-result))
 	    (t
 	     (Assert (null length))
 	     ;; The buffer should not have been modified.
-	     (Assert (equal (buffer-string) string))))
+	     (Assert-Equal (buffer-string) string)))
       ;; partial
       (erase-buffer)
       (insert "random junk........\0\0';'eqwrkw[erpqf")
@@ -89,11 +89,11 @@
 	(setq length (base64-decode-region p1 p2))
 	(cond (string-result
 	       (Assert (eq length (- p2 p1)))
-	       (Assert (equal (buffer-substring p1 p2) string-result)))
+	       (Assert-Equal (buffer-substring p1 p2) string-result))
 	      (t
 	       (Assert (null length))
 	       ;; The buffer should not have been modified.
-	       (Assert (equal (buffer-substring p1 p2) string))))))
+	       (Assert-Equal (buffer-substring p1 p2) string)))))
     string-result))
 
 (defun bt-remove-newlines (str)
@@ -124,9 +124,9 @@ oqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX
 ;;-----------------------------------------------------
 
 (loop for (raw encoded) in bt-test-strings do
-  (Assert (equal (bt-base64-encode-string raw) encoded))
+  (Assert-Equal (bt-base64-encode-string raw) encoded)
   ;; test the NO-LINE-BREAK flag
-  (Assert (equal (bt-base64-encode-string raw t) (bt-remove-newlines encoded))))
+  (Assert-Equal (bt-base64-encode-string raw t) (bt-remove-newlines encoded)))
 
 ;; When Mule is around, Lisp programmers should make sure that the
 ;; buffer contains only characters whose `char-int' is in the [0, 256)
@@ -148,8 +148,8 @@ oqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX
 ;;-----------------------------------------------------
 
 (loop for (raw encoded) in bt-test-strings do
-  (Assert (equal (bt-base64-decode-string encoded) raw))
-  (Assert (equal (bt-base64-decode-string (bt-remove-newlines encoded)) raw)))
+  (Assert-Equal (bt-base64-decode-string encoded) raw)
+  (Assert-Equal (bt-base64-decode-string (bt-remove-newlines encoded)) raw))
 
 ;; Test errors
 (dolist (str `("foo" "AAC" "foo\0bar" "====" "Zm=9v" ,bt-allchars))
@@ -180,7 +180,7 @@ oqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX
       ;; Whitespace at the beginning, end, and middle.
       (let ((mangled (concat bt-nonbase64-chars left bt-nonbase64-chars right
 			     bt-nonbase64-chars)))
-	(Assert (equal (bt-base64-decode-string mangled) raw)))
+	(Assert-Equal (bt-base64-decode-string mangled) raw))
 
       ;; Whitespace between every char.
       (let ((mangled (concat bt-nonbase64-chars
@@ -189,7 +189,7 @@ oqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX
 			     (mapconcat #'char-to-string encoded
 					(apply #'string bt-nonbase64-chars))
 			     bt-nonbase64-chars)))
-	(Assert (equal (bt-base64-decode-string mangled) raw))))))
+	(Assert-Equal (bt-base64-decode-string mangled) raw)))))
 
 ;;-----------------------------------------------------
 ;; Mixed...
@@ -203,22 +203,22 @@ oqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX
 ;; practically all aspects of the encoding and decoding process.
 
 (loop for (raw ignored) in bt-test-strings do
-  (Assert (equal (bt-base64-decode-string
+  (Assert-Equal (bt-base64-decode-string
 		  (bt-base64-encode-string raw))
-		 raw))
-  (Assert (equal (bt-base64-decode-string
+		 raw)
+  (Assert-Equal (bt-base64-decode-string
 		  (bt-base64-decode-string
 		   (bt-base64-encode-string
 		    (bt-base64-encode-string raw))))
-		 raw))
-  (Assert (equal (bt-base64-decode-string
+		 raw)
+  (Assert-Equal (bt-base64-decode-string
 		  (bt-base64-decode-string
 		   (bt-base64-decode-string
 		    (bt-base64-encode-string
 		     (bt-base64-encode-string
 		      (bt-base64-encode-string raw))))))
-		 raw))
-  (Assert (equal (bt-base64-decode-string
+		 raw)
+  (Assert-Equal (bt-base64-decode-string
 		  (bt-base64-decode-string
 		   (bt-base64-decode-string
 		    (bt-base64-decode-string
@@ -226,8 +226,8 @@ oqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX
 		      (bt-base64-encode-string
 		       (bt-base64-encode-string
 			(bt-base64-encode-string raw))))))))
-		 raw))
-  (Assert (equal (bt-base64-decode-string
+		 raw)
+  (Assert-Equal (bt-base64-decode-string
 		  (bt-base64-decode-string
 		   (bt-base64-decode-string
 		    (bt-base64-decode-string
@@ -237,4 +237,4 @@ oqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX
 			(bt-base64-encode-string
 			 (bt-base64-encode-string
 			  (bt-base64-encode-string raw))))))))))
-		 raw)))
+		 raw))

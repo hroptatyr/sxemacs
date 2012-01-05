@@ -54,7 +54,7 @@
 ;;-----------------------------------------------------
 
 (mapcar (lambda (x)
-	  (Assert (equal (md5 (car x)) (cdr x))))
+	  (Assert-Equal (md5 (car x)) (cdr x)))
 	md5-tests)
 
 ;;-----------------------------------------------------
@@ -64,8 +64,8 @@
 (let ((large-string (mapconcat #'car md5-tests "")))
   (let ((count 0))
     (mapcar (lambda (x)
-	      (Assert (equal (md5 large-string count (+ count (length (car x))))
-			     (cdr x)))
+	      (Assert-Equal (md5 large-string count (+ count (length (car x))))
+			     (cdr x))
 	      (incf count (length (car x))))
 	    md5-tests)))
 
@@ -77,7 +77,7 @@
   (mapcar (lambda (x)
 	    (erase-buffer)
 	    (insert (car x))
-	    (Assert (equal (md5 (current-buffer)) (cdr x))))
+	    (Assert-Equal (md5 (current-buffer)) (cdr x)))
 	  md5-tests))
 
 ;;-----------------------------------------------------
@@ -88,7 +88,7 @@
   (insert (mapconcat #'car md5-tests ""))
   (let ((point 1))
     (mapcar (lambda (x)
-	      (Assert (equal (md5 (current-buffer) point (+ point (length (car x))))
-			     (cdr x)))
+	      (Assert-Equal (md5 (current-buffer) point (+ point (length (car x))))
+			     (cdr x))
 	      (incf point (length (car x))))
 	    md5-tests)))

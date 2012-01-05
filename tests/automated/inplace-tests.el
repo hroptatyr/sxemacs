@@ -52,7 +52,7 @@
 
   (mapc-inplace #'evenp ivector)
   (Assert (vectorp ivector))
-  (Assert (equal ivector [nil t nil t]))
+  (Assert-Equal ivector [nil t nil t])
 
   ;; we can't test strings at the moment
 

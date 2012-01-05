@@ -61,7 +61,7 @@ the Assert macro checks for correctness."
 	  ;; buffer.
 	  (with-temp-buffer
 	    (insert string)
-	    (Assert (equal (buffer-string) string)))
+	    (Assert-Equal (buffer-string) string))
 	;; For use without test harness: use a normal buffer, so that
 	;; you can also test whether redisplay works.
 	(switch-to-buffer (get-buffer-create "test"))
@@ -265,28 +265,28 @@ the Assert macro checks for correctness."
     (loop for j from 0 below (length string) do
       (aset string j (aref greek-string (mod j 96))))
     (loop for k in '(0 1 58 59) do
-      (Assert (equal (substring string (* 96 k) (* 96 (1+ k))) greek-string))))
+      (Assert-Equal (substring string (* 96 k) (* 96 (1+ k))) greek-string)))
 
   (let ((greek-string (charset-char-string 'greek-iso8859-7))
 	(string (make-string (* 96 60) ??)))
    (loop for j from (1- (length string)) downto 0 do
      (aset string j (aref greek-string (mod j 96))))
    (loop for k in '(0 1 58 59) do
-     (Assert (equal (substring string (* 96 k) (* 96 (1+ k))) greek-string))))
+     (Assert-Equal (substring string (* 96 k) (* 96 (1+ k))) greek-string)))
 
   (let ((ascii-string (charset-char-string 'ascii))
 	(string (make-string (* 94 60) (make-char 'greek-iso8859-7 57))))
    (loop for j from 0 below (length string) do
       (aset string j (aref ascii-string (mod j 94))))
     (loop for k in '(0 1 58 59) do
-      (Assert (equal (substring string (* 94 k) (+ 94 (* 94 k))) ascii-string))))
+      (Assert-Equal (substring string (* 94 k) (+ 94 (* 94 k))) ascii-string)))
 
   (let ((ascii-string (charset-char-string 'ascii))
 	(string (make-string (* 94 60) (make-char 'greek-iso8859-7 57))))
     (loop for j from (1- (length string)) downto 0 do
       (aset string j (aref ascii-string (mod j 94))))
     (loop for k in '(0 1 58 59) do
-      (Assert (equal (substring string (* 94 k) (* 94 (1+ k))) ascii-string))))
+      (Assert-Equal (substring string (* 94 k) (* 94 (1+ k))) ascii-string)))
 
   ;;---------------------------------------------------------------
   ;; Test file-system character conversion (and, en passant, file ops)
@@ -300,7 +300,7 @@ the Assert macro checks for correctness."
 	 (name2 (make-temp-name prefix))
 	 (file-name-coding-system 'iso-8859-2))
     (Silence-Message
-      (Assert (not (equal name1 name2)))
+      (Assert-Not-Equal name1 name2)
       ;; Kludge to handle Mac OS X which groks only UTF-8.
       (cond ((eq system-type 'darwin)
 	     (Check-Error-Message 'file-error "Opening output file"
@@ -313,8 +313,9 @@ the Assert macro checks for correctness."
       (when (fboundp 'make-symbolic-link)
 	(make-symbolic-link name1 name2)
 	(Assert (file-exists-p name2))
-	(Assert (equal (file-truename name2) name1))
-	(Assert (equal (file-truename name1) name1)))
+	(Assert-Equal (file-truename name2) (file-truename name1))
+	(Assert-Equal (file-truename name2) name1)
+	(Assert-Equal (file-truename name1) name1))
 
       (ignore-file-errors (delete-file name1) (delete-file name2))))
 

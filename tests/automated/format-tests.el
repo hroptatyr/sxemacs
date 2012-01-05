@@ -39,30 +39,30 @@
 ;; Testing numbers
 ;;-----------------------------------------------------
 
-(Assert (equal (format "%d" 2) "2"))
-(Assert (equal (format "%d" -2) "-2"))
-(Assert (equal (format "%2.2E" -2) "-2.00E+00"))
+(Assert-Equal (format "%d" 2) "2")
+(Assert-Equal (format "%d" -2) "-2")
+(Assert-Equal (format "%2.2E" -2) "-2.00E+00")
 
-(Assert (equal (format "%\0s" 'a) "a"))
+(Assert-Equal (format "%\0s" 'a) "a")
 
-(Assert (equal (format "%x" 100) "64"))
-(Assert (equal (format "%#x" 100) "0x64"))
-(Assert (equal (format "%X" 122) "7A"))
-(Assert (equal (format "%.4X" 122) "007A"))
-(Assert (equal (format "%4o" 100) " 144"))
-(Assert (equal (format "%x" 10.58) "a"))
-(Assert (equal (format "%o" 10.58) "12"))
-(Assert (equal (format "%#o" 10.58) "0o12"))
+(Assert-Equal (format "%x" 100) "64")
+(Assert-Equal (format "%#x" 100) "0x64")
+(Assert-Equal (format "%X" 122) "7A")
+(Assert-Equal (format "%.4X" 122) "007A")
+(Assert-Equal (format "%4o" 100) " 144")
+(Assert-Equal (format "%x" 10.58) "a")
+(Assert-Equal (format "%o" 10.58) "12")
+(Assert-Equal (format "%#o" 10.58) "0o12")
 
-(Assert (equal (format "%#8x" 1) "     0x1"))
-(Assert (equal (format "%#+8x" 1) "    +0x1"))
-(Assert (equal (format "%#08x" 1) "0x000001"))
-(Assert (equal (format "%#+08x" 1) "+0x00001"))
-(Assert (equal (format "%# 08x" 1) " 0x00001"))
-(Assert (equal (format "%#.8x" 1) "0x00000001"))
-(Assert (equal (format "%#+.8x" 1) "+0x00000001"))
-(Assert (equal (format "%#+ .8x" 1) "+0x00000001")) ;; plus has precedence
-(Assert (equal (format "%# .8x" 1) " 0x00000001"))
+(Assert-Equal (format "%#8x" 1) "     0x1")
+(Assert-Equal (format "%#+8x" 1) "    +0x1")
+(Assert-Equal (format "%#08x" 1) "0x000001")
+(Assert-Equal (format "%#+08x" 1) "+0x00001")
+(Assert-Equal (format "%# 08x" 1) " 0x00001")
+(Assert-Equal (format "%#.8x" 1) "0x00000001")
+(Assert-Equal (format "%#+.8x" 1) "+0x00000001")
+(Assert-Equal (format "%#+ .8x" 1) "+0x00000001") ;; plus has precedence
+(Assert-Equal (format "%# .8x" 1) " 0x00000001")
 
 ;; floats
 (let ((forms
@@ -540,27 +540,27 @@
         forms))
 
 ;; exterior precision
-(Assert (equal (format "%*d" 10 4) "         4"))
-(Assert (equal (format "%#!_*x" 10 4) "_______0x4"))
+(Assert-Equal (format "%*d" 10 4) "         4")
+(Assert-Equal (format "%#!_*x" 10 4) "_______0x4")
 
 ;; lisp reader syntax
-(Assert (equal (format "%#~x" 19) "0x13"))
-(Assert (equal (format "%#~x" -19) "0x-13"))
-(Assert (equal (format "%&x" 19) "#x13"))
-(Assert (equal (format "%&~x" 19) "#x13"))
-(Assert (equal (format "%&x" -19) "#x-13"))
-(Assert (equal (format "%&~x" -19) "#x-13"))
+(Assert-Equal (format "%#~x" 19) "0x13")
+(Assert-Equal (format "%#~x" -19) "0x-13")
+(Assert-Equal (format "%&x" 19) "#x13")
+(Assert-Equal (format "%&~x" 19) "#x13")
+(Assert-Equal (format "%&x" -19) "#x-13")
+(Assert-Equal (format "%&~x" -19) "#x-13")
 ;; check spacing
-(Assert (equal (format "%&+x" 19) "#x+13"))
-(Assert (equal (format "%&~+x" 19) "#x+13"))
-(Assert (equal (format "%&+x" -19) "#x-13"))
-(Assert (equal (format "%&~+x" -19) "#x-13"))
-(Assert (equal (format "%& x" 19) "#x13"))
-(Assert (equal (format "%&~ x" 19) "#x13"))
-(Assert (equal (format "%& x" -19) "#x-13"))
-(Assert (equal (format "%&~ x" -19) "#x-13"))
+(Assert-Equal (format "%&+x" 19) "#x+13")
+(Assert-Equal (format "%&~+x" 19) "#x+13")
+(Assert-Equal (format "%&+x" -19) "#x-13")
+(Assert-Equal (format "%&~+x" -19) "#x-13")
+(Assert-Equal (format "%& x" 19) "#x13")
+(Assert-Equal (format "%&~ x" 19) "#x13")
+(Assert-Equal (format "%& x" -19) "#x-13")
+(Assert-Equal (format "%&~ x" -19) "#x-13")
 
-(Assert (equal (format "%&0*x" 10 4) "#x00000004"))
-(Assert (equal (format "%&0.*x" 10 4) "#x0000000004"))
+(Assert-Equal (format "%&0*x" 10 4) "#x00000004")
+(Assert-Equal (format "%&0.*x" 10 4) "#x0000000004")
 
 ;;; format-tests.el ends here
