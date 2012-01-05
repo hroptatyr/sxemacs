@@ -478,7 +478,7 @@ Lisp_Object make_process_internal(Lisp_Object name)
 		if (NILP(tem))
 			break;
 		sz = snprintf(suffix, sizeof(suffix), "<%d>", i);
-		assert(sz>=0 && sz<sizeof(suffix));
+		assert(sz>=0 && (size_t)sz<sizeof(suffix));
 		name1 = concat2(name, build_string(suffix));
 	}
 	name = name1;

@@ -459,7 +459,7 @@ static void GaugeExpose(Widget w, XEvent * event, Region region)
 					     "%d",
 					     v0 + i * (v1 - v0) / 
 					          (gw->gauge.nlabels - 1));
-				assert(n >= 0 &&  n < sizeof(label));
+				assert(n >= 0 &&  (size_t)n < sizeof(label));
 			}
 			else
 				s = gw->gauge.labels[i];
@@ -899,7 +899,7 @@ static void MaxLabel(GaugeWidget gw, Dimension * wid,	/* max label width */
 			if (gw->gauge.labels == NULL)	{ /* numeric labels */
 				int sz = snprintf(lbl = lstr, sizeof(lstr), 
 						  "%d", v0 + i * dv / n);
-				assert(sz >= 0 && sz < sizeof(lstr));
+				assert(sz >= 0 && (size_t)sz < sizeof(lstr));
 			} else
 				lbl = gw->gauge.labels[i];
 

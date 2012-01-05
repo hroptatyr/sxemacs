@@ -1284,7 +1284,7 @@ static int pdump_file_try(char *exe_path, size_t size)
 		sz = snprintf(w, size, "-%d.%d.%d-%08x.dmp", 
                          EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
                          EMACS_BETA_VERSION, dump_id);
-		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
+		if (sz >=0 && (size_t)sz < size && pdump_file_get(exe_path)) {
 			if (pdump_load_check()) {
 				return 1;
 			}
@@ -1293,7 +1293,7 @@ static int pdump_file_try(char *exe_path, size_t size)
 #endif	/* EMACS_BETA_VERSION */
 
 		sz = snprintf(w, size, "-%08x.dmp", dump_id);
-		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
+		if (sz >=0 && (size_t)sz < size && pdump_file_get(exe_path)) {
 			if (pdump_load_check()) {
 				return 1;
 			}
@@ -1301,7 +1301,7 @@ static int pdump_file_try(char *exe_path, size_t size)
 		}
 
 		sz = snprintf(w, size, ".dmp");
-		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
+		if (sz >=0 && (size_t)sz < size && pdump_file_get(exe_path)) {
 			if (pdump_load_check()) {
 				return 1;
 			}
@@ -1422,7 +1422,7 @@ int pdump_load(const char *argv0)
 				/* Oh well, let's have some kind of default */
 				int sz = snprintf(exe_path, sizeof(exe_path),
 						  "./%s", name);
-				assert(sz >= 0 && sz < sizeof(exe_path));
+				assert(sz >= 0 && (size_t)sz < sizeof(exe_path));
 				break;
 			}
 			path = p + 1;

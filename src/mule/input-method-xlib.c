@@ -714,7 +714,7 @@ EmacsXtCvtStringToXIMStyles (
 			       "Cannot convert string \"%s\" to type XIMStyles.\n"
 			       "Using default string \"%s\" instead.\n",
 			       fromVal->addr, DefaultXIMStyles);
-		assert(len >= 0 && len < sizeof(buf));
+		assert(len >= 0 && (size_t)len < sizeof(buf));
 		XtAppWarningMsg(the_app_con, "wrongParameters",
 				"cvtStringToXIMStyle",
 				"XtToolkitError",
@@ -939,9 +939,10 @@ void
 describe_Window (Window win)
 {
 	char xwincmd[128];
-	if ( snprintf (xwincmd, sizeof(xwincmd), 
-		       "xwininfo -id 0x%x >&2; xwininfo -events -id 0x%x >&2",
-		       (int) win, (int) win) < sizeof(xwincmd) ) {
+	int sz = snprintf (xwincmd, sizeof(xwincmd), 
+			   "xwininfo -id 0x%x >&2; xwininfo -events -id 0x%x >&2",
+			   (int) win, (int) win);
+	if ( sz >= 0 && (size_t) sz < sizeof(xwincmd) ) {
 		int exit_code = system (xwincmd);
 		if (  exit_code != 0 )
 			stderr_out("command '%s' failed with exit code %d", 

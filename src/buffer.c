@@ -705,7 +705,7 @@ even if a buffer with that name exists.
 	count = 1;
 	while (1) {
                 prt = snprintf(number, sizeof(number), "<%d>", ++count);
-	        assert(prt>=0 && prt < sizeof(number));
+	        assert(prt>=0 && (size_t)prt < sizeof(number));
 		gentemp = concat2(name, build_string(number));
 		if (!NILP(ignore)) {
 			tem = Fstring_equal(gentemp, ignore);

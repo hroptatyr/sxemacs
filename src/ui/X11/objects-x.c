@@ -629,7 +629,7 @@ static Extbyte *truename_via_random_props(Display * dpy, XFontStruct * font)
 		      "-%s-%s-%s-%s-%s-%s-%ld-%ld-%ld-%ld-%s-%ld-%s-%s",
 		      foundry, family, weight, slant, setwidth, add_style, pixel,
 		      point, res_x, res_y, spacing, avg_width, registry, encoding);
-	assert(sz>=0 && sz < sizeof(composed_name));
+	assert(sz>=0 && (size_t)sz < sizeof(composed_name));
 	ok = 1;
 
       FAIL:

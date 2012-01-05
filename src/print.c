@@ -144,7 +144,7 @@ std_handle_out_external(FILE * stream, Lisp_Object lstream,
 			size *= 2;					\
 			XMALLOC_OR_ALLOCA(buf,size,type);		\
 			ret = 0;					\
-		} else if ( ret > size ) {				\
+		} else if ( (size_t)ret > (size_t)size ) {		\
 		    /* We need more space, so we need to allocate it */ \
 			XMALLOC_UNBIND(buf,size,spec);			\
 			size = ret + 1;					\
@@ -565,7 +565,7 @@ void write_hex_ptr(void* value, Lisp_Object stream)
 {
 	char buf[sizeof(value)*2+1];
 	int n = snprintf(buf,sizeof(buf),"0x%p",value);
-	assert(n>=0 && n<sizeof(buf));
+	assert(n>=0 && (size_t)n<sizeof(buf));
 	write_c_string(buf,stream);
 }
 
@@ -1272,7 +1272,7 @@ printing_major_badness(Lisp_Object printcharfun,
 			       badness_string, badness);
 		break;
 	}
-	assert(len >= 0 && len < sizeof(buf));
+	assert(len >= 0 && (size_t)len < sizeof(buf));
 
 	/* Don't abort or signal if called from debug_print() or already
 	   crashing */

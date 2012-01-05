@@ -102,7 +102,7 @@ x_create_scrollbar_instance(struct frame *f, int vertical,
 
 	SCROLLBAR_X_ID(instance) = new_lwlib_id();
 	sz = snprintf(buffer, sizeof(buffer), "scrollbar_%d", SCROLLBAR_X_ID(instance));
-	assert(sz >= 0 && sz < sizeof(buffer));
+	assert(sz >= 0 && (size_t)sz < sizeof(buffer));
 	SCROLLBAR_X_NAME(instance) = xstrdup(buffer);
 #if defined (LWLIB_SCROLLBARS_MOTIF) || defined (LWLIB_SCROLLBARS_LUCID) || \
     defined (LWLIB_SCROLLBARS_ATHENA3D)

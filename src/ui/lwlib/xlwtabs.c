@@ -1236,7 +1236,7 @@ void XawTabsSetTop(Widget w, Bool callCallbacks)
 		int n = snprintf(line, sizeof(line),
 			"XawTabsSetTop: widget \"%.64s\" is not the child of a tabs widget.",
 			XtName(w));
-		assert(n >= 0 && n < sizeof(line));
+		assert(n >= 0 && (size_t)n < sizeof(line));
 		XtAppWarning(XtWidgetToApplicationContext(w), line);
 		return;
 	}

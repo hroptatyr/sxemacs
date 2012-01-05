@@ -247,7 +247,7 @@ static int connect_to_unix_server(void)
 {
 	int s;			/* connected socket descriptor */
 	struct sockaddr_un server;	/* for unix connections */
-	int sz;
+	size_t sz;
 
 	if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
 		perror(progname);
@@ -389,7 +389,8 @@ static int connect_to_internet_server(char *serverhost, unsigned short port)
 #endif				/* AUTH_MAGIC_COOKIE */
 
 	len = snprintf(buf, sizeof(buf), "%s\n", DEFAUTH_NAME);
-	assert(len >= 0 && len < sizeof(buf));
+	assert(len >= 0);
+	assert((size_t)len < sizeof(buf));
 	t = write(s, buf, len);
 	if(t != len) {
 		fprintf(stderr, "%s: unable to send auth", progname);
