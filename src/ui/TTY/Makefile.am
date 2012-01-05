@@ -57,7 +57,7 @@ libsxeuiTTY_a_sources =  						\
 libsxeuiTTY_a_SOURCES = $(libsxeuiTTY_a_headers) $(libsxeuiTTY_a_sources) 
 EXTRA_libsxeuiTTY_a_SOURCES=                     \
 	gpmevent.c termcap.c terminfo.c tparam.c
-libsxeuiTTY_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general)
+libsxeuiTTY_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general) $(X_CFLAGS)
 libsxeuiTTY_a_LIBADD=$(libsxeuiTTY_objs)
 libsxeuiTTY_a_DEPENDENCIES = $(libsxeuiTTY_a_LIBADD)
 all_sources += $(libsxeuiTTY_a_sources) $(libsxeuiTTY_objs:.o=.c)
