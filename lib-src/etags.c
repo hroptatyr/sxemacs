@@ -1337,13 +1337,16 @@ char *argv[];
 			case at_filename:
 			case at_stdin:
 				break;
+			case at_language:
+			case at_regexp:
+		        case at_end:
 			default:
 				continue;		/* the for loop */
 			}
 			len = snprintf (cmd, sizeof(cmd),
 					"mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
 					tagfile, argbuffer[i].what, tagfile);
-			if (len >= 0 && len < sizeof(cmd))
+			if (len >= 0 && (size_t)len < sizeof(cmd))
 				fatal ("failed to build shell command line", (char *)NULL);
 			if (system (cmd) != EXIT_SUCCESS)
 				fatal ("failed to execute shell command", (char *)NULL);
@@ -1371,7 +1374,7 @@ char *argv[];
 					    "sort -u -o %.*s %.*s", 
 					    BUFSIZ, tagfile, 
 					    BUFSIZ, tagfile);
-			if (len >= 0 && len < sizeof(cmd))
+			if (len >= 0 && (size_t)len < sizeof(cmd))
 				fatal("failed to build sort shell command line", 
 				      (char *)NULL);
 			exit (system (cmd));
@@ -2808,6 +2811,18 @@ bool *is_func_or_var;	/* OUT: function or variable found */
 			typdef = ttypeseen;
 
 			/* all the rest */
+		case st_C_objprot:
+		case st_C_objimpl:
+		case st_C_objend:
+		case st_C_gnumacro:
+		case st_C_ignore:
+		case st_C_attribute:
+		case st_C_javastruct:
+		case st_C_operator:
+		case st_C_template:
+		case st_C_extern:
+		case st_C_define:
+		case st_C_typedef:
 		default:
 			break;
 		}
@@ -2828,12 +2843,27 @@ bool *is_func_or_var;	/* OUT: function or variable found */
 			return FALSE;
 
 			/* all the rest */
+		case st_none:
+		case st_C_objprot:
+		case st_C_objimpl:
+		case st_C_objend:
+		case st_C_gnumacro:
+		case st_C_ignore:
+		case st_C_attribute:
+		case st_C_javastruct:
+		case st_C_operator:
+		case st_C_template:
+		case st_C_extern:
+		case st_C_define:
+		case st_C_typedef:
 		default:
 			break;
 		}
 		return TRUE;
 
 		/* all the rest */
+	case tinbody:
+	case tignore:
 	default:
 		break;
 	}
@@ -2870,6 +2900,17 @@ bool *is_func_or_var;	/* OUT: function or variable found */
 		return FALSE;
 
 		/* all the rest */
+	case st_none:
+	case st_C_objprot:
+	case st_C_objimpl:
+	case st_C_objend:
+	case st_C_gnumacro:
+	case st_C_ignore:
+	case st_C_attribute:
+	case st_C_operator:
+	case st_C_extern:
+	case st_C_define:
+	case st_C_typedef:
 	default:
 		break;
 	}
@@ -2897,6 +2938,20 @@ bool *is_func_or_var;	/* OUT: function or variable found */
 			return FALSE;
 
 			/* all the rest */
+		case st_none:
+		case st_C_objend:
+		case st_C_gnumacro:
+		case st_C_ignore:
+		case st_C_attribute:
+		case st_C_javastruct:
+		case st_C_operator:
+		case st_C_class:
+		case st_C_template:
+		case st_C_struct:
+		case st_C_extern:
+		case st_C_enum:
+		case st_C_define:
+		case st_C_typedef:
 		default:
 			break;
 		}
@@ -2957,6 +3012,9 @@ bool *is_func_or_var;	/* OUT: function or variable found */
 		return FALSE;
 
 		/* all the rest */
+	case otagseen:
+	case ocatseen:
+	case omethodtag:
 	default:
 		break;
 	}
@@ -2973,6 +3031,12 @@ bool *is_func_or_var;	/* OUT: function or variable found */
 		case fignore:
 		case vignore:
 			break;
+		case fvnone:
+		case fdefunkey:
+		case fdefunname:
+		case foperator:
+		case fvnameseen:
+		case fstartlist:
 		default:
 			fvdef = fvnone;
 		}
@@ -3013,6 +3077,10 @@ bool *is_func_or_var;	/* OUT: function or variable found */
 				break;
 
 				/* all the rest */
+			case tkeyseen:
+			case tinbody:
+			case tend:
+			case tignore:
 			default:
 				break;
 			}
@@ -3033,12 +3101,31 @@ bool *is_func_or_var;	/* OUT: function or variable found */
 			return TRUE;
 
 			/* all the rest */
+		case fdefunname:
+		case foperator:
+		case fstartlist:
+		case finlist:
+		case flistseen:
+		case fignore:
+		case vignore:
 		default:
 			break;
 		}
 		break;
 
 		/* all the rest */
+	case st_C_objprot:
+	case st_C_objimpl:
+	case st_C_objend:
+	case st_C_gnumacro:
+	case st_C_attribute:
+	case st_C_javastruct:
+	case st_C_class:
+	case st_C_template:
+	case st_C_struct:
+	case st_C_enum:
+	case st_C_define:
+	case st_C_typedef:
 	default:
 		break;
 	}
@@ -3269,6 +3356,11 @@ FILE *inf;			/* input file */
 			case fignore:
 			case vignore:
 				break;
+			case fvnone:
+			case fdefunname:
+			case foperator:
+			case fvnameseen:
+			case flistseen:
 			default:
 				fvextern = FALSE;
 				fvdef = fvnone;
@@ -3525,6 +3617,14 @@ FILE *inf;			/* input file */
 						break;
 
 						/* all the rest */
+					case fvnone:
+					case fdefunkey:
+					case fdefunname:
+					case foperator:
+					case fvnameseen:
+					case finlist:
+					case fignore:
+					case vignore:
 					default:
 						break;
 					}
@@ -3539,6 +3639,8 @@ FILE *inf;			/* input file */
 					break;
 
 					/* all the rest */
+				case ddefineseen:
+				case dignorerest:
 				default:
 					break;
 				}
@@ -3581,6 +3683,15 @@ FILE *inf;			/* input file */
 				break;
 
 				/* all the rest */
+			case onone:
+			case oprotocol:
+			case oimplementation:
+			case oparenseen:
+			case ocatseen:
+			case oinbody:
+			case omethodsign:
+			case omethodcolon:
+			case oignore:
 			default:
 				break;
 			}
@@ -3633,6 +3744,13 @@ FILE *inf;			/* input file */
 						&& plainc && instruct))
 						make_C_tag (TRUE);  /* a function */
 					/* FALLTHRU */
+				case fvnone:
+				case fdefunkey:
+				case fdefunname:
+				case foperator:
+				case fstartlist:
+				case finlist:
+				case vignore:
 				default:
 					fvextern = FALSE;
 					fvdef = fvnone;
@@ -3643,6 +3761,7 @@ FILE *inf;			/* input file */
 						token.valid = FALSE;
 				} /* switch (fvdef) */
 				/* FALLTHRU */
+			case tkeyseen:
 			default:
 				if (!instruct)
 					typdef = tnone;
@@ -3662,6 +3781,16 @@ FILE *inf;			/* input file */
 				break;
 
 				/* all the rest */
+			case onone:
+			case oprotocol:
+			case oimplementation:
+			case otagseen:
+			case oparenseen:
+			case ocatseen:
+			case oinbody:
+			case omethodsign:
+			case omethodcolon:
+			case oignore:
 			default:
 				break;
 			}
@@ -3697,6 +3826,7 @@ FILE *inf;			/* input file */
 					fvdef = fvnone;
 				token.valid = FALSE;
 				break;
+			case fvnone:
 			default:
 				fvdef = fvnone;
 			}
@@ -3730,12 +3860,19 @@ FILE *inf;			/* input file */
 						&& (!fvextern || declarations)))
 						make_C_tag (FALSE); /* a variable */
 					/* FALLTHRU */
+				case fvnone:
+				case fdefunkey:
+				case fdefunname:
+				case fstartlist:
+				case flistseen:
 				default:
 					fvdef = fvnone;
 				}
 				break;
 
 				/* all the rest */
+			case tkeyseen:
+			case tignore:
 			default:
 				break;
 			}
@@ -3773,6 +3910,13 @@ FILE *inf;			/* input file */
 				break;
 
 				/* all the rest */
+			case fvnone:
+			case fdefunkey:
+			case fdefunname:
+			case fstartlist:
+			case finlist:
+			case fignore:
+			case vignore:
 			default:
 				break;
 			}
@@ -3802,6 +3946,14 @@ FILE *inf;			/* input file */
 					break;
 
 					/* all the rest */
+				case fvnone:
+				case fdefunkey:
+				case fdefunname:
+				case foperator:
+				case fvnameseen:
+				case flistseen:
+				case fignore:
+				case vignore:
 				default:
 					break;
 				}
@@ -3846,6 +3998,15 @@ FILE *inf;			/* input file */
 					make_C_tag (TRUE); /* an Objective C method */
 					objdef = oinbody;
 					break;
+				case onone:
+				case oprotocol:
+				case oimplementation:
+				case oparenseen:
+				case ocatseen:
+				case oinbody:
+				case omethodsign:
+				case omethodcolon:
+				case oignore:
 				default:
 					/* Neutralize `extern "C" {' grot. */
 					if (bracelev == 0 && structdef == snone && nestlev == 0
@@ -3855,6 +4016,13 @@ FILE *inf;			/* input file */
 				break;
 
 				/* all the rest */
+			case fdefunkey:
+			case fdefunname:
+			case foperator:
+			case fvnameseen:
+			case fstartlist:
+			case finlist:
+			case vignore:
 			default:
 				break;
 			}
@@ -3872,6 +4040,7 @@ FILE *inf;			/* input file */
 				break;
 
 				/* all the rest */
+			case snone:
 			default:
 				break;
 			}
@@ -3928,6 +4097,11 @@ FILE *inf;			/* input file */
 				    || (globals && bracelev == 0 && (!fvextern || declarations)))
 					make_C_tag (FALSE); /* a variable */
 				/* FALLTHRU */
+			case fvnone:
+			case fdefunkey:
+			case fdefunname:
+			case fstartlist:
+			case flistseen:
 			default:
 				fvdef = vignore;
 			}
@@ -3968,6 +4142,12 @@ FILE *inf;			/* input file */
 			case fignore:
 			case vignore:
 				break;
+			case fvnone:
+			case fdefunkey:
+			case fdefunname:
+			case fvnameseen:
+			case fstartlist:
+			case flistseen:
 			default:
 				fvdef = fvnone;
 			}
@@ -6459,8 +6639,8 @@ etags_strrchr (sp, c)
 register const char *sp;
 register int c;
 {
-	register const char *r;
-
+	const char *r;
+	
 	r = NULL;
 	do
 	{
