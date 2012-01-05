@@ -718,7 +718,7 @@ static int unix_init(void)
 #ifdef HIDE_UNIX_SOCKET
 	sz = snprintf(server.sun_path, sizeof(server.sun_path),
 		      "%s/gsrvdir%d", tmpdir, (int)geteuid());
-	assert(sz>=0 && sz<sizeof(server.sun_path));
+	assert(sz>=0 && (size_t)sz<sizeof(server.sun_path));
 	if (mkdir(server.sun_path, 0700) < 0) {
 		/* assume it already exists, and try to set perms */
 		if (chmod(server.sun_path, 0700) < 0) {

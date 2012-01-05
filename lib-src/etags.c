@@ -6639,8 +6639,8 @@ etags_strrchr (sp, c)
 register const char *sp;
 register int c;
 {
-	const char *r;
-	
+	register const char *r;
+
 	r = NULL;
 	do
 	{

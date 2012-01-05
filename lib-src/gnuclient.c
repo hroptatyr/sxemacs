@@ -107,7 +107,7 @@ static void tell_emacs_to_resume(int sig)
 
 	sz = snprintf(buffer, sizeof(buffer), "(gnuserv-eval '(resume-pid-console %d))",
 		      (int)getpid());
-	assert(sz>=0 && sz<sizeof(buffer));
+	assert(sz>=0 && (size_t)sz<sizeof(buffer));
 	send_string(s, buffer);
 
 #ifdef SYSV_IPC
@@ -201,7 +201,7 @@ static void filename_expand(char *fullpath, char *filename, size_t fullsize)
 
 		if (len > 0 && fullpath[len - 1] == '/')	/* trailing slash already? */
 			;	/* yep */
-		else if (len < fullsize-1)
+		else if (len >=0 && (size_t)len < fullsize-1)
 			strcat(fullpath, "/");	/* nope, append trailing slash */
 		/* Don't forget to add the filename! */
 		strncat(fullpath, filename, fullsize-len-1);
@@ -448,7 +448,7 @@ int main(int argc, char *argv[])
 #endif
 		sz = snprintf(command, sizeof(command), "(gnuserv-eval%s '(progn ",
 			 quick ? "-quickly" : "");
-		assert(sz>=0 && sz<sizeof(command));
+		assert(sz>=0 && (size_t)sz<sizeof(command));
 		send_string(s, command);
 		if (load_library) {
 			send_string(s, "(load-library ");
@@ -485,7 +485,7 @@ int main(int argc, char *argv[])
 		sz = snprintf(command, sizeof(command),
 			      "(gnuserv-eval%s '(progn ",
 			      quick ? "-quickly" : "");
-		assert(sz>=0 && sz<sizeof(command));
+		assert(sz>=0 && (size_t)sz<sizeof(command));
 		send_string(s, command);
 
 		while ((nb = read(fileno(stdin), buffer, GSERV_BUFSZ - 1)) > 0) {
@@ -582,7 +582,6 @@ int main(int argc, char *argv[])
 
 		if (suppress_windows_system) {
 			char *term = getenv("TERM");
-			int sz;
 			if (!term) {
 				fprintf(stderr, "%s: unknown terminal type\n",
 					progname);
@@ -592,16 +591,16 @@ int main(int argc, char *argv[])
 				      "(gnuserv-edit-files '(tty %s %s %d) '(",
 				      clean_string(tty), clean_string(term),
 				      (int)getpid());
-			assert(sz>=0 && sz<sizeof(command));
+			assert(sz>=0 && (size_t)sz<sizeof(command));
 		} else {	/* !suppress_windows_system */
 
 			if (0) ;
 #ifdef HAVE_X_WINDOWS
 			else if (display) {
-				int sz = snprintf(command, sizeof(command),
-						  "(gnuserv-edit-files '(x %s) '(",
+				sz = snprintf(command, sizeof(command),
+					      "(gnuserv-edit-files '(x %s) '(",
 						  clean_string(display));
-				assert(sz>=0 && sz<sizeof(command));
+				assert(sz>=0 && (size_t)sz<sizeof(command));
 			}
 #endif
 #ifdef HAVE_GTK
@@ -637,7 +636,7 @@ int main(int argc, char *argv[])
 			sz = snprintf(command, sizeof(command),
 				      "(%d . %s)", starting_line,
 				      clean_string(path));
-			assert(sz>=0 && sz<sizeof(command));
+			assert(sz>=0 && (size_t)sz<sizeof(command));
 			send_string(s, command);
 			free(path);
 		}		/* for */
@@ -648,7 +647,7 @@ int main(int argc, char *argv[])
 			       || (nofiles
 				   && !suppress_windows_system)) ? " 'quick" : "",
 			      view ? " 'view" : "");
-		assert(sz>=0 && sz<sizeof(command));
+		assert(sz>=0 && (size_t)sz<sizeof(command));
 		send_string(s, command);
 		send_string(s, ")");
 
