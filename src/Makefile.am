@@ -223,7 +223,7 @@ libsxecore_a_sources =							\
 	strftime.c symbols.c syntax.c sysdep.c undo.c
 libsxecore_a_SOURCES = $(libsxecore_a_headers) $(libsxecore_a_sources)
 EXTRA_libsxecore_a_SOURCES = dumper.c realpath.c
-libsxecore_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_FLAGS)
+libsxecore_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_CFLAGS)
 libsxecore_a_LIBADD = $(libsxecore_objs)
 libsxecore_a_DEPENDENCIES = $(libsxecore_a_LIBADD)
 all_sources += $(libsxecore_a_sources) $(libsxecore_objs:.o=.c)
@@ -235,7 +235,7 @@ EXTRA_libcruft_a_SOURCES =						\
 	alloca.c debug.c effi.c emodules-ng.c				\
 	filelock.c getloadavg.c inline.c openssl.c strcat.c tests.c
 libcruft_a_CPPFLAGS = 							\
-	$(AM_CPPFLAGS) $(DB_CPPFLAGS) $(FFI_CPPFLAGS) $(X_FLAGS)
+	$(AM_CPPFLAGS) $(DB_CPPFLAGS) $(FFI_CPPFLAGS) $(X_CFLAGS)
 libcruft_a_LIBADD = $(libcruft_objs)
 libcruft_a_DEPENDENCIES = $(libcruft_a_LIBADD)
 all_sources += $(libcruft_a_sources) $(extra_objs:.o=.c)
