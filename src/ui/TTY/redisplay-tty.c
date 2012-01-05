@@ -1453,7 +1453,7 @@ static Lisp_Object term_get_fkeys_1(Lisp_Object function_key_map)
 				char *sequence = tgetstr(fcap, address);
 				if (sequence) {
 					int sz = snprintf(fkey, sizeof(fkey), "f%d", i);
-					assert(sz >= 0 && sz < sizeof(fkey));
+					assert(sz >= 0 && (size_t)sz < sizeof(fkey));
 					Fdefine_key(function_key_map,
 						    build_ext_string(sequence,
 								     Qbinary),

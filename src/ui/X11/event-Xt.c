@@ -512,11 +512,14 @@ x_reset_modifier_mapping(struct device *d)
 		KeySym last_sym = 0;
 		KeyCode code = xd->x_modifier_keymap->modifiermap
 			[modifier_index * mkpm + modifier_key];
-		auto inline void modbarf() __attribute__((always_inline));
-		auto inline void modwarn() __attribute__((always_inline));
-		auto inline void store_modifier()
+		auto inline void modbarf(const char *name, const char *other) 
 			__attribute__((always_inline));
-		auto inline void check_modifier()
+		auto inline void modwarn(const char *name,
+					 int old, const char *other) 
+			__attribute__((always_inline));
+		auto inline void store_modifier(const char *name, int *old)
+			__attribute__((always_inline));
+		auto inline void check_modifier(const char *name, int mask)
 			__attribute__((always_inline));
 
 		auto inline void modbarf(const char *name, const char *other)
@@ -1100,7 +1103,7 @@ x_keysym_to_emacs_keysym(KeySym keysym, int simple_p)
 				int sz = snprintf(buf, sizeof(buf),
 						  "unknown-keysym-0x%X", 
 						  (int)keysym);
-				assert(sz>=0 && sz < sizeof(buf));
+				assert(sz>=0 && (size_t)sz < sizeof(buf));
 				return KEYSYM(buf);
 			}
 			}
@@ -2734,7 +2737,7 @@ static void describe_event(XEvent * event)
 	int sz = snprintf(buf, sizeof(buf),
 			  "%s%s", x_event_name(event->type),
 			  event->xany.send_event ? " (send)" : "");
-	assert(sz >= 0 && sz < sizeof(buf));
+	assert(sz >= 0 && (size_t)sz < sizeof(buf));
 	stderr_out("%-30s", buf);
 	switch (event->type) {
 	case FocusIn:

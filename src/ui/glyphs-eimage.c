@@ -957,7 +957,8 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		     &interlace_type, NULL, NULL);
 
 	{
-		int y, pass;
+		png_uint_32 y;
+		int pass;
 		int passes = 0;
 		png_bytep row_pointers[height];
 
@@ -1211,7 +1212,7 @@ static void tiff_error_func(const char *module, const char *fmt, ...)
 	va_start(vargs, fmt);
 
 	n = vsnprintf(tiff_err_data.err_str, sizeof(tiff_err_data.err_str), fmt, vargs);
-	assert(n>=0 && n <  sizeof(tiff_err_data.err_str));
+	assert(n>=0 && (size_t)n <  sizeof(tiff_err_data.err_str));
 
 	va_end(vargs);
 	/* return to setjmp point */
@@ -1227,7 +1228,7 @@ static void tiff_warning_func(const char *module, const char *fmt, ...)
 	va_start(vargs, fmt);
 
 	n = vsnprintf(warn_str, sizeof(warn_str), fmt, vargs);
-	assert(n>=0 && n < sizeof(warn_str));
+	assert(n>=0 && (size_t)n < sizeof(warn_str));
 	va_end(vargs);
 	warn_when_safe(Qtiff, Qinfo, "%s - %s", module, warn_str);
 }

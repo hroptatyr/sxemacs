@@ -591,7 +591,7 @@ read_locale_specific_resources(Display *dpy)
 			char path[strlen(data_dir) + strlen(locale) + 7];
 			int sz = snprintf(path, sizeof(path),
 					  "%s%s/Emacs", data_dir, locale);
-			assert(sz >= 0 && sz < sizeof(path));
+			assert(sz >= 0 && (size_t)sz < sizeof(path));
 			if (!access(path, R_OK)) {
 				XrmCombineFileDatabase(path, &db, False);
 			}
@@ -608,7 +608,7 @@ read_locale_specific_resources(Display *dpy)
 			int sz = snprintf(path, sizeof(path), 
 					  "%sapp-defaults/%s/Emacs",
 					  data_dir, locale);
-			assert(sz >= 0 && sz < sizeof(path));
+			assert(sz >= 0 && (size_t)sz < sizeof(path));
 			if (!access(path, R_OK)) {
 				XrmCombineFileDatabase(path, &db, False);
 			}
@@ -720,9 +720,9 @@ static void x_init_device(struct device *d, Lisp_Object props)
 		XrmValue value;
 
 		int sz = snprintf(buf1, sizeof(buf1), "%s.emacsVisual", app_name);
-		assert(sz >= 0 && sz < sizeof(buf1));
+		assert(sz >= 0 && (size_t)sz < sizeof(buf1));
 		sz = snprintf(buf2, sizeof(buf2), "%s.EmacsVisual", app_class);
-		assert(sz >= 0 && sz < sizeof(buf2));
+		assert(sz >= 0 && (size_t)sz < sizeof(buf2));
 
 		if (XrmGetResource(XtDatabase(dpy), buf1, buf2, &type, &value)
 		    == True) {
@@ -782,10 +782,10 @@ static void x_init_device(struct device *d, Lisp_Object props)
 		   PseudoColor, check to see if the user specified that we need
 		   a private colormap */
 		if (visual == DefaultVisual(dpy, screen)) {
-			int sz = snprintf(buf1, sizeof(buf1), "%s.privateColormap", app_name);
-			assert(sz >= 0 && sz < sizeof(buf1));
+			sz = snprintf(buf1, sizeof(buf1), "%s.privateColormap", app_name);
+			assert(sz >= 0 && (size_t)sz < sizeof(buf1));
 			sz = snprintf(buf2, sizeof(buf2), "%s.PrivateColormap", app_class);
-			assert(sz >= 0 && sz < sizeof(buf2));
+			assert(sz >= 0 && (size_t)sz < sizeof(buf2));
 
 			if ((visual->class == PseudoColor) &&
 			    (XrmGetResource
@@ -1151,17 +1151,17 @@ int signal_if_x_error(Display * dpy, int resumable_p)
 		return 0;
 	data = Qnil;
 	sz = snprintf(buf, sizeof(buf), "0x%X", (unsigned int)last_error.resourceid);
-	assert(sz >= 0 && sz < sizeof(buf));
+	assert(sz >= 0 && (size_t)sz < sizeof(buf));
 	data = Fcons(build_string(buf), data);
 	{
 		char num[32];
 		sz = snprintf(num, sizeof(num), "%d", last_error.request_code);
-		assert(sz >= 0 && sz < sizeof(num));
+		assert(sz >= 0 && (size_t)sz < sizeof(num));
 		XGetErrorDatabaseText(last_error.display, "XRequest", num, "",
 				      buf, sizeof(buf));
 		if (!*buf) {
 			sz = snprintf(buf, sizeof(buf), "Request-%d", last_error.request_code);
-			assert(sz >=0 && sz < sizeof(buf));
+			assert(sz >=0 && (size_t)sz < sizeof(buf));
 		}
 		data = Fcons(build_string(buf), data);
 	}

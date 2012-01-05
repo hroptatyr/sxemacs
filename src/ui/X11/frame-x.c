@@ -473,7 +473,7 @@ static Lisp_Object color_to_string(Widget w, unsigned long pixel)
 	color.pixel = pixel;
 	XQueryColor(XtDisplay(w), w->core.colormap, &color);
 	sz = snprintf(buf, sizeof(buf), "#%04x%04x%04x", color.red, color.green, color.blue);
-	assert(sz>=0 && sz < sizeof(buf));
+	assert(sz>=0 && (size_t)sz < sizeof(buf));
 	return build_string(buf);
 }
 
@@ -711,7 +711,7 @@ x_set_initial_frame_size(struct frame *f, int flags, int x, int y,
 	else if (ussize)
 		sz = snprintf(shell_geom, sizeof(shell_geom),
 			      "=%dx%d", w, h);
-	assert(sz >=0 && sz < sizeof(shell_geom));
+	assert(sz >=0 && (size_t)sz < sizeof(shell_geom));
 	if (uspos || ussize) {
 		temp = xnew_atomic_array(char, 1 + strlen(shell_geom));
 		strcpy(temp, shell_geom);
@@ -2105,7 +2105,7 @@ a string.
 	struct frame *f = decode_x_frame(frame);
 
 	int sz = snprintf(str, sizeof(str), "%lu", XtWindow(FRAME_X_TEXT_WIDGET(f)));
-	assert(sz >= 0 && sz < sizeof(str));
+	assert(sz >= 0 && (size_t)sz < sizeof(str));
 	return build_string(str);
 }
 

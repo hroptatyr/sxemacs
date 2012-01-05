@@ -2226,6 +2226,10 @@ static int x_widget_border_width(void)
 
 void
 x_subwindow_query_geometry(Lisp_Object image_instance,
+                           int *width, int *height);
+
+void
+x_subwindow_query_geometry(Lisp_Object image_instance,
                            int *width, int *height)
 {
 	Lisp_Image_Instance *ii = XIMAGE_INSTANCE(image_instance);

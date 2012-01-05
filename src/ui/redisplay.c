@@ -6669,7 +6669,7 @@ static void decode_mode_spec(struct window *w, Emchar spec, int type)
 			const size_t order_strmax = sizeof(f->order_count)*3+2;
 			char *writable_str = alloca_array(char, order_strmax);
 			int n = snprintf(writable_str, order_strmax, "-%d", f->order_count);
-			assert(n>=0 && n < order_strmax);
+			assert(n>=0 && (size_t)n < order_strmax);
 			str = writable_str;
 		}
 #endif				/* HAVE_TTY */
@@ -6760,7 +6760,7 @@ static void decode_mode_spec(struct window *w, Emchar spec, int type)
 				percent = 99;
 
 			n = snprintf(buf, sizeof(buf), "%d%%", percent);
-			assert(n>=0 && n < sizeof(buf));
+			assert(n>=0 && (size_t)n < sizeof(buf));
 			Dynarr_add_many(mode_spec_bufbyte_string,
 					(Bufbyte *) buf, strlen(buf));
 
@@ -6809,7 +6809,7 @@ static void decode_mode_spec(struct window *w, Emchar spec, int type)
 				n = snprintf(buf, sizeof(buf), "Top%d%%", percent);
 			else
 				n = snprintf(buf, sizeof(buf), "%d%%", percent);
-			assert(n>=0 && n < sizeof(buf));
+			assert(n>=0 && (size_t)n < sizeof(buf));
 			Dynarr_add_many(mode_spec_bufbyte_string,
 					(Bufbyte *) buf, strlen(buf));
 

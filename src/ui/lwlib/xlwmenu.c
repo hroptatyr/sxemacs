@@ -581,7 +581,8 @@ static char *parameterize_string(const char *string, const char *value)
 		off_t offset = percent-string;
 
 		if (percent[1] == '%') {	/* it's a real % */
-			assert( res_left >= (1 + offset) );
+			assert( offset >=0 && 
+				res_left >= (size_t)(1 + offset));
 					        /* incl % */
 			strncat(result, string, 1 + offset);
 			res_left -= 1 + offset;
@@ -598,7 +599,8 @@ static char *parameterize_string(const char *string, const char *value)
 			} else if (*p == '-') {	/* right pad */
 				right_pad++;
 			} else if (*p == '1') {	/* param and terminator */
-				assert( res_left >= offset );
+				assert( offset >= 0 && 
+					res_left >= (size_t)offset );
 				res_left -= offset;
 				strncat(result, string, offset);
 				if (value[0] != '\0') {
@@ -615,9 +617,11 @@ static char *parameterize_string(const char *string, const char *value)
 				break;	/* out of for() loop */
 			} else {	/* bogus, copy the format as is */
 				/* out of for() loop */
-				assert( res_left >= (1+ p - string) );
-				strncat(result, string, 1 + p - string);
-				res_left -= 1 + p - string;
+				off_t remain = 1 + p - string;
+				assert( remain >=0 && 
+					res_left >= (size_t)remain );
+				strncat(result, string, remain);
+				res_left -= remain;
 				string = (*p ? &p[1] : p);
 				offset = percent - string;
 				break;
