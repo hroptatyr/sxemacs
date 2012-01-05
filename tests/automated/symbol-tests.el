@@ -61,10 +61,10 @@
 	(uninterned (make-symbol name)))
     (Assert (symbolp interned))
     (Assert (symbolp uninterned))
-    (Assert (equal (symbol-name interned) name))
-    (Assert (equal (symbol-name uninterned) name))
+    (Assert-Equal (symbol-name interned) name)
+    (Assert-Equal (symbol-name uninterned) name)
     (Assert (not (eq interned uninterned)))
-    (Assert (not (equal interned uninterned)))))
+    (Assert-Not-Equal interned uninterned)))
 
 (flet ((check-weak-list-unique (weak-list &optional reversep)
 	 "Check that elements of WEAK-LIST are referenced only there."
@@ -119,10 +119,10 @@
        (bar3 (nth 5 list)))
   (Assert (symbolp foo))
   (Assert (not (intern-soft foo)))
-  (Assert (equal (symbol-name foo) "foo"))
+  (Assert-Equal (symbol-name foo) "foo")
   (Assert (symbolp bar))
   (Assert (not (intern-soft bar)))
-  (Assert (equal (symbol-name bar) "bar"))
+  (Assert-Equal (symbol-name bar) "bar")
 
   (Assert (eq foo foo2))
   (Assert (eq foo2 foo3))
@@ -135,10 +135,10 @@
        (list (list foo foo bar bar foo bar)))
   (let* ((print-gensym nil)
 	 (printed-list (prin1-to-string list)))
-    (Assert (equal printed-list "(foo foo bar bar foo bar)")))
+    (Assert-Equal printed-list "(foo foo bar bar foo bar)"))
   (let* ((print-gensym t)
 	 (printed-list (prin1-to-string list)))
-    (Assert (equal printed-list "(#1=#:foo #1# #2=#:bar #2# #1# #2#)"))))
+    (Assert-Equal printed-list "(#1=#:foo #1# #2=#:bar #2# #1# #2#)")))
 
 ;;-----------------------------------------------------
 ;; Read-only symbols
@@ -233,14 +233,14 @@
 ;;; Printing keywords
 
 (let ((print-gensym t))
-  (Assert (equal (prin1-to-string :foo)                ":foo"))
-  (Assert (equal (prin1-to-string (intern ":foo"))     ":foo"))
-  (Assert (equal (prin1-to-string (intern ":foo" [0])) "#::foo")))
+  (Assert-Equal (prin1-to-string :foo)                ":foo")
+  (Assert-Equal (prin1-to-string (intern ":foo"))     ":foo")
+  (Assert-Equal (prin1-to-string (intern ":foo" [0])) "#::foo"))
 
 (let ((print-gensym nil))
-  (Assert (equal (prin1-to-string :foo)                ":foo"))
-  (Assert (equal (prin1-to-string (intern ":foo"))     ":foo"))
-  (Assert (equal (prin1-to-string (intern ":foo" [0])) ":foo")))
+  (Assert-Equal (prin1-to-string :foo)                ":foo")
+  (Assert-Equal (prin1-to-string (intern ":foo"))     ":foo")
+  (Assert-Equal (prin1-to-string (intern ":foo" [0])) ":foo"))
 
 ;; #### Add many more tests for printing and reading symbols, as well
 ;; as print-gensym and print-gensym-alist!
@@ -262,16 +262,16 @@
    (lambda (&rest args)
      (throw 'test-tag args)))
   (Assert (not (boundp mysym)))
-  (Assert (equal (catch 'test-tag
+  (Assert-Equal (catch 'test-tag
 		   (set mysym 'foo))
-		 `(,mysym (foo) set nil nil)))
+		 `(,mysym (foo) set nil nil))
   (Assert (not (boundp mysym)))
   (dontusethis-set-symbol-value-handler
    mysym
    'set-value
    (lambda (&rest args) (setq save (nth 1 args))))
   (set mysym 'foo)
-  (Assert (equal save '(foo)))
+  (Assert-Equal save '(foo))
   (Assert (eq (symbol-value mysym) 'foo))
   )
 
@@ -282,9 +282,9 @@
    'make-unbound
    (lambda (&rest args)
      (throw 'test-tag args)))
-  (Assert (equal (catch 'test-tag
+  (Assert-Equal (catch 'test-tag
 		   (makunbound mysym))
-		 `(,mysym nil makunbound nil nil)))
+		 `(,mysym nil makunbound nil nil))
   (dontusethis-set-symbol-value-handler
    mysym
    'make-unbound
@@ -320,6 +320,6 @@
 ;   'make-local
 ;   (lambda (&rest args)
 ;     (throw 'test-tag args)))
-;  (Assert (equal (catch 'test-tag
+;  (Assert-Equal (catch 'test-tag
 ;		   (set mysym 'foo))
-;		 `(,mysym (foo) make-local nil nil))))
+;		 `(,mysym (foo) make-local nil nil)))

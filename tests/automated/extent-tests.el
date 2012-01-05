@@ -123,25 +123,25 @@
   (let ((e (make-extent 4 7)))
     ;; current state: "###[eee)###"
     ;;                 123 456 789
-    (Assert (equal (et-range e) '(4 7)))
+    (Assert-Equal (et-range e) '(4 7))
 
     (et-insert-at "xxx" 4)
 
     ;; current state: "###[xxxeee)###"
     ;;                 123 456789 012
-    (Assert (equal (et-range e) '(4 10)))
+    (Assert-Equal (et-range e) '(4 10))
 
     (et-insert-at "yyy" 7)
 
     ;; current state: "###[xxxyyyeee)###"
     ;;                 123 456789012 345
-    (Assert (equal (et-range e) '(4 13)))
+    (Assert-Equal (et-range e) '(4 13))
 
     (et-insert-at "zzz" 13)
 
     ;; current state: "###[xxxyyyeee)zzz###"
     ;;                 123 456789012 345678
-    (Assert (equal (et-range e) '(4 13)))
+    (Assert-Equal (et-range e) '(4 13))
     ))
 
 ;; closed-closed
@@ -153,25 +153,25 @@
 
     ;; current state: "###[eee]###"
     ;;                 123 456 789
-    (Assert (equal (et-range e) '(4 7)))
+    (Assert-Equal (et-range e) '(4 7))
 
     (et-insert-at "xxx" 4)
 
     ;; current state: "###[xxxeee]###"
     ;;                 123 456789 012
-    (Assert (equal (et-range e) '(4 10)))
+    (Assert-Equal (et-range e) '(4 10))
 
     (et-insert-at "yyy" 7)
 
     ;; current state: "###[xxxyyyeee]###"
     ;;                 123 456789012 345
-    (Assert (equal (et-range e) '(4 13)))
+    (Assert-Equal (et-range e) '(4 13))
 
     (et-insert-at "zzz" 13)
 
     ;; current state: "###[xxxyyyeeezzz]###"
     ;;                 123 456789012345 678
-    (Assert (equal (et-range e) '(4 16)))
+    (Assert-Equal (et-range e) '(4 16))
     ))
 
 ;; open-closed
@@ -184,25 +184,25 @@
 
     ;; current state: "###(eee]###"
     ;;                 123 456 789
-    (Assert (equal (et-range e) '(4 7)))
+    (Assert-Equal (et-range e) '(4 7))
 
     (et-insert-at "xxx" 4)
 
     ;; current state: "###xxx(eee]###"
     ;;                 123456 789 012
-    (Assert (equal (et-range e) '(7 10)))
+    (Assert-Equal (et-range e) '(7 10))
 
     (et-insert-at "yyy" 8)
 
     ;; current state: "###xxx(eyyyee]###"
     ;;                 123456 789012 345
-    (Assert (equal (et-range e) '(7 13)))
+    (Assert-Equal (et-range e) '(7 13))
 
     (et-insert-at "zzz" 13)
 
     ;; current state: "###xxx(eyyyeezzz]###"
     ;;                 123456 789012345 678
-    (Assert (equal (et-range e) '(7 16)))
+    (Assert-Equal (et-range e) '(7 16))
     ))
 
 ;; open-open
@@ -214,25 +214,25 @@
 
     ;; current state: "###(eee)###"
     ;;                 123 456 789
-    (Assert (equal (et-range e) '(4 7)))
+    (Assert-Equal (et-range e) '(4 7))
 
     (et-insert-at "xxx" 4)
 
     ;; current state: "###xxx(eee)###"
     ;;                 123456 789 012
-    (Assert (equal (et-range e) '(7 10)))
+    (Assert-Equal (et-range e) '(7 10))
 
     (et-insert-at "yyy" 8)
 
     ;; current state: "###xxx(eyyyee)###"
     ;;                 123456 789012 345
-    (Assert (equal (et-range e) '(7 13)))
+    (Assert-Equal (et-range e) '(7 13))
 
     (et-insert-at "zzz" 13)
 
     ;; current state: "###xxx(eyyyee)zzz###"
     ;;                 123456 789012 345678
-    (Assert (equal (et-range e) '(7 13)))
+    (Assert-Equal (et-range e) '(7 13))
     ))
 
 
@@ -254,31 +254,31 @@
 
       ;; current state: xx[xxxxxx]xx
       ;;                12 345678 90
-      (Assert (equal (et-range e) '(3 9)))
+      (Assert-Equal (et-range e) '(3 9))
 
       (delete-region 1 2)
 
       ;; current state: x[xxxxxx]xx
       ;;                1 234567 89
-      (Assert (equal (et-range e) '(2 8)))
+      (Assert-Equal (et-range e) '(2 8))
 
       (delete-region 2 4)
 
       ;; current state: x[xxxx]xx
       ;;                1 2345 67
-      (Assert (equal (et-range e) '(2 6)))
+      (Assert-Equal (et-range e) '(2 6))
 
       (delete-region 1 3)
 
       ;; current state: [xxx]xx
       ;;                 123 45
-      (Assert (equal (et-range e) '(1 4)))
+      (Assert-Equal (et-range e) '(1 4))
 
       (delete-region 3 5)
 
       ;; current state: [xx]x
       ;;                 12 3
-      (Assert (equal (et-range e) '(1 3)))
+      (Assert-Equal (et-range e) '(1 3))
 
       )))
 
@@ -327,7 +327,7 @@
       (delete-region 4 6)
       ;; ###[]###
       (Assert (not (extent-detached-p e)))
-      (Assert (equal (et-range e) '(4 4)))
+      (Assert-Equal (et-range e) '(4 4))
       ))
   )
 
@@ -341,7 +341,7 @@
   (insert "######")
   (let ((e (make-extent 4 4)))
     (et-insert-at "foo" 4)
-    (Assert (equal (et-range e) '(4 4)))))
+    (Assert-Equal (et-range e) '(4 4))))
 
 ;; open-closed (should move)
 (with-temp-buffer
@@ -350,7 +350,7 @@
     (put e 'start-open t)
     (put e 'end-closed t)
     (et-insert-at "foo" 4)
-    (Assert (equal (et-range e) '(7 7)))))
+    (Assert-Equal (et-range e) '(7 7))))
 
 ;; closed-closed (should extend)
 (with-temp-buffer
@@ -358,7 +358,7 @@
   (let ((e (make-extent 4 4)))
     (put e 'end-closed t)
     (et-insert-at "foo" 4)
-    (Assert (equal (et-range e) '(4 7)))))
+    (Assert-Equal (et-range e) '(4 7))))
 
 ;; open-open (illegal; forced to behave like closed-open)
 (with-temp-buffer
@@ -366,4 +366,4 @@
   (let ((e (make-extent 4 4)))
     (put e 'start-open t)
     (et-insert-at "foo" 4)
-    (Assert (equal (et-range e) '(4 4)))))
+    (Assert-Equal (et-range e) '(4 4))))

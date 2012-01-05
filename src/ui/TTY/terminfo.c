@@ -81,6 +81,9 @@ extern char *tparm(const char *string, int arg1, int arg2, int arg3,
    ncurses (We don't use this function anyway!) */
 char *emacs_tparam(const char *string, char *outstring, int len, int arg1,
 		   int arg2, int arg3, int arg4, int arg5, int arg6, int arg7,
+		   int arg8, int arg9);
+char *emacs_tparam(const char *string, char *outstring, int len, int arg1,
+		   int arg2, int arg3, int arg4, int arg5, int arg6, int arg7,
 		   int arg8, int arg9)
 {
 	char *temp;

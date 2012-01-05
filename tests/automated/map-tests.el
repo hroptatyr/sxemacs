@@ -38,7 +38,7 @@
   (let* ((m1 (if (arrayp s1) 'across 'in))
          (m2 (if (arrayp s2) 'across 'in)))
     `(progn
-       (Assert (equal (type-of ,s1) (type-of ,s2)))
+       (Assert-Equal (type-of ,s1) (type-of ,s2))
        (Assert (= (length ,s1) (length ,s2)))
        (Assert
         (loop
@@ -51,7 +51,7 @@
   (let* ((m1 (if (arrayp s1) 'across 'in))
          (m2 (if (arrayp s2) 'across 'in)))
     `(progn
-       (Assert (equal (type-of ,s1) (type-of ,s2)))
+       (Assert-Equal (type-of ,s1) (type-of ,s2))
        (Assert
         (loop
           for i ,m1 ,s1
@@ -584,7 +584,7 @@
   (Assert (= (length 6c) 729))
   ;; all elements must look the same
   (dotimes (i 729)
-    (Assert (equal (car 6c) '(1.4142 1.4142 1.4142 1.4142 1.4142 1.4142)))
+    (Assert-Equal (car 6c) '(1.4142 1.4142 1.4142 1.4142 1.4142 1.4142))
     (setq 6c (cdr 6c))))
 ;; test invariance of input sequence type
 (Assert
@@ -929,7 +929,7 @@
 ;;  (null (mapfam #'wreck-3 foo :arity 3)))
 ;; ;; foo should still have these two elements
 ;; (Assert (= (dllist-size foo) 2))
-;; (Assert (equal foo (dllist 1 2)))
+;; (Assert-Equal foo (dllist 1 2))
 
 ;; dicts
 (setq test-ht (make-hash-table)

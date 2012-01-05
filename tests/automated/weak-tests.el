@@ -61,9 +61,9 @@
 
   (Assert (eq (weak-list-list weaklist1) testlist))
   (unless (featurep 'bdwgc)
-    (Assert (equal (weak-list-list weaklist2) testlist))
-    (Assert (equal (weak-list-list weaklist3) testlist))
-    (Assert (equal (weak-list-list weaklist4) testlist))))
+    (Assert-Equal (weak-list-list weaklist2) testlist)
+    (Assert-Equal (weak-list-list weaklist3) testlist)
+    (Assert-Equal (weak-list-list weaklist4) testlist)))
 
 (garbage-collect)
 
@@ -92,9 +92,9 @@
 
   (Assert (eq (weak-list-list weaklist1) testlist))
   (unless (featurep 'bdwgc)
-    (Assert (equal (weak-list-list weaklist2) testlist))
-    (Assert (equal (weak-list-list weaklist3) testlist))
-    (Assert (equal (weak-list-list weaklist4) testlist))))
+    (Assert-Equal (weak-list-list weaklist2) testlist)
+    (Assert-Equal (weak-list-list weaklist3) testlist)
+    (Assert-Equal (weak-list-list weaklist4) testlist)))
   
 (garbage-collect)
 
@@ -123,9 +123,9 @@
 
   (Assert (eq (weak-list-list weaklist1) testlist))
   (unless (featurep 'bdwgc)
-    (Assert (equal (weak-list-list weaklist2) testlist))
-    (Assert (equal (weak-list-list weaklist3) (list b (cons a (cons 1 2)) b)))
-    (Assert (equal (weak-list-list weaklist4) testlist)))
+    (Assert-Equal (weak-list-list weaklist2) testlist)
+    (Assert-Equal (weak-list-list weaklist3) (list b (cons a (cons 1 2)) b))
+    (Assert-Equal (weak-list-list weaklist4) testlist))
 
 
 (garbage-collect)
@@ -155,9 +155,9 @@
 
   (Assert (eq (weak-list-list weaklist1) testlist))
   (unless (featurep 'bdwgc)
-    (Assert (equal (weak-list-list weaklist2) (list b (cons (cons 1 2) a) b)))
-    (Assert (equal (weak-list-list weaklist3) testlist))
-    (Assert (equal (weak-list-list weaklist4) testlist))))
+    (Assert-Equal (weak-list-list weaklist2) (list b (cons (cons 1 2) a) b))
+    (Assert-Equal (weak-list-list weaklist3) testlist)
+    (Assert-Equal (weak-list-list weaklist4) testlist)))
 
 
 (garbage-collect)
@@ -187,9 +187,9 @@
 
   (Assert (eq (weak-list-list weaklist1) testlist))
   (unless (featurep 'bdwgc)
-    (Assert (equal (weak-list-list weaklist2) (list b (cons (cons 1 2) a) b)))
-    (Assert (equal (weak-list-list weaklist3) (list b (cons a (cons 1 2)) b)))
-    (Assert (equal (weak-list-list weaklist4) testlist))))
+    (Assert-Equal (weak-list-list weaklist2) (list b (cons (cons 1 2) a) b))
+    (Assert-Equal (weak-list-list weaklist3) (list b (cons a (cons 1 2)) b))
+    (Assert-Equal (weak-list-list weaklist4) testlist)))
 
 
 (garbage-collect)
