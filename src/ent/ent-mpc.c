@@ -76,8 +76,9 @@ static const struct lrecord_description bigc_description[] = {
 	{ XD_END }
 };
 
-#if ! HAVE_MPC_SET_UI_FR
+#if ! defined(HAVE_MPC_SET_UI_FR) || ! HAVE_MPC_SET_UI_FR
 #if defined(MPC_SET_X_Y)
+int mpc_set_ui_fr (mpc_t rop, unsigned long int re, mpfr_t im, mpc_rnd_t rnd);
 int mpc_set_ui_fr (mpc_t rop, unsigned long int re, mpfr_t im, mpc_rnd_t rnd)
               MPC_SET_X_Y (ui, fr, rop, re, im, rnd);
 #else
