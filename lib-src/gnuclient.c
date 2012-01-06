@@ -87,7 +87,8 @@ static char *cp = NULL;		/* ptr into valid bit of cwd above */
 
 static pid_t emacs_pid;		/* Process id for emacs process */
 
-void initialize_signals(void);
+static void
+initialize_signals(void);
 
 static void tell_emacs_to_resume(int sig)
 {
@@ -119,7 +120,8 @@ static void tell_emacs_to_resume(int sig)
 #endif				/* !SYSV_IPC */
 }
 
-static void pass_signal_to_emacs(int sig)
+static void
+pass_signal_to_emacs(int sig)
 {
 	if (kill(emacs_pid, sig) == -1) {
 		fprintf(stderr,
@@ -129,7 +131,8 @@ static void pass_signal_to_emacs(int sig)
 	initialize_signals();
 }
 
-void initialize_signals(void)
+static void
+initialize_signals(void)
 {
 	/* Set up signal handler to pass relevant signals to emacs process.
 	   We used to send SIGSEGV, SIGBUS, SIGPIPE, SIGILL and others to
@@ -252,20 +255,21 @@ static char *clean_string(const char *s)
 	return res;
 }
 
-#define GET_ARGUMENT(var, desc) do {					   \
- if (*(p + 1)) (var) = p + 1;						   \
-   else									   \
-     {									   \
-       if (!argv[++i])							   \
-         {								   \
-           fprintf (stderr, "%s: `%s' must be followed by an argument\n",  \
-		    progname, desc);					   \
-	   exit (1);							   \
-         }								   \
-      (var) = argv[i];							   \
-    }									   \
-  over = 1;								   \
-} while (0)
+#define GET_ARGUMENT(var, desc)						\
+	do {								\
+		if (*(p + 1)) {						\
+			(var) = p + 1;					\
+		} else {						\
+			if (!argv[++i]) {				\
+				fprintf(stderr, "%s: `%s' must be "	\
+					"followed by an argument\n",	\
+					progname, desc);		\
+				exit (1);				\
+			}						\
+			(var) = argv[i];				\
+		}							\
+		over = 1;						\
+	} while (0)
 
 /* A strdup imitation. */
 static char *my_strdup(const char *s)
@@ -312,7 +316,8 @@ int main(int argc, char *argv[])
 	char buffer[GSERV_BUFSZ + 1];	/* buffer to read pid */
 	char result[GSERV_BUFSZ + 1];
 	int i;
-	int sz, msz;
+	int sz;
+	size_t msz;
 
 #ifdef INTERNET_DOMAIN_SOCKETS
 	memset(remotepath, 0, sizeof(remotepath));
@@ -582,31 +587,36 @@ int main(int argc, char *argv[])
 
 		if (suppress_windows_system) {
 			char *term = getenv("TERM");
+			pid_t pid = getpid();
+
 			if (!term) {
 				fprintf(stderr, "%s: unknown terminal type\n",
 					progname);
 				exit(1);
 			}
-			sz = snprintf(command, sizeof(command),
-				      "(gnuserv-edit-files '(tty %s %s %d) '(",
-				      clean_string(tty), clean_string(term),
-				      (int)getpid());
-			assert(sz>=0 && (size_t)sz<sizeof(command));
+			sz = snprintf(
+				command, sizeof(command),
+				"(gnuserv-edit-files '(tty %s %s %d) '(",
+				clean_string(tty), clean_string(term),
+				(int)pid);
+			assert(sz >= 0 && (size_t)sz < sizeof(command));
 		} else {	/* !suppress_windows_system */
 
 			if (0) ;
 #ifdef HAVE_X_WINDOWS
 			else if (display) {
-				sz = snprintf(command, sizeof(command),
-					      "(gnuserv-edit-files '(x %s) '(",
-						  clean_string(display));
-				assert(sz>=0 && (size_t)sz<sizeof(command));
+				sz = snprintf(
+					command, sizeof(command),
+					"(gnuserv-edit-files '(x %s) '(",
+					clean_string(display));
+				assert(sz >= 0 && (size_t)sz < sizeof(command));
 			}
 #endif
 #ifdef HAVE_GTK
-			else if (display)
+			else if (display) {
 				strcpy(command,
 				       "(gnuserv-edit-files '(gtk nil) '(");
+			}
 #endif
 		}		/* !suppress_windows_system */
 		send_string(s, command);
@@ -615,11 +625,13 @@ int main(int argc, char *argv[])
 			nofiles = 1;
 
 		for (; argv[i]; i++) {
-			if (i < argc - 1 && *argv[i] == '+')
+			if (i < argc - 1 && *argv[i] == '+') {
 				starting_line = atoi(argv[i++]);
-			else
+			} else {
 				starting_line = 1;
-			/* If the last argument is +something, treat it as a file. */
+			}
+			/* If the last argument is +something, treat it as a
+			   file. */
 			if (i == argc) {
 				starting_line = 1;
 				--i;
@@ -627,27 +639,28 @@ int main(int argc, char *argv[])
 			filename_expand(fullpath, argv[i], sizeof(fullpath));
 #ifdef INTERNET_DOMAIN_SOCKETS
 			msz = strlen(remotepath) + strlen(fullpath) + 1;
-			path = (char *)malloc(msz);
+			path = (char*)malloc(msz);
 			sz = snprintf(path, msz, "%s%s", remotepath, fullpath);
-			assert(sz>=0 && sz<msz);
-#else
+			assert(sz >= 0 && (size_t)sz < msz);
+#else  /* !INTERNET_DOMAIN_SOCKETS */
 			path = my_strdup(fullpath);
-#endif
-			sz = snprintf(command, sizeof(command),
-				      "(%d . %s)", starting_line,
-				      clean_string(path));
-			assert(sz>=0 && (size_t)sz<sizeof(command));
+#endif	/* INTERNET_DOMAIN_SOCKETS */
+			sz = snprintf(
+				command, sizeof(command),
+				"(%d . %s)", starting_line,
+				clean_string(path));
+			assert(sz >= 0 && (size_t)sz < sizeof(command));
 			send_string(s, command);
 			free(path);
-		}		/* for */
+		}
 		
-		sz = snprintf(command, sizeof(command),
-			      ")%s%s",
-			      (quick
-			       || (nofiles
-				   && !suppress_windows_system)) ? " 'quick" : "",
-			      view ? " 'view" : "");
-		assert(sz>=0 && (size_t)sz<sizeof(command));
+		sz = snprintf(
+			command, sizeof(command), ")%s%s",
+			(quick || (nofiles && !suppress_windows_system))
+			? " 'quick"
+			: "",
+			view ? " 'view" : "");
+		assert(sz >= 0 && (size_t)sz < sizeof(command));
 		send_string(s, command);
 		send_string(s, ")");
 
@@ -663,6 +676,6 @@ int main(int argc, char *argv[])
 	/* not batch */
 	return 0;
 
-}				/* main */
+}
 
-#endif				/* SYSV_IPC || UNIX_DOMAIN_SOCKETS || INTERNET_DOMAIN_SOCKETS */
+#endif  /* SYSV_IPC || UNIX_DOMAIN_SOCKETS || INTERNET_DOMAIN_SOCKETS */
