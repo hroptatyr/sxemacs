@@ -139,49 +139,49 @@ struct ase_category_s {
 };
 
 /* inline decls */
-extern inline int
+static inline int
 _ase_less_p(Lisp_Object, Lisp_Object);
-extern inline int
+static inline int
 _ase_greater_p(Lisp_Object, Lisp_Object);
-extern inline int
+static inline int
 _ase_equal_p(Lisp_Object, Lisp_Object);
-extern inline int
+static inline int
 _ase_lessequal_p(Lisp_Object, Lisp_Object);
-extern inline int
+static inline int
 _ase_greaterequal_p(Lisp_Object, Lisp_Object);
-extern inline void
+static inline void
 _ase_swap(Lisp_Object *args, int idx1, int idx2);
 
 
-extern inline int
+static inline int
 _ase_less_p(Lisp_Object a, Lisp_Object b)
 {
 	return ent_binrel(ASE_BINARY_REL_LESSP, a, b);
 }
-extern inline int
+static inline int
 _ase_greater_p(Lisp_Object a, Lisp_Object b)
 {
 	return ent_binrel(ASE_BINARY_REL_GREATERP, a, b);
 }
-extern inline int
+static inline int
 _ase_equal_p(Lisp_Object a, Lisp_Object b)
 {
 	return ent_binrel(ASE_BINARY_REL_EQUALP, a, b);
 }
-extern inline int
+static inline int
 _ase_lessequal_p(Lisp_Object a, Lisp_Object b)
 {
 	return ent_binrel2(ASE_BINARY_REL_LESSP,
 			   ASE_BINARY_REL_EQUALP, a, b);
 }
-extern inline int
+static inline int
 _ase_greaterequal_p(Lisp_Object a, Lisp_Object b)
 {
 	return ent_binrel2(ASE_BINARY_REL_GREATERP,
 			   ASE_BINARY_REL_EQUALP, a, b);
 }
 
-extern inline void
+static inline void
 _ase_swap(Lisp_Object *args, int idx1, int idx2)
 {
 	Lisp_Object foo = args[idx1];
