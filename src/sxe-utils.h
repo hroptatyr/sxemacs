@@ -84,14 +84,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 
 
-
-#if defined SXE_STATIC_EXTERN_INLINE
-# define extern_inline	static inline
-#elif !defined __GNUC_STDC_INLINE__ && !defined SXE_INLINE_NO_EXTERN
-# define extern_inline	extern inline
-#else
-# define extern_inline  inline
-#endif
+#define extern_inline	static inline
 
 #ifdef ALL_DEBUG_FLAGS
 #undef SXE_DEBUG_FLAG
