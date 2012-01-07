@@ -12,6 +12,7 @@
 #define DONT_ENCAPSULATE
 #include <config.h>
 
+#include <assert.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <../src/sxe-paths.h>	/* For PATH_DATA.  */
@@ -41,7 +42,7 @@ int main(int argc, char *argv[])
 	if (argc > 2 && !strcmp(argv[1], "-f")) {
 		strncpy(file, argv[2], sizeof(file)-1);
 		file[sizeof(file)-1]='\0';
-	} else
+	} else {
 #ifdef PATH_DATA
 #ifdef vms
 		int sz = snprintf(file, sizeof(file), "%s%s", PATH_DATA, YOW_FILE);
@@ -50,14 +51,13 @@ int main(int argc, char *argv[])
 #endif
 		assert(sz>=0 && sz<sizeof(file));
 #else				/* !PATH_DATA */
-	{
 		fprintf(stderr,
 			"%s: the location of the \"%s\" file was not supplied at compile-time.\n\
 You must supply it with the -f command-line option.\n",
 			argv[0], YOW_FILE);
 		exit(1);
-	}
 #endif
+	}
 
 	if ((fp = fopen(file, "r")) == NULL) {
 		perror(file);
