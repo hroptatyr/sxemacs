@@ -470,11 +470,16 @@ struct mod_clo_s {
 	bool warned_about_overlapping_modifiers:1;
 	bool warned_about_predefined_modifiers:1;
 	bool warned_about_duplicate_modifiers:1;
-	int meta_bit:1;
-	int hyper_bit:1;
-	int super_bit:1;
-	int alt_bit:1;
-	int mode_bit:1;
+	/* pad for the bools, so they end up on an 8bit boundary */
+	unsigned int:5;
+	/* each bit consumes 4 bits, totalling to 20 bits */
+	unsigned int meta_bit:4;
+	unsigned int hyper_bit:4;
+	unsigned int super_bit:4;
+	unsigned int alt_bit:4;
+	unsigned int mode_bit:4;
+	/* pad to make it a 32 bit thing */
+	unsigned int:4;
 };
 
 static inline void
