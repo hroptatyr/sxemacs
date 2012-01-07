@@ -466,20 +466,24 @@ static char *err_msg_else =
 
 /* Boy, I really wish C had local functions... */
 struct mod_clo_s {
-	int modifier_index, modifier_key, mkpm;
+	unsigned int modifier_index;
+	unsigned int modifier_key;
+	unsigned int mkpm;
+
+	/* now 32 bits of goodness */
 	bool warned_about_overlapping_modifiers:1;
 	bool warned_about_predefined_modifiers:1;
 	bool warned_about_duplicate_modifiers:1;
 	/* pad for the bools, so they end up on an 8bit boundary */
-	unsigned int:5;
-	/* each bit consumes 4 bits, totalling to 20 bits */
-	unsigned int meta_bit:4;
-	unsigned int hyper_bit:4;
-	unsigned int super_bit:4;
-	unsigned int alt_bit:4;
-	unsigned int mode_bit:4;
+	unsigned int:1;
+	/* each bit consumes 5 bits, totalling to 25 bits */
+	unsigned int meta_bit:5;
+	unsigned int hyper_bit:5;
+	unsigned int super_bit:5;
+	unsigned int alt_bit:5;
+	unsigned int mode_bit:5;
 	/* pad to make it a 32 bit thing */
-	unsigned int:4;
+	unsigned int:3;
 };
 
 static inline void
@@ -589,6 +593,7 @@ whatever(Display *dspl, struct x_device *xd, struct mod_clo_s *clo)
 	KeySym last_sym = 0;
 	KeyCode code = xd->x_modifier_keymap->modifiermap
 		[modifier_index * mkpm + modifier_key];
+	unsigned int tmp = 0;
 
 	for (int column = 0; column < 4; column += 2) {
 		KeySym sym = code
@@ -600,7 +605,6 @@ whatever(Display *dspl, struct x_device *xd, struct mod_clo_s *clo)
 		}
 		last_sym = sym;
 		switch (sym) {
-			int tmp;
 		case XK_Mode_switch:
 			/* store_modifier("Mode_switch", &mode_bit); */
 			/* handled specially here */
