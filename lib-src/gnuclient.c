@@ -183,11 +183,12 @@ static char *get_current_working_directory(void)
   filename_expand -- try to convert the given filename into a fully-qualified
   		     pathname.
 */
-static void filename_expand(char *fullpath, char *filename, size_t fullsize)
-  /* fullpath - returned full pathname */
-  /* filename - filename to expand */
+static void
+filename_expand(char *fullpath, char *filename, size_t fullsize)
 {
-	int len;
+/* fullpath - returned full pathname */
+/* filename - filename to expand */
+	size_t len;
 	fullpath[0] = '\0';
 
 	if (filename[0] && filename[0] == '/') {
@@ -195,20 +196,24 @@ static void filename_expand(char *fullpath, char *filename, size_t fullsize)
 	        strncat(fullpath, filename, fullsize-1);
 	} else {
 		/* Assume relative Unix style path.  Get the current directory
-		   and prepend it.  FIXME: need to fix the case of DOS paths like
-		   "\foo", where we need to get the current drive. */
-
+		 * and prepend it.  FIXME: need to fix the case of DOS paths
+		 * like "\foo", where we need to get the current drive. */
 	        strncat(fullpath, get_current_working_directory(), fullsize-1);
 		len = strlen(fullpath);
 
-		if (len > 0 && fullpath[len - 1] == '/')	/* trailing slash already? */
-			;	/* yep */
-		else if (len >=0 && (size_t)len < fullsize-1)
-			strcat(fullpath, "/");	/* nope, append trailing slash */
+		/* trailing slash already? */
+		if (len > 0 && fullpath[len - 1] == '/') {
+			/* yep */
+			;
+		} else if (len < fullsize-1) {
+			/* nope, append trailing slash */
+			strcat(fullpath, "/");
+		}
 		/* Don't forget to add the filename! */
-		strncat(fullpath, filename, fullsize-len-1);
+		strncat(fullpath, filename, fullsize - len - 1);
 	}
-}				/* filename_expand */
+	return;
+}
 
 /* Encase the string in quotes, escape all the backslashes and quotes
    in string.  */
