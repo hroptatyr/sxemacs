@@ -12,6 +12,7 @@
 #define DONT_ENCAPSULATE
 #include <config.h>
 
+#include <assert.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <../src/sxe-paths.h>	/* For PATH_DATA.  */
