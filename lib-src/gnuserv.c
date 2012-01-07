@@ -59,6 +59,7 @@ char gnuserv_version[] = "gnuserv version" GNUSERV_VERSION;
 #include <string.h>
 #endif				/* HAVE_STRING_H */
 
+
 #if !defined(SYSV_IPC) && !defined(UNIX_DOMAIN_SOCKETS) && \
     !defined(INTERNET_DOMAIN_SOCKETS)
 main()
@@ -129,8 +130,9 @@ void ipc_init(struct msgbuf **msgpp)
 	key_t key;		/* messge key */
 	char buf[GSERV_BUFSZ];	/* pathname for key */
 
-	int sz = snprintf(buf, sizeof(buf),"%s/gsrv%d", tmpdir, (int)geteuid());
-	assert(sz>=0 && sz<sizeof(buf));
+	int sz;
+
+	SNPRINTF(sz, buf, sizeof(buf),"%s/gsrv%d", tmpdir, (int)geteuid());
 	creat(buf, 0600);
 	key = ftok(buf, 1);
 
@@ -716,9 +718,8 @@ static int unix_init(void)
 	/* if */
 	/* Set up address structure for the listen socket. */
 #ifdef HIDE_UNIX_SOCKET
-	sz = snprintf(server.sun_path, sizeof(server.sun_path),
-		      "%s/gsrvdir%d", tmpdir, (int)geteuid());
-	assert(sz>=0 && (size_t)sz<sizeof(server.sun_path));
+	SNPRINTF(sz, server.sun_path, sizeof(server.sun_path),
+		 "%s/gsrvdir%d", tmpdir, (int)geteuid());
 	if (mkdir(server.sun_path, 0700) < 0) {
 		/* assume it already exists, and try to set perms */
 		if (chmod(server.sun_path, 0700) < 0) {
@@ -731,9 +732,8 @@ static int unix_init(void)
 	strcat(server.sun_path, "/gsrv");
 	unlink(server.sun_path);	/* remove old file if it exists */
 #else				/* HIDE_UNIX_SOCKET */
-	sz = snprintf(server.sun_path, sizeof(server.sun_path),
-		      "%s/gsrv%d", tmpdir, (int)geteuid());
-	assert(sz>=0 && sz<sizeof(server.sun_path));
+	SNPRINTF(sz, server.sun_path, sizeof(server.sun_path),
+		 "%s/gsrv%d", tmpdir, (int)geteuid());
 	unlink(server.sun_path);	/* remove old file if it exists */
 #endif				/* HIDE_UNIX_SOCKET */
 

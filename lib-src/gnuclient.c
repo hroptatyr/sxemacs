@@ -106,9 +106,8 @@ static void tell_emacs_to_resume(int sig)
 
 	connect_type = make_connection(NULL, 0, &s);
 
-	sz = snprintf(buffer, sizeof(buffer), "(gnuserv-eval '(resume-pid-console %d))",
-		      (int)getpid());
-	assert(sz>=0 && (size_t)sz<sizeof(buffer));
+	SNPRINTF(sz, buffer, sizeof(buffer),
+		 "(gnuserv-eval '(resume-pid-console %d))", (int)getpid());
 	send_string(s, buffer);
 
 #ifdef SYSV_IPC
@@ -451,9 +450,8 @@ int main(int argc, char *argv[])
 #else
 		connect_type = make_connection(NULL, 0, &s);
 #endif
-		sz = snprintf(command, sizeof(command), "(gnuserv-eval%s '(progn ",
-			 quick ? "-quickly" : "");
-		assert(sz>=0 && (size_t)sz<sizeof(command));
+		SNPRINTF(sz, command, sizeof(command),
+			 "(gnuserv-eval%s '(progn ", quick ? "-quickly" : "");
 		send_string(s, command);
 		if (load_library) {
 			send_string(s, "(load-library ");
@@ -487,10 +485,8 @@ int main(int argc, char *argv[])
 #else
 		connect_type = make_connection(NULL, 0, &s);
 #endif
-		sz = snprintf(command, sizeof(command),
-			      "(gnuserv-eval%s '(progn ",
-			      quick ? "-quickly" : "");
-		assert(sz>=0 && (size_t)sz<sizeof(command));
+		SNPRINTF(sz, command, sizeof(command),
+			 "(gnuserv-eval%s '(progn ", quick ? "-quickly" : "");
 		send_string(s, command);
 
 		while ((nb = read(fileno(stdin), buffer, GSERV_BUFSZ - 1)) > 0) {
@@ -594,22 +590,18 @@ int main(int argc, char *argv[])
 					progname);
 				exit(1);
 			}
-			sz = snprintf(
-				command, sizeof(command),
-				"(gnuserv-edit-files '(tty %s %s %d) '(",
-				clean_string(tty), clean_string(term),
-				(int)pid);
-			assert(sz >= 0 && (size_t)sz < sizeof(command));
+			SNPRINTF(sz, command, sizeof(command),
+				 "(gnuserv-edit-files '(tty %s %s %d) '(",
+				 clean_string(tty), clean_string(term),
+				 (int)pid);
 		} else {	/* !suppress_windows_system */
 
 			if (0) ;
 #ifdef HAVE_X_WINDOWS
 			else if (display) {
-				sz = snprintf(
-					command, sizeof(command),
-					"(gnuserv-edit-files '(x %s) '(",
-					clean_string(display));
-				assert(sz >= 0 && (size_t)sz < sizeof(command));
+				SNPRINTF(sz, command, sizeof(command),
+					 "(gnuserv-edit-files '(x %s) '(",
+					 clean_string(display));
 			}
 #endif
 #ifdef HAVE_GTK
@@ -640,27 +632,21 @@ int main(int argc, char *argv[])
 #ifdef INTERNET_DOMAIN_SOCKETS
 			msz = strlen(remotepath) + strlen(fullpath) + 1;
 			path = (char*)malloc(msz);
-			sz = snprintf(path, msz, "%s%s", remotepath, fullpath);
-			assert(sz >= 0 && (size_t)sz < msz);
+			SNPRINTF(sz, path, msz, "%s%s", remotepath, fullpath);
 #else  /* !INTERNET_DOMAIN_SOCKETS */
 			path = my_strdup(fullpath);
 #endif	/* INTERNET_DOMAIN_SOCKETS */
-			sz = snprintf(
-				command, sizeof(command),
-				"(%d . %s)", starting_line,
-				clean_string(path));
-			assert(sz >= 0 && (size_t)sz < sizeof(command));
+			SNPRINTF(sz, command, sizeof(command),
+				"(%d . %s)", starting_line, clean_string(path));
 			send_string(s, command);
 			free(path);
 		}
 		
-		sz = snprintf(
-			command, sizeof(command), ")%s%s",
-			(quick || (nofiles && !suppress_windows_system))
-			? " 'quick"
-			: "",
-			view ? " 'view" : "");
-		assert(sz >= 0 && (size_t)sz < sizeof(command));
+		SNPRINTF(sz, command, sizeof(command), ")%s%s",
+			 (quick || (nofiles && !suppress_windows_system))
+			 ? " 'quick"
+			 : "",
+			 view ? " 'view" : "");
 		send_string(s, command);
 		send_string(s, ")");
 
