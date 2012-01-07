@@ -486,7 +486,7 @@ struct mod_clo_s {
 	unsigned int:3;
 };
 
-static inline void
+static void
 modbarf(KeyCode code, const char *name, const char *other,
 	struct mod_clo_s *clo)
 {
@@ -499,7 +499,7 @@ modbarf(KeyCode code, const char *name, const char *other,
 	return;
 }
 
-static inline void
+static void
 modwarn(KeyCode code, const char *name, int old, const char *other,
 	struct mod_clo_s *clo)
 {
@@ -511,8 +511,9 @@ modwarn(KeyCode code, const char *name, int old, const char *other,
 	return;
 }
 
-static inline void
-store_modifier(KeyCode code, const char *name, int *old, struct mod_clo_s *clo)
+static void
+store_modifier(KeyCode code, const char *name, unsigned int *old,
+	       struct mod_clo_s *clo)
 {
 #define modifier_index	clo->modifier_index
 #define modifier_key	clo->modifier_key
