@@ -636,14 +636,18 @@ AC_DEFUN([SXE_WARNFLAGS], [dnl
 		warnflags="$warnflags -Wmissing-declarations"])
 	SXE_CHECK_COMPILER_FLAGS([-Wmissing-prototypes], [
 		warnflags="$warnflags -Wmissing-prototypes"])
-	SXE_CHECK_COMPILER_FLAGS([-Winline], [
-		warnflags="$warnflags -Winline"])
 	SXE_CHECK_COMPILER_FLAGS([-Wbad-function-cast], [
 		warnflags="$warnflags -Wbad-function-cast"])
 	SXE_CHECK_COMPILER_FLAGS([-Wcast-qual], [
 		warnflags="$warnflags -Wcast-qual"])
 	SXE_CHECK_COMPILER_FLAGS([-Wcast-align], [
 		warnflags="$warnflags -Wcast-align"])
+
+	## too aggressive innit
+	if test "${with_maximum_warning_output}" = "yes"; then
+		SXE_CHECK_COMPILER_FLAGS([-Winline], [
+			warnflags="$warnflags -Winline"])
+	fi
 
 	## warn about incomplete switches
 	if test "${with_maximum_warning_output}" = "yes"; then
