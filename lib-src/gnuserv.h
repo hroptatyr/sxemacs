@@ -214,3 +214,8 @@ int read_line(int s, char *dest);
 #ifdef INTERNET_DOMAIN_SOCKETS
 int internet_addr(char *host);
 #endif
+
+/* convenience macro, that does asserts as well */
+#define SNPRINTF(_res_, _tgt_, _tsz_, args...)			\
+	(_res_) = snprintf(_tgt_, _tsz_, args);			\
+	assert((_res_) >= 0 && (size_t)(_res_) < (_tsz_))

@@ -106,9 +106,8 @@ static void tell_emacs_to_resume(int sig)
 
 	connect_type = make_connection(NULL, 0, &s);
 
-	sz = snprintf(buffer, sizeof(buffer), "(gnuserv-eval '(resume-pid-console %d))",
-		      (int)getpid());
-	assert(sz>=0 && (size_t)sz<sizeof(buffer));
+	SNPRINTF(sz, buffer, sizeof(buffer),
+		 "(gnuserv-eval '(resume-pid-console %d))", (int)getpid());
 	send_string(s, buffer);
 
 #ifdef SYSV_IPC
@@ -184,11 +183,12 @@ static char *get_current_working_directory(void)
   filename_expand -- try to convert the given filename into a fully-qualified
   		     pathname.
 */
-static void filename_expand(char *fullpath, char *filename, size_t fullsize)
-  /* fullpath - returned full pathname */
-  /* filename - filename to expand */
+static void
+filename_expand(char *fullpath, char *filename, size_t fullsize)
 {
-	int len;
+/* fullpath - returned full pathname */
+/* filename - filename to expand */
+	size_t len;
 	fullpath[0] = '\0';
 
 	if (filename[0] && filename[0] == '/') {
@@ -196,20 +196,24 @@ static void filename_expand(char *fullpath, char *filename, size_t fullsize)
 	        strncat(fullpath, filename, fullsize-1);
 	} else {
 		/* Assume relative Unix style path.  Get the current directory
-		   and prepend it.  FIXME: need to fix the case of DOS paths like
-		   "\foo", where we need to get the current drive. */
-
+		 * and prepend it.  FIXME: need to fix the case of DOS paths
+		 * like "\foo", where we need to get the current drive. */
 	        strncat(fullpath, get_current_working_directory(), fullsize-1);
 		len = strlen(fullpath);
 
-		if (len > 0 && fullpath[len - 1] == '/')	/* trailing slash already? */
-			;	/* yep */
-		else if (len >=0 && (size_t)len < fullsize-1)
-			strcat(fullpath, "/");	/* nope, append trailing slash */
+		/* trailing slash already? */
+		if (len > 0 && fullpath[len - 1] == '/') {
+			/* yep */
+			;
+		} else if (len < fullsize-1) {
+			/* nope, append trailing slash */
+			strcat(fullpath, "/");
+		}
 		/* Don't forget to add the filename! */
-		strncat(fullpath, filename, fullsize-len-1);
+		strncat(fullpath, filename, fullsize - len - 1);
 	}
-}				/* filename_expand */
+	return;
+}
 
 /* Encase the string in quotes, escape all the backslashes and quotes
    in string.  */
@@ -451,9 +455,8 @@ int main(int argc, char *argv[])
 #else
 		connect_type = make_connection(NULL, 0, &s);
 #endif
-		sz = snprintf(command, sizeof(command), "(gnuserv-eval%s '(progn ",
-			 quick ? "-quickly" : "");
-		assert(sz>=0 && (size_t)sz<sizeof(command));
+		SNPRINTF(sz, command, sizeof(command),
+			 "(gnuserv-eval%s '(progn ", quick ? "-quickly" : "");
 		send_string(s, command);
 		if (load_library) {
 			send_string(s, "(load-library ");
@@ -487,10 +490,8 @@ int main(int argc, char *argv[])
 #else
 		connect_type = make_connection(NULL, 0, &s);
 #endif
-		sz = snprintf(command, sizeof(command),
-			      "(gnuserv-eval%s '(progn ",
-			      quick ? "-quickly" : "");
-		assert(sz>=0 && (size_t)sz<sizeof(command));
+		SNPRINTF(sz, command, sizeof(command),
+			 "(gnuserv-eval%s '(progn ", quick ? "-quickly" : "");
 		send_string(s, command);
 
 		while ((nb = read(fileno(stdin), buffer, GSERV_BUFSZ - 1)) > 0) {
@@ -594,22 +595,18 @@ int main(int argc, char *argv[])
 					progname);
 				exit(1);
 			}
-			sz = snprintf(
-				command, sizeof(command),
-				"(gnuserv-edit-files '(tty %s %s %d) '(",
-				clean_string(tty), clean_string(term),
-				(int)pid);
-			assert(sz >= 0 && (size_t)sz < sizeof(command));
+			SNPRINTF(sz, command, sizeof(command),
+				 "(gnuserv-edit-files '(tty %s %s %d) '(",
+				 clean_string(tty), clean_string(term),
+				 (int)pid);
 		} else {	/* !suppress_windows_system */
 
 			if (0) ;
 #ifdef HAVE_X_WINDOWS
 			else if (display) {
-				sz = snprintf(
-					command, sizeof(command),
-					"(gnuserv-edit-files '(x %s) '(",
-					clean_string(display));
-				assert(sz >= 0 && (size_t)sz < sizeof(command));
+				SNPRINTF(sz, command, sizeof(command),
+					 "(gnuserv-edit-files '(x %s) '(",
+					 clean_string(display));
 			}
 #endif
 #ifdef HAVE_GTK
@@ -640,27 +637,21 @@ int main(int argc, char *argv[])
 #ifdef INTERNET_DOMAIN_SOCKETS
 			msz = strlen(remotepath) + strlen(fullpath) + 1;
 			path = (char*)malloc(msz);
-			sz = snprintf(path, msz, "%s%s", remotepath, fullpath);
-			assert(sz >= 0 && (size_t)sz < msz);
+			SNPRINTF(sz, path, msz, "%s%s", remotepath, fullpath);
 #else  /* !INTERNET_DOMAIN_SOCKETS */
 			path = my_strdup(fullpath);
 #endif	/* INTERNET_DOMAIN_SOCKETS */
-			sz = snprintf(
-				command, sizeof(command),
-				"(%d . %s)", starting_line,
-				clean_string(path));
-			assert(sz >= 0 && (size_t)sz < sizeof(command));
+			SNPRINTF(sz, command, sizeof(command),
+				"(%d . %s)", starting_line, clean_string(path));
 			send_string(s, command);
 			free(path);
 		}
 		
-		sz = snprintf(
-			command, sizeof(command), ")%s%s",
-			(quick || (nofiles && !suppress_windows_system))
-			? " 'quick"
-			: "",
-			view ? " 'view" : "");
-		assert(sz >= 0 && (size_t)sz < sizeof(command));
+		SNPRINTF(sz, command, sizeof(command), ")%s%s",
+			 (quick || (nofiles && !suppress_windows_system))
+			 ? " 'quick"
+			 : "",
+			 view ? " 'view" : "");
 		send_string(s, command);
 		send_string(s, ")");
 
