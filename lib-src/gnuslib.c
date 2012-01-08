@@ -263,7 +263,7 @@ static int connect_to_unix_server(void)
 	sz = snprintf(server.sun_path, sizeof(server.sun_path),
 		      "%s/gsrv%d", tmpdir, (int)geteuid());
 #endif				/* HIDE_UNIX_SOCKET */
-	assert(sz>=0 && sz<sizeof(server.sun_path));
+	assert(sz >= 0 && (size_t)sz < sizeof(server.sun_path));
 	if (connect(s, (struct sockaddr *)&server, strlen(server.sun_path) + 2)
 	    < 0) {
 		perror(progname);
@@ -389,8 +389,7 @@ static int connect_to_internet_server(char *serverhost, unsigned short port)
 #endif				/* AUTH_MAGIC_COOKIE */
 
 	len = snprintf(buf, sizeof(buf), "%s\n", DEFAUTH_NAME);
-	assert(len >= 0);
-	assert((size_t)len < sizeof(buf));
+	assert(len >= 0 && (size_t)len < sizeof(buf));
 	t = write(s, buf, len);
 	if(t != len) {
 		fprintf(stderr, "%s: unable to send auth", progname);

@@ -65,7 +65,7 @@ static char *get_time(void)
 	sz = snprintf(time_string, sizeof(time_string), "%lu.%06lu",
 		      (unsigned long)TV2.tv_sec - TV1.tv_sec,
 		      (unsigned long)TV2.tv_usec - TV1.tv_usec);
-	assert(sz>=0 && (size_t)sz<sizeof(time_string));
+	assert(sz >= 0 && (size_t)sz < sizeof(time_string));
 	return time_string;
 }
 
