@@ -474,16 +474,17 @@ struct mod_clo_s {
 	bool warned_about_overlapping_modifiers:1;
 	bool warned_about_predefined_modifiers:1;
 	bool warned_about_duplicate_modifiers:1;
-	/* pad for the bools, so they end up on an 8bit boundary */
-	unsigned int:1;
-	/* each bit consumes 5 bits, totalling to 25 bits */
-	unsigned int meta_bit:5;
-	unsigned int hyper_bit:5;
-	unsigned int super_bit:5;
-	unsigned int alt_bit:5;
-	unsigned int mode_bit:5;
-	/* pad to make it a 32 bit thing */
-	unsigned int:3;
+	/* pad for the bools, so they end up on an 8bit boundary
+	 * also store the old state */
+	unsigned int old:5;
+	/* each bit consumes 4 bits, totalling to 20 bits */
+	unsigned int meta_bit:4;
+	unsigned int hyper_bit:4;
+	unsigned int super_bit:4;
+	unsigned int alt_bit:4;
+	unsigned int mode_bit:4;
+	/* for bits left for a future modifier */
+	unsigned int:4;
 };
 
 static void
@@ -512,18 +513,17 @@ modwarn(KeyCode code, const char *name, int old, const char *other,
 }
 
 static void
-store_modifier(KeyCode code, const char *name, unsigned int *old,
-	       struct mod_clo_s *clo)
+store_modifier(KeyCode code, const char *name, struct mod_clo_s *clo)
 {
 #define modifier_index	clo->modifier_index
 #define modifier_key	clo->modifier_key
 #define mkpm		clo->mkpm
-	if (*old && *old != modifier_index) {
+	if (clo->old && clo->old != modifier_index) {
 		warn_when_safe(
 			Qkey_mapping, Qwarning,
 			"SXEmacs:  %s (0x%x) generates both "
 			"%s and %s, which is nonsensical.",
-			name, code, index_to_name(*old),
+			name, code, index_to_name(clo->old),
 			index_to_name(modifier_index));
 		clo->warned_about_duplicate_modifiers = true;
 	}
@@ -539,19 +539,19 @@ store_modifier(KeyCode code, const char *name, unsigned int *old,
 		;
 #endif
 	} else if (modifier_index == clo->meta_bit &&
-		   *old != clo->meta_bit) {	
+		   clo->old != clo->meta_bit) {	
 		modwarn(code, name, clo->meta_bit, "Meta", clo);
 	} else if (modifier_index == clo->super_bit &&
-		   *old != clo->super_bit) {
+		   clo->old != clo->super_bit) {
 		modwarn(code, name, clo->super_bit, "Super", clo);
 	} else if (modifier_index == clo->hyper_bit &&
-		   *old != clo->hyper_bit) {
+		   clo->old != clo->hyper_bit) {
 		modwarn(code, name, clo->hyper_bit, "Hyper", clo);
 	} else if (modifier_index == clo->alt_bit &&
-		   *old != clo->alt_bit) {
+		   clo->old != clo->alt_bit) {
 		modwarn(code, name, clo->alt_bit, "Alt", clo);
 	} else {
-		*old = modifier_index;
+		clo->old = modifier_index;
 	}
 	return;
 #undef modifier_index
@@ -594,7 +594,6 @@ whatever(Display *dspl, struct x_device *xd, struct mod_clo_s *clo)
 	KeySym last_sym = 0;
 	KeyCode code = xd->x_modifier_keymap->modifiermap
 		[modifier_index * mkpm + modifier_key];
-	unsigned int tmp = 0;
 
 	for (int column = 0; column < 4; column += 2) {
 		KeySym sym = code
@@ -612,36 +611,45 @@ whatever(Display *dspl, struct x_device *xd, struct mod_clo_s *clo)
 			mode_bit = modifier_index;
 			break;
 		case XK_Meta_L:
-			store_modifier(code, "Meta_L", &tmp, clo);
-			meta_bit = tmp;
+			/* new modifier, new luck, reset clo->old */
+			clo->old = meta_bit;
+			store_modifier(code, "Meta_L", clo);
+			meta_bit = clo->old;
 			break;
 		case XK_Meta_R:
-			store_modifier(code, "Meta_R", &tmp, clo);
-			meta_bit = tmp;
+			clo->old = meta_bit;
+			store_modifier(code, "Meta_R", clo);
+			meta_bit = clo->old;
 			break;
 		case XK_Super_L:
-			store_modifier(code, "Super_L", &tmp, clo);
-			super_bit = tmp;
+			clo->old = super_bit;
+			store_modifier(code, "Super_L", clo);
+			super_bit = clo->old;
 			break;
 		case XK_Super_R:
-			store_modifier(code, "Super_R", &tmp, clo);
-			super_bit = tmp;
+			clo->old = super_bit;
+			store_modifier(code, "Super_R", clo);
+			super_bit = clo->old;
 			break;
 		case XK_Hyper_L:
-			store_modifier(code, "Hyper_L", &tmp, clo);
-			hyper_bit = tmp;
+			clo->old = hyper_bit;
+			store_modifier(code, "Hyper_L", clo);
+			hyper_bit = clo->old;
 			break;
 		case XK_Hyper_R:
-			store_modifier(code, "Hyper_R", &tmp, clo);
-			hyper_bit = tmp;
+			clo->old = hyper_bit;
+			store_modifier(code, "Hyper_R", clo);
+			hyper_bit = clo->old;
 			break;
 		case XK_Alt_L:
-			store_modifier(code, "Alt_L", &tmp, clo);
-			alt_bit = tmp;
+			clo->old = alt_bit;
+			store_modifier(code, "Alt_L", clo);
+			alt_bit = clo->old;
 			break;
 		case XK_Alt_R:
-			store_modifier(code, "Alt_R", &tmp, clo);
-			alt_bit = tmp;
+			clo->old = alt_bit;
+			store_modifier(code, "Alt_R", clo);
+			alt_bit = clo->old;
 			break;
 		case XK_Control_L:
 			check_modifier(code, "Control_L", ControlMask, clo);
@@ -703,6 +711,7 @@ x_reset_modifier_mapping(struct device *d)
 		.super_bit = 0,
 		.alt_bit = 0,
 		.mode_bit = 0,
+		.old = 0,
 	};
 
 #define mode_bit	clo.mode_bit
