@@ -607,12 +607,14 @@ AC_DEFUN([SXE_WARNFLAGS], [dnl
 	## Warnings about char subscripts are pretty
 	## pointless, though,
 	## and we use them in various places.
-	SXE_CHECK_COMPILER_FLAGS([-Wsign-compare], [
-		warnflags="$warnflags -Wsign-compare"])
-	SXE_CHECK_COMPILER_FLAGS([-Wno-char-subscripts], [
-		warnflags="$warnflags -Wno-char-subscripts"])
-	SXE_CHECK_COMPILER_FLAGS([-Wundef], [
-		warnflags="$warnflags -Wundef"])
+	if test "${with_maximum_warning_output}" = "yes"; then
+		SXE_CHECK_COMPILER_FLAGS([-Wsign-compare], [
+			warnflags="$warnflags -Wsign-compare"])
+		SXE_CHECK_COMPILER_FLAGS([-Wno-char-subscripts], [
+			warnflags="$warnflags -Wno-char-subscripts"])
+		SXE_CHECK_COMPILER_FLAGS([-Wundef], [
+			warnflags="$warnflags -Wundef"])
+	fi
 
 	## too much at the moment, we rarely define protos
 	#warnflags="$warnflags -Wmissing-prototypes -Wstrict-prototypes"
@@ -634,8 +636,6 @@ AC_DEFUN([SXE_WARNFLAGS], [dnl
 		warnflags="$warnflags -Wmissing-declarations"])
 	SXE_CHECK_COMPILER_FLAGS([-Wmissing-prototypes], [
 		warnflags="$warnflags -Wmissing-prototypes"])
-	SXE_CHECK_COMPILER_FLAGS([-Winline], [
-		warnflags="$warnflags -Winline"])
 	SXE_CHECK_COMPILER_FLAGS([-Wbad-function-cast], [
 		warnflags="$warnflags -Wbad-function-cast"])
 	SXE_CHECK_COMPILER_FLAGS([-Wcast-qual], [
@@ -643,25 +643,35 @@ AC_DEFUN([SXE_WARNFLAGS], [dnl
 	SXE_CHECK_COMPILER_FLAGS([-Wcast-align], [
 		warnflags="$warnflags -Wcast-align"])
 
+	## too aggressive innit
+	if test "${with_maximum_warning_output}" = "yes"; then
+		SXE_CHECK_COMPILER_FLAGS([-Winline], [
+			warnflags="$warnflags -Winline"])
+	fi
+
 	## warn about incomplete switches
-	SXE_CHECK_COMPILER_FLAGS([-Wswitch], [
-		warnflags="$warnflags -Wswitch"])
-	SXE_CHECK_COMPILER_FLAGS([-Wswitch-default], [
-		warnflags="$warnflags -Wswitch-default"])
-	SXE_CHECK_COMPILER_FLAGS([-Wswitch-enum], [
-		warnflags="$warnflags -Wswitch-enum"])
+	if test "${with_maximum_warning_output}" = "yes"; then
+		SXE_CHECK_COMPILER_FLAGS([-Wswitch], [
+			warnflags="$warnflags -Wswitch"])
+		SXE_CHECK_COMPILER_FLAGS([-Wswitch-default], [
+			warnflags="$warnflags -Wswitch-default"])
+		SXE_CHECK_COMPILER_FLAGS([-Wswitch-enum], [
+			warnflags="$warnflags -Wswitch-enum"])
+	fi
 
 	## Wunused's
-	SXE_CHECK_COMPILER_FLAGS([-Wunused-function], [
-		warnflags="$warnflags -Wunused-function"])
-	SXE_CHECK_COMPILER_FLAGS([-Wunused-variable], [
-		warnflags="$warnflags -Wunused-variable"])
-	SXE_CHECK_COMPILER_FLAGS([-Wunused-parameter], [
-		warnflags="$warnflags -Wunused-parameter"])
-	SXE_CHECK_COMPILER_FLAGS([-Wunused-value], [
-		warnflags="$warnflags -Wunused-value"])
-	SXE_CHECK_COMPILER_FLAGS([-Wunused], [
-		warnflags="$warnflags -Wunused"])
+	if test "${with_maximum_warning_output}" = "yes"; then
+		SXE_CHECK_COMPILER_FLAGS([-Wunused-function], [
+			warnflags="$warnflags -Wunused-function"])
+		SXE_CHECK_COMPILER_FLAGS([-Wunused-variable], [
+			warnflags="$warnflags -Wunused-variable"])
+		SXE_CHECK_COMPILER_FLAGS([-Wunused-parameter], [
+			warnflags="$warnflags -Wunused-parameter"])
+		SXE_CHECK_COMPILER_FLAGS([-Wunused-value], [
+			warnflags="$warnflags -Wunused-value"])
+		SXE_CHECK_COMPILER_FLAGS([-Wunused], [
+			warnflags="$warnflags -Wunused"])
+	fi
 
 	## icc
 	SXE_CHECK_COMPILER_FLAGS([-Wreorder], [

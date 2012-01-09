@@ -87,7 +87,8 @@ static char *cp = NULL;		/* ptr into valid bit of cwd above */
 
 static pid_t emacs_pid;		/* Process id for emacs process */
 
-void initialize_signals(void);
+static void
+initialize_signals(void);
 
 static void tell_emacs_to_resume(int sig)
 {
@@ -105,9 +106,8 @@ static void tell_emacs_to_resume(int sig)
 
 	connect_type = make_connection(NULL, 0, &s);
 
-	sz = snprintf(buffer, sizeof(buffer), "(gnuserv-eval '(resume-pid-console %d))",
-		      (int)getpid());
-	assert(sz>=0 && (size_t)sz<sizeof(buffer));
+	SNPRINTF(sz, buffer, sizeof(buffer),
+		 "(gnuserv-eval '(resume-pid-console %d))", (int)getpid());
 	send_string(s, buffer);
 
 #ifdef SYSV_IPC
@@ -119,7 +119,8 @@ static void tell_emacs_to_resume(int sig)
 #endif				/* !SYSV_IPC */
 }
 
-static void pass_signal_to_emacs(int sig)
+static void
+pass_signal_to_emacs(int sig)
 {
 	if (kill(emacs_pid, sig) == -1) {
 		fprintf(stderr,
@@ -129,7 +130,8 @@ static void pass_signal_to_emacs(int sig)
 	initialize_signals();
 }
 
-void initialize_signals(void)
+static void
+initialize_signals(void)
 {
 	/* Set up signal handler to pass relevant signals to emacs process.
 	   We used to send SIGSEGV, SIGBUS, SIGPIPE, SIGILL and others to
@@ -181,11 +183,12 @@ static char *get_current_working_directory(void)
   filename_expand -- try to convert the given filename into a fully-qualified
   		     pathname.
 */
-static void filename_expand(char *fullpath, char *filename, size_t fullsize)
-  /* fullpath - returned full pathname */
-  /* filename - filename to expand */
+static void
+filename_expand(char *fullpath, char *filename, size_t fullsize)
 {
-	int len;
+/* fullpath - returned full pathname */
+/* filename - filename to expand */
+	size_t len;
 	fullpath[0] = '\0';
 
 	if (filename[0] && filename[0] == '/') {
@@ -193,20 +196,24 @@ static void filename_expand(char *fullpath, char *filename, size_t fullsize)
 	        strncat(fullpath, filename, fullsize-1);
 	} else {
 		/* Assume relative Unix style path.  Get the current directory
-		   and prepend it.  FIXME: need to fix the case of DOS paths like
-		   "\foo", where we need to get the current drive. */
-
+		 * and prepend it.  FIXME: need to fix the case of DOS paths
+		 * like "\foo", where we need to get the current drive. */
 	        strncat(fullpath, get_current_working_directory(), fullsize-1);
 		len = strlen(fullpath);
 
-		if (len > 0 && fullpath[len - 1] == '/')	/* trailing slash already? */
-			;	/* yep */
-		else if (len >=0 && (size_t)len < fullsize-1)
-			strcat(fullpath, "/");	/* nope, append trailing slash */
+		/* trailing slash already? */
+		if (len > 0 && fullpath[len - 1] == '/') {
+			/* yep */
+			;
+		} else if (len < fullsize-1) {
+			/* nope, append trailing slash */
+			strcat(fullpath, "/");
+		}
 		/* Don't forget to add the filename! */
-		strncat(fullpath, filename, fullsize-len-1);
+		strncat(fullpath, filename, fullsize - len - 1);
 	}
-}				/* filename_expand */
+	return;
+}
 
 /* Encase the string in quotes, escape all the backslashes and quotes
    in string.  */
@@ -252,20 +259,21 @@ static char *clean_string(const char *s)
 	return res;
 }
 
-#define GET_ARGUMENT(var, desc) do {					   \
- if (*(p + 1)) (var) = p + 1;						   \
-   else									   \
-     {									   \
-       if (!argv[++i])							   \
-         {								   \
-           fprintf (stderr, "%s: `%s' must be followed by an argument\n",  \
-		    progname, desc);					   \
-	   exit (1);							   \
-         }								   \
-      (var) = argv[i];							   \
-    }									   \
-  over = 1;								   \
-} while (0)
+#define GET_ARGUMENT(var, desc)						\
+	do {								\
+		if (*(p + 1)) {						\
+			(var) = p + 1;					\
+		} else {						\
+			if (!argv[++i]) {				\
+				fprintf(stderr, "%s: `%s' must be "	\
+					"followed by an argument\n",	\
+					progname, desc);		\
+				exit (1);				\
+			}						\
+			(var) = argv[i];				\
+		}							\
+		over = 1;						\
+	} while (0)
 
 /* A strdup imitation. */
 static char *my_strdup(const char *s)
@@ -312,7 +320,8 @@ int main(int argc, char *argv[])
 	char buffer[GSERV_BUFSZ + 1];	/* buffer to read pid */
 	char result[GSERV_BUFSZ + 1];
 	int i;
-	int sz, msz;
+	int sz;
+	size_t msz;
 
 #ifdef INTERNET_DOMAIN_SOCKETS
 	memset(remotepath, 0, sizeof(remotepath));
@@ -446,9 +455,8 @@ int main(int argc, char *argv[])
 #else
 		connect_type = make_connection(NULL, 0, &s);
 #endif
-		sz = snprintf(command, sizeof(command), "(gnuserv-eval%s '(progn ",
-			 quick ? "-quickly" : "");
-		assert(sz>=0 && (size_t)sz<sizeof(command));
+		SNPRINTF(sz, command, sizeof(command),
+			 "(gnuserv-eval%s '(progn ", quick ? "-quickly" : "");
 		send_string(s, command);
 		if (load_library) {
 			send_string(s, "(load-library ");
@@ -482,10 +490,8 @@ int main(int argc, char *argv[])
 #else
 		connect_type = make_connection(NULL, 0, &s);
 #endif
-		sz = snprintf(command, sizeof(command),
-			      "(gnuserv-eval%s '(progn ",
-			      quick ? "-quickly" : "");
-		assert(sz>=0 && (size_t)sz<sizeof(command));
+		SNPRINTF(sz, command, sizeof(command),
+			 "(gnuserv-eval%s '(progn ", quick ? "-quickly" : "");
 		send_string(s, command);
 
 		while ((nb = read(fileno(stdin), buffer, GSERV_BUFSZ - 1)) > 0) {
@@ -582,31 +588,32 @@ int main(int argc, char *argv[])
 
 		if (suppress_windows_system) {
 			char *term = getenv("TERM");
+			pid_t pid = getpid();
+
 			if (!term) {
 				fprintf(stderr, "%s: unknown terminal type\n",
 					progname);
 				exit(1);
 			}
-			sz = snprintf(command, sizeof(command),
-				      "(gnuserv-edit-files '(tty %s %s %d) '(",
-				      clean_string(tty), clean_string(term),
-				      (int)getpid());
-			assert(sz>=0 && (size_t)sz<sizeof(command));
+			SNPRINTF(sz, command, sizeof(command),
+				 "(gnuserv-edit-files '(tty %s %s %d) '(",
+				 clean_string(tty), clean_string(term),
+				 (int)pid);
 		} else {	/* !suppress_windows_system */
 
 			if (0) ;
 #ifdef HAVE_X_WINDOWS
 			else if (display) {
-				sz = snprintf(command, sizeof(command),
-					      "(gnuserv-edit-files '(x %s) '(",
-						  clean_string(display));
-				assert(sz>=0 && (size_t)sz<sizeof(command));
+				SNPRINTF(sz, command, sizeof(command),
+					 "(gnuserv-edit-files '(x %s) '(",
+					 clean_string(display));
 			}
 #endif
 #ifdef HAVE_GTK
-			else if (display)
+			else if (display) {
 				strcpy(command,
 				       "(gnuserv-edit-files '(gtk nil) '(");
+			}
 #endif
 		}		/* !suppress_windows_system */
 		send_string(s, command);
@@ -615,11 +622,13 @@ int main(int argc, char *argv[])
 			nofiles = 1;
 
 		for (; argv[i]; i++) {
-			if (i < argc - 1 && *argv[i] == '+')
+			if (i < argc - 1 && *argv[i] == '+') {
 				starting_line = atoi(argv[i++]);
-			else
+			} else {
 				starting_line = 1;
-			/* If the last argument is +something, treat it as a file. */
+			}
+			/* If the last argument is +something, treat it as a
+			   file. */
 			if (i == argc) {
 				starting_line = 1;
 				--i;
@@ -627,27 +636,22 @@ int main(int argc, char *argv[])
 			filename_expand(fullpath, argv[i], sizeof(fullpath));
 #ifdef INTERNET_DOMAIN_SOCKETS
 			msz = strlen(remotepath) + strlen(fullpath) + 1;
-			path = (char *)malloc(msz);
-			sz = snprintf(path, msz, "%s%s", remotepath, fullpath);
-			assert(sz>=0 && sz<msz);
-#else
+			path = (char*)malloc(msz);
+			SNPRINTF(sz, path, msz, "%s%s", remotepath, fullpath);
+#else  /* !INTERNET_DOMAIN_SOCKETS */
 			path = my_strdup(fullpath);
-#endif
-			sz = snprintf(command, sizeof(command),
-				      "(%d . %s)", starting_line,
-				      clean_string(path));
-			assert(sz>=0 && (size_t)sz<sizeof(command));
+#endif	/* INTERNET_DOMAIN_SOCKETS */
+			SNPRINTF(sz, command, sizeof(command),
+				"(%d . %s)", starting_line, clean_string(path));
 			send_string(s, command);
 			free(path);
-		}		/* for */
+		}
 		
-		sz = snprintf(command, sizeof(command),
-			      ")%s%s",
-			      (quick
-			       || (nofiles
-				   && !suppress_windows_system)) ? " 'quick" : "",
-			      view ? " 'view" : "");
-		assert(sz>=0 && (size_t)sz<sizeof(command));
+		SNPRINTF(sz, command, sizeof(command), ")%s%s",
+			 (quick || (nofiles && !suppress_windows_system))
+			 ? " 'quick"
+			 : "",
+			 view ? " 'view" : "");
 		send_string(s, command);
 		send_string(s, ")");
 
@@ -663,6 +667,6 @@ int main(int argc, char *argv[])
 	/* not batch */
 	return 0;
 
-}				/* main */
+}
 
-#endif				/* SYSV_IPC || UNIX_DOMAIN_SOCKETS || INTERNET_DOMAIN_SOCKETS */
+#endif  /* SYSV_IPC || UNIX_DOMAIN_SOCKETS || INTERNET_DOMAIN_SOCKETS */

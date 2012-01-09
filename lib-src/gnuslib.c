@@ -130,9 +130,9 @@ static int connect_to_ipc_server(void)
 	key_t key;		/* message key */
 	char buf[GSERV_BUFSZ + 1];	/* buffer for filename */
 
-	int sz = snprintf(buf, sizeof(buf), 
-			  "%s/gsrv%d", tmpdir, (int)geteuid());
-	assert(sz>=0 && sz<sizeof(buf));
+	int sz;
+
+	SNPRINTF(sz, buf, sizeof(buf), "%s/gsrv%d", tmpdir, (int)geteuid());
 	creat(buf, 0600);
 	if ((key = ftok(buf, 1)) == -1) {
 		perror(progname);
@@ -257,13 +257,12 @@ static int connect_to_unix_server(void)
 
 	server.sun_family = AF_UNIX;
 #ifdef HIDE_UNIX_SOCKET
-	sz = snprintf(server.sun_path, sizeof(server.sun_path),
-		      "%s/gsrvdir%d/gsrv", tmpdir, (int)geteuid());
+	SNPRINTF(sz, server.sun_path, sizeof(server.sun_path),
+		 "%s/gsrvdir%d/gsrv", tmpdir, (int)geteuid());
 #else				/* HIDE_UNIX_SOCKET */
-	sz = snprintf(server.sun_path, sizeof(server.sun_path),
-		      "%s/gsrv%d", tmpdir, (int)geteuid());
+	SNPRINTF(sz, server.sun_path, sizeof(server.sun_path),
+		 "%s/gsrv%d", tmpdir, (int)geteuid());
 #endif				/* HIDE_UNIX_SOCKET */
-	assert(sz>=0 && sz<sizeof(server.sun_path));
 	if (connect(s, (struct sockaddr *)&server, strlen(server.sun_path) + 2)
 	    < 0) {
 		perror(progname);
@@ -371,9 +370,8 @@ static int connect_to_internet_server(char *serverhost, unsigned short port)
 			     strlen(MCOOKIE_X_NAME), MCOOKIE_X_NAME);
 
 	if (server_xauth && server_xauth->data) {
-		len = snprintf(buf, sizeof(buf), "%s\n%d\n", MCOOKIE_NAME,
-			       server_xauth->data_length);
-		assert( len >=0 && len < sizeof(buf));
+		SNPRINTF(len, buf, sizeof(buf),
+			 "%s\n%d\n", MCOOKIE_NAME, server_xauth->data_length);
 		t = write(s, buf, len);
 		if(t != len) {
 			fprintf(stderr, "%s: unable to send auth", progname);
@@ -388,9 +386,7 @@ static int connect_to_internet_server(char *serverhost, unsigned short port)
 	}
 #endif				/* AUTH_MAGIC_COOKIE */
 
-	len = snprintf(buf, sizeof(buf), "%s\n", DEFAUTH_NAME);
-	assert(len >= 0);
-	assert((size_t)len < sizeof(buf));
+	SNPRINTF(len, buf, sizeof(buf), "%s\n", DEFAUTH_NAME);
 	t = write(s, buf, len);
 	if(t != len) {
 		fprintf(stderr, "%s: unable to send auth", progname);

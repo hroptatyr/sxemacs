@@ -31,10 +31,11 @@
 #define YOW_FILE "yow.lines"
 #endif
 
-void yow(FILE * fp);
-void setup_yow(FILE * fp);
+static void yow(FILE * fp);
+static void setup_yow(FILE * fp);
 
-int main(int argc, char *argv[])
+int
+main(int argc, char *argv[])
 {
 	FILE *fp;
 	char file[BUFSIZ];
@@ -79,7 +80,8 @@ static long header_len;
 #define AVG_LEN 40		/* average length of a quotation */
 
 /* Sets len and header_len */
-void setup_yow(FILE * fp)
+static void
+setup_yow(FILE * fp)
 {
 	int c;
 
@@ -105,7 +107,8 @@ void setup_yow(FILE * fp)
 }
 
 /* go to a random place in the file and print the quotation there */
-void yow(FILE * fp)
+static void
+yow(FILE * fp)
 {
 	long offset;
 	int c, i = 0;

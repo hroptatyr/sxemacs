@@ -1974,7 +1974,7 @@ re_wctype(re_char *str)
 	} else if (STREQ (string, "multibyte")) {
 		return RECC_MULTIBYTE;
 	} else {
-		return 0;
+		return RECC_ERROR;
 	}
 }
 
