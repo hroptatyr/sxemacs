@@ -224,7 +224,7 @@ Lisp_Object Qretry_undefined_key_binding_unshifted;
 #ifdef HAVE_XIM
 /* If composed input is undefined, use self-insert-char */
 Lisp_Object Vcomposed_character_default_binding;
-#endif				/* HAVE_XIM */
+#endif  /* HAVE_XIM */
 
 /* Console that corresponds to our controlling terminal */
 Lisp_Object Vcontrolling_terminal;
@@ -287,7 +287,7 @@ event_queue_t asyneq = Qnull_pointer;
 static Lisp_Object Vasyneq;
 #define EQ_EMPTY_P()	eq_queue_empty_p(asyneq)
 #define EQ_LARGE_P()	(eq_queue_size(asyneq) > 1)
-#else
+#else  /* !EF_USE_ASYNEQ */
 /* This structure is basically a typeahead queue: things like
    wait-reading-process-output will delay the execution of
    keyboard and mouse events by pushing them here.
@@ -299,7 +299,7 @@ static Lisp_Object command_event_queue;
 static Lisp_Object command_event_queue_tail;
 #define EQ_EMPTY_P()	NILP(command_event_queue)
 #define EQ_LARGE_P()	!NILP(command_event_queue_tail)
-#endif
+#endif	/* EF_USE_ASYNEQ */
 
 /* Nonzero means echo unfinished commands after this many seconds of pause. */
 static Lisp_Object Vecho_keystrokes;
@@ -330,7 +330,8 @@ static Lisp_Object recursive_sit_for;
 #define COMMAND_BUILDERP(x) RECORDP (x, command_builder)
 #define CHECK_COMMAND_BUILDER(x) CHECK_RECORD (x, command_builder)
 
-static Lisp_Object mark_command_builder(Lisp_Object obj)
+static Lisp_Object
+mark_command_builder(Lisp_Object obj)
 {
 	struct command_builder *builder = XCOMMAND_BUILDER(obj);
 	mark_object(builder->prefix_events);
@@ -342,7 +343,8 @@ static Lisp_Object mark_command_builder(Lisp_Object obj)
 	return builder->console;
 }
 
-static void finalize_command_builder(void *header, int for_disksave)
+static void
+finalize_command_builder(void *header, int for_disksave)
 {
 	if (!for_disksave) {
 		xfree(((struct command_builder *)header)->echo_buf);
@@ -365,12 +367,13 @@ static void reset_command_builder_event_chain(struct command_builder *builder)
 	builder->munge_me[1].first_mungeable_event = Qnil;
 }
 
-Lisp_Object allocate_command_builder(Lisp_Object console)
+Lisp_Object
+allocate_command_builder(Lisp_Object console)
 {
 	Lisp_Object builder_obj;
 	struct command_builder *builder =
-	    alloc_lcrecord_type(struct command_builder,
-				&lrecord_command_builder);
+		alloc_lcrecord_type(
+			struct command_builder, &lrecord_command_builder);
 
 	builder->console = console;
 	reset_command_builder_event_chain(builder);
@@ -391,16 +394,20 @@ command_builder_append_event(struct command_builder *builder, Lisp_Object event)
 {
 	assert(EVENTP(event));
 
-	if (EVENTP(builder->most_current_event))
+	if (EVENTP(builder->most_current_event)) {
 		XSET_EVENT_NEXT(builder->most_current_event, event);
-	else
+	} else {
 		builder->current_events = event;
+	}
 
 	builder->most_current_event = event;
-	if (NILP(builder->munge_me[0].first_mungeable_event))
+	if (NILP(builder->munge_me[0].first_mungeable_event)) {
 		builder->munge_me[0].first_mungeable_event = event;
-	if (NILP(builder->munge_me[1].first_mungeable_event))
+	}
+	if (NILP(builder->munge_me[1].first_mungeable_event)) {
 		builder->munge_me[1].first_mungeable_event = event;
+	}
+	return;
 }
 
 /**********************************************************************/
@@ -414,7 +421,8 @@ enum event_stream_operation {
 	EVENT_STREAM_READ
 };
 
-static void check_event_stream_ok(enum event_stream_operation op)
+static void
+check_event_stream_ok(enum event_stream_operation op)
 {
 	if (!event_stream && noninteractive) {
 		switch (op) {
@@ -433,20 +441,26 @@ static void check_event_stream_ok(enum event_stream_operation op)
 		error
 		    ("event-stream callbacks not initialized (internal error?)");
 	}
+	return;
 }
 
-static int event_stream_event_pending_p(int user)
+static int
+event_stream_event_pending_p(int user)
 {
 	return event_stream && event_stream->event_pending_p(user);
 }
 
-static void event_stream_force_event_pending(struct frame *f)
+static void
+event_stream_force_event_pending(struct frame *f)
 {
-	if (event_stream->force_event_pending)
+	if (event_stream->force_event_pending) {
 		event_stream->force_event_pending(f);
+	}
+	return;
 }
 
-static int maybe_read_quit_event(Lisp_Event * event)
+static int
+maybe_read_quit_event(Lisp_Event * event)
 {
 	/* A C-g that came from `sigint_happened' will always come from the
 	   controlling terminal.  If that doesn't exist, however, then the
@@ -473,7 +487,8 @@ static int maybe_read_quit_event(Lisp_Event * event)
 	return 0;
 }
 
-void event_stream_next_event(Lisp_Event * event)
+void
+event_stream_next_event(Lisp_Event * event)
 {
 	Lisp_Object event_obj;
 
@@ -501,74 +516,90 @@ void event_stream_next_event(Lisp_Event * event)
 #ifdef DEBUG_SXEMACS
 	/* timeout events have more info set later, so
 	   print the event out in next_event_internal(). */
-	if (event->event_type != timeout_event)
+	if (event->event_type != timeout_event) {
 		DEBUG_PRINT_EMACS_EVENT("real", event_obj);
+	}
 #endif
 	maybe_kbd_translate(event_obj);
+	return;
 }
 
-void event_stream_handle_magic_event(Lisp_Event * event)
+void
+event_stream_handle_magic_event(Lisp_Event * event)
 {
 	check_event_stream_ok(EVENT_STREAM_READ);
 	event_stream->handle_magic_event_cb(event);
+	return;
 }
 
-static int event_stream_add_timeout(EMACS_TIME timeout)
+static int
+event_stream_add_timeout(EMACS_TIME timeout)
 {
 	check_event_stream_ok(EVENT_STREAM_TIMEOUT);
 	return event_stream->add_timeout_cb(timeout);
 }
 
-static void event_stream_remove_timeout(int id)
+static void
+event_stream_remove_timeout(int id)
 {
 	check_event_stream_ok(EVENT_STREAM_TIMEOUT);
 	event_stream->remove_timeout_cb(id);
+	return;
 }
 
-void event_stream_select_console(struct console *con)
+void
+event_stream_select_console(struct console *con)
 {
 	check_event_stream_ok(EVENT_STREAM_CONSOLE);
 	if (!con->input_enabled) {
 		event_stream->select_console_cb(con);
 		con->input_enabled = 1;
 	}
+	return;
 }
 
-void event_stream_unselect_console(struct console *con)
+void
+event_stream_unselect_console(struct console *con)
 {
 	check_event_stream_ok(EVENT_STREAM_CONSOLE);
 	if (con->input_enabled) {
 		event_stream->unselect_console_cb(con);
 		con->input_enabled = 0;
 	}
+	return;
 }
 
-void event_stream_select_process(Lisp_Process * proc)
+void
+event_stream_select_process(Lisp_Process * proc)
 {
 	check_event_stream_ok(EVENT_STREAM_PROCESS);
 	if (!get_process_selected_p(proc)) {
 		event_stream->select_process_cb(proc);
 		set_process_selected_p(proc, 1);
 	}
+	return;
 }
 
-void event_stream_unselect_process(Lisp_Process * proc)
+void
+event_stream_unselect_process(Lisp_Process * proc)
 {
 	check_event_stream_ok(EVENT_STREAM_PROCESS);
 	if (get_process_selected_p(proc)) {
 		event_stream->unselect_process_cb(proc);
 		set_process_selected_p(proc, 0);
 	}
+	return;
 }
 
 USID
-event_stream_create_stream_pair(void *inhandle, void *outhandle,
-				Lisp_Object * instream, Lisp_Object * outstream,
-				int flags)
+event_stream_create_stream_pair(
+	void *inhandle, void *outhandle,
+	Lisp_Object * instream, Lisp_Object * outstream,
+	int flags)
 {
 	check_event_stream_ok(EVENT_STREAM_PROCESS);
-	return event_stream->create_stream_pair_cb
-	    (inhandle, outhandle, instream, outstream, flags);
+	return event_stream->create_stream_pair_cb(
+		inhandle, outhandle, instream, outstream, flags);
 }
 
 USID
@@ -578,18 +609,22 @@ event_stream_delete_stream_pair(Lisp_Object instream, Lisp_Object outstream)
 	return event_stream->delete_stream_pair_cb(instream, outstream);
 }
 
-void event_stream_quit_p(void)
+void
+event_stream_quit_p(void)
 {
-	if (event_stream)
+	if (event_stream) {
 		event_stream->quit_p_cb();
+	}
 }
 
-static int event_stream_current_event_timestamp(struct console *c)
+static int
+event_stream_current_event_timestamp(struct console *c)
 {
-	if (event_stream && event_stream->current_event_timestamp_cb)
+	if (event_stream && event_stream->current_event_timestamp_cb) {
 		return event_stream->current_event_timestamp_cb(c);
-	else
+	} else {
 		return 0;
+	}
 }
 
 /**********************************************************************/
@@ -613,8 +648,9 @@ echo_key_event(struct command_builder *command_builder, Lisp_Object event)
 	format_event_object(buf, XEVENT(event), 1);
 	len = strlen(buf);
 
-	if (len + buf_index + 4 > command_builder->echo_buf_length)
+	if (len + buf_index + 4 > command_builder->echo_buf_length) {
 		return;
+	}
 	e = command_builder->echo_buf + buf_index;
 	memcpy(e, buf, len);
 	e += len;
@@ -625,6 +661,7 @@ echo_key_event(struct command_builder *command_builder, Lisp_Object event)
 	e[3] = 0;
 
 	command_builder->echo_buf_index = buf_index + len + 1;
+	return;
 }
 
 static void
@@ -634,8 +671,10 @@ regenerate_echo_keys_from_this_command_keys(struct command_builder *builder)
 
 	builder->echo_buf_index = 0;
 
-	EVENT_CHAIN_LOOP(event, Vthis_command_keys)
-	    echo_key_event(builder, event);
+	EVENT_CHAIN_LOOP(event, Vthis_command_keys) {
+		echo_key_event(builder, event);
+	}
+	return;
 }
 
 static void
@@ -645,13 +684,15 @@ maybe_echo_keys(struct command_builder *command_builder, int no_snooze)
 	double echo_keystrokes;
 	struct frame *f = selected_frame();
 	/* Message turns off echoing unless more keystrokes turn it on again. */
-	if (echo_area_active(f) && !EQ(Qcommand, echo_area_status(f)))
+	if (echo_area_active(f) && !EQ(Qcommand, echo_area_status(f))) {
 		return;
+	}
 
-	if (INTP(Vecho_keystrokes) || FLOATP(Vecho_keystrokes))
+	if (INTP(Vecho_keystrokes) || FLOATP(Vecho_keystrokes)) {
 		echo_keystrokes = extract_float(Vecho_keystrokes);
-	else
+	} else {
 		echo_keystrokes = 0;
+	}
 
 	if (minibuf_level == 0 && echo_keystrokes > 0.0
 #if defined (HAVE_X_WINDOWS) && defined (LWLIB_MENUBARS_LUCID)
@@ -659,11 +700,13 @@ maybe_echo_keys(struct command_builder *command_builder, int no_snooze)
 #endif
 	    ) {
 		if (!no_snooze) {
-			/* #### C-g here will cause QUIT.  Setting dont_check_for_quit
+			/* #### C-g here will cause QUIT.
+			   Setting dont_check_for_quit
 			   doesn't work.  See check_quit. */
-			if (NILP(Fsit_for(Vecho_keystrokes, Qnil)))
+			if (NILP(Fsit_for(Vecho_keystrokes, Qnil))) {
 				/* input came in, so don't echo. */
 				return;
+			}
 		}
 
 		echo_area_message(f, command_builder->echo_buf, Qnil, 0,
@@ -672,6 +715,7 @@ maybe_echo_keys(struct command_builder *command_builder, int no_snooze)
 				  strlen((char *)command_builder->echo_buf),
 				  Qcommand);
 	}
+	return;
 }
 
 static void
@@ -681,34 +725,41 @@ reset_key_echo(struct command_builder *command_builder,
 	/* This function can GC */
 	struct frame *f = selected_frame();
 
-	if (command_builder)
+	if (command_builder) {
 		command_builder->echo_buf_index = -1;
+	}
 
-	if (remove_echo_area_echo)
+	if (remove_echo_area_echo) {
 		clear_echo_area(f, Qcommand, 0);
+	}
+	return;
 }
 
 /**********************************************************************/
 /*                          random junk                               */
 /**********************************************************************/
 
-static void maybe_kbd_translate(Lisp_Object event)
+static void
+maybe_kbd_translate(Lisp_Object event)
 {
 	Emchar c;
 	int did_translate = 0;
 
-	if (XEVENT_TYPE(event) != key_press_event)
+	if (XEVENT_TYPE(event) != key_press_event) {
 		return;
-	if (!HASH_TABLEP(Vkeyboard_translate_table))
+	}
+	if (!HASH_TABLEP(Vkeyboard_translate_table)) {
 		return;
-	if (EQ(Fhash_table_count(Vkeyboard_translate_table), Qzero))
+	}
+	if (EQ(Fhash_table_count(Vkeyboard_translate_table), Qzero)) {
 		return;
+	}
 
 	c = event_to_character(XEVENT(event), 0, 0, 0);
 	if (c != -1) {
-		Lisp_Object traduit =
-		    Fgethash(make_char(c), Vkeyboard_translate_table,
-			     Qnil);
+		Lisp_Object traduit = Fgethash(
+			make_char(c), Vkeyboard_translate_table, Qnil);
+
 		if (!NILP(traduit) && SYMBOLP(traduit)) {
 			XEVENT(event)->event.key.keysym = traduit;
 			XEVENT(event)->event.key.modifiers = 0;
@@ -716,23 +767,24 @@ static void maybe_kbd_translate(Lisp_Object event)
 		} else if (CHARP(traduit)) {
 			Lisp_Event ev2;
 
-			/* This used to call Fcharacter_to_event() directly into EVENT,
-			   but that can eradicate timestamps and other such stuff.
-			   This way is safer. */
+			/* This used to call Fcharacter_to_event() directly into
+			   EVENT, but that can eradicate timestamps and other
+			   such stuff.  This way is safer. */
 			zero_event(&ev2);
-			character_to_event(XCHAR(traduit), &ev2,
-					   XCONSOLE(EVENT_CHANNEL
-						    (XEVENT(event))), 0, 1);
+			character_to_event(
+				XCHAR(traduit), &ev2,
+				XCONSOLE(EVENT_CHANNEL(XEVENT(event))), 0, 1);
 			XEVENT(event)->event.key.keysym = ev2.event.key.keysym;
 			XEVENT(event)->event.key.modifiers =
-			    ev2.event.key.modifiers;
+				ev2.event.key.modifiers;
 			did_translate = 1;
 		}
 	}
 
 	if (!did_translate) {
-		Lisp_Object traduit = Fgethash(XEVENT(event)->event.key.keysym,
-					       Vkeyboard_translate_table, Qnil);
+		Lisp_Object traduit = Fgethash(
+			XEVENT(event)->event.key.keysym,
+			Vkeyboard_translate_table, Qnil);
 		if (!NILP(traduit) && SYMBOLP(traduit)) {
 			XEVENT(event)->event.key.keysym = traduit;
 			did_translate = 1;
@@ -740,19 +792,21 @@ static void maybe_kbd_translate(Lisp_Object event)
 			Lisp_Event ev2;
 
 			zero_event(&ev2);
-			character_to_event(XCHAR(traduit), &ev2,
-					   XCONSOLE(EVENT_CHANNEL
-						    (XEVENT(event))), 0, 1);
+			character_to_event(
+				XCHAR(traduit), &ev2,
+				XCONSOLE(EVENT_CHANNEL(XEVENT(event))), 0, 1);
 			XEVENT(event)->event.key.keysym = ev2.event.key.keysym;
 			XEVENT(event)->event.key.modifiers |=
-			    ev2.event.key.modifiers;
+				ev2.event.key.modifiers;
 			did_translate = 1;
 		}
 	}
 #ifdef DEBUG_SXEMACS
-	if (did_translate)
+	if (did_translate) {
 		DEBUG_PRINT_EMACS_EVENT("->keyboard-translate-table", event);
-#endif
+	}
+#endif	/* DEBUG_SXEMACS */
+	return;
 }
 
 /* NB: The following auto-save stuff is in keyboard.c in FSFmacs, and
@@ -762,19 +816,24 @@ static void maybe_kbd_translate(Lisp_Object event)
 /* When an auto-save happens, record the number of keystrokes, and
    don't do again soon.  */
 
-void record_auto_save(void)
+void
+record_auto_save(void)
 {
 	keystrokes_since_auto_save = 0;
+	return;
 }
 
 /* Make an auto save happen as soon as possible at command level.  */
 
-void force_auto_save_soon(void)
+void
+force_auto_save_soon(void)
 {
 	keystrokes_since_auto_save = 1 + max(auto_save_interval, 20);
+	return;
 }
 
-static void maybe_do_auto_save(void)
+static void
+maybe_do_auto_save(void)
 {
 	/* This function can call lisp */
 	keystrokes_since_auto_save++;
@@ -784,9 +843,11 @@ static void maybe_do_auto_save(void)
 		Fdo_auto_save(Qnil, Qnil);
 		record_auto_save();
 	}
+	return;
 }
 
-static Lisp_Object print_help(Lisp_Object object)
+static Lisp_Object
+print_help(Lisp_Object object)
 {
 	Fprinc(object, Qnil);
 	return Qnil;
@@ -799,9 +860,10 @@ execute_help_form(struct command_builder *command_builder, Lisp_Object event)
 	Lisp_Object help = Qnil;
 	int speccount = specpdl_depth();
 	Bytecount buf_index = command_builder->echo_buf_index;
-	Lisp_Object echo = ((buf_index <= 0)
-			    ? Qnil : make_string(command_builder->echo_buf,
-						 buf_index));
+	Lisp_Object echo =
+		((buf_index <= 0)
+		 ? Qnil
+		 : make_string(command_builder->echo_buf, buf_index));
 	struct gcpro gcpro1, gcpro2;
 	GCPRO2(echo, help);
 
@@ -810,9 +872,10 @@ execute_help_form(struct command_builder *command_builder, Lisp_Object event)
 	reset_key_echo(command_builder, 1);
 
 	help = Feval(Vhelp_form);
-	if (STRINGP(help))
-		internal_with_output_to_temp_buffer(build_string("*Help*"),
-						    print_help, help, Qnil);
+	if (STRINGP(help)) {
+		internal_with_output_to_temp_buffer(
+			build_string("*Help*"), print_help, help, Qnil);
+	}
 	Fnext_command_event(event, Qnil);
 	/* Remove the help from the frame */
 	unbind_to(speccount, Qnil);
@@ -837,25 +900,31 @@ execute_help_form(struct command_builder *command_builder, Lisp_Object event)
 	}
 
 	command_builder->echo_buf_index = buf_index;
-	if (buf_index > 0)
-		memcpy(command_builder->echo_buf, XSTRING_DATA(echo), buf_index + 1);	/* terminating 0 */
+	if (buf_index > 0) {
+		memcpy(command_builder->echo_buf,
+		       XSTRING_DATA(echo), buf_index + /* terminating 0 */1);
+	}
 	UNGCPRO;
+	return;
 }
 
 /**********************************************************************/
 /*                          input pending                             */
 /**********************************************************************/
 
-int detect_input_pending(void)
+int
+detect_input_pending(void)
 {
 	/* Always call the event_pending_p hook even if there's an unread
 	   character, because that might do some needed ^G detection (on
 	   systems without SIGIO, for example).
 	 */
-	if (event_stream_event_pending_p(1))
+	if (event_stream_event_pending_p(1)) {
 		return 1;
-	if (!NILP(Vunread_command_events) || !NILP(Vunread_command_event))
+	}
+	if (!NILP(Vunread_command_events) || !NILP(Vunread_command_event)) {
 		return 1;
+	}
 	if (!EQ_EMPTY_P()) {
 		Lisp_Object event;
 
@@ -866,13 +935,13 @@ int detect_input_pending(void)
 			    XEVENT_TYPE(event) != magic_eval_event) {
 				RETURN_FROM_EQ_TRAVERSE(asyneq, 1);
 			});
-#else
+#else  /* !EF_USE_ASYNEQ */
 		EVENT_CHAIN_LOOP(event, command_event_queue) {
 			if (XEVENT_TYPE(event) != eval_event
 			    && XEVENT_TYPE(event) != magic_eval_event)
 				return 1;
 		}
-#endif
+#endif	/* EF_USE_ASYNEQ */
 	}
 	return 0;
 }
@@ -918,8 +987,9 @@ add_low_level_timeout(struct low_level_timeout **timeout_list, EMACS_TIME thyme)
 
 	tm = Blocktype_alloc(the_low_level_timeout_blocktype);
 	tm->next = NULL;
-	if (low_level_timeout_id_tick == 0)
+	if (low_level_timeout_id_tick == 0) {
 		low_level_timeout_id_tick++;
+	}
 	tm->id = low_level_timeout_id_tick++;
 	tm->time = thyme;
 
@@ -940,24 +1010,29 @@ add_low_level_timeout(struct low_level_timeout **timeout_list, EMACS_TIME thyme)
 /* Remove the low-level timeout identified by ID from TIMEOUT_LIST.
    If the timeout is not there, do nothing. */
 
-void remove_low_level_timeout(struct low_level_timeout **timeout_list, int id)
+void
+remove_low_level_timeout(struct low_level_timeout **timeout_list, int id)
 {
 	struct low_level_timeout *t, *prev;
 
 	/* find it */
 
-	for (t = *timeout_list, prev = NULL; t && t->id != id; t = t->next)
+	for (t = *timeout_list, prev = NULL; t && t->id != id; t = t->next) {
 		prev = t;
+	}
 
-	if (!t)
-		return;		/* couldn't find it */
+	if (!t) {
+		/* couldn't find it */
+		return;
+	}
 
-	if (!prev)
+	if (!prev) {
 		*timeout_list = t->next;
-	else
+	} else {
 		prev->next = t->next;
-
+	}
 	Blocktype_free(the_low_level_timeout_blocktype, t);
+	return;
 }
 
 /* If there are timeouts on TIMEOUT_LIST, store the relative time
@@ -965,12 +1040,13 @@ void remove_low_level_timeout(struct low_level_timeout **timeout_list, int id)
    return 1.  Otherwise, return 0. */
 
 int
-get_low_level_timeout_interval(struct low_level_timeout *timeout_list,
-			       EMACS_TIME * interval)
+get_low_level_timeout_interval(
+	struct low_level_timeout *timeout_list, EMACS_TIME *interval)
 {
-	if (!timeout_list)	/* no timer events; block indefinitely */
+	if (!timeout_list) {
+		/* no timer events; block indefinitely */
 		return 0;
-	else {
+	} else {
 		EMACS_TIME current_time;
 
 		/* The time to block is the difference between the first
@@ -979,13 +1055,15 @@ get_low_level_timeout_interval(struct low_level_timeout *timeout_list,
 		   but we still have to call select(), with a zero-valued
 		   timeout: user events must have precedence over timer events. */
 		EMACS_GET_TIME(current_time);
-		if (EMACS_TIME_GREATER(timeout_list->time, current_time))
+		if (EMACS_TIME_GREATER(timeout_list->time, current_time)) {
 			EMACS_SUB_TIME(*interval, timeout_list->time,
 				       current_time);
-		else
+		} else {
 			EMACS_SET_SECS_USECS(*interval, 0, 0);
+		}
 		return 1;
 	}
+	/* not reached */
 }
 
 /* Pop the first (i.e. soonest) timeout off of TIMEOUT_LIST and return
@@ -993,16 +1071,17 @@ get_low_level_timeout_interval(struct low_level_timeout *timeout_list,
    timeout into TIME_OUT. */
 
 int
-pop_low_level_timeout(struct low_level_timeout **timeout_list,
-		      EMACS_TIME * time_out)
+pop_low_level_timeout(
+	struct low_level_timeout **timeout_list, EMACS_TIME *time_out)
 {
 	struct low_level_timeout *tm = *timeout_list;
 	int id;
 
 	assert(tm);
 	id = tm->id;
-	if (time_out)
+	if (time_out) {
 		*time_out = tm->time;
+	}
 	*timeout_list = tm->next;
 	Blocktype_free(the_low_level_timeout_blocktype, tm);
 	return id;
@@ -1018,7 +1097,8 @@ static Lisp_Object pending_timeout_list, pending_async_timeout_list;
 static Lisp_Object Vtimeout_free_list;
 #endif	/* !BDWGC */
 
-static Lisp_Object mark_timeout(Lisp_Object obj)
+static Lisp_Object
+mark_timeout(Lisp_Object obj)
 {
 	Lisp_Timeout *tm = XTIMEOUT(obj);
 	mark_object(tm->function);
@@ -1030,8 +1110,11 @@ static void
 print_timeout(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	const Lisp_Timeout *t = XTIMEOUT(obj);
-	write_fmt_string(printcharfun, "#<INTERNAL OBJECT (SXEmacs bug?) (timeout) 0x%lx>",
-			 (unsigned long)t);
+	write_fmt_string(
+		printcharfun,
+		"#<INTERNAL OBJECT (SXEmacs bug?) (timeout) 0x%lx>",
+		(unsigned long)t);
+	return;
 }
 
 static const struct lrecord_description timeout_description[] = {
@@ -1074,12 +1157,13 @@ event_stream_generate_wakeup(unsigned int milliseconds,
 
 	if (async_p) {
 		timeout->interval_id =
-		    event_stream_add_async_timeout(timeout->next_signal_time);
-		pending_async_timeout_list = noseeum_cons(op,
-							  pending_async_timeout_list);
+			event_stream_add_async_timeout(
+				timeout->next_signal_time);
+		pending_async_timeout_list = noseeum_cons(
+			op, pending_async_timeout_list);
 	} else {
 		timeout->interval_id =
-		    event_stream_add_timeout(timeout->next_signal_time);
+			event_stream_add_timeout(timeout->next_signal_time);
 		pending_timeout_list = noseeum_cons(op, pending_timeout_list);
 	}
 	return timeout->id;
@@ -1109,17 +1193,18 @@ event_stream_resignal_wakeup(int interval_id, int async_p,
 	struct gcpro gcpro1;
 	int id;
 
-	GCPRO1(op);		/* just in case ...  because it's removed from the list
-				   for awhile. */
+	/* just in case ...  because it's removed from the list for awhile. */
+	GCPRO1(op);
 
 	timeout_list =
-	    async_p ? &pending_async_timeout_list : &pending_timeout_list;
+		async_p ? &pending_async_timeout_list : &pending_timeout_list;
 
 	/* Find the timeout on the list of pending ones. */
 	LIST_LOOP(rest, *timeout_list) {
 		timeout = XTIMEOUT(XCAR(rest));
-		if (timeout->interval_id == interval_id)
+		if (timeout->interval_id == interval_id) {
 			break;
+		}
 	}
 
 	assert(!NILP(rest));
@@ -1152,8 +1237,8 @@ event_stream_resignal_wakeup(int interval_id, int async_p,
 		do {
 			EMACS_ADD_TIME(timeout->next_signal_time,
 				       timeout->next_signal_time, interval);
-		} while (EMACS_TIME_GREATER
-			 (current_time, timeout->next_signal_time));
+		} while (EMACS_TIME_GREATER(
+				 current_time, timeout->next_signal_time));
 
 		if (async_p) {
 			timeout->interval_id =
@@ -1179,7 +1264,8 @@ event_stream_resignal_wakeup(int interval_id, int async_p,
 	return id;
 }
 
-void event_stream_disable_wakeup(int id, int async_p)
+void
+event_stream_disable_wakeup(int id, int async_p)
 {
 	Lisp_Timeout *timeout = 0;
 	Lisp_Object rest;
@@ -1214,19 +1300,22 @@ void event_stream_disable_wakeup(int id, int async_p)
 		free_managed_lcrecord(Vtimeout_free_list, op);
 #endif	/* BDWGC */
 	}
+	return;
 }
 
-static int event_stream_wakeup_pending_p(int id, int async_p)
+static int
+event_stream_wakeup_pending_p(int id, int async_p)
 {
 	Lisp_Timeout *timeout;
 	Lisp_Object rest;
 	Lisp_Object timeout_list;
 	int found = 0;
 
-	if (async_p)
+	if (async_p) {
 		timeout_list = pending_async_timeout_list;
-	else
+	} else {
 		timeout_list = pending_timeout_list;
+	}
 
 	/* Find the element on the list of pending ones, if it's still there. */
 	LIST_LOOP(rest, timeout_list) {
@@ -1250,7 +1339,8 @@ extern int poll_for_quit_id;
 extern int poll_for_sigchld_id;
 #endif
 
-void event_stream_deal_with_async_timeout(int interval_id)
+void
+event_stream_deal_with_async_timeout(int interval_id)
 {
 	/* This function can GC */
 	Lisp_Object humpty, dumpty;
@@ -1258,7 +1348,7 @@ void event_stream_deal_with_async_timeout(int interval_id)
      || defined(HAVE_UNIX_PROCESSES) && !defined(SIGCHLD))
 	int id =
 #endif
-	    event_stream_resignal_wakeup(interval_id, 1, &humpty, &dumpty);
+		event_stream_resignal_wakeup(interval_id, 1, &humpty, &dumpty);
 
 #if !defined (SIGIO) && !defined (DONT_POLL_FOR_QUIT)
 	if (id == poll_for_quit_id) {
@@ -1278,11 +1368,13 @@ void event_stream_deal_with_async_timeout(int interval_id)
 	/* call1 GC-protects its arguments */
 	call1_trapping_errors("Error in asynchronous timeout callback",
 			      humpty, dumpty);
+	return;
 }
 
 /**** Lisp-level timeout functions. ****/
 
-static unsigned long lisp_number_to_milliseconds(Lisp_Object secs, int allow_0)
+static unsigned long
+lisp_number_to_milliseconds(Lisp_Object secs, int allow_0)
 {
 #if defined(WITH_NUMBER_TYPES)
 	double fsecs;
@@ -1299,15 +1391,18 @@ static unsigned long lisp_number_to_milliseconds(Lisp_Object secs, int allow_0)
 	fsecs = XINT(secs);
 #endif	/* HAVE_FPFLOAT */
 #endif	/* WITH_NUMBER_TYPES */
-	if (fsecs < 0)
+	if (fsecs < 0) {
 		signal_simple_error("timeout is negative", secs);
-	if (!allow_0 && fsecs == 0)
+	}
+	if (!allow_0 && fsecs == 0) {
 		signal_simple_error("timeout is non-positive", secs);
-	if (fsecs >= (((unsigned int)0xFFFFFFFF) / 1000))
-		signal_simple_error
-		    ("timeout would exceed 32 bits when represented in milliseconds",
-		     secs);
-
+	}
+	if (fsecs >= (((unsigned int)0xFFFFFFFF) / 1000)) {
+		signal_simple_error(
+			"timeout would exceed 32 bits when "
+			"represented in milliseconds",
+			secs);
+	}
 	return (unsigned long)(1000 * fsecs);
 }
 
@@ -1354,8 +1449,9 @@ is a race condition.  That's why the RESIGNAL argument exists.
 	Lisp_Object lid;
 	id = event_stream_generate_wakeup(msecs, msecs2, function, object, 0);
 	lid = make_int(id);
-	if (id != XINT(lid))
+	if (id != XINT(lid)) {
 		abort();
+	}
 	return lid;
 }
 
@@ -1434,8 +1530,9 @@ is a race condition.  That's why the RESIGNAL argument exists.
 	Lisp_Object lid;
 	id = event_stream_generate_wakeup(msecs, msecs2, function, object, 1);
 	lid = make_int(id);
-	if (id != XINT(lid))
+	if (id != XINT(lid)) {
 		abort();
+	}
 	return lid;
 }
 
@@ -1463,7 +1560,8 @@ It will not work to call this function on an id number returned by
    event read after all pending events.   This only works on keyboard,
    mouse-click, misc-user, and eval events.
  */
-static void enqueue_command_event(Lisp_Object event)
+static void
+enqueue_command_event(Lisp_Object event)
 {
 #ifdef EF_USE_ASYNEQ
 	eq_enqueue(asyneq, event);
@@ -1472,7 +1570,8 @@ static void enqueue_command_event(Lisp_Object event)
 #endif
 }
 
-static Lisp_Object dequeue_command_event(void)
+static Lisp_Object
+dequeue_command_event(void)
 {
 #ifdef EF_USE_ASYNEQ
 	return eq_dequeue(asyneq);
@@ -1487,15 +1586,19 @@ static Lisp_Object dequeue_command_event(void)
    all the processing we should do - leaving it on the queue
    would cause the quit to be processed twice.
    */
-static void enqueue_command_event_1(Lisp_Object event_to_copy)
+static void
+enqueue_command_event_1(Lisp_Object event_to_copy)
 {
 	/* do not call check_quit() here.  Vquit_flag was set in
 	   next_event_internal. */
-	if (NILP(Vquit_flag))
+	if (NILP(Vquit_flag)) {
 		enqueue_command_event(Fcopy_event(event_to_copy, Qnil));
+	}
+	return;
 }
 
-void enqueue_magic_eval_event(void (*fun) (Lisp_Object), Lisp_Object object)
+void
+enqueue_magic_eval_event(void (*fun) (Lisp_Object), Lisp_Object object)
 {
 	Lisp_Object event = Fmake_event(Qnil, Qnil);
 
@@ -1504,6 +1607,7 @@ void enqueue_magic_eval_event(void (*fun) (Lisp_Object), Lisp_Object object)
 	XEVENT(event)->event.magic_eval.internal_function = fun;
 	XEVENT(event)->event.magic_eval.object = object;
 	enqueue_command_event(event);
+	return;
 }
 
 DEFUN("enqueue-eval-event", Fenqueue_eval_event, 2, 2, 0,	/*
@@ -1641,14 +1745,18 @@ it's safe to do this, and we don't end up with unwanted redirection.
 
 */
 
-static void run_select_frame_hook(void)
+static void
+run_select_frame_hook(void)
 {
 	run_hook(Qselect_frame_hook);
+	return;
 }
 
-static void run_deselect_frame_hook(void)
+static void
+run_deselect_frame_hook(void)
 {
 	run_hook(Qdeselect_frame_hook);
+	return;
 }
 
 /* When select-frame is called and focus_follows_mouse is false, we want
@@ -1673,7 +1781,62 @@ static void run_deselect_frame_hook(void)
    Both cases are handled by this function.  It must be called as appropriate
    from these two places, depending on the value of focus_follows_mouse. */
 
-void investigate_frame_change(void)
+static void
+investigate_frame_change_dev(struct device *d, Lisp_Object sel_frame)
+{
+	/* You'd think that maybe we should use FRAME_WITH_FOCUS_REAL,
+	   but that can cause us to end up in an infinite loop focusing
+	   between two frames.  It seems that since the call to
+	   `select-frame' in emacs_handle_focus_change_final() is based
+	   on the _FOR_HOOKS value, we need to do so too. */
+#define DEVICE_FRAME_TOTHF	DEVICE_FRAME_THAT_OUGHT_TO_HAVE_FOCUS
+#define DEVICE_FRAME_WFFH	DEVICE_FRAME_WITH_FOCUS_FOR_HOOKS
+	if (!NILP(sel_frame) &&
+	    !EQ(DEVICE_FRAME_THAT_OUGHT_TO_HAVE_FOCUS(d), sel_frame) &&
+	    !NILP(DEVICE_FRAME_WITH_FOCUS_FOR_HOOKS(d)) &&
+	    !EQ(DEVICE_FRAME_WITH_FOCUS_FOR_HOOKS(d), sel_frame)) {
+		/* At this point, we know that the frame has been
+		 * changed.  Now, if focus_follows_mouse is not set, we
+		 * finish off the frame change, so that user events will
+		 * now come from the new frame.  Otherwise, if
+		 * focus_follows_mouse is set, no gratuitous frame
+		 * changing should take place.  Set the focus back to
+		 * the frame which was originally selected for user
+		 * input. */
+		if (!focus_follows_mouse) {
+			/* prevent us from issuing the same request more
+			   than once */
+			DEVICE_FRAME_TOTHF(d) = sel_frame;
+			MAYBE_DEVMETH(d, focus_on_frame, (XFRAME(sel_frame)));
+		} else {
+			Lisp_Object old_frame = Qnil;
+
+			/* #### Do we really want to check OUGHT ??
+			 * It seems to make sense, though I have never
+			 * seen us get here and have it be non-nil. */
+			if (FRAMEP(DEVICE_FRAME_TOTHF(d))) {
+				old_frame = DEVICE_FRAME_TOTHF(d);
+			} else if (FRAMEP(DEVICE_FRAME_WFFH(d))) {
+				old_frame = DEVICE_FRAME_WFFH(d);
+			}
+
+			/* #### Can old_frame ever be NIL?  play it safe.. */
+			if (!NILP(old_frame)) {
+				/* Fselect_frame is not really the right thing:
+				 * it frobs the buffer stack.  But there's no
+				 * easy way to do the right thing, and this code
+				 * already had this problem anyway. */
+				Fselect_frame(old_frame);
+			}
+		}
+	}
+#undef DEVICE_FRAME_TOTHF
+#undef DEVICE_FRAME_WFFH
+	return;
+}
+
+void
+investigate_frame_change(void)
 {
 	Lisp_Object devcons, concons;
 
@@ -1685,77 +1848,33 @@ void investigate_frame_change(void)
 		struct device *d = XDEVICE(XCAR(devcons));
 		Lisp_Object sel_frame = DEVICE_SELECTED_FRAME(d);
 
-		/* You'd think that maybe we should use FRAME_WITH_FOCUS_REAL,
-		   but that can cause us to end up in an infinite loop focusing
-		   between two frames.  It seems that since the call to `select-frame'
-		   in emacs_handle_focus_change_final() is based on the _FOR_HOOKS
-		   value, we need to do so too. */
-		if (!NILP(sel_frame) &&
-		    !EQ(DEVICE_FRAME_THAT_OUGHT_TO_HAVE_FOCUS(d), sel_frame) &&
-		    !NILP(DEVICE_FRAME_WITH_FOCUS_FOR_HOOKS(d)) &&
-		    !EQ(DEVICE_FRAME_WITH_FOCUS_FOR_HOOKS(d), sel_frame)) {
-			/* At this point, we know that the frame has been changed.  Now, if
-			 * focus_follows_mouse is not set, we finish off the frame change,
-			 * so that user events will now come from the new frame.  Otherwise,
-			 * if focus_follows_mouse is set, no gratuitous frame changing
-			 * should take place.  Set the focus back to the frame which was
-			 * originally selected for user input.
-			 */
-			if (!focus_follows_mouse) {
-				/* prevent us from issuing the same request more than once */
-				DEVICE_FRAME_THAT_OUGHT_TO_HAVE_FOCUS(d) =
-				    sel_frame;
-				MAYBE_DEVMETH(d, focus_on_frame,
-					      (XFRAME(sel_frame)));
-			} else {
-				Lisp_Object old_frame = Qnil;
-
-				/* #### Do we really want to check OUGHT ??
-				 * It seems to make sense, though I have never seen us
-				 * get here and have it be non-nil.
-				 */
-				if (FRAMEP
-				    (DEVICE_FRAME_THAT_OUGHT_TO_HAVE_FOCUS(d)))
-					old_frame =
-					    DEVICE_FRAME_THAT_OUGHT_TO_HAVE_FOCUS
-					    (d);
-				else if (FRAMEP
-					 (DEVICE_FRAME_WITH_FOCUS_FOR_HOOKS(d)))
-					old_frame =
-					    DEVICE_FRAME_WITH_FOCUS_FOR_HOOKS
-					    (d);
-
-				/* #### Can old_frame ever be NIL?  play it safe.. */
-				if (!NILP(old_frame)) {
-					/* Fselect_frame is not really the right thing: it frobs the
-					 * buffer stack.  But there's no easy way to do the right
-					 * thing, and this code already had this problem anyway.
-					 */
-					Fselect_frame(old_frame);
-				}
-			}
-		}
+		investigate_frame_change_dev(d, sel_frame);
 	}
+	return;
 }
 
-static Lisp_Object cleanup_after_missed_defocusing(Lisp_Object frame)
+static Lisp_Object
+cleanup_after_missed_defocusing(Lisp_Object frame)
 {
-	if (FRAMEP(frame) && FRAME_LIVE_P(XFRAME(frame)))
+	if (FRAMEP(frame) && FRAME_LIVE_P(XFRAME(frame))) {
 		Fselect_frame(frame);
+	}
 	return Qnil;
 }
 
-void emacs_handle_focus_change_preliminary(Lisp_Object frame_inp_and_dev)
+void
+emacs_handle_focus_change_preliminary(Lisp_Object frame_inp_and_dev)
 {
 	Lisp_Object frame = Fcar(frame_inp_and_dev);
 	Lisp_Object device = Fcar(Fcdr(frame_inp_and_dev));
 	int in_p = !NILP(Fcdr(Fcdr(frame_inp_and_dev)));
 	struct device *d;
 
-	if (!DEVICE_LIVE_P(XDEVICE(device)))
+	if (!DEVICE_LIVE_P(XDEVICE(device))) {
 		return;
-	else
+	} else {
 		d = XDEVICE(device);
+	}
 
 	/* Any received focus-change notifications render invalid any
 	   pending focus-change requests. */
@@ -1763,21 +1882,22 @@ void emacs_handle_focus_change_preliminary(Lisp_Object frame_inp_and_dev)
 	if (in_p) {
 		Lisp_Object focus_frame;
 
-		if (!FRAME_LIVE_P(XFRAME(frame)))
+		if (!FRAME_LIVE_P(XFRAME(frame))) {
 			return;
-		else
+		} else {
 			focus_frame = DEVICE_FRAME_WITH_FOCUS_REAL(d);
+		}
 
 		/* Mark the minibuffer as changed to make sure it gets updated
 		   properly if the echo area is active. */
 		{
 			struct window *w =
-			    XWINDOW(FRAME_MINIBUF_WINDOW(XFRAME(frame)));
+				XWINDOW(FRAME_MINIBUF_WINDOW(XFRAME(frame)));
 			MARK_WINDOWS_CHANGED(w);
 		}
 
-		if (FRAMEP(focus_frame) && FRAME_LIVE_P(XFRAME(focus_frame))
-		    && !EQ(frame, focus_frame)) {
+		if (FRAMEP(focus_frame) && FRAME_LIVE_P(XFRAME(focus_frame)) &&
+		    !EQ(frame, focus_frame)) {
 			/* Oops, we missed a focus-out event. */
 			DEVICE_FRAME_WITH_FOCUS_REAL(d) = Qnil;
 			redisplay_redraw_cursor(XFRAME(focus_frame), 1);
@@ -1789,15 +1909,18 @@ void emacs_handle_focus_change_preliminary(Lisp_Object frame_inp_and_dev)
 	} else {
 		/* We ignore the frame reported in the event.  If it's different
 		   from where we think the focus was, oh well -- we messed up.
-		   Nonetheless, we pretend we were right, for sensible behavior. */
+		   Nonetheless, we pretend we were right, for sensible
+		   behavior. */
 		frame = DEVICE_FRAME_WITH_FOCUS_REAL(d);
 		if (!NILP(frame)) {
 			DEVICE_FRAME_WITH_FOCUS_REAL(d) = Qnil;
 
-			if (FRAME_LIVE_P(XFRAME(frame)))
+			if (FRAME_LIVE_P(XFRAME(frame))) {
 				redisplay_redraw_cursor(XFRAME(frame), 1);
+			}
 		}
 	}
+	return;
 }
 
 /* Called from the window-system-specific code when we receive a
@@ -1805,7 +1928,8 @@ void emacs_handle_focus_change_preliminary(Lisp_Object frame_inp_and_dev)
    Argument is a cons: (frame . (device . in-p)) where in-p is non-nil
    for focus-in.
  */
-void emacs_handle_focus_change_final(Lisp_Object frame_inp_and_dev)
+void
+emacs_handle_focus_change_final(Lisp_Object frame_inp_and_dev)
 {
 	Lisp_Object frame = Fcar(frame_inp_and_dev);
 	Lisp_Object device = Fcar(Fcdr(frame_inp_and_dev));
@@ -1813,18 +1937,20 @@ void emacs_handle_focus_change_final(Lisp_Object frame_inp_and_dev)
 	struct device *d;
 	int count;
 
-	if (!DEVICE_LIVE_P(XDEVICE(device)))
+	if (!DEVICE_LIVE_P(XDEVICE(device))) {
 		return;
-	else
+	} else {
 		d = XDEVICE(device);
+	}
 
 	if (in_p) {
 		Lisp_Object focus_frame;
 
-		if (!FRAME_LIVE_P(XFRAME(frame)))
+		if (!FRAME_LIVE_P(XFRAME(frame))) {
 			return;
-		else
+		} else {
 			focus_frame = DEVICE_FRAME_WITH_FOCUS_FOR_HOOKS(d);
+		}
 
 		DEVICE_FRAME_WITH_FOCUS_FOR_HOOKS(d) = frame;
 		if (FRAMEP(focus_frame) && !EQ(frame, focus_frame)) {
@@ -1833,27 +1959,31 @@ void emacs_handle_focus_change_final(Lisp_Object frame_inp_and_dev)
 			/* Do an unwind-protect in case an error occurs in
 			   the deselect-frame-hook */
 			count = specpdl_depth();
-			record_unwind_protect(cleanup_after_missed_defocusing,
-					      frame);
+			record_unwind_protect(
+				cleanup_after_missed_defocusing, frame);
 			run_deselect_frame_hook();
 			unbind_to(count, Qnil);
 			/* the cleanup method changed the focus frame to nil, so
 			   we need to reflect this */
 			focus_frame = Qnil;
-		} else
+		} else {
 			Fselect_frame(frame);
-		if (!EQ(frame, focus_frame))
+		}
+		if (!EQ(frame, focus_frame)) {
 			run_select_frame_hook();
+		}
 	} else {
 		/* We ignore the frame reported in the event.  If it's different
 		   from where we think the focus was, oh well -- we messed up.
-		   Nonetheless, we pretend we were right, for sensible behavior. */
+		   Nonetheless, we pretend we were right, for sensible
+		   behavior. */
 		frame = DEVICE_FRAME_WITH_FOCUS_FOR_HOOKS(d);
 		if (!NILP(frame)) {
 			DEVICE_FRAME_WITH_FOCUS_FOR_HOOKS(d) = Qnil;
 			run_deselect_frame_hook();
 		}
 	}
+	return;
 }
 
 /**********************************************************************/
@@ -1863,25 +1993,37 @@ void emacs_handle_focus_change_final(Lisp_Object frame_inp_and_dev)
 static int in_single_console;
 
 /* #### These functions don't currently do anything. */
-void single_console_state(void)
+void
+single_console_state(void)
 {
 	in_single_console = 1;
+	return;
 }
 
-void any_console_state(void)
+void
+any_console_state(void)
 {
 	in_single_console = 0;
+	return;
 }
 
-int in_single_console_state(void)
+int
+in_single_console_state(void)
 {
 	return in_single_console;
+}
+
+static inline Lisp_Object
+make_con_quit_char(Lisp_Event *e)
+{
+	return make_char(CONSOLE_QUIT_CHAR(XCONSOLE(EVENT_CHANNEL(e))));
 }
 
 /* the number of keyboard characters read.  callint.c wants this. */
 Charcount num_input_chars;
 
-static void next_event_internal(Lisp_Object target_event, int allow_queued)
+static void
+next_event_internal(Lisp_Object target_event, int allow_queued)
 {
 	struct gcpro gcpro1;
 	/* QUIT;   This is incorrect - the caller must do this because some
@@ -1891,11 +2033,12 @@ static void next_event_internal(Lisp_Object target_event, int allow_queued)
 
 	GCPRO1(target_event);
 
-	/* When focus_follows_mouse is nil, if a frame change took place, we need
-	 * to actually switch window manager focus to the selected window now.
-	 */
-	if (!focus_follows_mouse)
+	/* When focus_follows_mouse is nil, if a frame change took place, we
+	 * need to actually switch window manager focus to the selected
+	 * window now. */
+	if (!focus_follows_mouse) {
 		investigate_frame_change();
+	}
 
 	if (allow_queued && !EQ_EMPTY_P()) {
 		Lisp_Object event = dequeue_command_event();
@@ -1914,19 +2057,20 @@ static void next_event_internal(Lisp_Object target_event, int allow_queued)
 			Lisp_Object tristan, isolde;
 
 			e->event.timeout.id_number =
-			    event_stream_resignal_wakeup(e->event.timeout.
-							 interval_id, 0,
-							 &tristan, &isolde);
+				event_stream_resignal_wakeup(
+					e->event.timeout.interval_id,
+					0, &tristan, &isolde);
 
 			e->event.timeout.function = tristan;
 			e->event.timeout.object = isolde;
-			/* next_event_internal() doesn't print out timeout events
-			   because of the extra info we just set. */
+			/* next_event_internal() doesn't print out timeout
+			   events because of the extra info we just set. */
 			DEBUG_PRINT_EMACS_EVENT("real, timeout", target_event);
 		}
 
-		/* If we read a ^G, then set quit-flag but do not discard the ^G.
-		   The callers of next_event_internal() will do one of two things:
+		/* If we read a ^G, then set quit-flag but do not discard the
+		   ^G.  The callers of next_event_internal() will do one of two
+		   things:
 
 		   -- set Vquit_flag to Qnil. (next-event does this.) This will
 		   cause the ^G to be treated as a normal keystroke.
@@ -1936,24 +2080,25 @@ static void next_event_internal(Lisp_Object target_event, int allow_queued)
 
 		 */
 		if (e->event_type == key_press_event &&
-		    event_matches_key_specifier_p
-		    (e,
-		     make_char(CONSOLE_QUIT_CHAR(XCONSOLE(EVENT_CHANNEL(e))))))
-		{
+		    event_matches_key_specifier_p(e, make_con_quit_char(e))) {
 			Vquit_flag = Qt;
 		}
 	}
 
 	UNGCPRO;
+	return;
 }
 
-static void run_pre_idle_hook(void)
+static void
+run_pre_idle_hook(void)
 {
 	if (!NILP(Vpre_idle_hook)
-	    && !detect_input_pending())
+	    && !detect_input_pending()) {
 		safe_run_hook_trapping_errors
 		    ("Error in `pre-idle-hook' (setting hook to nil)",
 		     Qpre_idle_hook, 1);
+	}
+	return;
 }
 
 static void push_this_command_keys(Lisp_Object event);
@@ -2013,13 +2158,13 @@ The returned event will be one of the following types:
 	   echo area for each console! */
 	struct console *con = XCONSOLE(Vselected_console);
 	struct command_builder *command_builder =
-	    XCOMMAND_BUILDER(con->command_builder);
+		XCOMMAND_BUILDER(con->command_builder);
 	int store_this_key = 0;
 	struct gcpro gcpro1;
 
 	GCPRO1(event);
-	/* DO NOT do QUIT anywhere within this function or the functions it calls.
-	   We want to read the ^G as an event. */
+	/* DO NOT do QUIT anywhere within this function or the functions it
+	   calls.  We want to read the ^G as an event. */
 
 #ifdef LWLIB_MENUBARS_LUCID
 	/*
@@ -2031,22 +2176,25 @@ The returned event will be one of the following types:
 	 * be blocked.  Fnext_event is the normal path into the menu code,
 	 * so we signal an error here.
 	 */
-	if (in_menu_callback)
+	if (in_menu_callback) {
 		error("Attempt to call next-event inside menu callback");
-#endif				/* LWLIB_MENUBARS_LUCID */
+	}
+#endif  /* LWLIB_MENUBARS_LUCID */
 
-	if (NILP(event))
+	if (NILP(event)) {
 		event = Fmake_event(Qnil, Qnil);
-	else
+	} else {
 		CHECK_LIVE_EVENT(event);
+	}
 
 	if (!NILP(prompt)) {
 		Bytecount len;
 		CHECK_STRING(prompt);
 
 		len = XSTRING_LENGTH(prompt);
-		if (command_builder->echo_buf_length < len)
+		if (command_builder->echo_buf_length < len) {
 			len = command_builder->echo_buf_length - 1;
+		}
 		memcpy(command_builder->echo_buf, XSTRING_DATA(prompt), len);
 		command_builder->echo_buf[len] = 0;
 		command_builder->echo_buf_index = len;
@@ -2056,11 +2204,11 @@ The returned event will be one of the following types:
 				  command_builder->echo_buf_index, Qcommand);
 	}
 
-      start_over_and_avoid_hosage:
+start_over_and_avoid_hosage:
 	/* If there is something in unread-command-events, simply return it.
 	   But do some error checking to make sure the user hasn't put something
-	   in the unread-command-events that they shouldn't have.
-	   This does not update this-command-keys and recent-keys.
+	   in the unread-command-events that they shouldn't have.  This does not
+	   update this-command-keys and recent-keys.
 	 */
 	if (!NILP(Vunread_command_events)) {
 		if (!CONSP(Vunread_command_events)) {
@@ -2071,19 +2219,21 @@ The returned event will be one of the following types:
 		} else {
 			Lisp_Object e = XCAR(Vunread_command_events);
 			Vunread_command_events = XCDR(Vunread_command_events);
-			if (!EVENTP(e) || !command_event_p(e))
+			if (!EVENTP(e) || !command_event_p(e)) {
 				signal_error(Qwrong_type_argument,
 					     list3(Qcommand_event_p, e,
 						   Qunread_command_events));
+			}
 			redisplay();
-			if (!EQ(e, event))
+			if (!EQ(e, event)) {
 				Fcopy_event(e, event);
+			}
 			DEBUG_PRINT_EMACS_EVENT("unread-command-events", event);
 		}
-	}
 
-	/* Do similar for unread-command-event (obsoleteness support). */
-	else if (!NILP(Vunread_command_event)) {
+	} else if (!NILP(Vunread_command_event)) {
+		/* Do similar for unread-command-event
+		 * (obsoleteness support). */
 		Lisp_Object e = Vunread_command_event;
 		Vunread_command_event = Qnil;
 
@@ -2091,44 +2241,47 @@ The returned event will be one of the following types:
 			signal_error(Qwrong_type_argument,
 				     list3(Qeventp, e, Qunread_command_event));
 		}
-		if (!EQ(e, event))
+		if (!EQ(e, event)) {
 			Fcopy_event(e, event);
+		}
 		redisplay();
 		DEBUG_PRINT_EMACS_EVENT("unread-command-event", event);
-	}
 
-	/* If we're executing a keyboard macro, take the next event from that,
-	   and update this-command-keys and recent-keys.
-	   Note that the unread-command-events take precedence over kbd macros.
-	 */
-	else {
+	} else {
+		/* If we're executing a keyboard macro, take the next event from
+		 * that, and update this-command-keys and recent-keys.  Note
+		 * that the unread-command-events take precedence over kbd
+		 * macros. */
 		if (!NILP(Vexecuting_macro)) {
 			redisplay();
-			pop_kbd_macro_event(event);	/* This throws past us at
-							   end-of-macro. */
+			/* This throws past us at end-of-macro. */
+			pop_kbd_macro_event(event);
 			store_this_key = 1;
 			DEBUG_PRINT_EMACS_EVENT("keyboard macro", event);
-		}
-		/* Otherwise, read a real event, possibly from the
-		   command_event_queue, and update this-command-keys and
-		   recent-keys. */
-		else {
+
+		} else {
+			/* Otherwise, read a real event, possibly from the
+			 * command_event_queue, and update this-command-keys and
+			 * recent-keys. */
 			run_pre_idle_hook();
 			redisplay();
 			next_event_internal(event, 1);
-			Vquit_flag = Qnil;	/* Read C-g as an event. */
+			/* Read C-g as an event. */
+			Vquit_flag = Qnil;
 			store_this_key = 1;
 		}
 	}
 
-	status_notify();	/* Notice process change */
+	/* Notice process change */
+	status_notify();
 
 #ifdef C_ALLOCA
-	alloca(0);		/* Cause a garbage collection now */
+	/* Cause a garbage collection now */
+	alloca(0);
 	/* Since we can free the most stuff here
 	 *  (since this is typically called from
 	 *  the command-loop top-level). */
-#endif				/* C_ALLOCA */
+#endif  /* C_ALLOCA */
 
 	if (object_dead_p(XEVENT(event)->channel)) {
 		/* event_console_or_selected may crash if the channel is dead.
@@ -2174,51 +2327,56 @@ The returned event will be one of the following types:
 
 	maybe_do_auto_save();
 	num_input_chars++;
-      STORE_AND_EXECUTE_KEY:
+STORE_AND_EXECUTE_KEY:
 	if (store_this_key) {
 		echo_key_event(command_builder, event);
 	}
 
-      EXECUTE_KEY:
+EXECUTE_KEY:
 	/* Store the last-input-event.  The semantics of this is that it is
 	   the thing most recently returned by next-command-event.  It need
 	   not have come from the keyboard or a keyboard macro, it may have
 	   come from unread-command-events.  It's always a command-event (a
 	   key, click, or menu selection), never a motion or process event.
 	 */
-	if (!EVENTP(Vlast_input_event))
+	if (!EVENTP(Vlast_input_event)) {
 		Vlast_input_event = Fmake_event(Qnil, Qnil);
+	}
 	if (XEVENT_TYPE(Vlast_input_event) == dead_event) {
 		Vlast_input_event = Fmake_event(Qnil, Qnil);
 		error("Someone deallocated last-input-event!");
 	}
-	if (!EQ(event, Vlast_input_event))
+	if (!EQ(event, Vlast_input_event)) {
 		Fcopy_event(event, Vlast_input_event);
+	}
 
 	/* last-input-char and last-input-time are derived from
 	   last-input-event.
 	   Note that last-input-char will never have its high-bit set, in an
 	   effort to sidestep the ambiguity between M-x and oslash.
 	 */
-	Vlast_input_char = Fevent_to_character(Vlast_input_event,
-					       Qnil, Qnil, Qnil);
+	Vlast_input_char = Fevent_to_character(
+		Vlast_input_event, Qnil, Qnil, Qnil);
 	{
 		EMACS_TIME t;
+
 		EMACS_GET_TIME(t);
-		if (!CONSP(Vlast_input_time))
+		if (!CONSP(Vlast_input_time)) {
 			Vlast_input_time = Fcons(Qnil, Qnil);
+		}
 		XCAR(Vlast_input_time) =
-		    make_int((EMACS_SECS(t) >> 16) & 0xffff);
+			make_int((EMACS_SECS(t) >> 16) & 0xffff);
 		XCDR(Vlast_input_time) =
-		    make_int((EMACS_SECS(t) >> 0) & 0xffff);
-		if (!CONSP(Vlast_command_event_time))
+			make_int((EMACS_SECS(t) >> 0) & 0xffff);
+		if (!CONSP(Vlast_command_event_time)) {
 			Vlast_command_event_time = list3(Qnil, Qnil, Qnil);
+		}
 		XCAR(Vlast_command_event_time) =
-		    make_int((EMACS_SECS(t) >> 16) & 0xffff);
+			make_int((EMACS_SECS(t) >> 16) & 0xffff);
 		XCAR(XCDR(Vlast_command_event_time)) =
-		    make_int((EMACS_SECS(t) >> 0) & 0xffff);
-		XCAR(XCDR(XCDR(Vlast_command_event_time)))
-		    = make_int(EMACS_USECS(t));
+			make_int((EMACS_SECS(t) >> 0) & 0xffff);
+		XCAR(XCDR(XCDR(Vlast_command_event_time))) =
+			make_int(EMACS_USECS(t));
 	}
 	/* If this key came from the keyboard or from a keyboard macro, then
 	   it goes into the recent-keys and this-command-keys vectors.
@@ -2226,15 +2384,19 @@ The returned event will be one of the following types:
 	   macro, then it goes into the macro.
 	 */
 	if (store_this_key) {
-		if (!is_scrollbar_event(event))	/* #### not quite right, see
-						   comment in execute_command_event */
+		if (!is_scrollbar_event(event)) {
+			/* #### not quite right, see
+			   comment in execute_command_event */
 			push_this_command_keys(event);
-		if (!inhibit_input_event_recording)
+		}
+		if (!inhibit_input_event_recording) {
 			push_recent_keys(event);
+		}
 		dribble_out_event(event);
 		if (!NILP(con->defining_kbd_macro) && NILP(Vexecuting_macro)) {
-			if (!EVENTP(command_builder->current_events))
+			if (!EVENTP(command_builder->current_events)) {
 				finalize_kbd_macro_chars(con);
+			}
 			store_kbd_macro_event(event);
 		}
 	}
@@ -2245,10 +2407,10 @@ The returned event will be one of the following types:
 	   this function, as well as Fdispatch_event.
 	 */
 	if (!NILP(Vhelp_form) &&
-	    event_matches_key_specifier_p(XEVENT(event), Vhelp_char))
+	    event_matches_key_specifier_p(XEVENT(event), Vhelp_char)) {
 		execute_help_form(command_builder, event);
-
-      RETURN:
+	}
+RETURN:
 	UNGCPRO;
 	return event;
 }
@@ -2281,20 +2443,27 @@ but it also makes a provision for displaying keystrokes in the echo area.
 {
 	/* This function can GC */
 	struct gcpro gcpro1;
+
 	GCPRO1(event);
-	maybe_echo_keys(XCOMMAND_BUILDER(XCONSOLE(Vselected_console)->command_builder), 0);	/* #### This sucks bigtime */
+
+	/* #### This sucks bigtime */
+	maybe_echo_keys(
+		XCOMMAND_BUILDER(
+			XCONSOLE(Vselected_console)->command_builder), 0);
+
 	for (;;) {
 		event = Fnext_event(event, prompt);
-		if (command_event_p(event))
+		if (command_event_p(event)) {
 			break;
-		else
+		} else {
 			execute_internal_event(event);
+		}
 	}
 	UNGCPRO;
 	return event;
 }
 
-DEFUN("dispatch-non-command-events", Fdispatch_non_command_events, 0, 0, 0,	/*
+DEFUN("dispatch-non-command-events", Fdispatch_non_command_events, 0, 0, 0, /*
 Dispatch any pending "magic" events.
 
 This function is useful for forcing the redisplay of native
@@ -2308,6 +2477,7 @@ function does not call redisplay or do any of the other things that
 	/* This function can GC */
 	Lisp_Object event = Qnil;
 	struct gcpro gcpro1;
+
 	GCPRO1(event);
 	event = Fmake_event(Qnil, Qnil);
 
@@ -2317,21 +2487,23 @@ function does not call redisplay or do any of the other things that
 	event_stream_force_event_pending(selected_frame());
 
 	while (event_stream_event_pending_p(0)) {
-		QUIT;		/* next_event_internal() does not QUIT. */
+		/* next_event_internal() does not QUIT. */
+		QUIT;
 
-		/* We're a generator of the command_event_queue, so we can't be a
-		   consumer as well.  Also, we have no reason to consult the
-		   command_event_queue; there are only user and eval-events there,
-		   and we'd just have to put them back anyway.
+		/* We're a generator of the command_event_queue, so we can't be
+		   a consumer as well.  Also, we have no reason to consult the
+		   command_event_queue; there are only user and eval-events
+		   there, and we'd just have to put them back anyway.
 		 */
-		next_event_internal(event, 0);	/* blocks */
+		/* blocks */
+		next_event_internal(event, 0);
 		/* See the comment in accept-process-output about Vquit_flag */
 		if (XEVENT_TYPE(event) == magic_event ||
 		    XEVENT_TYPE(event) == timeout_event ||
 		    XEVENT_TYPE(event) == process_event ||
-		    XEVENT_TYPE(event) == pointer_motion_event)
+		    XEVENT_TYPE(event) == pointer_motion_event) {
 			execute_internal_event(event);
-		else {
+		} else {
 			enqueue_command_event_1(event);
 			break;
 		}
@@ -2342,12 +2514,15 @@ function does not call redisplay or do any of the other things that
 	return Qnil;
 }
 
-static void reset_current_events(struct command_builder *command_builder)
+static void
+reset_current_events(struct command_builder *command_builder)
 {
 	Lisp_Object event = command_builder->current_events;
 	reset_command_builder_event_chain(command_builder);
-	if (EVENTP(event))
+	if (EVENTP(event)) {
 		deallocate_event_chain(event);
+	}
+	return;
 }
 
 DEFUN("discard-input", Fdiscard_input, 0, 0, 0,	/*
@@ -2363,7 +2538,8 @@ A user event is a key press, button press, button release, or
 	 */
 	Lisp_Object event = Fmake_event(Qnil, Qnil);
 #ifndef EF_USE_ASYNEQ
-	Lisp_Object head = Qnil, tail = Qnil;
+	Lisp_Object head = Qnil;
+	Lisp_Object tail = Qnil;
 #endif
 	Lisp_Object oiq = Vinhibit_quit;
 	struct gcpro gcpro1, gcpro2;
@@ -2377,8 +2553,9 @@ A user event is a key press, button press, button release, or
 	Vinhibit_quit = Qt;
 	/* If a macro was being defined then we have to mark the modeline
 	   has changed to ensure that it gets updated correctly. */
-	if (!NILP(con->defining_kbd_macro))
+	if (!NILP(con->defining_kbd_macro)) {
 		MARK_MODELINE_CHANGED;
+	}
 	con->defining_kbd_macro = Qnil;
 	reset_current_events(XCOMMAND_BUILDER(con->command_builder));
 
@@ -2393,18 +2570,16 @@ A user event is a key press, button press, button release, or
 #else
 	while (!EQ_EMPTY_P() || event_stream_event_pending_p(1)) {
 		/* This will take stuff off the command_event_queue, or read it
-		   from the event_stream, but it will not block.
-		 */
+		   from the event_stream, but it will not block. */
 		next_event_internal(event, 1);
-		Vquit_flag = Qnil;	/* Treat C-g as a user event (ignore it).
-					   It is vitally important that we reset
-					   Vquit_flag here.  Otherwise, if we're
-					   reading from a TTY console,
-					   maybe_read_quit_event() will notice
-					   that C-g has been set and send us
-					   another C-g.  That will cause us
-					   to get right back here, and read
-					   another C-g, ad infinitum ... */
+
+		/* Treat C-g as a user event (ignore it).  It is vitally
+		   important that we reset Vquit_flag here.  Otherwise, if we're
+		   reading from a TTY console, maybe_read_quit_event() will
+		   notice that C-g has been set and send us another C-g.  That
+		   will cause us to get right back here, and read another C-g,
+		   ad infinitum ... */
+		Vquit_flag = Qnil;
 
 		/* If the event is a user event, ignore it. */
 		if (!command_event_p(event)) {
@@ -2422,8 +2597,9 @@ A user event is a key press, button press, button release, or
 		}
 	}
 
-	if (!EQ_EMPTY_P() || EQ_LARGE_P())
+	if (!EQ_EMPTY_P() || EQ_LARGE_P()) {
 		abort();
+	}
 
 	/* Now tack our chain of events back on to the front of the queue.
 	   Actually, since the queue is now drained, we can just replace it.
@@ -2464,8 +2640,9 @@ A user event is a key press, button press, button release, or
 
 static Lisp_Object sit_for_unwind(Lisp_Object timeout_id)
 {
-	if (!NILP(timeout_id))
+	if (!NILP(timeout_id)) {
 		Fdisable_timeout(timeout_id);
+	}
 
 	recursive_sit_for = Qnil;
 	return Qnil;
@@ -2507,23 +2684,26 @@ Return non-nil iff we received any output before the timeout expired.
 	   will eventually alter current_buffer to match.  In the mean time
 	   we don't want to mess up whatever called this function. */
 
-	if (!NILP(process))
+	if (!NILP(process)) {
 		CHECK_PROCESS(process);
+	}
 
 	GCPRO2(event, process);
 
 	if (!NILP(timeout_secs) || !NILP(timeout_msecs)) {
 		unsigned long msecs = 0;
-		if (!NILP(timeout_secs))
+
+		if (!NILP(timeout_secs)) {
 			msecs = lisp_number_to_milliseconds(timeout_secs, 1);
+		}
 		if (!NILP(timeout_msecs)) {
 			CHECK_NATNUM(timeout_msecs);
 			msecs += XINT(timeout_msecs);
 		}
 		if (msecs) {
 			timeout_id =
-			    event_stream_generate_wakeup(msecs, 0, Qnil, Qnil,
-							 0);
+				event_stream_generate_wakeup(
+					msecs, 0, Qnil, Qnil, 0);
 			timeout_enabled = 1;
 		}
 	}
@@ -2531,48 +2711,51 @@ Return non-nil iff we received any output before the timeout expired.
 	event = Fmake_event(Qnil, Qnil);
 
 	count = specpdl_depth();
-	record_unwind_protect(sit_for_unwind,
-			      timeout_enabled ? make_int(timeout_id) : Qnil);
+	record_unwind_protect(
+		sit_for_unwind, timeout_enabled ? make_int(timeout_id) : Qnil);
 	recursive_sit_for = Qt;
 
 	while (!done &&
 	       ((NILP(process) && timeout_enabled) ||
 		(NILP(process) && event_stream_event_pending_p(0)) ||
-		(!NILP(process))))
-		/* Calling detect_input_pending() is the wrong thing here, because
-		   that considers the Vunread_command_events and command_event_queue.
-		   We don't need to look at the command_event_queue because we are
-		   only interested in process events, which don't go on that.  In
-		   fact, we can't read from it anyway, because we put stuff on it.
+		(!NILP(process)))) {
+		/* Calling detect_input_pending() is the wrong thing here,
+		   because that considers the Vunread_command_events and
+		   command_event_queue.  We don't need to look at the
+		   command_event_queue because we are only interested in process
+		   events, which don't go on that.  In fact, we can't read from
+		   it anyway, because we put stuff on it.
 
-		   Note that event_stream->event_pending_p must be called in such
-		   a way that it says whether any events *of any kind* are ready,
-		   not just user events, or (accept-process-output nil) will fail
-		   to dispatch any process events that may be on the queue.  It is
-		   not clear to me that this is important, because the top-level
-		   loop will process it, and I don't think that there is ever a
-		   time when one calls accept-process-output with a nil argument
-		   and really need the processes to be handled. */
-	{
+		   Note that event_stream->event_pending_p must be called in
+		   such a way that it says whether any events *of any kind* are
+		   ready, not just user events, or (accept-process-output nil)
+		   will fail to dispatch any process events that may be on the
+		   queue.  It is not clear to me that this is important, because
+		   the top-level loop will process it, and I don't think that
+		   there is ever a time when one calls accept-process-output
+		   with a nil argument and really need the processes to be
+		   handled. */
+
 		/* If our timeout has arrived, we move along. */
 		if (timeout_enabled
 		    && !event_stream_wakeup_pending_p(timeout_id, 0)) {
 			timeout_enabled = 0;
-			done = 1;	/* We're  done. */
-			continue;	/* Don't call next_event_internal */
+			done = 1;
+			/* Don't call next_event_internal */
+			continue;
 		}
 
-		QUIT;		/* next_event_internal() does not QUIT, so check
-				   for ^G before reading output from the process
-				   - this makes it less likely that the filter
-				   will actually be aborted.
-				 */
+		/* next_event_internal() does not QUIT, so check
+		   for ^G before reading output from the process
+		   - this makes it less likely that the filter
+		   will actually be aborted. */
+		QUIT;
 
 		next_event_internal(event, 0);
-		/* If C-g was pressed while we were waiting, Vquit_flag got
-		   set and next_event_internal() also returns C-g.  When
-		   we enqueue the C-g below, it will get discarded.  The
-		   next time through, QUIT will be called and will signal a quit. */
+		/* If C-g was pressed while we were waiting, Vquit_flag got set
+		   and next_event_internal() also returns C-g.  When we enqueue
+		   the C-g below, it will get discarded.  The next time through,
+		   QUIT will be called and will signal a quit. */
 		switch (XEVENT_TYPE(event)) {
 		case process_event:
 			if (NILP(process) ||
@@ -2651,8 +2834,9 @@ filter function or timer event (either synchronous or asynchronous).
 
 	while (1) {
 		/* If our timeout has arrived, we move along. */
-		if (!event_stream_wakeup_pending_p(id, 0))
+		if (!event_stream_wakeup_pending_p(id, 0)) {
 			goto DONE_LABEL;
+		}
 
 		/* next_event_internal() does not QUIT, so check for ^G before
 		   reading output from the process - this makes it less likely
@@ -2695,7 +2879,7 @@ filter function or timer event (either synchronous or asynchronous).
 			break;
 		}
 	}
-      DONE_LABEL:
+DONE_LABEL:
 	unbind_to(count, make_int(id));
 	Fdeallocate_event(event);
 	UNGCPRO;
@@ -2723,8 +2907,9 @@ event (either synchronous or asynchronous) it will return immediately.
 	int count;
 
 	/* The unread-command-events count as pending input */
-	if (!NILP(Vunread_command_events) || !NILP(Vunread_command_event))
+	if (!NILP(Vunread_command_events) || !NILP(Vunread_command_event)) {
 		return Qnil;
+	}
 
 	/* If the command-builder already has user-input on it (not eval events)
 	   then that means we're done too.
@@ -2746,8 +2931,9 @@ event (either synchronous or asynchronous) it will return immediately.
 
 	/* If we're in a macro, or noninteractive, or early in temacs, then
 	   don't wait. */
-	if (noninteractive || !NILP(Vexecuting_macro))
+	if (noninteractive || !NILP(Vexecuting_macro)) {
 		return Qnil;
+	}
 
 	/* Recursive call from a filter function or timeout handler. */
 	if (!NILP(recursive_sit_for)) {
@@ -2767,9 +2953,9 @@ event (either synchronous or asynchronous) it will return immediately.
 
 	/* Generate the wakeup even if MSECS is 0, so that existing timeout/etc.
 	   events get processed.  The old (pre-19.12) code special-cased this
-	   and didn't generate a wakeup, but the resulting behavior was less than
-	   ideal; viz. the occurrence of (sit-for 0.001) scattered throughout
-	   the E-Lisp universe. */
+	   and didn't generate a wakeup, but the resulting behavior was less
+	   than ideal; viz. the occurrence of (sit-for 0.001) scattered
+	   throughout the E-Lisp universe. */
 
 	id = event_stream_generate_wakeup(msecs, 0, Qnil, Qnil, 0);
 
@@ -2778,8 +2964,7 @@ event (either synchronous or asynchronous) it will return immediately.
 	recursive_sit_for = Qt;
 
 	while (1) {
-		/* If there is no user input pending, then redisplay.
-		 */
+		/* If there is no user input pending, then redisplay. */
 		if (!event_stream_event_pending_p(1) && NILP(nodisplay)) {
 			run_pre_idle_hook();
 			redisplay();
@@ -2793,14 +2978,12 @@ event (either synchronous or asynchronous) it will return immediately.
 
 		/* next_event_internal() does not QUIT, so check for ^G
 		   before reading output from the process - this makes it
-		   less likely that the filter will actually be aborted.
-		*/
+		   less likely that the filter will actually be aborted. */
 		QUIT;
 
 		/* We're a generator of the command_event_queue, so we can't be
 		   a consumer as well.  In fact, we know there's nothing on the
-		   command_event_queue that we didn't just put there.
-		 */
+		   command_event_queue that we didn't just put there. */
 		next_event_internal(event, 0);	/* blocks */
 		/* See the comment in accept-process-output about Vquit_flag */
 
@@ -2856,10 +3039,11 @@ event (either synchronous or asynchronous) it will return immediately.
 	   no user-events on the queue, or else we would not have reached this
 	   point at all.
 	 */
-	if (NILP(result))
+	if (NILP(result)) {
 		enqueue_command_event(event);
-	else
+	} else {
 		Fdeallocate_event(event);
+	}
 
 	UNGCPRO;
 	return result;
@@ -2867,7 +3051,8 @@ event (either synchronous or asynchronous) it will return immediately.
 
 /* This handy little function is used by select-x.c to wait for replies
    from processes that aren't really processes (e.g. the X server) */
-void wait_delaying_user_input(int (*predicate) (void *arg), void *predicate_arg)
+void
+wait_delaying_user_input(int (*predicate) (void *arg), void *predicate_arg)
 {
 	/* This function can GC */
 	Lisp_Object event = Fmake_event(Qnil, Qnil);
@@ -2875,23 +3060,26 @@ void wait_delaying_user_input(int (*predicate) (void *arg), void *predicate_arg)
 	GCPRO1(event);
 
 	while (!(*predicate) (predicate_arg)) {
-		QUIT;		/* next_event_internal() does not QUIT. */
+		/* next_event_internal() does not QUIT. */
+		QUIT;
 
-		/* We're a generator of the command_event_queue, so we can't be a
-		   consumer as well.  Also, we have no reason to consult the
-		   command_event_queue; there are only user and eval-events there,
-		   and we'd just have to put them back anyway.
+		/* We're a generator of the command_event_queue, so we can't be
+		   a consumer as well.  Also, we have no reason to consult the
+		   command_event_queue; there are only user and eval-events
+		   there, and we'd just have to put them back anyway.
 		 */
 		next_event_internal(event, 0);
 		/* See the comment in accept-process-output about Vquit_flag */
 		if (command_event_p(event)
 		    || (XEVENT_TYPE(event) == eval_event)
-		    || (XEVENT_TYPE(event) == magic_eval_event))
+		    || (XEVENT_TYPE(event) == magic_eval_event)) {
 			enqueue_command_event_1(event);
-		else
+		} else {
 			execute_internal_event(event);
+		}
 	}
 	UNGCPRO;
+	return;
 }
 
 /**********************************************************************/
@@ -2922,8 +3110,9 @@ execute_internal_event(Lisp_Object event)
 		return;
 
 	case pointer_motion_event:
-		if (!NILP(Vmouse_motion_handler))
+		if (!NILP(Vmouse_motion_handler)) {
 			call1(Vmouse_motion_handler, event);
+		}
 		return;
 
 	case process_event: {
@@ -2932,47 +3121,50 @@ execute_internal_event(Lisp_Object event)
 
 		assert(PROCESSP(p));
 		while ((readstatus = read_process_output(p)) > 0) ;
-		if (readstatus > 0) ;	/* this clauses never gets
-					   executed but allows the
-					   #ifdefs to work cleanly. */
+		/* this clause never gets executed but allows the
+		   #ifdefs to work cleanly. */
+		if (readstatus > 0) {
+			;
 #ifdef EWOULDBLOCK
-		else if (readstatus == -1 && errno == EWOULDBLOCK) ;
-#endif				/* EWOULDBLOCK */
+		} else if (readstatus == -1 && errno == EWOULDBLOCK) {
+			;
+#endif  /* EWOULDBLOCK */
 #ifdef EAGAIN
-		else if (readstatus == -1 && errno == EAGAIN) ;
-#endif				/* EAGAIN */
-		else if ((readstatus == 0 &&
-			  /* Note that we cannot distinguish between no
-			     input available now and a closed pipe.
-			     With luck, a closed pipe will be
-			     accompanied by subprocess termination and
-			     SIGCHLD.  */
-			  (!network_connection_p(p) ||
-			   /*
-			     When connected to ToolTalk (i.e.
-			     connected_via_filedesc_p()), it's not
-			     possible to reliably determine whether
-			     there is a message waiting for ToolTalk to
-			     receive.  ToolTalk expects to have
-			     tt_message_receive() called exactly once
-			     every time the file descriptor becomes
-			     active, so the filter function forces this
-			     by returning 0.  Emacs must not interpret
-			     this as a closed pipe. 
+		} else if (readstatus == -1 && errno == EAGAIN) {
+			;
+#endif  /* EAGAIN */
+		} else if ((readstatus == 0 &&
+			    /* Note that we cannot distinguish between no
+			       input available now and a closed pipe.
+			       With luck, a closed pipe will be
+			       accompanied by subprocess termination and
+			       SIGCHLD.  */
+			    (!network_connection_p(p) ||
+			     /*
+			       When connected to ToolTalk (i.e.
+			       connected_via_filedesc_p()), it's not
+			       possible to reliably determine whether
+			       there is a message waiting for ToolTalk to
+			       receive.  ToolTalk expects to have
+			       tt_message_receive() called exactly once
+			       every time the file descriptor becomes
+			       active, so the filter function forces this
+			       by returning 0.  Emacs must not interpret
+			       this as a closed pipe. 
 
-			     We don't do ToolTalk anymore, but come
-			     back and revisit this for D-Bus */
-			   connected_via_filedesc_p(XPROCESS(p))))
+			       We don't do ToolTalk anymore, but come
+			       back and revisit this for D-Bus */
+			     connected_via_filedesc_p(XPROCESS(p))))
 #ifdef HAVE_PTYS
-			 /* On some OSs with ptys, when the process on
-			    one end of a pty exits, the other end gets
-			    an error reading with errno = EIO instead of
-			    getting an EOF (0 bytes read).  Therefore,
-			    if we get an error reading and errno = EIO,
-			    just continue, because the child process has
-			    exited and should clean itself up soon
-			    (e.g. when we get a SIGCHLD). */
-			 || (readstatus == -1 && errno == EIO)
+			   /* On some OSs with ptys, when the process on
+			      one end of a pty exits, the other end gets
+			      an error reading with errno = EIO instead of
+			      getting an EOF (0 bytes read).  Therefore,
+			      if we get an error reading and errno = EIO,
+			      just continue, because the child process has
+			      exited and should clean itself up soon
+			      (e.g. when we get a SIGCHLD). */
+			   || (readstatus == -1 && errno == EIO)
 #endif
 			) {
 			/* Currently, we rely on SIGCHLD to indicate
@@ -2984,6 +3176,7 @@ execute_internal_event(Lisp_Object event)
 			   tell status_notify() to enable that check,
 			   and we do so now. */
 			kick_status_notify();
+
 		} else {
 			/* Deactivate network connection */
 			Lisp_Object status = Fprocess_status(p);
@@ -2991,8 +3184,9 @@ execute_internal_event(Lisp_Object event)
 			    /* In case somebody changes the theory of
 			       whether to return open as opposed to run
 			       for network connection "processes"... */
-			    || EQ(status, Qrun))
+			    || EQ(status, Qrun)) {
 				update_process_status(p, Qexit, 256, 0);
+			}
 			deactivate_process(p);
 		}
 
@@ -3013,9 +3207,10 @@ execute_internal_event(Lisp_Object event)
 
 	case timeout_event: {
 		Lisp_Event *e = XEVENT(event);
-		if (!NILP(e->event.timeout.function))
+		if (!NILP(e->event.timeout.function)) {
 			call1(e->event.timeout.function,
 			      e->event.timeout.object);
+		}
 		return;
 	}
 
@@ -3050,12 +3245,14 @@ this_command_keys_replace_suffix(Lisp_Object suffix, Lisp_Object chain)
 	Lisp_Object first_before_suffix =
 	    event_chain_find_previous(Vthis_command_keys, suffix);
 
-	if (NILP(first_before_suffix))
+	if (NILP(first_before_suffix)) {
 		Vthis_command_keys = chain;
-	else
+	} else {
 		XSET_EVENT_NEXT(first_before_suffix, chain);
+	}
 	deallocate_event_chain(suffix);
 	Vthis_command_keys_tail = event_chain_tail(chain);
+	return;
 }
 
 static void
@@ -3063,23 +3260,26 @@ command_builder_replace_suffix(struct command_builder *builder,
 			       Lisp_Object suffix, Lisp_Object chain)
 {
 	Lisp_Object first_before_suffix =
-	    event_chain_find_previous(builder->current_events, suffix);
+		event_chain_find_previous(builder->current_events, suffix);
 
-	if (NILP(first_before_suffix))
+	if (NILP(first_before_suffix)) {
 		builder->current_events = chain;
-	else
+	} else {
 		XSET_EVENT_NEXT(first_before_suffix, chain);
+	}
 	deallocate_event_chain(suffix);
 	builder->most_current_event = event_chain_tail(chain);
+	return;
 }
 
-static Lisp_Object command_builder_find_leaf_1(struct command_builder *builder)
+static Lisp_Object
+command_builder_find_leaf_1(struct command_builder *builder)
 {
 	Lisp_Object event0 = builder->current_events;
 
-	if (NILP(event0))
+	if (NILP(event0)) {
 		return Qnil;
-
+	}
 	return event_binding(event0, 1);
 }
 
@@ -3094,48 +3294,54 @@ munge_keymap_translate(struct command_builder *builder,
 {
 	Lisp_Object suffix;
 
-	EVENT_CHAIN_LOOP(suffix, builder->munge_me[munge].first_mungeable_event) {
+	EVENT_CHAIN_LOOP(
+		suffix, builder->munge_me[munge].first_mungeable_event) {
 		Lisp_Object result =
-		    munging_key_map_event_binding(suffix, munge);
+			munging_key_map_event_binding(suffix, munge);
 
-		if (NILP(result))
+		if (NILP(result)) {
 			continue;
+		}
 
 		if (KEYMAPP(result)) {
-			if (NILP(builder->last_non_munged_event)
-			    && !has_normal_binding_p)
+			if (NILP(builder->last_non_munged_event) &&
+			    !has_normal_binding_p) {
 				builder->last_non_munged_event =
-				    builder->most_current_event;
-		} else
+					builder->most_current_event;
+			}
+		} else {
 			builder->last_non_munged_event = Qnil;
+		}
 
 		if (!KEYMAPP(result) && !VECTORP(result) && !STRINGP(result)) {
 			struct gcpro gcpro1;
 			GCPRO1(suffix);
 			result = call1(result, Qnil);
 			UNGCPRO;
-			if (NILP(result))
+			if (NILP(result)) {
 				return Qnil;
+			}
 		}
 
-		if (KEYMAPP(result))
+		if (KEYMAPP(result)) {
 			return result;
+		}
 
 		if (VECTORP(result) || STRINGP(result)) {
 			Lisp_Object new_chain =
-			    key_sequence_to_event_chain(result);
+				key_sequence_to_event_chain(result);
 			Lisp_Object tempev;
 			int n, tckn;
 
 			/* If the first_mungeable_event of the other munger is
-			   within the events we're munging, then it will point to
-			   deallocated events afterwards, which is bad -- so make it
-			   point at the beginning of the munged events. */
+			   within the events we're munging, then it will point
+			   to deallocated events afterwards, which is bad -- so
+			   make it point at the beginning of the munged
+			   events. */
 			EVENT_CHAIN_LOOP(tempev, suffix) {
 				Lisp_Object *mungeable_event =
-				    &builder->munge_me[1 -
-						       munge].
-				    first_mungeable_event;
+					&builder->munge_me[1 - munge].
+					first_mungeable_event;
 				if (EQ(tempev, *mungeable_event)) {
 					*mungeable_event = new_chain;
 					break;
@@ -3143,22 +3349,23 @@ munge_keymap_translate(struct command_builder *builder,
 			}
 
 			n = event_chain_count(suffix);
-			command_builder_replace_suffix(builder, suffix,
-						       new_chain);
+			command_builder_replace_suffix(
+				builder, suffix, new_chain);
 			builder->munge_me[munge].first_mungeable_event = Qnil;
 			/* Now hork this-command-keys as well. */
 
 			/* We just assume that the events we just replaced are
-			   sitting in copied form at the end of this-command-keys.
-			   If the user did weird things with `dispatch-event' this
-			   may not be the case, but at least we make sure we won't
-			   crash. */
+			   sitting in copied form at the end of
+			   this-command-keys.  If the user did weird things with
+			   `dispatch-event' this may not be the case, but at
+			   least we make sure we won't crash. */
 			new_chain = copy_event_chain(new_chain);
 			tckn = event_chain_count(Vthis_command_keys);
 			if (tckn >= n) {
-				this_command_keys_replace_suffix
-				    (event_chain_nth
-				     (Vthis_command_keys, tckn - n), new_chain);
+				this_command_keys_replace_suffix(
+					event_chain_nth(
+						Vthis_command_keys, tckn - n),
+					new_chain);
 			}
 
 			result = command_builder_find_leaf_1(builder);
@@ -3192,11 +3399,12 @@ command_builder_find_leaf(struct command_builder *builder,
 	Lisp_Object evee = builder->current_events;
 
 	if (XEVENT_TYPE(evee) == misc_user_event) {
-		if (allow_misc_user_events_p && (NILP(XEVENT_NEXT(evee))))
+		if (allow_misc_user_events_p && (NILP(XEVENT_NEXT(evee)))) {
 			return list2(XEVENT(evee)->event.eval.function,
 				     XEVENT(evee)->event.eval.object);
-		else
+		} else {
 			return Qnil;
+		}
 	}
 
 	/* if we're currently in a menu accelerator, check there for further
@@ -3207,17 +3415,20 @@ command_builder_find_leaf(struct command_builder *builder,
 		return command_builder_operate_menu_accelerator(builder);
 	} else {
 		result = Qnil;
-		if (EQ(Vmenu_accelerator_enabled, Qmenu_force))
+		if (EQ(Vmenu_accelerator_enabled, Qmenu_force)) {
 			result = command_builder_find_menu_accelerator(builder);
-		if (NILP(result))
-#endif
+		}
+		if (NILP(result)) {
+#endif	/* X_WINDOWS && LWLIB_MENUBARS_LUCID */
 			result = command_builder_find_leaf_1(builder);
 #if defined(HAVE_X_WINDOWS) && defined(LWLIB_MENUBARS_LUCID)
-		if (NILP(result)
-		    && EQ(Vmenu_accelerator_enabled, Qmenu_fallback))
+		}
+		if (NILP(result) &&
+		    EQ(Vmenu_accelerator_enabled, Qmenu_fallback)) {
 			result = command_builder_find_menu_accelerator(builder);
+		}
 	}
-#endif
+#endif	/* X_WINDOWS && LWLIB_MENUBARS_LUCID */
 
 	/* Check to see if we have a potential function-key-map match. */
 	if (NILP(result)) {
@@ -3236,8 +3447,9 @@ command_builder_find_leaf(struct command_builder *builder,
 		}
 	}
 
-	if (!NILP(result))
+	if (!NILP(result)) {
 		return result;
+	}
 
 	/* If key-sequence wasn't bound, we'll try some fallbacks.  */
 
@@ -3249,47 +3461,52 @@ command_builder_find_leaf(struct command_builder *builder,
 		Lisp_Object terminal = builder->most_current_event;
 		struct key_data *key = &XEVENT(terminal)->event.key;
 		Emchar c = 0;
-		if ((key->modifiers & XEMACS_MOD_SHIFT)
-		    || (CHAR_OR_CHAR_INTP(key->keysym)
-			&& ((c = XCHAR_OR_CHAR_INT(key->keysym)), c >= 'A'
-			    && c <= 'Z'))) {
+		if ((key->modifiers & XEMACS_MOD_SHIFT) ||
+		    (CHAR_OR_CHAR_INTP(key->keysym) &&
+		     ((c = XCHAR_OR_CHAR_INT(key->keysym)),
+		      (c >= 'A' && c <= 'Z')))) {
 			Lisp_Event terminal_copy = *XEVENT(terminal);
 
-			if (key->modifiers & XEMACS_MOD_SHIFT)
+			if (key->modifiers & XEMACS_MOD_SHIFT) {
 				key->modifiers &= (~XEMACS_MOD_SHIFT);
-			else
+			} else {
 				key->keysym = make_char(c + 'a' - 'A');
+			}
+			result = command_builder_find_leaf(
+				builder, allow_misc_user_events_p);
 
-			result =
-			    command_builder_find_leaf(builder,
-						      allow_misc_user_events_p);
-			if (!NILP(result))
+			if (!NILP(result)) {
 				return result;
-			/* If there was no match with the lower-case version either,
-			   then put back the upper-case event for the error
-			   message.  But make sure that function-key-map didn't
-			   change things out from under us. */
-			if (EQ(terminal, builder->most_current_event))
+			}
+			/* If there was no match with the lower-case version
+			   either, then put back the upper-case event for the
+			   error message.  But make sure that function-key-map
+			   didn't change things out from under us. */
+			if (EQ(terminal, builder->most_current_event)) {
 				*XEVENT(terminal) = terminal_copy;
+			}
 		}
 	}
 
 	/* help-char is `auto-bound' in every keymap */
 	if (!NILP(Vprefix_help_command) &&
-	    event_matches_key_specifier_p(XEVENT(builder->most_current_event),
-					  Vhelp_char))
+	    event_matches_key_specifier_p(
+		    XEVENT(builder->most_current_event), Vhelp_char)) {
 		return Vprefix_help_command;
+	}
 
 #ifdef HAVE_XIM
-	/* If keysym is a non-ASCII char, bind it to self-insert-char by default. */
-	if (XEVENT_TYPE(builder->most_current_event) == key_press_event
-	    && !NILP(Vcomposed_character_default_binding)) {
+	/* If keysym is a non-ASCII char, bind it to self-insert-char by
+	   default. */
+	if (XEVENT_TYPE(builder->most_current_event) == key_press_event &&
+	    !NILP(Vcomposed_character_default_binding)) {
 		Lisp_Object keysym =
-		    XEVENT(builder->most_current_event)->event.key.keysym;
-		if (CHARP(keysym) && !CHAR_ASCII_P(XCHAR(keysym)))
+			XEVENT(builder->most_current_event)->event.key.keysym;
+		if (CHARP(keysym) && !CHAR_ASCII_P(XCHAR(keysym))) {
 			return Vcomposed_character_default_binding;
+		}
 	}
-#endif				/* HAVE_XIM */
+#endif  /* HAVE_XIM */
 
 	/* If we read extra events attempting to match a function key but end
 	   up failing, then we release those events back to the command loop
@@ -3353,9 +3570,9 @@ modify them.
 	int start, nkeys, i, j;
 	GCPRO1(val);
 
-	if (NILP(number))
+	if (NILP(number)) {
 		nwanted = recent_keys_ring_size;
-	else {
+	} else {
 		CHECK_NATNUM(number);
 		nwanted = XINT(number);
 	}
@@ -3367,36 +3584,38 @@ modify them.
 		RETURN_UNGCPRO(make_vector(0, Qnil));
 	}
 
-	if (NILP(XVECTOR_DATA(Vrecent_keys_ring)[recent_keys_ring_index]))
+	if (NILP(XVECTOR_DATA(Vrecent_keys_ring)[recent_keys_ring_index])) {
 		/* This means the vector has not yet wrapped */
-	{
 		nkeys = recent_keys_ring_index;
 		start = 0;
 	} else {
 		nkeys = recent_keys_ring_size;
-		start =
-		    ((recent_keys_ring_index ==
-		      nkeys) ? 0 : recent_keys_ring_index);
+		start = ((recent_keys_ring_index == nkeys)
+			 ? 0 : recent_keys_ring_index);
 	}
 
 	if (nwanted < nkeys) {
 		start += nkeys - nwanted;
-		if (start >= recent_keys_ring_size)
+		if (start >= recent_keys_ring_size) {
 			start -= recent_keys_ring_size;
+		}
 		nkeys = nwanted;
-	} else
+	} else {
 		nwanted = nkeys;
+	}
 
 	val = make_vector(nwanted, Qnil);
 
 	for (i = 0, j = start; i < nkeys; i++) {
 		Lisp_Object e = XVECTOR_DATA(Vrecent_keys_ring)[j];
 
-		if (NILP(e))
+		if (NILP(e)) {
 			abort();
+		}
 		XVECTOR_DATA(val)[i] = Fcopy_event(e, Qnil);
-		if (++j >= recent_keys_ring_size)
+		if (++j >= recent_keys_ring_size) {
 			j = 0;
+		}
 	}
 	UNGCPRO;
 	return val;
@@ -3420,10 +3639,12 @@ Set the maximum number of events to be stored internally.
 	struct gcpro gcpro1;
 
 	CHECK_INT(size);
-	if (XINT(size) <= 0)
+	if (XINT(size) <= 0) {
 		error("Recent keys ring size must be positive");
-	if (XINT(size) == recent_keys_ring_size)
+	}
+	if (XINT(size) == recent_keys_ring_size) {
 		return size;
+	}
 
 	GCPRO1(new_vector);
 	new_vector = make_vector(XINT(size), Qnil);
@@ -3433,28 +3654,28 @@ Set the maximum number of events to be stored internally.
 		RETURN_UNGCPRO(size);
 	}
 
-	if (NILP(XVECTOR_DATA(Vrecent_keys_ring)[recent_keys_ring_index]))
+	if (NILP(XVECTOR_DATA(Vrecent_keys_ring)[recent_keys_ring_index])) {
 		/* This means the vector has not yet wrapped */
-	{
 		nkeys = recent_keys_ring_index;
 		start = 0;
 	} else {
 		nkeys = recent_keys_ring_size;
-		start =
-		    ((recent_keys_ring_index ==
-		      nkeys) ? 0 : recent_keys_ring_index);
+		start = ((recent_keys_ring_index == nkeys)
+			 ? 0 : recent_keys_ring_index);
 	}
 
-	if (XINT(size) > nkeys)
+	if (XINT(size) > nkeys) {
 		min = nkeys;
-	else
+	} else {
 		min = XINT(size);
+	}
 
 	for (i = 0, j = start; i < min; i++) {
 		XVECTOR_DATA(new_vector)[i] =
-		    XVECTOR_DATA(Vrecent_keys_ring)[j];
-		if (++j >= recent_keys_ring_size)
+			XVECTOR_DATA(Vrecent_keys_ring)[j];
+		if (++j >= recent_keys_ring_size) {
 			j = 0;
+		}
 	}
 	recent_keys_ring_size = XINT(size);
 	recent_keys_ring_index = (i < recent_keys_ring_size) ? i : 0;
@@ -3484,24 +3705,28 @@ Set the maximum number of events to be stored internally.
       default error handler, and whenever there's a throw to top-level.)
  */
 
-void reset_this_command_keys(Lisp_Object console, int clear_echo_area_p)
+void
+reset_this_command_keys(Lisp_Object console, int clear_echo_area_p)
 {
 	if (!NILP(console)) {
-		/* console is nil if we just deleted the console as a result of C-x 5
-		   0.  Unfortunately things are currently in a messy situation where
-		   some stuff is console-local and other stuff isn't, so we need to
-		   do everything that's not console-local. */
+		/* console is nil if we just deleted the console as a result of
+		   C-x 5 0.  Unfortunately things are currently in a messy
+		   situation where some stuff is console-local and other stuff
+		   isn't, so we need to do everything that's not
+		   console-local. */
 		struct command_builder *command_builder =
-		    XCOMMAND_BUILDER(XCONSOLE(console)->command_builder);
+			XCOMMAND_BUILDER(XCONSOLE(console)->command_builder);
 
 		reset_key_echo(command_builder, clear_echo_area_p);
 		reset_current_events(command_builder);
-	} else
+	} else {
 		reset_key_echo(0, clear_echo_area_p);
+	}
 
 	deallocate_event_chain(Vthis_command_keys);
 	Vthis_command_keys = Qnil;
 	Vthis_command_keys_tail = Qnil;
+	return;
 }
 
 static void push_this_command_keys(Lisp_Object event)
@@ -3510,6 +3735,7 @@ static void push_this_command_keys(Lisp_Object event)
 
 	Fcopy_event(event, new);
 	enqueue_event(new, &Vthis_command_keys, &Vthis_command_keys_tail);
+	return;
 }
 
 /* The following two functions are used in call-interactively,
@@ -3527,11 +3753,13 @@ Lisp_Object extract_this_command_keys_nth_mouse_event(int n)
 			|| XEVENT_TYPE(event) == button_release_event
 			|| XEVENT_TYPE(event) == misc_user_event)) {
 			if (!n) {
-				/* must copy to avoid an abort() in next_event_internal() */
-				if (!NILP(XEVENT_NEXT(event)))
+				/* must copy to avoid an abort() in
+				   next_event_internal() */
+				if (!NILP(XEVENT_NEXT(event))) {
 					return Fcopy_event(event, Qnil);
-				else
+				} else {
 					return event;
+				}
 			}
 			n--;
 		}
@@ -3540,7 +3768,8 @@ Lisp_Object extract_this_command_keys_nth_mouse_event(int n)
 	return Qnil;
 }
 
-Lisp_Object extract_vector_nth_mouse_event(Lisp_Object vector, int n)
+Lisp_Object
+extract_vector_nth_mouse_event(Lisp_Object vector, int n)
 {
 	int i;
 	int len = XVECTOR_LENGTH(vector);
@@ -3552,8 +3781,9 @@ Lisp_Object extract_vector_nth_mouse_event(Lisp_Object vector, int n)
 			case button_press_event:
 			case button_release_event:
 			case misc_user_event:
-				if (n == 0)
+				if (n == 0) {
 					return event;
+				}
 				n--;
 				break;
 
@@ -3581,12 +3811,14 @@ Lisp_Object extract_vector_nth_mouse_event(Lisp_Object vector, int n)
 	return Qnil;
 }
 
-static void push_recent_keys(Lisp_Object event)
+static void
+push_recent_keys(Lisp_Object event)
 {
 	Lisp_Object e;
 
-	if (NILP(Vrecent_keys_ring))
+	if (NILP(Vrecent_keys_ring)) {
 		Vrecent_keys_ring = make_vector(recent_keys_ring_size, Qnil);
+	}
 
 	e = XVECTOR_DATA(Vrecent_keys_ring)[recent_keys_ring_index];
 
@@ -3595,8 +3827,10 @@ static void push_recent_keys(Lisp_Object event)
 		XVECTOR_DATA(Vrecent_keys_ring)[recent_keys_ring_index] = e;
 	}
 	Fcopy_event(event, e);
-	if (++recent_keys_ring_index == recent_keys_ring_size)
+	if (++recent_keys_ring_index == recent_keys_ring_size) {
 		recent_keys_ring_index = 0;
+	}
+	return;
 }
 
 static Lisp_Object
@@ -3611,8 +3845,9 @@ current_events_into_vector(struct command_builder *command_builder)
 	   nobody other than the command-builder has pointers to them */
 	vector = make_vector(n, Qnil);
 	n = 0;
-	EVENT_CHAIN_LOOP(event, command_builder->current_events)
-	    XVECTOR_DATA(vector)[n++] = event;
+	EVENT_CHAIN_LOOP(event, command_builder->current_events) {
+		XVECTOR_DATA(vector)[n++] = event;
+	}
 	reset_command_builder_event_chain(command_builder);
 	return vector;
 }
@@ -3639,60 +3874,64 @@ lookup_command_event(struct command_builder *command_builder,
 	/* Clear output from previous command execution */
 	if (!EQ(Qcommand, echo_area_status(f))
 	    /* but don't let mouse-up clear what mouse-down just printed */
-	    && (XEVENT(event)->event_type != button_release_event))
+	    && (XEVENT(event)->event_type != button_release_event)) {
 		clear_echo_area(f, Qnil, 0);
+	}
 
 	/* Add the given event to the command builder.
-	   Extra hack: this also updates the recent_keys_ring and Vthis_command_keys
-	   vectors to translate "ESC x" to "M-x" (for any "x" of course).
+	   Extra hack: this also updates the recent_keys_ring and
+	   Vthis_command_keys vectors to translate
+	   "ESC x" to "M-x" (for any "x" of course).
 	 */
 	{
 		Lisp_Object recent = command_builder->most_current_event;
 
-		if (EVENTP(recent)
-		    && event_matches_key_specifier_p(XEVENT(recent),
-						     Vmeta_prefix_char)) {
+		if (EVENTP(recent) &&
+		    event_matches_key_specifier_p(
+			    XEVENT(recent), Vmeta_prefix_char)) {
 			Lisp_Event *e;
-			/* When we see a sequence like "ESC x", pretend we really saw "M-x".
-			   DoubleThink the recent-keys and this-command-keys as well. */
-
-			/* Modify the previous most-recently-pushed event on the command
-			   builder to be a copy of this one with the meta-bit set instead of
-			   pushing a new event.
+			/* When we see a sequence like "ESC x", pretend we
+			   really saw "M-x".  DoubleThink the recent-keys and
+			   this-command-keys as well. */
+			/* Modify the previous most-recently-pushed event on the
+			   command builder to be a copy of this one with the
+			   meta-bit set instead of pushing a new event.
 			 */
 			Fcopy_event(event, recent);
 			e = XEVENT(recent);
-			if (e->event_type == key_press_event)
+			if (e->event_type == key_press_event) {
 				e->event.key.modifiers |= XEMACS_MOD_META;
-			else if (e->event_type == button_press_event
-				 || e->event_type == button_release_event)
+			} else if (e->event_type == button_press_event ||
+				   e->event_type == button_release_event) {
 				e->event.button.modifiers |= XEMACS_MOD_META;
-			else
+			} else {
 				abort();
+			}
 
 			{
 				int tckn =
-				    event_chain_count(Vthis_command_keys);
-				if (tckn >= 2)
+					event_chain_count(Vthis_command_keys);
+				if (tckn >= 2) {
 					/* ??? very strange if it's < 2. */
-					this_command_keys_replace_suffix
-					    (event_chain_nth
-					     (Vthis_command_keys, tckn - 2),
-					     Fcopy_event(recent, Qnil));
+					this_command_keys_replace_suffix(
+						event_chain_nth(
+							Vthis_command_keys,
+							tckn - 2),
+						Fcopy_event(recent, Qnil));
+				}
 			}
 
-			regenerate_echo_keys_from_this_command_keys
-			    (command_builder);
+			regenerate_echo_keys_from_this_command_keys(
+				command_builder);
 		} else {
 			event = Fcopy_event(event, Fmake_event(Qnil, Qnil));
-
 			command_builder_append_event(command_builder, event);
 		}
 	}
 
 	{
-		Lisp_Object leaf = command_builder_find_leaf(command_builder,
-							     allow_misc_user_events_p);
+		Lisp_Object leaf = command_builder_find_leaf(
+			command_builder, allow_misc_user_events_p);
 		struct gcpro gcpro1;
 		GCPRO1(leaf);
 
@@ -3705,27 +3944,30 @@ lookup_command_event(struct command_builder *command_builder,
 			{
 				Lisp_Object prompt = Fkeymap_prompt(leaf, Qt);
 				if (STRINGP(prompt)) {
-					/* Append keymap prompt to key echo buffer */
+					/* Append keymap prompt to key echo
+					   buffer */
 					int buf_index =
-					    command_builder->echo_buf_index;
+						command_builder->echo_buf_index;
 					Bytecount len = XSTRING_LENGTH(prompt);
 
 					if (len + buf_index + 1 <=
 					    command_builder->echo_buf_length) {
 						Bufbyte *echo =
-						    command_builder->echo_buf +
-						    buf_index;
+							command_builder->
+							echo_buf +
+							buf_index;
 						memcpy(echo,
 						       XSTRING_DATA(prompt),
 						       len);
 						echo[len] = 0;
 					}
 					maybe_echo_keys(command_builder, 1);
-				} else
+				} else {
 					maybe_echo_keys(command_builder, 0);
+				}
 			} else if (!NILP(Vquit_flag)) {
 				Lisp_Object quit_event =
-				    Fmake_event(Qnil, Qnil);
+					Fmake_event(Qnil, Qnil);
 				Lisp_Event *e = XEVENT(quit_event);
 				/* if quit happened during menu acceleration,
 				   pretend we read it */
@@ -3740,8 +3982,8 @@ lookup_command_event(struct command_builder *command_builder,
 				Vquit_flag = Qnil;
 			}
 		} else if (!NILP(leaf)) {
-			if (EQ(Qcommand, echo_area_status(f))
-			    && command_builder->echo_buf_index > 0) {
+			if (EQ(Qcommand, echo_area_status(f)) &&
+			    command_builder->echo_buf_index > 0) {
 				/* If we had been echoing keys, echo the last
 				   one (without the trailing dash) and redisplay
 				   before executing the command. */
@@ -3753,6 +3995,7 @@ lookup_command_event(struct command_builder *command_builder,
 		}
 		RETURN_UNGCPRO(leaf);
 	}
+	/* not reached */
 }
 
 static int is_scrollbar_event(Lisp_Object event)
@@ -3760,10 +4003,12 @@ static int is_scrollbar_event(Lisp_Object event)
 #ifdef HAVE_SCROLLBARS
 	Lisp_Object fun;
 
-	if (!EVENTP(event))
+	if (!EVENTP(event)) {
 		return 0;
-	if (XEVENT(event)->event_type != misc_user_event)
+	}
+	if (XEVENT(event)->event_type != misc_user_event) {
 		return 0;
+	}
 	fun = XEVENT(event)->event.misc.function;
 
 	return (EQ(fun, Qscrollbar_line_up) ||
@@ -3780,9 +4025,9 @@ static int is_scrollbar_event(Lisp_Object event)
 		EQ(fun, Qscrollbar_to_left) ||
 		EQ(fun, Qscrollbar_to_right) ||
 		EQ(fun, Qscrollbar_horizontal_drag));
-#else
+#else  /* !HAVE_SCROLLBARS */
 	return 0;
-#endif				/* HAVE_SCROLLBARS */
+#endif  /* HAVE_SCROLLBARS */
 }
 
 static void
@@ -3792,7 +4037,8 @@ execute_command_event(struct command_builder *cmd_builder, Lisp_Object event)
 	struct console *con = XCONSOLE(cmd_builder->console);
 	struct gcpro gcpro1;
 
-	GCPRO1(event);		/* event may be freshly created */
+	/* event may be freshly created */
+	GCPRO1(event);
 
 	/* #### This call to is_scrollbar_event() isn't quite right, but
 	   fixing properly it requires more work than can go into 21.4.
@@ -3844,8 +4090,9 @@ execute_command_event(struct command_builder *cmd_builder, Lisp_Object event)
 	   #### here.  Do this when separating out scrollbar events.
 	 */
 
-	if (!is_scrollbar_event(event))
+	if (!is_scrollbar_event(event)) {
 		reset_current_events(cmd_builder);
+	}
 
 	switch (XEVENT(event)->event_type) {
 	case key_press_event:
@@ -3877,20 +4124,22 @@ execute_command_event(struct command_builder *cmd_builder, Lisp_Object event)
 
 	/* Store the last-command-event.  The semantics of this is that it
 	   is the last event most recently involved in command-lookup. */
-	if (!EVENTP(Vlast_command_event))
+	if (!EVENTP(Vlast_command_event)) {
 		Vlast_command_event = Fmake_event(Qnil, Qnil);
+	}
 	if (XEVENT(Vlast_command_event)->event_type == dead_event) {
 		Vlast_command_event = Fmake_event(Qnil, Qnil);
 		error("Someone deallocated the last-command-event!");
 	}
 
-	if (!EQ(event, Vlast_command_event))
+	if (!EQ(event, Vlast_command_event)) {
 		Fcopy_event(event, Vlast_command_event);
+	}
 
 	/* Note that last-command-char will never have its high-bit set, in
 	   an effort to sidestep the ambiguity between M-x and oslash. */
-	Vlast_command_char = Fevent_to_character(Vlast_command_event,
-						 Qnil, Qnil, Qnil);
+	Vlast_command_char = Fevent_to_character(
+		Vlast_command_event, Qnil, Qnil, Qnil);
 
 	/* Actually call the command, with all sorts of hair to preserve or clear
 	   the echo-area and region as appropriate and call the pre- and post-
@@ -3900,13 +4149,15 @@ execute_command_event(struct command_builder *cmd_builder, Lisp_Object event)
 		Lisp_Object tmp = Fselected_window(Qnil);
 		struct window *w = XWINDOW(tmp);
 
-		/* We're executing a new command, so the old value is irrelevant. */
+		/* We're executing a new command, so the old value is
+		   irrelevant. */
 		zmacs_region_stays = 0;
 
-		/* If the previous command tried to force a specific window-start,
-		   reset the flag in case this command moves point far away from
-		   that position.  Also, reset the window's buffer's change
-		   information so that we don't trigger an incremental update. */
+		/* If the previous command tried to force a specific
+		   window-start, reset the flag in case this command moves point
+		   far away from that position.  Also, reset the window's
+		   buffer's change information so that we don't trigger an
+		   incremental update. */
 		if (w->force_start) {
 			w->force_start = 0;
 			buffer_reset_changes(XBUFFER(w->buffer));
@@ -3940,8 +4191,9 @@ execute_command_event(struct command_builder *cmd_builder, Lisp_Object event)
 			   in the macro" to be just before this command.  This
 			   is so that the ^U in "^U ^X )" doesn't go onto the
 			   end of macro. */
-			if (!NILP(con->defining_kbd_macro))
+			if (!NILP(con->defining_kbd_macro)) {
 				con->kbd_macro_end = old_kbd_macro;
+			}
 		} else {
 			/* Start a new command next time */
 			Vlast_command = Vthis_command;
@@ -3951,33 +4203,39 @@ execute_command_event(struct command_builder *cmd_builder, Lisp_Object event)
 			/* Emacs 18 doesn't unconditionally clear the echoed
 			   keystrokes, so we don't either */
 			/* who cares about RMSmacs 18? */
-			if (!is_scrollbar_event(event))
-				reset_this_command_keys(CONSOLE_LIVE_P(con) ?
-							make_console(con)
-							: Qnil, 0);
+			if (!is_scrollbar_event(event)) {
+				reset_this_command_keys(
+					CONSOLE_LIVE_P(con)
+					? make_console(con)
+					: Qnil, 0);
+			}
 		}
 	}
 	UNGCPRO;
+	return;
 }
 
 /* Run the pre command hook. */
 
-static void pre_command_hook(void)
+static void
+pre_command_hook(void)
 {
 	last_point_position = BUF_PT(current_buffer);
 	XSETBUFFER(last_point_position_buffer, current_buffer);
 	/* This function can GC */
-	safe_run_hook_trapping_errors
-	    ("Error in `pre-command-hook' (setting hook to nil)",
-	     Qpre_command_hook, 1);
+	safe_run_hook_trapping_errors(
+		"Error in `pre-command-hook' (setting hook to nil)",
+		Qpre_command_hook, 1);
 
 	/* This is a kludge, but necessary; see simple.el */
 	call0(Qhandle_pre_motion_command);
+	return;
 }
 
 /* Run the post command hook. */
 
-static void post_command_hook(void)
+static void
+post_command_hook(void)
 {
 	/* This function can GC */
 	/* Turn off region highlighting unless this command requested that
@@ -3998,27 +4256,30 @@ static void post_command_hook(void)
 	   line after. */
 	/* #### This doesn't really fix the problem,
 	   if delete-frame is called by some hook */
-	if (NILP(win))
+	if (NILP(win)) {
 		return;
+	}
 
 	/* This is a kludge, but necessary; see simple.el */
 	call0(Qhandle_post_motion_command);
 
-	if (!zmacs_region_stays && (!MINI_WINDOW_P(XWINDOW(win))
-				    || EQ(zmacs_region_buffer(),
-					  WINDOW_BUFFER(XWINDOW(win)))))
+	if (!zmacs_region_stays &&
+	    (!MINI_WINDOW_P(XWINDOW(win)) ||
+	     EQ(zmacs_region_buffer(), WINDOW_BUFFER(XWINDOW(win))))) {
 		zmacs_deactivate_region();
-	else
+	} else {
 		zmacs_update_region();
+	}
 
-	safe_run_hook_trapping_errors
-	    ("Error in `post-command-hook' (setting hook to nil)",
-	     Qpost_command_hook, 1);
+	safe_run_hook_trapping_errors(
+		"Error in `post-command-hook' (setting hook to nil)",
+		Qpost_command_hook, 1);
 
 	/* #### Kludge!!! This is necessary to make sure that things
 	   are properly positioned even if post-command-hook moves point.
 	   #### There should be a cleaner way of handling this. */
 	call0(Qauto_show_make_point_visible);
+	return;
 }
 
 DEFUN("dispatch-event", Fdispatch_event, 1, 1, 0,	/*
@@ -4055,17 +4316,20 @@ Magic events are handled as necessary.
 
 	/* events on dead channels get silently eaten */
 	channel = EVENT_CHANNEL(ev);
-	if (object_dead_p(channel))
+	if (object_dead_p(channel)) {
 		return Qnil;
+	}
 
 	/* Some events don't have channels (e.g. eval events). */
 	console = CDFW_CONSOLE(channel);
-	if (NILP(console))
+	if (NILP(console)) {
 		console = Vselected_console;
-	else if (!EQ(console, Vselected_console))
+	} else if (!EQ(console, Vselected_console)) {
 		Fselect_console(console);
+	}
 
 	command_builder = XCOMMAND_BUILDER(XCONSOLE(console)->command_builder);
+
 	switch (XEVENT(event)->event_type) {
 	case button_press_event:
 	case button_release_event:
@@ -4073,9 +4337,10 @@ Magic events are handled as necessary.
 		Lisp_Object leaf =
 			lookup_command_event(command_builder, event, 1);
 
-		if (KEYMAPP(leaf))
+		if (KEYMAPP(leaf)) {
 			/* Incomplete key sequence */
 			break;
+		}
 		if (NILP(leaf)) {
 			/* At this point, we know that the sequence is
 			   not bound to a command.  Normally, we beep
@@ -4115,8 +4380,7 @@ Magic events are handled as necessary.
 					button_release_event;
 				/* If the "up" version is bound, don't
 				   complain. */
-				no_bitching
-					=
+				no_bitching =
 					!NILP(command_builder_find_leaf
 					      (command_builder, 0));
 				/* Undo the temporary changes we just made. */
@@ -4134,26 +4398,26 @@ Magic events are handled as necessary.
 					} else {
 						Lisp_Object eve;
 
-						EVENT_CHAIN_LOOP(eve,
-								 command_builder->
-								 current_events)
+						EVENT_CHAIN_LOOP(
+							eve,
+							command_builder->
+							current_events) {
 							if (EQ
 							    (XEVENT_NEXT
 							     (eve),
-							     terminal))
+							     terminal)) {
 								break;
-
-						Fdeallocate_event
-							(command_builder->
-							 most_current_event);
-						XSET_EVENT_NEXT(eve,
-								Qnil);
+							}
+						}
+						Fdeallocate_event(
+							command_builder->
+							most_current_event);
+						XSET_EVENT_NEXT(eve, Qnil);
 						command_builder->
 							most_current_event =
 							eve;
 					}
-					maybe_echo_keys(command_builder,
-							1);
+					maybe_echo_keys(command_builder, 1);
 					break;
 				}
 			}
@@ -4168,8 +4432,8 @@ Magic events are handled as necessary.
 			if (XEVENT_TYPE(terminal) !=
 			    button_release_event) {
 				Lisp_Object keys =
-					current_events_into_vector
-					(command_builder);
+					current_events_into_vector(
+						command_builder);
 				struct gcpro gcpro1;
 
 				/* Run the pre-command-hook before
@@ -4185,7 +4449,8 @@ Magic events are handled as necessary.
 			/* Reset the command builder for reading the
 			   next sequence. */
 			reset_this_command_keys(console, 1);
-		} else {	/* key sequence is bound to a command */
+		} else {
+			/* key sequence is bound to a command */
 
 			int magic_undo = 0;
 			int magic_undo_count = 20;
@@ -4213,31 +4478,33 @@ Magic events are handled as necessary.
 				Lisp_Object prop =
 					Fget(leaf, Qself_insert_defer_undo,
 					     Qnil);
-				if (NATNUMP(prop))
+				if (NATNUMP(prop)) {
 					magic_undo =
 						1, magic_undo_count =
 						XINT(prop);
-				else if (!NILP(prop))
+				} else if (!NILP(prop)) {
 					magic_undo = 1;
-				else if (EQ(leaf, Qself_insert_command))
+				} else if (EQ(leaf, Qself_insert_command)) {
 					magic_undo = 1;
+				}
 			}
 
-			if (!magic_undo)
-				command_builder->self_insert_countdown =
-					0;
-			if (NILP(XCONSOLE(console)->prefix_arg)
-			    && NILP(Vexecuting_macro)
-			    && command_builder->self_insert_countdown ==
-			    0)
+			if (!magic_undo) {
+				command_builder->self_insert_countdown = 0;
+			}
+			if (NILP(XCONSOLE(console)->prefix_arg) &&
+			    NILP(Vexecuting_macro) &&
+			    command_builder->self_insert_countdown == 0) {
 				Fundo_boundary();
+			}
 
 			if (magic_undo) {
 				if (--command_builder->
-				    self_insert_countdown < 0)
+				    self_insert_countdown < 0) {
 					command_builder->
 						self_insert_countdown =
 						magic_undo_count;
+				}
 			}
 			execute_command_event
 				(command_builder,
@@ -4298,10 +4565,11 @@ Magic events are handled as necessary.
 		reset_key_echo(command_builder, 1);
 
 		command_builder->self_insert_countdown = 0;
-		if (NILP(XCONSOLE(console)->prefix_arg)
-		    && NILP(Vexecuting_macro)
-		    && !EQ(minibuf_window, Fselected_window(Qnil)))
+		if (NILP(XCONSOLE(console)->prefix_arg) &&
+		    NILP(Vexecuting_macro) &&
+		    !EQ(minibuf_window, Fselected_window(Qnil))) {
 			Fundo_boundary();
+		}
 		execute_command_event(command_builder, event);
 		break;
 	}
@@ -4328,16 +4596,18 @@ Magic events are handled as necessary.
 		Lisp_Object ljob = ev->event.work_started.job;
 		worker_job_t job = XWORKER_JOB(ljob);
 		work_handler_t hdl = XWORKER_JOB_HANDLER(ljob);
-		if (hdl && work_started(hdl))
+		if (hdl && work_started(hdl)) {
 			work_started(hdl)(job);
+		}
 		break;
 	}
 	case work_finished_event: {
 		Lisp_Object ljob = ev->event.work_finished.job;
 		worker_job_t job = XWORKER_JOB(ljob);
 		work_handler_t hdl = XWORKER_JOB_HANDLER(ljob);
-		if (hdl && work_finished(hdl))
+		if (hdl && work_finished(hdl)) {
 			work_finished(hdl)(job);
+		}
 		break;
 	}
 #endif
@@ -4393,10 +4663,9 @@ See `function-key-map' for more details.
       (prompt, continue_echo, dont_downcase_last))
 {
 	/* This function can GC */
-	struct console *con = XCONSOLE(Vselected_console);	/* #### correct?
-								   Probably not -- see
-								   comment in
-								   next-event */
+	/* #### correct?
+	   Probably not -- see comment in next-event */
+	struct console *con = XCONSOLE(Vselected_console);
 	struct command_builder *command_builder;
 	Lisp_Object result;
 	Lisp_Object event = Fmake_event(Qnil, Qnil);
@@ -4405,34 +4674,39 @@ See `function-key-map' for more details.
 	GCPRO1(event);
 
 	record_unwind_protect(Fset_buffer, Fcurrent_buffer());
-	if (!NILP(prompt))
+	if (!NILP(prompt)) {
 		CHECK_STRING(prompt);
+	}
 	/* else prompt = Fkeymap_prompt (current_buffer->keymap); may GC */
 	QUIT;
 
-	if (NILP(continue_echo))
+	if (NILP(continue_echo)) {
 		reset_this_command_keys(make_console(con), 1);
+	}
 
 	specbind(Qinhibit_quit, Qt);
 
-	if (!NILP(dont_downcase_last))
+	if (!NILP(dont_downcase_last)) {
 		specbind(Qretry_undefined_key_binding_unshifted, Qnil);
+	}
 
 	for (;;) {
 		Fnext_event(event, prompt);
 		/* restore the selected-console damage */
 		con = event_console_or_selected(event);
 		command_builder = XCOMMAND_BUILDER(con->command_builder);
-		if (!command_event_p(event))
+		if (!command_event_p(event)) {
 			execute_internal_event(event);
-		else {
-			if (XEVENT(event)->event_type == misc_user_event)
+		} else {
+			if (XEVENT(event)->event_type == misc_user_event) {
 				reset_current_events(command_builder);
+			}
 			result =
-			    lookup_command_event(command_builder, event, 1);
+				lookup_command_event(command_builder, event, 1);
 			if (!KEYMAPP(result)) {
 				result =
-				    current_events_into_vector(command_builder);
+					current_events_into_vector(
+						command_builder);
 				reset_key_echo(command_builder, 0);
 				break;
 			}
@@ -4440,8 +4714,9 @@ See `function-key-map' for more details.
 		}
 	}
 
-	Vquit_flag = Qnil;	/* In case we read a ^G; do not call
-				   check_quit() here */
+	/* In case we read a ^G; do not call check_quit() here */
+	Vquit_flag = Qnil;
+
 	Fdeallocate_event(event);
 	RETURN_UNGCPRO(unbind_to(speccount, result));
 }
@@ -4457,19 +4732,21 @@ to keep and modify them.
 	Lisp_Object result;
 	int len;
 
-	if (NILP(Vthis_command_keys))
+	if (NILP(Vthis_command_keys)) {
 		return make_vector(0, Qnil);
+	}
 
 	len = event_chain_count(Vthis_command_keys);
 
 	result = make_vector(len, Qnil);
 	len = 0;
-	EVENT_CHAIN_LOOP(event, Vthis_command_keys)
-	    XVECTOR_DATA(result)[len++] = Fcopy_event(event, Qnil);
+	EVENT_CHAIN_LOOP(event, Vthis_command_keys) {
+		XVECTOR_DATA(result)[len++] = Fcopy_event(event, Qnil);
+	}
 	return result;
 }
 
-DEFUN("reset-this-command-lengths", Freset_this_command_lengths, 0, 0, 0,	/*
+DEFUN("reset-this-command-lengths", Freset_this_command_lengths, 0, 0, 0, /*
 Used for complicated reasons in `universal-argument-other-key'.
 
 `universal-argument-other-key' rereads the event just typed.
@@ -4489,10 +4766,12 @@ appears in the echo area and in the value of `this-command-keys'.
 	return Qnil;
 }
 
-static void dribble_out_event(Lisp_Object event)
+static void
+dribble_out_event(Lisp_Object event)
 {
-	if (NILP(Vdribble_file))
+	if (NILP(Vdribble_file)) {
 		return;
+	}
 
 	if (XEVENT(event)->event_type == key_press_event &&
 	    !XEVENT(event)->event.key.modifiers) {
@@ -4502,21 +4781,24 @@ static void dribble_out_event(Lisp_Object event)
 			Bufbyte str[MAX_EMCHAR_LEN];
 			Bytecount len = set_charptr_emchar(str, ch);
 			Lstream_write(XLSTREAM(Vdribble_file), str, len);
-		} else if (string_char_length(XSYMBOL(keysym)->name) == 1)
-			/* one-char key events are printed with just the key name */
+		} else if (string_char_length(XSYMBOL(keysym)->name) == 1) {
+			/* one-char key events are printed with just the key
+			   name */
 			Fprinc(keysym, Vdribble_file);
-		else if (EQ(keysym, Qreturn))
+		} else if (EQ(keysym, Qreturn)) {
 			Lstream_putc(XLSTREAM(Vdribble_file), '\n');
-		else if (EQ(keysym, Qspace))
+		} else if (EQ(keysym, Qspace)) {
 			Lstream_putc(XLSTREAM(Vdribble_file), ' ');
-		else
+		} else {
 			Fprinc(event, Vdribble_file);
+		}
 	} else
 		Fprinc(event, Vdribble_file);
 	Lstream_flush(XLSTREAM(Vdribble_file));
+	return;
 }
 
-DEFUN("open-dribble-file", Fopen_dribble_file, 1, 1, "FOpen dribble file: ",	/*
+DEFUN("open-dribble-file", Fopen_dribble_file, 1, 1, "FOpen dribble file: ", /*
 Start writing all keyboard characters to a dribble file called FILENAME.
 If FILENAME is nil, close any open dribble file.
 */
@@ -4536,15 +4818,16 @@ If FILENAME is nil, close any open dribble file.
 		fd = open((char *)XSTRING_DATA(filename),
 			  O_WRONLY | O_TRUNC | O_CREAT | OPEN_BINARY,
 			  CREAT_MODE);
-		if (fd < 0)
+		if (fd < 0) {
 			error("Unable to create dribble file");
+		}
 		Vdribble_file =
-		    make_filedesc_output_stream(fd, 0, 0, LSTR_CLOSING);
+			make_filedesc_output_stream(fd, 0, 0, LSTR_CLOSING);
 #ifdef MULE
 		Vdribble_file =
-		    make_encoding_output_stream(XLSTREAM(Vdribble_file),
-						Fget_coding_system
-						(Qescape_quoted));
+			make_encoding_output_stream(
+				XLSTREAM(Vdribble_file),
+				Fget_coding_system(Qescape_quoted));
 #endif
 	}
 	return Qnil;
@@ -4575,6 +4858,7 @@ asyneq_handle_event(event_queue_t eq)
 		Lisp_Object eqev = eq_dequeue(eq);
 		Fdispatch_event(eqev);
 	}
+	return;
 }
 
 void
@@ -4589,10 +4873,12 @@ asyneq_handle_non_command_event(event_queue_t eq)
                         break;
                 });
 
-        if (!NILP(eqev))
+        if (!NILP(eqev)) {
                 execute_internal_event(eqev);
+	}
+	return;
 }
-#endif
+#endif	/* EF_USE_ASYNEQ */
 
 /************************************************************************/
 /*                            initialization                            */
@@ -4776,7 +5062,7 @@ to this value, you must use `copy-event'.
 	DEFVAR_LISP("current-mouse-event", &Vcurrent_mouse_event	/*
 The mouse-button event which invoked this command, or nil.
 This is usually what `(interactive "e")' returns.
-									 */ );
+									*/ );
 	Vcurrent_mouse_event = Qnil;
 
 	DEFVAR_LISP("last-input-char", &Vlast_input_char	/*
@@ -4796,7 +5082,7 @@ modified, so copy it if you want to keep it.
 								 */ );
 	Vlast_input_time = Qnil;
 
-	DEFVAR_LISP("last-command-event-time", &Vlast_command_event_time	/*
+	DEFVAR_LISP("last-command-event-time", &Vlast_command_event_time /*
 The time (in seconds since Jan 1, 1970) of the last-command-event,
 represented as a list of three integers.  The first integer contains
 the most significant 16 bits of the number of seconds, and the second
@@ -4804,7 +5090,7 @@ integer contains the least significant 16 bits.  The third integer
 contains the remainder number of microseconds, if the current system
 supports microsecond clock resolution.  This list is destructively
 modified, so copy it if you want to keep it.
-										 */ );
+									 */ );
 	Vlast_command_event_time = Qnil;
 
 	DEFVAR_LISP("unread-command-events", &Vunread_command_events	/*
@@ -4834,21 +5120,21 @@ will be in `last-command' during the following command.
 							 */ );
 	Vthis_command = Qnil;
 
-	DEFVAR_LISP("last-command-properties", &Vlast_command_properties	/*
+	DEFVAR_LISP("last-command-properties", &Vlast_command_properties /*
 Value of `this-command-properties' for the last command.
 Used by commands to help synchronize consecutive commands, in preference
 to looking at `last-command' directly.
-										 */ );
+									 */ );
 	Vlast_command_properties = Qnil;
 
-	DEFVAR_LISP("this-command-properties", &Vthis_command_properties	/*
+	DEFVAR_LISP("this-command-properties", &Vthis_command_properties /*
 Properties set by the current command.
 At the beginning of each command, the current value of this variable is
 copied to `last-command-properties', and then it is set to nil.  Use `putf'
 to add properties to this variable.  Commands should use this to communicate
 with pre/post-command hooks, subsequent commands, wrapping commands, etc.
 in preference to looking at and/or setting `this-command'.
-										 */ );
+									 */ );
 	Vthis_command_properties = Qnil;
 
 	DEFVAR_LISP("help-char", &Vhelp_char	/*
@@ -4858,7 +5144,8 @@ If the value of `help-form' is nil, this char can be read normally.
 This can be any form recognized as a single key specifier.
 The help-char cannot be a negative number in SXEmacs.
 						 */ );
-	Vhelp_char = make_char(8);	/* C-h */
+	/* C-h */
+	Vhelp_char = make_char(8);
 
 	DEFVAR_LISP("help-form", &Vhelp_form	/*
 Form to execute when character help-char is read.
@@ -4874,7 +5161,8 @@ for that character after that prefix key.
 									 */ );
 	Vprefix_help_command = Qnil;
 
-	DEFVAR_CONST_LISP("keyboard-translate-table", &Vkeyboard_translate_table	/*
+	DEFVAR_CONST_LISP("keyboard-translate-table",
+			  &Vkeyboard_translate_table	/*
 sh table used as translate table for keyboard input.
 e `keyboard-translate' to portably add entries to this table.
 ch key-press event is looked up in this table as follows:
@@ -4909,18 +5197,19 @@ eir positions to eliminate the need to use the Shift key.
 (keyboard-translate ?} ?])
 (keyboard-translate 'f11 ?{)
 (keyboard-translate 'f12 ?})
-											 */ );
+					*/ );
 
-	DEFVAR_LISP("retry-undefined-key-binding-unshifted", &Vretry_undefined_key_binding_unshifted	/*
+	DEFVAR_LISP("retry-undefined-key-binding-unshifted",
+		    &Vretry_undefined_key_binding_unshifted	/*
 If a key-sequence which ends with a shifted keystroke is undefined
 and this variable is non-nil then the command lookup is retried again
 with the last key unshifted.  (e.g. C-X C-F would be retried as C-X C-f.)
 If lookup still fails, a normal error is signalled.  In general,
 you should *bind* this, not set it.
-													 */ );
+								*/ );
 	Vretry_undefined_key_binding_unshifted = Qt;
 
-	DEFVAR_BOOL("modifier-keys-are-sticky", &modifier_keys_are_sticky	/*
+	DEFVAR_BOOL("modifier-keys-are-sticky", &modifier_keys_are_sticky /*
 *Non-nil makes modifier keys sticky.
 This means that you can release the modifier key before pressing down
 the key that you wish to be modified.  Although this is non-standard
@@ -4929,7 +5218,7 @@ thus reducing the incidence of the dreaded Emacs-pinky syndrome.
 
 Modifier keys are sticky within the inverval specified by
 `modifier-keys-sticky-time'.
-		    */ );
+									  */ );
 	modifier_keys_are_sticky = 0;
 
 	DEFVAR_LISP("modifier-keys-sticky-time", 
