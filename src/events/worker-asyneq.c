@@ -100,6 +100,7 @@ eq_worker_eaten_myself(eq_worker_t eqw)
 	XEVENT(emev)->event.eaten_myself.worker = eqw;
 	eq_enqueue(asyneq, emev);
 	UNGCPRO;
+	asyneq_handle_event(asyneq);
 	return;
 }
 
@@ -115,6 +116,7 @@ eq_worker_work_started(Lisp_Object job)
 	XEVENT(wsev)->event.work_started.job = job;
 	eq_enqueue(asyneq, wsev);
 	UNGCPRO;
+	asyneq_handle_event(asyneq);
 	return;
 }
 
@@ -130,6 +132,7 @@ eq_worker_work_finished(Lisp_Object job)
 	XEVENT(wfev)->event.work_finished.job = job;
 	eq_enqueue(asyneq, wfev);
 	UNGCPRO;
+	asyneq_handle_event(asyneq);
 	return;
 }
 
