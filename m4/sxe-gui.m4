@@ -453,9 +453,7 @@ AC_DEFUN([SXE_CHECK_XT_DEPENDENCIES], [dnl
 	SXE_SUFFICIENT_LUCID_P
 
 	all_widgets="$with_menubars $with_scrollbars $with_dialogs $with_toolbars $with_widgets"
-	if test "$with_x11" = "yes" -a \
-		"$with_gtk" != "yes" -a \
-		"$with_gnome" != "yes"; then
+	if test "$with_x11" = "yes"; then
 
 		if test "$with_menubars" != "no"; then
 			SXE_ADD_SXEUIX11_OBJS([menubar-x.o])
@@ -475,37 +473,6 @@ AC_DEFUN([SXE_CHECK_XT_DEPENDENCIES], [dnl
 	fi
 
 ])dnl SXE_CHECK_XT_DEPENDENCIES
-
-AC_DEFUN([SXE_CHECK_GTK_DEPENDENCIES], [dnl
-
-	all_widgets="$with_menubars $with_scrollbars $with_dialogs $with_toolbars $with_widgets"
-	if test "$with_menubars" != "no"; then
-		SXE_ADD_SXEUIGTK_OBJS([menubar-gtk.o])
-	fi
-	if test "$with_scrollbars" != "no"; then
-		SXE_ADD_SXEUIGTK_OBJS([scrollbar-gtk.o])
-	fi
-	if test "$with_dialogs" != "no"; then
-		SXE_ADD_SXEUIGTK_OBJS([dialog-gtk.o])
-	fi
-	if test "$with_toolbars" != "no"; then
-		SXE_ADD_SXEUIGTK_OBJS([toolbar-gtk.o])
-	fi
-	if test "$all_widgets" != "no no no no no"; then
-		SXE_ADD_SXEUIGTK_OBJS([gui-gtk.o])
-	fi
-
-	AS_MESSAGE([
-
-Congratulations!!!  You've won already!!!
-
-You have been chosen to implement a GTK user interface for us!
-Finish all your work IMMEDIATELY and contact us to obtain detailed orders.
-
-])
-	sleep 30
-])dnl SXE_CHECK_GTK_DEPENDENCIES
-
 
 AC_DEFUN([SXE_CHECK_UI_SUFFICIENCY], [dnl
 	## common-to-all stuff
@@ -536,7 +503,6 @@ AC_DEFUN([SXE_CHECK_UI_SUFFICIENCY], [dnl
 	SXE_SUBST_SXEUI_OBJS
 	SXE_SUBST_SXEUITTY_OBJS
 	SXE_SUBST_SXEUIX11_OBJS
-	SXE_SUBST_SXEUIGTK_OBJS
 
 ])dnl SXE_CHECK_UI_SUFFICIENCY
 

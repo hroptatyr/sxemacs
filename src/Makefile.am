@@ -77,11 +77,6 @@ pdump_ldadd      += $(libsxecore_a_ldflags)
 # Inverse order of dependency for order dependendant
 # linkers...
 
-if NEED_LIBSXEUIGTK
-pdumplibs += $(builddir)/ui/Gtk/libsxeuiGtk.a 
-# sxe_subdirs += ui
-endif
-
 if NEED_LIBSXEUIX11
 pdumplibs += $(builddir)/ui/X11/libsxeuiX11.a 
 # sxe_subdirs += ui

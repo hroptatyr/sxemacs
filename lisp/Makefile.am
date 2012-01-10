@@ -75,30 +75,24 @@ corelispels =								\
 	abbrev.el about.el alist.el apropos.el auto-save.el		\
 	auto-show.el backquote.el blessmail.el buff-menu.el buffer.el	\
 	build-rpt.el byte-optimize.el bytecomp-runtime.el bytecomp.el	\
-	callers-of-rpt.el cl-compat.el cl-extra.el              	\
-	cl-macs.el cl-seq.el cl.el cmdloop.el code-cmds.el		\
-	code-files.el code-process.el coding.el compat.el config.el	\
-	console.el cus-dep.el cus-edit.el cus-face.el cus-file.el	\
-	cus-load.el cus-start.el custom.el derived.el device.el		\
-	dialog-gtk.el dialog-items.el dialog.el disass.el		\
-	disp-table.el dragdrop.el easy-mmode.el easymenu.el 		\
+	callers-of-rpt.el cl-compat.el cl-extra.el cl-macs.el cl-seq.el \
+	cl.el cmdloop.el code-cmds.el code-files.el code-process.el	\
+	coding.el compat.el config.el console.el cus-dep.el		\
+	cus-edit.el cus-face.el cus-file.el cus-load.el cus-start.el	\
+	custom.el derived.el device.el dialog-items.el dialog.el	\
+	disass.el disp-table.el dragdrop.el easy-mmode.el easymenu.el	\
 	emod-utils.el etags.el events.el extents.el faces.el ffi.el 	\
 	files-nomule.el files.el fill.el float-sup.el font-lock.el 	\
-	font-menu.el font.el fontl-hooks.el format.el frame.el gdk.el   \
-	generic-widgets.el glade.el glyphs.el gnome-widgets.el gnome.el \
-	gnuserv.el gpm.el gtk-compose.el gtk-extra.el gtk-faces.el 	\
-	gtk-ffi.el gtk-file-dialog.el gtk-font-menu.el gtk-glyphs.el 	\
-	gtk-init.el gtk-iso8859-1.el gtk-marshal.el gtk-mouse.el 	\
-	gtk-package.el gtk-password-dialog.el gtk-select.el 		\
-	gtk-widget-accessors.el	gtk-widgets.el gtk.el gui.el 		\
-	gutter-items.el gutter.el help-macro.el help-nomule.el help.el  \
-	hyper-apropos.el indent.el info.el isearch-mode.el iso8859-1.el \
-	issue-tracker.el itimer-autosave.el itimer.el keydefs.el 	\
-	keymap.el ldap.el lib-complete.el lisp-initd.el lisp-mnt.el 	\
-	lisp-mode.el lisp.el list-mode.el loaddefs.el loadhist.el 	\
-	map-ynp.el menubar-items.el menubar.el minibuf.el misc.el 	\
-	mode-motion.el modeline.el mouse.el movemail.el multicast.el 	\
-	mwheel.el number.el objects.el obsolete.el package-admin.el	\
+	font-menu.el font.el fontl-hooks.el format.el frame.el          \
+	glyphs.el gnuserv.el gpm.el gui.el gutter-items.el gutter.el	\
+	help-macro.el help-nomule.el help.el hyper-apropos.el indent.el	\
+	info.el isearch-mode.el iso8859-1.el issue-tracker.el		\
+	itimer-autosave.el itimer.el keydefs.el keymap.el ldap.el	\
+	lib-complete.el lisp-initd.el lisp-mnt.el lisp-mode.el lisp.el	\
+	list-mode.el loaddefs.el loadhist.el map-ynp.el			\
+	menubar-items.el menubar.el minibuf.el misc.el mode-motion.el	\
+	modeline.el mouse.el movemail.el multicast.el mwheel.el		\
+	number.el objects.el obsolete.el package-admin.el		\
 	package-get.el package-info.el package-ui.el packages.el	\
 	page.el paragraphs.el paths.el picture.el printer.el		\
 	process.el rect.el regexp-opt.el register.el replace.el         \
@@ -106,7 +100,7 @@ corelispels =								\
 	sound.el specifier.el subr.el symbol-syntax.el symbols.el       \
 	syntax.el text-mode.el text-props.el toolbar-items.el           \
 	toolbar.el tty-init.el undo-stack.el userlock.el version.el     \
-	view-less.el wid-browse.el wid-edit.el widget.el widgets-gtk.el	\
+	view-less.el wid-browse.el wid-edit.el widget.el		\
 	window-xemacs.el window.el x-color.el x-compose.el x-faces.el	\
 	x-font-menu.el x-init.el x-iso8859-1.el x-misc.el x-mouse.el	\
 	x-scrollbar.el x-select.el x-win-sun.el x-win-xfree86.el
