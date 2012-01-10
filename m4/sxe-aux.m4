@@ -132,9 +132,6 @@ __SXE_MAKE_ADDER([SXEUITTY], [libsxeuiTTY])
 dnl creates SXE_ADD_SXEUI_{OBJ,OBJS}
 __SXE_MAKE_ADDER([SXEUIX11], [libsxeuiX11])
 
-dnl creates SXE_ADD_SXEUI_{OBJ,OBJS}
-__SXE_MAKE_ADDER([SXEUIGTK], [libsxeuiGtk])
-
 dnl SXE_ADD_STATMOD_A(foo.o ...)
 AC_DEFUN([SXE_ADD_STATMOD_A], [
 	statmod_archives="$statmod_archives [$1]" && \

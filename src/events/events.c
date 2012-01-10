@@ -32,8 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "ui/device.h"
 #include "ui/X11/console-x.h" 	/* for x_event_name prototype in
 				   format_event_object. Needs refactoring */
-#include "ui/Gtk/console-gtk.h"	/* for gtk_event_name prototype. Same
-				   as above */
 #include "extents.h"		/* Just for the EXTENTP abort check... */
 #define INCLUDE_EVENTS_H_PRIVATE_SPHERE
 #include "events.h"
@@ -379,13 +377,6 @@ event_equal(Lisp_Object obj1, Lisp_Object obj2, int depth)
 		struct console *con =
 			XCONSOLE(CDFW_CONSOLE(e1->channel));
 
-#ifdef HAVE_GTK
-		if (CONSOLE_GTK_P(con))
-			return (!memcmp
-				(&e1->event.magic.underlying_gdk_event,
-				 &e2->event.magic.underlying_gdk_event,
-				 sizeof(GdkEvent)));
-#endif
 #ifdef HAVE_X_WINDOWS
 		if (CONSOLE_X_P(con))
 			return (e1->event.magic.underlying_x_event.xany.
@@ -467,12 +458,6 @@ event_hash(Lisp_Object obj, int depth)
 	case magic_event: {
 		struct console *con =
 			XCONSOLE(CDFW_CONSOLE(EVENT_CHANNEL(e)));
-#ifdef HAVE_GTK
-		if (CONSOLE_GTK_P(con))
-			return HASH2(hash,
-				     e->event.magic.
-				     underlying_gdk_event.type);
-#endif
 #ifdef HAVE_X_WINDOWS
 		if (CONSOLE_X_P(con))
 			return HASH2(hash,
@@ -1596,14 +1581,6 @@ void format_event_object(char *buf, Lisp_Event * event, int brief)
 	case magic_event: {
 		const char *name = NULL;
 
-#ifdef HAVE_GTK
-		Lisp_Object console = CDFW_CONSOLE(EVENT_CHANNEL(event));
-		if (CONSOLE_GTK_P(XCONSOLE(console))) {
-			name = gtk_event_name(event->event.magic.
-					      underlying_gdk_event.
-					      type);
-		}
-#endif
 #ifdef HAVE_X_WINDOWS
 		Lisp_Object console = CDFW_CONSOLE(EVENT_CHANNEL(event));
 		if (CONSOLE_X_P(XCONSOLE(console))) {

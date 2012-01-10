@@ -131,7 +131,6 @@ SYMBOL(Qgap_overhead);
 SYMBOL(Qgeneric);
 SYMBOL(Qgeometry);
 SYMBOL(Qglobal);
-SYMBOL(Qgtk);
 SYMBOL(Qgutter);
 SYMBOL(Qheight);
 SYMBOL_KEYWORD(Q_height);

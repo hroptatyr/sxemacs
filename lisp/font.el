@@ -115,7 +115,6 @@
 
 (defconst font-window-system-mappings
   '((x         . (x-font-create-name x-font-create-object))
-    (gtk       . (x-font-create-name x-font-create-object))
     (tty       . (tty-font-create-plist tty-font-create-object)))
   "An assoc list mapping device types to a list of translations.
 
