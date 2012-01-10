@@ -2268,9 +2268,6 @@ if test "$with_x" != "no"; then
 	fi
 
 	AC_PATH_XTRA
-	## Autoconf claims to find X library and include dirs for us.
-	## dnl encapsulate that, such that Xaw and motif is not used when gtk is
-	## in effect
 	if test "$with_x11" != "no"; then
 		if test "$no_x" = "yes"; then
 			with_x11=no

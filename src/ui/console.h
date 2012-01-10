@@ -546,12 +546,6 @@ extern_inline struct console *error_check_console_type(struct console *con,
    too many places where the abstraction is broken.  Need to
    fix. */
 
-#ifdef HAVE_GTK
-#define CONSOLE_TYPESYM_GTK_P(typesym) EQ (typesym, Qgtk)
-#else
-#define CONSOLE_TYPESYM_GTK_P(typesym) 0
-#endif
-
 #ifdef HAVE_X_WINDOWS
 #define CONSOLE_TYPESYM_X_P(typesym) EQ (typesym, Qx)
 #else
@@ -565,16 +559,11 @@ extern_inline struct console *error_check_console_type(struct console *con,
 #endif
 #define CONSOLE_TYPESYM_STREAM_P(typesym) EQ (typesym, Qstream)
 
-#define CONSOLE_TYPESYM_WIN_P(typesym) \
-  (CONSOLE_TYPESYM_GTK_P (typesym) || CONSOLE_TYPESYM_X_P (typesym))
+#define CONSOLE_TYPESYM_WIN_P(typesym) CONSOLE_TYPESYM_X_P (typesym)
 
 #define CONSOLE_X_P(con) CONSOLE_TYPESYM_X_P (CONSOLE_TYPE (con))
 #define CHECK_X_CONSOLE(z) CHECK_CONSOLE_TYPE (z, x)
 #define CONCHECK_X_CONSOLE(z) CONCHECK_CONSOLE_TYPE (z, x)
-
-#define CONSOLE_GTK_P(con) CONSOLE_TYPESYM_GTK_P (CONSOLE_TYPE (con))
-#define CHECK_GTK_CONSOLE(z) CHECK_CONSOLE_TYPE (z, gtk)
-#define CONCHECK_GTK_CONSOLE(z) CONCHECK_CONSOLE_TYPE (z, gtk)
 
 #define CONSOLE_TTY_P(con) CONSOLE_TYPESYM_TTY_P (CONSOLE_TYPE (con))
 #define CHECK_TTY_CONSOLE(z) CHECK_CONSOLE_TYPE (z, tty)

@@ -418,18 +418,4 @@ This always assumes DndText as type."
 	       event (buffer-substring-no-properties begin end))
     (error "OffiX functionality not compiled in.")))
 
-(defun gtk-start-drag (event data &optional type)
-  (interactive "esi")
-  (if (featurep 'gtk)
-      (declare-fboundp (gtk-start-drag-internal event data type))
-    (error "GTK functionality not compiled in.")))
-
-(defun gtk-start-drag-region (event begin end)
-  (interactive "_er")
-  (if (featurep 'gtk)
-      (declare-fboundp
-       (gtk-start-drag-internal
-	event (buffer-substring-no-properties begin end) "text/plain"))
-    (error "GTK functionality not compiled in.")))
-
 ;;; dragdrop.el ends here

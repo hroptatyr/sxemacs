@@ -2200,7 +2200,7 @@ whether it is a file(/result) or a directory (/result/)."
 (defun read-color-completion-table ()
   (case (device-type)
     ;; #### Evil device-type dependency
-    ((x gtk)
+    (x
      (if-fboundp #'x-read-color-completion-table
 	 (x-read-color-completion-table)
        (let ((rgb-file (locate-file "rgb.txt" x-library-search-path))

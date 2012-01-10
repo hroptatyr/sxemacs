@@ -341,10 +341,6 @@ extern_inline struct frame *error_check_frame_type(struct frame *f,
 #define CHECK_X_FRAME(z) CHECK_FRAME_TYPE (z, x)
 #define CONCHECK_X_FRAME(z) CONCHECK_FRAME_TYPE (z, x)
 
-#define FRAME_GTK_P(frm) CONSOLE_TYPESYM_GTK_P (FRAME_TYPE (frm))
-#define CHECK_GTK_FRAME(z) CHECK_FRAME_TYPE (z, gtk)
-#define CONCHECK_GTK_FRAME(z) CONCHECK_FRAME_TYPE (z, gtk)
-
 #define FRAME_TTY_P(frm) CONSOLE_TYPESYM_TTY_P (FRAME_TYPE (frm))
 #define CHECK_TTY_FRAME(z) CHECK_FRAME_TYPE (z, tty)
 #define CONCHECK_TTY_FRAME(z) CONCHECK_FRAME_TYPE (z, tty)

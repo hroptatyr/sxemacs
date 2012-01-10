@@ -601,8 +601,6 @@ detail in the doc string for `current-display-table'."
 (or (valid-specifier-tag-p 'mswindows)
     (define-specifier-tag 'mswindows (lambda (dev) 
 				       (eq (device-type dev) 'mswindows))))
-(or (valid-specifier-tag-p 'gtk)
-    (define-specifier-tag 'gtk (lambda (dev) (eq (device-type dev) 'gtk))))
 
 ;; Add special tag for use by initialization code.  Code that
 ;; sets up default specs should use this tag.  Code that needs to

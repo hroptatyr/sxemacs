@@ -87,11 +87,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "ui/X11/gui-x.h"
 #endif
 
-#ifdef HAVE_GTK
-#include "ui/Gtk/console-gtk.h"
-#include "ui/Gtk/ui-gtk.h"
-#endif
-
 #ifdef FILE_CODING
 #include "mule/file-coding.h"
 #endif

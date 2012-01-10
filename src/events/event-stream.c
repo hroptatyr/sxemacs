@@ -5313,11 +5313,6 @@ void init_event_stream(void)
 			init_event_Xt_late();
 		else
 #endif
-#ifdef HAVE_GTK
-		if (!strcmp(display_use, "gtk"))
-			init_event_gtk_late();
-		else
-#endif
 		{
 			/* For TTY's, use the Xt event loop if we can; it allows
 			   us to later open an X connection. */

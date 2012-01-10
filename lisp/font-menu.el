@@ -154,14 +154,12 @@ the last entry in the menu."
 
 (defvar font-menu-preferred-resolution
   (make-specifier-and-init 'generic '((global 
-					      ((gtk) . "*-*")
-					      ((x) . "*-*"))) t)
+				       ((x) . "*-*"))) t)
   "Preferred horizontal and vertical font menu resolution (e.g. \"75:75\").")
 
 (defvar font-menu-size-scaling
   (make-specifier-and-init 'integer '((global
-					      ((gtk) . 10)
-					      ((x) . 10))) t)
+				       ((x) . 10))) t)
   "Scale factor used in defining font sizes.")
 
 ;; only call XListFonts (and parse) once per device.
