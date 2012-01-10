@@ -130,7 +130,6 @@ eq_worker_work_finished(Lisp_Object job)
 	XEVENT(wfev)->event.work_finished.job = job;
 	eq_enqueue(asyneq, wfev);
 	UNGCPRO;
-	asyneq_handle_event(asyneq);
 	return;
 }
 
