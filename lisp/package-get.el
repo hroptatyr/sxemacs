@@ -2,12 +2,12 @@
 
 ;; Copyright (C) 1998 by Pete Ware
 ;; Copyright (C) 2002 Ben Wing.
-;; Copyright (C) 2003, 2004 Steve Youngs
+;; Copyright (C) 2003 - 2012 Steve Youngs
 
 ;; Author: Pete Ware <ware@cis.ohio-state.edu>
 ;; Heavy-Modifications: Greg Klanderman <greg@alphatech.com>
 ;;                      Jan Vroonhof    <vroonhof@math.ethz.ch>
-;;                      Steve Youngs    <youngs@xemacs.org>
+;;                      Steve Youngs    <steve@sxemacs.org>
 ;; Keywords: internal
 
 ;; This file is part of SXEmacs.
@@ -1334,10 +1334,7 @@ tools, `pui-list-packages' etc."
 	(delete-file (expand-file-name efs-pkg dldir))
 	(error "MD5 mismatch, %s deleted" (expand-file-name efs-pkg dldir)))
       (when (y-or-n-p "Install more packages? ")
-	;; Remove this ugly hack as soon as a SXEmacs-friendly EFS is in
-	;; stable XE packages.  It is already in EFS upstream.
-	(let ((emacs-version "21.4 (patch 17) \"Jumbo Shrimp\" XEmacs Lucid"))
-	  (pui-list-packages))))))
+	(declare-fboundp (pui-list-packages))))))
 
 (provide 'package-get)
 
