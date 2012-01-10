@@ -128,17 +128,7 @@ eq_worker_work_finished(Lisp_Object job)
 	wfev = make_empty_event();
 	XEVENT(wfev)->event_type = work_finished_event;
 	XEVENT(wfev)->event.work_finished.job = job;
-#if 0
-	/* the original idea was to enqueue the event and let the dispatcher
-	 * pick it up at some point in a FIFO fashion
-	 * however that's gone up the drain with bug #131 ... */
 	eq_enqueue(asyneq, wfev);
-	asyneq_handle_event(wfev);
-#else  /* !0 */
-	/* ... so let's try and dispatch the event directly
-	 * while he's gc pro'd of course */
-	Fdispatch_event(wfev);
-#endif	/* 0 */
 	UNGCPRO;
 	return;
 }
