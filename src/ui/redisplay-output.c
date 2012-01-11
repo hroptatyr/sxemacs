@@ -2211,7 +2211,6 @@ redisplay_update_line(struct window *w, int first_line, int last_line,
 	   larger impact on their sizing. */
 	/* #### See if we can get away with only calling this if
 	   max_line_len is greater than the window_char_width. */
-	/* #### BILL!!! Should we do this for GTK as well? */
 #if defined(HAVE_SCROLLBARS) && defined(HAVE_X_WINDOWS)
 	{
 		extern int stupid_vertical_scrollbar_drag_hack;

@@ -45,7 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "specifier.h"
 #include "window.h"
 
-#if defined (HAVE_XPM) && !defined (HAVE_GTK)
+#ifdef HAVE_XPM
 #include <X11/xpm.h>
 #endif
 
@@ -2759,13 +2759,6 @@ static int xface_possible_dest_types(void)
  *                             XPM                                    *
  **********************************************************************/
 
-#ifdef HAVE_GTK
-/* Gtk has to be gratuitously different, eh? */
-Lisp_Object pixmap_to_lisp_data(Lisp_Object name, int ok_if_data_invalid)
-{
-	return (make_string_from_file(name));
-}
-#else
 Lisp_Object pixmap_to_lisp_data(Lisp_Object name, int ok_if_data_invalid)
 {
 	char **data;
@@ -2846,7 +2839,6 @@ Lisp_Object pixmap_to_lisp_data(Lisp_Object name, int ok_if_data_invalid)
 
 	return Qnil;		/* not reached */
 }
-#endif				/* !HAVE_GTK */
 
 static void check_valid_xpm_color_symbols(Lisp_Object data)
 {

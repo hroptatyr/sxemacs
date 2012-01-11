@@ -277,8 +277,7 @@ Each element is a gnuclient structure that identifies a client.")
 
 (defun gnuserv-main-frame-function (type)
   "Return a sensible value for the main Emacs frame."
-  (if (or (eq type 'x)
-	  (eq type 'gtk))
+  (if (eq type 'x)
       (car (frame-list))
     nil))
 
@@ -286,8 +285,7 @@ Each element is a gnuclient structure that identifies a client.")
   "Return a frame if there is a frame that is truly visible, nil otherwise.
 This is meant in the X sense, so it will not return frames that are on another
 visual screen.  Totally visible frames are preferred.  If none found, return nil."
-  (if (or (eq type 'x)
-	  (eq type 'gtk))
+  (if (eq type 'x)
       (cond ((car (filtered-frame-list 'frame-totally-visible-p
 				       (selected-device))))
 	    ((car (filtered-frame-list (lambda (frame)
@@ -405,12 +403,6 @@ This order is important as not to keep the client waiting."
 
 
 
-(defun make-x-device-with-gtk-fallback (device)
-  (or (condition-case ()
-          (make-x-device device)
-        (error nil))
-      (make-gtk-device)))
-
 ;; "Execute" a client connection, called by gnuclient.  This is the
 ;; backbone of gnuserv.el.
 (defun gnuserv-edit-files (type list &rest flags)
@@ -442,8 +434,7 @@ If a flag is `view', view the files read-only."
 			 ((null dest-frame)
 			  (case (car type)
 			    (tty (apply 'make-tty-device (cdr type)))
-			    (gtk (make-gtk-device))
-			    (x   (make-x-device-with-gtk-fallback (cadr type)))
+			    (x   (make-x-device (cadr type)))
 			    (t   (error "Invalid device type"))))
 			 (t
 			  (selected-device))))

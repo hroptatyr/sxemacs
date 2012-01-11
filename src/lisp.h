@@ -3716,7 +3716,6 @@ extern Lisp_Object Qvariable_documentation, Qvariable_domain;
 extern Lisp_Object Qvoid_function, Qvoid_variable;
 extern Lisp_Object Qwindow_live_p, Qwrong_number_of_arguments;
 extern Lisp_Object Qwrong_type_argument, Qyes_or_no_p;
-extern Lisp_Object Qgtk;
 
 #define SYMBOL(fou) extern Lisp_Object fou
 #define SYMBOL_KEYWORD(la_cle_est_fou) extern Lisp_Object la_cle_est_fou

@@ -2491,7 +2491,8 @@ BLUR is float, 0.25 for insane pixels, > 2.0 for excessively smoth."
   (Wand:fit-size wand width height Wand-mode-scaler t))
 
 (define-Wand-operation liquid-rescale (wand width height)
-  (Wand:liquid-rescale wand width height 0.0 0.0))
+  (declare-fboundp
+   (Wand:liquid-rescale wand width height 0.0 0.0)))
 
 (define-Wand-operation posterize (wand levels &optional ditherp)
   (Wand:posterize-image wand levels ditherp))

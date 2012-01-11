@@ -163,7 +163,6 @@ if test "$need_athena" = "yes"; then
   echo "    - Athena library to link:                     $athena_lib"
 fi
 case "$with_menubars" in
-  gtk   ) echo "  Using GTK menubars."   ;;
   lucid ) echo "  Using Lucid menubars." ;;
   motif ) echo "  Using Motif menubars."
           echo "  *WARNING*  The Motif menubar implementation is currently buggy."
@@ -172,14 +171,12 @@ case "$with_menubars" in
   * )      echo "  No support for menubars."   ;;
 esac
 case "$with_scrollbars" in
-  gtk    ) echo "  Using GTK scrollbars."        ;;
   lucid  ) echo "  Using Lucid scrollbars."      ;;
   motif  ) echo "  Using Motif scrollbars."      ;;
   athena ) echo "  Using Athena scrollbars."     ;;
   * )      echo "  No support for scrollbars."   ;;
 esac
 case "$with_dialogs" in
-  gtk    ) echo "  Using GTK dialog boxes." ;;
   motif  ) echo "  Using Motif dialog boxes."
            if test "$unexec" = "unexaix.o"; then if test "`uname -v`" = 4 -a "`uname -r`" -ge 3; then
              echo "  *WARNING*  The Motif dialog boxes cause problems on AIX 4.3 and higher."
@@ -191,13 +188,12 @@ case "$with_dialogs" in
   * )      echo "  No support for dialog boxes." ;;
 esac
 case "$with_widgets" in
-  gtk    ) echo "  Using GTK native widgets."        ;;
   motif  ) echo "  Using Motif native widgets."      ;;
   athena ) echo "  Using Athena native widgets."     ;;
   * )      echo "  No support for native widgets."   ;;
 esac
 case "$with_toolbars" in
-  yes | gtk ) echo "  Support for toolbars."         ;;
+  yes )       echo "  Support for toolbars."         ;;
   no )        echo "  No support for toolbars."      ;;
   * ) ;;
 esac

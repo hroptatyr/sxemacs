@@ -437,41 +437,6 @@ void init_sxemacs_process(void);
 void init_redisplay(void);
 void init_sunpro(void);
 
-void syms_of_device_gtk(void);
-void syms_of_dialog_gtk(void);
-void syms_of_event_gtk(void);
-void syms_of_frame_gtk(void);
-void syms_of_glyphs_gtk(void);
-void syms_of_gui_gtk(void);
-void syms_of_menubar_gtk(void);
-void syms_of_objects_gtk(void);
-void syms_of_select_gtk(void);
-void syms_of_ui_gtk(void);
-void console_type_create_gtk(void);
-void console_type_create_device_gtk(void);
-void console_type_create_frame_gtk(void);
-void console_type_create_glyphs_gtk(void);
-void console_type_create_menubar_gtk(void);
-void console_type_create_objects_gtk(void);
-void console_type_create_redisplay_gtk(void);
-void console_type_create_scrollbar_gtk(void);
-void console_type_create_toolbar_gtk(void);
-void console_type_create_dialog_gtk(void);
-void image_instantiator_format_create_glyphs_gtk(void);
-void vars_of_device_gtk(void);
-void vars_of_dialog_gtk(void);
-void vars_of_event_gtk(void);
-void vars_of_frame_gtk(void);
-void vars_of_glyphs_gtk(void);
-void vars_of_gui_gtk(void);
-void vars_of_menubar_gtk(void);
-void vars_of_objects_gtk(void);
-void vars_of_scrollbar_gtk(void);
-void vars_of_select_gtk(void);
-void vars_of_ui_gtk(void);
-void complex_vars_of_glyphs_gtk(void);
-void init_event_gtk_late(void);
-
 /* Enhanced number initialization: must be done only at runtime due to complex
  * interactions with the supporting libraries.
  */

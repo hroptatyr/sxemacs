@@ -42,10 +42,6 @@ bldlwlibdir = $(top_builddir)/src/ui/lwlib
 
 misc_tests = frame.el glyph-test.el gutter-test.el			\
 	redisplay-tests.el reproduce-bugs.el
-gtk_tests = gtk/event-stream-tests.el gtk/gnome-test.el			\
-	gtk/gtk-embedded-test.el gtk/gtk-extra-test.el gtk/gtk-test.el	\
-	gtk/gtk-test.glade gtk/statusbar-test.el gtk/toolbar-test.el	\
-	gtk/xemacs-toolbar.el gtk/UNIMPLEMENTED
 mule_tests = mule/match.el
 DLL_tests = DLL/dltest.c
 automated_tests = automated/ase-cartesian-tests.el                      \
@@ -68,7 +64,7 @@ automated_tests = automated/ase-cartesian-tests.el                      \
 	automated/tag-tests.el automated/test-harness.el		\
 	automated/weak-tests.el automated/README
 
-EXTRA_DIST = $(misc_tests) $(gtk_tests) $(mule_tests)		\
+EXTRA_DIST = $(misc_tests) $(mule_tests)		\
 	$(DLL_tests) $(automated_tests)
 
 CLEANFILES = stage1 stage2

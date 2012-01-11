@@ -322,14 +322,6 @@ extern_inline struct device *error_check_device_type(struct device *d,
 #define CHECK_X_DEVICE(z) CHECK_DEVICE_TYPE (z, x)
 #define CONCHECK_X_DEVICE(z) CONCHECK_DEVICE_TYPE (z, x)
 
-#define DEVICE_GTK_P(dev) CONSOLE_TYPESYM_GTK_P (DEVICE_TYPE (dev))
-#define CHECK_GTK_DEVICE(z) CHECK_DEVICE_TYPE (z, gtk)
-#define CONCHECK_GTK_DEVICE(z) CONCHECK_DEVICE_TYPE (z, gtk)
-
-#define DEVICE_MSWINDOWS_P(dev) CONSOLE_TYPESYM_MSWINDOWS_P (DEVICE_TYPE (dev))
-#define CHECK_MSWINDOWS_DEVICE(z) CHECK_DEVICE_TYPE (z, mswindows)
-#define CONCHECK_MSWINDOWS_DEVICE(z) CONCHECK_DEVICE_TYPE (z, mswindows)
-
 #define DEVICE_TTY_P(dev) CONSOLE_TYPESYM_TTY_P (DEVICE_TYPE (dev))
 #define CHECK_TTY_DEVICE(z) CHECK_DEVICE_TYPE (z, tty)
 #define CONCHECK_TTY_DEVICE(z) CONCHECK_DEVICE_TYPE (z, tty)
@@ -347,8 +339,7 @@ EXFUN(Fmake_device, 3);
 EXFUN(Fselected_device, 1);
 
 extern Lisp_Object Qcreate_device_hook, Qdelete_device_hook, Qgrayscale;
-extern Lisp_Object Qinit_post_tty_win, Qmono, Vdefault_x_device,
-    Vdefault_gtk_device;
+extern Lisp_Object Qinit_post_tty_win, Qmono, Vdefault_x_device;
 extern Lisp_Object Vdevice_class_list;
 
 int valid_device_class_p(Lisp_Object class);

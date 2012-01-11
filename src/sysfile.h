@@ -45,11 +45,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <sys/stat.h>
 
-#ifdef HAVE_GTK
-/* I hate GTK */
-#undef MIN
-#undef MAX
-#endif				/* HAVE_GTK */
 #include <sys/param.h>
 
 #if defined (NeXT) 

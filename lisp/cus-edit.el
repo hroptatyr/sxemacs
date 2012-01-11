@@ -2449,9 +2449,6 @@ value."
 				    (const :format "X "
 					   :sibling-args (:help-echo "The X11 Window System")
 					   x)
-				    (const :format "GTK "
-					   :sibling-args (:help-echo "The GTK Window System")
-					   gtk)
 				    (const :format "PM "
 					   :sibling-args (:help-echo "OS/2 Presentation Manager")
 					   pm)

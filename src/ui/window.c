@@ -6371,9 +6371,6 @@ This is a specifier; use `set-specifier' to change it.
 #ifdef HAVE_TTY
 		fb = Fcons(Fcons(list1(Qtty), make_int(1)), fb);
 #endif
-#ifdef HAVE_GTK
-		fb = Fcons(Fcons(list1(Qgtk), make_int(3)), fb);
-#endif
 #ifdef HAVE_X_WINDOWS
 		fb = Fcons(Fcons(list1(Qx), make_int(3)), fb);
 #endif
@@ -6402,9 +6399,6 @@ This is a specifier; use `set-specifier' to change it.
 		/* #### 3D dividers look great on MS Windows with spacing = 0.
 		   Should not the same value be the fallback under X? - kkm */
 		fb = Fcons(Fcons(list1(Qx), make_int(2)), fb);
-#endif
-#ifdef HAVE_GTK
-		fb = Fcons(Fcons(list1(Qgtk), Qzero), fb);
 #endif
 		set_specifier_fallback(Vvertical_divider_spacing, fb);
 	}

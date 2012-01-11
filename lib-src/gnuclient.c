@@ -609,12 +609,6 @@ int main(int argc, char *argv[])
 					 clean_string(display));
 			}
 #endif
-#ifdef HAVE_GTK
-			else if (display) {
-				strcpy(command,
-				       "(gnuserv-edit-files '(gtk nil) '(");
-			}
-#endif
 		}		/* !suppress_windows_system */
 		send_string(s, command);
 
