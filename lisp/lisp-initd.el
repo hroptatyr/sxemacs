@@ -44,12 +44,14 @@
 ;(require 'byte-optimize)
 ;(require 'bytecomp-runtime)
 
-(defvar lisp-initd-dir (file-name-as-directory
-			(expand-file-name "init.d" user-init-directory))
+(defvar lisp-initd-basename  "init.d"
+  "The default prefix for the compiled init file.")
+
+
+(defvar lisp-initd-dir 
+  (concat user-init-directory lisp-initd-basename)
   "The default directory for the init files.")
 
-(defvar lisp-initd-prefix  ""
-  "The default prefix for the compiled init file.")
 
 (defvar lisp-initd-keep-elisp t
   "If TRUE the initd resulting lisp file is kept.
@@ -68,14 +70,15 @@ arguments see `directory-files'.  The function is expected to return a
 sorted list of absolute pathnames, accept and honor the MATCH argument
 and return files only.")
 
-(defun lisp-initd-compile (&optional dir prefix do-init)
+(defun lisp-initd-compile (&optional dir file do-init)
   "Compile the lisp files in DIR into a file named {DIR}/{PREFIX}init.d.el.
 If DIR is nil `lisp-initd-dir' is used.
-If PREFIX is nil `lisp-initd-prefix' is used.
+If FILE is nil `lisp-initd-basename' is used.
 If DO-INIT is non-nil the file is loaded."
-  (let* ((initd-dir    (or dir lisp-initd-dir))
-         (initd-file   (concat (or prefix lisp-initd-prefix)
-			      "init.d"))
+  (let* ((initd-dir    (file-name-as-directory
+			(expand-file-name
+			 (or dir lisp-initd-dir))))
+         (initd-file   (or file lisp-initd-basename))
 	 (initd-el     (expand-file-name (concat initd-file ".el")
 					 (paths-construct-path 
 					  (list initd-dir ".."))))
@@ -127,7 +130,7 @@ If DO-INIT is non-nil the file is loaded."
 			 ";; ----------------------------------\n\n")
 	       (error
 		(progn
-		  (insert "(message \"\\\"" current 
+		  (insert "(warn \"\\\"" current 
 			  "\\\" not inserted "
 			  (replace-regexp-in-string 
 			   "\"" "\\\""
@@ -156,15 +159,15 @@ If DO-INIT is non-nil the file is loaded."
       (load init-file nil nil t))))
 
 
-(defun lisp-initd-compile-and-load (&optional dir prefix)
-  "Compile and load the lisp files in DIR into a file named {DIR}/{PREFIX}init.d.el.
+(defun lisp-initd-compile-and-load (&optional dir file)
+  "Compile and load the lisp files in DIR into a file named {DIR}/{FILE}.el.
 
 If DIR, a string, is omitted `lisp-initd-dir' is used.  DIR can be
 either a complete path, or the last element of a path.  If the latter,
 DIR is expanded against the _parent_ directory of `lisp-initd-dir'.
 
-Optional prefix arg, PREFIX is a string that is prepended to the generated
-filename to be loaded.  If it is omitted, `lisp-initd-prefix' is used.
+Optional file arg, FILE is the name of the file to be loaded.  
+If it is omitted, `lisp-initd-basename' is used.
 
 See `lisp-initd-compile'."
   (interactive (list (expand-file-name (read-directory-name
@@ -176,9 +179,9 @@ See `lisp-initd-compile'."
 		 (expand-file-name dir (paths-construct-path 
 					(list lisp-initd-dir "..")))))))
   (when current-prefix-arg
-    (setq prefix (read-string "Prefix: ")))
+    (setq file (read-string "File: ")))
     
-  (lisp-initd-compile dir prefix t))
+  (lisp-initd-compile dir file t))
 
 (provide 'lisp-initd)
 
