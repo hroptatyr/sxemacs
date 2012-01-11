@@ -3219,10 +3219,47 @@ execute_internal_event(Lisp_Object event)
 		return;
 
 #ifdef EF_USE_ASYNEQ
-	case work_started_event:
-	case work_finished_event:
-	case eaten_myself_event:
-		return;
+	case eaten_myself_event: {
+		/* try to find the worker in the workers dllist and pop it */
+		/* raw :( */
+		Lisp_Event *ev = XEVENT(event);
+
+		/* since this affects garbage collection, we better lock that
+		   mutex, too */
+		lock_allocator();
+		WITH_DLLIST_TRAVERSE(
+			workers,
+			if (ev->event.eaten_myself.worker == dllist_item) {
+				dllist_pop_inner(workers, _el);
+				break;
+			});
+		unlock_allocator();
+		fini_worker(ev->event.eaten_myself.worker);
+		EQUEUE_DEBUG_WORKER("Successfully eaten 0x%lx\n",
+				    (long unsigned int)
+				    ev->event.eaten_myself.worker);
+		break;
+	}
+	case work_started_event: {
+		Lisp_Event *ev = XEVENT(event);
+		Lisp_Object ljob = ev->event.work_started.job;
+		worker_job_t job = XWORKER_JOB(ljob);
+		work_handler_t hdl = XWORKER_JOB_HANDLER(ljob);
+		if (hdl && work_started(hdl)) {
+			work_started(hdl)(job);
+		}
+		break;
+	}
+	case work_finished_event: {
+		Lisp_Event *ev = XEVENT(event);
+		Lisp_Object ljob = ev->event.work_finished.job;
+		worker_job_t job = XWORKER_JOB(ljob);
+		work_handler_t hdl = XWORKER_JOB_HANDLER(ljob);
+		if (hdl && work_finished(hdl)) {
+			work_finished(hdl)(job);
+		}
+		break;
+	}
 #endif  /* EF_USE_ASYNEQ */
 
 		/* not sure about the next ones, but they've
@@ -3236,6 +3273,7 @@ execute_internal_event(Lisp_Object event)
 	default:
 		abort();
 	}
+	return;
 }
 
 
@@ -4575,41 +4613,9 @@ Magic events are handled as necessary.
 	}
 #ifdef EF_USE_ASYNEQ
 	case eaten_myself_event:
-		/* try to find the worker in the workers dllist and pop it */
-		/* raw :( */
-		/* since this affects garbage collection, we better lock that
-		   mutex, too */
-		lock_allocator();
-		WITH_DLLIST_TRAVERSE(
-			workers,
-			if (ev->event.eaten_myself.worker == dllist_item) {
-				dllist_pop_inner(workers, _el);
-				break;
-			});
-		unlock_allocator();
-		fini_worker(ev->event.eaten_myself.worker);
-		EQUEUE_DEBUG_WORKER("Successfully eaten 0x%lx\n",
-				    (long unsigned int)
-				    ev->event.eaten_myself.worker);
-		break;
-	case work_started_event: {
-		Lisp_Object ljob = ev->event.work_started.job;
-		worker_job_t job = XWORKER_JOB(ljob);
-		work_handler_t hdl = XWORKER_JOB_HANDLER(ljob);
-		if (hdl && work_started(hdl)) {
-			work_started(hdl)(job);
-		}
-		break;
-	}
-	case work_finished_event: {
-		Lisp_Object ljob = ev->event.work_finished.job;
-		worker_job_t job = XWORKER_JOB(ljob);
-		work_handler_t hdl = XWORKER_JOB_HANDLER(ljob);
-		if (hdl && work_finished(hdl)) {
-			work_finished(hdl)(job);
-		}
-		break;
-	}
+	case work_started_event:
+	case work_finished_event:
+		/* fall through, should land in a execute_internal_event() */
 #endif
 
 		/* and the rest */
