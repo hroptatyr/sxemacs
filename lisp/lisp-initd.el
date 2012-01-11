@@ -44,9 +44,8 @@
 ;(require 'byte-optimize)
 ;(require 'bytecomp-runtime)
 
-(defvar lisp-initd-dir (file-name-as-directory
-			(expand-file-name "init.d" user-init-directory))
-  "The default directory for the init files.")
+(eval-when-compile
+  (defvar lisp-initd-dir))		; Now in startup.el
 
 (defvar lisp-initd-prefix  ""
   "The default prefix for the compiled init file.")
