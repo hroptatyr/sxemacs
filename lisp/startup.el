@@ -111,11 +111,6 @@ The first one found takes precedence.")
 (defvar load-user-init-file-p t
   "Non-nil if SXEmacs should load the user's init file.")
 
-(defvar lisp-initd-dir
-  (file-name-as-directory
-   (paths-construct-path (list user-init-directory "init.d")))
-  "The default directory for the init files.")
-
 ;; #### called `site-run-file' in FSFmacs
 
 (defvar site-start-file "site-start"
