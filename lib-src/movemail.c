@@ -599,6 +599,8 @@ static void lock_dot(char *filename)
 		/* Give up if cannot do that.  */
 
 #ifdef HAVE_MKSTEMP
+		/* Remove all group and other permissions.. */
+	        umask(S_IRWXG|S_IRWXO);
 		desc = mkstemp(tempname);
 #else
 		desc = open(tempname, O_WRONLY | O_CREAT | O_EXCL, 0666);
