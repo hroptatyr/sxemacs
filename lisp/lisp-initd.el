@@ -1,7 +1,7 @@
 ;; lisp-initd.el - rc.d inspired configuration management for
 ;;                 SXEmacs-lisp
 ;;
-;; Copyright (C) 2007, Nelson Ferreira
+;; Copyright (C) 2007-2012, Nelson Ferreira
 ;; Maintainer: Nelson Ferreira
 ;;
 ;; This file is part of SXEmacs
@@ -40,16 +40,13 @@
 ;; This file is dumped with SXEmacs
 
 (require 'cl-extra)
-;(require 'bytecomp)
-;(require 'byte-optimize)
-;(require 'bytecomp-runtime)
 
 (defvar lisp-initd-basename  "init.d"
-  "The default prefix for the compiled init file.")
+  "The default basename for the compiled init file.")
 
-
-(defvar lisp-initd-dir 
-  (concat user-init-directory lisp-initd-basename)
+(defvar lisp-initd-dir
+  (file-name-as-directory
+   (paths-construct-path (list user-init-directory lisp-initd-basename)))
   "The default directory for the init files.")
 
 
