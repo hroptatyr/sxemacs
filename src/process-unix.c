@@ -299,7 +299,10 @@ static int allocate_pty(void)
 	goto lose;
 
       have_slave_name:
-	strncpy(pty_name, slave_name, sizeof(pty_name));
+	if( slave_name != NULL )
+		strncpy(pty_name, slave_name, sizeof(pty_name));
+	else
+		strncpy(pty_name, "<NULL ttyname>", sizeof(pty_name));
 	pty_name[sizeof(pty_name) - 1] = '\0';
 	setup_pty(master_fd);
 
