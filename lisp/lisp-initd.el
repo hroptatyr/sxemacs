@@ -68,7 +68,7 @@ sorted list of absolute pathnames, accept and honor the MATCH argument
 and return files only.")
 
 (defun lisp-initd-compile (&optional dir file do-init)
-  "Compile the lisp files in DIR into a file named {DIR}/{PREFIX}init.d.el.
+  "Compile the lisp files in DIR into a file named {DIR}/{FILE}.
 If DIR is nil `lisp-initd-dir' is used.
 If FILE is nil `lisp-initd-basename' is used.
 If DO-INIT is non-nil the file is loaded."

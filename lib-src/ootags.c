@@ -4599,9 +4599,10 @@ char *name;
 void analyse_regex(regex_arg)
 char *regex_arg;
 {
-	if (regex_arg == NULL)
+	if (regex_arg == NULL) {
 		free_patterns();	/* --no-regex: remove existing regexps */
-
+		return;
+	}
 	/* A real --regexp option or a line in a regexp file. */
 	switch (regex_arg[0]) {
 		/* Comments in regexp file or null arg to --regex. */
