@@ -168,6 +168,8 @@ media_stream_finalise(void *header, int for_disksave)
 	Lisp_Media_Stream *ms = (Lisp_Media_Stream*)header;
 	media_substream *mss = NULL;
 
+	if(ms == NULL)
+		return;
 	if (media_stream_meths(ms) &&
 	    media_stream_meth(ms, close))
 		media_stream_meth(ms, close)(media_stream_data(ms));

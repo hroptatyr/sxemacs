@@ -103,6 +103,8 @@ FILE *termscript;		/* Stdio stream being used for copy of all output.  */
 
 int stdout_needs_newline;
 
+void debug_backtrace(void);
+
 static void
 std_handle_out_external(FILE * stream, Lisp_Object lstream,
 			const Extbyte * extptr, Extcount extlen,
@@ -342,16 +344,21 @@ write_string_to_stdio_stream(FILE * stream, struct console *con,
 		}
 	}
 
+	
 	if (stream) {
 		std_handle_out_external(stream, Qnil, extptr, extlen,
 					stream == stdout
 					|| stream == stderr, must_flush);
-	} else {
+	} else if(con != NULL) {
 		assert(CONSOLE_TTY_P(con));
 		std_handle_out_external(0, CONSOLE_TTY_DATA(con)->outstream,
 					extptr, extlen,
 					CONSOLE_TTY_DATA(con)->is_stdio,
 					must_flush);
+	} else {
+		error("Error attempting to write write '%s' with no stream nor console", str);
+		debug_backtrace();
+		abort();
 	}
 }
 
@@ -1731,8 +1738,8 @@ the output also will be logged to this file.
 */
       (char_or_string, stdout_p, device))
 {
-	FILE *file = 0;
-	struct console *con = 0;
+	FILE *file = NULL;
+	struct console *con = NULL;
 
 	if (NILP(device)) {
 		if (!NILP(stdout_p))
@@ -1848,7 +1855,6 @@ void debug_print(Lisp_Object debug_print_obj)
 
 /* Debugging kludge -- unbuffered */
 /* This function provided for the benefit of the debugger.  */
-void debug_backtrace(void);
 void debug_backtrace(void)
 {
 	/* This function can GC */
