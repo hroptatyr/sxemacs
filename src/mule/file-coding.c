@@ -1820,6 +1820,8 @@ static Lisp_Object coding_system_from_mask(int mask)
 		   the first one that is allowed. */
 		for (i = 0; i < CODING_CATEGORY_LAST; i++) {
 			cat = fcd->coding_category_by_priority[i];
+			if (cat<0)
+				continue;
 			if ((mask & (1 << cat)) &&
 			    !NILP(fcd->coding_category_system[cat]))
 				break;
