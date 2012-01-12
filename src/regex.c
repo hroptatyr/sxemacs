@@ -1458,9 +1458,9 @@ typedef struct {
 #define POP_FAILURE_POINT(str, pat, low_reg, high_reg,			\
                           regstart, regend, reg_info)			\
 	do {								\
-		DEBUG_STATEMENT (fail_stack_elt_t ffailure_id;)		\
-			int this_reg;					\
+		int this_reg;						\
 		const unsigned char *string_temp;			\
+		DEBUG_STATEMENT (fail_stack_elt_t ffailure_id);		\
 									\
 		assert (!FAIL_STACK_EMPTY ());				\
 									\
@@ -1482,7 +1482,8 @@ typedef struct {
 		   came from an on_failure_keep_string_jump opcode,	\
 		   and we want to throw away the saved NULL, thus	\
 		   retaining our current position in the string.  */	\
-		string_temp = POP_FAILURE_POINTER ();			\
+		string_temp = (const unsigned char *)			\
+			POP_FAILURE_POINTER ();				\
 		if (string_temp != NULL)				\
 			str = string_temp;				\
 									\
@@ -4679,7 +4680,7 @@ re_match_2_internal(struct re_pattern_buffer *bufp, re_char * string1,
 	re_char *end_match_1, *end_match_2;
 
 	/* Where we are in the data, and the end of the current string.  */
-	re_char *d, *dend;
+	const re_char *d, *dend;
 
 	/* Where we are in the pattern, and the end of the pattern.  */
 	unsigned char *p = bufp->buffer;
@@ -5653,7 +5654,7 @@ re_match_2_internal(struct re_pattern_buffer *bufp, re_char * string1,
 			EXTRACT_NUMBER_AND_INCR(mcnt, p);
 			DEBUG_PRINT2("EXECUTING maybe_pop_jump %d.\n", mcnt);
 			{
-				REGISTER unsigned char *p2 = p;
+				REGISTER const unsigned char *p2 = p;
 
 				/* Compare the beginning of the repeat with what
 				   in the pattern follows its end. If we can
@@ -5846,8 +5847,8 @@ re_match_2_internal(struct re_pattern_buffer *bufp, re_char * string1,
 			   from the stack, since lowest will == highest
 			   in `pop_failure_point'.  */
 			int dummy_low_reg, dummy_high_reg;
-			re_char *pdummy;
-			re_char *sdummy = NULL;
+			const unsigned char *pdummy = NULL;
+			const unsigned char *sdummy = NULL;
 
 			DEBUG_PRINT1("EXECUTING pop_failure_jump.\n");
 			POP_FAILURE_POINT(sdummy, pdummy,
@@ -6263,9 +6264,9 @@ re_match_2_internal(struct re_pattern_buffer *bufp, re_char * string1,
 		if (!FAIL_STACK_EMPTY()) {
 			/* A restart point is known.  Restore to that state.  */
 			DEBUG_PRINT1("\nFAIL:\n");
-			POP_FAILURE_POINT(d, p /* used to be const char* */,
-					  lowest_active_reg, highest_active_reg,
-					  regstart, regend, reg_info);
+			POP_FAILURE_POINT(d, p, lowest_active_reg, 
+					  highest_active_reg, regstart, regend, 
+					  reg_info);
 
 			/* If this failure point is a dummy, try the next one.  */
 			if (!p)
