@@ -3112,24 +3112,23 @@ Non-nil return value means SXEmacs is running without interactive terminal.
 	return noninteractive ? Qt : Qnil;
 }
 
+#ifdef USE_ASSERTIONS
+static int in_assert_failed = 0;
+static const char *assert_failed_file = NULL;
+static int assert_failed_line = 0;
+static const char *assert_failed_expr = NULL;
 /* This flag is useful to define if you're under a debugger; this way, you
    can put a breakpoint of assert_failed() and debug multiple problems
    in one session without having to recompile. */
-/* #define ASSERTIONS_DONT_ABORT */
-
-#ifdef USE_ASSERTIONS
-/* This highly dubious kludge ... shut up Jamie, I'm tired of your slagging. */
-
-static int in_assert_failed;
-static const char *assert_failed_file;
-static int assert_failed_line;
-static const char *assert_failed_expr;
+static int assertions_dont_abort = 0;
 
 #ifdef fprintf
 #undef fprintf
 #endif
 
+#ifdef abort
 #undef abort			/* avoid infinite #define loop... */
+#endif
 
 #define enter_debugger()
 
@@ -3150,18 +3149,21 @@ assert_failed(const char *file, int line, const char *expr)
 		_exit(-1);
 	else if (in_assert_failed == 3) {
 		enter_debugger();
-		_exit(-1);
+		abort();
 	} else if (in_assert_failed == 2) {
 		/* Not stderr_out(), which does additional things and may trigger
 		   a recursive assertion failure.  fprintf was undeffed above, in
 		   case it was encapsulated. */
 		fprintf(stderr,
-			"\nFatal error: recursive assertion failure, "
+			"\n\nFatal error: recursive assertion failure, "
 			"file %s, line %d, %s\n", file, line, expr);
 		fprintf(stderr,
 			"Original assertion failure: file %s, line %d, %s\n",
 			assert_failed_file, assert_failed_line,
 			assert_failed_expr);
+		fflush(stderr);
+		enter_debugger();
+		debug_short_backtrace(0x7FFF);
 	} else {
 		assert_failed_file = file;
 		assert_failed_line = line;
@@ -3175,13 +3177,13 @@ assert_failed(const char *file, int line, const char *expr)
 			stderr_out
 			    ("\nFatal error: assertion failed, file %s, line %d, %s\n",
 			     file, line, expr);
+		fflush(stderr);
+		enter_debugger();
+		debug_backtrace();
 	}
-	fflush(stderr);
-
-	enter_debugger();
-#if !defined (ASSERTIONS_DONT_ABORT)
-	abort();
-#endif
+	if (! assertions_dont_abort) {
+		abort();
+	}
 	inhibit_non_essential_printing_operations = 0;
 	in_assert_failed = 0;
 }
