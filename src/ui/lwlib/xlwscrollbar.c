@@ -76,6 +76,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <X11/StringDefs.h>
 #include <X11/bitmaps/gray>
 
+#include <assert.h>
+
 #include "xlwscrollbarP.h"
 #include "xlwscrollbar.h"
 
@@ -401,6 +403,12 @@ call_callbacks(XlwScrollBarWidget w, int reason,
 		}
 		called_anything = True;	/* Special Case */
 		break;
+	default:
+		/* Since called_anything will definitely be False
+		   here, the fall through if will do the proper
+		   thing.. So, nothing to do here
+		*/
+		;
 	}
 
 	if (!called_anything) {
@@ -1501,7 +1509,7 @@ static void timer(XtPointer data, XtIntervalId * id)
 
 	if (w->sb.armed != ARM_NONE) {
 		int last_value = w->sb.value;
-		int reason;
+		int reason = XmCR_NONE;
 
 		switch (w->sb.armed) {
 		case ARM_PAGEUP:
@@ -1520,6 +1528,12 @@ static void timer(XtPointer data, XtIntervalId * id)
 			increment_value(w, w->sb.increment);
 			reason = XmCR_INCREMENT;
 			break;
+		case ARM_NONE:
+			/* This one should never happen... */
+			assert(w->sb.armed != ARM_NONE);
+			break;
+		case ARM_SLIDER:
+			/* Should something be done for slider? */
 		default:
 			reason = XmCR_NONE;
 		}
@@ -1611,6 +1625,7 @@ Select(Widget widget, XEvent * event, String * parms, Cardinal * num_parms)
 				break;
 			}
 			abort();
+		case BUTTON_NONE:
 		default:
 			;	/* Do nothing */
 		}
@@ -1655,7 +1670,8 @@ Select(Widget widget, XEvent * event, String * parms, Cardinal * num_parms)
 		redraw_down_arrow(w, True, False);
 		break;
 	case BUTTON_NONE:
-		;		/* Do nothing */
+	default:
+		;               /* Do nothing */
 	}
 
 	verify_values(w);
