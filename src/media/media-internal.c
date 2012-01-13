@@ -934,14 +934,14 @@ void media_internal_analyse_stream(Lisp_Media_Stream *ms)
 	switch (media_stream_kind(ms)) {
 	case MKIND_FILE: {
 		mkind_file_properties *mkfp = NULL;
-		const char *file;
+		const char *file = NULL;
 		int file_len = 0;
 
 		/* open the file */
 		mkfp = media_stream_kind_properties(ms).fprops;
 		TO_EXTERNAL_FORMAT(LISP_STRING, mkfp->filename,
 				   ALLOCA, (file, file_len), Qnil);
-		if ((fd = open(file, O_RDONLY, 0)) < 0) {
+		if (file == NULL || (fd = open(file, O_RDONLY, 0)) < 0) {
 			xfree(data);
 			return;
 		}
