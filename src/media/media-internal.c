@@ -986,7 +986,7 @@ void media_internal_analyse_stream(Lisp_Media_Stream *ms)
 
 	/* shutdown */
 	xfree(data);
-	close(fd);
+	if( fd >= 0) close(fd);
 }
 
 /* Look at the header of the sound file and try to determine the format;
