@@ -111,17 +111,19 @@ media_mad_open(Lisp_Media_Stream *ms)
 	switch (media_stream_kind(ms)) {
 	case MKIND_FILE: {
 		mkind_file_properties *mkfp = NULL;
-		const char *file;
+		const char *file = NULL;
 		/* file stuff */
-		FILE *f;
+		FILE *f = NULL;
 		size_t file_len = 0;
 
 		/* open the file */
 		mkfp = media_stream_kind_properties(ms).fprops;
 		TO_EXTERNAL_FORMAT(LISP_STRING, mkfp->filename,
 				   ALLOCA, (file, file_len), Qnil);
-		/* read in the file */
-		f = fopen(file, "rb");
+		if ( file != NULL ) {
+			/* read in the file */
+			f = fopen(file, "rb");
+		}
 		if (!f) {
 			media_stream_set_meths(ms, NULL);
 			media_stream_driver(ms) = MDRIVER_UNKNOWN;
@@ -131,6 +133,14 @@ media_mad_open(Lisp_Media_Stream *ms)
 		}
 		fseek(f, 0, SEEK_END);
 		file_len = ftell(f);
+		if ( file_len < 0) {
+			fclose(f);
+			media_stream_set_meths(ms, NULL);
+			media_stream_driver(ms) = MDRIVER_UNKNOWN;
+			xfree(sd);
+			xfree(madd);
+			return NULL;
+		}
 		fseek(f, 0, SEEK_SET);
 
 		/* now copy into media_data structure */

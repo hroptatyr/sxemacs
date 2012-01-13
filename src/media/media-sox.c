@@ -82,20 +82,22 @@ media_sox_open(Lisp_Media_Stream *ms)
 	switch (media_stream_kind(ms)) {
 	case MKIND_FILE: {
 		mkind_file_properties *mkfp = NULL;
-		const char *file;
+		const char *file = NULL;
 		int file_len = 0;
 
 		/* open the file */
 		mkfp = media_stream_kind_properties(ms).fprops;
 		TO_EXTERNAL_FORMAT(LISP_STRING, mkfp->filename,
 				   ALLOCA, (file, file_len), Qnil);
+		if( file != NULL {
 #if defined HAVE_SOX_OPEN_READ_3ARGS
-		ft = sxe_sox_open_read(file, NULL, NULL);
+			    ft = sxe_sox_open_read(file, NULL, NULL);
 #elif defined HAVE_SOX_OPEN_READ_4ARGS
-		ft = sxe_sox_open_read(file, NULL, NULL, NULL);
+			    ft = sxe_sox_open_read(file, NULL, NULL, NULL);
 #else
 # error You shouldnt be here.  Wake up before you try to compile me.
 #endif
+		}
 		break;
 	}
 	case MKIND_STRING: {
