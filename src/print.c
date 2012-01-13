@@ -134,26 +134,25 @@ std_handle_out_external(FILE * stream, Lisp_Object lstream,
 }
 
 
-#define SXE_VSNPRINT_VA(ret,sbuf,buf,size,spec,tries,type,fmt,args)	\
+#define SXE_VSNPRINT_VA(ret__,sbuf__,buf__,size__,spec__,tries__,type__,fmt__,args__) \
 	do {								\
-		--tries;						\
-		ret = vsnprintf((char*)buf,size,fmt,args);		\
-		if ( retval == 0 ) {					\
+		--tries__;						\
+		ret__ = vsnprintf((char*)buf__,size__,fmt__,args__);	\
+		if ( ret__ == 0 ) {					\
 			/* Nothing to write */				\
 			break;						\
-		} else if ( ret < 0 ) {					\
-			XMALLOC_UNBIND(buf,size,spec);			\
-			size *= 2;					\
-			XMALLOC_OR_ALLOCA(buf,size,type);		\
-			ret = 0;					\
-		} else if ( (size_t)ret > (size_t)size ) {		\
+		} else if ( ret__ < 0 ) {				\
+			XMALLOC_UNBIND(buf__,size__,spec__);		\
+			size__ *= 2;					\
+			XMALLOC_OR_ALLOCA(buf__,size__,type__);		\
+		} else if ( (size_t)ret__ > (size_t)size__ ) {		\
 		    /* We need more space, so we need to allocate it */ \
-			XMALLOC_UNBIND(buf,size,spec);			\
-			size = ret + 1;					\
-			XMALLOC_OR_ALLOCA(buf,size,type);		\
-			ret = 0;					\
+			XMALLOC_UNBIND(buf__,size__,spec__);		\
+			size__ = ret__ + 1;				\
+			XMALLOC_OR_ALLOCA(buf__,size__,type__);		\
+			ret__ = -1;					\
 		}							\
-	} while( ret == 0 && tries > 0 )
+	} while( ret__ < 0 && tries__ > 0 )
 
 
 int write_fmt_str(Lisp_Object stream, const char* fmt, ...)
