@@ -61,6 +61,13 @@ This script will not send an email on a "fast-forward" or "merge"
 commit, so that you won't bother Steve if you keep a long lived
 for-steve branch, and even share it accross machines...
 
+To use, just place it under the name post-receive in the hooks
+directory of your git public repository.
+
+You may wish to review it and make sure the branch(es) you want to
+send mail for are there and the location of the post-receive-email
+script which should come with your git install.
+
 Nelson Ferreira <njsf@sxemacs.org>
 
 
