@@ -5,19 +5,21 @@ useful.
 
 File List:
 =========
-	do_builds.sh..............automate builds
-	make-pkg.sh...............bash script to create a SXEmacs tar package
-	pop3.el.patch.............SXEmacs native OpenSSL goodies
-	report-build-failure.sh...bash script to send a build report failure
-	show-tty-256-colors.pl....Perl script to test 256 color output on terminal 
-	smtpmail.el.patch.........SXEmacs native OpenSSL goodies
-	starttls.el.patch.........SXEmacs native OpenSSL goodies
-	tar-build-failure.sh......bash script w/ tar of build report failure
-	tty-colors.c..............C program to check the terminal color definitions
+	do_builds.sh..................automate builds
+	git-post-receive-hook.sample..git hook to send email automatically for merge requests
+	git-to-steve.sh...............setup a for-steve branch to send patches to the master branch
+	make-pkg.sh...................bash script to create a SXEmacs tar package 
+	pop3.el.patch.................SXEmacs native OpenSSL goodies 
+        report-build-failure.sh.......bash script to send a build report failure 
+        show-tty-256-colors.pl........Perl script to test 256 color output on terminal
+	smtpmail.el.patch.............SXEmacs native OpenSSL goodies
+	starttls.el.patch.............SXEmacs native OpenSSL goodies
+	tar-build-failure.sh..........bash script w/ tar of build report failure
+        tty-colors.c..................C program to check the terminal color definitions
+
 
 More Info:
 =========
-
 
 do_builds.sh:
 ------------
@@ -44,6 +46,34 @@ To setup:
    4. Execute do_builds.sh
 
 Nelson Ferreira <njsf@sxemacs.org>
+
+
+git-post-receive-hook.sample
+----------------------------
+This hook is meant as git hook (ie to be placed in the hooks directory
+of your publicly accessible repository) as a way to automatically send
+emails when you want something to be merged to the master branch.
+
+It assumes you will use a for-steve branch, as git-to-steve.sh will do
+for you, so it will only send emails for changes to that branch.
+
+This script will not send an email on a "fast-forward" or "merge"
+commit, so that you won't bother Steve if you keep a long lived
+for-steve branch, and even share it accross machines...
+
+Nelson Ferreira <njsf@sxemacs.org>
+
+
+git-to-steve.sh
+---------------
+
+This script will check your git configuration, give you some
+recommendations of changes and create a for-steve branch so that you
+use the same convention as the other SXEmacs developers to contribute
+to the SXEmacs project.
+
+Nelson Ferreira <njsf@sxemacs.org>
+
 
 make-pkg.sh:
 -------------
