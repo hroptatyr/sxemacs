@@ -89,7 +89,7 @@ media_sox_open(Lisp_Media_Stream *ms)
 		mkfp = media_stream_kind_properties(ms).fprops;
 		TO_EXTERNAL_FORMAT(LISP_STRING, mkfp->filename,
 				   ALLOCA, (file, file_len), Qnil);
-		if( file != NULL {
+		if( file != NULL ) {
 #if defined HAVE_SOX_OPEN_READ_3ARGS
 			    ft = sxe_sox_open_read(file, NULL, NULL);
 #elif defined HAVE_SOX_OPEN_READ_4ARGS
