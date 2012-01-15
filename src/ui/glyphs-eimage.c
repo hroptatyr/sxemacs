@@ -1647,8 +1647,9 @@ rawrgba_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	   stack frame is still valid. */
 	struct rawrgba_unwind_data unwind;
 	int speccount = specpdl_depth();
-	unsigned long width, height;
+	unsigned long width = 0, height = 0;
 
+	mem_struct.bytes = 0;
 	xzero(unwind);
 	record_unwind_protect(rawrgba_instantiate_unwind,
 			      make_opaque_ptr(&unwind));
@@ -1659,7 +1660,7 @@ rawrgba_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 							  Q_pixel_height);
 		Lisp_Object cols = find_keyword_in_vector(instantiator,
 							  Q_pixel_width);
-		Extbyte *bytes;
+		Extbyte *bytes = NULL;
 		Extcount len;
 
 		unsigned char *ep;
@@ -1675,26 +1676,29 @@ rawrgba_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 #endif  /* HAVE_FFI */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data,
 				   ALLOCA, (bytes, len), Qbinary);
-		mem_struct.bytes = bytes;
-		mem_struct.len = len;
-		mem_struct.index = 0;
+		if (bytes != NULL ) {
+			mem_struct.bytes = bytes;
+			mem_struct.len = len;
+			mem_struct.index = 0;
 
-		width = XINT(cols);
-		height = XINT(rows);
+			width = XINT(cols);
+			height = XINT(rows);
 
-		unwind.eimage = xmalloc_atomic(len);
-		for (ep = unwind.eimage, dp = (unsigned char*)bytes;
-		     dp < (unsigned char*)bytes+len; ep++, dp++) {
-			*ep = *dp;
+			unwind.eimage = xmalloc_atomic(len);
+			for (ep = unwind.eimage, dp = (unsigned char*)bytes;
+			     dp < (unsigned char*)bytes+len; ep++, dp++) {
+				*ep = *dp;
+			}
 		}
 	}
 
-	/* now instantiate */
-	MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
-		      init_image_instance_from_eimage,
-		      (ii, width, height, 1, unwind.eimage, dest_mask,
-		       instantiator, domain));
-
+	if ( mem_struct.bytes !=  NULL) {
+		/* now instantiate */
+		MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
+			      init_image_instance_from_eimage,
+			      (ii, width, height, 1, unwind.eimage, dest_mask,
+			       instantiator, domain));
+	}
 	unbind_to(speccount, Qnil);
 }
 #endif	/* 1 */
