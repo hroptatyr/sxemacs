@@ -1099,8 +1099,8 @@ do {										\
 				  dfc_simplified_sink_type,   &dfc_sink);	\
 										\
   DFC_##sink_type##_USE_CONVERTED_DATA (sink);					\
-} while (0);								        \
-assert((sink)!=NULL)
+  assert((sink)!=NULL)							        \
+} while (0)
 
 #define TO_INTERNAL_FORMAT(source_type, source, sink_type, sink, coding_system)	\
 do {										\
@@ -1131,8 +1131,8 @@ do {										\
 				  dfc_simplified_sink_type,   &dfc_sink);	\
 										\
   DFC_##sink_type##_USE_CONVERTED_DATA (sink);					\
-} while (0);								        \
-assert((sink)!=NULL)
+  assert((sink)!=NULL)							        \
+} while (0)
 
 #ifdef FILE_CODING
 #define DFC_CONVERT_TO_EXTERNAL_FORMAT dfc_convert_to_external_format
