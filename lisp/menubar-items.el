@@ -987,7 +987,7 @@ See also `menu-split-long-menu'."
 	 :active (and (boundp 'browse-url-browser-function)
 		      (fboundp 'browse-url-w3)
 		      (fboundp 'w3-fetch))]
-        ["Emacs-%_W3 (gnudoit)"
+        ["Emacs-%_W3 (gnuclient)"
          (customize-set-variable 'browse-url-browser-function 'browse-url-w3-gnudoit)
          :style radio
          :selected (and (boundp 'browse-url-browser-function)

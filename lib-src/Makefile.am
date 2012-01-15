@@ -58,8 +58,6 @@ ALLOCA_C = $(sxesrcdir)/alloca.c
 bin_PROGRAMS = gnuclient etags ctags2 ootags
 archlib_PROGRAMS = gnuserv fakemail wakeup profile make-docfile \
 	sorted-doc movemail yow hexl mmencode
-dist_bin_SCRIPTS = gnudoit rcs-checkin
-dist_archlib_SCRIPTS = rcs2log vcdiff gzip-el.sh
 noinst_PROGRAMS = make-path make-dump-id
 dist_noinst_SCRIPTS = ad2c
 
@@ -126,7 +124,7 @@ endif
 ## custom rules
 RM = rm -f
 
-stage1: $(bin_PROGRAMS) $(archlib_PROGRAMS) $(dist_bin_SCRIPTS) \
+stage1: $(bin_PROGRAMS) $(archlib_PROGRAMS)  \
 	$(archlib_SCRIPTS) $(noinst_PROGRAMS) $(dist_archlib_DATA)
 	@touch $@
 
