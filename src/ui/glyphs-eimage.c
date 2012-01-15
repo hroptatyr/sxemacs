@@ -621,7 +621,7 @@ gif_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	int speccount = specpdl_depth();
 	gif_memory_storage mem_struct;
 	struct gif_error_struct gif_err;
-	Extbyte *bytes;
+	Extbyte *bytes = NULL;
 	Extcount len;
 	int height = 0;
 	int width = 0;
@@ -661,20 +661,27 @@ gif_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 #endif  /* HAVE_FFI */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data, ALLOCA, (bytes, len),
 				   Qbinary);
-		mem_struct.bytes = bytes;
-		mem_struct.len = len;
-		mem_struct.index = 0;
-		GifSetReadFunc(unwind.giffile, gif_read_from_memory,
-			       (VoidPtr) & mem_struct);
-		GifSetCloseFunc(unwind.giffile, gif_memory_close,
-				(VoidPtr) & mem_struct);
-		DGifInitRead(unwind.giffile);
+		if ( bytes == NULL ) {
+			signal_image_error
+				("Error reading GIF data",
+				 instantiator);
+		} else {
+			mem_struct.bytes = bytes;
+			mem_struct.len = len;
+			mem_struct.index = 0;
+			GifSetReadFunc(unwind.giffile, gif_read_from_memory,
+				       (VoidPtr) & mem_struct);
+			GifSetCloseFunc(unwind.giffile, gif_memory_close,
+					(VoidPtr) & mem_struct);
+			DGifInitRead(unwind.giffile);
 
-		/* Then slurp the image into memory, decoding along the way.
-		   The result is the image in a simple one-byte-per-pixel
-		   format (#### the GIF routines only support 8-bit GIFs,
-		   it appears). */
-		DGifSlurp(unwind.giffile);
+			/* Then slurp the image into memory, decoding
+			   along the way.  The result is the image in
+			   a simple one-byte-per-pixel format (####
+			   the GIF routines only support 8-bit GIFs,
+			   it appears). */
+			DGifSlurp(unwind.giffile);
+		}
 	}
 
 	/* 3. Now create the EImage(s) */
@@ -903,6 +910,7 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 				   instantiator);
 	}
 
+	tbr.bytes = NULL;
 	xzero(unwind);
 	unwind.png_ptr = png_ptr;
 	unwind.info_ptr = info_ptr;
@@ -931,7 +939,7 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	/* Initialize the IO layer and read in header information */
 	{
 		Lisp_Object data = find_keyword_in_vector(instantiator, Q_data);
-		const Extbyte *bytes;
+		const Extbyte *bytes = NULL;
 		Extcount len;
 
 		assert(!NILP(data));
@@ -946,10 +954,14 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		   stack data it might allocate.  Need to think about using Lstreams */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data, ALLOCA, (bytes, len),
 				   Qbinary);
-		tbr.bytes = bytes;
-		tbr.len = len;
-		tbr.index = 0;
-		png_set_read_fn(png_ptr, (void *)&tbr, png_read_from_memory);
+		if ( bytes != NULL ) {
+			tbr.bytes = bytes;
+			tbr.len = len;
+			tbr.index = 0;
+			png_set_read_fn(png_ptr, (void *)&tbr, png_read_from_memory);
+		} else {
+			signal_image_error("Error reading PNG data", instantiator);
+		}
 	}
 
 	png_read_info(png_ptr, info_ptr);
@@ -1585,7 +1597,8 @@ rawrgb_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	   stack frame is still valid. */
 	struct rawrgb_unwind_data unwind;
 	int speccount = specpdl_depth();
-	unsigned long width, height;
+	unsigned long width = 0, height = 0;
+	mem_struct.bytes = NULL;
 
 	xzero(unwind);
 	record_unwind_protect(rawrgb_instantiate_unwind,
@@ -1597,7 +1610,7 @@ rawrgb_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 							  Q_pixel_height);
 		Lisp_Object cols = find_keyword_in_vector(instantiator,
 							  Q_pixel_width);
-		Extbyte *bytes;
+		Extbyte *bytes = NULL;
 		Extcount len;
 
 		unsigned char *ep;
@@ -1613,26 +1626,29 @@ rawrgb_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 #endif  /* HAVE_FFI */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data,
 				   ALLOCA, (bytes, len), Qbinary);
-		mem_struct.bytes = bytes;
-		mem_struct.len = len;
-		mem_struct.index = 0;
+		if ( bytes != NULL ) {
+			mem_struct.bytes = bytes;
+			mem_struct.len = len;
+			mem_struct.index = 0;
 
-		width = XINT(cols);
-		height = XINT(rows);
+			width = XINT(cols);
+			height = XINT(rows);
 
-		unwind.eimage = xmalloc_atomic(len);
-		ep = unwind.eimage;
-		dp = (unsigned char*)bytes;
-		for ( ; dp < (unsigned char*)bytes+len; ep++, dp++)
-			*ep = *dp;
+			unwind.eimage = xmalloc_atomic(len);
+			ep = unwind.eimage;
+			dp = (unsigned char*)bytes;
+			for ( ; dp < (unsigned char*)bytes+len; ep++, dp++)
+				*ep = *dp;
+		}
 	}
 
-	/* now instantiate */
-	MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
-		      init_image_instance_from_eimage,
-		      (ii, width, height, 1, unwind.eimage, dest_mask,
-		       instantiator, domain));
-
+	if ( mem_struct.bytes != NULL ) {
+		/* now instantiate */
+		MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
+			      init_image_instance_from_eimage,
+			      (ii, width, height, 1, unwind.eimage, dest_mask,
+			       instantiator, domain));
+	}
 	unbind_to(speccount, Qnil);
 }
 static void
