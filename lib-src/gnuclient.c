@@ -25,17 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  Please mail bugs and suggestions to the XEmacs maintainer.
 */
 
-/* #### This file should be a windows-mode, not console-mode program under
-   Windows. (i.e. its entry point should be WinMain.) gnuattach functionality,
-   to the extent it's used at all, should be retrieved using a script that
-   calls the i.exe wrapper program, to obtain stdio handles.
-
-   #### For that matter, both the functionality of gnuclient and gnuserv
-   should be merged into XEmacs itself using a -remote arg, just like
-   Netscape and other modern programs.
-
-   --ben */
-
 /*
  * This file incorporates new features added by Bob Weiner <weiner@mot.com>,
  * Darrell Kindred <dkindred@cmu.edu> and Arup Mukherjee <arup@cmu.edu>.
@@ -124,7 +113,7 @@ pass_signal_to_emacs(int sig)
 {
 	if (kill(emacs_pid, sig) == -1) {
 		fprintf(stderr,
-			"gnuattach: Could not pass signal to emacs process\n");
+			"gnuclient: Could not pass signal to emacs process\n");
 		exit(1);
 	}
 	initialize_signals();

@@ -7,13 +7,8 @@ gnuserv, gnuclient \- Server and Clients for XEmacs
 [-nw] [-display display] [-q] [-v] [-l library] [-batch] [-f function] [-eval form] 
 [-h hostname] [-p port] [-r remote-pathname] [[+line] file] ...
 .br
-.B gnudoit [-q] 
-form
-.br
 .B gnuserv
 .br
-.B gnuattach   
-Removed as of gnuserv 3.x
 .SH DESCRIPTION
 
 .PP
@@ -23,16 +18,10 @@ Depending on your environment, it can be an X frame or a TTY frame.
 One typical use for this is with a dialup connection to a machine on
 which an XEmacs process is currently running.
 .PP
-\fIgnudoit\fP is a shell script frontend to ``gnuclient -batch -eval form''.
-Its use is deprecated. Try to get used to calling gnuclient directly.
-.PP
 \fIgnuserv\fP is the server program that is set running by XEmacs to
 handle all incoming and outgoing requests. It is not usually invoked
 directly, but is started from XEmacs by loading the \fIgnuserv\fP
 package and evaluating the Lisp form (gnuserv-start).
-.PP
-\fIgnuattach\fP no longer exists. Its functionality has been replaced by
-\fIgnuclient -nw\fP.
 .SH OPTIONS
 .PP 
 \fIgnuclient\fP supports as much of the command line options of Emacs as
@@ -284,9 +273,6 @@ XEmacs customization file, see xemacs(1).
 .PP
 .TP 8
 xauth(1X11), Xsecurity(1X11), gnuserv.el
-.SH BUGS
-.PP 
-NULs occurring in result strings don't get passed back to gnudoit properly.
 
 .SH AUTHOR.
 Andy Norman (ange@hplb.hpl.hp.com), based heavily upon
