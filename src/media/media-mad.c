@@ -114,7 +114,7 @@ media_mad_open(Lisp_Media_Stream *ms)
 		const char *file = NULL;
 		/* file stuff */
 		FILE *f = NULL;
-		size_t file_len = 0;
+		long file_len = 0;
 
 		/* open the file */
 		mkfp = media_stream_kind_properties(ms).fprops;
@@ -146,7 +146,7 @@ media_mad_open(Lisp_Media_Stream *ms)
 		/* now copy into media_data structure */
 		sd->data = xmalloc_atomic(file_len+1);
 		sd->seek = 0;
-		sd->length = file_len;
+		sd->length = (size_t)file_len;
 
 		/* THIS IS VEEEEEERY BAD! */
 		if (fread(sd->data, sizeof(char), file_len, f) < file_len)
