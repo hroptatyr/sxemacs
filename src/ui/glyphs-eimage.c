@@ -621,7 +621,7 @@ gif_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	int speccount = specpdl_depth();
 	gif_memory_storage mem_struct;
 	struct gif_error_struct gif_err;
-	Extbyte *bytes;
+	Extbyte *bytes = NULL;
 	Extcount len;
 	int height = 0;
 	int width = 0;
@@ -661,20 +661,27 @@ gif_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 #endif  /* HAVE_FFI */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data, ALLOCA, (bytes, len),
 				   Qbinary);
-		mem_struct.bytes = bytes;
-		mem_struct.len = len;
-		mem_struct.index = 0;
-		GifSetReadFunc(unwind.giffile, gif_read_from_memory,
-			       (VoidPtr) & mem_struct);
-		GifSetCloseFunc(unwind.giffile, gif_memory_close,
-				(VoidPtr) & mem_struct);
-		DGifInitRead(unwind.giffile);
+		if ( bytes == NULL ) {
+			signal_image_error
+				("Error reading GIF data",
+				 instantiator);
+		} else {
+			mem_struct.bytes = bytes;
+			mem_struct.len = len;
+			mem_struct.index = 0;
+			GifSetReadFunc(unwind.giffile, gif_read_from_memory,
+				       (VoidPtr) & mem_struct);
+			GifSetCloseFunc(unwind.giffile, gif_memory_close,
+					(VoidPtr) & mem_struct);
+			DGifInitRead(unwind.giffile);
 
-		/* Then slurp the image into memory, decoding along the way.
-		   The result is the image in a simple one-byte-per-pixel
-		   format (#### the GIF routines only support 8-bit GIFs,
-		   it appears). */
-		DGifSlurp(unwind.giffile);
+			/* Then slurp the image into memory, decoding
+			   along the way.  The result is the image in
+			   a simple one-byte-per-pixel format (####
+			   the GIF routines only support 8-bit GIFs,
+			   it appears). */
+			DGifSlurp(unwind.giffile);
+		}
 	}
 
 	/* 3. Now create the EImage(s) */
@@ -903,6 +910,7 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 				   instantiator);
 	}
 
+	tbr.bytes = NULL;
 	xzero(unwind);
 	unwind.png_ptr = png_ptr;
 	unwind.info_ptr = info_ptr;
@@ -931,7 +939,7 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	/* Initialize the IO layer and read in header information */
 	{
 		Lisp_Object data = find_keyword_in_vector(instantiator, Q_data);
-		const Extbyte *bytes;
+		const Extbyte *bytes = NULL;
 		Extcount len;
 
 		assert(!NILP(data));
@@ -946,10 +954,14 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		   stack data it might allocate.  Need to think about using Lstreams */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data, ALLOCA, (bytes, len),
 				   Qbinary);
-		tbr.bytes = bytes;
-		tbr.len = len;
-		tbr.index = 0;
-		png_set_read_fn(png_ptr, (void *)&tbr, png_read_from_memory);
+		if ( bytes != NULL ) {
+			tbr.bytes = bytes;
+			tbr.len = len;
+			tbr.index = 0;
+			png_set_read_fn(png_ptr, (void *)&tbr, png_read_from_memory);
+		} else {
+			signal_image_error("Error reading PNG data", instantiator);
+		}
 	}
 
 	png_read_info(png_ptr, info_ptr);
@@ -1263,7 +1275,7 @@ tiff_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	TIFFSetWarningHandler((TIFFErrorHandler) tiff_warning_func);
 	{
 		Lisp_Object data = find_keyword_in_vector(instantiator, Q_data);
-		Extbyte *bytes;
+		Extbyte *bytes = NULL;
 		Extcount len;
 
 		uint32 *raster;
@@ -1281,70 +1293,80 @@ tiff_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		   stack data it might allocate.  Think about Lstreams... */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data,
 				   ALLOCA, (bytes, len), Qbinary);
-		mem_struct.bytes = bytes;
-		mem_struct.len = len;
-		mem_struct.index = 0;
-
-		unwind.tiff =
-		    TIFFClientOpen("memfile", "r", (thandle_t) & mem_struct,
-				   (TIFFReadWriteProc) tiff_memory_read,
-				   (TIFFReadWriteProc) tiff_memory_write,
-				   tiff_memory_seek, tiff_memory_close,
-				   tiff_memory_size, tiff_map_noop,
-				   tiff_unmap_noop);
-		if (!unwind.tiff)
+		if ( bytes == NULL ) {
 			signal_image_error
-			    ("Insufficient memory to instantiate TIFF image",
-			     instantiator);
+				("Unable to encode filename", instantiator);
+		}else {
+			mem_struct.bytes = bytes;
+			mem_struct.len = len;
+			mem_struct.index = 0;
 
-		TIFFGetField(unwind.tiff, TIFFTAG_IMAGEWIDTH, &width);
-		TIFFGetField(unwind.tiff, TIFFTAG_IMAGELENGTH, &height);
-		unwind.eimage = xmalloc_atomic(width * height * 3);
+			unwind.tiff =
+				TIFFClientOpen("memfile", "r", (thandle_t) & mem_struct,
+					       (TIFFReadWriteProc) tiff_memory_read,
+					       (TIFFReadWriteProc) tiff_memory_write,
+					       tiff_memory_seek, tiff_memory_close,
+					       tiff_memory_size, tiff_map_noop,
+					       tiff_unmap_noop);
+			if (!unwind.tiff)
+				signal_image_error
+					("Insufficient memory to instantiate TIFF image",
+					 instantiator);
 
-		/* #### This is little more than proof-of-concept/function testing.
-		   It needs to be reimplemented via scanline reads for both memory
-		   compactness. */
-		raster =
-		    (uint32 *) _TIFFmalloc(width * height * sizeof(uint32));
-		if (raster != NULL) {
-			int i, j;
-			uint32 *rp;
-			ep = unwind.eimage;
-			rp = raster;
-			if (TIFFReadRGBAImage
-			    (unwind.tiff, width, height, raster, 0)) {
-				for (i = height - 1; i >= 0; i--) {
-					/* This is to get around weirdness in the libtiff library where properly
-					   made TIFFs will come out upside down.  libtiff bug or jhod-brainlock? */
-					rp = raster + (i * width);
-					for (j = 0; (uint32) j < width; j++) {
-						*ep++ =
-						    (unsigned char)
-						    TIFFGetR(*rp);
-						*ep++ =
-						    (unsigned char)
-						    TIFFGetG(*rp);
-						*ep++ =
-						    (unsigned char)
-						    TIFFGetB(*rp);
-						rp++;
+			TIFFGetField(unwind.tiff, TIFFTAG_IMAGEWIDTH, &width);
+			TIFFGetField(unwind.tiff, TIFFTAG_IMAGELENGTH, &height);
+			unwind.eimage = xmalloc_atomic(width * height * 3);
+
+			/* #### This is little more than proof-of-concept/function testing.
+			   It needs to be reimplemented via scanline reads for both memory
+			   compactness. */
+			raster =
+				(uint32 *) _TIFFmalloc(width * height * sizeof(uint32));
+			if (raster != NULL) {
+				int i, j;
+				uint32 *rp;
+				ep = unwind.eimage;
+				rp = raster;
+				if (TIFFReadRGBAImage
+				    (unwind.tiff, width, height, raster, 0)) {
+					for (i = height - 1; i >= 0; i--) {
+						/* This is to get
+						   around weirdness in
+						   the libtiff library
+						   where properly made
+						   TIFFs will come out
+						   upside down.
+						   libtiff bug or
+						   jhod-brainlock? */
+						rp = raster + (i * width);
+						for (j = 0; (uint32) j < width; j++) {
+							*ep++ =
+								(unsigned char)
+								TIFFGetR(*rp);
+							*ep++ =
+								(unsigned char)
+								TIFFGetG(*rp);
+							*ep++ =
+								(unsigned char)
+								TIFFGetB(*rp);
+							rp++;
+						}
 					}
 				}
-			}
-			_TIFFfree(raster);
-		} else
-			signal_image_error
-			    ("Unable to allocate memory for TIFFReadRGBA",
-			     instantiator);
+				_TIFFfree(raster);
+			} else
+				signal_image_error
+					("Unable to allocate memory for TIFFReadRGBA",
+					 instantiator);
 
+		}
+
+		/* now instantiate */
+		MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
+			      init_image_instance_from_eimage,
+			      (ii, width, height, 1, unwind.eimage, dest_mask,
+			       instantiator, domain));
 	}
-
-	/* now instantiate */
-	MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
-		      init_image_instance_from_eimage,
-		      (ii, width, height, 1, unwind.eimage, dest_mask,
-		       instantiator, domain));
-
 	unbind_to(speccount, Qnil);
 }
 
@@ -1575,7 +1597,8 @@ rawrgb_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	   stack frame is still valid. */
 	struct rawrgb_unwind_data unwind;
 	int speccount = specpdl_depth();
-	unsigned long width, height;
+	unsigned long width = 0, height = 0;
+	mem_struct.bytes = NULL;
 
 	xzero(unwind);
 	record_unwind_protect(rawrgb_instantiate_unwind,
@@ -1587,7 +1610,7 @@ rawrgb_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 							  Q_pixel_height);
 		Lisp_Object cols = find_keyword_in_vector(instantiator,
 							  Q_pixel_width);
-		Extbyte *bytes;
+		Extbyte *bytes = NULL;
 		Extcount len;
 
 		unsigned char *ep;
@@ -1603,26 +1626,29 @@ rawrgb_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 #endif  /* HAVE_FFI */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data,
 				   ALLOCA, (bytes, len), Qbinary);
-		mem_struct.bytes = bytes;
-		mem_struct.len = len;
-		mem_struct.index = 0;
+		if ( bytes != NULL ) {
+			mem_struct.bytes = bytes;
+			mem_struct.len = len;
+			mem_struct.index = 0;
 
-		width = XINT(cols);
-		height = XINT(rows);
+			width = XINT(cols);
+			height = XINT(rows);
 
-		unwind.eimage = xmalloc_atomic(len);
-		ep = unwind.eimage;
-		dp = (unsigned char*)bytes;
-		for ( ; dp < (unsigned char*)bytes+len; ep++, dp++)
-			*ep = *dp;
+			unwind.eimage = xmalloc_atomic(len);
+			ep = unwind.eimage;
+			dp = (unsigned char*)bytes;
+			for ( ; dp < (unsigned char*)bytes+len; ep++, dp++)
+				*ep = *dp;
+		}
 	}
 
-	/* now instantiate */
-	MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
-		      init_image_instance_from_eimage,
-		      (ii, width, height, 1, unwind.eimage, dest_mask,
-		       instantiator, domain));
-
+	if ( mem_struct.bytes != NULL ) {
+		/* now instantiate */
+		MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
+			      init_image_instance_from_eimage,
+			      (ii, width, height, 1, unwind.eimage, dest_mask,
+			       instantiator, domain));
+	}
 	unbind_to(speccount, Qnil);
 }
 static void
@@ -1637,8 +1663,9 @@ rawrgba_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	   stack frame is still valid. */
 	struct rawrgba_unwind_data unwind;
 	int speccount = specpdl_depth();
-	unsigned long width, height;
+	unsigned long width = 0, height = 0;
 
+	mem_struct.bytes = 0;
 	xzero(unwind);
 	record_unwind_protect(rawrgba_instantiate_unwind,
 			      make_opaque_ptr(&unwind));
@@ -1649,7 +1676,7 @@ rawrgba_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 							  Q_pixel_height);
 		Lisp_Object cols = find_keyword_in_vector(instantiator,
 							  Q_pixel_width);
-		Extbyte *bytes;
+		Extbyte *bytes = NULL;
 		Extcount len;
 
 		unsigned char *ep;
@@ -1665,26 +1692,29 @@ rawrgba_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 #endif  /* HAVE_FFI */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data,
 				   ALLOCA, (bytes, len), Qbinary);
-		mem_struct.bytes = bytes;
-		mem_struct.len = len;
-		mem_struct.index = 0;
+		if (bytes != NULL ) {
+			mem_struct.bytes = bytes;
+			mem_struct.len = len;
+			mem_struct.index = 0;
 
-		width = XINT(cols);
-		height = XINT(rows);
+			width = XINT(cols);
+			height = XINT(rows);
 
-		unwind.eimage = xmalloc_atomic(len);
-		for (ep = unwind.eimage, dp = (unsigned char*)bytes;
-		     dp < (unsigned char*)bytes+len; ep++, dp++) {
-			*ep = *dp;
+			unwind.eimage = xmalloc_atomic(len);
+			for (ep = unwind.eimage, dp = (unsigned char*)bytes;
+			     dp < (unsigned char*)bytes+len; ep++, dp++) {
+				*ep = *dp;
+			}
 		}
 	}
 
-	/* now instantiate */
-	MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
-		      init_image_instance_from_eimage,
-		      (ii, width, height, 1, unwind.eimage, dest_mask,
-		       instantiator, domain));
-
+	if ( mem_struct.bytes !=  NULL) {
+		/* now instantiate */
+		MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
+			      init_image_instance_from_eimage,
+			      (ii, width, height, 1, unwind.eimage, dest_mask,
+			       instantiator, domain));
+	}
 	unbind_to(speccount, Qnil);
 }
 #endif	/* 1 */

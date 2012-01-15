@@ -375,6 +375,7 @@ sound_esd_play(audio_job_t aj)
 				ESD_DEBUG_S("finished\n");
 				SXE_MUTEX_LOCK(&aj->mtx);
 				aj->play_state = MTPSTATE_STOP;
+				SXE_MUTEX_UNLOCK(&aj->mtx);
 				break;
 			}
 

@@ -494,7 +494,7 @@ This yields a plain list of symbols.
 
 
 #define ossl_digest_fun(var, fun)					\
-{									\
+do {									\
 	int __kl;							\
 	const EVP_MD *__md;						\
 									\
@@ -569,7 +569,7 @@ Return the block size of DIGEST in bytes.
 
 
 #define ossl_cipher_fun(var, fun)					\
-{									\
+do {									\
 	int __kl;							\
 	const EVP_CIPHER *__ciph;					\
 									\
@@ -3430,7 +3430,7 @@ init_ssl_io_handles(Lisp_SSL_CONN *s, int flags)
 
 /* Advanced step-by-step initialisation */
 #define OSSL_CHECK_PROCESS(process)					\
-{									\
+do {									\
 	/* Make sure the process is really alive.  */			\
 	if (!EQ(XPROCESS(process)->status_symbol, Qrun))		\
 		error("Network stream %s not alive",			\
