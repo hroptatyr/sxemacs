@@ -881,7 +881,13 @@ get_dyna_doc(FILE *infile, char **saved_string)
 	}
 	*saved_string = xmalloc(length);
 	for (i = 0; i < length; i++) {
-		(*saved_string)[i] = getc(infile);
+		c = getc(infile);
+		if ( c >= 0 )
+			(*saved_string)[i] = (char)(c & 0xFF);
+		else {
+			(*saved_string)[i] = '\0';
+			break;
+		}
 	}
 	/* The last character is a ^_.
 	 * That is needed in the .elc file
@@ -890,7 +896,7 @@ get_dyna_doc(FILE *infile, char **saved_string)
 
 	/* Skip the newline.  */
 	c = getc(infile);
-	while (c != '\n') {
+	while (c > 0 && c != '\n') {
 		c = getc(infile);
 	}
 	return c;
