@@ -1263,7 +1263,7 @@ tiff_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	TIFFSetWarningHandler((TIFFErrorHandler) tiff_warning_func);
 	{
 		Lisp_Object data = find_keyword_in_vector(instantiator, Q_data);
-		Extbyte *bytes;
+		Extbyte *bytes = NULL;
 		Extcount len;
 
 		uint32 *raster;
@@ -1281,70 +1281,80 @@ tiff_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		   stack data it might allocate.  Think about Lstreams... */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data,
 				   ALLOCA, (bytes, len), Qbinary);
-		mem_struct.bytes = bytes;
-		mem_struct.len = len;
-		mem_struct.index = 0;
-
-		unwind.tiff =
-		    TIFFClientOpen("memfile", "r", (thandle_t) & mem_struct,
-				   (TIFFReadWriteProc) tiff_memory_read,
-				   (TIFFReadWriteProc) tiff_memory_write,
-				   tiff_memory_seek, tiff_memory_close,
-				   tiff_memory_size, tiff_map_noop,
-				   tiff_unmap_noop);
-		if (!unwind.tiff)
+		if ( bytes == NULL ) {
 			signal_image_error
-			    ("Insufficient memory to instantiate TIFF image",
-			     instantiator);
+				("Unable to encode filename", instantiator);
+		}else {
+			mem_struct.bytes = bytes;
+			mem_struct.len = len;
+			mem_struct.index = 0;
 
-		TIFFGetField(unwind.tiff, TIFFTAG_IMAGEWIDTH, &width);
-		TIFFGetField(unwind.tiff, TIFFTAG_IMAGELENGTH, &height);
-		unwind.eimage = xmalloc_atomic(width * height * 3);
+			unwind.tiff =
+				TIFFClientOpen("memfile", "r", (thandle_t) & mem_struct,
+					       (TIFFReadWriteProc) tiff_memory_read,
+					       (TIFFReadWriteProc) tiff_memory_write,
+					       tiff_memory_seek, tiff_memory_close,
+					       tiff_memory_size, tiff_map_noop,
+					       tiff_unmap_noop);
+			if (!unwind.tiff)
+				signal_image_error
+					("Insufficient memory to instantiate TIFF image",
+					 instantiator);
 
-		/* #### This is little more than proof-of-concept/function testing.
-		   It needs to be reimplemented via scanline reads for both memory
-		   compactness. */
-		raster =
-		    (uint32 *) _TIFFmalloc(width * height * sizeof(uint32));
-		if (raster != NULL) {
-			int i, j;
-			uint32 *rp;
-			ep = unwind.eimage;
-			rp = raster;
-			if (TIFFReadRGBAImage
-			    (unwind.tiff, width, height, raster, 0)) {
-				for (i = height - 1; i >= 0; i--) {
-					/* This is to get around weirdness in the libtiff library where properly
-					   made TIFFs will come out upside down.  libtiff bug or jhod-brainlock? */
-					rp = raster + (i * width);
-					for (j = 0; (uint32) j < width; j++) {
-						*ep++ =
-						    (unsigned char)
-						    TIFFGetR(*rp);
-						*ep++ =
-						    (unsigned char)
-						    TIFFGetG(*rp);
-						*ep++ =
-						    (unsigned char)
-						    TIFFGetB(*rp);
-						rp++;
+			TIFFGetField(unwind.tiff, TIFFTAG_IMAGEWIDTH, &width);
+			TIFFGetField(unwind.tiff, TIFFTAG_IMAGELENGTH, &height);
+			unwind.eimage = xmalloc_atomic(width * height * 3);
+
+			/* #### This is little more than proof-of-concept/function testing.
+			   It needs to be reimplemented via scanline reads for both memory
+			   compactness. */
+			raster =
+				(uint32 *) _TIFFmalloc(width * height * sizeof(uint32));
+			if (raster != NULL) {
+				int i, j;
+				uint32 *rp;
+				ep = unwind.eimage;
+				rp = raster;
+				if (TIFFReadRGBAImage
+				    (unwind.tiff, width, height, raster, 0)) {
+					for (i = height - 1; i >= 0; i--) {
+						/* This is to get
+						   around weirdness in
+						   the libtiff library
+						   where properly made
+						   TIFFs will come out
+						   upside down.
+						   libtiff bug or
+						   jhod-brainlock? */
+						rp = raster + (i * width);
+						for (j = 0; (uint32) j < width; j++) {
+							*ep++ =
+								(unsigned char)
+								TIFFGetR(*rp);
+							*ep++ =
+								(unsigned char)
+								TIFFGetG(*rp);
+							*ep++ =
+								(unsigned char)
+								TIFFGetB(*rp);
+							rp++;
+						}
 					}
 				}
-			}
-			_TIFFfree(raster);
-		} else
-			signal_image_error
-			    ("Unable to allocate memory for TIFFReadRGBA",
-			     instantiator);
+				_TIFFfree(raster);
+			} else
+				signal_image_error
+					("Unable to allocate memory for TIFFReadRGBA",
+					 instantiator);
 
+		}
+
+		/* now instantiate */
+		MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
+			      init_image_instance_from_eimage,
+			      (ii, width, height, 1, unwind.eimage, dest_mask,
+			       instantiator, domain));
 	}
-
-	/* now instantiate */
-	MAYBE_DEVMETH(DOMAIN_XDEVICE(ii->domain),
-		      init_image_instance_from_eimage,
-		      (ii, width, height, 1, unwind.eimage, dest_mask,
-		       instantiator, domain));
-
 	unbind_to(speccount, Qnil);
 }
 
