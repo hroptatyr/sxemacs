@@ -287,8 +287,8 @@ extern Lisp_Object ase_wheap_to_dllist(ase_wheap_t);
 
 
 /* dyna heaps */
-extern inline ase_yheap_t _ase_make_yheap(ase_heap_options_t opts);
-extern inline Lisp_Object _ase_wrap_yheap(ase_yheap_t);
+static inline ase_yheap_t _ase_make_yheap(ase_heap_options_t opts);
+static inline Lisp_Object _ase_wrap_yheap(ase_yheap_t);
 extern Lisp_Object ase_make_yheap(ase_heap_options_t opts);
 extern void ase_add_yheap(ase_yheap_t h, Lisp_Object o, Lisp_Object colour);
 extern Lisp_Object ase_pop_yheap(ase_yheap_t h);
@@ -296,8 +296,8 @@ extern Lisp_Object ase_yheap_top(ase_yheap_t h);
 extern Lisp_Object ase_yheap_top_rank(ase_yheap_t h);
 
 /* dense heaps */
-extern inline ase_dheap_t _ase_make_dheap(ase_heap_options_t opts);
-extern inline Lisp_Object _ase_wrap_dheap(ase_dheap_t);
+static inline ase_dheap_t _ase_make_dheap(ase_heap_options_t opts);
+static inline Lisp_Object _ase_wrap_dheap(ase_dheap_t);
 extern Lisp_Object ase_make_dheap(ase_heap_options_t opts);
 extern void ase_add_dheap(ase_dheap_t h, Lisp_Object o, Lisp_Object colour);
 extern Lisp_Object ase_pop_dheap(ase_dheap_t h);
@@ -305,8 +305,8 @@ extern Lisp_Object ase_dheap_top(ase_dheap_t h);
 extern Lisp_Object ase_dheap_top_rank(ase_dheap_t h);
 
 /* weak heaps */
-extern inline ase_wheap_t _ase_make_wheap(ase_heap_options_t opts);
-extern inline Lisp_Object _ase_wrap_wheap(ase_wheap_t);
+static inline ase_wheap_t _ase_make_wheap(ase_heap_options_t opts);
+static inline Lisp_Object _ase_wrap_wheap(ase_wheap_t);
 extern Lisp_Object ase_make_wheap(ase_heap_options_t opts);
 extern void ase_add_wheap(ase_wheap_t h, Lisp_Object o, Lisp_Object colour);
 extern Lisp_Object ase_pop_wheap(ase_wheap_t h);

@@ -116,16 +116,16 @@
       ;; feed l
       (mapc-internal #'(lambda (e) (ase-add-heap h e)) l)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-list h) l))
+      (Assert-Equal (ase-heap-to-list h) l)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-list* h) l))
+      (Assert-Equal (ase-heap-to-list* h) l)
       (Assert (= (ase-heap-size h) 0))
       ;; feed k
       (mapc-internal #'(lambda (e) (ase-add-heap h e)) k)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-list h) l))
+      (Assert-Equal (ase-heap-to-list h) l)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-list* h) l))
+      (Assert-Equal (ase-heap-to-list* h) l)
       (Assert (= (ase-heap-size h) 0)))
 
     (let* ((l '(8 7 6 5 4 3 2 1))
@@ -134,16 +134,16 @@
       ;; feed l
       (mapc-internal #'(lambda (e) (ase-add-heap h e)) l)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-vector h) v))
+      (Assert-Equal (ase-heap-to-vector h) v)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-vector* h) v))
+      (Assert-Equal (ase-heap-to-vector* h) v)
       (Assert (= (ase-heap-size h) 0))
       ;; feed k
       (mapc-internal #'(lambda (e) (ase-add-heap h e)) k)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-vector h) v))
+      (Assert-Equal (ase-heap-to-vector h) v)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-vector* h) v))
+      (Assert-Equal (ase-heap-to-vector* h) v)
       (Assert (= (ase-heap-size h) 0)))
 
     (let* ((l '(8 7 6 5 4 3 2 1))
@@ -152,16 +152,16 @@
       ;; feed l
       (mapc-internal #'(lambda (e) (ase-add-heap h e)) l)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-dllist h) d))
+      (Assert-Equal (ase-heap-to-dllist h) d)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-dllist* h) d))
+      (Assert-Equal (ase-heap-to-dllist* h) d)
       (Assert (= (ase-heap-size h) 0))
       ;; feed k
       (mapc-internal #'(lambda (e) (ase-add-heap h e)) k)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-dllist h) d))
+      (Assert-Equal (ase-heap-to-dllist h) d)
       (Assert (= (ase-heap-size h) 8))
-      (Assert (equal (ase-heap-to-dllist* h) d))
+      (Assert-Equal (ase-heap-to-dllist* h) d)
       (Assert (= (ase-heap-size h) 0))))
 
   ;;; testing coloured heaps

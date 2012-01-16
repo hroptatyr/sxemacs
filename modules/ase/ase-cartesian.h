@@ -167,27 +167,27 @@ struct ase_cartesian_s {
 extern Lisp_Object ase_make_cartesian(int nargs, Lisp_Object *args, int interiorp);
 extern Lisp_Object _ase_wrap_cartesian(ase_cartesian_t);
 extern Lisp_Object _ase_wrap_cartesian_interior(ase_cartesian_t);
-extern inline int
+static inline int
 ase_cartesian_pointwise_pred_p(ase_cartesian_t, int(*)(Lisp_Object));
-extern inline Lisp_Object
+static inline Lisp_Object
 ase_cartesian_pointwise_erel_p(
 	ase_cartesian_t, ase_cartesian_t, ase_element_relation_f);
-extern inline int
+static inline int
 ase_cartesian_pointwise_rel_p(
 	ase_cartesian_t, ase_cartesian_t, ase_relation_f);
-extern inline int
+static inline int
 ase_cartesian_antipointwise_rel_p(
 	ase_cartesian_t, ase_cartesian_t, ase_relation_f);
-extern inline ase_cartesian_t
+static inline ase_cartesian_t
 	_ase_make_cartesian(int nargs, Lisp_Object*, int interiorp);
-extern inline Lisp_Object*
+static inline Lisp_Object*
 __ase_vectorise(int nargs, Lisp_Object *o);
 
 
 /* for predicates this is a more intuitive function
  * it applies PREDFUN to every point in C and returns non-0 iff
  * all points met PREDFUN and 0 otherwise */
-extern inline int
+static inline int
 ase_cartesian_pointwise_pred_p(ase_cartesian_t c, int(*predfun)(Lisp_Object))
 {
 	/* Apply PREDFUN to every point in C and returns non-0 iff
@@ -202,7 +202,7 @@ ase_cartesian_pointwise_pred_p(ase_cartesian_t c, int(*predfun)(Lisp_Object))
 	return 1;
 }
 
-extern inline Lisp_Object
+static inline Lisp_Object
 ase_cartesian_pointwise_erel_p(
 	ase_cartesian_t c1, ase_cartesian_t c2, ase_element_relation_f relf)
 {
@@ -219,7 +219,7 @@ ase_cartesian_pointwise_erel_p(
 	return Qt;
 }
 
-extern inline int
+static inline int
 ase_cartesian_pointwise_rel_p(
 	ase_cartesian_t c1, ase_cartesian_t c2, ase_relation_f relf)
 {
@@ -237,7 +237,7 @@ ase_cartesian_pointwise_rel_p(
 	return 1;
 }
 
-extern inline int
+static inline int
 ase_cartesian_antipointwise_rel_p(
 	ase_cartesian_t c1, ase_cartesian_t c2, ase_relation_f relf)
 {
@@ -256,7 +256,7 @@ ase_cartesian_antipointwise_rel_p(
 
 
 /* constructors */
-extern inline Lisp_Object*
+static inline Lisp_Object*
 __ase_vectorise(int nargs, Lisp_Object *o)
 {
 	Lisp_Object *result = NULL;
@@ -269,7 +269,7 @@ __ase_vectorise(int nargs, Lisp_Object *o)
 	return result;
 }
 
-extern inline ase_cartesian_t
+static inline ase_cartesian_t
 _ase_make_cartesian(int nargs, Lisp_Object *o, int interiorp)
 {
 	ase_cartesian_t n = NULL;

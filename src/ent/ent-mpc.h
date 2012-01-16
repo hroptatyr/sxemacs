@@ -90,7 +90,7 @@ extern bigc ent_scratch_bigc;
 
 
 /***** Bigc: basic functions *****/
-#if HAVE_MPC_INIT
+#if defined(HAVE_MPC_INIT) && HAVE_MPC_INIT
 #define bigc_init(f)                mpc_init(f)
 #else
 #define bigc_init(f)                mpc_init2((f),internal_get_precision(Qnil))

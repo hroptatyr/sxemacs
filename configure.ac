@@ -482,30 +482,26 @@ OG_ARG_WITH([external-widget],
 OG_ARG_WITH([menubars],
 	AS_HELP_STRING([--with-menubars=TYPE],
  		[Type of menubars to use.  The Lucid menubars emulate
- 		Motif (mostly) but are faster.
-		*WARNING*  The gtk menubar is gtk-1.2 only and unmaintained.]),
-	[lucid], [Lucid], [lucid gtk no])
+ 		Motif (mostly) but are faster.]),
+	[lucid], [Lucid], [lucid no])
 
 OG_ARG_WITH([scrollbars],
 	AS_HELP_STRING([--with-scrollbars=TYPE],
  		[Type of scrollbars to use.
- 		*WARNING*  The Motif scrollbars are currently broken.
-		*WARNING*  The gtk scrollbars are gtk-1.2 only and unmaintained.]),
-	[lucid], [Lucid], [lucid motif athena gtk no])
+ 		*WARNING*  The Motif scrollbars are currently broken.]),
+	[lucid], [Lucid], [lucid motif athena no])
 
 OG_ARG_WITH([dialogs],
 	AS_HELP_STRING([--with-dialogs=TYPE],
  		[Type of dialog boxes to use.  Athena dialogs will
-                 be used if Athena can be found.
-		 *WARNING*  The gtk dialogs are gtk-1.2 only and unmaintained.]),
- 	[athena], [], [athena motif gtk no])
+                 be used if Athena can be found.]),
+ 	[athena], [], [athena motif no])
 
 OG_ARG_WITH([widgets],
 	AS_HELP_STRING([--with-widgets=TYPE],
  		[Type of native widgets to use.  Athena widgets will
- 		be used if Athena can be found.
-		*WARNING*  The gtk widgets are gtk-1.2 only and unmaintained.]),
-	[athena], [], [athena motif gtk no])
+ 		be used if Athena can be found.]),
+	[athena], [], [athena motif no])
 
 OG_ARG_WITH([athena],
 	AS_HELP_STRING([--with-athena=TYPE],
@@ -516,18 +512,6 @@ OG_ARG_WITH([xim],
 	AS_HELP_STRING([--with-xim],
  		[Type of Mule input method to use.]),
 	[auto], [Autodetect], [yes no xlib motif])
-
-OG_ARG_WITH([gtk],
-	AS_HELP_STRING([--with-gtk],
-		[Support GTK (version 1.x) on the X Window System.
-		(EXPERIMENTAL)]),
-	[no], [NO])
-
-OG_ARG_WITH([gnome],
-	AS_HELP_STRING([--with-gnome],
-		[Support GNOME (version 1.x) on the X Window System.
-		(EXPERIMENTAL)]),
-	[no], [NO])
 
 OG_ARG_WITH([wmcommand],
 	AS_HELP_STRING([--with-wmcommand],
@@ -876,6 +860,8 @@ AS_MESSAGE([Let's look for the entire C build chain])
 SXE_CHECK_CC
 SXE_CHECK_CFLAGS
 
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+
 ## check machine chars
 AS_MESSAGE([Let's have a detailed glance at your machine])
 SXE_PROC_CPUID
@@ -1138,7 +1124,7 @@ SXE_DO_CC_HACKS
 SXE_CHECK_SIMD_EXTENSIONS
 
 ## some linker flags that might come in handy
-SXE_CHECK_LINKER_FLAGS
+SXE_CHECK_LDFLAGS
 
 ## suffices to be defined late, for instance here
 SXE_CHECK_PARSER_LEXER
@@ -1151,7 +1137,7 @@ if test "$with_pdump" != "yes"; then
 	## enough.  Please report it, though.
 	## #### Should make this Solaris-friendly.
 	## Link with -z nocombreloc for now.
-	SXE_CHECK_LD_NOCOMBRELOC
+	SXE_CHECK_LD_ZFLAG([nocombreloc])
 	if test "$sxe_cv_ld__z_nocombreloc" = "yes"; then
 		SXE_PREPEND_LINKER_FLAG([-z nocombreloc], [ld_switch_site])
 	fi
@@ -1609,23 +1595,18 @@ dnl special pthread handling
 dnl AIX uses pthreads instead of pthread, and HP/UX uses cma
 dnl FreeBSD uses -pthread
 AC_CHECK_LIB(pthread, pthread_create)
-if test $ac_cv_lib_pthread_pthread_create = yes; then
-  have_threads=yes
-  have_pthreads_opt=yes
-  case "`$CC -pthreads 2>&1`" in
-      *unrecognized\ option*) have_pthreads_opt=no ;;
-  esac
-  if test "$have_pthreads_opt" = "yes"; then
-	SXE_PREPEND_UNDUP(-pthreads, c_switch_site)
-  fi
-  have_pthread_opt=yes
-  case "`$CC -pthread 2>&1`" in
-     *unrecognized\ option*) have_pthread_opt=no ;;
-  esac
-  if test "$have_pthread_opt" = "yes"; then
-	SXE_PREPEND_UNDUP(-pthread, c_switch_site)
-  fi
-  SXE_PREPEND(-lpthread, MM_LIBS)
+if test "${ac_cv_lib_pthread_pthread_create}" = "yes"; then
+	have_threads=yes
+
+	SXE_CHECK_COMPILER_FLAGS([-pthreads])
+	SXE_CHECK_COMPILER_FLAGS([-pthread])
+	if test "${sxe_cv_c_flags__pthreads}" = "yes"; then
+		SXE_PREPEND_UNDUP([-pthreads], [c_switch_site])
+	fi
+	if test "${sxe_cv_c_flags__pthread}" = "yes"; then
+		SXE_PREPEND_UNDUP([-pthread], [c_switch_site])
+	fi
+	SXE_PREPEND([-lpthread], [MM_LIBS])
 fi
 
 dnl test for AIX pthreads
@@ -2230,131 +2211,6 @@ dnl ----------------------
 
 AS_MESSAGE([checking for specified window system])
 
-dnl Autodetection of Gdk libraries and includes
-dnl -------------------------------------------
-dnl On some systems (FreeBSD springs to mind), they use
-dnl versions on the utility routines, so instead of gtk-config
-dnl you must use gtk12-config, etc, etc.
-
-GNOME_CONFIG=no
-GTK_CONFIG=no
-
-if test "$with_gnome" != "no"; then
-   AC_MSG_CHECKING(for GNOME configuration script)
-   for possible in gnome-config
-   do
-      possible_version=`${possible} --version 2> /dev/null`
-      if test "x${possible_version}" != "x"; then
-              GNOME_CONFIG="${possible}"
-              with_gnome=yes
-              with_gtk=yes
-              break
-      fi
-   done
-   AC_MSG_RESULT([${GNOME_CONFIG}])
-fi
-
-if test "${GNOME_CONFIG}" != "no"; then
-      GNOME_LIBS=`${GNOME_CONFIG} --libs gnomeui`
-      GNOME_CFLAGS=`${GNOME_CONFIG} --cflags gnomeui`
-      AC_DEFINE([HAVE_GNOME], [1], [Description here!])
-      SXE_APPEND(${GNOME_LIBS}, libs_gtk)
-      SXE_APPEND_UNDUP(${GNOME_CFLAGS}, c_switch_gtk)
-fi
-
-if test "$with_gtk" != "no";then
-   AC_MSG_CHECKING(for GTK configuration script)
-   for possible in gtk12-config gtk14-config gtk-config
-   do
-      possible_version=`${possible} --version 2> /dev/null`
-      if test "x${possible_version}" != "x"; then
-              GTK_CONFIG="${possible}"
-	      case "${possible_version}" in
-        	1.0.*) AC_MSG_WARN([GTK 1.2 is required, please upgrade your version of GTK.]); with_gtk=no;;
-	        1.3.*) AC_MSG_WARN([GTK 1.3 is not supported right now]); with_gtk=no;;
-		1.2.*)
-			with_gtk=yes
-			break
-			;;
-	        *)     AC_MSG_WARN([Found unsupported version of GTK: $possible_version]);;
-	      esac
-      fi
-   done
-   AC_MSG_RESULT([${GTK_CONFIG}])
-fi
-
-if test "${GTK_CONFIG}" != "no"; then
-      AC_MSG_CHECKING(gtk version)
-      GTK_VERSION=`${GTK_CONFIG} --version`
-      AC_MSG_RESULT(${GTK_VERSION})
-
-      AC_MSG_CHECKING(gtk libs)
-      GTK_LIBS=`${GTK_CONFIG} --libs`
-      SXE_APPEND(${GTK_LIBS}, libs_gtk)
-      AC_MSG_RESULT(${GTK_LIBS})
-
-      AC_MSG_CHECKING(gtk cflags)
-      GTK_CFLAGS=`${GTK_CONFIG} --cflags`
-      if test "$GCC" = "yes"; then
-      	GTK_CFLAGS="${GTK_CFLAGS} -Wno-shadow"
-      fi
-      SXE_APPEND_UNDUP(${GTK_CFLAGS}, c_switch_gtk)
-      AC_MSG_RESULT(${GTK_CFLAGS})
-
-      AC_CHECK_LIB(gdk_imlib, main, SXE_PREPEND(-lgdk_imlib, libs_gtk))
-      AC_CHECK_LIB(Imlib, Imlib_init, SXE_APPEND(-lImlib, libs_gtk))
-      AC_CHECK_FUNCS(gdk_imlib_init)
-
-      AC_DEFINE([HAVE_XPM], [1], [Description here!])
-      AC_DEFINE([HAVE_GTK], [1], [Description here!])
-      AC_SUBST(GTK_CONFIG)
-
-      window_system=gtk
-      with_gtk=yes
-      if test "$with_x11" != "no"; then
-	AC_MSG_WARN([Configuring Gtk, this means:
-*** --with-athena  will have no effect
-*** --with-scrollbars  has been turned into a boolean option
-*** --with-menubars  has been turned into a boolean option
-*** --with-dialogs  has been turned into a boolean option
-*** --with-widgets  has been turned into a boolean option.])
-	with_x11=no
-      fi
-
-      test "${with_scrollbars}" != "no" && with_scrollbars=gtk
-      test "${with_toolbars}" != "no" && with_toolbars=gtk
-      test "${with_menubars}" != "no" && with_menubars=gtk
-      test "${with_dialogs}" != "no" && with_dialogs=gtk
-      test "${with_widgets}" != "no" && with_widgets=gtk
-
-      SXE_ADD_SXEUIGTK_OBJS(console-gtk.o device-gtk.o event-gtk.o frame-gtk.o)
-      SXE_ADD_SXEUIGTK_OBJS(objects-gtk.o redisplay-gtk.o glyphs-gtk.o)
-      SXE_ADD_SXEUIGTK_OBJS(select-gtk.o gccache-gtk.o)
-      SXE_ADD_SXEUIGTK_OBJS(gtk-xemacs.o ui-gtk.o)
-
-      dnl Check for libglade support (it rocks)
-      OLD_CFLAGS="${CFLAGS}"
-      OLD_CPPFLAGS="${CPPFLAGS}"
-      OLD_LDFLAGS="${LDFLAGS}"
-      CFLAGS="${GTK_CFLAGS} ${CFLAGS}"
-      CPPFLAGS="${GTK_CFLAGS} ${CFLAGS}"
-      LDFLAGS="${LDFLAGS} ${GTK_LIBS}"
-      AC_CHECK_HEADERS(glade/glade.h glade.h)
-      AC_CHECK_LIB(xml, main, SXE_PREPEND(-lxml, libs_gtk))
-      AC_CHECK_LIB(glade, main, SXE_PREPEND(-lglade, libs_gtk))
-      AC_CHECK_LIB(glade-gnome, main, SXE_PREPEND(-lglade-gnome, libs_gtk))
-      AC_EGREP_HEADER([char \*txtdomain;], [glade/glade-xml.h],
-                      [AC_MSG_RESULT(yes)
-                       AC_DEFINE([LIBGLADE_XML_TXTDOMAIN], [1], [Description here!])],
-                      [AC_MSG_RESULT(no)])
-      CFLAGS="${OLD_CFLAGS}"
-      CPPFLAGS="${OLD_CPPFLAGS}"
-      LDFLAGS="${OLD_LDFLAGS}"
-fi
-
-dnl We may eventually prefer gtk/gdk over vanilla X11...
-dnl Are we mad? We need stuff from the X11 even _with_ gtk!!!
-
 if test "$with_x" != "no"; then
 	if test "$with_x11" != "no"; then
 		dnl User-specified --x-includes or --x-libraries implies --with-x11.
@@ -2415,9 +2271,6 @@ if test "$with_x" != "no"; then
 	fi
 
 	AC_PATH_XTRA
-	## Autoconf claims to find X library and include dirs for us.
-	## dnl encapsulate that, such that Xaw and motif is not used when gtk is
-	## in effect
 	if test "$with_x11" != "no"; then
 		if test "$no_x" = "yes"; then
 			with_x11=no
@@ -2729,11 +2582,6 @@ bitmapdir=
 
 case "$window_system" in
   x11  ) HAVE_X_WINDOWS=yes; echo "  Using X11." ;;
-  gtk  )
-       HAVE_X_WINDOWS=no
-       test "$with_gnome" = "yes" && echo "  Using GNOME."
-       test "$with_gnome" = "no" && echo "  Using GTK."
-       ;;
   none ) HAVE_X_WINDOWS=no ; echo "  Using no window system." ;;
 esac
 
@@ -2763,26 +2611,10 @@ AC_CHECK_HEADER([X11/Xauth.h], [:], [with_xauth=no])
 AC_CHECK_LIB([Xau], [XauGetAuthByAddr], [:], [with_xauth=no])
 if test "$with_xauth" = "yes"; then
   AC_DEFINE([HAVE_XAUTH], [1], [Description here!])
-  SXE_CONSECUTIVE_UNDUP([libs_xauth], [$GTK_LIBS $X_EXTRA_LIBS -lXau $libs_x $X_PRE_LIBS])
+  SXE_CONSECUTIVE_UNDUP([libs_xauth], [$X_EXTRA_LIBS -lXau $libs_x $X_PRE_LIBS])
 fi
 SXE_RESTORE_LIBS
 AC_SUBST(libs_xauth)
-
-dnl ----------------------
-dnl GTK-Specific Graphics libraries
-dnl ----------------------
-
-if test "$with_gtk" = "yes"; then
-	dnl Autodetect XFACE
-	have_image_xface=yes
-	AC_CHECK_HEADER([compface.h], [], [have_image_xface=no])
-	AC_CHECK_LIB([compface], [UnGenFace], [:], [have_image_xface=no])
-	if test "$have_image_xface" = "yes"; then
-		AC_DEFINE([HAVE_XFACE], [1], [Description here!])
-		SXE_PREPEND(-lcompface, libs_gtk)
-	fi
-fi
-
 
 dnl ----------------------
 dnl X-Specific Graphics libraries
@@ -2813,8 +2645,6 @@ dnl ----------------------
 if test "$with_x11" = "yes" -a "$with_x" != "no"; then
 	SXE_CHECK_XTOOLKITS
 	SXE_CHECK_XT_DEPENDENCIES
-elif test "$with_gtk" = "yes" -o "$with_gnome" = "yes"; then
-	SXE_CHECK_GTK_DEPENDENCIES
 else
 	with_menubars=no
 	with_scrollbars=no
@@ -2845,9 +2675,6 @@ if test "$with_offix" = "yes"; then
   AC_DEFINE([HAVE_OFFIX_DND], [1], [Description here!])
   SXE_APPEND(offix.o, dnd_objs)
   SXE_APPEND(OffiX, dragndrop_proto)
-fi
-if test "$with_gtk" = "yes"; then
-   SXE_APPEND(GTK, dragndrop_proto)
 fi
 
 
@@ -3260,7 +3087,8 @@ if test "$with_sound_esd" != "no"; then
 		AC_MSG_RESULT([yes])
 		need_internal_media=yes
 		SXE_ADD_MM_OBJS([sound-esd.o])
-		SXE_PREPEND([`$ESD_CONFIG --libs`], MM_LIBS)
+		ESD_LIBS=$("${ESD_CONFIG}" --libs)
+		SXE_PREPEND(["${ESD_LIBS}"], [MM_LIBS])
 		AC_DEFINE([HAVE_ESD_SOUND], [1], [Description here!])
 	else
 		AC_MSG_RESULT([no])
@@ -3617,7 +3445,7 @@ fi
 
 SXE_UNDUP(CFLAGS, $CFLAGS)
 SXE_UNDUP(c_switch_general, -DHAVE_CONFIG_H $c_switch_site $c_switch_machine $c_switch_system $CFLAGS $CPPFLAGS)
-SXE_UNDUP(c_switch_window_system, $c_switch_x_site $c_switch_gtk $X_CFLAGS)
+SXE_UNDUP(c_switch_window_system, $c_switch_x_site $X_CFLAGS)
 SXE_UNDUP(c_switch_all, $c_switch_general $c_switch_window_system)
 SXE_UNDUP(ld_switch_general, $ld_switch_site $ld_switch_machine $ld_switch_system $ld_switch_run)
 SXE_UNDUP(ld_switch_window_system, $ld_switch_x_site)
@@ -3625,7 +3453,7 @@ SXE_UNDUP(ld_switch_all, $ld_switch_general $ld_switch_window_system)
 dnl Since some systems need libs to be restated later, we can't just dedup, we can only safely dedup
 dnl consecutive occurrences
 SXE_CONSECUTIVE_UNDUP(ld_libs_general, $LIBS $libs_machine $libs_system $libs_standard)
-SXE_CONSECUTIVE_UNDUP(ld_libs_window_system, $X_EXTRA_LIBS $libs_x $libs_gtk $X_PRE_LIBS)
+SXE_CONSECUTIVE_UNDUP(ld_libs_window_system, $X_EXTRA_LIBS $libs_x $X_PRE_LIBS)
 SXE_CONSECUTIVE_UNDUP(ld_libs_all, $OPENSSL_LIBS $DB_LIBS $ENT_LIBS $MM_LIBS $ld_libs_window_system $ld_libs_general $ld_libs_module)
 
 dnl For no-module builds, make the src dir last
@@ -4231,7 +4059,6 @@ AC_CONFIG_FILES([src/ui/Makefile])
 AC_CONFIG_FILES([src/ui/TTY/Makefile])
 AC_CONFIG_FILES([src/ui/lwlib/Makefile])
 AC_CONFIG_FILES([src/ui/X11/Makefile])
-AC_CONFIG_FILES([src/ui/Gtk/Makefile])
 AC_CONFIG_FILES([src/events/Makefile])
 AC_CONFIG_FILES([src/ent/Makefile])
 AC_CONFIG_FILES([src/media/Makefile])

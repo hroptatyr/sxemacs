@@ -36,7 +36,7 @@ abs_top_srcdir = @abs_top_srcdir@
 
 AM_CFLAGS = -Demacs $(OPENSSL_CFLAGS) -DUSE_SXEMACS_CONFIG_H -DXTSTRINGDEFINES
 AM_CPPFLAGS = -I$(srcdir) -I$(builddir) -I$(top_builddir) $(c_switch_general) $(LTDLINCL)
-AM_LDFLAGS = $(OPENSSL_LDFLAGS) $(ENT_LDFLAGS) $(LIBLTDL)
+AM_LDFLAGS = $(OPENSSL_LDFLAGS) $(ENT_LDFLAGS) $(LIBLTDL) $(XCCLDFLAGS)
 
 headerdir = $(includedir)/$(instvarsepdir)
 sheaderdir = $(headerdir)/s
@@ -76,11 +76,6 @@ pdump_ldadd      += $(libsxecore_a_ldflags)
 
 # Inverse order of dependency for order dependendant
 # linkers...
-
-if NEED_LIBSXEUIGTK
-pdumplibs += $(builddir)/ui/Gtk/libsxeuiGtk.a 
-# sxe_subdirs += ui
-endif
 
 if NEED_LIBSXEUIX11
 pdumplibs += $(builddir)/ui/X11/libsxeuiX11.a 
@@ -223,7 +218,7 @@ libsxecore_a_sources =							\
 	strftime.c symbols.c syntax.c sysdep.c undo.c
 libsxecore_a_SOURCES = $(libsxecore_a_headers) $(libsxecore_a_sources)
 EXTRA_libsxecore_a_SOURCES = dumper.c realpath.c
-libsxecore_a_CPPFLAGS = $(AM_CPPFLAGS) 
+libsxecore_a_CPPFLAGS = $(AM_CPPFLAGS) $(X_CFLAGS)
 libsxecore_a_LIBADD = $(libsxecore_objs)
 libsxecore_a_DEPENDENCIES = $(libsxecore_a_LIBADD)
 all_sources += $(libsxecore_a_sources) $(libsxecore_objs:.o=.c)
@@ -235,7 +230,7 @@ EXTRA_libcruft_a_SOURCES =						\
 	alloca.c debug.c effi.c emodules-ng.c				\
 	filelock.c getloadavg.c inline.c openssl.c strcat.c tests.c
 libcruft_a_CPPFLAGS = 							\
-	$(AM_CPPFLAGS) $(DB_CPPFLAGS) $(FFI_CPPFLAGS) 
+	$(AM_CPPFLAGS) $(DB_CPPFLAGS) $(FFI_CPPFLAGS) $(X_CFLAGS)
 libcruft_a_LIBADD = $(libcruft_objs)
 libcruft_a_DEPENDENCIES = $(libcruft_a_LIBADD)
 all_sources += $(libcruft_a_sources) $(extra_objs:.o=.c)
@@ -247,9 +242,10 @@ AALFILE = $(bldlispdir)/auto-autoloads.el
 AALCFILE = $(bldlispdir)/auto-autoloads.elc
 BITCH = $(SXEMACS) -batch
 SXE_DYLD_PATH = $(bldsrcdir):$(bldsrcdir)/$(LT_OBJDIR):$(bldlwlibdir):$(bldlwlibdir)/$(LT_OBJDIR):$(DESTDIR)$(libdir)
-BITCHENV = DYLD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$DYLD_LIBRARY_PATH:$(DYLD_LIBRARY_PATH) \
+BATCHENV = DYLD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$DYLD_LIBRARY_PATH:$(DYLD_LIBRARY_PATH) \
 	LD_LIBRARY_PATH=$(SXE_DYLD_PATH):$$LD_LIBRARY_PATH:$(LD_LIBRARY_PATH) \
-	SHLIB_PATH=$(SXE_DYLD_PATH):$$SHLIB_PATH:$(SHLIB_PATH) \
+	SHLIB_PATH=$(SXE_DYLD_PATH):$$SHLIB_PATH:$(SHLIB_PATH)
+BITCHENV = $(BATCHENV) \
 	EMACSDEBUGPATHS=1 EMACSPACKAGEPATH= \
 	SOURCE_TREE_ROOT=$(sxe_srcdir) \
 	BUILD_TREE_ROOT=$(sxe_blddir)
@@ -339,6 +335,7 @@ sxemacs.dmp: $(SXEMACS) $(archlib_DATA) $(bldlispdir)/update-elc.stamp
 			(cd $(LT_OBJDIR); \
 			$(LN_S) -f ../$@ $@); \
 		fi; \
+		$(BATCHENV) \
 		SOURCE_TREE_ROOT= BUILD_TREE_ROOT= \
 			$(BITCH) -f list-load-path-shadows; \
 	fi

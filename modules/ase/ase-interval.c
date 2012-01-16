@@ -1376,13 +1376,12 @@ static ase_cartesian_t
 _ase_unite_intervals_intr(ase_cartesian_t c1, ase_cartesian_t c2)
 {
 	int hypidx, hypplaneeqp = 0;
-	int i, dim = ase_cartesian_dimension(c1);
+	int i, dim;
 
 	if (c1 == NULL)
 		return c2;
 	if (c2 == NULL)
 		return c1;
-
 	if (!NILP(_ase_interval_interior_contains_intr_p(c1, c2))) {
 		/* cartesians lack ref counters atm, hence we cant do: */
 		return c1;
@@ -1391,6 +1390,7 @@ _ase_unite_intervals_intr(ase_cartesian_t c1, ase_cartesian_t c2)
 		return c2;
 	}
 
+	dim = ase_cartesian_dimension(c1);
 	for (hypidx = 0; hypidx < dim; hypidx++) {
 		/* we build the hyperplane of the interval by
 		 * omitting the hypidx-th dimension in the next loop */

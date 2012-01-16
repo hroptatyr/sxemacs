@@ -103,6 +103,8 @@ FILE *termscript;		/* Stdio stream being used for copy of all output.  */
 
 int stdout_needs_newline;
 
+void debug_backtrace(void);
+
 static void
 std_handle_out_external(FILE * stream, Lisp_Object lstream,
 			const Extbyte * extptr, Extcount extlen,
@@ -144,7 +146,7 @@ std_handle_out_external(FILE * stream, Lisp_Object lstream,
 			size *= 2;					\
 			XMALLOC_OR_ALLOCA(buf,size,type);		\
 			ret = 0;					\
-		} else if ( ret > size ) {				\
+		} else if ( (size_t)ret > (size_t)size ) {		\
 		    /* We need more space, so we need to allocate it */ \
 			XMALLOC_UNBIND(buf,size,spec);			\
 			size = ret + 1;					\
@@ -342,16 +344,21 @@ write_string_to_stdio_stream(FILE * stream, struct console *con,
 		}
 	}
 
+	
 	if (stream) {
 		std_handle_out_external(stream, Qnil, extptr, extlen,
 					stream == stdout
 					|| stream == stderr, must_flush);
-	} else {
+	} else if(con != NULL) {
 		assert(CONSOLE_TTY_P(con));
 		std_handle_out_external(0, CONSOLE_TTY_DATA(con)->outstream,
 					extptr, extlen,
 					CONSOLE_TTY_DATA(con)->is_stdio,
 					must_flush);
+	} else {
+		error("Error attempting to write write '%s' with no stream nor console", str);
+		debug_backtrace();
+		abort();
 	}
 }
 
@@ -565,7 +572,7 @@ void write_hex_ptr(void* value, Lisp_Object stream)
 {
 	char buf[sizeof(value)*2+1];
 	int n = snprintf(buf,sizeof(buf),"0x%p",value);
-	assert(n>=0 && n<sizeof(buf));
+	assert(n>=0 && (size_t)n<sizeof(buf));
 	write_c_string(buf,stream);
 }
 
@@ -1272,7 +1279,7 @@ printing_major_badness(Lisp_Object printcharfun,
 			       badness_string, badness);
 		break;
 	}
-	assert(len >= 0 && len < sizeof(buf));
+	assert(len >= 0 && (size_t)len < sizeof(buf));
 
 	/* Don't abort or signal if called from debug_print() or already
 	   crashing */
@@ -1731,8 +1738,8 @@ the output also will be logged to this file.
 */
       (char_or_string, stdout_p, device))
 {
-	FILE *file = 0;
-	struct console *con = 0;
+	FILE *file = NULL;
+	struct console *con = NULL;
 
 	if (NILP(device)) {
 		if (!NILP(stdout_p))
@@ -1848,7 +1855,6 @@ void debug_print(Lisp_Object debug_print_obj)
 
 /* Debugging kludge -- unbuffered */
 /* This function provided for the benefit of the debugger.  */
-void debug_backtrace(void);
 void debug_backtrace(void)
 {
 	/* This function can GC */

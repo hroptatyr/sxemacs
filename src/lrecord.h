@@ -191,8 +191,6 @@ enum lrecord_type {
 	lrecord_type_devmode,
 	lrecord_type_case_table,
 	lrecord_type_emacs_ffi,
-	lrecord_type_emacs_gtk_object,
-	lrecord_type_emacs_gtk_boxed,
 	lrecord_type_ffiobject,	/* 60 */
 	lrecord_type_evp_pkey,
 	lrecord_type_ssl_conn,

@@ -1708,6 +1708,9 @@ accessible 24/7.
 Nelson
 @item
 http://git.nelsonferreira.com/sxemacs
+Sebastian
+@item
+git://github.com/hroptatyr/sxemacs.git
 @end itemize
 
 And that is it for now.  We've only just moved to git and the
@@ -1723,7 +1726,7 @@ main SXEmacs developers haven't set up their repos.
 @c Norbert
 @c @item
 @c http://arafel.viteno.net:33080/arch/sxemacs/
-@c Martin Kühl
+@c Martin K@"uhl
 @c @item
 @c http://www.informatik.uni-bremen.de/~mkhl/sxemacs-mirror/
 @c Alexey Mikhailov (karma)

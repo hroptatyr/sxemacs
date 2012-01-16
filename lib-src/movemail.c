@@ -198,7 +198,10 @@ static char *unparse_lock_method(int);
 
 int main(int argc, char *argv[])
 {
-	char *inname = 0, *outname = 0, *poppass = 0;
+	char *inname = 0, *outname = 0;
+#if defined MAIL_USE_POP
+	char *poppass = 0;
+#endif	/* MAIL_USE_POP */
 #ifndef DISABLE_DIRECT_ACCESS
 	int indesc, outdesc;
 	int nread;
@@ -236,12 +239,15 @@ int main(int argc, char *argv[])
 		case 0:
 			break;
 		case 1:	/* one of the standard arguments seen */
-			if (!inname)
+			if (!inname) {
 				inname = optarg;
-			else if (!outname)
+			} else if (!outname) {
 				outname = optarg;
-			else
+#if defined MAIL_USE_POP
+			} else {
 				poppass = optarg;
+#endif	/* MAIL_USE_POP */
+			}
 			break;
 
 		case 'i':	/* infile */
@@ -285,12 +291,15 @@ int main(int argc, char *argv[])
 	}
 
 	while (optind < argc) {
-		if (!inname)
+		if (!inname) {
 			inname = argv[optind];
-		else if (!outname)
+		} else if (!outname) {
 			outname = argv[optind];
-		else
+#if defined MAIL_USE_POP
+		} else {
 			poppass = argv[optind];
+#endif	/* MAIL_USE_POP */
+		}
 		optind++;
 	}
 
@@ -590,6 +599,8 @@ static void lock_dot(char *filename)
 		/* Give up if cannot do that.  */
 
 #ifdef HAVE_MKSTEMP
+		/* Remove all group and other permissions.. */
+	        umask(S_IRWXG|S_IRWXO);
 		desc = mkstemp(tempname);
 #else
 		desc = open(tempname, O_WRONLY | O_CREAT | O_EXCL, 0666);

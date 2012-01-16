@@ -133,7 +133,7 @@
 (let ((x (make-list-012))) (Assert (eq (nconc x) x)))
 (let ((x (make-list-012))) (Assert (eq (nconc x (make-circular-list 3)) x)))
 
-(Assert (equal (nconc '(1 . 2) '(3 . 4) '(5 . 6)) '(1 3 5 . 6)))
+(Assert-Equal (nconc '(1 . 2) '(3 . 4) '(5 . 6)) '(1 3 5 . 6))
 
 (let ((y (nconc (make-list-012) nil (list 3 4 5) nil)))
   (Assert (eq (length y) 6))
@@ -178,24 +178,24 @@
        (z (nbutlast x)))
   (Assert (eq z x))
   (Assert (not (eq y x)))
-  (Assert (equal y '(0 1 2)))
-  (Assert (equal z y)))
+  (Assert-Equal y '(0 1 2))
+  (Assert-Equal z y))
 
 (let* ((x (list 0 1 2 3 4))
        (y (butlast x 2))
        (z (nbutlast x 2)))
   (Assert (eq z x))
   (Assert (not (eq y x)))
-  (Assert (equal y '(0 1 2)))
-  (Assert (equal z y)))
+  (Assert-Equal y '(0 1 2))
+  (Assert-Equal z y))
 
 (let* ((x (list 0 1 2 3))
        (y (butlast x 0))
        (z (nbutlast x 0)))
   (Assert (eq z x))
   (Assert (not (eq y x)))
-  (Assert (equal y '(0 1 2 3)))
-  (Assert (equal z y)))
+  (Assert-Equal y '(0 1 2 3))
+  (Assert-Equal z y))
 
 (Assert (eq (butlast  '(x)) nil))
 (Assert (eq (nbutlast '(x)) nil))
@@ -790,25 +790,25 @@
 ;; Test mapping functions
 ;;-----------------------------------------------------
 (Check-Error wrong-type-argument (mapcar #'identity (current-buffer)))
-(Assert (equal (mapcar #'identity load-path) load-path))
-(Assert (equal (mapcar #'identity '(1 2 3)) '(1 2 3)))
-(Assert (equal (mapcar #'identity "123") '(?1 ?2 ?3)))
-(Assert (equal (mapcar #'identity [1 2 3]) '(1 2 3)))
-(Assert (equal (mapcar #'identity #*010) '(0 1 0)))
+(Assert-Equal (mapcar #'identity load-path) load-path)
+(Assert-Equal (mapcar #'identity '(1 2 3)) '(1 2 3))
+(Assert-Equal (mapcar #'identity "123") '(?1 ?2 ?3))
+(Assert-Equal (mapcar #'identity [1 2 3]) '(1 2 3))
+(Assert-Equal (mapcar #'identity #*010) '(0 1 0))
 
 (let ((z 0) (list (make-list 1000 1)))
   (mapc (lambda (x) (incf z x)) list)
   (Assert (eq 1000 z)))
 
 (Check-Error wrong-type-argument (mapvector #'identity (current-buffer)))
-(Assert (equal (mapvector #'identity '(1 2 3)) [1 2 3]))
-(Assert (equal (mapvector #'identity "123") [?1 ?2 ?3]))
-(Assert (equal (mapvector #'identity [1 2 3]) [1 2 3]))
-(Assert (equal (mapvector #'identity #*010) [0 1 0]))
+(Assert-Equal (mapvector #'identity '(1 2 3)) [1 2 3])
+(Assert-Equal (mapvector #'identity "123") [?1 ?2 ?3])
+(Assert-Equal (mapvector #'identity [1 2 3]) [1 2 3])
+(Assert-Equal (mapvector #'identity #*010) [0 1 0])
 
 (Check-Error wrong-type-argument (mapconcat #'identity (current-buffer) "foo"))
-(Assert (equal (mapconcat #'identity '("1" "2" "3") "|") "1|2|3"))
-(Assert (equal (mapconcat #'identity ["1" "2" "3"]  "|") "1|2|3"))
+(Assert-Equal (mapconcat #'identity '("1" "2" "3") "|") "1|2|3")
+(Assert-Equal (mapconcat #'identity ["1" "2" "3"]  "|") "1|2|3")
 
 ;; The following 2 functions used to crash XEmacs via mapcar1().
 ;; We don't test the actual values of the mapcar, since they're undefined.
@@ -836,29 +836,29 @@
 ;;-----------------------------------------------------
 ;; Test vector functions
 ;;-----------------------------------------------------
-(Assert (equal [1 2 3] [1 2 3]))
-(Assert (equal [] []))
-(Assert (not (equal [1 2 3] [])))
-(Assert (not (equal [1 2 3] [1 2 4])))
-(Assert (not (equal [0 2 3] [1 2 3])))
-(Assert (not (equal [1 2 3] [1 2 3 4])))
-(Assert (not (equal [1 2 3 4] [1 2 3])))
-(Assert (equal (vector 1 2 3) [1 2 3]))
-(Assert (equal (make-vector 3 1) [1 1 1]))
+(Assert-Equal [1 2 3] [1 2 3])
+(Assert-Equal [] [])
+(Assert-Not-Equal [1 2 3] [])
+(Assert-Not-Equal [1 2 3] [1 2 4])
+(Assert-Not-Equal [0 2 3] [1 2 3])
+(Assert-Not-Equal [1 2 3] [1 2 3 4])
+(Assert-Not-Equal [1 2 3 4] [1 2 3])
+(Assert-Equal (vector 1 2 3) [1 2 3])
+(Assert-Equal (make-vector 3 1) [1 1 1])
 
 ;;-----------------------------------------------------
 ;; Test bit-vector functions
 ;;-----------------------------------------------------
-(Assert (equal #*010 #*010))
-(Assert (equal #* #*))
-(Assert (not (equal #*010 #*011)))
-(Assert (not (equal #*010 #*)))
-(Assert (not (equal #*110 #*010)))
-(Assert (not (equal #*010 #*0100)))
-(Assert (not (equal #*0101 #*010)))
-(Assert (equal (bit-vector 0 1 0) #*010))
-(Assert (equal (make-bit-vector 3 1) #*111))
-(Assert (equal (make-bit-vector 3 0) #*000))
+(Assert-Equal #*010 #*010)
+(Assert-Equal #* #*)
+(Assert-Not-Equal #*010 #*011)
+(Assert-Not-Equal #*010 #*)
+(Assert-Not-Equal #*110 #*010)
+(Assert-Not-Equal #*010 #*0100)
+(Assert-Not-Equal #*0101 #*010)
+(Assert-Equal (bit-vector 0 1 0) #*010)
+(Assert-Equal (make-bit-vector 3 1) #*111)
+(Assert-Equal (make-bit-vector 3 0) #*000)
 
 ;;-----------------------------------------------------
 ;; Test buffer-local variables used as (ugh!) function parameters
@@ -873,18 +873,18 @@
 ;; Test split-string
 ;;-----------------------------------------------------
 ;; Hrvoje didn't like these tests so I'm disabling them for now. -sb
-;(Assert (equal (split-string "foo" "") '("" "f" "o" "o" "")))
-;(Assert (equal (split-string "foo" "^") '("" "foo")))
-;(Assert (equal (split-string "foo" "$") '("foo" "")))
-(Assert (equal (split-string "foo,bar" ",") '("foo" "bar")))
-(Assert (equal (split-string ",foo,bar," ",") '("" "foo" "bar" "")))
-(Assert (equal (split-string ",foo,bar," "^,") '("" "foo,bar,")))
-(Assert (equal (split-string ",foo,bar," ",$") '(",foo,bar" "")))
-(Assert (equal (split-string ",foo,,bar," ",") '("" "foo" "" "bar" "")))
-(Assert (equal (split-string "foo,,,bar" ",") '("foo" "" "" "bar")))
-(Assert (equal (split-string "foo,,bar,," ",") '("foo" "" "bar" "" "")))
-(Assert (equal (split-string "foo,,bar" ",+") '("foo" "bar")))
-(Assert (equal (split-string ",foo,,bar," ",+") '("" "foo" "bar" "")))
+;(Assert-Equal (split-string "foo" "") '("" "f" "o" "o" ""))
+;(Assert-Equal (split-string "foo" "^") '("" "foo"))
+;(Assert-Equal (split-string "foo" "$") '("foo" ""))
+(Assert-Equal (split-string "foo,bar" ",") '("foo" "bar"))
+(Assert-Equal (split-string ",foo,bar," ",") '("" "foo" "bar" ""))
+(Assert-Equal (split-string ",foo,bar," "^,") '("" "foo,bar,"))
+(Assert-Equal (split-string ",foo,bar," ",$") '(",foo,bar" ""))
+(Assert-Equal (split-string ",foo,,bar," ",") '("" "foo" "" "bar" ""))
+(Assert-Equal (split-string "foo,,,bar" ",") '("foo" "" "" "bar"))
+(Assert-Equal (split-string "foo,,bar,," ",") '("foo" "" "bar" "" ""))
+(Assert-Equal (split-string "foo,,bar" ",+") '("foo" "bar"))
+(Assert-Equal (split-string ",foo,,bar," ",+") '("" "foo" "bar" ""))
 
 (Assert (not (string-match "\\(\\.\\=\\)" ".")))
 (Assert (string= "" (let ((str "test string"))
@@ -958,7 +958,7 @@
   (Assert (eq 4 (put obj ?3 4)))
   (Assert (eq 4 (get obj ?3)))
   (when (or (stringp obj) (symbolp obj))
-    (Assert (equal '(?3 4) (object-plist obj))))
+    (Assert-Equal '(?3 4) (object-plist obj)))
   (Assert (eq t (remprop obj ?3)))
   (when (or (stringp obj) (symbolp obj))
     (Assert (eq '() (object-plist obj))))
@@ -991,15 +991,15 @@
 ;;-----------------------------------------------------
 ;; Test subseq
 ;;-----------------------------------------------------
-(Assert (equal (subseq nil 0) nil))
-(Assert (equal (subseq [1 2 3] 0) [1 2 3]))
-(Assert (equal (subseq [1 2 3] 1 -1) [2]))
-(Assert (equal (subseq "123" 0) "123"))
-(Assert (equal (subseq "1234" -3 -1) "23"))
-(Assert (equal (subseq #*0011 0) #*0011))
-(Assert (equal (subseq #*0011 -3 3) #*01))
-(Assert (equal (subseq '(1 2 3) 0) '(1 2 3)))
-(Assert (equal (subseq '(1 2 3 4) -3 nil) '(2 3 4)))
+(Assert-Equal (subseq nil 0) nil)
+(Assert-Equal (subseq [1 2 3] 0) [1 2 3])
+(Assert-Equal (subseq [1 2 3] 1 -1) [2])
+(Assert-Equal (subseq "123" 0) "123")
+(Assert-Equal (subseq "1234" -3 -1) "23")
+(Assert-Equal (subseq #*0011 0) #*0011)
+(Assert-Equal (subseq #*0011 -3 3) #*01)
+(Assert-Equal (subseq '(1 2 3) 0) '(1 2 3))
+(Assert-Equal (subseq '(1 2 3 4) -3 nil) '(2 3 4))
 
 (Check-Error wrong-type-argument (subseq 3 2))
 (Check-Error args-out-of-range (subseq [1 2 3] -42))

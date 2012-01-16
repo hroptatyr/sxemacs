@@ -183,6 +183,7 @@ media_mad_open(Lisp_Media_Stream *ms)
 		media_stream_driver(ms) = MDRIVER_UNKNOWN;
 		media_mad_close(madd);
 		xfree(madd);
+		xfree(sd);
 		return NULL;
 	}
 	madd->sd = sd;

@@ -67,6 +67,11 @@ static struct __gpm_state gpm_state_information[MAXDESC];
 
 static void store_gpm_state(int fd)
 {
+	if (fd < 0) {
+		warn_when_safe(Qnil, Qcritical, "store_gpm_state negative fd - %d",
+			       fd);
+		return;
+	}
 	gpm_state_information[fd].gpm_tried = gpm_tried;
 	gpm_state_information[fd].gpm_flag = gpm_flag;
 	gpm_state_information[fd].gpm_stack = gpm_stack;
@@ -74,6 +79,11 @@ static void store_gpm_state(int fd)
 
 static void restore_gpm_state(int fd)
 {
+	if (fd < 0) {
+		warn_when_safe(Qnil, Qcritical, "restore_gpm_state negative fd - %d",
+			       fd);
+		return;
+	}
 	gpm_tried = gpm_state_information[fd].gpm_tried;
 	gpm_flag = gpm_state_information[fd].gpm_flag;
 	gpm_stack = gpm_state_information[fd].gpm_stack;

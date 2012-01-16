@@ -246,14 +246,14 @@
         (default-real-precision 128))
 
     ;; testing bigg selector
-    (Assert (not (equal (real-part (read "2+3i")) 2)))
-    (Assert (not (equal (imaginary-part (read "2+3i")) 3)))
-    (Assert (not (equal (real-part 2+3i) 2)))
-    (Assert (not (equal (imaginary-part 2+3i) 3)))
-    (Assert (equal (real-part (read "2+3i")) (bigz 2)))
-    (Assert (equal (imaginary-part (read "2+3i")) (bigz 3)))
-    (Assert (equal (real-part 2+3i) (bigz 2)))
-    (Assert (equal (imaginary-part 2+3i) (bigz 3)))
+    (Assert-Not-Equal (real-part (read "2+3i")) 2)
+    (Assert-Not-Equal (imaginary-part (read "2+3i")) 3)
+    (Assert-Not-Equal (real-part 2+3i) 2)
+    (Assert-Not-Equal (imaginary-part 2+3i) 3)
+    (Assert-Equal (real-part (read "2+3i")) (bigz 2))
+    (Assert-Equal (imaginary-part (read "2+3i")) (bigz 3))
+    (Assert-Equal (real-part 2+3i) (bigz 2))
+    (Assert-Equal (imaginary-part 2+3i) (bigz 3))
     ;; use numerical equality
     (Assert (= (real-part (read "2+3i")) 2))
     (Assert (= (imaginary-part (read "2+3i")) 3))
@@ -265,16 +265,16 @@
     (Assert (= (imaginary-part 2+3i) (bigz 3)))
 
     ;; testing bigg constructor
-    (Assert (not (equal (real-part (make-bigg 1 2)) 1)))
-    (Assert (not (equal (imaginary-part (make-bigg 1 2)) 2)))
-    (Assert (equal (real-part (make-bigg 1 2)) (bigz 1)))
-    (Assert (equal (imaginary-part (make-bigg 1 2)) (bigz 2)))
+    (Assert-Not-Equal (real-part (make-bigg 1 2)) 1)
+    (Assert-Not-Equal (imaginary-part (make-bigg 1 2)) 2)
+    (Assert-Equal (real-part (make-bigg 1 2)) (bigz 1))
+    (Assert-Equal (imaginary-part (make-bigg 1 2)) (bigz 2))
     (Assert (= (real-part (make-bigg 1 2)) 1))
     (Assert (= (imaginary-part (make-bigg 1 2)) 2))
 
     ;; compare reader and constructor
-    (Assert (equal (make-bigg 1.0 2.0) (read "1+2i")))
-    (Assert (equal (make-bigg 1 2) (read "1+2i")))
+    (Assert-Equal (make-bigg 1.0 2.0) (read "1+2i"))
+    (Assert-Equal (make-bigg 1 2) (read "1+2i"))
     (Assert (and (= (real-part (make-bigg 1.0 2.0))
                     (real-part (read "1+2i")))
                  (= (imaginary-part (make-bigg 1.0 2.0))
@@ -289,10 +289,10 @@
         (default-real-precision 128))
 
     ;; testing bigc selector
-    (Assert (equal (real-part (read "2.3+3.2i"))
-                   (read "2.3")))
-    (Assert (equal (imaginary-part (read "2.3+3.2i"))
-                   (read "3.2")))
+    (Assert-Equal (real-part (read "2.3+3.2i"))
+                   (read "2.3"))
+    (Assert-Equal (imaginary-part (read "2.3+3.2i"))
+                   (read "3.2"))
     ;; use numerical equality
     (Assert (= (real-part (read "2.3+3.2i"))
                (read "2.3")))
@@ -300,16 +300,16 @@
                (read "3.2")))
 
     ;; testing bigc constructor
-    (Assert (not (equal (real-part (make-bigc 1 2)) 1)))
-    (Assert (not (equal (imaginary-part (make-bigc 1 2)) 2)))
-    (Assert (equal (real-part (make-bigc 1 2)) (bigfr 1)))
-    (Assert (equal (imaginary-part (make-bigc 1 2)) (bigfr 2)))
+    (Assert-Not-Equal (real-part (make-bigc 1 2)) 1)
+    (Assert-Not-Equal (imaginary-part (make-bigc 1 2)) 2)
+    (Assert-Equal (real-part (make-bigc 1 2)) (bigfr 1))
+    (Assert-Equal (imaginary-part (make-bigc 1 2)) (bigfr 2))
     (Assert (= (real-part (make-bigc 1 2)) 1))
     (Assert (= (imaginary-part (make-bigc 1 2)) 2))
 
     ;; now compare reader and constructor
-    (Assert (equal (make-bigc 1.0 2.0) (read "1.0+2.0i")))
-    (Assert (equal (make-bigc 1 2) (read "1.0+2.0i")))
+    (Assert-Equal (make-bigc 1.0 2.0) (read "1.0+2.0i"))
+    (Assert-Equal (make-bigc 1 2) (read "1.0+2.0i"))
     (Assert (and (= (real-part (make-bigc 1.0 2.0))
                     (real-part (read "1.0+2.0i")))
                  (= (imaginary-part (make-bigc 1.0 2.0))
@@ -326,18 +326,18 @@
 ;; Testing formatting output
 ;;-----------------------------------------------------
 
-(Assert (equal (format "%d" 2) "2"))
-(Assert (equal (format "%d" -2) "-2"))
-(Assert (equal (format "%2.2E" -2) "-2.00E+00"))
+(Assert-Equal (format "%d" 2) "2")
+(Assert-Equal (format "%d" -2) "-2")
+(Assert-Equal (format "%2.2E" -2) "-2.00E+00")
 
-(Assert (equal (format "%x" 100) "64"))
-(Assert (equal (format "%#x" 100) "0x64"))
-(Assert (equal (format "%X" 122) "7A"))
-(Assert (equal (format "%.4X" 122) "007A"))
-(Assert (equal (format "%4o" 100) " 144"))
-(Assert (equal (format "%x" 10.58) "a"))
-(Assert (equal (format "%o" 10.58) "12"))
-(Assert (equal (format "%#o" 10.58) "0o12"))
+(Assert-Equal (format "%x" 100) "64")
+(Assert-Equal (format "%#x" 100) "0x64")
+(Assert-Equal (format "%X" 122) "7A")
+(Assert-Equal (format "%.4X" 122) "007A")
+(Assert-Equal (format "%4o" 100) " 144")
+(Assert-Equal (format "%x" 10.58) "a")
+(Assert-Equal (format "%o" 10.58) "12")
+(Assert-Equal (format "%#o" 10.58) "0o12")
 
 ;; floats
 (let ((forms
@@ -1105,7 +1105,7 @@
 ;;; testing arithmetics with infinity symbols
 (let* ((ASSERT-EQUAL
 	#'(lambda (form result)
-	    (eval `(Assert (equal ,form ,result)))))
+	    (eval `(Assert-Equal ,form ,result))))
        (ASSERT-=
 	#'(lambda (form result)
 	    (eval `(Assert (= ,form ,result)))))
@@ -1671,12 +1671,12 @@
        (eval `(Assert (onep (coerce-number 1.0 ',type))))
 
        ;; lifts are idempotent
-       (eval `(Assert (equal
+       (eval `(Assert-Equal
                        (coerce-number 0 ',type)
-                       (coerce-number (coerce-number 0 ',type) ',type))))
-       (eval `(Assert (equal
+                       (coerce-number (coerce-number 0 ',type) ',type)))
+       (eval `(Assert-Equal
                        (coerce-number 1 ',type)
-                       (coerce-number (coerce-number 1 ',type) ',type))))
+                       (coerce-number (coerce-number 1 ',type) ',type)))
        (eval `(Assert (= (coerce-number 0 ',type)
                          (coerce-number (coerce-number 0 ',type) ',type))))
        (eval `(Assert (= (coerce-number 1 ',type)
@@ -1745,7 +1745,7 @@
   (mapc #'(lambda (fun)
 	    (when (fboundp fun)
 	      (mapc #'(lambda (val)
-			(eval `(Assert (equal (,fun ,val) not-a-number))))
+			(eval `(Assert-Equal (,fun ,val) not-a-number)))
 		    vals)))
 	nan-funs)
   (mapc #'(lambda (fun)
@@ -1864,7 +1864,7 @@
 			(eval `(Assert (= (+ (zero ,num) ,num) ,num)))
 			(eval `(Assert (= (* (zero ,num) ,num) (zero ,num)))))
 		      (unless (comparablep num)
-			(eval `(Assert (equal (+ (zero ,num) ,num) ,num)))
+			(eval `(Assert-Equal (+ (zero ,num) ,num) ,num))
 			(eval `(Assert
 				(equal (* (zero ,num) ,num) (zero ,num)))))
 		      ;; ones
@@ -1875,8 +1875,8 @@
 			(eval `(Assert (= (* (one ,num) ,num) ,num)))
 			(eval `(Assert (= (zero ,num) (1- (one ,num))))))
 		      (unless (comparablep num)
-			(eval `(Assert (equal (* (one ,num) ,num) ,num)))
-			(eval `(Assert (equal (zero ,num) (1- (one ,num)))))))
+			(eval `(Assert-Equal (* (one ,num) ,num) ,num))
+			(eval `(Assert-Equal (zero ,num) (1- (one ,num))))))
                   (symbol-value cat)))
         '(ints bigzs bigqs floats bigfs bigfrs biggs bigcs)))
 

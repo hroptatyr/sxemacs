@@ -12,6 +12,7 @@
 #define DONT_ENCAPSULATE
 #include <config.h>
 
+#include <assert.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <../src/sxe-paths.h>	/* For PATH_DATA.  */
@@ -30,10 +31,11 @@
 #define YOW_FILE "yow.lines"
 #endif
 
-void yow(FILE * fp);
-void setup_yow(FILE * fp);
+static void yow(FILE * fp);
+static void setup_yow(FILE * fp);
 
-int main(int argc, char *argv[])
+int
+main(int argc, char *argv[])
 {
 	FILE *fp;
 	char file[BUFSIZ];
@@ -41,7 +43,7 @@ int main(int argc, char *argv[])
 	if (argc > 2 && !strcmp(argv[1], "-f")) {
 		strncpy(file, argv[2], sizeof(file)-1);
 		file[sizeof(file)-1]='\0';
-	} else
+	} else {
 #ifdef PATH_DATA
 #ifdef vms
 		int sz = snprintf(file, sizeof(file), "%s%s", PATH_DATA, YOW_FILE);
@@ -50,14 +52,13 @@ int main(int argc, char *argv[])
 #endif
 		assert(sz>=0 && sz<sizeof(file));
 #else				/* !PATH_DATA */
-	{
 		fprintf(stderr,
 			"%s: the location of the \"%s\" file was not supplied at compile-time.\n\
 You must supply it with the -f command-line option.\n",
 			argv[0], YOW_FILE);
 		exit(1);
-	}
 #endif
+	}
 
 	if ((fp = fopen(file, "r")) == NULL) {
 		perror(file);
@@ -79,7 +80,8 @@ static long header_len;
 #define AVG_LEN 40		/* average length of a quotation */
 
 /* Sets len and header_len */
-void setup_yow(FILE * fp)
+static void
+setup_yow(FILE * fp)
 {
 	int c;
 
@@ -105,7 +107,8 @@ void setup_yow(FILE * fp)
 }
 
 /* go to a random place in the file and print the quotation there */
-void yow(FILE * fp)
+static void
+yow(FILE * fp)
 {
 	long offset;
 	int c, i = 0;

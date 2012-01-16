@@ -50,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 Lisp_Object Qmedia_streamp;
 Lisp_Object Qunknown;
+Lisp_Object Qunavailable;
 /* media property syms */
 Lisp_Object Qdemux, Qcodec, Qnchannels, Qsamplerate;
 Lisp_Object Qbitrate, Qabitrate, Qvbitrate;
@@ -168,6 +169,8 @@ media_stream_finalise(void *header, int for_disksave)
 	Lisp_Media_Stream *ms = (Lisp_Media_Stream*)header;
 	media_substream *mss = NULL;
 
+	if(ms == NULL)
+		return;
 	if (media_stream_meths(ms) &&
 	    media_stream_meth(ms, close))
 		media_stream_meth(ms, close)(media_stream_data(ms));
@@ -989,6 +992,7 @@ in the result alist.
 		break;
 	}
 
+	__add_prop(&resdl, Qdriver, Qunavailable);
 	switch (media_stream_driver(ms)) {
 	case MDRIVER_INTERNAL:
 		__add_prop(&resdl, Qdriver, Qinternal);
@@ -1015,6 +1019,12 @@ in the result alist.
 #ifdef HAVE_SOX
 		__add_prop(&resdl, Qdriver, Qsox);
 #endif
+		break;
+
+	case MDRIVER_XINE:
+		break;
+
+	case MDRIVER_GSTREAMER:
 		break;
 
 	case MDRIVER_UNKNOWN:
@@ -1464,6 +1474,7 @@ void syms_of_media(void)
 	defsymbol(&Qsndfile, "sndfile");
 #endif
 	defsymbol(&Qunknown, "unknown");
+	defsymbol(&Qunavailable, "unavailable");
 }
 
 void vars_of_media(void)

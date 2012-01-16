@@ -1101,7 +1101,7 @@ if (update) {
 		sz = snprintf(cmd, sizeof(cmd),
 			      "mv %s OTAGS;fgrep -v '\t%s\t' OTAGS >%s;rm OTAGS",
 			      tagfile, argbuffer[i].what, tagfile);
-		if(sz >= 0 && sz < sizeof(cmd))
+		if(sz >= 0 && (size_t)sz < sizeof(cmd))
 			fatal("failed to build shell command line", (char *)NULL);
 		if (system(cmd) != GOOD)
 			fatal("failed to execute shell command", (char *)NULL);
@@ -1118,7 +1118,7 @@ fclose(tagf);
 if (update) {
 	char cmd[BUFSIZ];
 	int sz = snprintf(cmd, sizeof(cmd), "sort %s -o %s", tagfile, tagfile);
-	if(sz >= 0 && sz < sizeof(cmd))
+	if(sz >= 0 && (size_t)sz < sizeof(cmd))
 		fatal("failed to build sort command line", (char *)NULL);
 	exit(system(cmd));
 }
@@ -4599,9 +4599,10 @@ char *name;
 void analyse_regex(regex_arg)
 char *regex_arg;
 {
-	if (regex_arg == NULL)
+	if (regex_arg == NULL) {
 		free_patterns();	/* --no-regex: remove existing regexps */
-
+		return;
+	}
 	/* A real --regexp option or a line in a regexp file. */
 	switch (regex_arg[0]) {
 		/* Comments in regexp file or null arg to --regex. */

@@ -3140,7 +3140,7 @@ print_extent_1(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		sz=snprintf(bp, sizeof(buf)-2, "%ld, %ld",
 			    XINT(Fextent_start_position(obj)),
 			    XINT(Fextent_end_position(obj)));
-		assert(sz>=0 && sz<(sizeof(buf)-2));
+		assert(sz>=0 && (size_t)sz<(sizeof(buf)-2));
 	}
 	bp += strlen(bp);
 	*bp++ = (extent_end_open_p(anc) ? ')' : ']');

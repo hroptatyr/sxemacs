@@ -50,7 +50,7 @@ headerdir = $(includedir)/$(instvarsepdir)
 AM_CFLAGS = $(dll_cflags) -DIMA_MODULE
 AM_CPPFLAGS = -I$(srcdir) -I$(builddir)  -I$(top_srcdir)/src \
 	-I$(top_builddir)/src $(SXEMACS_INCLUDES) $(c_switch_all)
-AM_LDFLAGS = -module
+AM_LDFLAGS = -module $(XCCLDFLAGS)
 AM_YFLAGS = -d
 
 ## all the mods

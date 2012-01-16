@@ -131,34 +131,34 @@ extern Lisp_Object ase_neighbourhood_closure(Lisp_Object nbh);
 extern Lisp_Object ase_neighbourhood_interior(Lisp_Object nbh);
 
 /* predicates */
-extern inline bool
+static inline bool
 ase_neighbourhood_contains_obj_p(ase_neighbourhood_t, Lisp_Object);
-extern inline bool
+static inline bool
 ase_neighbourhood_contains_nbh_p(ase_neighbourhood_t, ase_neighbourhood_t);
-extern inline bool ase_neighbourhood_open_p(ase_neighbourhood_t);
-extern inline bool ase_neighbourhood_closed_p(ase_neighbourhood_t);
-extern inline bool
+static inline bool ase_neighbourhood_open_p(ase_neighbourhood_t);
+static inline bool ase_neighbourhood_closed_p(ase_neighbourhood_t);
+static inline bool
 ase_neighbourhood_less_obj_p(ase_neighbourhood_t, Lisp_Object);
-extern inline bool
+static inline bool
 ase_neighbourhood_less_nbh_p(ase_neighbourhood_t, ase_neighbourhood_t);
-extern inline bool
+static inline bool
 ase_neighbourhood_greater_obj_p(ase_neighbourhood_t, Lisp_Object);
-extern inline bool
+static inline bool
 ase_neighbourhood_greater_nbh_p(ase_neighbourhood_t, ase_neighbourhood_t);
 
-extern inline Lisp_Object
+static inline Lisp_Object
 ase_neighbourhood_point(ase_neighbourhood_t);
-extern inline Lisp_Object
+static inline Lisp_Object
 ase_neighbourhood_radius(ase_neighbourhood_t);
 
 /* measures */
-extern inline Lisp_Object
+static inline Lisp_Object
 ase_neighbourhood_lebesgue_measure(ase_neighbourhood_t);
-extern inline Lisp_Object
+static inline Lisp_Object
 ase_neighbourhood_rational_measure(ase_neighbourhood_t);
 
 /* inlines */
-extern inline bool
+static inline bool
 ase_neighbourhood_contains_obj_p(ase_neighbourhood_t n, Lisp_Object obj)
 {
 	/* we _know_ atm that n->ldata points to an ase_interval_t */
@@ -166,7 +166,7 @@ ase_neighbourhood_contains_obj_p(ase_neighbourhood_t n, Lisp_Object obj)
 	return !NILP(Fase_interval_contains_p(intv, obj));
 }
 
-extern inline bool
+static inline bool
 ase_neighbourhood_contains_nbh_p(ase_neighbourhood_t n1, ase_neighbourhood_t n2)
 {
 	/* we _know_ atm that {n1,n2}->data points to an ase_interval_t */
@@ -175,19 +175,19 @@ ase_neighbourhood_contains_nbh_p(ase_neighbourhood_t n1, ase_neighbourhood_t n2)
 	return !NILP(Fase_interval_contains_p(i1, i2));
 }
 
-extern inline bool
+static inline bool
 ase_neighbourhood_open_p(ase_neighbourhood_t n)
 {
 	return n->open_p;
 }
 
-extern inline bool
+static inline bool
 ase_neighbourhood_closed_p(ase_neighbourhood_t n)
 {
 	return !n->open_p;
 }
 
-extern inline bool
+static inline bool
 ase_neighbourhood_less_obj_p(ase_neighbourhood_t n, Lisp_Object obj)
 {
 	/* we _know_ atm that {n1,n2}->data points to an ase_interval_t */
@@ -196,7 +196,7 @@ ase_neighbourhood_less_obj_p(ase_neighbourhood_t n, Lisp_Object obj)
 	return (_ase_less_p(a->upper, obj) || _ase_equal_p(a->upper, obj));
 }
 
-extern inline bool
+static inline bool
 ase_neighbourhood_less_nbh_p(ase_neighbourhood_t n1, ase_neighbourhood_t n2)
 {
 	/* we _know_ atm that {n1,n2}->data points to an ase_interval_t */
@@ -206,7 +206,7 @@ ase_neighbourhood_less_nbh_p(ase_neighbourhood_t n1, ase_neighbourhood_t n2)
 		_ase_equal_p(a1->upper, a2->lower));
 }
 
-extern inline bool
+static inline bool
 ase_neighbourhood_greater_obj_p(ase_neighbourhood_t n, Lisp_Object obj)
 {
 	/* we _know_ atm that {n1,n2}->data points to an ase_interval_t */
@@ -214,7 +214,7 @@ ase_neighbourhood_greater_obj_p(ase_neighbourhood_t n, Lisp_Object obj)
 	return (_ase_less_p(obj, a->lower) || _ase_equal_p(obj, a->lower));
 }
 
-extern inline bool
+static inline bool
 ase_neighbourhood_greater_nbh_p(ase_neighbourhood_t n1, ase_neighbourhood_t n2)
 {
 	/* we _know_ atm that {n1,n2}->data points to an ase_interval_t */

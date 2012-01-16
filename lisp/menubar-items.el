@@ -1598,10 +1598,6 @@ See also `menu-split-long-menu'."
        ["Sample %_init.el"
 	(find-file (locate-data-file "sample.init.el"))
 	:active (locate-data-file "sample.init.el")]
-       ["Sample .%_gtkrc"
-	(find-file (locate-data-file "sample.gtkrc"))
-	:included (featurep 'gtk)
-	:active (locate-data-file "sample.gtkrc")]
        ["Sample .%_Xdefaults"
 	(find-file (locate-data-file "sample.Xdefaults"))
 	:included (featurep 'x)

@@ -258,10 +258,6 @@ static void *malloc_state_ptr;
 void r_alloc_reinit(void);
 # endif
 
-#ifdef HAVE_GTK
-void console_type_create_select_gtk(void);
-#endif
-
 /* Variable whose value is symbol giving operating system type. */
 Lisp_Object Vsystem_type;
 
@@ -1195,13 +1191,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 			display_use = "x";
 
 #endif				/* HAVE_X_WINDOWS */
-#ifdef HAVE_GTK
-		{
-			char *dpy = getenv("DISPLAY");
-			if (dpy && dpy[0])
-				display_use = "gtk";
-		}
-#endif
 	}
 #endif				/* HAVE_WINDOW_SYSTEM */
 
@@ -1344,9 +1333,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 #ifdef HAVE_X_WINDOWS
 		syms_of_event_Xt();
 #endif
-#ifdef HAVE_GTK
-		syms_of_event_gtk();
-#endif
 #ifdef HAVE_DRAGNDROP
 		syms_of_dragdrop();
 #endif
@@ -1427,26 +1413,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		syms_of_device_tty();
 		syms_of_objects_tty();
 #endif
-
-#ifdef HAVE_GTK
-		syms_of_device_gtk();
-		syms_of_frame_gtk();
-		syms_of_glyphs_gtk();
-		syms_of_objects_gtk();
-		syms_of_ui_gtk();
-		syms_of_select_gtk();
-#ifdef HAVE_DIALOGS
-		syms_of_dialog_gtk();
-#endif
-#ifdef HAVE_MENUBARS
-		syms_of_menubar_gtk();
-#endif
-		syms_of_select_gtk();
-
-#if defined (HAVE_MENUBARS) || defined(HAVE_SCROLLBARS) || defined(HAVE_DIALOGS) || defined(HAVE_TOOLBARS)
-		syms_of_gui_gtk();
-#endif
-#endif				/* HAVE_GTK */
 
 #ifdef HAVE_X_WINDOWS
 #ifdef HAVE_BALLOON_HELP
@@ -1566,28 +1532,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		console_type_create_redisplay_tty();
 #endif
 
-#ifdef HAVE_GTK
-		console_type_create_gtk();
-		console_type_create_select_gtk();
-		console_type_create_device_gtk();
-		console_type_create_frame_gtk();
-		console_type_create_objects_gtk();
-		console_type_create_glyphs_gtk();
-		console_type_create_redisplay_gtk();
-#ifdef HAVE_MENUBARS
-		console_type_create_menubar_gtk();
-#endif
-#ifdef HAVE_SCROLLBARS
-		console_type_create_scrollbar_gtk();
-#endif
-#ifdef HAVE_TOOLBARS
-		console_type_create_toolbar_gtk();
-#endif
-#ifdef HAVE_DIALOGS
-		console_type_create_dialog_gtk();
-#endif
-#endif				/* HAVE_GTK */
-
 #ifdef HAVE_X_WINDOWS
 		console_type_create_x();
 		console_type_create_device_x();
@@ -1665,9 +1609,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 #ifdef HAVE_X_WINDOWS
 		image_instantiator_format_create_glyphs_x();
 #endif				/* HAVE_X_WINDOWS */
-#ifdef HAVE_GTK
-		image_instantiator_format_create_glyphs_gtk();
-#endif
 
 		/* Now initialize the lstream types and associated symbols.
 		   Other than the first function below, the functions may
@@ -1862,28 +1803,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		vars_of_objects_tty();
 #endif
 
-#ifdef HAVE_GTK
-		vars_of_device_gtk();
-#ifdef HAVE_DIALOGS
-		vars_of_dialog_gtk();
-#endif
-		vars_of_event_gtk();
-		vars_of_frame_gtk();
-		vars_of_glyphs_gtk();
-		vars_of_ui_gtk();
-#ifdef HAVE_MENUBARS
-		vars_of_menubar_gtk();
-#endif
-		vars_of_objects_gtk();
-		vars_of_select_gtk();
-#ifdef HAVE_SCROLLBARS
-		vars_of_scrollbar_gtk();
-#endif
-#if defined (HAVE_MENUBARS) || defined (HAVE_SCROLLBARS) || defined (HAVE_DIALOGS) || defined (HAVE_TOOLBARS)
-		vars_of_gui_gtk();
-#endif
-#endif				/* HAVE_GTK */
-
 #ifdef HAVE_X_WINDOWS
 #ifdef HAVE_BALLOON_HELP
 		vars_of_balloon_x();
@@ -2019,9 +1938,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		/* These rely on the glyphs just created in the previous function,
 		   and call Fadd_spec_to_specifier(), which relies on various
 		   variables initialized above. */
-#ifdef HAVE_GTK
-		complex_vars_of_glyphs_gtk();
-#endif
 #ifdef HAVE_X_WINDOWS
 		complex_vars_of_glyphs_x();
 #endif
@@ -2102,9 +2018,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		reinit_console_type_create_x();
 		reinit_console_type_create_device_x();
 #endif
-#ifdef HAVE_GTK
-		reinit_console_type_create_gtk();
-#endif
 
 		reinit_specifier_type_create();
 		reinit_specifier_type_create_image();
@@ -2139,9 +2052,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 #ifdef HAVE_X_WINDOWS
 		reinit_vars_of_event_Xt();
 #endif
-#ifdef HAVE_GTK
-		reinit_vars_of_event_gtk();
-#endif
 #if defined(HAVE_TTY) && (defined (DEBUG_TTY_EVENT_STREAM) || !defined (HAVE_X_WINDOWS))
 		reinit_vars_of_event_tty();
 #endif
@@ -2170,10 +2080,6 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		reinit_vars_of_search();
 		reinit_vars_of_undo();
 		reinit_vars_of_window();
-
-#ifdef HAVE_GTK
-		reinit_vars_of_menubar_gtk();
-#endif
 
 #ifdef HAVE_X_WINDOWS
 		reinit_vars_of_device_x();
@@ -3206,24 +3112,23 @@ Non-nil return value means SXEmacs is running without interactive terminal.
 	return noninteractive ? Qt : Qnil;
 }
 
+#ifdef USE_ASSERTIONS
+static int in_assert_failed = 0;
+static const char *assert_failed_file = NULL;
+static int assert_failed_line = 0;
+static const char *assert_failed_expr = NULL;
 /* This flag is useful to define if you're under a debugger; this way, you
    can put a breakpoint of assert_failed() and debug multiple problems
    in one session without having to recompile. */
-/* #define ASSERTIONS_DONT_ABORT */
-
-#ifdef USE_ASSERTIONS
-/* This highly dubious kludge ... shut up Jamie, I'm tired of your slagging. */
-
-static int in_assert_failed;
-static const char *assert_failed_file;
-static int assert_failed_line;
-static const char *assert_failed_expr;
+static int assertions_dont_abort = 0;
 
 #ifdef fprintf
 #undef fprintf
 #endif
 
+#ifdef abort
 #undef abort			/* avoid infinite #define loop... */
+#endif
 
 #define enter_debugger()
 
@@ -3244,18 +3149,21 @@ assert_failed(const char *file, int line, const char *expr)
 		_exit(-1);
 	else if (in_assert_failed == 3) {
 		enter_debugger();
-		_exit(-1);
+		abort();
 	} else if (in_assert_failed == 2) {
 		/* Not stderr_out(), which does additional things and may trigger
 		   a recursive assertion failure.  fprintf was undeffed above, in
 		   case it was encapsulated. */
 		fprintf(stderr,
-			"\nFatal error: recursive assertion failure, "
+			"\n\nFatal error: recursive assertion failure, "
 			"file %s, line %d, %s\n", file, line, expr);
 		fprintf(stderr,
 			"Original assertion failure: file %s, line %d, %s\n",
 			assert_failed_file, assert_failed_line,
 			assert_failed_expr);
+		fflush(stderr);
+		enter_debugger();
+		debug_short_backtrace(0x7FFF);
 	} else {
 		assert_failed_file = file;
 		assert_failed_line = line;
@@ -3269,13 +3177,13 @@ assert_failed(const char *file, int line, const char *expr)
 			stderr_out
 			    ("\nFatal error: assertion failed, file %s, line %d, %s\n",
 			     file, line, expr);
+		fflush(stderr);
+		enter_debugger();
+		debug_backtrace();
 	}
-	fflush(stderr);
-
-	enter_debugger();
-#if !defined (ASSERTIONS_DONT_ABORT)
-	abort();
-#endif
+	if (! assertions_dont_abort) {
+		abort();
+	}
 	inhibit_non_essential_printing_operations = 0;
 	in_assert_failed = 0;
 }

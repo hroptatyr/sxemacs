@@ -1322,9 +1322,6 @@ See `default-gutter-height' for more information.
 #ifdef HAVE_TTY
 	fb = Fcons(Fcons(list1(Qtty), Qautodetect), fb);
 #endif
-#ifdef HAVE_GTK
-	fb = Fcons(Fcons(list1(Qgtk), Qautodetect), fb);
-#endif
 #ifdef HAVE_X_WINDOWS
 	fb = Fcons(Fcons(list1(Qx), Qautodetect), fb);
 #endif
@@ -1337,9 +1334,6 @@ See `default-gutter-height' for more information.
 #endif
 #ifdef HAVE_X_WINDOWS
 	fb = Fcons(Fcons(list1(Qx), Qautodetect), fb);
-#endif
-#ifdef HAVE_GTK
-	fb = Fcons(Fcons(list1(Qgtk), Qautodetect), fb);
 #endif
 	if (!NILP(fb))
 		set_specifier_fallback(Vdefault_gutter_width, fb);

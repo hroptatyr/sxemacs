@@ -229,7 +229,7 @@ static widget_value *dbox_descriptor_to_widget_value(Lisp_Object keys)
 			      "%c%dBR%d", type, lbuttons + rbuttons,
 			      rbuttons);
 
-		assert(sz >= 0 && sz < sizeof(tmp_dbox_name));
+		assert(sz >= 0 && (size_t)sz < sizeof(tmp_dbox_name));
 		dbox = xmalloc_widget_value();
 		dbox->name = xstrdup(tmp_dbox_name);
 		dbox->contents = kids;

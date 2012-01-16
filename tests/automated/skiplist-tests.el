@@ -99,7 +99,7 @@
   (map-skiplist
    #'(lambda (key val)
        (Assert (skiplist-owns-p sl3 key))
-       (Assert (equal (get-skiplist sl3 key) val)))
+       (Assert-Equal (get-skiplist sl3 key) val))
    sl1)
 
   (loop for i to 20000 do (put-skiplist sl1 i i))

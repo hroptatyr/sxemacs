@@ -766,8 +766,7 @@ See `face-property-instance' for the semantics of the DOMAIN argument."
 		(face-equal-loop tty-props face1 face2 domain))
  	       ;; #### Why isn't this (console-on-window-system-p (device-console device))?
  	       ;; #### FIXME!
-	       ((or (eq 'x (device-type device))
-		    (eq 'gtk (device-type device)))
+	       ((eq 'x (device-type device))
 		(face-equal-loop win-props face1 face2 domain))
 	       (t t)))))
 
@@ -1056,9 +1055,6 @@ circumstances."
        (set-face-highlight-p face t locale (cons 'tty tags))))
    (lambda ()
      ;; handle window-system specific entries
-     (when (featurep 'gtk)
-       (frob-face-property face 'font 'gtk-make-font-bold
-			   '(gtk) locale tags))
      (when (featurep 'x)
        (frob-face-property face 'font 'x-make-font-bold
 			   '(x) locale tags))
@@ -1083,9 +1079,6 @@ how this function works."
        (set-face-underline-p face t locale (cons 'tty tags))))
    (lambda ()
      ;; handle window-system specific entries
-     (when (featurep 'gtk)
-       (frob-face-property face 'font 'gtk-make-font-italic
-			   '(gtk) locale tags))
      (when (featurep 'x)
        (frob-face-property face 'font 'x-make-font-italic
 			   '(x) locale tags))
@@ -1111,9 +1104,6 @@ argument and for more specifics on exactly how this function works."
        (set-face-underline-p face t locale (cons 'tty tags))))
    (lambda ()
      ;; handle window-system specific entries
-     (when (featurep 'gtk)
-       (frob-face-property face 'font 'gtk-make-font-bold-italic
-			   '(gtk) locale tags))
      (when (featurep 'x)
        (frob-face-property face 'font 'x-make-font-bold-italic
 			   '(x) locale tags))
@@ -1138,9 +1128,6 @@ specifics on exactly how this function works."
        (set-face-highlight-p face nil locale (cons 'tty tags))))
    (lambda ()
      ;; handle window-system specific entries
-     (when (featurep 'gtk)
-       (frob-face-property face 'font 'gtk-make-font-unbold
-			   '(gtk) locale tags))
      (when (featurep 'x)
        (frob-face-property face 'font 'x-make-font-unbold
 			   '(x) locale tags))
@@ -1165,9 +1152,6 @@ specifics on exactly how this function works."
        (set-face-underline-p face nil locale (cons 'tty tags))))
    (lambda ()
      ;; handle window-system specific entries
-     (when (featurep 'gtk)
-       (frob-face-property face 'font 'gtk-make-font-unitalic
-			   '(gtk) locale tags))
      (when (featurep 'x)
        (frob-face-property face 'font 'x-make-font-unitalic
 			   '(x) locale tags))
@@ -1525,8 +1509,6 @@ and 'global)."
     ;; Then do any device-specific initialization.
     (cond ((eq 'x (device-type device))
 	   (declare-fboundp (x-init-device-faces device)))
-	  ((eq 'gtk (device-type device))
-	   (declare-fboundp (gtk-init-device-faces device)))
 	  ;; Nothing to do for TTYs?
 	  )
     (or (eq 'stream (device-type device))
@@ -1540,8 +1522,6 @@ and 'global)."
     ;; Then do any frame-specific initialization.
     (cond ((eq 'x (frame-type frame))
 	   (declare-fboundp (x-init-frame-faces frame)))
-	  ((eq 'gtk (frame-type frame))
-	   (declare-fboundp (gtk-init-frame-faces frame)))
 	  ;; Is there anything which should be done for TTY's?
 	  )))
 
@@ -1557,7 +1537,6 @@ and 'global)."
 	(init-face-from-resources face 'global))
   ;; Further X frobbing.
   (and (featurep 'x) (declare-fboundp (x-init-global-faces)))
-  (and (featurep 'gtk) (declare-fboundp (gtk-init-global-faces)))
 
   ;; for bold and the like, make the global specification be bold etc.
   ;; if the user didn't already specify a value.  These will also be
@@ -1782,8 +1761,7 @@ in that frame; otherwise change each frame."
 		       ((x default grayscale) . "gray53"))
 		     'global)
 (set-face-background-pixmap 'highlight
-			    '(((x default mono) . "gray1")
- 			      ((gtk default mono) . "gray1"))
+			    '(((x default mono) . "gray1"))
 			    'global)
 
 (set-face-background 'zmacs-region
@@ -1791,17 +1769,13 @@ in that frame; otherwise change each frame."
 		       ((x default grayscale) . "gray65"))
 		     'global)
 (set-face-background-pixmap 'zmacs-region
-			    '(((x default mono) . "gray3")
- 			      ((gtk default mono) . "gray3"))
+			    '(((x default mono) . "gray3"))
 			    'global)
 
 (set-face-background 'list-mode-item-selected
 		     '(((x default color) . "gray68")
 		       ((x default grayscale) . "gray68")
-		       ((x default mono) . [default foreground])
- 		       ((gtk default color) . "gray68")
- 		       ((gtk default grayscale) . "gray68")
- 		       ((gtk default mono) . [default foreground]))
+		       ((x default mono) . [default foreground]))
 		     'global)
 (set-face-foreground 'list-mode-item-selected
 		     '(((x default mono) . [default background]))
@@ -1812,28 +1786,21 @@ in that frame; otherwise change each frame."
 		       ((x default grayscale) . "gray65"))
 		     'global)
 (set-face-background-pixmap 'primary-selection
-			    '(((x default mono) . "gray3")
-			      ((gtk default mono) . "gray3"))
+			    '(((x default mono) . "gray3"))
 			    'global)
 
 (set-face-background 'secondary-selection
 		     '(((x default color) . "paleturquoise")
 		       ((x default color) . "green")
-		       ((x default grayscale) . "gray53")
-		       ((gtk default color) . "paleturquoise")
-		       ((gtk default color) . "green")
-		       ((gtk default grayscale) . "gray53"))
+		       ((x default grayscale) . "gray53"))
 		     'global)
 (set-face-background-pixmap 'secondary-selection
-			    '(((x default mono) . "gray1")
-			      ((gtk default mono) . "gray1"))
+			    '(((x default mono) . "gray1"))
 			    'global)
 
 (set-face-background 'isearch
 		     '(((x default color) . "paleturquoise")
-		       ((x default color) . "green")
-		       ((gtk default color) . "paleturquoise")
-		       ((gtk default color) . "green"))
+		       ((x default color) . "green"))
 		     'global)
 
 ;; #### This should really, I mean *really*, be converted to some form
