@@ -1262,7 +1262,7 @@ lisp_data_to_selection_data(struct device *d, Lisp_Object obj,
                 Extcount extvallen;
                 TO_EXTERNAL_FORMAT(LISP_STRING, obj, ALLOCA, (extval, extvallen),
                                    (NILP(type) ? Qctext : Qbinary));
-		if { extval != NULL ) {
+		if ( extval != NULL ) {
 			*format_ret = 8;
 			*size_ret = extvallen;
 			*data_ret = (unsigned char *)xmalloc_atomic(*size_ret);
