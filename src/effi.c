@@ -1056,14 +1056,16 @@ object of the underlying type pointed to.
                         SIGNAL_ERROR(Qwrong_type_argument, list2(Qfloatp, val));
                 *(double*)ptr = XFLOAT_DATA(val);
         } else if (EQ(val_type, Q_c_string)) {
-		char *tmp;
+		char *tmp = NULL;
 		int tmplen;
                 if (!STRINGP(val))
                         SIGNAL_ERROR(Qwrong_type_argument, list2(Qstringp, val));
 #if defined(MULE)
 		TO_EXTERNAL_FORMAT(LISP_STRING, val,
 				   ALLOCA, (tmp, tmplen), Qnil);
-		memcpy((char*)ptr, tmp, tmplen + 1);
+		if ( tmp != NULL ) {
+			     memcpy((char*)ptr, tmp, tmplen + 1);
+		}
 #else
                 memcpy((char*)ptr,
 		       (const char *)XSTRING_DATA(val),
