@@ -318,12 +318,15 @@ widget_value *replace_widget_value_tree(widget_value * node,
 
 	if (!node || !newtree)
 		abort();
+	else {
 
-	copy = copy_widget_value_tree(newtree, STRUCTURAL_CHANGE);
+		copy = copy_widget_value_tree(newtree, STRUCTURAL_CHANGE);
 
-	free_widget_value_contents(node);
-	*node = *copy;
-	free_widget_value(copy);	/* free the node, but not its contents. */
+		free_widget_value_contents(node);
+		*node = *copy;
+                /* free the node, but not its contents. */
+		free_widget_value(copy);	
+	}
 	return node;
 }
 
@@ -447,8 +450,7 @@ lw_map_widget_values(LWLIB_ID id, int (*mapfunc) (widget_value * value,
 
 	if (!info)
 		abort();
-
-	if (info->val)
+	else if (info->val)
 		return map_widget_values(info->val, mapfunc, closure);
 	return 0;
 }
