@@ -1072,14 +1072,15 @@ object of the underlying type pointed to.
         } else if (EQ(val_type, Q_c_data) ||
 		   (CONSP(val_type) &&
 		    EQ(XCAR(val_type), Q_c_data) && INTP(XCDR(val_type)))) {
-		char *val_ext;
+		char *val_ext = NULL;
 		unsigned int val_ext_len;
                 if (!STRINGP(val))
                         SIGNAL_ERROR(Qwrong_type_argument, list2(Qstringp, val));
 
 		TO_EXTERNAL_FORMAT(LISP_STRING, val, ALLOCA,
 				   (val_ext, val_ext_len), Qbinary);
-                if (CONSP(val_type) && (val_ext_len > XINT(XCDR(val_type)))) {
+                if (val_ext == NULL || 
+		    (CONSP(val_type) && (val_ext_len > XINT(XCDR(val_type))))) {
 #ifdef SXEMACS
                         error("storage size too small");
 #else
@@ -1087,8 +1088,9 @@ object of the underlying type pointed to.
 				list2(Qstringp,
 				      build_string("storage size too small")));
 #endif	/* SXEMACS */
+		} else {
+			memcpy((char*)ptr, (const char *)val_ext, val_ext_len);
 		}
-                memcpy((char*)ptr, (const char *)val_ext, val_ext_len);
         } else if (FFI_POINTERP(val_type)) {
                 if (!EFFIOP(val)) {
 #ifdef SXEMACS
