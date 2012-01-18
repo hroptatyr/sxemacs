@@ -758,7 +758,8 @@ scan_c_file(const char *filename, const char *mode)
 				/* Copy arguments into ARGBUF. */
 				*p++ = c;
 				do {
-					*p++ = c = getc(infile);
+					c = getc(infile);
+					*p++ = (char)(c);
 				} while (c != ')');
 				*p = '\0';
 				/* Output them. */
@@ -818,7 +819,7 @@ eof:
 static void
 skip_white(FILE *infile)
 {
-	char c = ' ';
+	int c = ' ';
 	while (c == ' ' || c == '\t' || c == '\n') {
 		c = getc(infile);
 	}
@@ -829,7 +830,7 @@ skip_white(FILE *infile)
 static void
 read_lisp_symbol(FILE *infile, char *buffer)
 {
-	char c;
+	int c;
 	char *fillp = buffer;
 
 	skip_white(infile);
@@ -846,7 +847,7 @@ read_lisp_symbol(FILE *infile, char *buffer)
 			*fillp = 0;
 			break;
 		} else {
-			*fillp++ = c;
+			*fillp++ = (char)(c);
 		}
 	}
 
@@ -883,7 +884,7 @@ get_dyna_doc(FILE *infile, char **saved_string)
 	for (i = 0; i < length; i++) {
 		c = getc(infile);
 		if ( c >= 0 )
-			(*saved_string)[i] = (char)(c & 0xFF);
+			(*saved_string)[i] = (char)(c);
 		else {
 			(*saved_string)[i] = '\0';
 			break;

@@ -373,7 +373,7 @@ static SIGTYPE interrupt_signal(int sig)
 	if (sigint_happened && CONSOLEP(Vcontrolling_terminal) &&
 	    CONSOLE_LIVE_P(XCONSOLE(Vcontrolling_terminal)) &&
 	    !emacs_is_blocking) {
-		char c;
+		int c;
 		fflush(stdout);
 		reset_initial_console();
 		EMACS_UNBLOCK_SIGNAL(sig);

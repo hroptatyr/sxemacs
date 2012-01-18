@@ -153,115 +153,115 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 
 	if ((!!cache->head) != (!!cache->tail))
 		abort();
-	if (cache->head && (cache->head->prev || cache->tail->next))
-		abort();
-
-	gcvm.mask = mask;
-	gcvm.gcv = *gcv;	/* this copies... */
-
-#ifdef GCCACHE_HASH
-
-	if (gethash(&gcvm, cache->table, (const void **)((void*)&cell)))
-#else				/* !GCCACHE_HASH */
-
-	cell = cache->tail;	/* start at the end (most recently used) */
-	while (cell) {
-		if (gc_cache_eql(&gcvm, &cell->gcvm))
-			break;
-		else
-			cell = cell->prev;
-	}
-
-	/* #### This whole file needs some serious overhauling. */
-	if (!(mask | GCTile) && cell->gc->values.tile)
-		cell = 0;
-	else if (!(mask | GCStipple) && cell->gc->values.stipple)
-		cell = 0;
-
-	if (cell)
-#endif				/* !GCCACHE_HASH */
-
-	{
-		/* Found a cell.  Move this cell to the end of the list, so that it
-		   will be less likely to be collected than a cell that was accessed
-		   less recently.
-		 */
-		if (cell == cache->tail)
-			return cell->gc;
-
-		next = cell->next;
-		prev = cell->prev;
-		if (prev)
-			prev->next = next;
-		if (next)
-			next->prev = prev;
-		if (cache->head == cell)
-			cache->head = next;
-		cell->next = 0;
-		cell->prev = cache->tail;
-		cache->tail->next = cell;
-		cache->tail = cell;
-		if (cache->head == cell)
-			abort();
-		if (cell->next)
-			abort();
-		if (cache->head->prev)
-			abort();
-		if (cache->tail->next)
-			abort();
-		return cell->gc;
-	}
-
-	/* else, cache miss. */
-
-	if (cache->size == GC_CACHE_SIZE)
-		/* Reuse the first cell on the list (least-recently-used).
-		   Remove it from the list, and unhash it from the table.
-		 */
-	{
-		cell = cache->head;
-		cache->head = cell->next;
-		cache->head->prev = 0;
-		if (cache->tail == cell)
-			cache->tail = 0;	/* only one */
-		XFreeGC(cache->dpy, cell->gc);
-		cache->delete_count++;
-#ifdef GCCACHE_HASH
-		remhash(&cell->gcvm, cache->table);
-#endif
-	} else if (cache->size > GC_CACHE_SIZE)
+	else if (cache->head && (cache->head->prev || cache->tail->next))
 		abort();
 	else {
-		/* Allocate a new cell (don't put it in the list or table yet). */
-		cell = xnew(struct gc_cache_cell);
-		cache->size++;
-	}
+		gcvm.mask = mask;
+		gcvm.gcv = *gcv;	/* this copies... */
 
-	/* Now we've got a cell (new or reused).  Fill it in. */
-	memcpy(&cell->gcvm.gcv, gcv, sizeof(XGCValues));
-	cell->gcvm.mask = mask;
-
-	/* Put the cell on the end of the list. */
-	cell->next = 0;
-	cell->prev = cache->tail;
-	if (cache->tail)
-		cache->tail->next = cell;
-	cache->tail = cell;
-	if (!cache->head)
-		cache->head = cell;
-
-	cache->create_count++;
 #ifdef GCCACHE_HASH
-	/* Hash it in the table */
-	puthash(&cell->gcvm, cell, cache->table);
+
+		if (gethash(&gcvm, cache->table, (const void **)((void*)&cell)))
+#else				/* !GCCACHE_HASH */
+
+			cell = cache->tail;	/* start at the end (most recently used) */
+		while (cell) {
+			if (gc_cache_eql(&gcvm, &cell->gcvm))
+				break;
+			else
+				cell = cell->prev;
+		}
+
+		/* #### This whole file needs some serious overhauling. */
+		if (!(mask | GCTile) && cell->gc->values.tile)
+			cell = 0;
+		else if (!(mask | GCStipple) && cell->gc->values.stipple)
+			cell = 0;
+		
+		if (cell)
+#endif				/* !GCCACHE_HASH */
+
+		{
+			/* Found a cell.  Move this cell to the end of the list, so that it
+			   will be less likely to be collected than a cell that was accessed
+			   less recently.
+			*/
+			if (cell == cache->tail)
+				return cell->gc;
+			
+			next = cell->next;
+			prev = cell->prev;
+			if (prev)
+				prev->next = next;
+			if (next)
+				next->prev = prev;
+			if (cache->head == cell)
+				cache->head = next;
+			cell->next = 0;
+			cell->prev = cache->tail;
+			cache->tail->next = cell;
+			cache->tail = cell;
+			if (cache->head == cell)
+				abort();
+			else if (cell->next)
+				abort();
+			else if (cache->head->prev)
+				abort();
+			else if (cache->tail->next)
+				abort();
+			return cell->gc;
+		}
+		
+		/* else, cache miss. */
+		
+		if (cache->size == GC_CACHE_SIZE)
+			/* Reuse the first cell on the list (least-recently-used).
+			   Remove it from the list, and unhash it from the table.
+			*/
+		{
+			cell = cache->head;
+			cache->head = cell->next;
+			cache->head->prev = 0;
+			if (cache->tail == cell)
+				cache->tail = 0;	/* only one */
+			XFreeGC(cache->dpy, cell->gc);
+			cache->delete_count++;
+#ifdef GCCACHE_HASH
+			remhash(&cell->gcvm, cache->table);
 #endif
-
-	/* Now make and return the GC. */
-	cell->gc = XCreateGC(cache->dpy, cache->window, mask, gcv);
-
-	/* debug */
-	assert(cell->gc == gc_cache_lookup(cache, gcv, mask));
-
+		} else if (cache->size > GC_CACHE_SIZE)
+			abort();
+		else {
+			/* Allocate a new cell (don't put it in the list or table yet). */
+			cell = xnew(struct gc_cache_cell);
+			cache->size++;
+		}
+		
+		/* Now we've got a cell (new or reused).  Fill it in. */
+		memcpy(&cell->gcvm.gcv, gcv, sizeof(XGCValues));
+		cell->gcvm.mask = mask;
+		
+		/* Put the cell on the end of the list. */
+		cell->next = 0;
+		cell->prev = cache->tail;
+		if (cache->tail)
+			cache->tail->next = cell;
+		cache->tail = cell;
+		if (!cache->head)
+			cache->head = cell;
+		
+		cache->create_count++;
+#ifdef GCCACHE_HASH
+		/* Hash it in the table */
+		puthash(&cell->gcvm, cell, cache->table);
+#endif
+		
+		/* Now make and return the GC. */
+		cell->gc = XCreateGC(cache->dpy, cache->window, mask, gcv);
+		
+		/* debug */
+		assert(cell->gc == gc_cache_lookup(cache, gcv, mask));
+	}
 	return cell->gc;
 }
 

@@ -2504,7 +2504,7 @@ Do not call this.  It will reinitialize your SXEmacs.  You'll be sorry.
       (int nargs, Lisp_Object * args))
 {
 	int ac;
-	const Extbyte *wampum;
+	const Extbyte *wampum = NULL;
 	int namesize;
 	int total_len;
 	Lisp_Object orig_invoc_name = Fcar(Vcommand_line_args);
@@ -2521,13 +2521,20 @@ Do not call this.  It will reinitialize your SXEmacs.  You'll be sorry.
 
 	TO_EXTERNAL_FORMAT(LISP_STRING, orig_invoc_name,
 			   ALLOCA, (wampum, namesize), Qnative);
+	if ( wampum == NULL )
+		error("Could not transcode invocation name");
+
 	namesize++;
 
 	for (ac = 0, total_len = namesize; ac < nargs; ac++) {
 		CHECK_STRING(args[ac]);
+		wampum_all[ac]=NULL;
 		TO_EXTERNAL_FORMAT(LISP_STRING, args[ac],
 				   ALLOCA, (wampum_all[ac], wampum_all_len[ac]),
 				   Qnative);
+		if(wampum_all[ac]==NULL) {
+			error("Could not transcode arguments");
+		}
 		wampum_all_len[ac]++;
 		total_len += wampum_all_len[ac];
 	}
@@ -3039,8 +3046,8 @@ split_string_by_emchar_1(const Bufbyte * string, Bytecount size, Emchar sepchar)
    (':' or whatever).  */
 Lisp_Object decode_path(/*const*/ char *path)
 {
-	Bytecount newlen;
-	Bufbyte *newpath;
+	Bytecount newlen = 0;
+	Bufbyte *newpath = NULL;
 	if (!path)
 		return Qnil;
 
@@ -3051,7 +3058,7 @@ Lisp_Object decode_path(/*const*/ char *path)
 	   decode_env_path(), but it looks dubious here.  Does any code
 	   depend on decode_path("") returning nil instead of an empty
 	   string?  */
-	if (!newlen)
+	if (!newlen || !newpath)
 		return Qnil;
 
 	return split_string_by_emchar_1(newpath, newlen, SEPCHAR);
