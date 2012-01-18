@@ -3699,7 +3699,7 @@ extern Lisp_Object Qrun_hooks, Qsans_modifiers;
 extern Lisp_Object Qsave_buffers_kill_emacs;
 extern Lisp_Object Qself_insert_command, Qself_insert_defer_undo;
 extern Lisp_Object Qsequencep, Qset, Qsetting_constant;
-extern Lisp_Object Qseven, Qshift_jis, Qshort;
+extern Lisp_Object Qseven, Qshift_jis;
 extern Lisp_Object Qsingularity_error;
 extern Lisp_Object Qstandard_input, Qstandard_output;
 extern Lisp_Object Qstart_open;

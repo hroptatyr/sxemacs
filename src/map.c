@@ -59,7 +59,7 @@ Lisp_Object Qcart, Qcartesian;
 
 typedef Lisp_Object(*glue_f)(int nargs, Lisp_Object *args);
 
-static Lisp_Object Qinplace, Qvoid, Qlitter, Qconcat;
+static Lisp_Object Qinplace, Qlitter, Qconcat;
 static Lisp_Object Qvector, Qbit_vector;
 
 EXFUN(Fstring, MANY);
@@ -4230,7 +4230,6 @@ map_LTX_init(void)
 	DEFKEYWORD(Q_terminator);
 	/* symbols for result and glue */
 	DEFSYMBOL(Qinplace);
-	DEFSYMBOL(Qvoid);
 	DEFSYMBOL(Qlitter);
 	DEFSYMBOL(Qlist);
 	DEFSYMBOL(Qdllist);

@@ -99,7 +99,7 @@ Lisp_Object Qforce_g2_on_output, Qforce_g3_on_output;
 Lisp_Object Qno_iso6429;
 Lisp_Object Qinput_charset_conversion, Qoutput_charset_conversion;
 Lisp_Object Qescape_quoted;
-Lisp_Object Qshort, Qno_ascii_eol, Qno_ascii_cntl, Qseven, Qlock_shift;
+Lisp_Object Qno_ascii_eol, Qno_ascii_cntl, Qseven, Qlock_shift;
 #endif
 Lisp_Object Qencode, Qdecode;
 
@@ -5700,7 +5700,6 @@ void syms_of_file_coding(void)
 	defsymbol(&Qinput_charset_conversion, "input-charset-conversion");
 	defsymbol(&Qoutput_charset_conversion, "output-charset-conversion");
 
-	defsymbol(&Qshort, "short");
 	defsymbol(&Qno_ascii_eol, "no-ascii-eol");
 	defsymbol(&Qno_ascii_cntl, "no-ascii-cntl");
 	defsymbol(&Qseven, "seven");
