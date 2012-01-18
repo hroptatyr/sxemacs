@@ -1710,15 +1710,22 @@ to 0.
 	Bufbyte str[MAX_EMCHAR_LEN];
 	Bytecount len;
 	int extlen;
-	const Extbyte *extptr;
+	const Extbyte *extptr = NULL;
 
 	CHECK_CHAR_COERCE_INT(character);
 	len = set_charptr_emchar(str, XCHAR(character));
 	TO_EXTERNAL_FORMAT(DATA, (str, len),
 			   ALLOCA, (extptr, extlen), Qterminal);
-	memcpy(alternate_do_string + alternate_do_pointer, extptr, extlen);
-	alternate_do_pointer += extlen;
-	alternate_do_string[alternate_do_pointer] = 0;
+	if ( extptr != NULL ) {
+		memcpy(alternate_do_string + alternate_do_pointer, extptr, extlen);
+		alternate_do_pointer += extlen;
+		alternate_do_string[alternate_do_pointer] = 0;
+	} else {
+		/* Better bad transcoding than nothing I guess... */
+		memcpy(alternate_do_string + alternate_do_pointer, str, len);
+		alternate_do_pointer += len;
+		alternate_do_string[alternate_do_pointer] = 0;
+	}
 	return character;
 }
 
