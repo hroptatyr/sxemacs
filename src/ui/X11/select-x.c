@@ -1258,14 +1258,18 @@ lisp_data_to_selection_data(struct device *d, Lisp_Object obj,
                 *format_ret = 32;
                 *size_ret = 0; *data_ret = 0; type = QNULL;
         } else if (STRINGP(obj)) {
-                const Extbyte * extval;
+                const Extbyte * extval = NULL;
                 Extcount extvallen;
                 TO_EXTERNAL_FORMAT(LISP_STRING, obj, ALLOCA, (extval, extvallen),
                                    (NILP(type) ? Qctext : Qbinary));
-                *format_ret = 8;
-                *size_ret = extvallen;
-                *data_ret = (unsigned char *)xmalloc_atomic(*size_ret);
-                memcpy(*data_ret, extval, *size_ret);
+		if { extval != NULL ) {
+			*format_ret = 8;
+			*size_ret = extvallen;
+			*data_ret = (unsigned char *)xmalloc_atomic(*size_ret);
+			memcpy(*data_ret, extval, *size_ret);
+		} else {
+			error("Could not transcode string");
+		}
 #ifdef MULE
                 if (NILP(type))
                         type = QCOMPOUND_TEXT;
@@ -1275,15 +1279,19 @@ lisp_data_to_selection_data(struct device *d, Lisp_Object obj,
         } else if (CHARP(obj)) {
                 Bufbyte buf[MAX_EMCHAR_LEN];
                 Bytecount len;
-                const Extbyte * extval;
+                const Extbyte * extval = NULL;
                 Extcount extvallen;
                 *format_ret = 8;
                 len = set_charptr_emchar(buf, XCHAR(obj));
                 TO_EXTERNAL_FORMAT(DATA, (buf, len), ALLOCA, (extval, extvallen),
                                    Qctext);
-                *size_ret = extvallen;
-                *data_ret = (unsigned char *)xmalloc_atomic(*size_ret);
-                memcpy(*data_ret, extval, *size_ret);
+		if ( extvall != NULL ) {
+			*size_ret = extvallen;
+			*data_ret = (unsigned char *)xmalloc_atomic(*size_ret);
+			memcpy(*data_ret, extval, *size_ret);
+		} else {
+			error("Could not transcode data");
+		}
 #ifdef MULE
                 if (NILP(type))
                         type = QCOMPOUND_TEXT;
