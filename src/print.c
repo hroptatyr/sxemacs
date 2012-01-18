@@ -325,7 +325,7 @@ write_string_to_stdio_stream(FILE * stream, struct console *con,
 			     Lisp_Object coding_system, int must_flush)
 {
 	Extcount extlen;
-	const Extbyte *extptr;
+	const Extbyte *extptr = NULL;
 
 	/* #### yuck! sometimes this function is called with string data,
 	   and the following call may gc. */
@@ -333,11 +333,12 @@ write_string_to_stdio_stream(FILE * stream, struct console *con,
 		Bufbyte *puta = (Bufbyte *) alloca(len);
 		memcpy(puta, str + offset, len);
 
-		if (initialized && !inhibit_non_essential_printing_operations)
+		if (initialized && !inhibit_non_essential_printing_operations) {
 			TO_EXTERNAL_FORMAT(DATA, (puta, len),
 					   ALLOCA, (extptr, extlen),
 					   coding_system);
-		else {
+		}
+		if( extptr == NULL ) {
 			extptr = (Extbyte *) puta;
 			extlen = (Bytecount) len;
 		}
