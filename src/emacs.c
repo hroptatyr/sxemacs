@@ -3046,8 +3046,8 @@ split_string_by_emchar_1(const Bufbyte * string, Bytecount size, Emchar sepchar)
    (':' or whatever).  */
 Lisp_Object decode_path(/*const*/ char *path)
 {
-	Bytecount newlen;
-	Bufbyte *newpath;
+	Bytecount newlen = 0;
+	Bufbyte *newpath = NULL;
 	if (!path)
 		return Qnil;
 
@@ -3058,7 +3058,7 @@ Lisp_Object decode_path(/*const*/ char *path)
 	   decode_env_path(), but it looks dubious here.  Does any code
 	   depend on decode_path("") returning nil instead of an empty
 	   string?  */
-	if (!newlen)
+	if (!newlen || !newpath)
 		return Qnil;
 
 	return split_string_by_emchar_1(newpath, newlen, SEPCHAR);
