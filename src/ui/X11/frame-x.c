@@ -758,15 +758,19 @@ static void x_set_frame_properties(struct frame *f, Lisp_Object plist)
 
 			LISP_STRING_TO_EXTERNAL(prop, extprop, Qctext);
 			if (STRINGP(val)) {
-				const Extbyte *extval;
+				const Extbyte *extval = NULL;
 				Extcount extvallen;
 
 				TO_EXTERNAL_FORMAT(LISP_STRING, val,
 						   ALLOCA, (extval, extvallen),
 						   Qctext);
-				XtVaSetValues(w, XtVaTypedArg, extprop,
-					      XtRString, extval, extvallen + 1,
-					      NULL);
+				if ( extval != NULL ) {
+					XtVaSetValues(w, XtVaTypedArg, extprop,
+						      XtRString, extval, extvallen + 1,
+						      NULL);
+				} else {
+					warn("Could not transcode property");
+				}
 			} else
 				XtVaSetValues(w, XtVaTypedArg, extprop, XtRInt,
 					      XINT(val), sizeof(int),

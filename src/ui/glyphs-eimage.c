@@ -379,7 +379,7 @@ jpeg_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 
 	{
 		Lisp_Object data = find_keyword_in_vector(instantiator, Q_data);
-		const Extbyte *bytes;
+		const Extbyte *bytes = NULL;
 		Extcount len;
 
 #ifdef HAVE_FFI
@@ -393,7 +393,13 @@ jpeg_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		   write out to a file. */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data, ALLOCA, (bytes, len),
 				   Qbinary);
-		jpeg_memory_src(&cinfo, (const JOCTET*)bytes, len);
+		if ( bytes != NULL ) {
+			jpeg_memory_src(&cinfo, (const JOCTET*)bytes, len);
+		} else {
+			signal_image_error
+			    ("Unable to transcode image source",
+			     instantiator);
+		}
 	}
 
 	/* Step 3: read file parameters with jpeg_read_header() */
