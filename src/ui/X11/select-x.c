@@ -1285,7 +1285,7 @@ lisp_data_to_selection_data(struct device *d, Lisp_Object obj,
                 len = set_charptr_emchar(buf, XCHAR(obj));
                 TO_EXTERNAL_FORMAT(DATA, (buf, len), ALLOCA, (extval, extvallen),
                                    Qctext);
-		if ( extvall != NULL ) {
+		if ( extval != NULL ) {
 			*size_ret = extvallen;
 			*data_ret = (unsigned char *)xmalloc_atomic(*size_ret);
 			memcpy(*data_ret, extval, *size_ret);
