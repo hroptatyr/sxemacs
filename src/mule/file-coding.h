@@ -257,7 +257,7 @@ extern Lisp_Object Qmnemonic, Qno_ascii_cntl, Qno_ascii_eol, Qno_conversion;
 extern Lisp_Object Qraw_text;
 extern Lisp_Object Qno_iso6429, Qoutput_charset_conversion;
 extern Lisp_Object Qpost_read_conversion, Qpre_write_conversion, Qseven;
-extern Lisp_Object Qshift_jis, Qshort, Vcoding_system_for_read;
+extern Lisp_Object Qshift_jis, Vcoding_system_for_read;
 extern Lisp_Object Vcoding_system_for_write, Vcoding_system_hash_table;
 extern Lisp_Object Vfile_name_coding_system, Vkeyboard_coding_system;
 extern Lisp_Object Vterminal_coding_system;
