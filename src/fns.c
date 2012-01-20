@@ -911,18 +911,22 @@ concat(int nargs, Lisp_Object * args,
 		val =
 		    make_string(string_result,
 				string_result_ptr - string_result);
-		for (argnum = 0; argnum < nargs; argnum++) {
-			if (STRINGP(args_mse[argnum].string))
-				copy_string_extents(val,
-						    args_mse[argnum].string,
-						    args_mse[argnum].
-						    entry_offset, 0,
-						    args_mse[argnum].
-						    entry_length);
+		if (args_mse != NULL) {
+			for (argnum = 0; argnum < nargs; argnum++) {
+				if (STRINGP(args_mse[argnum].string))
+					copy_string_extents(val,
+							    args_mse[argnum].string,
+							    args_mse[argnum].
+							    entry_offset, 0,
+							    args_mse[argnum].
+							    entry_length);
+			}
+			XMALLOC_UNBIND(string_result,
+				       total_length * MAX_EMCHAR_LEN, speccount);
+			XMALLOC_UNBIND(args_mse, nargs, speccount);
+		} else {
+			abort();
 		}
-                XMALLOC_UNBIND(string_result,
-			       total_length * MAX_EMCHAR_LEN, speccount);
-                XMALLOC_UNBIND(args_mse, nargs, speccount);
 	}
 
 	if (!NILP(prev))
