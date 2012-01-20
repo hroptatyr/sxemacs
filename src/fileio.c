@@ -1092,58 +1092,66 @@ in the realpath() function.
 
 	{
 		Lisp_Object handler =
-		    Ffind_file_name_handler(expanded_name, Qfile_truename);
-
+			Ffind_file_name_handler(expanded_name, Qfile_truename);
+		
 		if (!NILP(handler))
 			RETURN_UNGCPRO
-			    (call2_check_string
-			     (handler, Qfile_truename, expanded_name));
+				(call2_check_string
+				 (handler, Qfile_truename, expanded_name));
 	}
 
 	{
 		char resolved_path[MAXPATHLEN];
-		Extbyte *path;
-		Extbyte *p;
+		Extbyte *path = NULL;
+		Extbyte *p = NULL;
 		Extcount elen;
 
 		TO_EXTERNAL_FORMAT(LISP_STRING, expanded_name,
 				   ALLOCA, (path, elen), Qfile_name);
-
 		p = path;
 
 		if (elen > MAXPATHLEN)
 			goto toolong;
 
 		/* Try doing it all at once. */
-		/* !! Does realpath() Mule-encapsulate?
-		   Answer: Nope! So we do it above */
-		if (!xrealpath((char *)path, resolved_path)) {
-			/* Didn't resolve it -- have to do it one component at a time. */
-			/* "realpath" is a typically useless, stupid un*x piece of crap.
-			   It claims to return a useful value in the "error" case, but since
-			   there is no indication provided of how far along the pathname
-			   the function went before erring, there is no way to use the
-			   partial result returned.  What a piece of junk.
+		/* !! Does realpath() Mule-encapsulate?  Answer: Nope! 
+		   So we do it above */
+		if (path != NULL && !xrealpath((char *)path, resolved_path)) {
+			/* Didn't resolve it -- have to do it one
+			   component at a time. 
 
-			   The above comment refers to historical versions of
-			   realpath().  The Unix98 specs state:
+			   "realpath" is a typically useless, stupid
+			   un*x piece of crap.  It claims to return a
+			   useful value in the "error" case, but since
+			   there is no indication provided of how far
+			   along the pathname the function went before
+			   erring, there is no way to use the partial
+			   result returned.  What a piece of junk.
 
-			   "On successful completion, realpath() returns a
-			   pointer to the resolved name. Otherwise, realpath()
-			   returns a null pointer and sets errno to indicate the
-			   error, and the contents of the buffer pointed to by
-			   resolved_name are undefined."
+			   The above comment refers to historical
+			   versions of realpath().  The Unix98 specs
+			   state:
 
-			   Since we depend on undocumented semantics of various system realpath()s,
-			   we just use our own version in realpath.c. */
+			   "On successful completion, realpath()
+			   returns a pointer to the resolved
+			   name. Otherwise, realpath() returns a null
+			   pointer and sets errno to indicate the
+			   error, and the contents of the buffer
+			   pointed to by resolved_name are undefined."
+
+			   Since we depend on undocumented semantics
+			   of various system realpath()s, we just use
+			   our own version in realpath.c. 
+			*/
 			for (;;) {
-				Extbyte *pos;
+				Extbyte *pos = NULL;
 
-				for (pos = p + 1; pos < path + elen; pos++)
+				for (pos = p + 1; pos < path + elen; pos++) {
 					if (IS_DIRECTORY_SEP(*pos)) {
 						*(p = pos) = 0;
 						break;
 					}
+				}
 				if (p != pos)
 					p = 0;
 
@@ -1152,34 +1160,39 @@ in the realpath() function.
 						*p = DIRECTORY_SEP;
 					else
 						break;
-
+					
 				} else if (errno == ENOENT || errno == EACCES) {
-					/* Failed on this component.  Just tack on the rest of
-					   the string and we are done. */
+					/* Failed on this component.
+					   Just tack on the rest of
+					   the string and we are
+					   done. */
 					int rlen = strlen(resolved_path);
 
-					/* "On failure, it returns NULL, sets errno to indicate
-					   the error, and places in resolved_path the absolute pathname
-					   of the path component which could not be resolved." */
-
-					if (p) {
-						int plen = elen - (p - path);
-
-						if (rlen > 1
-						    &&
-						    IS_DIRECTORY_SEP
-						    (resolved_path[rlen - 1]))
-							rlen = rlen - 1;
-
-						if (plen + rlen + 1 >
-						    countof(resolved_path))
-							goto toolong;
-
-						resolved_path[rlen] =
-						    DIRECTORY_SEP;
-						memcpy(resolved_path + rlen + 1,
-						       p + 1, plen + 1 - 1);
+					/* "On failure, it returns
+					   NULL, sets errno to
+					   indicate the error, and
+					   places in resolved_path the
+					   absolute pathname of the
+					   path component which could
+					   not be resolved." 
+					*/
+					if (p == NULL ) {
+						break;
 					}
+					int plen = elen - (p - path);
+					
+					if (rlen > 1 &&
+					    IS_DIRECTORY_SEP
+					    (resolved_path[rlen - 1]))
+						rlen = rlen - 1;
+
+					if ((plen + rlen + 1) >
+					    countof(resolved_path))
+						goto toolong;
+
+					resolved_path[rlen] = DIRECTORY_SEP;
+					memcpy(resolved_path + rlen + 1,
+					       p + 1, plen + 1 - 1);
 					break;
 				} else
 					goto lose;
@@ -1189,13 +1202,12 @@ in the realpath() function.
 		{
 			Lisp_Object resolved_name;
 			int rlen = strlen(resolved_path);
-			if (elen > 0
-			    &&
-			    IS_DIRECTORY_SEP(XSTRING_BYTE
-					     (expanded_name, elen - 1))
-			    && !(rlen > 0
-				 && IS_DIRECTORY_SEP(resolved_path[rlen - 1])))
-			{
+
+			if (elen > 0 
+			    && IS_DIRECTORY_SEP(
+				    XSTRING_BYTE(expanded_name, elen-1)) 
+			    && !(rlen > 0 && 
+				 IS_DIRECTORY_SEP(resolved_path[rlen-1]))) {
 				if (rlen + 1 > countof(resolved_path))
 					goto toolong;
 				resolved_path[rlen++] = DIRECTORY_SEP;
@@ -1207,10 +1219,10 @@ in the realpath() function.
 			RETURN_UNGCPRO(resolved_name);
 		}
 
-	      toolong:
+	toolong:
 		errno = ENAMETOOLONG;
 		goto lose;
-	      lose:
+	lose:
 		report_file_error("Finding truename", list1(expanded_name));
 	}
 	RETURN_UNGCPRO(Qnil);
