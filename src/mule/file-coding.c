@@ -1331,6 +1331,7 @@ Return the type of CODING-SYSTEM.
 	switch (XCODING_SYSTEM_TYPE(tmp)) {
 	default:
 		abort();
+		break;
 	case CODESYS_AUTODETECT:
 		return Qundecided;
 #ifdef MULE
