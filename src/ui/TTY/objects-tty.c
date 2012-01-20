@@ -505,6 +505,7 @@ tty_font_spec_matches_charset(struct device *d, Lisp_Object charset,
 	assert(length>=0);
 	if( length<0 ) {
 		abort();
+		return -1;
 	}
 
 	the_nonreloc += offset;
