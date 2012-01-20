@@ -561,8 +561,7 @@ display_line_dynarr *window_display_lines(struct window * w, int which)
 	t = find_window_mirror(w);
 	if (!t)
 		abort();
-
-	if (which == CURRENT_DISP)
+	else if (which == CURRENT_DISP)
 		return t->current_display_lines;
 	else if (which == DESIRED_DISP)
 		return t->desired_display_lines;
@@ -584,8 +583,8 @@ struct buffer *window_display_buffer(struct window *w)
 	t = find_window_mirror(w);
 	if (!t)
 		abort();
-
-	return t->buffer;
+	else
+		return t->buffer;
 }
 
 void set_window_display_buffer(struct window *w, struct buffer *b)
@@ -597,8 +596,8 @@ void set_window_display_buffer(struct window *w, struct buffer *b)
 	t = find_window_mirror(w);
 	if (!t)
 		abort();
-
-	t->buffer = b;
+	else 
+		t->buffer = b;
 }
 
 /* Determining a window's position based solely on its pixel
