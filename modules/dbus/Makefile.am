@@ -55,7 +55,7 @@ AM_LDFLAGS = -module $(XCCLDFLAGS)
 ## mods
 module_LTLIBRARIES = 
 
-BUILT_SOURCES = 
+BUILT_SOURCES = dbusbind.c dbusbind.doc.c
 
 header_HEADERS =
 
