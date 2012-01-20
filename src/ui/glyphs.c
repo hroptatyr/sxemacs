@@ -3736,6 +3736,7 @@ The return value will be one of 'buffer, 'pointer, or 'icon.
 	case GLYPH_ICON:
 		return Qicon;
 	}
+	return Qnil;
 }
 
 Lisp_Object
