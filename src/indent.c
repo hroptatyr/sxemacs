@@ -571,10 +571,15 @@ static int vpix_motion(line_start_cache_dynarr * cache, int start, int end)
 	assert(start >= 0);
 	assert(end < Dynarr_length(cache));
 
+	if (start<0 || end<0 || end>start) {
+		/* Least bad thing in case of in fatal_failure, where
+		   assert will not terminate this function... */
+		return 0;
+	} 
+
 	vpix = 0;
 	for (i = start; i <= end; i++)
 		vpix += Dynarr_atp(cache, i)->height;
-
 	return vpix;
 }
 

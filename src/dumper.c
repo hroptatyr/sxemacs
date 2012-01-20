@@ -1072,35 +1072,38 @@ pdump(const char *dumpfile)
 	if ( pdump_fd < 0 ) {
 		stderr_out("Could not open dump file: %s", dumpfile);
 		abort();
+	} else {
+		pdump_out = fdopen(pdump_fd, "w");
+		if ( pdump_out < 0 ) {
+			stderr_out("Could not fdopen dump file: %s %d", 
+				   dumpfile, pdump_fd);
+			abort();
+		} else {
+
+			fwrite(&header, sizeof(header), 1, pdump_out);
+			PDUMP_ALIGN_OUTPUT(max_align_t);
+
+			pdump_scan_by_alignment(pdump_dump_data);
+
+			fseek(pdump_out, header.stab_offset, SEEK_SET);
+
+			pdump_dump_root_struct_ptrs();
+			pdump_dump_opaques();
+			pdump_dump_rtables();
+			pdump_dump_root_objects();
+			
+			fclose(pdump_out);
+			close(pdump_fd);
+			
+			xfree(pdump_buf);
+
+			xfree(pdump_hash);
+			
+			Vterminal_console = t_console;
+			Vterminal_frame = t_frame;
+			Vterminal_device = t_device;
+		}
 	}
-	pdump_out = fdopen(pdump_fd, "w");
-	if ( pdump_out < 0 ) {
-		stderr_out("Could not fdopen dump file: %s %d", dumpfile, pdump_fd);
-		abort();
-	}
-
-	fwrite(&header, sizeof(header), 1, pdump_out);
-	PDUMP_ALIGN_OUTPUT(max_align_t);
-
-	pdump_scan_by_alignment(pdump_dump_data);
-
-	fseek(pdump_out, header.stab_offset, SEEK_SET);
-
-	pdump_dump_root_struct_ptrs();
-	pdump_dump_opaques();
-	pdump_dump_rtables();
-	pdump_dump_root_objects();
-
-	fclose(pdump_out);
-	close(pdump_fd);
-
-	xfree(pdump_buf);
-
-	xfree(pdump_hash);
-
-	Vterminal_console = t_console;
-	Vterminal_frame = t_frame;
-	Vterminal_device = t_device;
 }
 
 static int pdump_load_check(void)

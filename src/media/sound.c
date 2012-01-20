@@ -857,6 +857,9 @@ audio_device_finalise(void *header, int for_disksave)
 	SOUND_DEBUG_DEV("GCor asked me to finalise: 0x%lx\n",
 			(long unsigned int)ad);
 
+	if ( ad == NULL ) 
+		return;
+
 	if (audio_device_data(ad) &&
 	    audio_device_meth(ad, finish))
 		audio_device_meth(ad, finish)(audio_device_data(ad));
@@ -866,7 +869,7 @@ audio_device_finalise(void *header, int for_disksave)
 	audio_device_data(ad) = NULL;
 
 	/* avoid some warning */
-	if (for_disksave || ad == NULL);
+	if (for_disksave);
 }
 
 static void

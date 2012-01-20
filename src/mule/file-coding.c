@@ -463,6 +463,7 @@ static Lisp_Object eol_type_to_symbol(eol_type_t type)
 	switch (type) {
 	default:
 		abort();
+		break;
 	case EOL_LF:
 		return Qlf;
 	case EOL_CRLF:
@@ -1330,6 +1331,7 @@ Return the type of CODING-SYSTEM.
 	switch (XCODING_SYSTEM_TYPE(tmp)) {
 	default:
 		abort();
+		break;
 	case CODESYS_AUTODETECT:
 		return Qundecided;
 #ifdef MULE
