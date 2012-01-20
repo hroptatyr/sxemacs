@@ -898,9 +898,9 @@ static void instantiate_widget_instance(widget_instance * instance)
 		fprintf(stderr, "No creation function for widget type %s\n",
 			instance->info->type);
 		abort();
+	} else {
+		instance->widget = (*function) (instance);
 	}
-
-	instance->widget = (*function) (instance);
 
 	if (!instance->widget)
 		abort();
