@@ -173,9 +173,18 @@ OG_ERROR_ADDITIONAL_VERBOSITY($1)
         popdef([og_group])
 ])
 
+dnl helper for OG_MULTIARG_HELP_STINGS
+dnl mimicking AS_HELP_STRING here
+dnl we can't use AS_HELP_STRING (or m4_text_wrap) directly because
+dnl we need $1 and $2 expanded and indirected, a bit like a lisp `
+AC_DEFUN([_OG_MULTIARG_ITEM_EXPL], [dnl
+[                          ][- $1 for $2]
+])dnl _OG_MULTIARG_ITEM_EXPL
+
 dnl automatically generated help string
 AC_DEFUN([OG_MULTIARG_HELP_STRINGS], [dnl
-	pushdef([OG_MULTIARG_ITEM], AS_HELP_STRING([], - $[1] for $[3]))
+	pushdef([OG_MULTIARG_ITEM],
+		_OG_MULTIARG_ITEM_EXPL($[1], $[3]))
 	pushdef([OG_MULTIARG_MUTEX], [])
 AS_HELP_STRING([], [Explanation of the items:])
 $1
