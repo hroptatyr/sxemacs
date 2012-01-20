@@ -454,22 +454,23 @@ xlw_update_tab_control(widget_instance * instance, Widget widget,
 	children = XtCompositeChildren(widget, &num_children);
 	if (children) {
 		for (i = 0, cur = val->contents; i < num_children; i++) {
-			if (!cur)
-				abort();
-			if (children[i]->core.being_destroyed
-			    || strcmp(XtName(children[i]), cur->name))
-				continue;
+			if (cur) {
+				if (children[i]->core.being_destroyed
+				    || strcmp(XtName(children[i]), cur->name))
+					continue;
 #ifdef NEED_MOTIF
-			if (lw_motif_widget_p(children[i]))
-				xm_update_one_widget(instance, children[i], cur,
-						     False);
+				if (lw_motif_widget_p(children[i]))
+					xm_update_one_widget(instance, children[i], cur,
+							     False);
 #endif
 #ifdef NEED_ATHENA
-			if (lw_xaw_widget_p(children[i]))
-				xaw_update_one_widget(instance, children[i],
-						      cur, False);
+				if (lw_xaw_widget_p(children[i]))
+					xaw_update_one_widget(instance, children[i],
+							      cur, False);
 #endif
-			cur = cur->next;
+				cur = cur->next;
+			} else
+				abort();
 		}
 		XtFree((char *)children);
 	}
