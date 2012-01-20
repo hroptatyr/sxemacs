@@ -3259,7 +3259,11 @@ make_ext_string(const Extbyte *contents, EMACS_INT length,
 Lisp_Object build_string(const char *str)
 {
 	/* Some strlen's crash and burn if passed null. */
-	return make_string((const Bufbyte*)str, (str ? strlen(str) : 0));
+	if( str )
+		return make_string((const Bufbyte*)str, strlen(str));
+	else
+		abort();
+	return Qnil;
 }
 
 Lisp_Object build_ext_string(const char *str, Lisp_Object coding_system)
