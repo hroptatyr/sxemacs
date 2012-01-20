@@ -787,6 +787,8 @@ handle_unix_request(int ls)
 	if ((s = accept(ls, (struct sockaddr *)&server, &len)) < 0) {
 		perror(progname);
 		fprintf(stderr, "%s: unable to accept\n", progname);
+		/* Nothing more we can do here... */
+		return;
 	}
 	echo_request(s);
 	return;
