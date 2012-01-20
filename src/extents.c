@@ -2932,6 +2932,8 @@ extent_fragment_update(struct window * w, struct extent_fragment * ef,
 			if (!NILP(glyph)) {
 				struct glyph_block gb;
 
+				memset(&gb,0,sizeof(gb));
+
 				gb.glyph = glyph;
 				gb.active = 0; /* BEGIN_GLYPH */
 				gb.width = 0;

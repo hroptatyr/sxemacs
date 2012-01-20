@@ -3075,9 +3075,8 @@ void vars_of_insdel(void)
 void init_buffer_text(struct buffer *b)
 {
 	if (!b->base_buffer) {
-		Bufbyte *unused = NULL;
 		SET_BUF_GAP_SIZE(b, 20);
-		unused = BUFFER_ALLOC(
+	        (void)BUFFER_ALLOC(
 			b->text->beg, BUF_GAP_SIZE(b) + BUF_END_SENTINEL_SIZE);
 		if (!BUF_BEG_ADDR(b))
 			memory_full();

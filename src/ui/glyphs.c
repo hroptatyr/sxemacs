@@ -3728,6 +3728,7 @@ The return value will be one of 'buffer, 'pointer, or 'icon.
 	case GLYPH_UNKNOWN:
 	default:
 		abort();
+		break;
 	case GLYPH_BUFFER:
 		return Qbuffer;
 	case GLYPH_POINTER:

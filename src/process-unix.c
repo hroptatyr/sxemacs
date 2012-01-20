@@ -677,6 +677,10 @@ static SIGTYPE sigchld_handler(int signo)
 
 static int process_signal_char(int tty_fd, int signo)
 {
+	/* Invalid tty_fd ... */
+	if (tty_fd < 0)
+		return '\0';
+
 	/* If it's not a tty, pray that these default values work */
 	if (!isatty(tty_fd)) {
 #define CNTL(ch) (037 & (ch))
@@ -1512,6 +1516,7 @@ unix_kill_child_process(Lisp_Object proc, int signo,
 #ifdef SIGNALS_VIA_CHARACTERS
 		/* If possible, send signals to the entire pgrp
 		   by sending an input character to it.  */
+		if (d->subtty >= 0) 
 		{
 			char sigchar = process_signal_char(d->subtty, signo);
 			if (sigchar) {
@@ -1525,8 +1530,9 @@ unix_kill_child_process(Lisp_Object proc, int signo,
 #ifdef TIOCGPGRP
 		if (pgid == -1)
 			ioctl(d->infd, TIOCGPGRP, &pgid);	/* BSD */
-		if (pgid == -1 && d->subtty != -1)
-			ioctl(d->subtty, TIOCGPGRP, &pgid);	/* Only this works on AIX! */
+		if (pgid == -1 && d->subtty >= 0)
+	                /* Only this works on AIX! */
+			ioctl(d->subtty, TIOCGPGRP, &pgid);	
 #endif				/* TIOCGPGRP */
 
 		if (pgid == -1) {

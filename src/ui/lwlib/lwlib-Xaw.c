@@ -537,7 +537,7 @@ xaw_generic_callback(Widget widget, XtPointer closure, XtPointer call_data)
 	widget_instance *instance = (widget_instance *) closure;
 	Widget instance_widget;
 	LWLIB_ID id;
-	XtPointer user_data;
+	XtPointer user_data = NULL;
 #ifdef LWLIB_WIDGETS_ATHENA
 	/* We want the selected status to change only when we decide it
 	   should change.  Yuck but correct. */
@@ -583,7 +583,7 @@ xaw_generic_callback(Widget widget, XtPointer closure, XtPointer call_data)
 		/* If the widget is a buffer/gutter widget then we already have
 		   the one we are looking for, so don't try and descend the widget
 		   tree. */
-		if (val->contents) {
+		if (val && val->contents) {
 			char *name = XtName(widget);
 			val = val->contents;
 			while (val) {
@@ -591,14 +591,15 @@ xaw_generic_callback(Widget widget, XtPointer closure, XtPointer call_data)
 					break;
 				val = val->next;
 			}
-			if (!val)
-				abort();
 		}
-		user_data = val->call_data;
+		if (val)
+			user_data = val->call_data;
+		else 
+			abort();
 	}
 #endif
 
-	if (instance->info->selection_cb)
+	if (instance->info->selection_cb && user_data)
 		instance->info->selection_cb(widget, id, user_data);
 }
 
@@ -617,22 +618,23 @@ wm_delete_window(Widget shell, XtPointer closure, XtPointer call_data)
 	XtGetValues(shell, al, 1);
 	if (!kids || !*kids)
 		abort();
-	widget = kids[0];
-	if (!XtIsSubclass(widget, dialogWidgetClass))
-		abort();
-	id = lw_get_widget_id(widget);
-	if (!id)
-		abort();
-
-	{
-		widget_info *info = lw_get_widget_info(id);
-		if (!info)
+	else {
+		widget = kids[0];
+		if (!XtIsSubclass(widget, dialogWidgetClass))
 			abort();
-		if (info->selection_cb)
-			info->selection_cb(widget, id, (XtPointer) - 1);
-	}
+		id = lw_get_widget_id(widget);
+		if (!id)
+			abort();
+		else {
+			widget_info *info = lw_get_widget_info(id);
+			if (!info)
+				abort();
+			else if (info->selection_cb)
+				info->selection_cb(widget, id, (XtPointer) - 1);
+		}
 
-	lw_destroy_all_widgets(id);
+		lw_destroy_all_widgets(id);
+	}
 	return NULL;
 }
 

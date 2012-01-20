@@ -758,7 +758,8 @@ scan_c_file(const char *filename, const char *mode)
 				/* Copy arguments into ARGBUF. */
 				*p++ = c;
 				do {
-					*p++ = c = getc(infile);
+					c = getc(infile);
+					*p++ = (char)(c);
 				} while (c != ')');
 				*p = '\0';
 				/* Output them. */
@@ -818,7 +819,7 @@ eof:
 static void
 skip_white(FILE *infile)
 {
-	char c = ' ';
+	int c = ' ';
 	while (c == ' ' || c == '\t' || c == '\n') {
 		c = getc(infile);
 	}
@@ -829,7 +830,7 @@ skip_white(FILE *infile)
 static void
 read_lisp_symbol(FILE *infile, char *buffer)
 {
-	char c;
+	int c;
 	char *fillp = buffer;
 
 	skip_white(infile);
@@ -846,7 +847,7 @@ read_lisp_symbol(FILE *infile, char *buffer)
 			*fillp = 0;
 			break;
 		} else {
-			*fillp++ = c;
+			*fillp++ = (char)(c);
 		}
 	}
 
@@ -881,7 +882,13 @@ get_dyna_doc(FILE *infile, char **saved_string)
 	}
 	*saved_string = xmalloc(length);
 	for (i = 0; i < length; i++) {
-		(*saved_string)[i] = getc(infile);
+		c = getc(infile);
+		if ( c >= 0 )
+			(*saved_string)[i] = (char)(c);
+		else {
+			(*saved_string)[i] = '\0';
+			break;
+		}
 	}
 	/* The last character is a ^_.
 	 * That is needed in the .elc file
@@ -890,7 +897,7 @@ get_dyna_doc(FILE *infile, char **saved_string)
 
 	/* Skip the newline.  */
 	c = getc(infile);
-	while (c != '\n') {
+	while (c > 0 && c != '\n') {
 		c = getc(infile);
 	}
 	return c;

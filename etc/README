@@ -45,9 +45,7 @@ eos/			Images for EOS support (GUD)
 etags.1			Etags man page
 gnu.xbm			
 gnu.xpm			Image of a Gnu.
-gnuattach.1		Gnuattach man page
 gnuclient.1		Gnuclient man page
-gnudoit.1		Gnudoit man page
 gnuserv.1		Gnuserv man page
 gnuserv.README		Original README file from gnuserv
 gnusref.tex		Gnus reference card

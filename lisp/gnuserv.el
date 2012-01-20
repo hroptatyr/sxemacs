@@ -46,14 +46,10 @@
 ;; XEmacs, and will be removed once you are done with the buffer.
 
 ;; To evaluate a Lisp form in a running Emacs, use the `-eval'
-;; argument of gnuclient.  To simplify this, we provide the `gnudoit'
-;; shell script.  For example `gnudoit "(+ 2 3)"' will print `5',
-;; whereas `gnudoit "(gnus)"' will fire up your favorite newsreader.
-;; Like gnuclient, `gnudoit' requires the server to be started prior
-;; to using it.
+;; argument of gnuclient.
 
 ;; For more information you can refer to man pages of gnuclient,
-;; gnudoit and gnuserv, distributed with XEmacs.
+;; and gnuserv, distributed with SXEmacs.
 
 ;; gnuserv.el was originally written by Andy Norman as an improvement
 ;; over William Sommerfeld's server.el.  Since then, a number of
@@ -739,9 +735,9 @@ All the clients will be disposed of via the normal methods."
 ;;;###autoload
 (defun gnuserv-start (&optional leave-dead)
   "Allow this Emacs process to be a server for client processes.
-This starts a gnuserv communications subprocess through which
-client \"editors\" (gnuclient and gnudoit) can send editing commands to
-this Emacs job.  See the gnuserv(1) manual page for more details.
+This starts a gnuserv communications subprocess through which client
+\"editors\" (gnuclient) can send editing commands to this Emacs job.
+See the gnuserv(1) manual page for more details.
 
 Prefix arg means just kill any existing server communications subprocess."
   (interactive "P")

@@ -694,8 +694,8 @@ concat(int nargs, Lisp_Object * args,
 	Lisp_Object last_tail;
 	Lisp_Object prev;
 	struct merge_string_extents_struct *args_mse = 0;
-	Bufbyte *string_result = 0;
-	Bufbyte *string_result_ptr = 0;
+	Bufbyte *string_result = NULL;
+	Bufbyte *string_result_ptr = NULL;
 	struct gcpro gcpro1;
 	int speccount = specpdl_depth();
         Charcount total_length;
@@ -889,10 +889,13 @@ concat(int nargs, Lisp_Object * args,
 						   XINT(elt));
 			} else {
 				CHECK_CHAR_COERCE_INT(elt);
-                                assert(string_result_ptr != NULL);
-				string_result_ptr +=
-				    set_charptr_emchar(string_result_ptr,
-						       XCHAR(elt));
+                                if(string_result_ptr != NULL) {
+					string_result_ptr +=
+						set_charptr_emchar(string_result_ptr,
+								   XCHAR(elt));
+				} else {
+					abort();
+				}
 			}
 		}
 		if (args_mse) {

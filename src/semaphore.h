@@ -238,15 +238,17 @@ extern_inline void
 sxe_refcounter_init(sxe_refcounter_t rc)
 {
 	pthread_mutex_init(&(rc->mtx), NULL);
+	pthread_mutex_lock(&(rc->mtx));
 	rc->refcnt = 0;
+	pthread_mutex_unlock(&(rc->mtx));
 }
 extern_inline void
 sxe_refcounter_finish(sxe_refcounter_t rc)
 {
 	pthread_mutex_lock(&(rc->mtx));
+	rc->refcnt = 0;
 	pthread_mutex_unlock(&(rc->mtx));
 	pthread_mutex_destroy(&(rc->mtx));
-	rc->refcnt = 0;
 }
 extern_inline sxe_refcounter_t
 sxe_refcounter_new(void)

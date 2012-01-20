@@ -247,7 +247,7 @@ static int connect_to_unix_server(void)
 {
 	int s;			/* connected socket descriptor */
 	struct sockaddr_un server;	/* for unix connections */
-	size_t sz;
+	int sz;
 
 	if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
 		perror(progname);

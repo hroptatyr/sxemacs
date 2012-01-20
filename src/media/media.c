@@ -702,27 +702,30 @@ detecting a suitable one.  It is one of `ffmpeg', `sndfile',
 	}
 	case DATA_IS_DATA: {
 		mkind_string_properties *sprops;
-		char *data_ext;
+		char *data_ext = NULL;
 		int data_len = 0;
-
-		media_stream_kind(ms) = MKIND_STRING;
-
-		/* initialise a new file properties structure */
-		sprops = xnew_and_zero(mkind_string_properties);
 
 		/* copy the filename also as C string */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data,
 				   MALLOC, (data_ext, data_len),
 				   Qbinary);
-		data_ext[data_len] = '\0';
-		sprops->name = NULL;
-		sprops->stream_data = data_ext;
-		sprops->size = data_len;
 
-		/* assign the file properties */
-		media_stream_kind_properties(ms).sprops = sprops;
+		if (data_ext != NULL) {
+			media_stream_kind(ms) = MKIND_STRING;
 
-		determine_stream_type(ms, pref);
+			/* initialise a new file properties structure */
+			sprops = xnew_and_zero(mkind_string_properties);
+
+			data_ext[data_len] = '\0';
+			sprops->name = NULL;
+			sprops->stream_data = data_ext;
+			sprops->size = data_len;
+
+			/* assign the file properties */
+			media_stream_kind_properties(ms).sprops = sprops;
+
+			determine_stream_type(ms, pref);
+		}
 		break;
 	}
 	case DATA_IS_URL: {

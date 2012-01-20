@@ -68,8 +68,7 @@ dist_icon_DATA = cbsx.png cbsxe.png chr.png chrm.png			\
 	sxemacs-icon3.xpm sxemacs.xbm sxemacs.xpm trash.xpm
 
 ## do we really want to install this old (and unrevised) stuff?
-dist_manone_DATA = ctags.1 etags.1 gnuattach.1 gnuclient.1 gnudoit.1	\
-	gnuserv.1 sxemacs.1
+dist_manone_DATA = ctags.1 etags.1 gnuclient.1 gnuserv.1 sxemacs.1
 
 dist_toolbar_DATA =				\
 	toolbar/compile-cap-up.xpm		\

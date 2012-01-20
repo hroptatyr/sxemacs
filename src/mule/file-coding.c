@@ -99,7 +99,7 @@ Lisp_Object Qforce_g2_on_output, Qforce_g3_on_output;
 Lisp_Object Qno_iso6429;
 Lisp_Object Qinput_charset_conversion, Qoutput_charset_conversion;
 Lisp_Object Qescape_quoted;
-Lisp_Object Qshort, Qno_ascii_eol, Qno_ascii_cntl, Qseven, Qlock_shift;
+Lisp_Object Qno_ascii_eol, Qno_ascii_cntl, Qseven, Qlock_shift;
 #endif
 Lisp_Object Qencode, Qdecode;
 
@@ -463,6 +463,7 @@ static Lisp_Object eol_type_to_symbol(eol_type_t type)
 	switch (type) {
 	default:
 		abort();
+		break;
 	case EOL_LF:
 		return Qlf;
 	case EOL_CRLF:
@@ -1330,6 +1331,7 @@ Return the type of CODING-SYSTEM.
 	switch (XCODING_SYSTEM_TYPE(tmp)) {
 	default:
 		abort();
+		break;
 	case CODESYS_AUTODETECT:
 		return Qundecided;
 #ifdef MULE
@@ -5700,7 +5702,6 @@ void syms_of_file_coding(void)
 	defsymbol(&Qinput_charset_conversion, "input-charset-conversion");
 	defsymbol(&Qoutput_charset_conversion, "output-charset-conversion");
 
-	defsymbol(&Qshort, "short");
 	defsymbol(&Qno_ascii_eol, "no-ascii-eol");
 	defsymbol(&Qno_ascii_cntl, "no-ascii-cntl");
 	defsymbol(&Qseven, "seven");
