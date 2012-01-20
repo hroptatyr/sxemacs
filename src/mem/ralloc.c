@@ -559,9 +559,17 @@ static void update_heap_bloc_correspondence(bloc_ptr bloc, heap_ptr heap)
 			heap = heap->next;
 			/* We know HEAP is not null now,
 			   because there has to be space for bloc B.  */
-			heap->first_bloc = NIL_BLOC;
-			heap->last_bloc = NIL_BLOC;
-			heap->free = heap->bloc_start;
+			if ( heap ) {
+				/* But we still tested it... */
+				heap->first_bloc = NIL_BLOC;
+				heap->last_bloc = NIL_BLOC;
+				heap->free = heap->bloc_start;
+			} else {
+				/* ... and now abort if proven
+				   otherwise... 
+				*/
+				abort();
+			}
 		}
 		if (heap == NULL)
 			break;
