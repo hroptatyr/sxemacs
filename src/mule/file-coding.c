@@ -463,6 +463,7 @@ static Lisp_Object eol_type_to_symbol(eol_type_t type)
 	switch (type) {
 	default:
 		abort();
+		break;
 	case EOL_LF:
 		return Qlf;
 	case EOL_CRLF:
