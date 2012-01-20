@@ -2623,6 +2623,7 @@ This is in the form of a property list (alternating keyword/value pairs).
 	switch (e->event_type) {
 	default:
 		abort();
+		break;
 
 	case process_event:
 		props = cons3(Qprocess, e->event.process.process, props);
