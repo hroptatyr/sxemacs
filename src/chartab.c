@@ -178,6 +178,7 @@ static Lisp_Object char_table_type_to_symbol(enum char_table_type type)
 	switch (type) {
 	default:
 		abort();
+		break;
 	case CHAR_TABLE_TYPE_GENERIC:
 		return Qgeneric;
 	case CHAR_TABLE_TYPE_SYNTAX:
