@@ -165,8 +165,8 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 			    (const void **)((void*)&cell)))
 #else				/* !GCCACHE_HASH */
 
-			/* start at the end (most recently used) */
-			cell = cache->tail;	
+		/* start at the end (most recently used) */
+		cell = cache->tail;	
 		while (cell) {
 			if (gc_cache_eql(&gcvm, &cell->gcvm))
 				break;
@@ -269,6 +269,7 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 			/* debug */
 			assert(cell->gc == gc_cache_lookup(cache, gcv, mask));
 			return cell->gc;
+		}
 	}
 	return NULL; /* No cell determined */
 }
