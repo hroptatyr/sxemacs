@@ -1647,8 +1647,10 @@ redisplay_clear_region(Lisp_Object locale, face_index findex, int x, int y,
 	} else if (FRAMEP(locale)) {
 		w = NULL;
 		f = XFRAME(locale);
-	} else
+	} else {
 		abort();
+		return;
+	}
 
 	d = XDEVICE(f->device);
 

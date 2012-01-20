@@ -5113,8 +5113,10 @@ regenerate_window(struct window *w, Bufpos start_pos, Bufpos point, int type)
 	int need_modeline;
 
 	/* The lines had better exist by this point. */
-	if (!(dla = window_display_lines(w, type)))
+	if (!(dla = window_display_lines(w, type))) {
 		abort();
+		return;
+	}
 	Dynarr_reset(dla);
 	w->max_line_len = 0;
 
