@@ -537,7 +537,7 @@ xaw_generic_callback(Widget widget, XtPointer closure, XtPointer call_data)
 	widget_instance *instance = (widget_instance *) closure;
 	Widget instance_widget;
 	LWLIB_ID id;
-	XtPointer user_data;
+	XtPointer user_data = NULL;
 #ifdef LWLIB_WIDGETS_ATHENA
 	/* We want the selected status to change only when we decide it
 	   should change.  Yuck but correct. */
@@ -599,7 +599,7 @@ xaw_generic_callback(Widget widget, XtPointer closure, XtPointer call_data)
 	}
 #endif
 
-	if (instance->info->selection_cb)
+	if (instance->info->selection_cb && user_data)
 		instance->info->selection_cb(widget, id, user_data);
 }
 
