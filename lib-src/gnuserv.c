@@ -432,7 +432,7 @@ permitted(unsigned long host_addr, int fd)
 		    strcmp(auth_protocol, MCOOKIE_NAME)) {
 			printf("authentication protocol (%s) \
 from client is invalid...\n\
-... Was the client an old version of gnuclient/gnudoit?\n", auth_protocol);
+... Was the client an old version of gnuclient?\n", auth_protocol);
 			return FALSE;
 		}
 
@@ -677,7 +677,7 @@ handle_internet_request(int ls)
 	/* Check that access is allowed - if not return crud to the client */
 	if (!permitted(peer.sin_addr.s_addr, s)) {
 		send_string(s, "\
-gnudoit: Connection refused\ngnudoit: unable to connect to remote");
+gnuclient: Connection refused\ngnuclient: unable to connect to remote");
 		close(s);
 
 		printf("Refused connection from %s\n",

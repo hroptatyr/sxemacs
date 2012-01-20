@@ -251,17 +251,21 @@ static size_t parsewave(void **data, size_t * sz, void **outbuf)
 					if (parsestate.wave.chunklength)
 						parsestate.wave.state =
 						    wvSkipChunk;
-				} else if (rq)
+				} else if (rq) {
 					/* align data length to a multiple of datasize; keep additional data
 					   in "leftover" buffer --- this is necessary to ensure proper
 					   functioning of the sndcnv... routines */
-					waverequire(data, sz, rq);
-				return (count);
+					if(waverequire(data, sz, rq) != 0)
+						return (count);
+				        else
+						return 0;
+				}
 			}
+			break;
 		case wvFatalNotify:
 			warn("Irrecoverable error while parsing WAVE file");
 			parsestate.wave.state = wvFatal;
-			break;
+			return 0;
 		case wvFatal:
 		default:
 			*sz = 0;
@@ -934,14 +938,14 @@ void media_internal_analyse_stream(Lisp_Media_Stream *ms)
 	switch (media_stream_kind(ms)) {
 	case MKIND_FILE: {
 		mkind_file_properties *mkfp = NULL;
-		const char *file;
+		const char *file = NULL;
 		int file_len = 0;
 
 		/* open the file */
 		mkfp = media_stream_kind_properties(ms).fprops;
 		TO_EXTERNAL_FORMAT(LISP_STRING, mkfp->filename,
 				   ALLOCA, (file, file_len), Qnil);
-		if ((fd = open(file, O_RDONLY, 0)) < 0) {
+		if (file == NULL || (fd = open(file, O_RDONLY, 0)) < 0) {
 			xfree(data);
 			return;
 		}
@@ -986,7 +990,7 @@ void media_internal_analyse_stream(Lisp_Media_Stream *ms)
 
 	/* shutdown */
 	xfree(data);
-	close(fd);
+	if( fd >= 0) close(fd);
 }
 
 /* Look at the header of the sound file and try to determine the format;

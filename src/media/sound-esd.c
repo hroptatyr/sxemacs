@@ -373,7 +373,9 @@ sound_esd_play(audio_job_t aj)
 				mss, aj->buffer, resolution);
 			if (!len) {
 				ESD_DEBUG_S("finished\n");
+				SXE_MUTEX_LOCK(&aj->mtx);
 				aj->play_state = MTPSTATE_STOP;
+				SXE_MUTEX_UNLOCK(&aj->mtx);
 				break;
 			}
 
@@ -405,7 +407,9 @@ sound_esd_play(audio_job_t aj)
 			if (wrtn < 0) {
 				ESD_DEBUG_S("writing to socket failed: %d.\n",
 					    wrtn);
+				SXE_MUTEX_LOCK(&aj->mtx);
 				aj->play_state = MTPSTATE_STOP;
+				SXE_MUTEX_UNLOCK(&aj->mtx);
 			}
 			break;
 		case MTPSTATE_PAUSE:

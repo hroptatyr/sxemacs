@@ -98,14 +98,16 @@ media_sndfile_open(Lisp_Media_Stream *ms)
 	switch (media_stream_kind(ms)) {
 	case MKIND_FILE: {
 		mkind_file_properties *mkfp = NULL;
-		const char *file;
+		const char *file = NULL;
 		int file_len = 0;
 
 		/* open the file */
 		mkfp = media_stream_kind_properties(ms).fprops;
 		TO_EXTERNAL_FORMAT(LISP_STRING, mkfp->filename,
 				   ALLOCA, (file, file_len), Qnil);
-		sf = sf_open(file, SFM_READ, sfinfo);
+		if ( file != NULL ) {
+			sf = sf_open(file, SFM_READ, sfinfo);
+		}
 		break;
 	}
 	case MKIND_STRING: {

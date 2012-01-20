@@ -3033,14 +3033,23 @@ moves over the text.
 /* Is PWD another name for `.' ? */
 static int directory_is_current_directory(Extbyte * pwd)
 {
-	Bufbyte *pwd_internal;
+	Bufbyte *pwd_internal = NULL;
 	Bytecount pwd_internal_len;
 	struct stat dotstat, pwdstat;
 
 	TO_INTERNAL_FORMAT(DATA, (pwd, strlen((char *)pwd) + 1),
 			   ALLOCA, (pwd_internal, pwd_internal_len),
 			   Qfile_name);
-
+	if( pwd_internal == NULL ) {
+		/* Failure for failure, lets try using the external
+		   format anyway..
+		*/
+		pwd_internal=pwd;
+		
+	} 
+	if( pwd_internal == NULL ) {
+		return 0;
+	}
 	return (IS_DIRECTORY_SEP(*pwd_internal)
 		&& sxemacs_stat((char *)pwd_internal, &pwdstat) == 0
 		&& sxemacs_stat(".", &dotstat) == 0
@@ -3053,7 +3062,7 @@ void init_initial_directory(void)
 {
 	/* This function can GC */
 
-	Extbyte *pwd;
+	Extbyte *pwd = NULL;
 
 	initial_directory[0] = 0;
 

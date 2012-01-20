@@ -928,13 +928,14 @@ x_find_charset_font(Lisp_Object device, Lisp_Object font, Lisp_Object charset)
 			   patternext, MAX_FONT_COUNT, &count);
 	/* #### This code seems awfully bogus -- mrb */
 	for (i = 0; i < count; i++) {
-		const Bufbyte *intname;
+		const Bufbyte *intname = NULL;
 		Bytecount intlen;
 
 		TO_INTERNAL_FORMAT(C_STRING, names[i],
 				   ALLOCA, (intname, intlen),
 				   Qx_font_name_encoding);
-		if (x_font_spec_matches_charset(XDEVICE(device), charset,
+		if (intname != NULL &&
+		    x_font_spec_matches_charset(XDEVICE(device), charset,
 						intname, Qnil, 0, -1)) {
 			result = make_string(intname, intlen);
 			break;
