@@ -1796,7 +1796,17 @@ else
 		AC_MSG_WARN([Sorry no bison means no cl module for you.])
 	fi
 fi
+
 SXE_EMOD_STATMOD([cl])
+
+dnl D-Bus
+if test "$with_modules_dbus" = "yes"; then
+	have_modules_dbus=yes
+fi
+if test "$with_static_modules_dbus" = "yes"; then
+	have_static_modules_dbus=yes
+fi
+
 SXE_EMOD_STATMOD([dbus])
 
 AM_CONDITIONAL([AUTARKIC], [test "0" = "1"])

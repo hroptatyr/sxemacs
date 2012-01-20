@@ -53,19 +53,17 @@ AM_CPPFLAGS = -I$(srcdir) -I$(builddir)  -I$(top_srcdir)/src \
 AM_LDFLAGS = -module $(XCCLDFLAGS)
 
 ## mods
-module_LTLIBRARIES = 
+module_LTLIBRARIES = dbusbind.la
 
-BUILT_SOURCES = dbusbind.c dbusbind.doc.c
+BUILT_SOURCES = dbusbind.doc.c
 
 header_HEADERS =
 
-module_LTLIBRARIES += sxe-dbus.la
+dbus_la_SOURCES = dbusbind.c
 
-sxe_dbus_la_SOURCES = dbusbind.c
+nodist_dbus_la_SOURCES = dbusbind.doc.c
 
-nodist_sxe_dbus_la_SOURCES = dbusbind.doc.c
-
-sxe_dbus_la_CFLAGS = $(AM_CFLAGS) -DEMOD_SXE_DBUS
+dbus_la_CFLAGS = $(AM_CFLAGS) -DEMOD_SXE_DBUS
 
 CLEANFILES = $(BUILT_SOURCES) auto-autoloads.el{,c} libsxe-dbus.a
 
@@ -93,8 +91,4 @@ SUFFIXES = .doc.c
 .c.s:
 	$(COMPILE) -S -c $(cflags) $<
 
-## all the mods
-module_LTLIBRARIES =
-
-BUILT_SOURCES =
 
