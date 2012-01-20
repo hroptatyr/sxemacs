@@ -2242,14 +2242,17 @@ static void Xt_timeout_callback(XtPointer closure, XtIntervalId * id)
 	struct Xt_timeout *t2 = pending_timeouts;
 
 	/* Remove this one from the set of pending timeouts */
-	if (t2 == timeout) {
+	if(timeout == NULL) {
+		abort();
+	} if (t2 == timeout) {
 		pending_timeouts = pending_timeouts->next;
 	} else {
 		while (t2->next && t2->next != timeout) {
 			t2 = t2->next;
 		}
 		assert(t2->next);
-		t2->next = t2->next->next;
+		if(t2->next)
+			t2->next = t2->next->next;
 	}
 	/* Add this one to the queue of completed timeouts */
 	timeout->next = NULL;
