@@ -912,8 +912,8 @@ void r_alloc_free(POINTER * ptr)
 	dead_bloc = find_bloc(ptr);
 	if (dead_bloc == NIL_BLOC)
 		abort();
-
-	free_bloc(dead_bloc);
+	else 
+		free_bloc(dead_bloc);
 	*ptr = 0;
 
 #ifdef emacs
