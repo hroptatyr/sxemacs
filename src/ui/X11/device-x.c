@@ -436,8 +436,10 @@ static int x_get_visual_depth(Display * dpy, Visual * visual)
 				&vi_in, &out_count);
 	if (!vi_out)
 		abort();
-	d = vi_out[0].depth;
-	XFree((char *)vi_out);
+	else {
+		d = vi_out[0].depth;
+		XFree((char *)vi_out);
+	}
 	return d;
 }
 
