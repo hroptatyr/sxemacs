@@ -912,8 +912,8 @@ void r_alloc_free(POINTER * ptr)
 	dead_bloc = find_bloc(ptr);
 	if (dead_bloc == NIL_BLOC)
 		abort();
-
-	free_bloc(dead_bloc);
+	else 
+		free_bloc(dead_bloc);
 	*ptr = 0;
 
 #ifdef emacs
@@ -954,7 +954,7 @@ POINTER r_re_alloc(POINTER * ptr, size_t size)
 	if (bloc == NIL_BLOC)
 		abort();
 
-	if (size < bloc->size) {
+	else if (size < bloc->size) {
 		/* Wouldn't it be useful to actually resize the bloc here?  */
 		/* I think so too, but not if it's too expensive...  */
 		if ((bloc->size - MEM_ROUNDUP(size) >= page_size)

@@ -1358,26 +1358,30 @@ emacs_doprnt_1(Lisp_Object stream, const Bufbyte * format_nonreloc,
 		   was specified as an argument.  Extract the data and forward
 		   it to the next spec, to which it will apply.  */
 		if (ch == '*') {
-			printf_spec_t nextspec = Dynarr_atp(specs, i + 1);
-			Lisp_Object obj = largs[spec->argnum - 1];
-
-			if (INTP(obj)) {
-				if (spec->forwarding_precision) {
-					nextspec->precision = XINT(obj);
-					nextspec->minwidth = spec->minwidth;
-				} else {
-					nextspec->minwidth = XINT(obj);
-					if (XINT(obj) < 0) {
-						spec->minus_flag = 1;
-						nextspec->minwidth =
-						    -nextspec->minwidth;
+			if(!largs) {
+				error("Invalid largs and '*' converter in emacs_doprnt_1");
+			} else {
+				printf_spec_t nextspec = Dynarr_atp(specs, i + 1);
+				Lisp_Object obj = largs[spec->argnum - 1];
+			
+				if (INTP(obj)) {
+					if (spec->forwarding_precision) {
+						nextspec->precision = XINT(obj);
+						nextspec->minwidth = spec->minwidth;
+					} else {
+						nextspec->minwidth = XINT(obj);
+						if (XINT(obj) < 0) {
+							spec->minus_flag = 1;
+							nextspec->minwidth =
+								-nextspec->minwidth;
+						}
 					}
+					nextspec->minus_flag = spec->minus_flag;
+					nextspec->plus_flag = spec->plus_flag;
+					nextspec->space_flag = spec->space_flag;
+					nextspec->number_flag = spec->number_flag;
+					nextspec->zero_flag = spec->zero_flag;
 				}
-				nextspec->minus_flag = spec->minus_flag;
-				nextspec->plus_flag = spec->plus_flag;
-				nextspec->space_flag = spec->space_flag;
-				nextspec->number_flag = spec->number_flag;
-				nextspec->zero_flag = spec->zero_flag;
 			}
 			continue;
 		}

@@ -917,7 +917,11 @@ extent_list_delete_marker(extent_list_t el, extent_list_marker_t m)
 	extent_list_marker_t p, prev;
 
 	for (prev = 0, p = el->markers; p && p != m; prev = p, p = p->next);
-	assert(p);
+	if( !p ) {
+		abort();
+		return;
+	}
+
 	if (prev) {
 		prev->next = p->next;
 	} else {

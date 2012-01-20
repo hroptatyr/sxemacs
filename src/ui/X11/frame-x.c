@@ -769,7 +769,7 @@ static void x_set_frame_properties(struct frame *f, Lisp_Object plist)
 						      XtRString, extval, extvallen + 1,
 						      NULL);
 				} else {
-					warn("Could not transcode property");
+					message("x_set_frame_properties: Could not transcode property");
 				}
 			} else
 				XtVaSetValues(w, XtVaTypedArg, extprop, XtRInt,

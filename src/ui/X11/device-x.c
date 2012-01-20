@@ -434,11 +434,14 @@ static int x_get_visual_depth(Display * dpy, Visual * visual)
 	vi_in.visualid = XVisualIDFromVisual(visual);
 	vi_out = XGetVisualInfo(dpy, /*VisualScreenMask| */ VisualIDMask,
 				&vi_in, &out_count);
-	if (!vi_out)
+	if (!vi_out) {
 		abort();
-	d = vi_out[0].depth;
-	XFree((char *)vi_out);
-	return d;
+	        return 1;
+	} else {
+		d = vi_out[0].depth;
+		XFree((char *)vi_out);
+		return d;
+	}
 }
 
 static Visual *x_try_best_visual(Display * dpy, int scrnum)

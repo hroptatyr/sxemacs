@@ -6276,9 +6276,13 @@ regex_tag_multiline ()
 					/* Force explicit tag name, if a name is there. */
 					pfnote (name, TRUE, buffer + linecharno,
 						charno - linecharno + 1, lineno, linecharno);
-				else
-					make_tag (name, strlen (name), TRUE, buffer + linecharno,
-						  charno - linecharno + 1, lineno, linecharno);
+				else if(name == NULL)
+					abort();
+				else 
+					make_tag (name, strlen (name), TRUE, 
+						  buffer + linecharno,
+						  charno - linecharno + 1, 
+						  lineno, linecharno);
 				break;
 			}
 		}

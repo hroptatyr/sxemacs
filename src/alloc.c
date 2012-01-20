@@ -837,11 +837,13 @@ static int gc_count_num_##type##_freelist
 #define ALLOCATE_FIXED_TYPE(type, structtype, result)			\
 	do {								\
 		result = xnew(structtype);				\
+		assert(result != NULL);					\
 		INCREMENT_CONS_COUNTER(sizeof(structtype), #type);	\
 	} while (0)
 #define ALLOCATE_ATOMIC_FIXED_TYPE(type, structtype, result)		\
 	do {								\
 		result = xnew_atomic(structtype);			\
+		assert(result != NULL);					\
 		INCREMENT_CONS_COUNTER(sizeof(structtype), #type);	\
 	} while (0)
 
@@ -2892,7 +2894,7 @@ allocate_string_chars_struct(Lisp_String *string_it_goes_with,
 
 Lisp_Object make_uninit_string(Bytecount length)
 {
-	Lisp_String *s;
+	Lisp_String *s = NULL;
 #if !defined HAVE_BDWGC || !defined EF_USE_BDWGC
 	EMACS_INT fullsize = STRING_FULLSIZE(length);
 #endif	/* !BDWGC */
@@ -2907,17 +2909,22 @@ Lisp_Object make_uninit_string(Bytecount length)
 	set_lheader_implementation(&s->lheader, &lrecord_string);
 	string_register_finaliser(s);
 
-#if defined HAVE_BDWGC && defined EF_USE_BDWGC
 	{
-		Bufbyte *foo = xnew_atomic_array(Bufbyte, length+1);
+		Bufbyte *foo = NULL;
+#if defined HAVE_BDWGC && defined EF_USE_BDWGC
+		foo = xnew_atomic_array(Bufbyte, length+1);
+		assert(foo != NULL);
+#else
+		if (BIG_STRING_FULLSIZE_P(fullsize)) {
+			foo = xnew_atomic_array(Bufbyte, length + 1);
+			assert(foo != NULL);
+		} else {
+			foo = allocate_string_chars_struct(s, fullsize)->chars;
+			assert(foo != NULL);
+		}
+#endif
 		set_string_data(s, foo);
 	}
-#else
-	set_string_data(s, BIG_STRING_FULLSIZE_P(fullsize)
-			? xnew_atomic_array(Bufbyte, length + 1)
-			: allocate_string_chars_struct(s, fullsize)->chars);
-#endif
-
 	set_string_length(s, length);
 	s->plist = Qnil;
 #ifdef EF_USE_COMPRE
@@ -3252,7 +3259,11 @@ make_ext_string(const Extbyte *contents, EMACS_INT length,
 Lisp_Object build_string(const char *str)
 {
 	/* Some strlen's crash and burn if passed null. */
-	return make_string((const Bufbyte*)str, (str ? strlen(str) : 0));
+	if( str )
+		return make_string((const Bufbyte*)str, strlen(str));
+	else
+		abort();
+	return Qnil;
 }
 
 Lisp_Object build_ext_string(const char *str, Lisp_Object coding_system)
