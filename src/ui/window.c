@@ -581,9 +581,11 @@ struct buffer *window_display_buffer(struct window *w)
 	if (XFRAME(w->frame)->mirror_dirty)
 		update_frame_window_mirror(XFRAME(w->frame));
 	t = find_window_mirror(w);
-	if (!t)
+	if (!t) 
+	{
 		abort();
-	else
+		return NULL;
+	} else
 		return t->buffer;
 }
 
