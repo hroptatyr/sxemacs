@@ -312,7 +312,7 @@ _ase_interval_union_item_fini(ase_interval_union_item_t u)
 	if (u->current &&
 	    ASE_INTERVALP(u->current) &&
 	    !ASE_INTERVAL_EMPTY_P(u->current))
-		XASE_INTERVAL_DECREF(u->current);
+		(void)XASE_INTERVAL_DECREF(u->current);
 	xfree(u);
 	return;
 }
