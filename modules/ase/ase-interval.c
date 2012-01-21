@@ -2351,6 +2351,7 @@ _ase_interval_union_boundary(ase_interval_union_item_t u)
 		while (ur->next)
 			ur = ur->next;
 		lastiv = ur->current;
+		_ase_interval_union_item_fini(tmp);
 	}
 
 	if (ASE_INTERVAL_INTERIOR_P(lastiv)) {
