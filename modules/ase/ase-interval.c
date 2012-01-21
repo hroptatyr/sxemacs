@@ -1857,6 +1857,7 @@ _ase_subtract_intr_intr(ase_cartesian_t c1, ase_cartesian_t c2)
 						ase_make_cartesian(
 							dim, newos, 1));
 			}
+			_ase_interval_union_item_fini(dec);
 		}
 
 		return ures.next;
