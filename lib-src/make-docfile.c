@@ -838,7 +838,11 @@ read_lisp_symbol(FILE *infile, char *buffer)
 		c = getc(infile);
 		if (c == '\\') {
 			/* FSF has *(++fillp), which is wrong. */
-			*fillp++ = getc(infile);
+			c = getc(infile);
+			if( c < 0 )
+				/* IO error... */
+				return;
+			*fillp++ = (char)(c);
 		} else if (c == ' ' ||
 			   c == '\t' ||
 			   c == '\n' ||
