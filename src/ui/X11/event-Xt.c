@@ -2244,7 +2244,9 @@ static void Xt_timeout_callback(XtPointer closure, XtIntervalId * id)
 	/* Remove this one from the set of pending timeouts */
 	if(timeout == NULL) {
 		abort();
-	} if (t2 == timeout) {
+		return;
+	} 
+	if (t2 == timeout) {
 		pending_timeouts = pending_timeouts->next;
 	} else {
 		while (t2->next && t2->next != timeout) {
