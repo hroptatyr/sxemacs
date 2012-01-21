@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 					putchar(c);
 
 					if ((i & group_by) == group_by)
-						getc(fp);
+						(void)getc(fp);
 				}
 
 				if (c == ' ') {
