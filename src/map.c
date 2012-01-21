@@ -3214,6 +3214,7 @@ __perm_nseq(Lisp_Object seqs[], size_t nseqs, Lisp_Object fun, size_t arity,
 				__advance_multi_index_2(idx, 2, nseqsz);
 			}
 		}
+		break;
 
 	case 3:
 		if (LIKELY(!NILP(fun) && gf == NULL)) {
@@ -3248,7 +3249,7 @@ __perm_nseq(Lisp_Object seqs[], size_t nseqs, Lisp_Object fun, size_t arity,
 				__advance_multi_index_2(idx, 3, nseqsz);
 			}
 		}
-
+		break;
 
 	default:
 		if (LIKELY(!NILP(fun) && gf == NULL)) {
@@ -3293,6 +3294,7 @@ __perm_nseq(Lisp_Object seqs[], size_t nseqs, Lisp_Object fun, size_t arity,
 				__advance_multi_index_2(idx, nseqs, nseqsz);
 			}
 		}
+		break;
 	}
 	UNGCPRO;
 
