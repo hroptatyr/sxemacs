@@ -73,7 +73,13 @@ get_histogram(quant_table * qt, unsigned char *pic,
 				box->bmin = blue;
 			if (blue > box->bmax)
 				box->bmax = blue;
-			qt->histogram[red][green][blue]++;
+#if defined(SXEMACS_DEBUG) && SXEMACS_DEBUG	             
+			if( red < 0 || green < 0 || blue < 0 || 
+			    ! (red < B_LEN && green < B_LEN && blue < B_LEN) ) {
+				abort();
+			} else
+#endif
+				qt->histogram[red][green][blue]++;
 		}
 	}
 }
