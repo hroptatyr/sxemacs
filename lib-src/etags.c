@@ -6214,7 +6214,7 @@ regex_tag_multiline ()
 {
 	char *buffer = filebuf.buffer;
 	regexp *rp;
-	char *name;
+	char *name = NULL;
 
 	for (rp = p_head; rp != NULL; rp = rp->p_next)
 	{
@@ -6267,15 +6267,16 @@ regex_tag_multiline ()
 				while (charno < rp->regs.end[0])
 					if (buffer[charno++] == '\n')
 						lineno++, linecharno = charno;
-				name = rp->name;
-				if (name[0] == '\0')
+				if (rp->name && rp->name[0] == '\0')
 					name = NULL;
 				else /* make a named tag */
 					name = substitute (buffer, rp->name, &rp->regs);
 				if (rp->force_explicit_name)
-					/* Force explicit tag name, if a name is there. */
+					/* Force explicit tag name, if a name
+					   is there. */
 					pfnote (name, TRUE, buffer + linecharno,
-						charno - linecharno + 1, lineno, linecharno);
+						charno - linecharno + 1, lineno, 
+						linecharno);
 				else if(name == NULL)
 					abort();
 				else 
@@ -6283,6 +6284,8 @@ regex_tag_multiline ()
 						  buffer + linecharno,
 						  charno - linecharno + 1, 
 						  lineno, linecharno);
+				free(name);
+				name = NULL;
 				break;
 			}
 		}
