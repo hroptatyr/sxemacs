@@ -634,6 +634,7 @@ static void lock_dot(char *filename)
 		}
 	}
 	strcpy(dotlock_filename, filename);
+	free(tempname);
 }
 #endif				/* not DISABLE_DIRECT_ACCESS */
 
