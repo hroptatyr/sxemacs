@@ -312,7 +312,7 @@ _ase_interval_union_item_fini(ase_interval_union_item_t u)
 	if (u->current &&
 	    ASE_INTERVALP(u->current) &&
 	    !ASE_INTERVAL_EMPTY_P(u->current))
-		XASE_INTERVAL_DECREF(u->current);
+		(void)XASE_INTERVAL_DECREF(u->current);
 	xfree(u);
 	return;
 }
@@ -1857,6 +1857,7 @@ _ase_subtract_intr_intr(ase_cartesian_t c1, ase_cartesian_t c2)
 						ase_make_cartesian(
 							dim, newos, 1));
 			}
+			_ase_interval_union_item_fini(dec);
 		}
 
 		return ures.next;
@@ -2350,6 +2351,7 @@ _ase_interval_union_boundary(ase_interval_union_item_t u)
 		while (ur->next)
 			ur = ur->next;
 		lastiv = ur->current;
+		_ase_interval_union_item_fini(tmp);
 	}
 
 	if (ASE_INTERVAL_INTERIOR_P(lastiv)) {

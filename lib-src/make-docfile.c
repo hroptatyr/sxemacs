@@ -838,7 +838,11 @@ read_lisp_symbol(FILE *infile, char *buffer)
 		c = getc(infile);
 		if (c == '\\') {
 			/* FSF has *(++fillp), which is wrong. */
-			*fillp++ = getc(infile);
+			c = getc(infile);
+			if( c < 0 )
+				/* IO error... */
+				return;
+			*fillp++ = (char)(c);
 		} else if (c == ' ' ||
 			   c == '\t' ||
 			   c == '\n' ||
@@ -1062,7 +1066,7 @@ scan_lisp_file(const char *filename, const char *mode)
                                         c1 = c;
                                         /* SXEmacs: shame we can't do this. */
                                         /* c = getc_skipping_iso2022(infile); */
-                                        getc (infile);
+                                        (void)getc (infile);
                                 }
 	  
                                 /* If two previous characters were " and \,

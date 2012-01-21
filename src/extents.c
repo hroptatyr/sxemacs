@@ -662,13 +662,12 @@ gap_array_make_marker(gap_array_t ga, int pos)
 static void
 gap_array_delete_marker(gap_array_t ga, gap_array_marker_t m)
 {
-	volatile gap_array_marker_t p, prev;
+	gap_array_marker_t p, prev;
 
 	for (prev = 0, p = ga->markers; p && p != m; prev = p, p = p->next);
 	if (UNLIKELY(p == NULL)) {
 		return;
 	}
-	assert(p);
 	if (prev) {
 		prev->next = p->next;
 	} else {
@@ -687,7 +686,7 @@ gap_array_delete_marker(gap_array_t ga, gap_array_marker_t m)
 static void
 gap_array_delete_all_markers(gap_array_t ga)
 {
-	for (volatile gap_array_marker_t p = ga->markers, next; p; p = next) {
+	for (gap_array_marker_t p = ga->markers, next; p; p = next) {
 		next = p->next;
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
 		xfree(p);

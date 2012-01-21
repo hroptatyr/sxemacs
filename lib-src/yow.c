@@ -161,4 +161,5 @@ yow(FILE * fp)
 	}
 	buf[i++] = 0;
 	printf("%s\n", buf);
+	free(buf);
 }

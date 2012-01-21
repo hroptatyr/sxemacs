@@ -156,7 +156,7 @@ static void
 emacs_tty_next_event(Lisp_Event * emacs_event)
 {
         int ndesc;
-        unsigned i;
+        int i;
         SELECT_TYPE temp_mask;
         EMACS_TIME time_to_block;
         EMACS_SELECT_TIME select_time_to_block, *pointer_to_this;

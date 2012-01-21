@@ -554,9 +554,10 @@ pdump_register_object(Lisp_Object obj)
 
 	if (imp->description) {
 		int me = depth++;
-		if (me > 65536) {
+		if (me >= 65536) {
 			stderr_out("Backtrace overflow, loop ?\n");
 			abort();
+			return;
 		}
 		backtrace[me].obj = objh;
 		backtrace[me].position = 0;

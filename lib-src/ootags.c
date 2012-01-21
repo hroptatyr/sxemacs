@@ -4433,6 +4433,7 @@ FILE *inf;
 			continue;
 		else if (cp[0] == '-') {	/* attribute, e.g. "-define" */
 			erlang_attribute(cp);
+			free(last);
 			last = NULL;
 		} else if ((len = erlang_func(cp, last)) > 0) {
 			/* 
@@ -4448,6 +4449,7 @@ FILE *inf;
 			last[len] = '\0';
 		}
 	}
+	free(last);
 }
 
 /*
