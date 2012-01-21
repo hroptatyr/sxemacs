@@ -4448,6 +4448,7 @@ FILE *inf;
 			last[len] = '\0';
 		}
 	}
+	xfree(last);
 }
 
 /*
