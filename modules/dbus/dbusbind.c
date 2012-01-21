@@ -77,6 +77,9 @@ static Lisp_Object QCdbus_type_unix_fd;
 #endif
 static Lisp_Object QCdbus_type_array, QCdbus_type_variant;
 static Lisp_Object QCdbus_type_struct, QCdbus_type_dict_entry;
+static Lisp_Object Vdbus_debug, Vdbus_registered_buses;
+static Lisp_Object Vdbus_registered_objects_table;
+Lisp_Object Q_test;
 
 /* Whether we are reading a D-Bus event.  */
 static int xd_in_read_queued_messages = 0;
@@ -252,7 +255,7 @@ xd_symbol_to_dbus_type (Lisp_Object object)
 		dbus_uint32_t DBUS_SERIAL_MAX = -1;			\
 		if (NATNUMP (x) && XINT (x) <= DBUS_SERIAL_MAX)		\
 			serial = XINT (x);				\
-		else if (MOST_POSITIVE_FIXNUM < DBUS_SERIAL_MAX		\
+		else if (EMACS_INT_MAX < DBUS_SERIAL_MAX		\
 			 && FLOATP (x)					\
 			 && 0 <= XFLOAT_DATA (x)			\
 			 && XFLOAT_DATA (x) <= DBUS_SERIAL_MAX)		\
@@ -267,8 +270,8 @@ xd_symbol_to_dbus_type (Lisp_Object object)
 static void
 xd_signature_cat (char *signature, char const *x)
 {
-	ptrdiff_t siglen = strlen (signature);
-	ptrdiff_t xlen = strlen (x);
+	int siglen = strlen (signature);
+	int xlen = strlen (x);
 	if (DBUS_MAXIMUM_SIGNATURE_LENGTH - xlen <= siglen)
 		string_overflow ();
 	strcat (signature, x);
@@ -459,6 +462,7 @@ xd_signature (char *signature, unsigned int dtype, unsigned int parent_type, Lis
    objects, being arguments of `dbus-call-method' or
    `dbus-send-signal', into corresponding C values appended as
    arguments to a D-Bus message.  */
+#define pI "l"
 static void
 xd_append_arg (unsigned int dtype, Lisp_Object object, DBusMessageIter *iter)
 {
@@ -1030,6 +1034,8 @@ Return the unique name of Emacs registered at D-Bus BUS.
 	return build_string (name);
 }
 
+#define pD
+
 DEFUN("dbus-call-method", Fdbus_call_method, 5, MANY, 0, /*
 Call METHOD on the D-Bus BUS.
 
@@ -1101,7 +1107,7 @@ object is returned instead of a list containing this single Lisp object.
 
 usage: (dbus-call-method BUS SERVICE PATH INTERFACE METHOD &optional :timeout TIMEOUT &rest ARGS)
 */
-      (ptrdiff_t nargs, Lisp_Object *args))
+      (int nargs, Lisp_Object *args))
 {
 	Lisp_Object bus, service, path, interface, method;
 	Lisp_Object result;
@@ -1113,7 +1119,7 @@ usage: (dbus-call-method BUS SERVICE PATH INTERFACE METHOD &optional :timeout TI
 	DBusError derror;
 	unsigned int dtype;
 	int timeout = -1;
-	ptrdiff_t i = 5;
+	int i = 5;
 	char signature[DBUS_MAXIMUM_SIGNATURE_LENGTH];
 
 	/* Check parameters.  */
@@ -1284,7 +1290,7 @@ Example:
 
 usage: (dbus-call-method-asynchronously BUS SERVICE PATH INTERFACE METHOD HANDLER &optional :timeout TIMEOUT &rest ARGS)
 */
-      (ptrdiff_t nargs, Lisp_Object *args))
+      (int nargs, Lisp_Object *args))
 {
 	Lisp_Object bus, service, path, interface, method, handler;
 	Lisp_Object result;
@@ -1295,7 +1301,7 @@ usage: (dbus-call-method-asynchronously BUS SERVICE PATH INTERFACE METHOD HANDLE
 	unsigned int dtype;
 	dbus_uint32_t serial;
 	int timeout = -1;
-	ptrdiff_t i = 6;
+	int i = 6;
 	char signature[DBUS_MAXIMUM_SIGNATURE_LENGTH];
 
 	/* Check parameters.  */
@@ -1410,7 +1416,7 @@ This is an internal function, it shall not be used outside dbus.el.
 
 usage: (dbus-method-return-internal BUS SERIAL SERVICE &rest ARGS)
 */
-      (ptrdiff_t nargs, Lisp_Object *args))
+      (int nargs, Lisp_Object *args))
 {
 	Lisp_Object bus, service;
 	struct gcpro gcpro1, gcpro2;
@@ -1419,7 +1425,7 @@ usage: (dbus-method-return-internal BUS SERIAL SERVICE &rest ARGS)
 	DBusMessageIter iter;
 	dbus_uint32_t serial;
 	unsigned int ui_serial, dtype;
-	ptrdiff_t i;
+	int i;
 	char signature[DBUS_MAXIMUM_SIGNATURE_LENGTH];
 
 	/* Check parameters.  */
@@ -1499,7 +1505,7 @@ This is an internal function, it shall not be used outside dbus.el.
 
 usage: (dbus-method-error-internal BUS SERIAL SERVICE &rest ARGS)
 */
-      (ptrdiff_t nargs, Lisp_Object *args))
+      (int nargs, Lisp_Object *args))
 {
 	Lisp_Object bus, service;
 	struct gcpro gcpro1, gcpro2;
@@ -1508,7 +1514,7 @@ usage: (dbus-method-error-internal BUS SERIAL SERVICE &rest ARGS)
 	DBusMessageIter iter;
 	dbus_uint32_t serial;
 	unsigned int ui_serial, dtype;
-	ptrdiff_t i;
+	int i;
 	char signature[DBUS_MAXIMUM_SIGNATURE_LENGTH];
 
 	/* Check parameters.  */
@@ -1613,7 +1619,7 @@ Example:
 
 usage: (dbus-send-signal BUS SERVICE PATH INTERFACE SIGNAL &rest ARGS)
 */
-      (ptrdiff_t nargs, Lisp_Object *args))
+      (int nargs, Lisp_Object *args))
 {
 	Lisp_Object bus, service, path, interface, signal;
 	struct gcpro gcpro1, gcpro2, gcpro3, gcpro4, gcpro5;
@@ -1621,7 +1627,7 @@ usage: (dbus-send-signal BUS SERVICE PATH INTERFACE SIGNAL &rest ARGS)
 	DBusMessage *dmessage;
 	DBusMessageIter iter;
 	unsigned int dtype;
-	ptrdiff_t i;
+	int i;
 	char signature[DBUS_MAXIMUM_SIGNATURE_LENGTH];
 
 	/* Check parameters.  */
@@ -1893,7 +1899,7 @@ xd_read_queued_messages (int fd, void *data, int for_read)
 
 	/* We ignore all Lisp errors during the call.  */
 	xd_in_read_queued_messages = 1;
-	internal_catch (Qdbus_error, xd_read_message, bus);
+	internal_catch (Qdbus_error, xd_read_message, bus, 0);
 	xd_in_read_queued_messages = 0;
 }
 
@@ -1944,11 +1950,11 @@ dbus-service-allow-replacement dbus-service-replace-existing)
 
 usage: (dbus-register-service BUS SERVICE &rest FLAGS)
 */
-      (ptrdiff_t nargs, Lisp_Object *args))
+      (int nargs, Lisp_Object *args))
 {
 	Lisp_Object bus, service;
 	DBusConnection *connection;
-	ptrdiff_t i;
+	int i;
 	unsigned int value;
 	unsigned int flags = 0;
 	int result;
@@ -2044,13 +2050,13 @@ INTERFACE, SIGNAL and HANDLER must not be nil.  Example:
 
 usage: (dbus-register-signal BUS SERVICE PATH INTERFACE SIGNAL HANDLER &rest ARGS)
 */
-      (ptrdiff_t nargs, Lisp_Object *args))
+      (int nargs, Lisp_Object *args))
 {
 	Lisp_Object bus, service, path, interface, signal, handler;
 	struct gcpro gcpro1, gcpro2, gcpro3, gcpro4, gcpro5, gcpro6;
 	Lisp_Object uname, key, key1, value;
 	DBusConnection *connection;
-	ptrdiff_t i;
+	int i;
 	char rule[DBUS_MAXIMUM_MATCH_RULE_LENGTH];
 	int rulelen;
 	DBusError derror;
@@ -2219,76 +2225,76 @@ void
 syms_of_dbusbind (void)
 {
 
-	DEFSYM (Qdbus_init_bus, "dbus-init-bus");
-	defsubr (&Sdbus_init_bus);
+	defsymbol(&Qdbus_init_bus, "dbus-init-bus");
+	DEFSUBR(Fdbus_init_bus);
 
-	DEFSYM (Qdbus_close_bus, "dbus-close-bus");
-	defsubr (&Sdbus_close_bus);
+	defsymbol(&Qdbus_close_bus, "dbus-close-bus");
+	DEFSUBR(Fdbus_close_bus);
 
-	DEFSYM (Qdbus_get_unique_name, "dbus-get-unique-name");
-	defsubr (&Sdbus_get_unique_name);
+	defsymbol(&Qdbus_get_unique_name, "dbus-get-unique-name");
+	DEFSUBR(Fdbus_get_unique_name);
 
-	DEFSYM (Qdbus_call_method, "dbus-call-method");
-	defsubr (&Sdbus_call_method);
+	defsymbol(&Qdbus_call_method, "dbus-call-method");
+	DEFSUBR(Fdbus_call_method);
 
-	DEFSYM (Qdbus_call_method_asynchronously, "dbus-call-method-asynchronously");
-	defsubr (&Sdbus_call_method_asynchronously);
+	defsymbol(&Qdbus_call_method_asynchronously, "dbus-call-method-asynchronously");
+	DEFSUBR(Fdbus_call_method_asynchronously);
 
-	DEFSYM (Qdbus_method_return_internal, "dbus-method-return-internal");
-	defsubr (&Sdbus_method_return_internal);
+	defsymbol(&Qdbus_method_return_internal, "dbus-method-return-internal");
+	DEFSUBR(Fdbus_method_return_internal);
 
-	DEFSYM (Qdbus_method_error_internal, "dbus-method-error-internal");
-	defsubr (&Sdbus_method_error_internal);
+	defsymbol(&Qdbus_method_error_internal, "dbus-method-error-internal");
+	DEFSUBR(Fdbus_method_error_internal);
 
-	DEFSYM (Qdbus_send_signal, "dbus-send-signal");
-	defsubr (&Sdbus_send_signal);
+	defsymbol(&Qdbus_send_signal, "dbus-send-signal");
+	DEFSUBR(Fdbus_send_signal);
 
-	DEFSYM (Qdbus_register_service, "dbus-register-service");
-	defsubr (&Sdbus_register_service);
+	defsymbol(&Qdbus_register_service, "dbus-register-service");
+	DEFSUBR(Fdbus_register_service);
 
-	DEFSYM (Qdbus_register_signal, "dbus-register-signal");
-	defsubr (&Sdbus_register_signal);
+	defsymbol(&Qdbus_register_signal, "dbus-register-signal");
+	DEFSUBR(Fdbus_register_signal);
 
-	DEFSYM (Qdbus_register_method, "dbus-register-method");
-	defsubr (&Sdbus_register_method);
+	defsymbol(&Qdbus_register_method, "dbus-register-method");
+	DEFSUBR(Fdbus_register_method);
 
-	DEFSYM (Qdbus_error, "dbus-error");
+	defsymbol(&Qdbus_error, "dbus-error");
 	Fput (Qdbus_error, Qerror_conditions,
 	      list2 (Qdbus_error, Qerror));
 	Fput (Qdbus_error, Qerror_message,
 	      make_pure_c_string ("D-Bus error"));
 
-	DEFSYM (QCdbus_system_bus, ":system");
-	DEFSYM (QCdbus_session_bus, ":session");
-	DEFSYM (QCdbus_request_name_allow_replacement, ":allow-replacement");
-	DEFSYM (QCdbus_request_name_replace_existing, ":replace-existing");
-	DEFSYM (QCdbus_request_name_do_not_queue, ":do-not-queue");
-	DEFSYM (QCdbus_request_name_reply_primary_owner, ":primary-owner");
-	DEFSYM (QCdbus_request_name_reply_exists, ":exists");
-	DEFSYM (QCdbus_request_name_reply_in_queue, ":in-queue");
-	DEFSYM (QCdbus_request_name_reply_already_owner, ":already-owner");
-	DEFSYM (QCdbus_timeout, ":timeout");
-	DEFSYM (QCdbus_type_byte, ":byte");
-	DEFSYM (QCdbus_type_boolean, ":boolean");
-	DEFSYM (QCdbus_type_int16, ":int16");
-	DEFSYM (QCdbus_type_uint16, ":uint16");
-	DEFSYM (QCdbus_type_int32, ":int32");
-	DEFSYM (QCdbus_type_uint32, ":uint32");
-	DEFSYM (QCdbus_type_int64, ":int64");
-	DEFSYM (QCdbus_type_uint64, ":uint64");
-	DEFSYM (QCdbus_type_double, ":double");
-	DEFSYM (QCdbus_type_string, ":string");
-	DEFSYM (QCdbus_type_object_path, ":object-path");
-	DEFSYM (QCdbus_type_signature, ":signature");
+	defsymbol(&QCdbus_system_bus, ":system");
+	defsymbol(&QCdbus_session_bus, ":session");
+	defsymbol(&QCdbus_request_name_allow_replacement, ":allow-replacement");
+	defsymbol(&QCdbus_request_name_replace_existing, ":replace-existing");
+	defsymbol(&QCdbus_request_name_do_not_queue, ":do-not-queue");
+	defsymbol(&QCdbus_request_name_reply_primary_owner, ":primary-owner");
+	defsymbol(&QCdbus_request_name_reply_exists, ":exists");
+	defsymbol(&QCdbus_request_name_reply_in_queue, ":in-queue");
+	defsymbol(&QCdbus_request_name_reply_already_owner, ":already-owner");
+	defsymbol(&QCdbus_timeout, ":timeout");
+	defsymbol(&QCdbus_type_byte, ":byte");
+	defsymbol(&QCdbus_type_boolean, ":boolean");
+	defsymbol(&QCdbus_type_int16, ":int16");
+	defsymbol(&QCdbus_type_uint16, ":uint16");
+	defsymbol(&QCdbus_type_int32, ":int32");
+	defsymbol(&QCdbus_type_uint32, ":uint32");
+	defsymbol(&QCdbus_type_int64, ":int64");
+	defsymbol(&QCdbus_type_uint64, ":uint64");
+	defsymbol(&QCdbus_type_double, ":double");
+	defsymbol(&QCdbus_type_string, ":string");
+	defsymbol(&QCdbus_type_object_path, ":object-path");
+	defsymbol(&QCdbus_type_signature, ":signature");
 
 #ifdef DBUS_TYPE_UNIX_FD
-	DEFSYM (QCdbus_type_unix_fd, ":unix-fd");
+	defsymbol(&QCdbus_type_unix_fd, ":unix-fd");
 #endif
 
-	DEFSYM (QCdbus_type_array, ":array");
-	DEFSYM (QCdbus_type_variant, ":variant");
-	DEFSYM (QCdbus_type_struct, ":struct");
-	DEFSYM (QCdbus_type_dict_entry, ":dict-entry");
+	defsymbol(&QCdbus_type_array, ":array");
+	defsymbol(&QCdbus_type_variant, ":variant");
+	defsymbol(&QCdbus_type_struct, ":struct");
+	defsymbol(&QCdbus_type_dict_entry, ":dict-entry");
 
 	DEFVAR_LISP ("dbus-registered-buses", &Vdbus_registered_buses /*
 List of D-Bus buses we are polling for messages.
@@ -2332,7 +2338,7 @@ be called when the D-Bus reply message arrives.
 */);
 	{
 		Lisp_Object args[2];
-		args[0] = QCtest;
+		args[0] = Q_test;
 		args[1] = Qequal;
 		Vdbus_registered_objects_table = Fmake_hash_table (2, args);
 	}
@@ -2349,7 +2355,7 @@ If non-nil, debug messages of D-Bus bindings are raised.
 	Vdbus_debug = Qnil;
 #endif
 
-	Fprovide (intern_c_string ("dbusbind"), Qnil);
+	Fprovide(intern("dbusbind"));
 
 }
 
