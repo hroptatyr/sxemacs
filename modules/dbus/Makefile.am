@@ -47,10 +47,11 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 headerdir = $(includedir)/$(instvarsepdir)
 
-AM_CFLAGS = $(dll_cflags) -DIMA_MODULE -DUSE_SXEMACS_CONFIG_H
+AM_CFLAGS = $(dll_cflags) -DIMA_MODULE -DUSE_SXEMACS_CONFIG_H \
+	@DBUS_CFLAGS@
 AM_CPPFLAGS = -I$(srcdir) -I$(builddir)  -I$(top_srcdir)/src \
 	-I$(top_builddir)/src $(SXEMACS_INCLUDES) $(c_switch_all)
-AM_LDFLAGS = -module $(XCCLDFLAGS)
+AM_LDFLAGS = -module $(XCCLDFLAGS) @DBUS_LIBS@
 
 ## mods
 module_LTLIBRARIES = dbusbind.la

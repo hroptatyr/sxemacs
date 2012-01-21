@@ -94,6 +94,17 @@ AC_DEFUN([SXE_EMOD_STATMOD], [dnl
 	popdef([SXE_REGISTER_MODULE])
 ])dnl SXE_EMOD_STATMOD
 
+## D-Bus
+AC_DEFUN([SXE_CHECK_DBUS], [dnl
+	## Check for d-bus
+	PKG_CHECK_MODULES([DBUS], [dbus-1], [dnl
+		AC_SUBST([DBUS_CFLAGS])
+		AC_SUBST([DBUS_LIBS])
+		AC_DEFINE([HAVE_DBUS], [1], [Defined if d-bus is available])
+		have_dbus=yes], [dnl
+		have_dbus=no])
+])dnl SXE_CHECK_DBUS
+
 AC_DEFUN([SXE_FFI_TRY_PKGCONFIG], [dnl
 	## arg1 what to do in case of success
 	## arg2 what to do in case of failure
