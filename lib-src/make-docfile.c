@@ -1066,7 +1066,7 @@ scan_lisp_file(const char *filename, const char *mode)
                                         c1 = c;
                                         /* SXEmacs: shame we can't do this. */
                                         /* c = getc_skipping_iso2022(infile); */
-                                        getc (infile);
+                                        (void)getc (infile);
                                 }
 	  
                                 /* If two previous characters were " and \,
