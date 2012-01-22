@@ -25,6 +25,8 @@
 #include "lisp.h"
 #include "ui/frame.h"
 #include "process.h"
+#include "elhash.h"
+#include "dbusbind.h"
 
 /*
  * #include "termhooks.h"
@@ -32,163 +34,60 @@
  */
 
 
-/* Subroutines.  */
-static Lisp_Object Qdbus_init_bus;
-static Lisp_Object Qdbus_close_bus;
-static Lisp_Object Qdbus_get_unique_name;
-static Lisp_Object Qdbus_call_method;
-static Lisp_Object Qdbus_call_method_asynchronously;
-static Lisp_Object Qdbus_method_return_internal;
-static Lisp_Object Qdbus_method_error_internal;
-static Lisp_Object Qdbus_send_signal;
-static Lisp_Object Qdbus_register_service;
-static Lisp_Object Qdbus_register_signal;
-static Lisp_Object Qdbus_register_method;
+/* Stuff lifted from GNU/Emacs to let this work */
 
-/* D-Bus error symbol.  */
-static Lisp_Object Qdbus_error;
+/* Internal version of Fsignal that never returns.
+   Used for anything but Qquit (which can return from Fsignal).  */
 
-/* Lisp symbols of the system and session buses.  */
-static Lisp_Object QCdbus_system_bus, QCdbus_session_bus;
+void
+xsignal (Lisp_Object error_symbol, Lisp_Object data)
+{
+	Fsignal (error_symbol, data);
+	abort ();
+}
 
-/* Lisp symbol for method call timeout.  */
-static Lisp_Object QCdbus_timeout;
+/* Like xsignal, but takes 0, 1, 2, or 3 args instead of a list.  */
 
-/* Lisp symbols for name request flags.  */
-static Lisp_Object QCdbus_request_name_allow_replacement;
-static Lisp_Object QCdbus_request_name_replace_existing;
-static Lisp_Object QCdbus_request_name_do_not_queue;
+void
+xsignal0 (Lisp_Object error_symbol)
+{
+	xsignal (error_symbol, Qnil);
+}
 
-/* Lisp symbols for name request replies.  */
-static Lisp_Object QCdbus_request_name_reply_primary_owner;
-static Lisp_Object QCdbus_request_name_reply_in_queue;
-static Lisp_Object QCdbus_request_name_reply_exists;
-static Lisp_Object QCdbus_request_name_reply_already_owner;
+void
+xsignal1 (Lisp_Object error_symbol, Lisp_Object arg)
+{
+	xsignal (error_symbol, list1 (arg));
+}
 
-/* Lisp symbols of D-Bus types.  */
-static Lisp_Object QCdbus_type_byte, QCdbus_type_boolean;
-static Lisp_Object QCdbus_type_int16, QCdbus_type_uint16;
-static Lisp_Object QCdbus_type_int32, QCdbus_type_uint32;
-static Lisp_Object QCdbus_type_int64, QCdbus_type_uint64;
-static Lisp_Object QCdbus_type_double, QCdbus_type_string;
-static Lisp_Object QCdbus_type_object_path, QCdbus_type_signature;
-#ifdef DBUS_TYPE_UNIX_FD
-static Lisp_Object QCdbus_type_unix_fd;
-#endif
-static Lisp_Object QCdbus_type_array, QCdbus_type_variant;
-static Lisp_Object QCdbus_type_struct, QCdbus_type_dict_entry;
-static Lisp_Object Vdbus_debug, Vdbus_registered_buses;
-static Lisp_Object Vdbus_registered_objects_table;
-Lisp_Object Q_test;
+void
+xsignal2 (Lisp_Object error_symbol, Lisp_Object arg1, Lisp_Object arg2)
+{
+	xsignal (error_symbol, list2 (arg1, arg2));
+}
+
+void
+xsignal3 (Lisp_Object error_symbol, Lisp_Object arg1, Lisp_Object arg2, Lisp_Object arg3)
+{
+	xsignal (error_symbol, list3 (arg1, arg2, arg3));
+}
+
+Lisp_Object
+format2 (const char *string1, Lisp_Object arg0, Lisp_Object arg1)
+{
+	Lisp_Object args[3];
+	args[0] = build_string (string1);
+	args[1] = arg0;
+	args[2] = arg1;
+	return Fformat (3, args);
+}
+
+/* End lifted from GNU */
 
 /* Whether we are reading a D-Bus event.  */
 static int xd_in_read_queued_messages = 0;
 
 
-/* We use "xd_" and "XD_" as prefix for all internal symbols, because
-   we don't want to poison other namespaces with "dbus_".  */
-
-/* Raise a signal.  If we are reading events, we cannot signal; we
-   throw to xd_read_queued_messages then.  */
-#define XD_SIGNAL1(arg)					\
-	do {						\
-		if (xd_in_read_queued_messages)		\
-			Fthrow (Qdbus_error, Qnil);	\
-		else					\
-			xsignal1 (Qdbus_error, arg);	\
-	} while (0)
-
-#define XD_SIGNAL2(arg1, arg2)					\
-	do {							\
-		if (xd_in_read_queued_messages)			\
-			Fthrow (Qdbus_error, Qnil);		\
-		else						\
-			xsignal2 (Qdbus_error, arg1, arg2);	\
-	} while (0)
-
-#define XD_SIGNAL3(arg1, arg2, arg3)					\
-	do {								\
-		if (xd_in_read_queued_messages)				\
-			Fthrow (Qdbus_error, Qnil);			\
-		else							\
-			xsignal3 (Qdbus_error, arg1, arg2, arg3);	\
-	} while (0)
-
-/* Raise a Lisp error from a D-Bus ERROR.  */
-#define XD_ERROR(error)							\
-	do {								\
-		/* Remove the trailing newline.  */			\
-		char const *mess = error.message;			\
-		char const *nl = strchr (mess, '\n');			\
-		Lisp_Object err = make_string (mess, nl ? nl - mess : strlen (mess)); \
-		dbus_error_free (&error);				\
-		XD_SIGNAL1 (err);					\
-	} while (0)
-
-/* Macros for debugging.  In order to enable them, build with
-   "MYCPPFLAGS='-DDBUS_DEBUG -Wall' make".  */
-#ifdef DBUS_DEBUG
-#define XD_DEBUG_MESSAGE(...)				\
-	do {						\
-		char s[1024];				\
-		snprintf (s, sizeof s, __VA_ARGS__);	\
-		printf ("%s: %s\n", __func__, s);	\
-		message ("%s: %s", __func__, s);	\
-	} while (0)
-#define XD_DEBUG_VALID_LISP_OBJECT_P(object)				\
-	do {								\
-		if (!valid_lisp_object_p (object))			\
-		{							\
-			XD_DEBUG_MESSAGE ("%d Assertion failure", __LINE__); \
-			XD_SIGNAL1 (build_string ("Assertion failure")); \
-		}							\
-	} while (0)
-
-#else /* !DBUS_DEBUG */
-#define XD_DEBUG_MESSAGE(...)					\
-	do {							\
-		if (!NILP (Vdbus_debug))			\
-		{						\
-			char s[1024];				\
-			snprintf (s, 1023, __VA_ARGS__);	\
-			message ("%s: %s", __func__, s);	\
-		}						\
-	} while (0)
-#define XD_DEBUG_VALID_LISP_OBJECT_P(object)
-#endif
-
-/* Check whether TYPE is a basic DBusType.  */
-#ifdef DBUS_TYPE_UNIX_FD
-#define XD_BASIC_DBUS_TYPE(type)		\
-	((type ==  DBUS_TYPE_BYTE)		\
-	 || (type ==  DBUS_TYPE_BOOLEAN)	\
-	 || (type ==  DBUS_TYPE_INT16)		\
-	 || (type ==  DBUS_TYPE_UINT16)		\
-	 || (type ==  DBUS_TYPE_INT32)		\
-	 || (type ==  DBUS_TYPE_UINT32)		\
-	 || (type ==  DBUS_TYPE_INT64)		\
-	 || (type ==  DBUS_TYPE_UINT64)		\
-	 || (type ==  DBUS_TYPE_DOUBLE)		\
-	 || (type ==  DBUS_TYPE_STRING)		\
-	 || (type ==  DBUS_TYPE_OBJECT_PATH)	\
-	 || (type ==  DBUS_TYPE_SIGNATURE)	\
-	 || (type ==  DBUS_TYPE_UNIX_FD))
-#else
-#define XD_BASIC_DBUS_TYPE(type)		\
-	((type ==  DBUS_TYPE_BYTE)		\
-	 || (type ==  DBUS_TYPE_BOOLEAN)	\
-	 || (type ==  DBUS_TYPE_INT16)		\
-	 || (type ==  DBUS_TYPE_UINT16)		\
-	 || (type ==  DBUS_TYPE_INT32)		\
-	 || (type ==  DBUS_TYPE_UINT32)		\
-	 || (type ==  DBUS_TYPE_INT64)		\
-	 || (type ==  DBUS_TYPE_UINT64)		\
-	 || (type ==  DBUS_TYPE_DOUBLE)		\
-	 || (type ==  DBUS_TYPE_STRING)		\
-	 || (type ==  DBUS_TYPE_OBJECT_PATH)	\
-	 || (type ==  DBUS_TYPE_SIGNATURE))
-#endif
-
 /* This was a macro.  On Solaris 2.11 it was said to compile for
    hours, when optimization is enabled.  So we have transferred it into
    a function.  */
@@ -219,51 +118,6 @@ xd_symbol_to_dbus_type (Lisp_Object object)
 		 : (EQ (object, QCdbus_type_dict_entry)) ? DBUS_TYPE_DICT_ENTRY
 		 : DBUS_TYPE_INVALID);
 }
-
-/* Check whether a Lisp symbol is a predefined D-Bus type symbol.  */
-#define XD_DBUS_TYPE_P(object)						\
-	(SYMBOLP (object) && ((xd_symbol_to_dbus_type (object) != DBUS_TYPE_INVALID)))
-
-/* Determine the DBusType of a given Lisp OBJECT.  It is used to
-   convert Lisp objects, being arguments of `dbus-call-method' or
-   `dbus-send-signal', into corresponding C values appended as
-   arguments to a D-Bus message.  */
-#define XD_OBJECT_TO_DBUS_TYPE(object)					\
-	((EQ (object, Qt) || EQ (object, Qnil)) ? DBUS_TYPE_BOOLEAN	\
-	 : (NATNUMP (object)) ? DBUS_TYPE_UINT32			\
-	 : (INTEGERP (object)) ? DBUS_TYPE_INT32			\
-	 : (FLOATP (object)) ? DBUS_TYPE_DOUBLE				\
-	 : (STRINGP (object)) ? DBUS_TYPE_STRING			\
-	 : (XD_DBUS_TYPE_P (object)) ? xd_symbol_to_dbus_type (object)	\
-	 : (CONSP (object))						\
-	 ? ((XD_DBUS_TYPE_P (CAR_SAFE (object)))			\
-	    ? ((XD_BASIC_DBUS_TYPE (xd_symbol_to_dbus_type (CAR_SAFE (object)))) \
-	       ? DBUS_TYPE_ARRAY					\
-	       : xd_symbol_to_dbus_type (CAR_SAFE (object)))		\
-	    : DBUS_TYPE_ARRAY)						\
-	 : DBUS_TYPE_INVALID)
-
-/* Return a list pointer which does not have a Lisp symbol as car.  */
-#define XD_NEXT_VALUE(object)						\
-	((XD_DBUS_TYPE_P (CAR_SAFE (object))) ? CDR_SAFE (object) : object)
-
-/* Check whether X is a valid dbus serial number.  If valid, set
-   SERIAL to its value.  Otherwise, signal an error. */
-#define CHECK_DBUS_SERIAL_GET_SERIAL(x, serial)				\
-	do								\
-	{								\
-		dbus_uint32_t DBUS_SERIAL_MAX = -1;			\
-		if (NATNUMP (x) && XINT (x) <= DBUS_SERIAL_MAX)		\
-			serial = XINT (x);				\
-		else if (EMACS_INT_MAX < DBUS_SERIAL_MAX		\
-			 && FLOATP (x)					\
-			 && 0 <= XFLOAT_DATA (x)			\
-			 && XFLOAT_DATA (x) <= DBUS_SERIAL_MAX)		\
-			serial = XFLOAT_DATA (x);			\
-		else							\
-			XD_SIGNAL2 (build_string ("Invalid dbus serial"), x); \
-	}								\
-	while (0)
 
 /* Append to SIGNATURE a copy of X, making sure SIGNATURE does
    not become too long.  */
@@ -1707,6 +1561,12 @@ usage: (dbus-send-signal BUS SERVICE PATH INTERFACE SIGNAL &rest ARGS)
 /* Read one queued incoming message of the D-Bus BUS.
    BUS is either a Lisp symbol, :system or :session, or a string denoting
    the bus address.  */
+
+/* 
+ * FIXME: Gotta fix this.
+ * We kinda need it to get anything useful to happen. --SY.
+ */
+#if 0
 static void
 xd_read_message_1 (DBusConnection *connection, Lisp_Object bus)
 {
@@ -1858,6 +1718,7 @@ cleanup:
 
 	UNGCPRO;
 }
+#endif
 
 /* Read queued incoming messages of the D-Bus BUS.
    BUS is either a Lisp symbol, :system or :session, or a string denoting

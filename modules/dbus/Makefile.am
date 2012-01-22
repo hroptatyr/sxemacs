@@ -58,7 +58,7 @@ module_LTLIBRARIES = dbusbind.la
 
 BUILT_SOURCES = dbusbind.doc.c
 
-header_HEADERS =
+header_HEADERS = dbusbind.h
 
 dbus_la_SOURCES = dbusbind.c
 
