@@ -243,13 +243,13 @@ int lisp_readonly(Lisp_Object obj)
 /* Non-zero means ignore malloc warnings.  Set during initialization.  */
 int ignore_malloc_warnings;
 
-static void *breathing_space;
+static void *breathing_space = NULL;
 
 void release_breathing_space(void)
 {
 	if (breathing_space) {
 		void *tmp = breathing_space;
-		breathing_space = 0;
+		breathing_space = NULL;
 		free(tmp);
 	}
 }
@@ -720,7 +720,7 @@ void refill_memory_reserve(void);
 void refill_memory_reserve(void)
 {
 	if (breathing_space == 0)
-		breathing_space = (char *)malloc(4096 - MALLOC_OVERHEAD);
+		breathing_space = (char *)malloc(0xFFFF - MALLOC_OVERHEAD);
 }
 #endif	/* !HAVE_MMAP || DOUG_LEA_MALLOC */
 
