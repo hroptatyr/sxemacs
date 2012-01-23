@@ -408,7 +408,7 @@ call_callbacks(XlwScrollBarWidget w, int reason,
 		   here, the fall through if will do the proper
 		   thing.. So, nothing to do here
 		*/
-		;
+		break;
 	}
 
 	if (!called_anything) {
@@ -1599,7 +1599,7 @@ Select(Widget widget, XEvent * event, String * parms, Cardinal * num_parms)
 	int mouse_y = event_y(w, event);
 
 	int last_value = w->sb.savedValue = w->sb.value;
-	int reason = XmCR_NONE;
+	int reason = XmCR_UNKNOWN;
 
 	XtGrabKeyboard((Widget) w, False, GrabModeAsync, GrabModeAsync,
 		       event->xbutton.time);
@@ -1671,7 +1671,7 @@ Select(Widget widget, XEvent * event, String * parms, Cardinal * num_parms)
 		break;
 	case BUTTON_NONE:
 	default:
-		;               /* Do nothing */
+		break;               /* Do nothing */
 	}
 
 	verify_values(w);
