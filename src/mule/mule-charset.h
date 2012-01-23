@@ -572,9 +572,12 @@ CHARSET_BY_ATTRIBUTES(unsigned int type, unsigned char final, int dir)
 			     final < countof(chlook->charset_by_attributes[0])
 			     && dir <
 			     countof(chlook->charset_by_attributes[0][0]));
-#if defined(SXEMACS_DEBUG) && SXEMACS_DEBUG
-	if( dir < 0 || ! final < 128 || ! type < 4 ) {
-		abort();
+#if defined(DEBUG_SXEMACS) && DEBUG_SXEMACS
+	if( dir < 0 || ! (dir < 2 && final < 128 && type < 4) ) {
+		assert(dir >= 0);
+		assert(dir < 2);
+		assert(final < 128);
+		assert(type < 4);
 		return Qnil;
 	} else
 #endif
