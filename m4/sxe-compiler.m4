@@ -1669,8 +1669,15 @@ AC_DEFUN([SXE_CHECK_CFLAGS], [dnl
 	## so we issue the tests right here
 	if test "${with_error_checking_stack}" = "yes"; then
 		SXE_STACK_FLAGS
-		SXE_CFLAGS="${SXE_CFLAGS} ${diagflags}"
 	fi
+	if test "${with_error_checking_malldbg}" = "yes"; then
+		## keep MALLOC_PERTURB_ and friends?
+		:
+	else
+		EXTRA_BATCHENV="MALLOC_PERTURB_= MALLOC_CHECK_="
+		AC_SUBST([EXTRA_BATCHENV])
+	fi
+	SXE_CFLAGS="${SXE_CFLAGS} ${diagflags}"
 
 	## Use either command line flag, environment var, or autodetection
 	if test "$with_ridiculously_aggressive_optimisations" = "yes"; then
