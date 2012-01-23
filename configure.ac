@@ -446,6 +446,8 @@ OG_MULTIARG_WITH([error-checking], [dnl
 	OG_MULTIARG_ITEM([byte_code], [byte_code], [checks on byte compiled code])
 	OG_MULTIARG_ITEM([bufpos], [bufpos], [checks on buffer position])
 	OG_MULTIARG_ITEM([glyphs], [glyphs], [checks on glyph data])
+	OG_MULTIARG_ITEM([stack], [stack], [checks on stack barriers])
+	OG_MULTIARG_ITEM([malldbg], [malldbg], [malloc debugging code])
 ])
 
 OG_ARG_WITH([purify],
