@@ -1599,7 +1599,7 @@ Select(Widget widget, XEvent * event, String * parms, Cardinal * num_parms)
 	int mouse_y = event_y(w, event);
 
 	int last_value = w->sb.savedValue = w->sb.value;
-	int reason = XmCR_UNKNOWN;
+	int reason = XmCR_NONE;
 
 	XtGrabKeyboard((Widget) w, False, GrabModeAsync, GrabModeAsync,
 		       event->xbutton.time);
