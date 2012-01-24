@@ -135,6 +135,12 @@ else
   echo "    Good question ... where is it?"
 fi
 
+if test "$have_compre" = yes; then
+  echo "  Compiled regex caching: yes"
+else
+  echo "  Compiled regex caching: no"
+fi
+
 dnl summary for ENT and ASE
 OG_MULTIARG_SUMMARY([ent], [Enhanced Number Types], [  ])
 dnl OG_MULTIARG_SUMMARY([ase], [Algebraic Structures based on ENT], [  ])

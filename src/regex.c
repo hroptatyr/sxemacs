@@ -6316,6 +6316,7 @@ re_match_2_internal(struct re_pattern_buffer *bufp, re_char * string1,
 
 	return -1;		/* Failure to match.  */
 }				/* re_match_2 */
+
 
 /* Subroutine definitions for re_match_2.  */
 
