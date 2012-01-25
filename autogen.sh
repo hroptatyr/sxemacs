@@ -26,7 +26,7 @@
 # BSD's m4 probably isn't gonna cut it, use gm4 if it is available
 type gm4 >/dev/null 2>&1 && M4=gm4 || M4=m4
 
-M4_VERSION=$($M4 --version | head -1 | sed -e 's/^\(m4 \)\?(\?GNU M4)\? *//g' ) 
+M4_VERSION=$($M4 --version | head -n1 | sed -e 's/^\(m4 \)\?(\?GNU M4)\? *//g' ) 
 GOOD_M4=$( echo $M4_VERSION | awk -F. '{if( ($1>1) || ( ($1==1) && ($2>4) ) || ( ($1==1) && ($2==4) && ($3>=6) )) print 1 }')
 
 if [ "$GOOD_M4" != "1" ]; then
@@ -50,7 +50,7 @@ EXPECTED_TREE_VERSION="22.1.14"
 emacs_is_beta=t
 if test -n "$GIT" -a -n "$($GIT symbolic-ref HEAD 2>/dev/null)"; then
 	TREE_VERSION="$($GIT tag|tail -n1|tr -d v)"
-	GIT_VERSION="$($GIT describe | head -1)"
+	GIT_VERSION="$($GIT describe | head -n1)"
 	IN_GIT="1"
 fi
 if test -z "$TREE_VERSION"; then
