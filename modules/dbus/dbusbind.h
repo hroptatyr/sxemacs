@@ -5,7 +5,7 @@
  */
 
 /*
- * Time-stamp: <Monday Jan 23, 2012 02:10:12 steve>
+ * Time-stamp: <Wednesday Jan 25, 2012 14:15:31 steve>
  * Created:    <2012-01-22>  
  * Author:     Steve Youngs <steve@sxemacs.org>  
  * Maintainer: Steve Youngs <steve@sxemacs.org>  
@@ -73,7 +73,7 @@
 #define SREF(string, index)	(SDATA (string)[index] + 0)
 #define SSET(string, index, new) (SDATA (string)[index] = (new))
 #define SCHARS(string)		(XSTRING (string)->size + 0)
-#define SBYTES(string)		(STRING_BYTES (XSTRING (string)) + 0)
+#define SBYTES(string)		(XSTRING_LENGTH (XSTRING (string)) + 0)
 
 /* Avoid "differ in sign" warnings.  */
 #define SSDATA(x)  ((char *) SDATA (x))

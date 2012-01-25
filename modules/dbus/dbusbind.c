@@ -1,7 +1,7 @@
 /* dbusbind.c -- Elisp bindings for D-Bus. */
 
 /*
- * Time-stamp: <Wednesday Jan 25, 2012 13:32:16 steve>
+ * Time-stamp: <Wednesday Jan 25, 2012 14:23:45 steve>
  * Created:    <2012-01-03>
  * Maintainer: Steve Youngs <steve@sxemacs.org>
  * Homepage:   http://www.sxemacs.org/
@@ -1188,8 +1188,9 @@ usage: (dbus-call-method-asynchronously BUS SERVICE PATH INTERFACE METHOD HANDLE
 	CHECK_STRING (path);
 	CHECK_STRING (interface);
 	CHECK_STRING (method);
-	if (!NILP (handler) && !FUNCTIONP (handler))
-		wrong_type_argument (Qinvalid_function, handler);
+	if (!NILP (handler)) {
+		CHECK_FUNCTION(handler);
+	}
 	GCPRO6 (bus, service, path, interface, method, handler);
 
 	XD_DEBUG_MESSAGE ("%s %s %s %s",
@@ -1914,20 +1915,20 @@ the order.
 
 INTERFACE, SIGNAL and HANDLER must not be nil.  Example:
 
-\(defun my-signal-handler (device)
-(message "Device %s added" device))
+\(defun my-signal-handler \(device)
+\(message "Device %s added" device))
 
 \(dbus-register-signal
 :system "org.freedesktop.Hal" "/org/freedesktop/Hal/Manager"
 "org.freedesktop.Hal.Manager" "DeviceAdded" 'my-signal-handler)
 
-=> ((:system "org.freedesktop.Hal.Manager" "DeviceAdded")
-("org.freedesktop.Hal" "/org/freedesktop/Hal/Manager" my-signal-handler))
+=> \(\(:system "org.freedesktop.Hal.Manager" "DeviceAdded")
+\("org.freedesktop.Hal" "/org/freedesktop/Hal/Manager" my-signal-handler))
 
 `dbus-register-signal' returns an object, which can be used in
 `dbus-unregister-object' for removing the registration.
 
-usage: (dbus-register-signal BUS SERVICE PATH INTERFACE SIGNAL HANDLER &rest ARGS)
+usage: \(dbus-register-signal BUS SERVICE PATH INTERFACE SIGNAL HANDLER &rest ARGS)
 */
       (int nargs, Lisp_Object *args))
 {
@@ -1952,8 +1953,7 @@ usage: (dbus-register-signal BUS SERVICE PATH INTERFACE SIGNAL HANDLER &rest ARG
 	if (!NILP (path)) CHECK_STRING (path);
 	CHECK_STRING (interface);
 	CHECK_STRING (signal);
-	if (!FUNCTIONP (handler))
-		wrong_type_argument (Qinvalid_function, handler);
+	CHECK_FUNCTION(handler);
 	GCPRO6 (bus, service, path, interface, signal, handler);
 
 	/* Retrieve unique name of service.  If service is a known name, we
@@ -2077,8 +2077,7 @@ discovering the still incomplete interface.
 	CHECK_STRING (path);
 	CHECK_STRING (interface);
 	CHECK_STRING (method);
-	if (!FUNCTIONP (handler))
-		wrong_type_argument (Qinvalid_function, handler);
+	CHECK_FUNCTION(handler);
 	/* TODO: We must check for a valid service name, otherwise there is
 	   a segmentation fault.  */
 
@@ -2141,7 +2140,7 @@ syms_of_dbusbind (void)
 	Fput (Qdbus_error, Qerror_conditions,
 	      list2 (Qdbus_error, Qerror));
 	Fput (Qdbus_error, Qerror_message,
-	      make_pure_c_string ("D-Bus error"));
+	      build_string ("D-Bus error"));
 
 	defsymbol(&QCdbus_system_bus, ":system");
 	defsymbol(&QCdbus_session_bus, ":session");
