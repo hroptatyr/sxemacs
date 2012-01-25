@@ -1,20 +1,35 @@
-/* Elisp bindings for D-Bus.
-   Copyright (C) 2007-2011 Free Software Foundation, Inc.
+/* dbusbind.c -- Elisp bindings for D-Bus. */
 
-   This file is part of GNU Emacs.
+/*
+ * Time-stamp: <Wednesday Jan 25, 2012 13:32:16 steve>
+ * Created:    <2012-01-03>
+ * Maintainer: Steve Youngs <steve@sxemacs.org>
+ * Homepage:   http://www.sxemacs.org/
+ */
 
-   GNU Emacs is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+/*
+ * Copyright (C) 2007-2011 Free Software Foundation, Inc.
+ * Copyright (C) 2012 Steve Youngs
+ * Copyright (C) 2012 Nelson Ferreira
+ */
 
-   GNU Emacs is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+/*
+ * This file is part of SXEmacs.
 
-   You should have received a copy of the GNU General Public License
-   along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.  */
+ * SXEmacs is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * SXEmacs is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 
 #include <config.h>
 
@@ -34,7 +49,10 @@
  */
 
 
-/* Stuff lifted from GNU/Emacs to let this work */
+/*
+ * Stuff lifted from GNU/Emacs to let this work
+ * This stuff needs to be ported and then removed!!
+ */
 
 /* Internal version of Fsignal that never returns.
    Used for anything but Qquit (which can return from Fsignal).  */
@@ -2221,3 +2239,5 @@ If non-nil, debug messages of D-Bus bindings are raised.
 }
 
 #endif /* HAVE_DBUS */
+
+/* dbusbind.c ends here */
