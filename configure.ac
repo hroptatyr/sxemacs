@@ -822,7 +822,7 @@ AC_MSG_CHECKING([for SXEmacs patchlevel])
 CURDIR=$(pwd)
 cd "$sxe_srcdir"
 if test "$have_git" = "yes"; then
-	sxemacs_git_version="$(git describe)"
+	sxemacs_git_version="$(git describe | head -1)"
 fi
 if test -z "$sxemacs_git_version" ; then
 	sxemacs_git_version="[]SXEM4CS_GIT_VERSION[]"

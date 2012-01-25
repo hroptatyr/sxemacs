@@ -50,7 +50,7 @@ EXPECTED_TREE_VERSION="22.1.14"
 emacs_is_beta=t
 if test -n "$GIT" -a -n "$($GIT symbolic-ref HEAD 2>/dev/null)"; then
 	TREE_VERSION="$($GIT tag|tail -n1|tr -d v)"
-	GIT_VERSION="$($GIT describe)"
+	GIT_VERSION="$($GIT describe | head -1)"
 	IN_GIT="1"
 fi
 if test -z "$TREE_VERSION"; then
