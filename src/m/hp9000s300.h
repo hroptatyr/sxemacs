@@ -74,7 +74,9 @@ NOTE-END */
 
 #define CRT0_DUMMIES		bogus_a6,
 
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 
 #ifndef __GNUC__
 #define LIBS_DEBUG		/* don't have -lg that works */
@@ -105,7 +107,9 @@ NOTE-END */
 #define LOAD_AVE_CVT(x) ((int) ((x) * 100.0))
 
 #ifdef __GNUC__
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 #endif
 
 /* This library is needed with -g, on the 200/300 only.  */

@@ -40,7 +40,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /* If compiling with GCC, let GCC implement alloca.  */
 #if defined(__GNUC__) && !defined(alloca)
+#ifndef HAVE_ALLOCA
 #define alloca(n) __builtin_alloca(n)
 #define HAVE_ALLOCA
+#endif
 #endif
 #define ASSERT_VALID_POINTER(pnt) (assert ((((int) pnt) & 1) == 0))
