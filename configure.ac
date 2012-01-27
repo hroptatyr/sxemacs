@@ -382,6 +382,13 @@ OG_MULTIARG_WITH([ase], [dnl
 	OG_MULTIARG_ITEM([resclass], [resclass], [Residue Class Rings and Classes])
 ])
 
+OG_ARG_WITH([compre],
+	AS_HELP_STRING([--with-compre],[
+		Provide exhaustive caching of compiled regexps. This will
+		mean that frequently used regexps will be faster to use 
+		since the compile step will not be needed after first use.]),
+	[yes], [By default do cache compiled regexps.])
+
 OG_MULTIARG_WITH([experimental-features], [dnl
 	AS_HELP_STRING([--with-experimental-features], [
 		Activate experimental code, that is code which is
@@ -394,7 +401,6 @@ OG_MULTIARG_WITH([experimental-features], [dnl
 		can switch off some portions.])],
 	[all nobdwgc], [ALL but bdwgc], [dnl
 	OG_MULTIARG_ITEM([bdwgc], [bdwgc], [the Boehm-Demers-Weiser collector])
-	OG_MULTIARG_ITEM([compre], [compre], [exhaustive caching of compiled regexps])
 	OG_MULTIARG_ITEM([asyneq], [asyneq], [asynchronous event queues])
 ])
 	dnl stop that pom stuff
@@ -446,6 +452,8 @@ OG_MULTIARG_WITH([error-checking], [dnl
 	OG_MULTIARG_ITEM([byte_code], [byte_code], [checks on byte compiled code])
 	OG_MULTIARG_ITEM([bufpos], [bufpos], [checks on buffer position])
 	OG_MULTIARG_ITEM([glyphs], [glyphs], [checks on glyph data])
+	OG_MULTIARG_ITEM([stack], [stack], [checks on stack barriers])
+	OG_MULTIARG_ITEM([malldbg], [malldbg], [malloc debugging code])
 ])
 
 OG_ARG_WITH([purify],
@@ -814,7 +822,7 @@ AC_MSG_CHECKING([for SXEmacs patchlevel])
 CURDIR=$(pwd)
 cd "$sxe_srcdir"
 if test "$have_git" = "yes"; then
-	sxemacs_git_version="$(git describe)"
+	sxemacs_git_version="$(git describe | head -1)"
 fi
 if test -z "$sxemacs_git_version" ; then
 	sxemacs_git_version="[]SXEM4CS_GIT_VERSION[]"
@@ -2089,12 +2097,12 @@ AC_DEFINE([WITH_NUMBER_TYPES], [1], [Description here!])
 SXE_SUBST_ENT_OBJS
 
 dnl experimental code support
-if test "$with_experimental_features_compre" = "yes"; then
+if test "$with_compre" != "no"; then
 	AC_MSG_CHECKING([if compre prerequisites are met])
 	AC_MSG_RESULT([yes])
 	AC_DEFINE([EF_USE_COMPRE], [1],
 		[Whether to provide compiled regular expression!])
-	have_experimental_features_compre=yes
+	have_compre=yes
 fi
 if test "$with_experimental_features_pom" = "yes"; then
 	AC_MSG_CHECKING([if pom prerequisites are met])

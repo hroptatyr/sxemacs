@@ -985,14 +985,6 @@ dnl 		[optiflags="$optiflags -fstrict-aliasing"])
 	SXE_CHECK_COMPILER_FLAGS([-fsection-anchors],
 		[optiflags="$optiflags -fsection-anchors"])
 
-dnl 	## actually this belongs to error-checking stuff
-dnl 	SXE_CHECK_COMPILER_FLAGS([-fstack-protector],
-dnl 		[optiflags="$optiflags -fstack-protector"])
-dnl 	if test "$sxe_cv_c_flags__fstack_protector" = "yes"; then
-dnl 		## just check for ssp in this case
-dnl 		AC_CHECK_LIB([ssp], [__stack_chk_guard])
-dnl 	fi
-
 	SXE_CHECK_COMPILER_FLAGS([-fbranch-target-load-optimize])
 	SXE_CHECK_COMPILER_FLAGS([-fbranch-target-load-optimize2])
 	if test "$sxe_cv_c_flags__fbranch_target_load_optimize2" = "yes"; then
@@ -1612,6 +1604,22 @@ extern void f(void*restrict[]);
 	AC_MSG_RESULT([$typeofname])
 ])dnl SXE_CHECK_BROKEN_RESTRICT	
 
+AC_DEFUN([SXE_STACK_FLAGS], [dnl
+	## actually this belongs to error-checking stuff
+	SXE_CHECK_COMPILER_FLAGS([-fstack-protector])
+	## check if ssp is actually working
+	if test "${sxe_cv_c_flags__fstack_protector}" = "yes"; then
+		## just check for ssp in this case
+		AC_CHECK_LIB([ssp], [__stack_chk_guard])
+	fi
+	## final thing
+	if test "${sxe_cv_c_flags__fstack_protector}" = "yes" -a \
+		"${ac_cv_lib_ssp___stack_chk_guard}" = "yes"; then
+		## only if ssp is guaranteed to work
+		diagflags="${diagflags} -fstack-protector"
+	fi
+])dnl SXE_STACK_FLAGS
+
 dnl recommended interface macros
 ## compiler wrapper
 AC_DEFUN([SXE_CHECK_CC], [dnl
@@ -1662,16 +1670,31 @@ AC_DEFUN([SXE_CHECK_CFLAGS], [dnl
 	dnl #### This may need to be overhauled so that all of SXEMACS_CC's flags
 	dnl are handled separately, not just the xe_cflags_warning stuff.
 
+	## diagnostic stuff and error checking
+	## this may somehow be in contradiction to optimisation flags later on
+	## so we issue the tests right here
+	if test "${with_error_checking_stack}" = "yes"; then
+		SXE_STACK_FLAGS
+	fi
+	if test "${with_error_checking_malldbg}" = "yes"; then
+		## keep MALLOC_PERTURB_ and friends?
+		:
+	else
+		EXTRA_BATCHENV="MALLOC_PERTURB_= MALLOC_CHECK_="
+		AC_SUBST([EXTRA_BATCHENV])
+	fi
+	SXE_CFLAGS="${SXE_CFLAGS} ${diagflags}"
+
 	## Use either command line flag, environment var, or autodetection
 	if test "$with_ridiculously_aggressive_optimisations" = "yes"; then
 		CFLAGS=""
 		SXE_DEBUGFLAGS
 		SXE_WARNFLAGS
 		SXE_OPTIFLAGS
-		SXE_CFLAGS="$debugflags $optiflags $warnflags"
+		SXE_CFLAGS="$SXE_CFLAGS $debugflags $optiflags $warnflags"
 
 		SXE_FEATFLAGS
-		SXE_CFLAGS="$debugflags $featflags $optiflags $warnflags"
+		SXE_CFLAGS="$SXE_CFLAGS $featflags"
 
 	elif test "$CFLAGS_uspecified_p" = "no" -o \
 		"$ac_test_CFLAGS" != "set"; then
@@ -1712,16 +1735,17 @@ AC_DEFUN([SXE_CHECK_CFLAGS], [dnl
 				optiflags="-O"])
 		fi
 
-		SXE_CFLAGS="$debugflags $optiflags $warnflags"
+		SXE_CFLAGS="$SXE_CFLAGS $debugflags $optiflags $warnflags"
 
 		SXE_FEATFLAGS
-		SXE_CFLAGS="$debugflags $featflags $optiflags $warnflags"
+		SXE_CFLAGS="$SXE_CFLAGS $featflags"
 	else
-		SXE_CFLAGS=${USER_CFLAGS}
+		SXE_CFLAGS="${SXE_CFLAGS} ${USER_CFLAGS}"
 		featflags=""
 		debugflags=""
 		optiflags=""
 		warnflags=""
+		diagflags=""
 	fi
 
 	## unset the werror flag again
