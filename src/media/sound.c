@@ -92,7 +92,7 @@ exec_sentinel(void *job, Lisp_Object, Lisp_Object, Lisp_Object);
 #include "events/worker-asyneq.h"
 
 /*****************************************************************/
-/* 			Audio Jobs				 */
+/*			Audio Jobs				 */
 /*****************************************************************/
 /* sound-mst handler */
 
@@ -245,7 +245,7 @@ DEFUN("set-audio-job-sentinel", Fset_audio_job_sentinel, 2, 2, 0, /*
 Give JOB the sentinel SENTINEL; `nil' for none.
 The sentinel is called as a function whenever the stream state changes.
 
-The function should take three (optional four) arguments 
+The function should take three (optional four) arguments
   (JOB STREAM STATE &optional OLD-STATE)
 where
 - JOB is the worker job object currently coping with the stream,
@@ -272,7 +272,7 @@ If omitted DEVICE defaults to the value of `default-audio-device'.
 
 Optional third argument SENTINEL specifies a lisp function to be
 called whenever the stream state changes.  The function should
-take three (optional four) arguments 
+take three (optional four) arguments
   (JOB STREAM STATE &optional OLD-STATE)
 where
 - JOB is the worker job object currently coping with the stream,
@@ -833,7 +833,7 @@ Return t if connected to NAS server for sounds on DEVICE.
 
 
 /*****************************************************************/
-/* 			audio device hack			 */
+/*			audio device hack			 */
 /*****************************************************************/
 /* Indeed the console->device->frame->window structure is not what I'd call
  * applicable to audio devices. That is why this seamless fake here exists :)
@@ -857,7 +857,7 @@ audio_device_finalise(void *header, int for_disksave)
 	SOUND_DEBUG_DEV("GCor asked me to finalise: 0x%lx\n",
 			(long unsigned int)ad);
 
-	if ( ad == NULL ) 
+	if ( ad == NULL )
 		return;
 
 	if (audio_device_data(ad) &&
@@ -966,7 +966,7 @@ audio_device_hash (Lisp_Object obj, int SXE_UNUSED(depth))
 static const struct lrecord_description audio_device_description[] = {
 	{ XD_INT, offsetof(Lisp_Audio_Device, driver) },
 	{ XD_INT, offsetof(Lisp_Audio_Device, state) },
-        { XD_OPAQUE_PTR, offsetof(Lisp_Audio_Device, device_data) },
+	{ XD_OPAQUE_PTR, offsetof(Lisp_Audio_Device, device_data) },
 	{ XD_END }
 };
 
@@ -1419,7 +1419,7 @@ Subsequent elements of the list are alternating keyword/value pairs:
 Keyword: Value:
 -------  -----
 sound    A string of raw sound data (deprecated), or the name of another
-         sound to play.   The symbol `t' here means use the default X beep.
+	 sound to play.   The symbol `t' here means use the default X beep.
 volume   An integer from 0-100, defaulting to `bell-volume'
 pitch    If using the default X beep, the pitch (Hz) to generate.
 duration If using the default X beep, the duration (milliseconds).
@@ -1429,7 +1429,7 @@ You should probably add things to this list by calling the function
 load-sound-file.
 
 Note: SXEmacs must be built with sound support for your system.  Not all
-systems support sound. 
+systems support sound.
 Note: The pitch, duration, and volume options are available everywhere,
 but many X servers ignore the `pitch' option.
 

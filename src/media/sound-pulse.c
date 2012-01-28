@@ -5,7 +5,7 @@
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
   * This file is part of SXEmacs.
-  * 
+  *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
   * are met:
@@ -186,22 +186,22 @@ sound_pulse_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 
 	st = pa_context_get_state(spd->ctx);
 	switch ((unsigned int)st) {
-        case PA_CONTEXT_CONNECTING:
-        case PA_CONTEXT_AUTHORIZING:
-        case PA_CONTEXT_SETTING_NAME:
+	case PA_CONTEXT_CONNECTING:
+	case PA_CONTEXT_AUTHORIZING:
+	case PA_CONTEXT_SETTING_NAME:
 		write_c_string("#busy", pcfun);
 		break;
 
-        case PA_CONTEXT_READY:
+	case PA_CONTEXT_READY:
 		write_c_string("#connected", pcfun);
 		break;
-            
-        case PA_CONTEXT_TERMINATED:
+
+	case PA_CONTEXT_TERMINATED:
 		write_c_string("#terminated", pcfun);
 		break;
 
-        case PA_CONTEXT_FAILED:
-        default:
+	case PA_CONTEXT_FAILED:
+	default:
 		write_c_string("#failed", pcfun);
 		break;
 	}
@@ -430,7 +430,7 @@ sound_pulse_pause(audio_job_t aj)
 	sound_pulse_aj_data_t spsd;
 	sound_pulse_data_t spd;
 	pa_stream *stream;
-        struct timeval tv;
+	struct timeval tv;
 
 	SXE_MUTEX_LOCK(&aj->mtx);
 	spd = get_audio_device_data(aj->device);
@@ -584,7 +584,7 @@ sound_pulse_handle_aj_events(audio_job_t aj)
 
 static void
 time_ev_cb(pa_mainloop_api *m, pa_time_event *e,
-	   const struct timeval *tv, void *userdata) 
+	   const struct timeval *tv, void *userdata)
 {
 	/* check an audio-job's queue for incoming events */
 	struct timeval next;	/* for rescheduling this construction */
@@ -671,7 +671,7 @@ stream_write_callback(pa_stream *stream, size_t length, void *userdata)
 	if (aj->volume != spsd->volume) {
 		spsd->volume = _sound_pulse_change_volume(
 			&spsd->chanvol, ctx, stream, (pa_volume_t)aj->volume);
-        }
+	}
 #endif	/* !EF_USE_ASYNEQ */
 
 	mtp = aj->play_state;
@@ -781,21 +781,21 @@ stream_state_callback(pa_stream *s, void *userdata)
 
 	st = pa_stream_get_state(s);
 	switch ((unsigned int)st) {
-        case PA_STREAM_CREATING:
+	case PA_STREAM_CREATING:
 		PULSE_DEBUG_S("CREATING.\n");
 		break;
-        case PA_STREAM_TERMINATED:
+	case PA_STREAM_TERMINATED:
 		PULSE_DEBUG_S("TERMINATED.\n");
 		PULSE_DEBUG_PT("trigger local semaphore\n");
 		SXE_SEMAPH_TRIGGER(sem);
 		break;
 
-        case PA_STREAM_READY:
+	case PA_STREAM_READY:
 		PULSE_DEBUG_S("READY.\n");
 		break;
-            
-        case PA_STREAM_FAILED:
-        default:
+
+	case PA_STREAM_FAILED:
+	default:
 		PULSE_DEBUG_S("FAILED.\n");
 		PULSE_DEBUG_PT("trigger local semaphore\n");
 		SXE_SEMAPH_TRIGGER(sem);
@@ -1035,7 +1035,7 @@ sink_info_callback(pa_context *c, const pa_sink_info *i, int eol, void *data)
 {
 	sound_pulse_data_t spd = data;
 
-	if (eol < 0) {	
+	if (eol < 0) {
 		PULSE_DEBUG_CTX("No sink info\n");
 		spd->sink_info = NULL;
 	} else if (i == NULL) {
@@ -1051,7 +1051,7 @@ sink_info_callback(pa_context *c, const pa_sink_info *i, int eol, void *data)
 
 /* This is called whenever the context status changes */
 static void
-context_state_callback(pa_context *c, void *userdata) 
+context_state_callback(pa_context *c, void *userdata)
 {
 	sound_pulse_data_t spd = userdata;
 	pa_operation *o;
@@ -1060,15 +1060,15 @@ context_state_callback(pa_context *c, void *userdata)
 	assert(c);
 
 	switch (pa_context_get_state(c)) {
-        case PA_CONTEXT_UNCONNECTED:
-        case PA_CONTEXT_CONNECTING:
-        case PA_CONTEXT_AUTHORIZING:
-        case PA_CONTEXT_SETTING_NAME:
+	case PA_CONTEXT_UNCONNECTED:
+	case PA_CONTEXT_CONNECTING:
+	case PA_CONTEXT_AUTHORIZING:
+	case PA_CONTEXT_SETTING_NAME:
 		PULSE_DEBUG_CTX("CONN/AUTH.\n");
 		spd->ml_running_p = 0;
 		break;
-        
-        case PA_CONTEXT_READY:
+
+	case PA_CONTEXT_READY:
 		PULSE_DEBUG_CTX("ESTA.\n");
 		sink_name = (NILP(spd->sink) ? NULL :
 			     (char*)XSTRING_DATA(spd->sink));
@@ -1087,14 +1087,14 @@ context_state_callback(pa_context *c, void *userdata)
 		pa_threaded_mainloop_signal(spd->tml, 0);
 		break;
 
-        case PA_CONTEXT_TERMINATED:
+	case PA_CONTEXT_TERMINATED:
 		PULSE_DEBUG_CTX("DEAD.\n");
 		spd->ml_running_p = 0;
 		pa_threaded_mainloop_signal(spd->tml, 0);
 		break;
 
-        case PA_CONTEXT_FAILED:
-        default:
+	case PA_CONTEXT_FAILED:
+	default:
 		PULSE_DEBUG_CTX("FAIL.\n");
 		spd->ml_running_p = 0;
 		PULSE_DEBUG_CTX("triggering semaphore.\n");
@@ -1111,7 +1111,7 @@ sound_pulse_init_mainloop(ad_device_data *devdata)
 	/* device stuff */
 	sound_pulse_data_t spd = (sound_pulse_data_t)devdata;
 	/* some predeclarations to avoid ugly trigraphs */
-	const char *client = 
+	const char *client =
 		(NILP(spd->client) ? "SXEmacs" :
 		 (const char*)XSTRING_DATA(spd->client));
 	const char *server =

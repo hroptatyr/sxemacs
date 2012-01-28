@@ -220,7 +220,7 @@ const char *GetGifError(int error)
 }
 
 /******************************
-* These are called internally *        
+* These are called internally *
 ******************************/
 void GifError(GifFileType * GifFile, const char *err_str)
 {

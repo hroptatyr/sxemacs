@@ -30,10 +30,10 @@ extern Lisp_Object Qmad;
 
 typedef struct mad_decoder_s {
 
-	struct mad_synth  *synth; 
+	struct mad_synth  *synth;
 	struct mad_stream *stream;
 	struct mad_frame  *frame;
-  
+
 	int have_frame;
 
 	int output_sampling_rate;

@@ -202,14 +202,14 @@ EXFUN(Fdelete_audio_device, 1);	/* too dangerous at the moment */
 #define SOUND_MAX_AUDIO_FRAME_SIZE		\
 	SOUND_MAX_SAMPLE_FREQ * SOUND_MAX_SAMPLE_WIDTH * SOUND_MAX_CHANNELS
 
-/* 
+/*
  * Threads are the containers for the streams. Streams are stored
  * (along with devices) inside threads, while substreams are stored inside
  * subthreads. In source/sink language, a thread is the cable to plug a source
  * (stream) to a sink (device).
- * 
+ *
  * This brings us to:
- * 
+ *
  *                      up  +========+  up
  *                  ,-----> | Thread | <-----,
  *                 /        +--------+        \
@@ -229,7 +229,7 @@ EXFUN(Fdelete_audio_device, 1);	/* too dangerous at the moment */
  *    |pthread_t1|	   |pthread_t2|         |pthread_t3|
  *    |privdata1 |	   |privdata2 |	        |privdata3 |
  *    +==========+	   +==========+	        +==========+
- * 
+ *
  * Note: It is yet _not_ possible to specify different devices for each
  * subthread. This will require another split of the device structure into
  * a device+subdevice tree.

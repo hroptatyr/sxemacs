@@ -29,11 +29,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <errno.h>
 #include <string.h>
 
-/* 
+/*
 lisp.h defined UNUSED which also gets defined in some versions of SoX
 in an incompatible fashion.  We don't need that macro here...
 */
-#undef UNUSED 
+#undef UNUSED
 #include "media-sox.h"
 
 #define MYSELF MDRIVER_SOX
@@ -63,7 +63,7 @@ DEFINE_MEDIA_DRIVER_CUSTOM(media_sox,
 
 
 /* called from util.c::st_fail() */
-void cleanup(void) 
+void cleanup(void)
 {
 }
 
@@ -159,7 +159,7 @@ media_sox_open(Lisp_Media_Stream *ms)
 		mtap->samplewidth = 64;
 		mtap->framesize = mtap->channels * 8;
 		break;
-        default:
+	default:
 		mtap->samplewidth = 32;
 		mtap->framesize = mtap->channels * 4;
 		break;
