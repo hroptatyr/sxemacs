@@ -18,7 +18,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -523,13 +523,13 @@
 (when (featurep 'number-type)
   (let ((nums))
     (and (featurep 'bigz)
-         (setq nums (cons (factorial 20) nums)))
+	 (setq nums (cons (factorial 20) nums)))
     (and (featurep 'bigq)
-         (setq nums (cons (// (factorial 20) 71) nums)))
+	 (setq nums (cons (// (factorial 20) 71) nums)))
     (and (featurep 'bigfr)
-         (setq nums (cons (exp 2) nums)))
+	 (setq nums (cons (exp 2) nums)))
     (and (featurep 'bigc)
-         (setq nums (cons (sqrt -3) nums)))
+	 (setq nums (cons (sqrt -3) nums)))
     (loop for x in num do
       (Assert (eq t (=  x)))
       (Assert (eq t (<  x)))
@@ -1096,9 +1096,9 @@
 
 ;;; "%u" was undocumented, and support for it has been dropped
 (Check-Error-Message error "Invalid converter character"
-                     (format "%u"  most-positive-fixnum))
+		     (format "%u"  most-positive-fixnum))
 (Check-Error-Message error "Invalid converter character"
-                     (format "%u" most-negative-fixnum))
+		     (format "%u" most-negative-fixnum))
 
 ;; Check all-completions ignore element start with space.
 (Assert (not (all-completions "" '((" hidden" . "object")))))

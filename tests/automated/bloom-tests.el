@@ -5,7 +5,7 @@
 ;; Keywords: tests
 ;;
 ;; This file is part of SXEmacs.
-;; 
+;;
 ;; SXEmacs is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the
 ;; Free Software Foundation, either version 3 of the License, or (at your
@@ -17,7 +17,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;;; Synched up with: Not in FSF.
 ;;
@@ -42,11 +42,11 @@
       (b3 (make-bloom 512))
       (b4 (make-bloom 512 26)))
   (eval `(Assert (eq (bloom-order ,b1)
-                     (bloom-order ,b2))))
+		     (bloom-order ,b2))))
   (eval `(Assert (eq (bloom-order ,b3) 512)))
   (eval `(Assert (eq (bloom-order ,b4) 512)))
   (eval `(Assert (eq (bloom-degree ,b1)
-                     (bloom-degree ,b2))))
+		     (bloom-degree ,b2))))
   (eval `(Assert (eq (bloom-degree ,b4) 26)))
   (eval `(Assert (eq (bloom-size ,b1) 0)))
   (eval `(Assert (eq (bloom-size ,b2) 0)))
@@ -105,10 +105,10 @@
 ;;; moved to man/lispref/lists.texi -hroptatyr
 ;;   ;; when we add 8-times-degree-times more elements than the order
 ;;   ;; of the bloom we expect it to turn into a universe
-;; 
+;;
 ;;   (dotimes (i (* 8 (bloom-degree b4) (bloom-order b4)))
 ;;     (bloom-add b4 i))
-;; 
+;;
 ;;   (eval `(Assert (bloom-owns-p ,b4 'a-symbol-i-never-added)))
 ;;   (eval `(Assert (bloom-owns-p ,b4 "a-string-i-never-added")))
 ;;   (eval `(Assert (bloom-owns-p ,b4 [a vector i never added])))
@@ -121,16 +121,16 @@
       (b3 (make-bloom-universe 512))
       (b4 (make-bloom-universe 512 26)))
   (eval `(Assert (eq (bloom-order ,b1)
-                     (bloom-order ,b2))))
+		     (bloom-order ,b2))))
   (eval `(Assert (eq (bloom-order ,b3) 512)))
   (eval `(Assert (eq (bloom-order ,b4) 512)))
   (eval `(Assert (eq (bloom-degree ,b1)
-                     (bloom-degree ,b2))))
+		     (bloom-degree ,b2))))
   (eval `(Assert (eq (bloom-degree ,b4) 26)))
   (eval `(Assert (eq (bloom-size ,b1)
-                     (bloom-size ,b2))))
+		     (bloom-size ,b2))))
   (eval `(Assert (eq (bloom-size ,b3)
-                     (bloom-size ,b4))))
+		     (bloom-size ,b4))))
 
   (eval `(Assert (bloom-owns-p ,b1 21)))
   (eval `(Assert (bloom-owns-p ,b1 'a-symbol)))

@@ -5,7 +5,7 @@
 ;; Keywords: tests
 ;;
 ;; This file is part of SXEmacs.
-;; 
+;;
 ;; SXEmacs is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the
 ;; Free Software Foundation, either version 3 of the License, or (at your
@@ -17,7 +17,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 ;;; Synched up with: Not in FSF.
 ;;
@@ -36,27 +36,27 @@
 
 (defmacro Assert-set-equality (s1 s2)
   (let* ((m1 (if (arrayp s1) 'across 'in))
-         (m2 (if (arrayp s2) 'across 'in)))
+	 (m2 (if (arrayp s2) 'across 'in)))
     `(progn
        (Assert-Equal (type-of ,s1) (type-of ,s2))
        (Assert (= (length ,s1) (length ,s2)))
        (Assert
-        (loop
-          for i ,m1 ,s1
-          always (loop
-                   for j ,m2 ,s2
-                   thereis (equal i j)))))))
+	(loop
+	  for i ,m1 ,s1
+	  always (loop
+		   for j ,m2 ,s2
+		   thereis (equal i j)))))))
 
 (defmacro Assert-tup-equality (s1 s2)
   (let* ((m1 (if (arrayp s1) 'across 'in))
-         (m2 (if (arrayp s2) 'across 'in)))
+	 (m2 (if (arrayp s2) 'across 'in)))
     `(progn
        (Assert-Equal (type-of ,s1) (type-of ,s2))
        (Assert
-        (loop
-          for i ,m1 ,s1
-          for j ,m2 ,s2
-          always (equal i j))))))
+	(loop
+	  for i ,m1 ,s1
+	  for j ,m2 ,s2
+	  always (equal i j))))))
 
 
 ;; test trivial cases
@@ -132,12 +132,12 @@
 (Assert
  (equal
   (mapfam nil :mode 'pntw :result-type #'vector :glue #'vector :arity 2
-          [1 2 3 4 5 6 7])
+	  [1 2 3 4 5 6 7])
   [[1 2] [3 4] [5 6]]))
 (Assert
  (equal
   (mapfam nil :mode 'pntw :result-type #'vector :glue #'vector :arity 3
-          [1 2 3 4 5 6 7])
+	  [1 2 3 4 5 6 7])
   [[1 2 3] [4 5 6]]))
 ;; larger glue than sequence
 (Assert
@@ -807,33 +807,33 @@
     (loop for j in (list rl rv rd) do
       (eval
        `(Assert
-         (equal
-          (mapfam #'+ ,i :arity 2 :result-type #',(car j))
-          ,(cdr j))))))
+	 (equal
+	  (mapfam #'+ ,i :arity 2 :result-type #',(car j))
+	  ,(cdr j))))))
   ;; seq length coprime to arity
   (loop for i in (list l2 v2 d2) do
     (loop for j in (list rl rv rd) do
       (eval
        `(Assert
-         (equal
-          (mapfam #'+ ,i :arity 2 :result-type #',(car j))
-          ,(cdr j))))))
+	 (equal
+	  (mapfam #'+ ,i :arity 2 :result-type #',(car j))
+	  ,(cdr j))))))
   ;; arity 3
   (loop for i in (list l v d) do
     (loop for j in (list rl2 rv2 rd2) do
       (eval
        `(Assert
-         (equal
-          (mapfam #'+ ,i :arity 3 :result-type #',(car j))
-          ,(cdr j))))))
+	 (equal
+	  (mapfam #'+ ,i :arity 3 :result-type #',(car j))
+	  ,(cdr j))))))
   ;; seq length coprime to arity
   (loop for i in (list l2 v2 d2) do
     (loop for j in (list rl2 rv2 rd2) do
       (eval
        `(Assert
-         (equal
-          (mapfam #'+ ,i :arity 3 :result-type #',(car j))
-          ,(cdr j)))))))
+	 (equal
+	  (mapfam #'+ ,i :arity 3 :result-type #',(car j))
+	  ,(cdr j)))))))
 
 (Assert
  (equal
@@ -1434,7 +1434,7 @@
 ;;
 ;; Now with #'mapfam...
 ;;
-;; First, with the exact same syntax as we did with #'mapconcat (because it is 
+;; First, with the exact same syntax as we did with #'mapconcat (because it is
 ;; our plan to replace all of our #'map* functions with aliases to #'mapfam)
 ;;
 ;; (mapfam #'concat (split-string "unsplit this split string") " ")
@@ -1454,7 +1454,7 @@
 ;; wrong-type-argument error.
 ;;
 ;; Now lets try to wing it with more fancy syntax...
-;; 
+;;
 ;; (mapfam nil :separator " " :result-type #'concat
 ;;         (split-string "unsplit this split string"))
 ;;  => "unsplitthissplitstring"
@@ -1474,7 +1474,7 @@
 
 ;; (mapfam #'concat :result-type #'concat
 ;;         (split-string "unsplit this split string") " ")
-;;  => Wrong type argument: sequencep, ?\ 
+;;  => Wrong type argument: sequencep, ?\
 ;;
 ;; hrop: um, I can't see what that is supposed to do, but yes, the wrong-type
 ;;       error is because of the second sequence (" ") which is kinda like [?\ ]
@@ -1511,68 +1511,68 @@
 ;; (Assert
 ;;  (string=
 ;;   (mapfam #'concat :result-type #'concat
-;; 	  (split-string "unsplit this split string") '(" " " " " " ""))
+;;	  (split-string "unsplit this split string") '(" " " " " " ""))
 ;;   "unsplit this split string"))
-;; 
+;;
 ;; (when-fboundp #'divisiblep
 ;;   (Assert-set-equality
 ;;    (let ((divisors))
 ;;      (mapfam :result-type 'void
-;; 	     #'(lambda (p)
-;; 		 (garbage-collect)
-;; 		 (if (divisiblep 5041 p) (push p divisors))
-;; 		 (garbage-collect))
-;; 	     '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
-;; 		 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37
-;; 		 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54
-;; 		 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 69 70
-;; 		 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87
-;; 		 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103
-;; 		 104 105 106 107 108 109 110 111 112 113 114 115 116
-;; 		 117 118 119 120 121 122 123 124 125 126 127 128 129
-;; 		 130 131 132 133 134 135 136 137 138 139 140 141 142
-;; 		 143 144 145 146 147 148 149 150 151 152 153 154 155
-;; 		 156 157 158 159 160 161 162 163 164 165 166 167 168
-;; 		 169 170 171 172 173 174 175 176 177 178 179 180 181
-;; 		 182 183 184 185 186 187 188 189 190 191 192 193 194
-;; 		 195 196 197 198 199 200 201 202 203 204 205 206 207
-;; 		 208 209 210 211 212 213 214 215 216 217 218 219 220
-;; 		 221 222 223 224 225 226 227 228 229 230 231 232 233
-;; 		 234 235 236 237 238 239 240 241 242 243 244 245 246
-;; 		 247 248 249 250 251 252 253 254 255 256 257 258 259
-;; 		 260 261 262 263 264 265 266 267 268 269 270 271 272
-;; 		 273 274 275 276 277 278 279 280 281 282 283 284 285
-;; 		 ))
+;;	     #'(lambda (p)
+;;		 (garbage-collect)
+;;		 (if (divisiblep 5041 p) (push p divisors))
+;;		 (garbage-collect))
+;;	     '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+;;		 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37
+;;		 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54
+;;		 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 69 70
+;;		 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87
+;;		 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103
+;;		 104 105 106 107 108 109 110 111 112 113 114 115 116
+;;		 117 118 119 120 121 122 123 124 125 126 127 128 129
+;;		 130 131 132 133 134 135 136 137 138 139 140 141 142
+;;		 143 144 145 146 147 148 149 150 151 152 153 154 155
+;;		 156 157 158 159 160 161 162 163 164 165 166 167 168
+;;		 169 170 171 172 173 174 175 176 177 178 179 180 181
+;;		 182 183 184 185 186 187 188 189 190 191 192 193 194
+;;		 195 196 197 198 199 200 201 202 203 204 205 206 207
+;;		 208 209 210 211 212 213 214 215 216 217 218 219 220
+;;		 221 222 223 224 225 226 227 228 229 230 231 232 233
+;;		 234 235 236 237 238 239 240 241 242 243 244 245 246
+;;		 247 248 249 250 251 252 253 254 255 256 257 258 259
+;;		 260 261 262 263 264 265 266 267 268 269 270 271 272
+;;		 273 274 275 276 277 278 279 280 281 282 283 284 285
+;;		 ))
 ;;      divisors)
 ;;    '(1 71))
-;; 
+;;
 ;;   (Assert-set-equality
 ;;    (let ((divisors))
 ;;      (mapfam #'(lambda (p)
-;; 		 (garbage-collect)
-;; 		 (if (divisiblep 5041 p) (push p divisors))
-;; 		 (garbage-collect))
-;; 	     '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
-;; 		 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37
-;; 		 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54
-;; 		 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 69 70
-;; 		 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87
-;; 		 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103
-;; 		 104 105 106 107 108 109 110 111 112 113 114 115 116
-;; 		 117 118 119 120 121 122 123 124 125 126 127 128 129
-;; 		 130 131 132 133 134 135 136 137 138 139 140 141 142
-;; 		 143 144 145 146 147 148 149 150 151 152 153 154 155
-;; 		 156 157 158 159 160 161 162 163 164 165 166 167 168
-;; 		 169 170 171 172 173 174 175 176 177 178 179 180 181
-;; 		 182 183 184 185 186 187 188 189 190 191 192 193 194
-;; 		 195 196 197 198 199 200 201 202 203 204 205 206 207
-;; 		 208 209 210 211 212 213 214 215 216 217 218 219 220
-;; 		 221 222 223 224 225 226 227 228 229 230 231 232 233
-;; 		 234 235 236 237 238 239 240 241 242 243 244 245 246
-;; 		 247 248 249 250 251 252 253 254 255 256 257 258 259
-;; 		 260 261 262 263 264 265 266 267 268 269 270 271 272
-;; 		 273 274 275 276 277 278 279 280 281 282 283 284 285
-;; 		 ))
+;;		 (garbage-collect)
+;;		 (if (divisiblep 5041 p) (push p divisors))
+;;		 (garbage-collect))
+;;	     '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+;;		 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37
+;;		 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54
+;;		 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 69 70
+;;		 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87
+;;		 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103
+;;		 104 105 106 107 108 109 110 111 112 113 114 115 116
+;;		 117 118 119 120 121 122 123 124 125 126 127 128 129
+;;		 130 131 132 133 134 135 136 137 138 139 140 141 142
+;;		 143 144 145 146 147 148 149 150 151 152 153 154 155
+;;		 156 157 158 159 160 161 162 163 164 165 166 167 168
+;;		 169 170 171 172 173 174 175 176 177 178 179 180 181
+;;		 182 183 184 185 186 187 188 189 190 191 192 193 194
+;;		 195 196 197 198 199 200 201 202 203 204 205 206 207
+;;		 208 209 210 211 212 213 214 215 216 217 218 219 220
+;;		 221 222 223 224 225 226 227 228 229 230 231 232 233
+;;		 234 235 236 237 238 239 240 241 242 243 244 245 246
+;;		 247 248 249 250 251 252 253 254 255 256 257 258 259
+;;		 260 261 262 263 264 265 266 267 268 269 270 271 272
+;;		 273 274 275 276 277 278 279 280 281 282 283 284 285
+;;		 ))
 ;;      divisors)
 ;;    '(1 71)))
 

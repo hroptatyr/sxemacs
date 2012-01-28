@@ -18,7 +18,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -71,9 +71,9 @@
 	 (let ((len (length (weak-list-list weak-list))))
 	   (Assert (not (zerop len)))
 	   (garbage-collect)
-           (unless (featurep 'bdwgc)
-             (Assert (eq (length (weak-list-list weak-list))
-                         (if (not reversep) 0 len)))))))
+	   (unless (featurep 'bdwgc)
+	     (Assert (eq (length (weak-list-list weak-list))
+			 (if (not reversep) 0 len)))))))
   (let ((weak-list (make-weak-list))
 	(gc-cons-threshold most-positive-fixnum))
     ;; Symbols created with `make-symbol' and `gensym' should be fresh
