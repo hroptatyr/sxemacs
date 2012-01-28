@@ -56,7 +56,7 @@ dist_etc_DATA = BETA CHARSETS CODING-STANDARDS CODINGS			\
 	TUTORIAL.ko TUTORIAL.no TUTORIAL.pl TUTORIAL.ro TUTORIAL.ru	\
 	TUTORIAL.se TUTORIAL.th						\
 	XKeysymDB codenames emacskeys.sco emacsstrs.sco gnuserv.README	\
-	package-index.LATEST.gpg refcard.tex rgb.txt 		\
+	package-index.LATEST.gpg refcard.tex rgb.txt		\
 	sample.Xdefaults sample.init.el
 
 dist_desktop_DATA = sxemacs.desktop
