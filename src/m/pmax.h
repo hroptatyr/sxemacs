@@ -4,9 +4,9 @@
 
 #include "mips.h"
 
-/* The following line tells the configuration script what sort of 
+/* The following line tells the configuration script what sort of
    operating system this machine is likely to run.
-   USUAL-OPSYS="note"  
+   USUAL-OPSYS="note"
 
 NOTE-START
 Use -opsystem=osf1 for OSF/1, and -opsystem=bsd4-3 otherwise.

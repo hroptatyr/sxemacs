@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /* Synched up with: FSF 19.31. */
 
-/* The following line tells the configuration script what sort of 
+/* The following line tells the configuration script what sort of
    operating system this machine is likely to run.
    USUAL-OPSYS="note"
 
@@ -87,7 +87,7 @@ NOTE-END  */
 #undef RUN_TIME_REMAP
 #undef UNEXEC
 
-/* 
+/*
  * everything is pdump now. --SY
  * #define UNEXEC "unexec.o"
  */

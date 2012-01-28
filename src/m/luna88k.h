@@ -7,7 +7,7 @@ originaly wrote by
 
 modified for mule-2.0 by
 	Sep. 10th '94
-        MUKAIGAWA Shin'ichi
+	MUKAIGAWA Shin'ichi
 	shin@ari.ncl.omron.co.jp
 
    Copyright (C) 1990 Free Software Foundation, Inc.
