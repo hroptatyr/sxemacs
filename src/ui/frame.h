@@ -210,7 +210,7 @@ struct frame {
 	/* flag indicating if any window on this frame is displaying a subwindow */
 	unsigned int subwindows_being_displayed:1;
 
- 	/* flag indicating wheather windor-configuration-hook is running; this
+	/* flag indicating wheather windor-configuration-hook is running; this
 	   is an attempt at preventing infinite loops. */
 	unsigned int window_configuration_hook :1;
 
@@ -708,7 +708,7 @@ extern int frame_changed;
    ? FRAME_RAW_REAL_TOOLBAR_VISIBLE (f, pos)		\
    : 0)
 #define FRAME_REAL_TOOLBAR_SIZE(f, pos)			\
-  ((!NILP (FRAME_REAL_TOOLBAR (f, pos))	        	\
+  ((!NILP (FRAME_REAL_TOOLBAR (f, pos))		\
   && FRAME_RAW_REAL_TOOLBAR_VISIBLE (f, pos))		\
    ? FRAME_RAW_REAL_TOOLBAR_SIZE (f, pos)		\
    : 0)

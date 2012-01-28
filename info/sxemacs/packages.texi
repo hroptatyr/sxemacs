@@ -33,18 +33,18 @@ for local needs with safe removal of unnecessary code.
 There are two main flavors of packages.
 
 @itemize @bullet
-@item 
+@item
 Regular Packages
 @cindex regular packages
 A regular package is one in which multiple files are involved and one
 may not in general safely remove any of them, unless removing the entire
 package.
 
-@item 
+@item
 Single-File Packages
 @cindex single-file packages
 A single-file package is an aggregate collection of thematically
-related but otherwise independent lisp files.  These files are bundled 
+related but otherwise independent lisp files.  These files are bundled
 together for download convenience and individual files may be deleted at
 will without any loss of functionality.  However, we would recommend
 that you follow this rule of thumb: "When in doubt, don't delete".
@@ -84,7 +84,7 @@ As you may be aware, SXEmacs uses the same packaging tools (@dfn{PUI})
 as XEmacs.  What you may not be aware of is that PUI is useless until
 you manually install a couple of packages.  Yep, that's right, you
 can't use PUI to install packages unless you install some packages
-first... 
+first...
 
 Well @emph{that} was for XEmacs, @emph{this} is SXEmacs!  SXEmacs can
 @dfn{bootstrap} PUI @strong{without} needing @strong{any} packages to
@@ -170,7 +170,7 @@ idea to install all packages and not interfere with the wishes of your
 users.
 
 If you can't find which package provides the feature you require, try
-using the @code{package-get-package-provider} function. Eg., if you know 
+using the @code{package-get-package-provider} function. Eg., if you know
 that you need @code{thingatpt}, type:
 
 @example
@@ -212,19 +212,19 @@ indeed it has, @xref{Bootstrapping PUI}.
 
 If you are unlucky enough to have a @dfn{FFI-enabled} SXEmacs, you
 will have to manually install the EFS and xemacs-base packages
-@pxref{Manually}. 
+@pxref{Manually}.
 
 @enumerate 1
-@item 
+@item
 Choose a download site.
-via menu: Tools -> Packages -> Set Download Site 
+via menu: Tools -> Packages -> Set Download Site
 via keyb: @code{M-x customize-variable RET package-get-remote RET}
 (put in the details of remote host and directory)
 
 If the package tarballs _AND_ the package-index file are in a
 local directory, you can: @code{M-x pui-set-local-package-get-directory RET}
 
-@item 
+@item
 Obtain a list of packages and display the list in a buffer named
 @file{*Packages*}.
 menu: Tools -> Packages -> List & Install
@@ -272,7 +272,7 @@ Toggle between selecting and unselecting a package for installation.
 Install selected packages.
 @item @key{SPC}
 View, in the minibuffer, additional information about the package, such
-as the package date (not the build date) and the package author.  Moving 
+as the package date (not the build date) and the package author.  Moving
 the mouse over a package name will also do the same thing.
 @item v
 Toggle between verbose and non-verbose package display.
@@ -288,12 +288,12 @@ balloon-help enabled a balloon-help frame will pop up and display
 additional package information also.
 
 
-@item 
+@item
 Choose the packages you wish to install.
 mouse: Click button 2 on the package name.
  keyb: @kbd{RET} on the package name
 
-@item 
+@item
 Make sure you have everything you need.
 menu: Packages -> Add Required
 keyb: @kbd{r}
@@ -305,7 +305,7 @@ those packages also.
 For novices and gurus alike, this step can save your bacon.
 It's easy to forget to install a critical package.
 
-@item 
+@item
 Download and install the packages.
 menu: Packages -> Install/Remove Selected
 keyb: @kbd{x}
@@ -339,7 +339,7 @@ Tools -> Packages -> Update Installed Packages
 Fetch the packages from the FTP site, CD-ROM whatever. The filenames
 have the form @file{name-<version>-pkg.tar.gz} and are gzipped tar files. For
 a fresh install it is sufficient to untar the file at the top of the
-package hierarchy. 
+package hierarchy.
 
 Note: If you are upgrading packages already installed, it's best to
 remove the old package first @ref{Removing Packages}.
@@ -427,7 +427,7 @@ Because the exact files and their locations contained in a package may
 change it is recommended to remove a package first before installing a
 new version. In order to facilitate removal each package contains an
 @file{pgkinfo/MANIFEST.pkgname} file which list all the files belonging
-to the package. 
+to the package.
 
 No need to panic, you don't have to go through the
 @file{pkinfo/MANIFEST.pkgname} and manually delete the files.  Instead, use
@@ -449,11 +449,11 @@ Currently, source packages are only available via anonymous CVS.  See
 
 @table @code
 @item GNU cp
-@item GNU install 
+@item GNU install
 (or a BSD compatible install program).
-@item GNU make 
+@item GNU make
 (3.75 or later preferred).
-@item makeinfo 
+@item makeinfo
 (4.2 from GNU texinfo 4.2 or later required).
 @item GNU tar
 (or equivalent).
@@ -537,7 +537,7 @@ C, C++ and Java language support.
 Support for the Clearcase version control system.
 
 @item cookie
-"Fortune cookie"-style messages. Includes Spook (suspicious phrases) 
+"Fortune cookie"-style messages. Includes Spook (suspicious phrases)
 and Yow (Zippy quotes).
 
 @item crisp
@@ -672,7 +672,7 @@ Other amusements and diversions.
 Support for Multiple Major Modes within a single buffer.
 
 @item net-utils
-Miscellaneous Networking Utilities.  This is a single-file package and 
+Miscellaneous Networking Utilities.  This is a single-file package and
 files may be deleted at will.
 
 @item ocaml
@@ -815,7 +815,7 @@ naked XEmacs.
 
 @item xemacs-devel
 XEmacs Lisp developer support.  This package contains utilities for
-supporting Lisp development.  It is a single-file package so it may be 
+supporting Lisp development.  It is a single-file package so it may be
 tailored.
 
 @item xslide
@@ -870,4 +870,3 @@ Extended coding systems (including Unicode) for SXEmacs.
 Another Japanese Language Input Method.  Can be used without a
 separate process running as a dictionary server.
 @end table
-

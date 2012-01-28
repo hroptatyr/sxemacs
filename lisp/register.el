@@ -145,7 +145,7 @@ If NUMBER is nil, a decimal number is read from the buffer starting
 at point, and point moves to the end of that number.
 Interactively, NUMBER is the prefix arg (none means nil)."
   (interactive "P\ncNumber to register: ")
-  (set-register register 
+  (set-register register
 		(if number
 		    (prefix-numeric-value number)
 		  (if (looking-at "\\s-*-?[0-9]+")

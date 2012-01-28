@@ -56,7 +56,7 @@ AC_COPYRIGHT(
 ### If configure succeeds, it leaves its status in config.status.
 ### A log of configuration tests can be found in config.log.
 ### If configure fails after disturbing the status quo,
-### 	config.status is removed.
+###	config.status is removed.
 ])
 
 
@@ -115,9 +115,9 @@ dnl ====================
 OG_OPTION_GROUP(Installation Options)
 
 dnl OG_ARG_WITH([module-dir],
-dnl 	AS_HELP_STRING([--with-module-dir],
-dnl 		[Specify the directory where the modules go.]),
-dnl 	[auto], [$prefix/lib/sxemacs/site-modules], [og_any])
+dnl	AS_HELP_STRING([--with-module-dir],
+dnl		[Specify the directory where the modules go.]),
+dnl	[auto], [$prefix/lib/sxemacs/site-modules], [og_any])
 OG_ARG_WITH([module-dir],
 	AS_HELP_STRING([--with-module-dir],
 		[Specify the directory where the modules go.]),

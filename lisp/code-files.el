@@ -220,22 +220,22 @@ charsets."
 	     (let ((codesys (intern (buffer-substring
 				     (match-beginning 1)(match-end 1)))))
 	       (if (find-coding-system codesys) codesys)))
-        ;; (save-excursion
-        ;;   (let (start end)
-        ;;     (and (re-search-forward "^;+[ \t]*Local Variables:" nil t)
-        ;;          (setq start (match-end 0))
-        ;;          (re-search-forward "\n;+[ \t]*End:")
-        ;;          (setq end (match-beginning 0))
-        ;;          (save-restriction
-        ;;            (narrow-to-region start end)
-        ;;            (goto-char start)
-        ;;            (re-search-forward "^;;; coding: \\([^\n]+\\)$" nil t)
-        ;;            )
-        ;;          (let ((codesys
-        ;;                 (intern (buffer-substring
-        ;;                          (match-beginning 1)(match-end 1)))))
-        ;;            (if (find-coding-system codesys) codesys))
-        ;;          )))
+	;; (save-excursion
+	;;   (let (start end)
+	;;     (and (re-search-forward "^;+[ \t]*Local Variables:" nil t)
+	;;          (setq start (match-end 0))
+	;;          (re-search-forward "\n;+[ \t]*End:")
+	;;          (setq end (match-beginning 0))
+	;;          (save-restriction
+	;;            (narrow-to-region start end)
+	;;            (goto-char start)
+	;;            (re-search-forward "^;;; coding: \\([^\n]+\\)$" nil t)
+	;;            )
+	;;          (let ((codesys
+	;;                 (intern (buffer-substring
+	;;                          (match-beginning 1)(match-end 1)))))
+	;;            (if (find-coding-system codesys) codesys))
+	;;          )))
 	(let ((case-fold-search nil))
 	  (if (search-forward
 	       ";;;###coding system: " (+ (point-min) 3000) t)
@@ -264,52 +264,52 @@ Return t if file exists."
 	 (handler (find-file-name-handler filename 'load))
 	 (path nil))
     (cond (handler
-           (funcall handler 'load filename noerror nomessage nosuffix))
-          ((<= (length filename) 0)
-           (and (null noerror)
-                (signal 'file-error (list "Cannot open load file" filename))))
-          ((setq path (locate-file filename load-path
-                                   (and (not nosuffix) '(".elc" ".el" ""))))
-           ;; now use the internal load to actually load the file.
-           (load-internal
-            file noerror nomessage nosuffix
-            (let ((elc
-                   ;; use string= instead of string-match to keep match-data.
-                   (string= ".elc" (downcase (substring path -4)))))
-              (or (and (not elc) coding-system-for-read) ; prefer for source file
-                  ;; find magic-cookie
-                  (save-excursion
-                    (set-buffer (get-buffer-create " *load*"))
-                    (erase-buffer)
-                    (let ((coding-system-for-read 'raw-text))
-                      (insert-file-contents path nil 0 3000))
-                    (find-coding-system-magic-cookie))
-                  (if elc
-                      ;; if reading a byte-compiled file and we didn't find
-                      ;; a coding-system magic cookie, then use `binary'.
-                      ;; We need to guarantee that we never do autodetection
-                      ;; on byte-compiled files because confusion here would
-                      ;; be a very bad thing.  Pre-existing byte-compiled
-                      ;; files are always in the `binary' coding system.
-                      ;; Also, byte-compiled files always use `lf' to terminate
-                      ;; a line; don't risk confusion here either.
-                      'binary
-                    (or (find-file-coding-system-for-read-from-filename path)
-                        ;; looking up in `file-coding-system-alist'.
-                        ;; otherwise use `buffer-file-coding-system-for-read',
-                        ;; as normal
-                        buffer-file-coding-system-for-read)
-                    )))))
-          ((setq path (locate-file filename load-path
-                                   (and (not nosuffix) 
+	   (funcall handler 'load filename noerror nomessage nosuffix))
+	  ((<= (length filename) 0)
+	   (and (null noerror)
+		(signal 'file-error (list "Cannot open load file" filename))))
+	  ((setq path (locate-file filename load-path
+				   (and (not nosuffix) '(".elc" ".el" ""))))
+	   ;; now use the internal load to actually load the file.
+	   (load-internal
+	    file noerror nomessage nosuffix
+	    (let ((elc
+		   ;; use string= instead of string-match to keep match-data.
+		   (string= ".elc" (downcase (substring path -4)))))
+	      (or (and (not elc) coding-system-for-read) ; prefer for source file
+		  ;; find magic-cookie
+		  (save-excursion
+		    (set-buffer (get-buffer-create " *load*"))
+		    (erase-buffer)
+		    (let ((coding-system-for-read 'raw-text))
+		      (insert-file-contents path nil 0 3000))
+		    (find-coding-system-magic-cookie))
+		  (if elc
+		      ;; if reading a byte-compiled file and we didn't find
+		      ;; a coding-system magic cookie, then use `binary'.
+		      ;; We need to guarantee that we never do autodetection
+		      ;; on byte-compiled files because confusion here would
+		      ;; be a very bad thing.  Pre-existing byte-compiled
+		      ;; files are always in the `binary' coding system.
+		      ;; Also, byte-compiled files always use `lf' to terminate
+		      ;; a line; don't risk confusion here either.
+		      'binary
+		    (or (find-file-coding-system-for-read-from-filename path)
+			;; looking up in `file-coding-system-alist'.
+			;; otherwise use `buffer-file-coding-system-for-read',
+			;; as normal
+			buffer-file-coding-system-for-read)
+		    )))))
+	  ((setq path (locate-file filename load-path
+				   (and (not nosuffix)
 					(if (boundp 'module-extensions)
 					    module-extensions))))
-           (if (featurep 'modules)
-               (let ((load-modules-quietly nomessage))
-                 (declare-fboundp (load-module path)))
-             (signal 'file-error '("This SXEmacs does not support modules"))))
+	   (if (featurep 'modules)
+	       (let ((load-modules-quietly nomessage))
+		 (declare-fboundp (load-module path)))
+	     (signal 'file-error '("This SXEmacs does not support modules"))))
 	  ((null noerror)
-           (signal 'file-error (list "Cannot open load file" filename))))))
+	   (signal 'file-error (list "Cannot open load file" filename))))))
 
 (defvar insert-file-contents-access-hook nil
   "A hook to make a file accessible before reading it.

@@ -265,7 +265,7 @@ Function to call when the validity of an FFI type shall be checked.
 @end defvar
 
 @defvar ffi-named-types
-Alist of named FFI types with elements of the form 
+Alist of named FFI types with elements of the form
 @code{(NAME . FFI-TYPE)}.
 @end defvar
 
@@ -607,10 +607,10 @@ Let us now look at the promised example.
 
 @c   The whole procedure of binding foreign function objects can be
 @c abbreviated using the macro @code{define-ffi-function}.
-@c 
+@c
 @c @c all in one macro
 @c @defvr Macro define-ffi-function fsym args doc-string ftype ename
-@c 
+@c
 @c @end defvr
 
 
@@ -666,7 +666,7 @@ This is the equivalent of @samp{NULL} in C.
 
 
   For foreign arrays, unions and structures, there are accessor
-functions to modify or fetch portions in the foreign object: 
+functions to modify or fetch portions in the foreign object:
 
 @c on foreign arrays
 @defun ffi-aref farray idx
@@ -698,7 +698,7 @@ If @var{slot} is @code{nil} return the size of the structure.
 
 @c @defun ffi-dlerror
 @c @end defun
-@c 
+@c
 @c @defun ffi-plist
 @c @end defun
 
@@ -817,7 +817,7 @@ would assign a value of 5 to the symbol @samp{baz} and (by side-effect)
 set the counter to 6 for the next symbol.
 
 The defined enumeration will result in a (@code{defconst}'d) variable
-@code{name}, the value is an alist of the form 
+@code{name}, the value is an alist of the form
 
 @samp{  ((symbol . value) ...)},
 
@@ -938,7 +938,7 @@ The options are keyword-value-pairs and are set via
 @end defun
 
 @example
-(curl:download "http://www.sxemacs.org" 
+(curl:download "http://www.sxemacs.org"
   (expand-file-name (make-temp-name "curl") (temp-directory)))
      @result{} 0
 @end example
@@ -961,27 +961,27 @@ there is only one command in this class, and low-level API calls.
 
 @subsection Low-level functions of @file{ffi-wand.el}
 
-@c @defvr FFI-type MagickWand 
+@c @defvr FFI-type MagickWand
 @c A context.
-@c 
+@c
 @c An alias for '(pointer void).
 @c @end defvr
-@c 
+@c
 @c @defvr FFI-type MagickBooleanType
 @c A boolean type for function return values.
-@c 
+@c
 @c An alias for 'long.
 @c @end defvr
-@c 
+@c
 @c @defvr FFI-type MagickStorageType
 @c Type for the enumeration of storage methods.
-@c 
+@c
 @c An alias for 'unsigned-long.
 @c @end defvr
-@c 
+@c
 @c @defvr FFI-type MagickChannelType
 @c Type for the enumeration of channels.
-@c 
+@c
 @c An alias for 'unsigned-long.
 @c @end defvr
 
@@ -1129,7 +1129,7 @@ effect to wipe hard contrasts.
 
 @defun Wand:gamma-image wand level
 Perform gamma correction on the image associated with @var{wand}.
-The argument @var{level} is a positive float, a value of 1.00 
+The argument @var{level} is a positive float, a value of 1.00
 (read 100%) is a no-op.
 @end defun
 

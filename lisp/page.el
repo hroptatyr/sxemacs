@@ -76,7 +76,7 @@ thus marking a page other than the one point was originally in."
   (if (> arg 0)
       (forward-page arg)
     (if (< arg 0)
-        (forward-page (1- arg))))
+	(forward-page (1- arg))))
   (forward-page)
   (push-mark nil t t)
   (forward-page -1))

@@ -64,7 +64,7 @@ header_HEADERS= $(acgen_headers) $(libmule_a_headers)
 
 noinst_LIBRARIES=libmule.a
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## Create preprocessor output (debugging purposes only)

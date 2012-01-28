@@ -662,13 +662,12 @@ gap_array_make_marker(gap_array_t ga, int pos)
 static void
 gap_array_delete_marker(gap_array_t ga, gap_array_marker_t m)
 {
-	volatile gap_array_marker_t p, prev;
+	gap_array_marker_t p, prev;
 
 	for (prev = 0, p = ga->markers; p && p != m; prev = p, p = p->next);
 	if (UNLIKELY(p == NULL)) {
 		return;
 	}
-	assert(p);
 	if (prev) {
 		prev->next = p->next;
 	} else {
@@ -687,7 +686,7 @@ gap_array_delete_marker(gap_array_t ga, gap_array_marker_t m)
 static void
 gap_array_delete_all_markers(gap_array_t ga)
 {
-	for (volatile gap_array_marker_t p = ga->markers, next; p; p = next) {
+	for (gap_array_marker_t p = ga->markers, next; p; p = next) {
 		next = p->next;
 #if defined HAVE_BDWGC && defined EF_USE_BDWGC
 		xfree(p);
@@ -917,7 +916,11 @@ extent_list_delete_marker(extent_list_t el, extent_list_marker_t m)
 	extent_list_marker_t p, prev;
 
 	for (prev = 0, p = el->markers; p && p != m; prev = p, p = p->next);
-	assert(p);
+	if( !p ) {
+		abort();
+		return;
+	}
+
 	if (prev) {
 		prev->next = p->next;
 	} else {
@@ -1232,9 +1235,9 @@ detach_all_extents(Lisp_Object object)
 				set_extent_start(e, -1);
 				set_extent_end(e, -1);
 			}
-                        /* But we need to clear all the lists containing extents
-                           or havoc will result. */
-                        extent_list_delete_all(data->extents);
+			/* But we need to clear all the lists containing extents
+			   or havoc will result. */
+			extent_list_delete_all(data->extents);
 		}
 		soe_invalidate(object);
 	}
@@ -1536,7 +1539,7 @@ soe_move(Lisp_Object obj, Memind pos)
 			    : (extent_end(e) < pos)) {
 				/* All further extents lie on the far side of
 				   POS and thus can't overlap. */
-				break;	
+				break;
 			}
 			if ((direction > 0)
 			    ? (extent_end(e) >= pos)
@@ -2313,7 +2316,7 @@ map_extents_bytind(Bytind from, Bytind to, map_extents_fun fn, void *arg,
 				}
 
 				/* ----- stop if we're completely outside the
-				         range ----- */
+					 range ----- */
 
 				/* fetch ST and EN again to track text
 				   insertions or deletions */
@@ -2903,19 +2906,19 @@ extent_fragment_update(struct window * w, struct extent_fragment * ef,
 
 		if (extent_start(e) == mempos) {
 			/* The extent starts here.  If we are queuing
-		           end glyphs, we should display all the end
-		           glyphs we've pushed.  */
+			   end glyphs, we should display all the end
+			   glyphs we've pushed.  */
 
-		  	if (!queuing_begin) {
-		  		/* Append any already seen end glyphs */
-		      		for (j = Dynarr_length(glyphs); j--;) {
-				  	struct glyph_block *gbp
+			if (!queuing_begin) {
+				/* Append any already seen end glyphs */
+				for (j = Dynarr_length(glyphs); j--;) {
+					struct glyph_block *gbp
 					  = Dynarr_atp(glyphs, j);
-			
+
 					if (seen_glyph)
-					  	Dynarr_add(ef->glyphs, *gbp);
+						Dynarr_add(ef->glyphs, *gbp);
 					else if (EQ(gbp->glyph, last_glyph))
-					  	seen_glyph = 1;
+						seen_glyph = 1;
 				}
 
 				/* Pop the end glyphs just displayed. */
@@ -2928,7 +2931,7 @@ extent_fragment_update(struct window * w, struct extent_fragment * ef,
 			}
 
 			glyph = extent_begin_glyph(e);
-			
+
 			if (!NILP(glyph)) {
 				struct glyph_block gb;
 
@@ -2938,26 +2941,26 @@ extent_fragment_update(struct window * w, struct extent_fragment * ef,
 				gb.active = 0; /* BEGIN_GLYPH */
 				gb.width = 0;
 				XSETEXTENT(gb.extent, e);
-		    
+
 				if (zero_width) {
-				    	if (insert_empty
+					if (insert_empty
 					    == Dynarr_length (ef->glyphs))
-					  	Dynarr_add (ef->glyphs, gb);
+						Dynarr_add (ef->glyphs, gb);
 					else
-					  	Dynarr_insert_many
+						Dynarr_insert_many
 						  (ef->glyphs, &gb,
 						   1, insert_empty);
-				} else if (!invis_after) 
-				  	Dynarr_add (glyphs, gb);
+				} else if (!invis_after)
+					Dynarr_add (glyphs, gb);
 			}
 		}
-		
+
 		if (extent_end(e) == mempos) {
-		  	/* The extend ends here.  Push the end glyph.  */
+			/* The extend ends here.  Push the end glyph.  */
 			glyph = extent_end_glyph(e);
 
 			if (!NILP (glyph)) {
-			  	struct glyph_block gb;
+				struct glyph_block gb;
 
 				gb.width = gb.findex = 0; /* just init */
 				gb.glyph = glyph;
@@ -2974,16 +2977,16 @@ extent_fragment_update(struct window * w, struct extent_fragment * ef,
 			if (extent_start (e) < mempos && !NILP (invis_prop))
 			  invis_before = 1;
 		}
-		
+
 		if (extent_end(e) > mempos) {
 			/* This extent covers POS. */
 			if (!NILP(invis_prop)) {
-			  	invis_after = 1;
+				invis_after = 1;
 				/* If this extend spans POS, all
 				   glyphs are invisible.  */
 				if (extent_start (e) < mempos)
-				  	Dynarr_set_size (glyphs, 0);
-			  
+					Dynarr_set_size (glyphs, 0);
+
 				if (!BUFFERP(ef->object))
 					/* #### no `string-invisibility-spec' */
 					ef->invisible = 1;
@@ -3057,24 +3060,24 @@ extent_fragment_update(struct window * w, struct extent_fragment * ef,
 	}
 
 	if (!queuing_begin) {
-	   	/* Append end glyphs in reverse order */
-	  	for (j = Dynarr_length(glyphs); j--;) {
-		  	struct glyph_block *gbp = Dynarr_atp(glyphs, j);
-	    
+		/* Append end glyphs in reverse order */
+		for (j = Dynarr_length(glyphs); j--;) {
+			struct glyph_block *gbp = Dynarr_atp(glyphs, j);
+
 			if (seen_glyph)
 				Dynarr_add(ef->glyphs, *gbp);
 			else if (EQ(gbp->glyph, last_glyph))
 				seen_glyph = 1;
 		}
 	} else {
-	    	if (!seen_glyph) {
-		  	/* Scan the zero length glyphs and see where we
-		           start a glyph that has not been displayed yet.  */
+		if (!seen_glyph) {
+			/* Scan the zero length glyphs and see where we
+			   start a glyph that has not been displayed yet.  */
 			for (j = insert_empty;
 			     j != Dynarr_length (ef->glyphs); j++) {
 				struct glyph_block *gbp
 					= Dynarr_atp(ef->glyphs, j);
-		    
+
 				if (EQ(gbp->glyph, last_glyph)) {
 					seen_glyph = 1;
 					j++;
@@ -3087,12 +3090,12 @@ extent_fragment_update(struct window * w, struct extent_fragment * ef,
 
 		/* Now copy the begin glyphs. */
 		for (j = 0; j != Dynarr_length (glyphs); j++) {
-		  	struct glyph_block *gbp = Dynarr_atp(glyphs, j);
-		
+			struct glyph_block *gbp = Dynarr_atp(glyphs, j);
+
 			if (seen_glyph)
-			  	Dynarr_add(ef->glyphs, *gbp);
+				Dynarr_add(ef->glyphs, *gbp);
 			else if (EQ(gbp->glyph, last_glyph))
-		  		seen_glyph = 1;
+				seen_glyph = 1;
 		}
 	}
 
@@ -3106,7 +3109,7 @@ extent_fragment_update(struct window * w, struct extent_fragment * ef,
 }
 
 /************************************************************************/
-/*	  	        extent-object methods				*/
+/*		        extent-object methods				*/
 /************************************************************************/
 
 /* These are the basic helper functions for handling the allocation of
@@ -3357,9 +3360,9 @@ static Lisp_Object extent_plist(Lisp_Object obj)
 DEFINE_BASIC_LRECORD_IMPLEMENTATION_WITH_PROPS("extent", extent,
 					       mark_extent, print_extent,
 					       /* NOTE: If you declare a
-					          finalization method here,
-					          it will NOT be called.
-					          Shaft city. */
+						  finalization method here,
+						  it will NOT be called.
+						  Shaft city. */
 					       0,
 					       extent_equal, extent_hash,
 					       extent_description,
@@ -3631,7 +3634,7 @@ If OBJECT is nil, the current buffer is assumed.
 }
 
 /************************************************************************/
-/*		    	parent and children stuff			*/
+/*			parent and children stuff			*/
 /************************************************************************/
 
 DEFUN("extent-parent", Fextent_parent, 1, 1, 0,	/*
@@ -3734,7 +3737,7 @@ See `extent-parent'.
 }
 
 /************************************************************************/
-/*		    	basic extent mutators				*/
+/*			basic extent mutators				*/
 /************************************************************************/
 
 /* Note:  If you track non-duplicable extents by undo, you'll get bogus
@@ -4912,7 +4915,7 @@ report_extent_modification(Lisp_Object buffer, Bufpos start, Bufpos end,
 }
 
 /************************************************************************/
-/*		    	extent properties				*/
+/*			extent properties				*/
 /************************************************************************/
 
 static void set_extent_invisible(EXTENT extent, Lisp_Object value)
@@ -5731,7 +5734,7 @@ Do not modify this list; use `set-extent-property' instead.
 }
 
 /************************************************************************/
-/*		    	     highlighting      				*/
+/*			     highlighting				*/
 /************************************************************************/
 
 /* The display code looks into the Vlast_highlighted_extent variable to

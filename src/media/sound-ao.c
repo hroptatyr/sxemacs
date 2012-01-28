@@ -74,7 +74,7 @@ sound_ao_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 		/* now that we are here, mark AO device as dead */
 		XAUDIO_DEVICE_STATE(device) = ASTATE_DEAD;
 		return;
-	} 
+	}
 
 	/* info about the connected output plugin */
 	write_c_string(" :driver \"", pcfun);

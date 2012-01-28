@@ -111,9 +111,9 @@ from the search."
    ;; inplace
    (and
     (paths-file-readable-directory-p (paths-construct-path
-                                      (list directory "lisp")))
+				      (list directory "lisp")))
     (paths-file-readable-directory-p (paths-construct-path
-                                      (list directory "etc"))))))
+				      (list directory "etc"))))))
 
 (defun paths-root-in-place-p (root)
   "Check if ROOT is an in-place installation root for XEmacs."
@@ -170,7 +170,7 @@ to EXPAND-FILE-NAME."
 
 (defun paths-find-emacs-directory (roots suffix base
 				   &optional envvar default keep-suffix
-				   	     in-place-external)
+					     in-place-external)
   "Find a directory in the XEmacs hierarchy.
 ROOTS must be a list of installation roots.
 SUFFIX is the subdirectory from there.
@@ -250,13 +250,13 @@ If ENFORCE-VERSION is non-nil, the directory must contain the SXEmacs version."
    ;; look for lib/sxemacs-xx.y.z
    ;; what do we do if user specifies --libdir?
    (paths-find-emacs-directory roots
-                               (file-name-as-directory
-                                (paths-construct-path
-                                 (list "lib"
-                                       (construct-emacs-version-name))))
-                               base
-                               envvar default
-                               enforce-version))
+			       (file-name-as-directory
+				(paths-construct-path
+				 (list "lib"
+				       (construct-emacs-version-name))))
+			       base
+			       envvar default
+			       enforce-version))
 
 (defun paths-find-version-archindep-directory
   (roots base &optional envvar default enforce-version)
@@ -264,13 +264,13 @@ If ENFORCE-VERSION is non-nil, the directory must contain the SXEmacs version."
 If ENFORCE-VERSION is non-nil, the directory must contain the SXEmacs version."
    ;; look for share/sxemacs-xx.y.z
    (paths-find-emacs-directory roots
-                               (file-name-as-directory
-                                (paths-construct-path
-                                 (list "share"
-                                       (construct-emacs-version-name))))
-                               base
-                               envvar default
-                               enforce-version))
+			       (file-name-as-directory
+				(paths-construct-path
+				 (list "share"
+				       (construct-emacs-version-name))))
+			       base
+			       envvar default
+			       enforce-version))
 
 ;; we default to the arch-independent directory atm
 (defalias 'path-find-version-directory #'paths-find-version-archindep-directory)
@@ -280,15 +280,15 @@ If ENFORCE-VERSION is non-nil, the directory must contain the SXEmacs version."
   (or
    ;; from more to less specific
    (paths-find-version-archdep-directory roots
-                                         (paths-construct-path
-                                          (list system-configuration base))
-                                         envvar default)
+					 (paths-construct-path
+					  (list system-configuration base))
+					 envvar default)
    (paths-find-version-archdep-directory roots
-                                         base
-                                         envvar)
+					 base
+					 envvar)
    (paths-find-version-archdep-directory roots
-                                         system-configuration
-                                         envvar)))
+					 system-configuration
+					 envvar)))
 
 (defun construct-emacs-version-name ()
   "Construct the raw XEmacs version number."
@@ -347,30 +347,30 @@ Otherwise, they are left alone."
   "Find all plausible installation roots for SXEmacs."
   (let* ((potential-invocation-root
 	  (paths-find-emacs-root
-           invocation-directory invocation-name))
+	   invocation-directory invocation-name))
 	 (invocation-roots nil)
 	 (potential-installation-roots
-          (when (null dumpp)
-            (paths-uniq-append
-             (and configure-exec-prefix-directory
-                  (list (file-name-as-directory
-                         configure-exec-prefix-directory)))
-             (and configure-prefix-directory
-                  (list (file-name-as-directory
-                         configure-prefix-directory))))))
+	  (when (null dumpp)
+	    (paths-uniq-append
+	     (and configure-exec-prefix-directory
+		  (list (file-name-as-directory
+			 configure-exec-prefix-directory)))
+	     (and configure-prefix-directory
+		  (list (file-name-as-directory
+			 configure-prefix-directory))))))
 	 (installation-roots
 	  (paths-filter #'paths-emacs-root-p potential-installation-roots))
-         (source-tree-root
-          (or (getenv "SOURCE_TREE_ROOT")
-              (and potential-invocation-root
-                   (file-exists-p
-                    (expand-file-name ".sxemacs.source.tree"
-                                      potential-invocation-root))
-                   (file-truename
-                    (expand-file-name ".sxemacs.source.tree"
-                                      potential-invocation-root)))))
-         (build-tree-root
-          (getenv "BUILD_TREE_ROOT")))
+	 (source-tree-root
+	  (or (getenv "SOURCE_TREE_ROOT")
+	      (and potential-invocation-root
+		   (file-exists-p
+		    (expand-file-name ".sxemacs.source.tree"
+				      potential-invocation-root))
+		   (file-truename
+		    (expand-file-name ".sxemacs.source.tree"
+				      potential-invocation-root)))))
+	 (build-tree-root
+	  (getenv "BUILD_TREE_ROOT")))
     (when source-tree-root
       (setq invocation-roots (cons source-tree-root invocation-roots)
 	    invocation-roots (cons (or configure-prefix-directory

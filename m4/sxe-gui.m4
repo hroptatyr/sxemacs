@@ -126,7 +126,7 @@ AC_DEFUN([SXE_TEST_XAW_LIB], [dnl
 ])dnl SXE_TEST_XAW_LIB
 
 AC_DEFUN([SXE_TEST_XAW_INC], [dnl
-	## arg1 are some additional INCLUDES 
+	## arg1 are some additional INCLUDES
 
 	## unset the values before we get our dirty hands on them
 	unset "ac_cv_header_X11_Xaw_XawInit_h"
@@ -209,21 +209,21 @@ AC_DEFUN([SXE_CHECK_XTOOLKITS], [
 	## initialise our have-vars
 	have_athena=no
 	have_motif=no
-	  
+
 	case "$with_athena" in
 	## autodetect, that is walk through the chain given above
 	"auto" | "")
-	  	AC_MSG_CHECKING([for the Athena widgets])
+		AC_MSG_CHECKING([for the Athena widgets])
 		AC_MSG_RESULT([])
 
-	  	## ignite the chain :)
-	  	SXE_TEST_NEXTAW
-	  	SXE_TEST_XAW3D
-	  	SXE_TEST_XAWXPM
-	  	SXE_TEST_XAW95
-	  	SXE_TEST_XAW
+		## ignite the chain :)
+		SXE_TEST_NEXTAW
+		SXE_TEST_XAW3D
+		SXE_TEST_XAWXPM
+		SXE_TEST_XAW95
+		SXE_TEST_XAW
 		SXE_TEST_MOTIF
-	  	;;
+		;;
 
 	"3d")
 		SXE_TEST_XAW3D
@@ -242,16 +242,16 @@ AC_DEFUN([SXE_CHECK_XTOOLKITS], [
 	"xaw")
 		SXE_TEST_XAW
 		;;
-	  
+
 	## force the motif chain
 	"no")
 		SXE_TEST_MOTIF
 		;;
 	*)
-	  	SXE_DIE(["Unknown Athena widget set \`$with_athena'. This should not happen."])
+		SXE_DIE(["Unknown Athena widget set \`$with_athena'. This should not happen."])
 		;;
 	esac
-	  
+
 	## Do we actually have a usable Athena widget set? Please?
 	if test -n "$athena_lib" -a -n "$athena_h_path"; then
 		if test "athena_lib" = "Xaw"; then
@@ -305,13 +305,13 @@ AC_DEFUN([SXE_SUFFICIENT_ATHENA_P], [dnl
 		if test "$have_xaw" != "yes"; then
 			SXE_DIE(["Could not find a suitable Athena library to build with."])
 		fi
-	
+
 		dnl Add the Lucid widget Athena code
 		SXE_APPEND([lwlib-Xaw.o], [lwlib_objs])
-	
+
 		dnl Add the Athena widget library we located earlier
 		SXE_PREPEND([-l$athena_lib], [libs_x])
-	
+
 		dnl Tell lwlib where to find the Athena header files.
 		dnl Many people have tried to create a `smart' way of doing this,
 		dnl but all have failed.  Before changing the following ugly definitions,
@@ -336,11 +336,11 @@ AC_DEFUN([SXE_SUFFICIENT_ATHENA_P], [dnl
 			[Description here!])
 		AC_DEFINE_UNQUOTED([ATHENA_XawInit_h_], ["$athena_h_path/XawInit.h"],
 			[Description here!])
-	
+
 		AC_DEFINE([LWLIB_USES_ATHENA], [1], [Description here!])
 		AC_DEFINE([NEED_ATHENA], [1], [Description here!])
 		need_athena="yes"
-	
+
 		if test "$athena_3d" = "yes"; then
 			AC_DEFINE([HAVE_ATHENA_3D], [1], [Description here!])
 		fi
@@ -361,7 +361,7 @@ AC_DEFUN([SXE_SUFFICIENT_ATHENA_P], [dnl
 	if test "$with_dialogs" = "athena"; then
 		AC_DEFINE([LWLIB_DIALOGS_ATHENA], [1], [Description here!])
 	fi
-	
+
 	if test "$athena_3d" = "yes" -a \
 		"$with_scrollbars" = "athena"; then
 		AC_DEFINE([LWLIB_SCROLLBARS_ATHENA3D], [1], [Description here!])

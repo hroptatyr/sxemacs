@@ -1,7 +1,7 @@
 /* Give this program DOCSTR.mm.nn as standard input
    and it outputs to standard output
    a file of texinfo input containing the doc strings.
-   
+
    This version sorts the output by function name.
    */
 

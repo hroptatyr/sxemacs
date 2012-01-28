@@ -149,7 +149,7 @@
 	     (max-specpdl-size limits integer)
 	     (meta-prefix-char keyboard character)
 	     (parse-sexp-ignore-comments editing-basics boolean)
-	     (selective-display display 
+	     (selective-display display
 				(choice (const :tag "off" nil)
 					(integer :tag "space"
 						 :format "%v"
@@ -184,7 +184,7 @@
 	    ;; If variables are removed from C code, give an error here!
 	    (message "Intrinsic `%S' not bound" symbol))
       ;; This is called before any user can have changed the value.
-      (put symbol 'standard-value 
+      (put symbol 'standard-value
 	   (list (quote-maybe (default-value symbol))))
       ;; Add it to the right group.
       (custom-add-to-group group symbol 'custom-variable)

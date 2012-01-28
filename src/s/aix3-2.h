@@ -24,7 +24,9 @@
 #define C_SWITCH_SYSTEM "-mminimal-toc"
 #endif
 
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 /* Adrian Colley <Adrian.Colley@three.serpentine.com> says this is needed.  */
 #ifndef NOT_C_CODE
 #ifndef AIX4

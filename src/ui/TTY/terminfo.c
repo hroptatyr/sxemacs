@@ -98,4 +98,3 @@ char *emacs_tparam(const char *string, char *outstring, int len, int arg1,
 	strncpy(outstring, temp, slen);
 	return outstring;
 }
-

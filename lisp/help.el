@@ -43,7 +43,7 @@
   (globally-declare-fboundp
    '(find-function find-variable view-scroll-lines-up)))
 
-(require 'loadhist) ;; For symbol-file. 
+(require 'loadhist) ;; For symbol-file.
 
 (defgroup help nil
   "Support for on-line help systems."
@@ -54,10 +54,10 @@
   :group 'help)
 
 (defvar help-map (let ((map (make-sparse-keymap)))
-                   (set-keymap-name map 'help-map)
-                   (set-keymap-prompt
+		   (set-keymap-name map 'help-map)
+		   (set-keymap-prompt
 		    map (gettext "(Type ? for further options)"))
-                   map)
+		   map)
   "Keymap for characters following the Help key.")
 
 ;; global-map definitions moved to keydefs.el
@@ -332,7 +332,7 @@ If INSERT (the prefix arg) is non-nil, insert the message in the buffer."
 	defn menup)
     (setq defn (key-or-menu-binding key 'menup))
     (if (or (null defn) (integerp defn))
-        (princ (format "%s is undefined" (key-description key)))
+	(princ (format "%s is undefined" (key-description key)))
       ;; If it's a keyboard macro which trivially invokes another command,
       ;; document that instead.
       (if (or (stringp defn) (vectorp defn))
@@ -373,14 +373,14 @@ If FUNCTION is nil, applies `message' to it, thus printing it."
        (funcall
 	(or function 'message)
 	(concat
-         (substitute-command-keys
-          (if (one-window-p t)
-              (if pop-up-windows
-                  (gettext "Type \\[delete-other-windows] to remove help window.")
-                (gettext "Type \\[switch-to-buffer] RET to remove help window."))
+	 (substitute-command-keys
+	  (if (one-window-p t)
+	      (if pop-up-windows
+		  (gettext "Type \\[delete-other-windows] to remove help window.")
+		(gettext "Type \\[switch-to-buffer] RET to remove help window."))
    (gettext "Type \\[switch-to-buffer-other-window] RET to restore the other window.")))
-         (substitute-command-keys
-          (gettext "  \\[scroll-other-window] to scroll the help."))))))
+	 (substitute-command-keys
+	  (gettext "  \\[scroll-other-window] to scroll the help."))))))
 
 (defcustom help-selects-help-window t
   "*If nil, use the \"old Emacs\" behavior for Help buffers.
@@ -407,22 +407,22 @@ zero or nil, only one help buffer, \"*Help*\" is ever used."
   (setq help-buffer-list (remove newbuf help-buffer-list))
   ;; maybe kill excess help buffers
   (if (and (integerp help-max-help-buffers)
-           (> (length help-buffer-list) help-max-help-buffers))
+	   (> (length help-buffer-list) help-max-help-buffers))
       (let ((keep-list nil)
-            (num-kill (- (length help-buffer-list)
-                         help-max-help-buffers)))
-        (while help-buffer-list
-          (let ((buf (car help-buffer-list)))
-            (if (and (or (equal buf newbuf) (get-buffer buf))
-                     (string-match "^*Help" buf)
-                     (save-excursion (set-buffer buf)
-                                     (eq major-mode 'help-mode)))
-                (if (and (>= num-kill (length help-buffer-list))
-                         (not (get-buffer-window buf t t)))
-                    (kill-buffer buf)
-                  (setq keep-list (cons buf keep-list)))))
-          (setq help-buffer-list (cdr help-buffer-list)))
-        (setq help-buffer-list (nreverse keep-list))))
+	    (num-kill (- (length help-buffer-list)
+			 help-max-help-buffers)))
+	(while help-buffer-list
+	  (let ((buf (car help-buffer-list)))
+	    (if (and (or (equal buf newbuf) (get-buffer buf))
+		     (string-match "^*Help" buf)
+		     (save-excursion (set-buffer buf)
+				     (eq major-mode 'help-mode)))
+		(if (and (>= num-kill (length help-buffer-list))
+			 (not (get-buffer-window buf t t)))
+		    (kill-buffer buf)
+		  (setq keep-list (cons buf keep-list)))))
+	  (setq help-buffer-list (cdr help-buffer-list)))
+	(setq help-buffer-list (nreverse keep-list))))
   ;; push new buffer
   (setq help-buffer-list (cons newbuf help-buffer-list)))
 
@@ -433,8 +433,8 @@ You should never set this directory, only let-bind it.")
 (defun help-buffer-name (name)
   "Return a name for a Help buffer using string NAME for context."
   (if (and (integerp help-max-help-buffers)
-           (> help-max-help-buffers 0)
-           (stringp name))
+	   (> help-max-help-buffers 0)
+	   (stringp name))
       (if help-buffer-prefix-string
 	  (format "*%s: %s*" help-buffer-prefix-string name)
 	(format "*%s*" name))
@@ -525,7 +525,7 @@ When called interactively, KEY may also be a menu selection."
   (let ((defn (key-or-menu-binding key))
 	(key-string (key-description key)))
     (if (or (null defn) (integerp defn))
-        (message "%s is undefined" key-string)
+	(message "%s is undefined" key-string)
       (with-displaying-help-buffer
        (lambda ()
 	 (princ key-string)
@@ -656,15 +656,15 @@ is non-nil then only the mouse bindings are displayed."
 
 (defun describe-bindings-1 (&optional prefix mouse-only-p)
   (let ((heading (if mouse-only-p
-            (gettext "button          binding\n------          -------\n")
-            (gettext "key             binding\n---             -------\n")))
-        (buffer (current-buffer))
-        (minor minor-mode-map-alist)
+	    (gettext "button          binding\n------          -------\n")
+	    (gettext "key             binding\n---             -------\n")))
+	(buffer (current-buffer))
+	(minor minor-mode-map-alist)
 	(extent-maps (mapcar-extents
 		      'extent-keymap
 		      nil (current-buffer) (point) (point) nil 'keymap))
-        (local (current-local-map))
-        (shadow '()))
+	(local (current-local-map))
+	(shadow '()))
     (set-buffer standard-output)
     (while extent-maps
       (insert "Bindings for Text Region:\n"
@@ -676,25 +676,25 @@ is non-nil then only the mouse bindings are displayed."
 	     extent-maps (cdr extent-maps)))
     (while minor
       (let ((sym (car (car minor)))
-            (map (cdr (car minor))))
-        (if (symbol-value-in-buffer sym buffer nil)
-            (progn
-              (insert (format "Minor Mode Bindings for `%s':\n"
-                              sym)
-                      heading)
-              (describe-bindings-internal map nil shadow prefix mouse-only-p)
-              (insert "\n")
-              (setq shadow (cons map shadow))))
-        (setq minor (cdr minor))))
+	    (map (cdr (car minor))))
+	(if (symbol-value-in-buffer sym buffer nil)
+	    (progn
+	      (insert (format "Minor Mode Bindings for `%s':\n"
+			      sym)
+		      heading)
+	      (describe-bindings-internal map nil shadow prefix mouse-only-p)
+	      (insert "\n")
+	      (setq shadow (cons map shadow))))
+	(setq minor (cdr minor))))
     (if local
-        (progn
-          (insert "Local Bindings:\n" heading)
-          (describe-bindings-internal local nil shadow prefix mouse-only-p)
-          (insert "\n")
-          (setq shadow (cons local shadow))))
+	(progn
+	  (insert "Local Bindings:\n" heading)
+	  (describe-bindings-internal local nil shadow prefix mouse-only-p)
+	  (insert "\n")
+	  (setq shadow (cons local shadow))))
     (insert "Global Bindings:\n" heading)
     (describe-bindings-internal (current-global-map)
-                                nil shadow prefix mouse-only-p)
+				nil shadow prefix mouse-only-p)
     (when (and prefix function-key-map (not mouse-only-p))
       (insert "\nFunction key map translations:\n" heading)
       (describe-bindings-internal function-key-map nil nil
@@ -841,13 +841,13 @@ The number of messages shown is controlled by `view-lossage-message-count'."
 \(Use SPC or DEL to scroll through this text.  Type \\<help-map>\\[help-quit] to exit the Help command.)
 
 \\[hyper-apropos]	Type a substring; it shows a hypertext list of
-        functions and variables that contain that substring.
+	functions and variables that contain that substring.
 	See also the `apropos' command.
 \\[command-apropos]	Type a substring; it shows a list of commands
-        (interactively callable functions) that contain that substring.
+	(interactively callable functions) that contain that substring.
 \\[describe-bindings]	Table of all key bindings.
 \\[describe-key-briefly]	Type a command key sequence;
-        it displays the function name that sequence runs.
+	it displays the function name that sequence runs.
 \\[customize]	Customize Emacs options.
 \\[Info-goto-emacs-command-node]	Type a function name; it displays the Info node for that command.
 \\[describe-function]	Type a function name; it shows its documentation.
@@ -857,9 +857,9 @@ The number of messages shown is controlled by `view-lossage-message-count'."
 \\[info]	Info documentation reader.
 \\[Info-query]	Type an Info file name; it displays it in Info reader.
 \\[describe-key]	Type a command key sequence;
-        it displays the documentation for the command bound to that key.
+	it displays the documentation for the command bound to that key.
 \\[Info-goto-emacs-key-command-node]	Type a command key sequence;
-        it displays the Info node for the command bound to that key.
+	it displays the Info node for the command bound to that key.
 \\[view-lossage]	Recent input keystrokes and minibuffer messages.
 \\[describe-mode]	Documentation of current major and minor modes.
 \\[view-emacs-news]	News of recent SXEmacs changes.
@@ -972,13 +972,13 @@ When run interactively, it defaults to any function found by
 `function-at-point'."
   (interactive
     (let* ((fn (function-at-point))
-           (val (let ((enable-recursive-minibuffers t))
-                  (completing-read
-                    (if fn
-                        (format (gettext "Describe function (default %s): ")
+	   (val (let ((enable-recursive-minibuffers t))
+		  (completing-read
+		    (if fn
+			(format (gettext "Describe function (default %s): ")
 				fn)
-                        (gettext "Describe function: "))
-                    obarray 'fboundp t nil 'function-history
+			(gettext "Describe function: "))
+		    obarray 'fboundp t nil 'function-history
 		    (symbol-name fn)))))
       (list (intern val))))
   (with-displaying-help-buffer
@@ -1065,15 +1065,15 @@ arguments in the standard Lisp style."
 			 ((equal args "") nil)
 			 (args))))
 		(t t)))
-         (print-gensym nil))
+	 (print-gensym nil))
     (cond ((listp arglist)
 	   (prin1-to-string
 	    (cons function (loop
-                             for arg in arglist
-                             collect (if (memq arg '(&optional &rest))
-                                         arg
-                                       (make-symbol (upcase (symbol-name
-                                                             arg))))))
+			     for arg in arglist
+			     collect (if (memq arg '(&optional &rest))
+					 arg
+				       (make-symbol (upcase (symbol-name
+							     arg))))))
 	    t))
 	  ((stringp arglist)
 	   (format "(%s %s)" function arglist)))))
@@ -1088,7 +1088,7 @@ part of the documentation of internal subroutines."
 	       (void-function "(alias for undefined function)")
 	       (error "(unexpected error from `documention')"))))
     (when (and strip-arglist
-               (string-match "[\n\t ]*\narguments: ?(\\([^)]*\\))\n?\\'" doc))
+	       (string-match "[\n\t ]*\narguments: ?(\\([^)]*\\))\n?\\'" doc))
       (setq doc (substring doc 0 (match-beginning 0)))
       (and (zerop (length doc)) (setq doc (gettext "not documented"))))
     doc))
@@ -1261,29 +1261,29 @@ part of the documentation of internal subroutines."
 					   (an-p "an ")
 					   (t "a "))
 				     "%s"
-                                     (cond
-                                      ((eq 'neither macro-p)
-                                       "")
-                                      (macro-p " macro")
-                                      (t " function"))))
+				     (cond
+				      ((eq 'neither macro-p)
+				       "")
+				      (macro-p " macro")
+				      (t " function"))))
 			   string)))))
       (cond ((or (stringp def) (vectorp def))
-             (princ "a keyboard macro.")
+	     (princ "a keyboard macro.")
 	     (setq kbd-macro-p t))
-            ((special-form-p fndef)
-             (funcall int "built-in special form" nil 'neither))
-            ((subrp fndef)
-             (funcall int "built-in" nil macrop))
-            ((compiled-function-p fndef)
-             (funcall int "compiled Lisp" nil macrop))
-            ((eq (car-safe fndef) 'lambda)
-             (funcall int "Lisp" nil macrop))
-            ((eq (car-safe def) 'autoload)
+	    ((special-form-p fndef)
+	     (funcall int "built-in special form" nil 'neither))
+	    ((subrp fndef)
+	     (funcall int "built-in" nil macrop))
+	    ((compiled-function-p fndef)
+	     (funcall int "compiled Lisp" nil macrop))
+	    ((eq (car-safe fndef) 'lambda)
+	     (funcall int "Lisp" nil macrop))
+	    ((eq (car-safe def) 'autoload)
 	     (funcall int "autoloaded Lisp" t (elt def 4)))
 	    ((and (symbolp def) (not (fboundp def)))
 	     (princ "a symbol with a void (unbound) function definition."))
-            (t
-             nil)))
+	    (t
+	     nil)))
     (princ "\n")
     (or file-name
 	(setq file-name (symbol-file function 'defun)))
@@ -1293,7 +1293,7 @@ part of the documentation of internal subroutines."
 	    (princ file-name)
 	  (let ((opoint (point standard-output))
 		e)
-            (require 'hyper-apropos)
+	    (require 'hyper-apropos)
 	    (princ file-name)
 	    (setq e (make-extent opoint (point standard-output)
 				 standard-output))
@@ -1348,48 +1348,48 @@ part of the documentation of internal subroutines."
 		 (princ "\nInvoked with:\n")
 		 (let ((global-binding
 			(where-is-internal function global-map))
-		       (global-tty-binding 
+		       (global-tty-binding
 			(where-is-internal function global-tty-map))
-		       (global-window-system-binding 
+		       (global-window-system-binding
 			(where-is-internal function global-window-system-map)))
-                   (if (or global-binding global-tty-binding
-                           global-window-system-binding)
-                       (if (and (equal global-binding
-                                       global-tty-binding)
-                                (equal global-binding
-                                       global-window-system-binding))
-                           (princ
-                            (substitute-command-keys
-                             (format "\n\\[%s]" function)))
-                         (when (and global-window-system-binding
-                                    (not (equal global-window-system-binding
-                                                global-binding)))
-                           (princ 
-                            (format 
-                             "\n%s\n        -- under window systems\n"
-                             (mapconcat #'key-description
-                                        global-window-system-binding
-                                        ", "))))
-                         (when (and global-tty-binding
-                                    (not (equal global-tty-binding
-                                                global-binding)))
-                           (princ 
-                            (format 
-                             "\n%s\n        -- under TTYs\n"
-                             (mapconcat #'key-description
-                                        global-tty-binding
-                                        ", "))))
-                         (when global-binding
-                           (princ 
-                            (format 
-                             "\n%s\n        -- generally (that is, unless\
+		   (if (or global-binding global-tty-binding
+			   global-window-system-binding)
+		       (if (and (equal global-binding
+				       global-tty-binding)
+				(equal global-binding
+				       global-window-system-binding))
+			   (princ
+			    (substitute-command-keys
+			     (format "\n\\[%s]" function)))
+			 (when (and global-window-system-binding
+				    (not (equal global-window-system-binding
+						global-binding)))
+			   (princ
+			    (format
+			     "\n%s\n        -- under window systems\n"
+			     (mapconcat #'key-description
+					global-window-system-binding
+					", "))))
+			 (when (and global-tty-binding
+				    (not (equal global-tty-binding
+						global-binding)))
+			   (princ
+			    (format
+			     "\n%s\n        -- under TTYs\n"
+			     (mapconcat #'key-description
+					global-tty-binding
+					", "))))
+			 (when global-binding
+			   (princ
+			    (format
+			     "\n%s\n        -- generally (that is, unless\
  overridden by TTY- or
-           window-system-specific mappings)\n"
-                             (mapconcat #'key-description
-                                        global-binding
-                                        ", ")))))
-                     (princ (substitute-command-keys
-                             (format "\n\\[%s]" function))))))))))))
+	   window-system-specific mappings)\n"
+			     (mapconcat #'key-description
+					global-binding
+					", ")))))
+		     (princ (substitute-command-keys
+			     (format "\n\\[%s]" function))))))))))))
 
 
 
@@ -1479,12 +1479,12 @@ there is no variable around that point, nil is returned."
   "Display the full documentation of VARIABLE (a symbol)."
   (interactive
    (let* ((v (variable-at-point))
-          (val (let ((enable-recursive-minibuffers t))
-                 (completing-read
-                   (if v
-                       (format "Describe variable (default %s): " v)
-                       (gettext "Describe variable: "))
-                   obarray 'boundp t nil 'variable-history
+	  (val (let ((enable-recursive-minibuffers t))
+		 (completing-read
+		   (if v
+		       (format "Describe variable (default %s): " v)
+		       (gettext "Describe variable: "))
+		   obarray 'boundp t nil 'variable-history
 		   (symbol-name v)))))
      (list (intern val))))
   (with-displaying-help-buffer
@@ -1529,7 +1529,7 @@ there is no variable around that point, nil is returned."
 		 (set-extent-property e 'find-variable-symbol variable))
 	       (princ"\"\n")))
 	 (princ "\nValue: ")
-    	 (if (not (boundp variable))
+	 (if (not (boundp variable))
 	     (Help-princ-face "void\n" 'hyper-apropos-documentation)
 	   (Help-prin1-face (symbol-value variable)
 			    'hyper-apropos-documentation)
@@ -1606,7 +1606,7 @@ If INSERT (the prefix arg) is non-nil, insert the message in the buffer."
      (setq val (read-command
 		(if fn (format "Where is command (default %s): " fn)
 		  "Where is command: ")
-                (and fn (symbol-name fn))))
+		(and fn (symbol-name fn))))
      (list (if (equal (symbol-name val) "")
 	       fn val)
 	   current-prefix-arg)))
@@ -1720,12 +1720,12 @@ after the listing is made.)"
     (if e
 	(find-function (extent-property e 'find-function-symbol))
       (setq e (extent-at pos nil 'find-variable-symbol))
-      (if e 
+      (if e
 	  (find-variable (extent-property e 'find-variable-symbol))
 	(view-scroll-lines-up 1)))))
 
 (defun help-mouse-find-source-or-track (event)
-  "Follow any cross reference to source code under the mouse; 
+  "Follow any cross reference to source code under the mouse;
 if none, call mouse-track.  "
   (interactive "e")
   (mouse-set-point event)
@@ -1733,7 +1733,7 @@ if none, call mouse-track.  "
     (if e
 	(find-function (extent-property e 'find-function-symbol))
       (setq e (extent-at (point) nil 'find-variable-symbol))
-      (if e 
+      (if e
 	  (find-variable (extent-property e 'find-variable-symbol))
 	(view-scroll-lines-up 1)))))
 

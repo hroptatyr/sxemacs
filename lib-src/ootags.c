@@ -572,31 +572,31 @@ Relative ones are stored relative to the output file's directory.");
 	puts("\n");
 
 	puts("-a, --append\n\
-        Append tag entries to existing tags file.");
+	Append tag entries to existing tags file.");
 
 	if (CTAGS)
 		puts("-B, --backward-search\n\
-        Write the search commands for the tag entries using '?', the\n\
-        backward-search command instead of '/', the forward-search command.");
+	Write the search commands for the tag entries using '?', the\n\
+	backward-search command instead of '/', the forward-search command.");
 
 	puts("-C, --c++\n\
-        Treat files whose name suffix defaults to C language as C++ files.");
+	Treat files whose name suffix defaults to C language as C++ files.");
 
 	if (CTAGS)
 		puts("-d, --defines\n\
-        Create tag entries for C #define constants and enum constants, too.");
+	Create tag entries for C #define constants and enum constants, too.");
 	else
 		puts("-D, --no-defines\n\
-        Don't create tag entries for C #define constants and enum constants.\n\
+	Don't create tag entries for C #define constants and enum constants.\n\
 	This makes the tags file smaller.");
 
 	if (!CTAGS) {
 		puts("-i FILE, --include=FILE\n\
-        Include a note in tag file indicating that, when searching for\n\
-        a tag, one should also consult the tags file FILE after\n\
-        checking the current file.");
+	Include a note in tag file indicating that, when searching for\n\
+	a tag, one should also consult the tags file FILE after\n\
+	checking the current file.");
 		puts("-l LANG, --language=LANG\n\
-        Force the following files to be considered as written in the\n\
+	Force the following files to be considered as written in the\n\
 	named language up to the next --language=LANG option.");
 	}
 
@@ -612,58 +612,58 @@ Relative ones are stored relative to the output file's directory.");
 
 #ifdef ETAGS_REGEXPS
 	puts("-r /REGEXP/, --regex=/REGEXP/ or --regex=@regexfile\n\
-        Make a tag for each line matching pattern REGEXP in the\n\
- 	following files.  regexfile is a file containing one REGEXP\n\
+	Make a tag for each line matching pattern REGEXP in the\n\
+	following files.  regexfile is a file containing one REGEXP\n\
 	per line.  REGEXP is anchored (as if preceded by ^).\n\
 	The form /REGEXP/NAME/ creates a named tag.  For example Tcl\n\
 	named tags can be created with:\n\
 	--regex=/proc[ \\t]+\\([^ \\t]+\\)/\\1/.");
 	puts("-R, --no-regex\n\
-        Don't create tags from regexps for the following files.");
+	Don't create tags from regexps for the following files.");
 #endif				/* ETAGS_REGEXPS */
 	puts("-o FILE, --output=FILE\n\
-        Write the tags to FILE.");
+	Write the tags to FILE.");
 #ifdef OO_BROWSER
 	puts("-O, --oo-browser\n\
 	Generate a specialized tags format used only by the Altrasoft OO-Browser.");
 #endif
 	puts("-I, --ignore-indentation\n\
-        Don't rely on indentation quite as much as normal.  Currently,\n\
-        this means not to assume that a closing brace in the first\n\
-        column is the final brace of a function or structure\n\
-        definition in C and C++.");
+	Don't rely on indentation quite as much as normal.  Currently,\n\
+	this means not to assume that a closing brace in the first\n\
+	column is the final brace of a function or structure\n\
+	definition in C and C++.");
 
 	if (CTAGS) {
 		puts("-t, --typedefs\n\
-        Generate tag entries for C typedefs.");
+	Generate tag entries for C typedefs.");
 		puts("-T, --typedefs-and-c++\n\
-        Generate tag entries for C typedefs, C struct/enum/union tags,\n\
-        and C++ member functions.");
+	Generate tag entries for C typedefs, C struct/enum/union tags,\n\
+	and C++ member functions.");
 		puts("-u, --update\n\
-        Update the tag entries for the given files, leaving tag\n\
-        entries for other files in place.  Currently, this is\n\
-        implemented by deleting the existing entries for the given\n\
-        files and then rewriting the new entries at the end of the\n\
-        tags file.  It is often faster to simply rebuild the entire\n\
-        tag file than to use this.");
+	Update the tag entries for the given files, leaving tag\n\
+	entries for other files in place.  Currently, this is\n\
+	implemented by deleting the existing entries for the given\n\
+	files and then rewriting the new entries at the end of the\n\
+	tags file.  It is often faster to simply rebuild the entire\n\
+	tag file than to use this.");
 		puts("-v, --vgrind\n\
-        Generates an index of items intended for human consumption,\n\
-        similar to the output of vgrind.  The index is sorted, and\n\
-        gives the page number of each item.");
+	Generates an index of items intended for human consumption,\n\
+	similar to the output of vgrind.  The index is sorted, and\n\
+	gives the page number of each item.");
 		puts("-w, --no-warn\n\
-        Suppress warning messages about entries defined in multiple\n\
-        files.");
+	Suppress warning messages about entries defined in multiple\n\
+	files.");
 		puts("-x, --cxref\n\
-        Like --vgrind, but in the style of cxref, rather than vgrind.\n\
-        The output uses line numbers instead of page numbers, but\n\
-        beyond that the differences are cosmetic; try both to see\n\
-        which you like.");
+	Like --vgrind, but in the style of cxref, rather than vgrind.\n\
+	The output uses line numbers instead of page numbers, but\n\
+	beyond that the differences are cosmetic; try both to see\n\
+	which you like.");
 	}
 
 	puts("-V, --version\n\
-        Print the version of the program.\n\
+	Print the version of the program.\n\
 -h, --help\n\
-        Print this help message.");
+	Print this help message.");
 
 	print_language_names();
 
@@ -832,7 +832,7 @@ int main(int argc, char *argv[])
 	/*
 	 * If etags, always find typedefs and structure tags.  Why not?
 	 * Also default is to find macro constants, enum constants and
-	 * global variables. 
+	 * global variables.
 	 */
 	if (!CTAGS) {
 		typedefs = typedefs_and_cplusplus = constantypedefs = TRUE;
@@ -1718,32 +1718,32 @@ struct C_stab_entry { char *name; int c_ext; enum sym_type type; }
 import,		C_JAVA,	st_C_ignore
 package,	C_JAVA,	st_C_ignore
 friend,		C_PLPL,	st_C_ignore
-extends,  	C_JAVA,	st_C_javastruct
-implements,  	C_JAVA,	st_C_javastruct
+extends,	C_JAVA,	st_C_javastruct
+implements,	C_JAVA,	st_C_javastruct
 interface,	C_JAVA, st_C_struct
-class,  	C_PLPL,	st_C_class
+class,	C_PLPL,	st_C_class
 namespace,	C_PLPL,	st_C_struct
-domain, 	C_STAR,	st_C_struct
-union,  	0,	st_C_union
-struct, 	0,	st_C_struct
-enum,    	0,	st_C_enum
-typedef, 	0,	st_C_typedef
-define,  	0,	st_C_define
+domain,	C_STAR,	st_C_struct
+union,	0,	st_C_union
+struct,	0,	st_C_struct
+enum,	0,	st_C_enum
+typedef,	0,	st_C_typedef
+define,	0,	st_C_define
 inline,		0,	st_C_inline
 bool,		C_PLPL,	st_C_typespec
-long,    	0,	st_C_typespec
-short,   	0,	st_C_typespec
-int,     	0,	st_C_typespec
-char,    	0,	st_C_typespec
-float,   	0,	st_C_typespec
-double,  	0,	st_C_typespec
-signed,  	0,	st_C_typespec
+long,	0,	st_C_typespec
+short,	0,	st_C_typespec
+int,	0,	st_C_typespec
+char,	0,	st_C_typespec
+float,	0,	st_C_typespec
+double,	0,	st_C_typespec
+signed,	0,	st_C_typespec
 unsigned,	0,	st_C_typespec
-auto,    	0,	st_C_typespec
-void,    	0,	st_C_typespec
-extern,  	0,	st_C_extern
-static,  	0,	st_C_typespec
-const,   	0,	st_C_const
+auto,	0,	st_C_typespec
+void,	0,	st_C_typespec
+extern,	0,	st_C_extern
+static,	0,	st_C_typespec
+const,	0,	st_C_const
 volatile,	0,	st_C_typespec
 explicit,	C_PLPL,	st_C_typespec
 mutable,	C_PLPL,	st_C_typespec
@@ -2049,7 +2049,7 @@ void oo_browser_clear_some_globals(void)
  * consider_token ()
  *	checks to see if the current token is at the start of a
  *	function or variable, or corresponds to a typedef, or
- * 	is a struct/union/enum tag, or #define, or an enum constant.
+ *	is a struct/union/enum tag, or #define, or an enum constant.
  *
  *	*IS_FUNC gets TRUE iff the token is a function or #define macro
  *	with args.  C_EXT is which language we are looking at.
@@ -2468,8 +2468,8 @@ bool *is_func_or_var;		/* OUT: function or variable found */
 /*
  * C_entries ()
  *	This routine finds functions, variables, typedefs,
- * 	#define's, enum constants and struct/union/enum definitions in
- * 	#C syntax and adds them to the list.
+ *	#define's, enum constants and struct/union/enum definitions in
+ *	#C syntax and adds them to the list.
  */
 #define current_lb_is_new (newndx == curndx)
 #define switch_line_buffers() (curndx = 1 - curndx)
@@ -2849,11 +2849,11 @@ FILE *inf;			/* input file */
 								     == tend
 #ifdef OO_BROWSER
 								     /* Also name #define constants,
-								        enumerations and enum_labels.
-								        Conditionalize `funorvar' reference
-								        here or #defines will appear without
-								        their #names.
-								        -- Bob Weiner, Altrasoft, 4/25/1998 */
+									enumerations and enum_labels.
+									Conditionalize `funorvar' reference
+									here or #defines will appear without
+									their #names.
+									-- Bob Weiner, Altrasoft, 4/25/1998 */
 								     ||
 								     ((oo_browser_format || funorvar)
 								      &&
@@ -4258,7 +4258,7 @@ char *cp;
  * Prolog support (rewritten) by Anders Lindgren, Mar. 96
  *
  * Assumes that the predicate starts at column 0.
- * Only the first clause of a predicate is added. 
+ * Only the first clause of a predicate is added.
  */
 int prolog_pred PP((char *s, char *last));
 void prolog_skip_comment PP((linebuffer * plb, FILE * inf));
@@ -4400,7 +4400,7 @@ int pos;
 		return -1;
 }
 
-/* 
+/*
  * Support for Erlang  --  Anders Lindgren, Feb 1996.
  *
  * Generates tags for functions, defines, and records.
@@ -4433,9 +4433,10 @@ FILE *inf;
 			continue;
 		else if (cp[0] == '-') {	/* attribute, e.g. "-define" */
 			erlang_attribute(cp);
+			free(last);
 			last = NULL;
 		} else if ((len = erlang_func(cp, last)) > 0) {
-			/* 
+			/*
 			 * Function.  Store the function name so that we only
 			 * generates a tag for the first clause.
 			 */
@@ -4448,6 +4449,7 @@ FILE *inf;
 			last[len] = '\0';
 		}
 	}
+	free(last);
 }
 
 /*
@@ -4486,7 +4488,7 @@ char *last;			/* Name of last clause. */
 }
 
 /*
- * Handle attributes.  Currently, tags are generated for defines 
+ * Handle attributes.  Currently, tags are generated for defines
  * and records.
  *
  * They are on the form:

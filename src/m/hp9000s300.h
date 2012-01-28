@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /* Synched up with: FSF 19.31. */
 
-/* The following line tells the configuration script what sort of 
+/* The following line tells the configuration script what sort of
    operating system this machine is likely to run.
    USUAL-OPSYS="note"
 
@@ -74,7 +74,9 @@ NOTE-END */
 
 #define CRT0_DUMMIES		bogus_a6,
 
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 
 #ifndef __GNUC__
 #define LIBS_DEBUG		/* don't have -lg that works */
@@ -105,7 +107,9 @@ NOTE-END */
 #define LOAD_AVE_CVT(x) ((int) ((x) * 100.0))
 
 #ifdef __GNUC__
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 #endif
 
 /* This library is needed with -g, on the 200/300 only.  */

@@ -26,15 +26,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
    FSF: Original version; a long time ago.
    Mly: Significantly rewritten to use new 3-bit tags and
-        nicely abstracted object definitions, for 19.8.
+	nicely abstracted object definitions, for 19.8.
    JWZ: Improved code to keep track of purespace usage and
-        issue nice purespace and GC stats.
+	issue nice purespace and GC stats.
    Ben Wing: Cleaned up frob-block lrecord code, added error-checking
-        and various changes for Mule, for 19.12.
-        Added bit vectors for 19.13.
+	and various changes for Mule, for 19.12.
+	Added bit vectors for 19.13.
 	Added lcrecord lists for 19.14.
    slb: Lots of work on the purification and dump time code.
-        Synched Doug Lea malloc support from Emacs 20.2.
+	Synched Doug Lea malloc support from Emacs 20.2.
    og:  Killed the purespace.  Portable dumper (moved to dumper.c)
 */
 
@@ -243,13 +243,13 @@ int lisp_readonly(Lisp_Object obj)
 /* Non-zero means ignore malloc warnings.  Set during initialization.  */
 int ignore_malloc_warnings;
 
-static void *breathing_space;
+static void *breathing_space = NULL;
 
 void release_breathing_space(void)
 {
 	if (breathing_space) {
 		void *tmp = breathing_space;
-		breathing_space = 0;
+		breathing_space = NULL;
 		free(tmp);
 	}
 }
@@ -412,7 +412,7 @@ char *xstrdup(const char *str)
 #endif				/* ERROR_CHECK_MALLOC */
 	if ( str ) {
 		int len = strlen(str)+1;	/* for stupid terminating 0 */
-		
+
 		void *val = xmalloc(len);
 		if (val == 0)
 			return 0;
@@ -422,7 +422,7 @@ char *xstrdup(const char *str)
 }
 #endif	/* !BDWGC */
 
-#if !defined HAVE_STRDUP 
+#if !defined HAVE_STRDUP
 /* will be a problem I think */
 char *strdup(const char *s)
 {
@@ -719,8 +719,9 @@ int dbg_eq(Lisp_Object obj1, Lisp_Object obj2)
 void refill_memory_reserve(void);
 void refill_memory_reserve(void)
 {
-	if (breathing_space == 0)
-		breathing_space = (char *)malloc(4096 - MALLOC_OVERHEAD);
+	if (breathing_space == NULL) {
+		breathing_space = malloc(0xFFFF - MALLOC_OVERHEAD);
+	}
 }
 #endif	/* !HAVE_MMAP || DOUG_LEA_MALLOC */
 
@@ -837,11 +838,13 @@ static int gc_count_num_##type##_freelist
 #define ALLOCATE_FIXED_TYPE(type, structtype, result)			\
 	do {								\
 		result = xnew(structtype);				\
+		assert(result != NULL);					\
 		INCREMENT_CONS_COUNTER(sizeof(structtype), #type);	\
 	} while (0)
 #define ALLOCATE_ATOMIC_FIXED_TYPE(type, structtype, result)		\
 	do {								\
 		result = xnew_atomic(structtype);			\
+		assert(result != NULL);					\
 		INCREMENT_CONS_COUNTER(sizeof(structtype), #type);	\
 	} while (0)
 
@@ -1240,7 +1243,7 @@ Lisp_Object make_float(fpfloat float_value)
 		return make_indef(POS_INFINITY);
 	else if (ENT_FLOAT_NINF_P(float_value))
 		return make_indef(NEG_INFINITY);
-        else if (ENT_FLOAT_NAN_P(float_value))
+	else if (ENT_FLOAT_NAN_P(float_value))
 		return make_indef(NOT_A_NUMBER);
 
 	ALLOCATE_FIXED_TYPE(float, Lisp_Float, f);
@@ -1300,7 +1303,7 @@ Lisp_Object
 make_bigz (long bigz_value)
 {
 	Lisp_Bigz *b;
-	
+
 	ALLOCATE_FIXED_TYPE(bigz, Lisp_Bigz, b);
 	bigz_register_finaliser(b);
 
@@ -2892,7 +2895,7 @@ allocate_string_chars_struct(Lisp_String *string_it_goes_with,
 
 Lisp_Object make_uninit_string(Bytecount length)
 {
-	Lisp_String *s;
+	Lisp_String *s = NULL;
 #if !defined HAVE_BDWGC || !defined EF_USE_BDWGC
 	EMACS_INT fullsize = STRING_FULLSIZE(length);
 #endif	/* !BDWGC */
@@ -2907,17 +2910,22 @@ Lisp_Object make_uninit_string(Bytecount length)
 	set_lheader_implementation(&s->lheader, &lrecord_string);
 	string_register_finaliser(s);
 
-#if defined HAVE_BDWGC && defined EF_USE_BDWGC
 	{
-		Bufbyte *foo = xnew_atomic_array(Bufbyte, length+1);
+		Bufbyte *foo = NULL;
+#if defined HAVE_BDWGC && defined EF_USE_BDWGC
+		foo = xnew_atomic_array(Bufbyte, length+1);
+		assert(foo != NULL);
+#else
+		if (BIG_STRING_FULLSIZE_P(fullsize)) {
+			foo = xnew_atomic_array(Bufbyte, length + 1);
+			assert(foo != NULL);
+		} else {
+			foo = allocate_string_chars_struct(s, fullsize)->chars;
+			assert(foo != NULL);
+		}
+#endif
 		set_string_data(s, foo);
 	}
-#else
-	set_string_data(s, BIG_STRING_FULLSIZE_P(fullsize)
-			? xnew_atomic_array(Bufbyte, length + 1)
-			: allocate_string_chars_struct(s, fullsize)->chars);
-#endif
-
 	set_string_length(s, length);
 	s->plist = Qnil;
 #ifdef EF_USE_COMPRE
@@ -3252,7 +3260,11 @@ make_ext_string(const Extbyte *contents, EMACS_INT length,
 Lisp_Object build_string(const char *str)
 {
 	/* Some strlen's crash and burn if passed null. */
-	return make_string((const Bufbyte*)str, (str ? strlen(str) : 0));
+	if( str )
+		return make_string((const Bufbyte*)str, strlen(str));
+	else
+		abort();
+	return Qnil;
 }
 
 Lisp_Object build_ext_string(const char *str, Lisp_Object coding_system)
@@ -3318,12 +3330,12 @@ Lisp_Object make_string_nocopy(Bufbyte *contents, Bytecount length)
    4) Calling free_managed_lcrecord() is just like kissing the
       lcrecord goodbye as if it were garbage-collected.  This means:
       -- the contents of the freed lcrecord are undefined, and the
-         contents of something produced by allocate_managed_lcrecord()
+	 contents of something produced by allocate_managed_lcrecord()
 	 are undefined, just like for alloc_lcrecord().
       -- the mark method for the lcrecord's type will *NEVER* be called
-         on freed lcrecords.
+	 on freed lcrecords.
       -- the finalize method for the lcrecord's type will be called
-         at the time that free_managed_lcrecord() is called.
+	 at the time that free_managed_lcrecord() is called.
 
    lcrecord lists do not work in bdwgc mode. -hrop
 
@@ -3714,7 +3726,7 @@ static void tick_lcrecord_stats(const struct lrecord_header *h, int free_p)
 
 /* Free all unmarked records */
 #if !defined HAVE_BDWGC || !defined EF_USE_BDWGC
-static void 
+static void
 sweep_lcrecords_1(struct lcrecord_header *volatile*prev, int *used)
 {
 	int num_used = 0;
@@ -4040,7 +4052,7 @@ sweep_bigqs (void)
 {
 #define UNMARK_bigq(ptr) UNMARK_RECORD_HEADER(&((ptr)->lheader))
 #define ADDITIONAL_FREE_bigq(ptr) bigq_fini(ptr->data)
-	
+
 	SWEEP_FIXED_TYPE_BLOCK(bigq, Lisp_Bigq);
 }
 #endif /* HAVE_MPQ */
@@ -4051,7 +4063,7 @@ sweep_bigfs (void)
 {
 #define UNMARK_bigf(ptr) UNMARK_RECORD_HEADER(&((ptr)->lheader))
 #define ADDITIONAL_FREE_bigf(ptr) bigf_fini(ptr->data)
-	
+
 	SWEEP_FIXED_TYPE_BLOCK(bigf, Lisp_Bigf);
 }
 #endif	/* HAVE_MPF */
@@ -4062,7 +4074,7 @@ sweep_bigfrs (void)
 {
 #define UNMARK_bigfr(ptr) UNMARK_RECORD_HEADER(&((ptr)->lheader))
 #define ADDITIONAL_FREE_bigfr(ptr) bigfr_fini(ptr->data)
-	
+
 	SWEEP_FIXED_TYPE_BLOCK(bigfr, Lisp_Bigfr);
 }
 #endif	/* HAVE_MPFR */
@@ -4073,7 +4085,7 @@ sweep_biggs (void)
 {
 #define UNMARK_bigg(ptr) UNMARK_RECORD_HEADER(&((ptr)->lheader))
 #define ADDITIONAL_FREE_bigg(ptr) bigg_fini(ptr->data)
-	
+
 	SWEEP_FIXED_TYPE_BLOCK(bigg, Lisp_Bigg);
 }
 #endif	/* HAVE_PSEUG */
@@ -4085,7 +4097,7 @@ sweep_bigcs (void)
 {
 #define UNMARK_bigc(ptr) UNMARK_RECORD_HEADER(&((ptr)->lheader))
 #define ADDITIONAL_FREE_bigc(ptr) bigc_fini(ptr->data)
-	
+
 	SWEEP_FIXED_TYPE_BLOCK(bigc, Lisp_Bigc);
 }
 #endif	/* HAVE_MPC */
@@ -4096,7 +4108,7 @@ sweep_quaterns (void)
 {
 #define UNMARK_quatern(ptr) UNMARK_RECORD_HEADER(&((ptr)->lheader))
 #define ADDITIONAL_FREE_quatern(ptr) quatern_fini(ptr->data)
-	
+
 	SWEEP_FIXED_TYPE_BLOCK(quatern, Lisp_Quatern);
 }
 #endif	/* HAVE_QUATERN */
@@ -4426,12 +4438,12 @@ static void gc_sweep(void)
 	/* Put all unmarked bignums on free list */
 	sweep_bigzs();
 #endif	/* HAVE_MPZ */
-	
+
 #if defined HAVE_MPQ && defined WITH_GMP
 	/* Put all unmarked ratios on free list */
 	sweep_bigqs();
 #endif	/* HAVE_MPQ */
-	
+
 #if defined HAVE_MPF && defined WITH_GMP
 	/* Put all unmarked bigfloats on free list */
 	sweep_bigfs();
@@ -4892,7 +4904,7 @@ void garbage_collect_1(void)
 	unbind_to(speccount, Qnil);
 
 	if (!breathing_space) {
-		breathing_space = malloc(4096 - MALLOC_OVERHEAD);
+		breathing_space = malloc(0xFFFF - MALLOC_OVERHEAD);
 	}
 
 	UNGCPRO;
@@ -4976,7 +4988,7 @@ Garbage collection happens automatically if you cons more than
 			/* Okay, simple pluralization check for
 			   `symbol-value-varalias' */
 			if (name[len - 1] == 's')
-                                sz = snprintf(buf, sizeof(buf), "%ses-freed", name);
+				sz = snprintf(buf, sizeof(buf), "%ses-freed", name);
 			else
 				sz = snprintf(buf, sizeof(buf), "%ss-freed", name);
 			assert(sz >=0  && (size_t)sz < sizeof(buf));
@@ -5158,9 +5170,9 @@ int object_dead_p(Lisp_Object obj)
    2. When using the new allocator (gmalloc.c):
 
       -- blocks are always allocated in chunks of powers of two up
-         to 4096 bytes.  Larger blocks are allocated in chunks of
+	 to 4096 bytes.  Larger blocks are allocated in chunks of
 	 an integral multiple of 4096 bytes.  The minimum block
-         size is 2*sizeof (void *), or 16 bytes if SUNOS_LOCALTIME_BUG
+	 size is 2*sizeof (void *), or 16 bytes if SUNOS_LOCALTIME_BUG
 	 is defined.  There is no per-block overhead, but there
 	 is an overhead of 3*sizeof (size_t) for each 4096 bytes
 	 allocated.
@@ -5362,7 +5374,7 @@ __init_gmp_mem_funs(void)
 void reinit_alloc_once_early(void)
 {
 	gc_generation_number[0] = 0;
-	breathing_space = 0;
+	breathing_space = NULL;
 	XSETINT(all_bit_vectors, 0);	/* Qzero may not be set yet. */
 	XSETINT(Vgc_message, 0);
 #if !defined HAVE_BDWGC || !defined EF_USE_BDWGC

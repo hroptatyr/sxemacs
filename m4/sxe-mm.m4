@@ -319,15 +319,15 @@ AC_DEFUN([SXE_MM_CHECK_FFMPEG], [
 
 	sxe_cv_feat_ffmpeg=
 	## we can't use that one since we have to check multiple headers
-dnl 	_SXE_MM_CHECK_pkgconfig_based([ffmpeg], [libavformat], [49.0.0], [dnl
-dnl 		av_open_input_file av_close_input_file av_find_stream_info dnl
-dnl 		url_fopen av_probe_input_format avcodec_find_decoder dnl
-dnl 		avcodec_open av_read_frame av_seek_frame av_register_all dnl
-dnl 		avcodec_decode_audio avcodec_decode_audio2], [avformat.h],
-dnl 		[sxe_cv_feat_ffmpeg=yes], [sxe_cv_feat_ffmpeg=no])
+dnl	_SXE_MM_CHECK_pkgconfig_based([ffmpeg], [libavformat], [49.0.0], [dnl
+dnl		av_open_input_file av_close_input_file av_find_stream_info dnl
+dnl		url_fopen av_probe_input_format avcodec_find_decoder dnl
+dnl		avcodec_open av_read_frame av_seek_frame av_register_all dnl
+dnl		avcodec_decode_audio avcodec_decode_audio2], [avformat.h],
+dnl		[sxe_cv_feat_ffmpeg=yes], [sxe_cv_feat_ffmpeg=no])
 
-dnl 	Dropped in favour of sxe-pkgconfig.m4 macros
-dnl 	_SXE_CHECK_pkgconfig_based([ffmpeg], [libavformat], [49.0.0])
+dnl	Dropped in favour of sxe-pkgconfig.m4 macros
+dnl	_SXE_CHECK_pkgconfig_based([ffmpeg], [libavformat], [49.0.0])
 
 	SXE_PC_CHECK_VERSION_ATLEAST([libavformat], [51.0.0])
 
@@ -849,7 +849,7 @@ AC_DEFUN([SXE_MM_CHECK_OSS], [
 	SXE_DUMP_LIBS
 	MM_FAIL
 	SXE_CHECK_HEADERS([machine/soundcard.h sys/soundcard.h linux/soundcard.h soundcard.h])
-        if test "$ac_cv_header_linux_soundcard_h"="yes" -o	\
+	if test "$ac_cv_header_linux_soundcard_h"="yes" -o	\
 		"$ac_cv_header_machine_soundcard_h"="yes" -o	\
 		"$ac_cv_header_soundcard_h"="yes" -o		\
 		"$ac_cv_header_sys_soundcard_h"="yes"
@@ -864,11 +864,11 @@ AC_DEFUN([SXE_MM_CHECK_OSS], [
 #else
 #include <soundcard.h>
 #endif
-]], 
+]],
 		[[ ioctl(0, SNDCTL_DSP_RESET, 0); ]])],
-  			[oss_ioctl_linked=yes],
-  			[oss_ioctl_linked=no])
-		if test	"${oss_ioctl_linked}" = "no" 
+			[oss_ioctl_linked=yes],
+			[oss_ioctl_linked=no])
+		if test	"${oss_ioctl_linked}" = "no"
 		then
 			if test "${opsys}" = "netbsd"
 			then
@@ -1157,7 +1157,7 @@ AC_DEFUN([SXE_CHECK_ALSA_VERSION], [dnl
 # include <alsa/version.h>
 #endif
 
-int main(int c, char *v[]) 
+int main(int c, char *v[])
 {
 	fprintf(stdout, SND_LIB_VERSION_STR);
 	return 0;
@@ -1171,7 +1171,7 @@ int main(int c, char *v[])
 		AC_MSG_WARN([Your ALSA version is _KNOWN_ to fail! Do not say we have not warned you!])
 		sxe_mm_alsa_version_supported_p="no"
 		;;
-	1.0.2 | 1.0.4* | 1.0.5* | 1.0.6* | 1.0.7* | 1.0.8* ) 
+	1.0.2 | 1.0.4* | 1.0.5* | 1.0.6* | 1.0.7* | 1.0.8* )
 		AC_MSG_RESULT([${sxe_mm_alsa_version} (suspicious to break)])
 		AC_MSG_WARN([Your ALSA version has not been tested. Do not be surprised if it fails!])
 		sxe_mm_alsa_version_supported_p="no"

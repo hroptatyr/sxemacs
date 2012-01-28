@@ -844,7 +844,7 @@ get_toolbar_coords(struct frame *f, enum toolbar_pos pos, int *x, int *y,
   if (FRAME_REAL_##pos##_VISIBLE (f))					\
     {									\
       int x, y, width, height, vert;					\
-  									\
+									\
       get_toolbar_coords (f, pos, &x, &y, &width, &height, &vert, 0);	\
       if ((x_coord >= x) && (x_coord < (x + width)))			\
 	{								\
@@ -936,7 +936,7 @@ check_toolbar_button_keywords(Lisp_Object button, Lisp_Object key,
 }
 
 /* toolbar button spec is [pixmap-pair function enabled-p help]
-	               or [:style 2d-or-3d :size width-or-height] */
+		       or [:style 2d-or-3d :size width-or-height] */
 
 DEFUN("check-toolbar-button-syntax", Fcheck_toolbar_button_syntax, 1, 2, 0,	/*
 Verify the syntax of entry BUTTON in a toolbar description list.

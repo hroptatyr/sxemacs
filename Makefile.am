@@ -76,7 +76,7 @@ RECURSE =								\
 	@for subdir in $(sxe_subdirs); do				\
 		test "$$subdir" = . ||					\
 			(cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $@);	\
-        done ;                                                          \
+	done ;                                                          \
 	@$(TOUCH) $@
 
 CROSSMAKE = (cd `dirname $@` && $(MAKE) $(AM_MAKEFLAGS) `basename $@`)
@@ -102,12 +102,12 @@ uninstall-hook:
 check-recursive: all-recursive
 
 $(ETAGS):
-	cd $(top_builddir)/lib-src 
+	cd $(top_builddir)/lib-src
 	$(MAKE) $(AM_MAKEFLAGS) etags
 
 .PHONY: stage1 stage2 build-report time-build-report time-check beta
 ## Convenience target for SXEmacs beta testers
-beta: 
+beta:
 	$(MAKE) $(RECURSIVE_MAKE_ARGS) clean
 	$(MAKE) $(RECURSIVE_MAKE_ARGS) all
 	@ touch ,,build.done

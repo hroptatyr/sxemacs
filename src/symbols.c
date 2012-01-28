@@ -402,16 +402,16 @@ For every delta with one or two bits set, and the deltas of all three
   have at least 1/4 probability of changing.
 * If mix() is run forward, every bit of c will change between 1/3 and
   2/3 of the time.  (Well, 22/100 and 78/100 for some 2-bit deltas.)
-mix() was built out of 36 single-cycle latency instructions in a 
+mix() was built out of 36 single-cycle latency instructions in a
   structure that could supported 2x parallelism, like so:
-      a -= b; 
+      a -= b;
       a -= c; x = (c>>13);
       b -= c; a ^= x;
       b -= a; x = (a<<8);
       c -= a; b ^= x;
       c -= b; x = (b>>13);
       ...
-  Unfortunately, superscalar Pentiums and Sparcs can't take advantage 
+  Unfortunately, superscalar Pentiums and Sparcs can't take advantage
   of that parallelism.  They've also turned some of those single-cycle
   latency instructions into multi-cycle latency instructions.  Still,
   this is the fastest good hash I could find.  There were about 2^^68
@@ -522,7 +522,7 @@ hash_string(const Bufbyte *ptr, Bytecount length)
 #endif
 #if !defined (get16bits)
 #define get16bits(d) ((((const uint8_t *)(d))[1] << UINT32_C(8))\
-                      +((const uint8_t *)(d))[0])
+		      +((const uint8_t *)(d))[0])
 #endif
 
 hcode_t
@@ -547,18 +547,18 @@ hash_string(const Bufbyte *data, Bytecount len)
 
 	/* Handle end cases */
 	switch (rem) {
-        case 3: hash += get16bits (data);
-                hash ^= hash << 16;
-                hash ^= data[sizeof (uint16_t)] << 18;
-                hash += hash >> 11;
-                break;
-        case 2: hash += get16bits (data);
-                hash ^= hash << 11;
-                hash += hash >> 17;
-                break;
-        case 1: hash += *data;
-                hash ^= hash << 10;
-                hash += hash >> 1;
+	case 3: hash += get16bits (data);
+		hash ^= hash << 16;
+		hash ^= data[sizeof (uint16_t)] << 18;
+		hash += hash >> 11;
+		break;
+	case 2: hash += get16bits (data);
+		hash ^= hash << 11;
+		hash += hash >> 17;
+		break;
+	case 1: hash += *data;
+		hash ^= hash << 10;
+		hash += hash >> 1;
 	default:
 		break;
 	}
@@ -608,15 +608,15 @@ hash_string(const Bufbyte * ptr, Bytecount len)
 
 DEFUN ("subr-name", Fsubr_name, 1, 1, 0, /*
 Return name of function SUBR.
-SUBR must be a built-in function.  
+SUBR must be a built-in function.
 */
        (subr))
 {
-        const char *name;
-        if (!SUBRP (subr))
-                wrong_type_argument (Qsubrp, subr);
-        name = XSUBR (subr)->name;
-        return make_string ((Bufbyte *)name, strlen (name));
+	const char *name;
+	if (!SUBRP (subr))
+		wrong_type_argument (Qsubrp, subr);
+	name = XSUBR (subr)->name;
+	return make_string ((Bufbyte *)name, strlen (name));
 }
 
 
@@ -921,9 +921,9 @@ Return SYMBOL's name, a string.
 	CHECK_SYMBOL(symbol);
 	XSETSTRING(name, XSYMBOL(symbol)->name);
 
-        /* This is a CRUTCH, we need some better mechanism to
-         * initialize data like morphisms */
-        XSTRING(name)->lheader.morphisms = 0;
+	/* This is a CRUTCH, we need some better mechanism to
+	 * initialize data like morphisms */
+	XSTRING(name)->lheader.morphisms = 0;
 
 	return name;
 }
@@ -959,7 +959,7 @@ Associates the function with the current load file, if any.
 {
 	/* This function can GC */
 	Ffset(symbol, newdef);
-        LOADHIST_ATTACH (Fcons (Qdefun, symbol));
+	LOADHIST_ATTACH (Fcons (Qdefun, symbol));
 	return newdef;
 }
 
@@ -1912,7 +1912,7 @@ static Lisp_Object symbol_value_in_console(Lisp_Object sym, Lisp_Object console)
 static Lisp_Object
 search_symbol_macro(Lisp_Object name)
 {
-        return Fget(name, Qsymbol_macro, Qnil);
+	return Fget(name, Qsymbol_macro, Qnil);
 }
 
 /* Return the current value of SYM.  The difference between this function
@@ -1953,7 +1953,7 @@ Lisp_Object find_symbol_value(Lisp_Object sym)
      a) We have already found the symbol e.g. by traversing local_var_alist.
    or
      b) We know that the symbol will not be found in the current buffer's
-        list of local variables.
+	list of local variables.
    In the former case, find_it_p is 1 and symbol_cons is the element from
    local_var_alist.  In the latter case, find_it_p is 0 and symbol_cons
    is the symbol.
@@ -1993,12 +1993,12 @@ Return SYMBOL's value.  Error if that is void.
 	Lisp_Object val = find_symbol_value(symbol);
 
 	if (UNBOUNDP(val)) {
-                Lisp_Object fd = search_symbol_macro(symbol);
-                if (!NILP(fd))
-                        return Feval(fd);
-                else
-                        return Fsignal(Qvoid_variable, list1(symbol));
-        } else
+		Lisp_Object fd = search_symbol_macro(symbol);
+		if (!NILP(fd))
+			return Feval(fd);
+		else
+			return Fsignal(Qvoid_variable, list1(symbol));
+	} else
 		return val;
 }
 
@@ -2008,7 +2008,7 @@ Set SYMBOL's value to NEWVAL, and return NEWVAL.
       (symbol, newval))
 {
 	REGISTER Lisp_Object valcontents;
-        Lisp_Object ssm;
+	Lisp_Object ssm;
 	Lisp_Symbol *sym;
 	/* remember, we're called by Fmakunbound() as well */
 
@@ -2022,11 +2022,11 @@ Set SYMBOL's value to NEWVAL, and return NEWVAL.
 		reject_constant_symbols(symbol, newval, 0,
 					UNBOUNDP(newval) ? Qmakunbound : Qset);
 
-        if (UNBOUNDP(valcontents)) {
-                ssm = search_symbol_macro(symbol);
-                if (!NILP(ssm))
-                        return Feval(list3(Qsetf, ssm, list2(Qquote, newval)));
-        }
+	if (UNBOUNDP(valcontents)) {
+		ssm = search_symbol_macro(symbol);
+		if (!NILP(ssm))
+			return Feval(list3(Qsetf, ssm, list2(Qquote, newval)));
+	}
 
 	if (!SYMBOL_VALUE_MAGIC_P(valcontents) || UNBOUNDP(valcontents)) {
 		sym->value = newval;
@@ -2811,7 +2811,7 @@ From now on the default value will apply in this buffer.
 	RETURN_NOT_REACHED(Qnil)	/* suppress compiler warning */
 }
 
-DEFUN("kill-console-local-variable", Fkill_console_local_variable, 1, 1, 
+DEFUN("kill-console-local-variable", Fkill_console_local_variable, 1, 1,
       "vKill Console Local Variable: ",	/*
 Make VARIABLE no longer have a separate value in the selected console.
 From now on the default value will apply in this console.
@@ -3003,17 +3003,17 @@ DEFUN("built-in-variable-type", Fbuilt_in_variable_type, 1, 1, 0,	/*
 ll be a symbol, one of
 
 A simple built-in variable.
-        Same, but cannot be set.
+	Same, but cannot be set.
 A built-in integer variable.
-        Same, but cannot be set.
+	Same, but cannot be set.
 A built-in boolean variable.
-        Same, but cannot be set.
+	Same, but cannot be set.
 Always contains a specifier; e.g. `has-modeline-p'.
 A built-in buffer-local variable.
 fer'    Same, but cannot be set.
 Forwards to the default value of a built-in
 buffer-local variable.
-        A built-in console-local variable.
+	A built-in console-local variable.
 nsole' Same, but cannot be set.
 Forwards to the default value of a built-in
 console-local variable.
@@ -3608,7 +3608,7 @@ variable chain of symbols.
 DEFUN("variable-binding-locus", Fvariable_binding_locus, 1, 1, 0,	/*
 Return a value indicating where VARIABLE's current binding comes from.
 If the current binding is buffer-local, the value is the current buffer.
-If the current binding is global (the default), the value is nil. 
+If the current binding is global (the default), the value is nil.
 */
       (variable))
 {
@@ -3740,19 +3740,19 @@ defsymbol_massage_name_1(Lisp_Object * location, const char *name, int dump_p,
 	size_t i;
 
 	if (multiword_predicate_p)
-                /* If it is a multiword_predicate_p it is expected
-                   the last char of name is a p, which should be
-                   removed and replaced with "_p", so the net length
-                   difference is 1 char, the '_' */
+		/* If it is a multiword_predicate_p it is expected
+		   the last char of name is a p, which should be
+		   removed and replaced with "_p", so the net length
+		   difference is 1 char, the '_' */
 		assert(len + 1 < sizeof(temp));
 	else
 		assert(len < sizeof(temp));
-        temp[0]='\0';
+	temp[0]='\0';
 	strncat(temp, name + 1, sizeof(temp)-1);	/* Remove initial Q */
 	if (multiword_predicate_p) {
-                /* Overwrite the 'p' which is the last char of name
-                   and put "_p" instead. */
-                strcpy(temp + len - 1, "_p");
+		/* Overwrite the 'p' which is the last char of name
+		   and put "_p" instead. */
+		strcpy(temp + len - 1, "_p");
 		len++;
 	}
 	for (i = 0; i < len; i++)
@@ -3978,7 +3978,7 @@ void syms_of_symbols(void)
 	DEFSYMBOL(Qselected_console);
 	DEFSYMBOL(Qconst_selected_console);
 	DEFSYMBOL(Qsetf);
-        DEFSYMBOL(Qsymbol_macro);
+	DEFSYMBOL(Qsymbol_macro);
 
 	DEFSUBR(Fintern);
 	DEFSUBR(Fintern_soft);
@@ -3998,7 +3998,7 @@ void syms_of_symbols(void)
 	DEFSUBR(Fdefine_function);
 	Ffset(intern("defalias"), intern("define-function"));
 	DEFSUBR (Fspecial_form_p);
-        DEFSUBR (Fsubr_name);
+	DEFSUBR (Fsubr_name);
 	DEFSUBR(Fsetplist);
 	DEFSUBR(Fsymbol_value_in_buffer);
 	DEFSUBR(Fsymbol_value_in_console);

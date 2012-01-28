@@ -1,6 +1,6 @@
 @comment  node-name,  next,  previous,  up
 @node Customization Basics, Help, Edit, Top
-@chapter Customize key bindings and menus 
+@chapter Customize key bindings and menus
 @cindex init.el
 @cindex customize
 @findex eval-region
@@ -28,7 +28,7 @@ Eval,,,sxemacs,SXEmacs User's Manual}).
 @end menu
 
 @node Customizing key Bindings, Customizing Menus, Customization Basics, Customization Basics
-@section Customize key bindings 
+@section Customize key bindings
 @cindex key bindings
 @cindex keystrokes
 
@@ -61,7 +61,7 @@ following in your @b{init.el} file:
 
 @noindent
 then @kbd{C-p} will move to the next line and @kbd{C-n} to the previous
-line. 
+line.
 
 You can also disable a key binding, by using @samp{nil} as the @var{cmd}
 in the syntax stated above. Here, @samp{nil} stands for @samp{false}
@@ -162,7 +162,7 @@ information on Major Modes in SXEmacs.
 You can customize any of the  SXEmacs Pull-down-Menus. You can create your
 own menu, delete an existing one, enable a menu or disable a menu. For
 more information on the default menus available to you, @xref{Pull-down
-Menus}. 
+Menus}.
 
   Some of the functions which are available to you for customization are:
 @enumerate
@@ -197,27 +197,27 @@ Execute Last Macro      C-xe
 @end example
 
 @noindent
-@b{Replace String} will now execute the function 
+@b{Replace String} will now execute the function
 @code{replace-string}. Select this menu item. Emacs will prompt you for
-a string name to be replaced. Type a 
+a string name to be replaced. Type a
 string and hit @key{RET}. Now type a new string to replace the old
 string and hit @key{RET}. All occurrences of the old string will be
 replaced by the new string. In this example,
 
 @samp{Edit} is the @var{menu-name} which identifies the menu into which
-the new menu item should be inserted. 
+the new menu item should be inserted.
 
 @samp{Replace String} is the @var{item-name} which names the menu item
-to be added. 
+to be added.
 
 @samp{replace-string} is the @var{function} i.e. the command to be
-invoked when the menu item "Replace String" is selected. 
+invoked when the menu item "Replace String" is selected.
 
 @samp{t} is the @var{enabled-p} parameter which controls whether the
 menu item is selectable or not. This parameter can be either @code{t} (selectable), @code{nil} (not selectable), or a
 form to evaluate. This form is evaluated just before the menu is
 displayed, and the menu item will be selectable if the form returns
-non-@code{nil}. 
+non-@code{nil}.
 
 @samp{Clear} is the @var{&optional before} parameter which is the name
 of the menu before which the new menu or sub-menu should be added. The
@@ -237,7 +237,7 @@ Last Macro}.
 This will create a new menu @b{Bot} on the menu bar. Selecting this menu
 will take you to the end of the buffer. Using @code{nil} for the
 parameter @var{menu-name} will create a new menu. Your menu-bar
-will now look like: 
+will now look like:
 
 @example
 File Edit Options Buffers Bot                         Help
@@ -255,7 +255,7 @@ submenus themselves:
 
 This will create a sub-menu @b{Management} under the @b{File}
 menu. When you select the submenu @b{Management}, it will contain three
-submenus: @b{Copy File}, @b{Delete File} and @b{Rename File}. 
+submenus: @b{Copy File}, @b{Delete File} and @b{Rename File}.
 
 @findex delete-menu-item
 @cindex deleting menu items
@@ -267,7 +267,7 @@ above them which specify what the examples do.
 
 @example
 ;; deletes the "Replace String" menu item created earlier
-(delete-menu-item '("Edit" "Replace String")) 
+(delete-menu-item '("Edit" "Replace String"))
 
 ;; deletes the "Bot" menu created earlier
 (delete-menu-item '("Bot"))
@@ -276,7 +276,7 @@ above them which specify what the examples do.
 (delete-menu-item '("File" "File Management" "Copy File"))
 
 ;; deletes the sub-menu "Delete File" created earlier
-(delete-menu-item '("File" "Management" "Delete File")) 
+(delete-menu-item '("File" "Management" "Delete File"))
 
 ;; deletes the sub-menu "Rename File" created earlier
 (delete-menu-item '("File" "Management" "Rename File"))
@@ -287,7 +287,7 @@ above them which specify what the examples do.
 @cindex disabling menu items
 @item
 disable-menu-item: (@var{menu-name})
-Disables the specified menu item. The following example 
+Disables the specified menu item. The following example
 
 @example
 (disable-menu-item '("File" "Management" "Copy File"))
@@ -302,7 +302,7 @@ be selected.
 @cindex enabling menu items
 @item
 enable-menu-item: (@var{menu-name})
-Enables the specified previously disabled menu item. 
+Enables the specified previously disabled menu item.
 
 @example
 (enable-menu-item '("File" "Management" "Copy File"))
@@ -317,14 +317,13 @@ earlier command.
 @item
 relabel-menu-item: (@var{menu-name} @var{new-name})
 Change the string of the menu item specified by @var{menu-name} to
-@var{new-name}. 
+@var{new-name}.
 
 @example
 (relabel-menu-item '("File" "Open...") "Open File")
 @end example
 
 This example will rename the @b{Open...} menu item from the @b{File}
-menu to @b{Open File}. 
+menu to @b{Open File}.
 
 @end enumerate
-

@@ -26,8 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
    Copyright (c) 1988-1997 Sam Leffler
    Copyright (c) 1991-1997 Silicon Graphics, Inc.
-   
-   Permission to use, copy, modify, distribute, and sell this software and 
+
+   Permission to use, copy, modify, distribute, and sell this software and
    its documentation for any purpose is hereby granted without fee, provided
    that (i) the above copyright notices and this permission notice appear in
    all copies of the software and related documentation, and (ii) the names of
@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
    publicity relating to the software without the specific, prior written
    permission of Sam Leffler and Silicon Graphics. */
 
-/* Quantizing code based off of the paper 
+/* Quantizing code based off of the paper
    Color Image Quantization for Frame Buffer Display, Paul Heckbert,
    Siggraph '82 proceedings, pp. 297-307 */
 
@@ -73,7 +73,13 @@ get_histogram(quant_table * qt, unsigned char *pic,
 				box->bmin = blue;
 			if (blue > box->bmax)
 				box->bmax = blue;
-			qt->histogram[red][green][blue]++;
+#if defined(DEBUG_SXEMACS) && DEBUG_SXEMACS
+			if( red < 0 || green < 0 || blue < 0 ||
+			    ! (red < B_LEN && green < B_LEN && blue < B_LEN) ) {
+				abort();
+			} else
+#endif
+				qt->histogram[red][green][blue]++;
 		}
 	}
 }

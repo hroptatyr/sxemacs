@@ -64,7 +64,7 @@
 ;; emods
 (defun find-emod-directories ()
   (let* ((objdir "../modules/")
-	 (files (directory-files-recur 
+	 (files (directory-files-recur
 		 objdir 'full (mapfam
 			       #'(lambda (e)
 				   (replace-in-string e "\\." ""))
@@ -86,7 +86,7 @@
 
 (when (featurep 'modules)
   (let* ((modsrc "../.sxemacs.source.tree/modules/")
-	 (mods (mapfam 
+	 (mods (mapfam
 		#'(lambda (d) (concat modsrc d))
 		:result-type #'list (find-emod-directories)))
 	 (feat "modules")

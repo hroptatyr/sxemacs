@@ -78,7 +78,7 @@ BUILT_SOURCES += ase.doc.c
 
 module_LTLIBRARIES += ase-set.la
 ase_set_la_SOURCES = ase-set.c						\
-	ase-cartesian.c ase-interval.c ase-metric.c ase-neighbourhood.c 
+	ase-cartesian.c ase-interval.c ase-metric.c ase-neighbourhood.c
 nodist_ase_set_la_SOURCES = ase-set.doc.c				\
 	ase-cartesian.doc.c ase-interval.doc.c ase-metric.doc.c		\
 	ase-neighbourhood.doc.c
@@ -104,7 +104,7 @@ ase_digraph_la_DEPENDENCIES = ase.la
 BUILT_SOURCES += ase-digraph.doc.c
 
 module_LTLIBRARIES += ase-heap.la
-ase_heap_la_SOURCES = ase-heap.c 
+ase_heap_la_SOURCES = ase-heap.c
 nodist_ase_heap_la_SOURCES = ase-heap.doc.c
 ase_heap_la_DEPENDENCIES = ase.la
 BUILT_SOURCES += ase-heap.doc.c
@@ -138,7 +138,7 @@ _ase-heap_benchmarks: ase-heap.la
 
 benchmarks: _ase-heap_benchmarks
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## the libtool approach

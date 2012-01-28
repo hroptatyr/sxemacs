@@ -491,4 +491,3 @@ not operators.
 matches records of class @code{Person} containing a @code{mail}
 attribute and corresponding to people whose last name is @code{Smith} or
 whose first name is @code{John}.
-

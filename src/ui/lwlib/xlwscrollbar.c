@@ -408,7 +408,7 @@ call_callbacks(XlwScrollBarWidget w, int reason,
 		   here, the fall through if will do the proper
 		   thing.. So, nothing to do here
 		*/
-		;
+		break;
 	}
 
 	if (!called_anything) {
@@ -1671,7 +1671,7 @@ Select(Widget widget, XEvent * event, String * parms, Cardinal * num_parms)
 		break;
 	case BUTTON_NONE:
 	default:
-		;               /* Do nothing */
+		break;               /* Do nothing */
 	}
 
 	verify_values(w);

@@ -333,7 +333,7 @@ static void widget_update(Lisp_Object image_instance, Lisp_Object instantiator)
 	GCPRO1(descriptor_item);
 
 	/* Pick up any generic properties that we might need to keep hold
-	   of. 
+	   of.
 	   #### This is potentially bogus because it is changing the items
 	   in place rather than in the pending items. */
 	if (!NILP(text)) {
@@ -346,7 +346,7 @@ static void widget_update(Lisp_Object image_instance, Lisp_Object instantiator)
 	   keywords.
 
 	   #### This is inconsistent with instantiation in that you have to
-	   have the :descriptor keyword for updates in order to recognise 
+	   have the :descriptor keyword for updates in order to recognise
 	   changes. */
 	if (VECTORP(desc)) {
 		descriptor_item = gui_parse_item_keywords_no_errors(desc);
@@ -699,7 +699,7 @@ widget_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 	   keywords. Note that standard gui descriptor shortcuts will not work
 	   because of keyword parsing.
 
-	   #### This is bogus in that descriptor and items share the same slot, 
+	   #### This is bogus in that descriptor and items share the same slot,
 	   we should rationalize. */
 	if (VECTORP(desc)) {
 		IMAGE_INSTANCE_WIDGET_ITEMS(ii) =
@@ -1214,7 +1214,7 @@ layout_post_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
    glyphs are cached on a device basis like most other glyphs. Instead
    they should be cached per-window and then the instance would be
    fixed and we wouldn't have to mess around with font metrics and the
-   rest. 
+   rest.
 
    Another sizing problem is alignment. We provide layout widgets that
    allow users to stack widgets vertically or horizontally. These

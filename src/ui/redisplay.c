@@ -1275,7 +1275,7 @@ static prop_block_dynarr *add_octal_runes(pos_data * data)
 	ADD_NEXT_OCTAL_RUNE_CHAR;
 
 	(void)add_failed;
-	
+
 	data->cursor_type = orig_cursor_type;
 	if (prop && prop != ADD_FAILED )
 		Dynarr_free(prop);
@@ -2183,23 +2183,23 @@ create_text_block(struct window *w, struct display_line *dl,
 			glyph_block_dynarr* tmpglyphs = 0;
 			/* #### I think this is safe, but could be wrong. */
 			data.ch = BI_BUF_FETCH_CHAR (b, data.bi_bufpos);
-			
+
 			*prop = add_glyph_runes (&data);
 			tmpglyphs = data.ef->glyphs;
-			
-			if (*prop) 
+
+			if (*prop)
 			{
 				/* If we just clipped a glyph and we are
 				   at the end of a line and there are more
 				   glyphs to display then do appropriate
 				   processing to not get a continuation
 				   glyph. */
-				if (*prop != ADD_FAILED 
+				if (*prop != ADD_FAILED
 				    && Dynarr_atp (*prop, 0)->type == PROP_GLYPH
 				    && data.ch == '\n') {
 					/* If there are no more glyphs
 					   then do the normal processing.
-					   
+
 					   #### This doesn't actually work
 					   if the same glyph is present
 					   more than once in the block. To
@@ -2207,7 +2207,7 @@ create_text_block(struct window *w, struct display_line *dl,
 					   carry the index around which
 					   might be problematic since the
 					   fragment is recalculated for
-					   each line.  */ 
+					   each line.  */
 					if (EQ (Dynarr_end (tmpglyphs)->glyph,
 						Dynarr_atp (*prop, 0)->data.p_glyph.glyph)) {
 						Dynarr_free (*prop);
@@ -2223,7 +2223,7 @@ create_text_block(struct window *w, struct display_line *dl,
 					goto done;
 			}
 		}
-		
+
 		/* If the current position is covered by an invisible
 		   extent, do nothing (except maybe add some
 		   ellipses).  */
@@ -2594,8 +2594,8 @@ create_text_block(struct window *w, struct display_line *dl,
 					gb.extent = Qnil;
 					gb.glyph = Vhscroll_glyph;
 					add_glyph_rune_noret(&data, &gb, BEGIN_GLYPHS,
-						             0, GLYPH_CACHEL(w,
-								             HSCROLL_GLYPH_INDEX));
+							     0, GLYPH_CACHEL(w,
+									     HSCROLL_GLYPH_INDEX));
 				} else {
 					/* This duplicates code down below to add a newline to
 					   the end of an otherwise empty line. */
@@ -5113,8 +5113,10 @@ regenerate_window(struct window *w, Bufpos start_pos, Bufpos point, int type)
 	int need_modeline;
 
 	/* The lines had better exist by this point. */
-	if (!(dla = window_display_lines(w, type)))
+	if (!(dla = window_display_lines(w, type))) {
 		abort();
+		return;
+	}
 	Dynarr_reset(dla);
 	w->max_line_len = 0;
 

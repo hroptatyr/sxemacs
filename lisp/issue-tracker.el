@@ -38,7 +38,7 @@
 ;; IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ;;; Commentary:
-;; 
+;;
 ;;    This will hopefully turn into an interface to the SXEmacs issue
 ;;    tracker.  For now, it is basically a clone of xemacsbug with a
 ;;    couple of things changed to suit SXEmacs conditions.
@@ -75,8 +75,8 @@
 It takes the format (HEADER . VALUE) where both HEADER and VALUE are
 strings. See `compose-mail'."
   :group 'sxemacsbug
-  :type '(repeat 
-	  (cons (string :tag "Header") 
+  :type '(repeat
+	  (cons (string :tag "Header")
 		(string :tag "Value"))))
 
 (defcustom report-sxemacs-bug-beta-address "SXEmacs Devel <sxemacs-devel@sxemacs.org>"
@@ -90,8 +90,8 @@ strings. See `compose-mail'."
 It takes the format (HEADER . VALUE) where both HEADER and VALUE are
 strings. See `compose-mail'."
   :group 'sxemacsbug
-  :type '(repeat 
-	  (cons (string :tag "Header") 
+  :type '(repeat
+	  (cons (string :tag "Header")
 		(string :tag "Value"))))
 
 (defvar report-sxemacs-bug-orig-text nil
@@ -128,7 +128,7 @@ Also include a reliable recipe for triggering the bug, as well as
 any C and lisp back-traces that you may have.
 \(setq stack-trace-on-error t\), or \(setq debug-on-error t\) if you
 are familiar with the debugger, to get a lisp back-trace.
-To get a core file for the C back-trace on a GNU/Linux system do 
+To get a core file for the C back-trace on a GNU/Linux system do
 'ulimit -c unlimited' in the shell prior to starting SXEmacs.
 
 Type \\[report-sxemacs-bug-info] to visit in Info the SXEmacs Manual section
@@ -149,7 +149,7 @@ To your ~/.sxemacs/init.el")
   "Display the help buffer for `report-sxemacs-bug'."
   (declare-fboundp
    (with-electric-help
-    #'(lambda () 
+    #'(lambda ()
 	(define-key (current-local-map) "\C-c\C-i" 'report-sxemacs-bug-info)
 	(princ (substitute-command-keys report-sxemacs-bug-help)) nil) "*Bug Help*")))
 
@@ -363,7 +363,7 @@ and send the mail again.") nil) "*Bug Help*")))
 This is a convenience for reporting SXEmacs issues at
 http://issues.sxemacs.org/.  Returns t if any backtrace buffers are
 found and saved, nil otherwise."
-  (let ((ctrace (or (get-buffer (concat "*gdb-sxemacs-" 
+  (let ((ctrace (or (get-buffer (concat "*gdb-sxemacs-"
 					emacs-program-version
 					"*"))
 		    (get-buffer "*gdb-sxemacs*")))
@@ -398,7 +398,7 @@ http://issues.sxemacs.org/.  Returns t on success, nil otherwise."
 	    (write-region (point-min) (point-max) file))
 	  t)
       nil)))
-	  
+
 (defconst report-sxemacs-bugzilla-notrace
   "Thank you very much for taking the time to report a problem with SXEmacs
 ========================================================================
@@ -478,7 +478,7 @@ Devel <sxemacs-devel@sxemacs.org> mailing list.
       (insert report-sxemacs-bugzilla-notrace)
       (toggle-read-only 1)
       (pop-to-buffer (get-buffer "Reporting Bugs"))
-      (view-minor-mode 
+      (view-minor-mode
        nil #'(lambda (&rest not-used-buffer)
 	       (kill-buffer (get-buffer "Reporting Bugs"))
 	       (jump-to-register ?S)

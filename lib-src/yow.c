@@ -1,9 +1,9 @@
 /*
  * yow.c
- * 
+ *
  * Print a quotation from Zippy the Pinhead.
  * Qux <Kaufman-David@Yale> March 6, 1986
- * 
+ *
  * With dynamic memory allocation.
  */
 
@@ -48,7 +48,7 @@ main(int argc, char *argv[])
 #ifdef vms
 		int sz = snprintf(file, sizeof(file), "%s%s", PATH_DATA, YOW_FILE);
 #else
-	        int sz = snprintf(file, sizeof(file), "%s/%s", PATH_DATA, YOW_FILE);
+		int sz = snprintf(file, sizeof(file), "%s/%s", PATH_DATA, YOW_FILE);
 #endif
 		assert(sz>=0 && sz<sizeof(file));
 #else				/* !PATH_DATA */
@@ -161,4 +161,5 @@ yow(FILE * fp)
 	}
 	buf[i++] = 0;
 	printf("%s\n", buf);
+	free(buf);
 }

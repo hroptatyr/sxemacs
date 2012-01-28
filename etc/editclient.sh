@@ -9,4 +9,3 @@ else
   done
   exec gnuclient ${1+"$@"}
 fi
-

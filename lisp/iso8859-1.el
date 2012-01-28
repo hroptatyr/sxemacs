@@ -68,7 +68,7 @@
   (modify-syntax-entry ?\276 "_"     table)   ; threequarters
   (modify-syntax-entry ?\277 "_"     table)   ; questiondown
   ;;
-  ;; the upper-case characters (plus "multiply" and "ssharp") 
+  ;; the upper-case characters (plus "multiply" and "ssharp")
   ;;
   (modify-syntax-entry ?\300 "w" table)   ; Agrave
   (modify-syntax-entry ?\301 "w" table)   ; Aacute
@@ -162,7 +162,7 @@
 		    (list
 		     (list 'quote
 			   (list downcase nil nil nil))))))))
- 
+
  (?\300  ?\340)		; Agrave
  (?\301  ?\341)		; Aacute
  (?\302  ?\342)		; Acircumflex

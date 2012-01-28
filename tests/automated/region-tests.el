@@ -18,7 +18,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -40,7 +40,7 @@
 (with-temp-buffer
   ;; Using active regions
   (let ((zmacs-regions t)
-        (first-buffer (current-buffer)))
+	(first-buffer (current-buffer)))
     (Silence-Message
      (insert (buffer-name)))
     (Assert (not (region-exists-p)))

@@ -153,7 +153,7 @@ char *ptsname();
     fatal ("ioctl I_PUSH ptem: errno %d\n", errno);	\
   if (ioctl (xforkin, I_PUSH, "ldterm") == -1)		\
     fatal ("ioctl I_PUSH ldterm: errno %d\n", errno);	\
-  if (ioctl (xforkin, I_PUSH, "ttcompat") == -1) 	\
+  if (ioctl (xforkin, I_PUSH, "ttcompat") == -1)	\
     fatal ("ioctl I_PUSH ttcompat: errno %d\n", errno);
 
 /* Tell x11term.c and keyboard.c we have the system V streams feature.  */

@@ -136,18 +136,18 @@ Return the property list of DYNACAT.
 */
       (dynacat))
 {
-        CHECK_DYNACAT(dynacat);
-        return XDYNACAT_PLIST(dynacat);
+	CHECK_DYNACAT(dynacat);
+	return XDYNACAT_PLIST(dynacat);
 }
 
 static const struct lrecord_description dynacat_description[] = {
 	{XD_LISP_OBJECT, offsetof(struct dynacat_s, type)},
 	{XD_LISP_OBJECT, offsetof(struct dynacat_s, plist)},
-        {XD_OPAQUE_DATA_PTR, offsetof(struct dynacat_s, ptr)},
-        {XD_OPAQUE_DATA_PTR, offsetof(struct dynacat_s, mrkfun)},
-        {XD_OPAQUE_DATA_PTR, offsetof(struct dynacat_s, finfun)},
-        {XD_OPAQUE_DATA_PTR, offsetof(struct dynacat_s, prfun)},
-        {XD_OPAQUE_DATA_PTR, offsetof(struct dynacat_s, intprfun)},
+	{XD_OPAQUE_DATA_PTR, offsetof(struct dynacat_s, ptr)},
+	{XD_OPAQUE_DATA_PTR, offsetof(struct dynacat_s, mrkfun)},
+	{XD_OPAQUE_DATA_PTR, offsetof(struct dynacat_s, finfun)},
+	{XD_OPAQUE_DATA_PTR, offsetof(struct dynacat_s, prfun)},
+	{XD_OPAQUE_DATA_PTR, offsetof(struct dynacat_s, intprfun)},
 	{XD_END}
 };
 

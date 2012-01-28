@@ -207,9 +207,9 @@ struct device {
 	   because Win32, presumably the first port which does not use select()
 	   polling, DOES have handles for a console device. -- kkm */
 
-        /* We removed Win32 support, but does it make sense to move infd
-           and outfd back inside HAVE_UNIXOID_EVENT_LOOP conditionals?
-           -- njsf */
+	/* We removed Win32 support, but does it make sense to move infd
+	   and outfd back inside HAVE_UNIXOID_EVENT_LOOP conditionals?
+	   -- njsf */
 
 #ifdef HAVE_UNIXOID_EVENT_LOOP
 	/* holds some data necessary for SIGIO control.  Perhaps this should
@@ -283,7 +283,7 @@ extern_inline struct device *error_check_device_type(struct device *d,
   do {							\
     CHECK_DEVICE (dev);					\
     if (!(DEVICEP (dev)					\
-          && DEVICE_DISPLAY_P (XDEVICE (dev))))		\
+	  && DEVICE_DISPLAY_P (XDEVICE (dev))))		\
       dead_wrong_type_argument (Qdisplay, dev);		\
   } while (0)
 
@@ -291,7 +291,7 @@ extern_inline struct device *error_check_device_type(struct device *d,
   do {							\
     CONCHECK_DEVICE (dev);				\
     if (!(DEVICEP (dev)					\
-          && DEVICE_DISPLAY_P (XDEVICE (dev))))		\
+	  && DEVICE_DISPLAY_P (XDEVICE (dev))))		\
       wrong_type_argument (Qdisplay, dev);		\
   } while (0)
 
@@ -302,7 +302,7 @@ extern_inline struct device *error_check_device_type(struct device *d,
   do {							\
     CHECK_DEVICE (dev);					\
     if (!(DEVICEP (dev)					\
-          && DEVICE_PRINTER_P (XDEVICE (dev))))		\
+	  && DEVICE_PRINTER_P (XDEVICE (dev))))		\
       dead_wrong_type_argument (Qprinter, dev);		\
   } while (0)
 
@@ -310,7 +310,7 @@ extern_inline struct device *error_check_device_type(struct device *d,
   do {							\
     CONCHECK_DEVICE (dev);				\
     if (!(DEVICEP (dev)					\
-          && DEVICE_PRINTER_P (XDEVICE (dev))))		\
+	  && DEVICE_PRINTER_P (XDEVICE (dev))))		\
       wrong_type_argument (Qprinter, dev);		\
   } while (0)
 
@@ -449,7 +449,7 @@ int valid_device_class_p(Lisp_Object class);
 #define DEVICE_FRAME_LOOP(frmcons, d) \
   LIST_LOOP (frmcons, DEVICE_FRAME_LIST (d))
 #define CONSOLE_FRAME_LOOP_NO_BREAK(frmcons, devcons, con) \
-  CONSOLE_DEVICE_LOOP (devcons, con) 			   \
+  CONSOLE_DEVICE_LOOP (devcons, con)			   \
     DEVICE_FRAME_LOOP (frmcons, XDEVICE (XCAR (devcons)))
 
 void select_device_1(Lisp_Object);

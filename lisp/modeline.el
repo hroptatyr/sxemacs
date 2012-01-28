@@ -643,7 +643,7 @@ Normally nil in most modes, since there is no process to display.")
   'global-mode-string
   " %[("
   (cons modeline-minor-mode-extent
-        (list "" 'mode-name 'minor-mode-alist))
+	(list "" 'mode-name 'minor-mode-alist))
   (cons modeline-narrowed-extent "%n")
   'modeline-process
   ")%]----"

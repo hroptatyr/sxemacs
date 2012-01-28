@@ -1,4 +1,3 @@
-
 @iftex
 @chapter Correcting Mistakes (Yours or Emacs's)
 
@@ -322,7 +321,7 @@ say what mode you are in.
   If the manifestation of the bug is an Emacs error message, it is
 important to report not just the text of the error message but a backtrace
 showing how the Lisp program in Emacs arrived at the error.  To make the
-backtrace, you must execute the Lisp expression 
+backtrace, you must execute the Lisp expression
 @code{(setq @w{debug-on-error t})} before the error happens (that is to
 say, you must execute that expression and then make the bug happen).  This
 causes the Lisp debugger to run (@pxref{Lisp Debug}).  The debugger's
@@ -388,4 +387,3 @@ will be open when Emacs displays the screen for the first time.
 @xref{Init File}. Be warned: it is often difficult, and sometimes
 impossible, to fix a terminal-dependent bug without access to a terminal
 of the type that stimulates the bug.@refill
-

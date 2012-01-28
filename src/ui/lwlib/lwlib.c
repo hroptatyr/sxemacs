@@ -324,8 +324,8 @@ widget_value *replace_widget_value_tree(widget_value * node,
 
 		free_widget_value_contents(node);
 		*node = *copy;
-                /* free the node, but not its contents. */
-		free_widget_value(copy);	
+		/* free the node, but not its contents. */
+		free_widget_value(copy);
 	}
 	return node;
 }
@@ -898,9 +898,9 @@ static void instantiate_widget_instance(widget_instance * instance)
 		fprintf(stderr, "No creation function for widget type %s\n",
 			instance->info->type);
 		abort();
+	} else {
+		instance->widget = (*function) (instance);
 	}
-
-	instance->widget = (*function) (instance);
 
 	if (!instance->widget)
 		abort();

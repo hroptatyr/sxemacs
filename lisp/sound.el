@@ -108,8 +108,8 @@
 ;; #### It is now :) -hroptatyr
 (defcustom sound-extension-list (cond ((eq system-type 'linux)
 				       '(".wav" ".au" ".mp3" ".mka" ".ogg"
-                                         ".aac" ".ac3" ".mp4" ".flac"
-                                         ".mpc" ".mpa"))
+					 ".aac" ".ac3" ".mp4" ".flac"
+					 ".mpc" ".mpa"))
 				      (t
 				       '(".au")))
   "List of filename extensions to complete sound file name with."
@@ -137,10 +137,10 @@ when an explicit volume parameter is omitted.")
   "Search for FILENAME in `default-sound-directory-list'
 with respect to the extensions given by `sound-extension-list'."
   (let ((exts (cond ((listp sound-extension-list)
-                     sound-extension-list)
-                    ((stringp sound-extension-list)
-                     (split-string sound-extension-list ":"))
-                    (t nil))))
+		     sound-extension-list)
+		    ((stringp sound-extension-list)
+		     (split-string sound-extension-list ":"))
+		    (t nil))))
 
     (cond ((file-exists-p filename)
 	   (expand-file-name filename))
@@ -158,9 +158,9 @@ with respect to the extensions given by `sound-extension-list'."
 (defun make-sound-alist-item (filename sound-name &optional volume)
   "Return an item suitable for `sound-alist'."
   (let* ((file (locate-sound-file filename))
-         ;; let's create media-streams
-         (stream (make-media-stream :file file))
-         (data))
+	 ;; let's create media-streams
+	 (stream (make-media-stream :file file))
+	 (data))
 
     (unless file
       (error "Couldn't load sound file %s" filename))
@@ -178,11 +178,11 @@ with respect to the extensions given by `sound-extension-list'."
 ;;       (and buf (kill-buffer buf)))
 
     (nconc (list sound-name)
-           (if (and volume (not (eq 0 volume)))
-               (list ':volume volume))
-           (if data
-               (list ':sound data))
-           (list ':stream stream))))
+	   (if (and volume (not (eq 0 volume)))
+	       (list ':volume volume))
+	   (if data
+	       (list ':sound data))
+	   (list ':stream stream))))
 
 ;;;###autoload
 (defun load-sound-file (filename sound-name &optional volume)
@@ -202,11 +202,11 @@ nVolume (0 for default): ")
     (error "volume not an integer or nil"))
 
   (let ((item (make-sound-alist-item filename sound-name volume))
-        (old (assq sound-name sound-alist)))
+	(old (assq sound-name sound-alist)))
 
       ;; some conses in sound-alist might have been dumped with emacs.
       (when old
-        (setq sound-alist (delq old (copy-sequence sound-alist))))
+	(setq sound-alist (delq old (copy-sequence sound-alist))))
 
       (setq sound-alist (cons item sound-alist)))
   sound-name)
@@ -274,8 +274,8 @@ See `play-media-stream-synchronously' and
 `play-media-stream&'."
   (let* ((vol (or volume default-media-stream-volume)))
     (if (and (fboundp #'play-media-stream&)
-             (not synchronous-sounds))
-        (play-media-stream& stream device sentinel vol)
+	     (not synchronous-sounds))
+	(play-media-stream& stream device sentinel vol)
       (play-media-stream-synchronously stream device sentinel vol))))
 
 ;;;###autoload
@@ -300,13 +300,13 @@ only valid symbol is 'finished\).  See `set-media-thread-sentinel'."
   (let ((data (cdr-safe (assq sound sound-alist))))
     (when (and data default-audio-device)
       (let ((ms (or (plist-get data :stream)
-                    (let ((s (plist-get data :sound)))
-                      (and (stringp s)
-                           (make-media-stream :data s)))))
-            (vol
-             (plist-get data :volume
-                        (or volume default-media-stream-volume bell-volume))))
-        (when ms
-          (play-media-stream ms device sentinel vol))))))
+		    (let ((s (plist-get data :sound)))
+		      (and (stringp s)
+			   (make-media-stream :data s)))))
+	    (vol
+	     (plist-get data :volume
+			(or volume default-media-stream-volume bell-volume))))
+	(when ms
+	  (play-media-stream ms device sentinel vol))))))
 
 ;;; sound.el ends here.

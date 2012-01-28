@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 
-/* The following line tells the configuration script what sort of 
+/* The following line tells the configuration script what sort of
    operating system this machine is likely to run.
    USUAL-OPSYS="solaris2-5" */
 
@@ -78,7 +78,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
    Define neither one if an assembler-language alloca
    in the file alloca.s should be used.	 */
 
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 
 /* Specify the font for X to use.
    This used to be Rom14.500; that's nice on the X server shipped with

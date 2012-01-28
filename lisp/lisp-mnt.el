@@ -26,7 +26,7 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: FSF 20.2.
- 
+
 ;;; Commentary:
 
 ;; This minor mode adds some services to Emacs-Lisp editing mode.
@@ -34,7 +34,7 @@
 ;; First, it knows about the header conventions for library packages.
 ;; One entry point supports generating synopses from a library directory.
 ;; Another can be used to check for missing headers in library files.
-;; 
+;;
 ;; Another entry point automatically addresses bug mail to a package's
 ;; maintainer or author.
 
@@ -42,20 +42,20 @@
 
 ;; This file is an example of the header conventions.  Note the following
 ;; features:
-;; 
+;;
 ;;    * Header line --- makes it possible to extract a one-line summary of
 ;; the package's uses automatically for use in library synopses, KWIC
 ;; indexes and the like.
-;; 
+;;
 ;;    Format is three semicolons, followed by the filename, followed by
 ;; three dashes, followed by the summary.  All fields space-separated.
-;; 
+;;
 ;;    * Author line --- contains the name and net address of at least
 ;; the principal author.
-;; 
+;;
 ;;    If there are multiple authors, they should be listed on continuation
 ;; lines led by ;;<TAB><TAB> (or multiple blanks), like this:
-;; 
+;;
 ;; ;; Author: Ashwin Ram <Ram-Ashwin@cs.yale.edu>
 ;; ;;		Dave Sill <de5@ornl.gov>
 ;; ;;		David Lawrence <tale@pawl.rpi.edu>
@@ -63,10 +63,10 @@
 ;; ;;		Joe Wells <jbw@maverick.uswest.com>
 ;; ;;		Dave Brennan <brennan@hal.com>
 ;; ;;		Eric Raymond <esr@snark.thyrsus.com>
-;; 
+;;
 ;; This field may have some special values; notably "FSF", meaning
 ;; "Free Software Foundation".
-;; 
+;;
 ;;    * Maintainer line --- should be a single name/address as in the Author
 ;; line, or an address only, or the string "FSF".  If there is no maintainer
 ;; line, the person(s) in the Author field are presumed to be it.  The example
@@ -75,19 +75,19 @@
 ;; that does "send mail to the author" without having to mine the name out by
 ;; hand. Please be careful about surrounding the network address with <> if
 ;; there's also a name in the field.
-;; 
+;;
 ;;    * Created line --- optional, gives the original creation date of the
 ;; file.  For historical interest, basically.
-;; 
+;;
 ;;    * Version line --- intended to give the reader a clue if they're looking
 ;; at a different version of the file than the one they're accustomed to.  This
 ;; may be an RCS or SCCS header.
-;; 
+;;
 ;;    * Adapted-By line --- this is for FSF's internal use.  The person named
 ;; in this field was the one responsible for installing and adapting the
 ;; package for the distribution.  (This file doesn't have one because the
 ;; author *is* one of the maintainers.)
-;; 
+;;
 ;;    * Keywords line --- used by the finder code (now under construction)
 ;; for finding Emacs Lisp code related to a topic.
 ;;
@@ -98,13 +98,13 @@
 ;;
 ;;    * Commentary line --- enables Lisp code to find the developer's and
 ;; maintainers' explanations of the package internals.
-;; 
+;;
 ;;    * Change log line --- optional, exists to terminate the commentary
 ;; section and start a change-log part, if one exists.
-;; 
+;;
 ;;    * Code line --- exists so Lisp can know where commentary and/or
 ;; change-log sections end.
-;; 
+;;
 ;;    * Footer line --- marks end-of-file so it can be distinguished from
 ;; an expanded formfeed or the results of truncation.
 
@@ -314,7 +314,7 @@ The return value has the form (NAME . ADDRESS)."
 
 (defun lm-last-modified-date (&optional file)
   "Return the modify-date given in file FILE, or current buffer if FILE is nil."
-  (save-excursion 
+  (save-excursion
     (if file
 	(find-file file))
     (prog1
@@ -325,7 +325,7 @@ The return value has the form (NAME . ADDRESS)."
 	       (lm-code-mark) t))
 	    (format "%s %s %s"
 		    (buffer-substring (match-beginning 3) (match-end 3))
-		    (nth (string-to-int 
+		    (nth (string-to-int
 			  (buffer-substring (match-beginning 2) (match-end 2)))
 			 '("" "Jan" "Feb" "Mar" "Apr" "May" "Jun"
 			   "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"))
@@ -342,7 +342,7 @@ The return value has the form (NAME . ADDRESS)."
 (defun lm-version (&optional file)
   "Return the version listed in file FILE, or current buffer if FILE is nil.
 This can be found in an RCS or SCCS header to crack it out of."
-  (save-excursion 
+  (save-excursion
     (if file
 	(find-file file))
     (prog1
@@ -356,7 +356,7 @@ This can be found in an RCS or SCCS header to crack it out of."
 	     (buffer-substring (match-beginning 1) (match-end 1)))
 
 	    ;; Look for an SCCS header
-	    ((re-search-forward 
+	    ((re-search-forward
 	      (concat
 	       (regexp-quote "@(#)")
 	       (regexp-quote (file-name-nondirectory (buffer-file-name)))
@@ -555,7 +555,7 @@ Prompts for bug subject.  Leaves you in a mail buffer."
   (let ((package	(lm-get-package-name))
 	(addr		(lm-maintainer))
 	(version	(lm-version)))
-    (declare-fboundp 
+    (declare-fboundp
      (mail nil
 	   (if addr
 	       (concat (car addr) " <" (cdr addr) ">")

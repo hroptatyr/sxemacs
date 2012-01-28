@@ -19,7 +19,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -329,8 +329,8 @@ the Assert macro checks for correctness."
       (progn
 	(set-ucs-char code scaron)
 	(Assert (eq scaron (ucs-char code)))))
-  
+
     (Assert (eq nil (set-ucs-char #x1ffff scaron)))
     (Check-Error wrong-type-argument (set-ucs-char -10000 scaron)))
-  
+
   )

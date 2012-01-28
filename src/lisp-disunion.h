@@ -24,17 +24,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /*
  Format of a non-union-type Lisp Object
 
-             3         2         1         0
+	     3         2         1         0
        bit  10987654321098765432109876543210
-            --------------------------------
-            VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTT
+	    --------------------------------
+	    VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTT
 
    Integers are treated specially, and look like this:
 
-             3         2         1         0
+	     3         2         1         0
        bit  10987654321098765432109876543210
-            --------------------------------
-            VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVT
+	    --------------------------------
+	    VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVT
 
  For integral Lisp types, i.e. integers and characters, the value
  bits are the Lisp object.  Some people call such Lisp_Objects "immediate".

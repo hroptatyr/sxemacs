@@ -16,7 +16,7 @@ libraries which themselves depend on more atomic libraries and so
 forth.
 
 @menu
-* Prerequisites::		External library dependencies. 
+* Prerequisites::		External library dependencies.
 * Media Streams::		The concept of media streams.
 * Audio Devices::		Audio output facilities.
 * Media Threads::		Plugging a stream to an output device.
@@ -38,7 +38,7 @@ your speakers (or somewhere else).
 In the land of ASCII-arts diagrams this would translate to:
 @example
 +------------+   +-----------+   +-------------+  +------------+
-| media file |   | media lib |   |   SXEmacs   |  | audio lib  |  
+| media file |   | media lib |   |   SXEmacs   |  | audio lib  |
 |------------|-->|-----------|-->|-------------|->|------------|->...
 | e.g.       |   | parser    |   | bind to var |  | connect to |
 | .wav  .mp3 |   | demuxer   |   | start/stop  |  | soundcard  |
@@ -117,7 +117,7 @@ NAS depend on X which disqualifies it for non-local or tty-only use.
 @url{ftp://ftp.gnome.org/pub/gnome/sources/esound/0.2/esound-0.2.36.tar.bz2}
 
 @item Pros:
-device independent (if used with ALSA), 
+device independent (if used with ALSA),
 network-mode possible, mixing possible, small
 @item Cons:
 high latency, not recent, not very configurable
@@ -145,7 +145,7 @@ optional: ALSA, libasyncns, sndfile
 @url{svn co svn://0pointer.de/pulseaudio/trunk pulseaudio}
 
 @item Pros:
-device independent (if used with ALSA), 
+device independent (if used with ALSA),
 network-mode possible, mixing possible, multiple inputs, multiple
 outputs, low latency, very configurable, @emph{developers' choice}
 @item Cons:
@@ -166,7 +166,7 @@ pulses or other running audio servers (like jack, esd, etc.).
 
 @itemize
 @item Availability: Unix-wide
-@item Dependencies: OSS, (KDE); 
+@item Dependencies: OSS, (KDE);
 optional: ALSA, Jack, ESD, mas, NAS, libaudiofile, Qt, sgilibaudio
 @item Webpage: @url{http://www.arts-project.org/}
 @item Download:
@@ -177,7 +177,7 @@ standalone version:
 @url{http://arts-project.org/download/arts-0.5.4.tar.gz}
 
 @item Pros:
-device independent (if used with ALSA or other sound servers), 
+device independent (if used with ALSA or other sound servers),
 network-mode possible, mixing possible, very flexible, very configurable
 @item Cons:
 standalone version discontinued, lots of processes, uses/needs MCOP
@@ -196,7 +196,7 @@ starting 80% of a bloated KDE, we highly discourage its use.
 @item Availability: Unix-wide
 @item Dependencies: ALSA
 @item Webpage: @url{http://jackit.sourceforge.net/}
-@item Download: 
+@item Download:
 
 @url{http://prdownloads.sourceforge.net/jackit/},
 
@@ -277,7 +277,7 @@ only available under linux, needs kernel support
 
 @url{http://www.mega-nerd.com/libsndfile/libsndfile-1.0.15.tar.gz}
 
-@item Maximally provided formats: 
+@item Maximally provided formats:
 @item Notes:
 @item Known caveats with SXE: none
 @end itemize
@@ -388,7 +388,7 @@ WAV, Ogg/Vorbis, A-law, .wve
 
 @url{cvs -z3 -d:pserver:anonymous@@cvs.sf.net:/cvsroot/xine co xine-lib}
 
-@item Maximally provided formats: 
+@item Maximally provided formats:
 @item Notes:
 @item Known caveats with SXE: not working
 @end itemize
@@ -406,7 +406,7 @@ WAV, Ogg/Vorbis, A-law, .wve
 
 @url{cvs -z3 -d:pserver:anoncvs@@anoncvs.freedesktop.org:/cvs/gstreamer co gstreamer}
 
-@item Maximally provided formats: 
+@item Maximally provided formats:
 @item Notes:
 @item Known caveats with SXE: not working
 @end itemize
@@ -718,7 +718,7 @@ See @code{init-asynchronousity}.
 
 Optional second argument @var{device} must be an audio device created
 by @code{make-audio-device}.
-If omitted @code{device} defaults to the value of 
+If omitted @code{device} defaults to the value of
 @code{default-audio-device}.
 
 Optional third argument @var{sentinel} specifies a lisp function to be
@@ -873,7 +873,7 @@ You should probably add things to this list by calling the function
 @code{load-sound-file}.
 
 Note: SXEmacs must be built with sound support for your system.  Not all
-systems support sound. 
+systems support sound.
 Note: The pitch, duration, and volume options are available everywhere,
 but many X servers ignore the @code{pitch} option.
 

@@ -36,7 +36,7 @@ AC_DEFUN([_SXE_CHECK_POSTGRESQL], [dnl
 		[have_PQserverVersion=yes
 		 AC_DEFINE([HAVE_PQSERVERVERSION], [1],
 			 [Defined when PQserverVersion() is available])],
-	        [have_PQserverVersion=no])
+		[have_PQserverVersion=no])
 
 
 	if test "$ac_cv_header_libpq_fe_h" = "yes"; then
@@ -95,12 +95,12 @@ AC_DEFUN([SXE_CHECK_POSTGRESQL], [dnl
 				AC_MSG_WARN([Sadly OpenSSL is not available or is misconfigured,])
 				AC_MSG_WARN([and '--with-openssl=no' was passed. Disabling PostgreSQL])
 				have_postgresql="no"
- 			else
- 				AC_MSG_WARN([Your PostgreSQL seems to require OpenSSL.])
- 				AC_MSG_WARN([Sadly OpenSSL is not available or is misconfigured.])
- 				AC_MSG_WARN([Performing the actual check anyway, cross your fingers!])
- 				AC_MSG_WARN([If you still encounter problems disable using '--with-postgresql=no'.])
- 				AC_MSG_WARN([NOTE: '--with-openssl=no' will also implictly disable PostgreSQL in this configuration.])
+			else
+				AC_MSG_WARN([Your PostgreSQL seems to require OpenSSL.])
+				AC_MSG_WARN([Sadly OpenSSL is not available or is misconfigured.])
+				AC_MSG_WARN([Performing the actual check anyway, cross your fingers!])
+				AC_MSG_WARN([If you still encounter problems disable using '--with-postgresql=no'.])
+				AC_MSG_WARN([NOTE: '--with-openssl=no' will also implictly disable PostgreSQL in this configuration.])
 			fi
 		fi
 	else

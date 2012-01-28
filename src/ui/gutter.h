@@ -91,7 +91,7 @@ int display_boxes_in_gutter_p(struct frame *f, struct display_box *db,
    ? WINDOW_GUTTER_BORDER_WIDTH (f, pos)	\
    : 0)
 #define WINDOW_REAL_GUTTER_BOUNDS(f, pos)	\
-   (WINDOW_REAL_GUTTER_SIZE (f,pos) + 		\
+   (WINDOW_REAL_GUTTER_SIZE (f,pos) +		\
     2 * WINDOW_REAL_GUTTER_BORDER_WIDTH (f,pos))
 
 /* these macros predicate size on position and type of window */

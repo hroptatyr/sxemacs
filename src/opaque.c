@@ -76,20 +76,25 @@ make_opaque(const void *data, size_t size)
 {
 	Lisp_Opaque *p = (Lisp_Opaque *)
 		alloc_lcrecord(aligned_sizeof_opaque(size), &lrecord_opaque);
-	p->size = size;
 
-	if (data == OPAQUE_CLEAR)
-		memset(p->data, '\0', size);
-	else if (data == OPAQUE_UNINIT)
-		DO_NOTHING;
-	else
-		memcpy(p->data, data, size);
+	assert(p!=NULL);
+	if(p != NULL) {
+		p->size = size;
 
-	{
-		Lisp_Object val;
-		XSETOPAQUE(val, p);
-		return val;
+		if (data == OPAQUE_CLEAR)
+			memset(p->data, '\0', size);
+		else if (data == OPAQUE_UNINIT)
+			DO_NOTHING;
+		else
+			memcpy(p->data, data, size);
+
+		{
+			Lisp_Object val;
+			XSETOPAQUE(val, p);
+			return val;
+		}
 	}
+	return Qnil;
 }
 
 /* This will not work correctly for opaques with subobjects! */
@@ -128,7 +133,7 @@ static void
 print_opaque_ptr(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	const Lisp_Opaque_Ptr *p = XOPAQUE_PTR(obj);
-	
+
 	write_fmt_string(printcharfun,
 			 "#<INTERNAL OBJECT (SXEmacs bug?) "
 			 "(opaque-ptr, adr=%p) %p>", p->ptr, p);

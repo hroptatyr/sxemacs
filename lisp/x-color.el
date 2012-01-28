@@ -49,22 +49,22 @@
 
 (defun x-read-color-completion-table ()
   "Color table for interactive completion"
-  (unless (and (skiplistp x-color-slist) 
+  (unless (and (skiplistp x-color-slist)
 	       (> (skiplist-size x-color-slist) 0))
     (x-color-read-system-colors))
   (let ((res))
-    (map-skiplist #'(lambda (key val) 
-		      (setq res (nconc res (list (list (format "%s" key)))))) 
+    (map-skiplist #'(lambda (key val)
+		      (setq res (nconc res (list (list (format "%s" key))))))
 		  x-color-slist)
     res))
 
 (defun x-color-list ()
   "Color list"
-  (unless (and (skiplistp x-color-slist) 
+  (unless (and (skiplistp x-color-slist)
 	       (> (skiplist-size x-color-slist) 0))
     (x-color-read-system-colors))
   (let ((res))
-    (map-skiplist #'(lambda (key val) 
+    (map-skiplist #'(lambda (key val)
 		      (setq res (nconc res (list (format "%s" key)))))
 		  x-color-slist)
     res))
@@ -74,14 +74,14 @@
   "Retrieve the color by NAME"
   (interactive)
   (x-color-rgb-components name))
-  
+
 (defun x-find-color-rgb (name &optional nearest)
   "Retrieve the color by NAME"
-  (unless (or (symbolp name) 
+  (unless (or (symbolp name)
 	      (stringp name)
 	      (x-rgb-color-p name))
     (error 'wrong-type-argument name))
-  (unless (and (skiplistp x-color-slist) 
+  (unless (and (skiplistp x-color-slist)
 	       (> (skiplist-size x-color-slist) 0))
     (x-color-read-system-colors))
   (if (x-rgb-color-p name)
@@ -94,7 +94,7 @@
 	   (color-sym (intern color-name))
 	   (color-lc-sym (intern (downcase color-name)))
 	   (color-ns-sym (intern (replace-in-string color-name " " "")))
-	   (color-lcns-sym (intern (replace-in-string 
+	   (color-lcns-sym (intern (replace-in-string
 				    (downcase color-name)
 				    " " ""))))
       (or (get-skiplist x-color-slist color-sym)
@@ -108,17 +108,17 @@
   "Parse RGB color specification and return a list of integers (R G B).
 #FEFEFE and rgb:fe/fe/fe style specifications are parsed.
 Returns NIL if RGB color specification is invalid."
-  (let ((case-fold-search t) 
+  (let ((case-fold-search t)
 	matches)
-    (if (string-match #r"\([0-9.]+\)\s-+\([0-9.]+\)\s-+\([0-9.]+\)" 
+    (if (string-match #r"\([0-9.]+\)\s-+\([0-9.]+\)\s-+\([0-9.]+\)"
 		      color)
 	;; recurse and parse hexadecimal color
-	(x-color-parse-rgb-components 
-	 (apply 'format "#%02X%02X%02X" 
+	(x-color-parse-rgb-components
+	 (apply 'format "#%02X%02X%02X"
 		(mapcar #'(lambda (c) (if (floatp c) c (* 255 c)))
 			(mapcar #'(lambda (i)
-				    (let ((m 
-					   (string-to-number 
+				    (let ((m
+					   (string-to-number
 					    (match-string i color))))
 				      (if (<= 0 m 1)
 					  (* 255 m)
@@ -139,7 +139,7 @@ Returns NIL if RGB color specification is invalid."
       (setq matches (mapcar #'(lambda (i) (match-string i color))
 			    '(1 2 3)))
       ;; Make sure all components have at most 4 hex digits
-      (when (eval 
+      (when (eval
 	     (append '(and)
 		     (mapcar #'(lambda (component)
 				 (> 5 (length component) 0))
@@ -189,7 +189,7 @@ Returns NIL if RGB color specification is invalid."
 into their components.
 RGB values for color names are looked up using 'x-find-color-rgb'."
   (let ((case-fold-search t)
-	(color-rgb 
+	(color-rgb
 	 (cond ((x-rgb-color-p color)
 		(mapcar #'(lambda (f)
 			    (funcall f color))
@@ -205,20 +205,20 @@ RGB values for color names are looked up using 'x-find-color-rgb'."
 		     (= 3 (length color)))
 		color))))
     (cond ((and color-rgb
-		(eval (append '(and) 
-			      (mapcar #'(lambda (c) 
+		(eval (append '(and)
+			      (mapcar #'(lambda (c)
 					  (and (numberp c) (<= 0 c 1)))
 				      color))))
 	   (mapcar #'(lambda (c) (* 65535 c)) color))
 	  ((and color-rgb
-		(eval (append '(and) 
-			      (mapcar #'(lambda (c) 
+		(eval (append '(and)
+			      (mapcar #'(lambda (c)
 					  (and (numberp c) (<= 0 c 255)))
 				      color))))
 	   (mapcar #'(lambda (c) (lsh c 8)) color))
 	  ((and color-rgb
-		(eval (append '(or) 
-			      (mapcar #'(lambda (c) 
+		(eval (append '(or)
+			      (mapcar #'(lambda (c)
 					  (and (numberp c) (<= 0 c 65535)))
 				      color))))
 	   color)
@@ -233,7 +233,7 @@ RGB values for color names are looked up using 'x-find-color-rgb'."
 (defun x-read-rgb-file (filename)
   "Read the colors from FILENAME. The file is expected to have the same
 format as X11 rgb.txt"
-  (let ((rgb-regex 
+  (let ((rgb-regex
 	 #r"^\s-*\([0-9]+\)\s-+\([0-9]+\)\s-+\([0-9]+\)\s-+\([a-zA-Z0-9 ]+\)\s-*$"))
     (unless (skiplistp x-color-slist)
       (setq x-color-slist (make-skiplist)))
@@ -250,21 +250,21 @@ format as X11 rgb.txt"
 	    (widen)
 	    (goto-char (point-min))
 	    (while (re-search-forward rgb-regex nil t)
-	      (let ((rgb-matches 
-		     (mapcar #'(lambda (i) 
+	      (let ((rgb-matches
+		     (mapcar #'(lambda (i)
 				 (lsh (read (match-string i)) 8))
 			     '(1 2 3)))
 		    (color-name (match-string 4)))
 		(mapc #'(lambda (name)
 			  (put-skiplist x-color-slist
-					(intern name) 
+					(intern name)
 					rgb-matches))
-		      (list color-name 
+		      (list color-name
 			    (downcase color-name)
 			    (replace-in-string color-name " " "")
-			    (replace-in-string (downcase color-name) 
+			    (replace-in-string (downcase color-name)
 					       " " "")))))))))))
-  
+
 (defun x-color-read-system-colors ()
   "Read the system colors"
   (when (locate-data-file "rgb.txt")
@@ -304,7 +304,7 @@ of gray, thus the name."
 	  (dB (- (caddr color1) (caddr color2))))
       (+ (* dR dR) (* dG dG) (* dB dB)))))
 
-    
+
 (defsubst x-color-distance-1 (color1 color2)
   "Return the color cube distance between the two colors.
 Assumes COLOR1 is an 8 bit rgb tupple. "
@@ -321,7 +321,7 @@ Assumes COLOR1 is an 8 bit rgb tupple. "
 
 (defvar x-nearest-color-favor-non-gray-threshold 0.065
   "If the approximated color is not close enough to the
-gray diagonal of the RGB cube, favor non-gray colors. 
+gray diagonal of the RGB cube, favor non-gray colors.
 The default number 0.065 is an empirical ad-hoc'ery")
 
 (defun x-nearest-color (color &optional colorlist) "
@@ -329,14 +329,14 @@ Return the nearest COLOR in COLORLIST.
 COLOR can be a color name, an '(r g b) tuple or a color specification.
 #FEFEFE and rgb:fe/fe/fe style specifications are parsed.
 COLORLIST is a list of colors in the same acceptable formats as COLOR.
-Returns NIL if color specification is invalid, or no colors 
+Returns NIL if color specification is invalid, or no colors
 close enough are found."
   (let (color-rgb)
     (when (or (stringp color) (symbolp color))
       (setq color-rgb (x-rgb-to-8bits (find-color-rgb color))))
     (when (not color-rgb)
       (error 'invalid-argument color))
-    (let ((favor-non-gray (>= (apply 'x-color-off-gray-diag color-rgb) 
+    (let ((favor-non-gray (>= (apply 'x-color-off-gray-diag color-rgb)
 			      x-nearest-color-favor-non-gray-threshold))
 	  (best-distance 195076)	;; Max possible distance: 3 * 255^2 + 15
 	  best-color)
@@ -349,8 +349,8 @@ close enough are found."
 			(< distance best-distance)
 			;; The candidate color is on the gray diagonal
 			;; if its RGB components are all equal.
-			(or (/= (x-rgb-color-red cand-rgb) 
-				(x-rgb-color-green cand-rgb)) 
+			(or (/= (x-rgb-color-red cand-rgb)
+				(x-rgb-color-green cand-rgb))
 			    (/= (x-rgb-color-green cand-rgb)
 				(x-rgb-color-blue cand-rgb))
 			    (not favor-non-gray)))

@@ -222,7 +222,7 @@ mailing list.
 where you'll find release tarballs and release to release patches
 available for download.
 
-@uref{http://downloads.sxemacs.org/snapshots/, SXEmacs snapshot downloads} 
+@uref{http://downloads.sxemacs.org/snapshots/, SXEmacs snapshot downloads}
 is where you can find snapshot tarballs which are uploaded from time
 to time.  Please note that these snapshots can sometimes be very
 unstable.
@@ -280,13 +280,13 @@ identification.
 
 Whenever you see unscrupulous people carrying your nickname or your
 nickname is ghosted because of a reconnection, you can just
-@code{/nickserv ghost <yournickname> <yourpassword>} to send the 
+@code{/nickserv ghost <yournickname> <yourpassword>} to send the
 other client to oblivion.
 
 Okay, now that you've registered yourself with freenode, you're
 nickname can be referred to, independently from whether you are
 carrying that nick or not. Just do @code{/nickserv info <nickname>}
-to obtain some information on a nickname you see and like to refer 
+to obtain some information on a nickname you see and like to refer
 to.
 @item
 HowTo to be listed in the channel access list
@@ -917,10 +917,10 @@ they @emph{all} have two things in common@dots{}
 
 @enumerate
 @item
-A diff is always sent to 
+A diff is always sent to
 @email{sxemacs-patches@@sxemacs.org, SXEmacs Patches}.
 @item
-The diff is always in @dfn{unified} format  
+The diff is always in @dfn{unified} format
 @code{diff -u oldfile newfile}
 @end enumerate
 
@@ -1105,7 +1105,7 @@ together with a detailed description of your changes to the
 From time to time someone will wander into the mailing list or our
 IRC channel saying something like "ya know, SXEmacs is cool, but it
 would truly @emph{rock} if it had @dfn{fooble-klangers}.  How 'bout
-it guys?  Can somebody please add @dfn{fooble-klangers} to SXEmacs?".  
+it guys?  Can somebody please add @dfn{fooble-klangers} to SXEmacs?".
 
 @emph{That's} a @dfn{Feature Request}.
 
@@ -1345,11 +1345,11 @@ Send a release announcement to @email{sxemacs-devel@@sxemacs.org,
 SXEmacs Devel} and comp.emacs.xemacs.
 
 @item
-Make a new release and  announcement on Freshmeat (our FM id: 52281) 
+Make a new release and  announcement on Freshmeat (our FM id: 52281)
 
 @item
 Commit the first patch to the next version, which would be adding a
-@file{ChangeLog.d/ChangeLog-@nver} 
+@file{ChangeLog.d/ChangeLog-@nver}
 @end itemize
 
 
@@ -1360,7 +1360,7 @@ Commit the first patch to the next version, which would be adding a
 
 How do you get a new feature into SXEmacs?  It's not hard, but
 remember this, we look at any new feature in this order of
-priority... 
+priority...
 
 @enumerate 1
 @item
@@ -1371,7 +1371,7 @@ A plan of action with @dfn{Proof of concept} code.
 A plan of action with a willingness to write the code.
 @item
 An idea with a willingness to move it to a real plan and then to
-code. 
+code.
 @item
 An idea with a willingness to help test any code resulting from it.
 @item
@@ -1517,7 +1517,7 @@ See how to patches in chapter @xref{Patches}.
                                    A git repo that others have read
                                    access to .
 * Setting up a private repos::     A git repo only you have access to.
-* Other Developers' Repositories:: Git repos of regular developers of 
+* Other Developers' Repositories:: Git repos of regular developers of
                                    SXEmacs.
 @end menu
 
@@ -1610,13 +1610,13 @@ git config hooks.showrev "git show -C %s; echo"
 Take note that the SXEmacs mailing lists will funnel any post from
 non-subscribers into the moderation queue.  So make sure that the
 address you set @dfn{hooks.envelopesender} to is subscribed to the
-patches list. 
+patches list.
 
-Also be aware that using this @dfn{post-receive} hook will mean that 
+Also be aware that using this @dfn{post-receive} hook will mean that
 every time you push to your publicly accessible repo, a message will be
-sent to sxemacs-patches; this includes instances where you merely 
-are pulling the latest from mainline and mirroring. Hence, the use of 
-aliases as discussed below may be preferable. 
+sent to sxemacs-patches; this includes instances where you merely
+are pulling the latest from mainline and mirroring. Hence, the use of
+aliases as discussed below may be preferable.
 
 @subsection @anchor{Automating with Aliases}Automating with Aliases
 

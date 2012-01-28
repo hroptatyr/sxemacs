@@ -70,7 +70,7 @@ If EXPLICIT-DEFAULTS is not nil and not t, it should be something
 that is allowable as a value for `font-lock-defaults' and will be
 used to initialize the Font Lock variables."
 
-  (with-boundp '(font-lock-auto-fontify 
+  (with-boundp '(font-lock-auto-fontify
 		 font-lock-mode-disable-list font-lock-mode-enable-list
 		 font-lock-keywords)
     (when

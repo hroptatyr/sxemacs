@@ -48,7 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #define NO_T_CHARS_DEFINES
 
 /* Use our own unexec routines */
-/* 
+/*
  * everything is pdump now. --SY
  * #define UNEXEC "unexnext.o"
  */

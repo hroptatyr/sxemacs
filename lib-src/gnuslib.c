@@ -8,15 +8,15 @@
 
  Copyright (C) 1989 Free Software Foundation, Inc.
 
- Author: Andy Norman (ange@hplb.hpl.hp.com), based on 
-         'etc/server.c' and 'etc/emacsclient.c' from the 18.52 GNU
-         Emacs distribution.
+ Author: Andy Norman (ange@hplb.hpl.hp.com), based on
+	 'etc/server.c' and 'etc/emacsclient.c' from the 18.52 GNU
+	 Emacs distribution.
 
  Please mail bugs and suggestions to the author at the above address.
 */
 
-/* HISTORY 
- * 11-Nov-1990		bristor@simba	
+/* HISTORY
+ * 11-Nov-1990		bristor@simba
  *    Added EOT stuff.
  */
 
@@ -84,7 +84,7 @@ int make_connection(char *hostarg, int portarg, int *s)
 #endif
 
 	if (hostarg != NULL) {
-		/* hostname was given explicitly, via cmd line arg or GNU_HOST, 
+		/* hostname was given explicitly, via cmd line arg or GNU_HOST,
 		 * so obey it. */
 #ifdef UNIX_DOMAIN_SOCKETS
 		if (!strcmp(hostarg, "unix")) {
@@ -122,7 +122,7 @@ int make_connection(char *hostarg, int portarg, int *s)
 #ifdef SYSV_IPC
 /*
   connect_to_ipc_server -- establish connection with server process via SYSV IPC
-  			   Returns msqid for server if successful.
+			   Returns msqid for server if successful.
 */
 static int connect_to_ipc_server(void)
 {
@@ -153,7 +153,7 @@ static int connect_to_ipc_server(void)
 
 /*
   disconnect_from_ipc_server -- inform the server that sending has finished,
-                                and wait for its reply.
+				and wait for its reply.
 */
 void disconnect_from_ipc_server(int s, struct msgbuf *msgp, int echo)
 {
@@ -240,7 +240,7 @@ int read_line(int s, char *dest)
 #ifdef UNIX_DOMAIN_SOCKETS
 /*
   connect_to_unix_server -- establish connection with server process via a unix-
-  			    domain socket. Returns socket descriptor for server
+			    domain socket. Returns socket descriptor for server
 			    if successful.
 */
 static int connect_to_unix_server(void)
@@ -278,7 +278,7 @@ static int connect_to_unix_server(void)
 #ifdef INTERNET_DOMAIN_SOCKETS
 /*
   internet_addr -- return the internet addr of the hostname or
-                   internet address passed. Return -1 on error.
+		   internet address passed. Return -1 on error.
 */
 int internet_addr(char *host)
 {
@@ -303,8 +303,8 @@ static Xauth *server_xauth = NULL;
 #endif
 
 /*
-  connect_to_internet_server -- establish connection with server process via 
-  				an internet domain socket. Returns socket
+  connect_to_internet_server -- establish connection with server process via
+				an internet domain socket. Returns socket
 				descriptor for server if successful.
 */
 static int connect_to_internet_server(char *serverhost, unsigned short port)
@@ -401,7 +401,7 @@ static int connect_to_internet_server(char *serverhost, unsigned short port)
 #if defined(INTERNET_DOMAIN_SOCKETS) || defined(UNIX_DOMAIN_SOCKETS)
 /*
   disconnect_from_server -- inform the server that sending has finished, and wait for
-                            its reply.
+			    its reply.
 */
 void disconnect_from_server(int s, int echo)
 {

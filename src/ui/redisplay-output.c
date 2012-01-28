@@ -1360,7 +1360,7 @@ redisplay_output_layout(Lisp_Object domain,
 	/* This shrinks the display box to exactly enclose the glyph
 	   area. */
 	redisplay_normalize_display_box(db, dga);
-        buf = Dynarr_new(Emchar);
+	buf = Dynarr_new(Emchar);
 	/* Flip through the widgets in the layout displaying as necessary */
 	LIST_LOOP(rest, IMAGE_INSTANCE_LAYOUT_CHILDREN(p)) {
 		Lisp_Object child =
@@ -1647,8 +1647,10 @@ redisplay_clear_region(Lisp_Object locale, face_index findex, int x, int y,
 	} else if (FRAMEP(locale)) {
 		w = NULL;
 		f = XFRAME(locale);
-	} else
+	} else {
 		abort();
+		return;
+	}
 
 	d = XDEVICE(f->device);
 
@@ -1784,7 +1786,7 @@ redisplay_clear_clipped_region(Lisp_Object window, face_index findex,
 
 	xpos - absolute horizontal position of area.
 
-  	ypos - absolute vertical position of area.
+	ypos - absolute vertical position of area.
 
   glyphsrc - display_glyph_area
 

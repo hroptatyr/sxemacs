@@ -107,16 +107,16 @@ Control whether the text should be inverted.  Works only on TTY-s")
 ;      ;; filter to make value suitable for customize
 ;      (lambda (real-value)
 ;        (cond ((or (null real-value) (eq real-value 'unspecified))
-; 	      nil)
-; 	     ((symbolp real-value)
-; 	      (list real-value))
-; 	     (t
-; 	      real-value)))
+;	      nil)
+;	     ((symbolp real-value)
+;	      (list real-value))
+;	     (t
+;	      real-value)))
 ;      ;; filter to make customized-value suitable for storing
 ;      (lambda (cus-value)
 ;        (if (and (consp cus-value) (null (cdr cus-value)))
-; 	   (car cus-value)
-; 	 cus-value))
+;	   (car cus-value)
+;	 cus-value))
      custom-set-face-inherit custom-face-inherit))
   "Alist of face attributes.
 

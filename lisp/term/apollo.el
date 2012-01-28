@@ -631,7 +631,7 @@ the other window."
   (bind-apollo-mouse-button "M1D" 'apollo-mouse-move-point
 			    'apollo-mouse-move-point) ;MOUSE LEFT DOWN
   (bind-apollo-mouse-button "M1U" 'apollo-mouse-move-mark
-			    'apollo-mouse-copy) ;MOUSE LEFT UP 
+			    'apollo-mouse-copy) ;MOUSE LEFT UP
   (bind-apollo-mouse-button "M2D" 'sm-depress
 			    'sm-depress-meta) ;MOUSE MIDDLE DOWN
   (bind-apollo-mouse-button "M2U" 'smart-key-mouse

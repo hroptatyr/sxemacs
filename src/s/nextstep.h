@@ -43,7 +43,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
    stupidly gets confused by it.  */
 #undef KERNEL_FILE
 
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 
 #define SYSTEM_MALLOC
 

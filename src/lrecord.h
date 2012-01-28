@@ -681,7 +681,7 @@ error_check_##c_name (Lisp_Object obj)				\
 }								\
 extern Lisp_Object Q##c_name##p
 
-# define DECLARE_EXTERNAL_LRECORD(c_name, structtype)	       	\
+# define DECLARE_EXTERNAL_LRECORD(c_name, structtype)		\
 extern unsigned int lrecord_type_##c_name;                      \
 extern struct lrecord_implementation lrecord_##c_name;		\
 extern_inline structtype *					\

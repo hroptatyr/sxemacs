@@ -403,7 +403,7 @@ void *alloca();
 /* True if `size1' is non-NULL and PTR is pointing anywhere inside
    `string1' or just past its end.  This works if PTR is NULL, which is
    a good thing.  */
-#define FIRST_STRING_P(ptr) 					\
+#define FIRST_STRING_P(ptr)					\
   (size1 && string1 <= (ptr) && (ptr) <= string1 + size1)
 
 /* (Re)Allocate N items of type T using malloc, or fail.  */
@@ -685,7 +685,7 @@ static int debug = 0;
 #define DEBUG_PRINT2(x1, x2)		printf(x1, x2)
 #define DEBUG_PRINT3(x1, x2, x3)	printf(x1, x2, x3)
 #define DEBUG_PRINT4(x1, x2, x3, x4)	printf(x1, x2, x3, x4)
-#define DEBUG_PRINT_COMPILED_PATTERN(p, s, e) 				\
+#define DEBUG_PRINT_COMPILED_PATTERN(p, s, e)				\
 	print_partial_compiled_pattern(s, e)
 #define DEBUG_PRINT_DOUBLE_STRING(w, s1, sz1, s2, sz2)			\
 	print_double_string (w, s1, sz1, s2, sz2)
@@ -1260,14 +1260,14 @@ typedef struct {
   ((int) (fail_stack).size > re_max_failures * MAX_FAILURE_ITEMS	\
    ? 0									\
    : ((fail_stack).stack = (fail_stack_elt_t *)				\
-        REGEX_REALLOCATE_STACK ((fail_stack).stack, 			\
-          (fail_stack).size * sizeof (fail_stack_elt_t),		\
-          ((fail_stack).size << 1) * sizeof (fail_stack_elt_t)),	\
+	REGEX_REALLOCATE_STACK ((fail_stack).stack,			\
+	  (fail_stack).size * sizeof (fail_stack_elt_t),		\
+	  ((fail_stack).size << 1) * sizeof (fail_stack_elt_t)),	\
 									\
       (fail_stack).stack == NULL					\
       ? 0								\
-      : ((fail_stack).size <<= 1, 					\
-         1)))
+      : ((fail_stack).size <<= 1,					\
+	 1)))
 
 /* Push pointer POINTER on FAIL_STACK.
    Return 1 if was able to do so and 0 if ran out of memory allocating
@@ -1437,7 +1437,7 @@ typedef struct {
 
 /* We actually push this many items.  */
 #define NUM_FAILURE_ITEMS						\
-  ((highest_active_reg - lowest_active_reg + 1) * NUM_REG_ITEMS 	\
+  ((highest_active_reg - lowest_active_reg + 1) * NUM_REG_ITEMS	\
     + NUM_NONREG_ITEMS)
 
 /* How many items can still be added to the stack without overflowing it.  */
@@ -1456,7 +1456,7 @@ typedef struct {
    `pend', `string1', `size1', `string2', and `size2'.  */
 
 #define POP_FAILURE_POINT(str, pat, low_reg, high_reg,			\
-                          regstart, regend, reg_info)			\
+			  regstart, regend, reg_info)			\
 	do {								\
 		int this_reg;						\
 		const unsigned char *string_temp;			\
@@ -1595,7 +1595,7 @@ static unsigned char reg_unset_dummy;
 #define PATFETCH_RAW(c)							\
   do {if (p == pend) return REG_EEND;					\
     assert (p < pend);							\
-    c = charptr_emchar (p); 						\
+    c = charptr_emchar (p);						\
     INC_CHARPTR (p);							\
   } while (0)
 
@@ -1821,20 +1821,20 @@ typedef struct {
 #endif
 
 /* Get the next unsigned number in the uncompiled pattern.  */
-#define GET_UNSIGNED_NUMBER(num) 					\
+#define GET_UNSIGNED_NUMBER(num)					\
   { if (p != pend)							\
      {									\
-       PATFETCH (c); 							\
-       while (ISDIGIT (c)) 						\
-         { 								\
-           if (num < 0)							\
-              num = 0;							\
-           num = num * 10 + c - '0'; 					\
-           if (p == pend) 						\
-              break; 							\
-           PATFETCH (c);						\
-         } 								\
-       } 								\
+       PATFETCH (c);							\
+       while (ISDIGIT (c))						\
+	 {								\
+	   if (num < 0)							\
+	      num = 0;							\
+	   num = num * 10 + c - '0';					\
+	   if (p == pend)						\
+	      break;							\
+	   PATFETCH (c);						\
+	 }								\
+       }								\
     }
 
 #define CHAR_CLASS_MAX_LENGTH  9	/* Namely, `multibyte'.  */
@@ -2040,7 +2040,7 @@ re_iswctype(int ch, re_wctype_t cc)
      `used' is set to the length of the compiled pattern;
      `fastmap_accurate' is zero;
      `re_ngroups' is the number of groups/subexpressions (including shy
-        groups) in PATTERN;
+	groups) in PATTERN;
      `re_nsub' is the number of non-shy groups in PATTERN;
      `not_bol' and `not_eol' are zero;
 
@@ -2630,7 +2630,7 @@ regex_compile(re_char * pattern, int size, reg_syntax_t syntax,
 				   character class.  */
 
 				else if (syntax & RE_CHAR_CLASSES &&
-					 c == '[' && *p == ':') {	
+					 c == '[' && *p == ':') {
 					/* Leave room for the null.  */
 					char str[CHAR_CLASS_MAX_LENGTH + 1];
 
@@ -3372,7 +3372,7 @@ regex_compile(re_char * pattern, int size, reg_syntax_t syntax,
 				/* Convert external to internal as soon
 				   as possible. */
 				reg = bufp->external_to_internal_register[reg];
- 
+
 				/* Can't back reference to a
 				   subexpression if inside it. */
 				if (group_in_compile_stack(
@@ -4550,12 +4550,12 @@ re_search_2(struct re_pattern_buffer *bufp, const char *str1,
 /* Call before fetching a character with *d.  This switches over to
    string2 if necessary.  */
 #define REGEX_PREFETCH()							\
-  while (d == dend)						    	\
+  while (d == dend)							\
     {									\
       /* End of string2 => fail.  */					\
-      if (dend == end_match_2) 						\
-        goto fail;							\
-      /* End of string1 => advance to string2.  */ 			\
+      if (dend == end_match_2)						\
+	goto fail;							\
+      /* End of string1 => advance to string2.  */			\
       d = string2;						        \
       dend = end_match_2;						\
     }
@@ -4575,7 +4575,7 @@ re_search_2(struct re_pattern_buffer *bufp, const char *str1,
 /* Test if CH is a word-constituent character. (XEmacs change) */
 #define WORDCHAR_P_UNSAFE(ch)						   \
   (SYNTAX_UNSAFE (XCHAR_TABLE (regex_emacs_buffer->mirror_syntax_table),   \
-                               ch) == Sword)
+			       ch) == Sword)
 
 /* Free everything we malloc.  */
 #ifdef MATCH_MAY_ALLOCATE
@@ -4981,8 +4981,8 @@ re_match_2_internal(struct re_pattern_buffer *bufp, re_char * string1,
 				if (regs && !bufp->no_sub) {
 					/* Have the register data arrays been
 					   allocated?  */
-					if (bufp->regs_allocated == REGS_UNALLOCATED) { 
-                                          /* No.  So allocate them with malloc.
+					if (bufp->regs_allocated == REGS_UNALLOCATED) {
+					  /* No.  So allocate them with malloc.
 					     We need one extra element beyond
 					     `num_regs' for the `-1' marker GNU
 					     code uses.  */
@@ -4994,8 +4994,8 @@ re_match_2_internal(struct re_pattern_buffer *bufp, re_char * string1,
 							return -2;
 						}
 						bufp->regs_allocated = REGS_REALLOCATE;
-					} else if (bufp->regs_allocated == REGS_REALLOCATE) { 
-                                          /* Yes.  If we need more elements than were already
+					} else if (bufp->regs_allocated == REGS_REALLOCATE) {
+					  /* Yes.  If we need more elements than were already
 					     allocated, reallocate them.  If we need fewer, just
 					     leave it alone.  */
 						if (regs->num_regs < num_nonshy_regs + 1) {
@@ -6264,8 +6264,8 @@ re_match_2_internal(struct re_pattern_buffer *bufp, re_char * string1,
 		if (!FAIL_STACK_EMPTY()) {
 			/* A restart point is known.  Restore to that state.  */
 			DEBUG_PRINT1("\nFAIL:\n");
-			POP_FAILURE_POINT(d, p, lowest_active_reg, 
-					  highest_active_reg, regstart, regend, 
+			POP_FAILURE_POINT(d, p, lowest_active_reg,
+					  highest_active_reg, regstart, regend,
 					  reg_info);
 
 			/* If this failure point is a dummy, try the next one.  */
@@ -6316,6 +6316,7 @@ re_match_2_internal(struct re_pattern_buffer *bufp, re_char * string1,
 
 	return -1;		/* Failure to match.  */
 }				/* re_match_2 */
+
 
 /* Subroutine definitions for re_match_2.  */
 
@@ -6857,8 +6858,8 @@ regerror(int errcode, const regex_t * preg, char *errbuf,
 	msg_size = strlen(msg) + 1;	/* Includes the null.  */
 
 	if (errbuf_size != 0) {
-                strncpy(errbuf, msg, errbuf_size - 1);
-                errbuf[errbuf_size-1]='\0';
+		strncpy(errbuf, msg, errbuf_size - 1);
+		errbuf[errbuf_size-1]='\0';
 	}
 
 	return msg_size;

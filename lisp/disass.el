@@ -83,7 +83,7 @@ redefine OBJECT if it is a symbol."
 	(setq macro t
 	      obj (cdr obj)))
     (if (and (listp obj) (eq (car obj) 'byte-code))
-	(setq obj (list 'lambda nil obj)))	
+	(setq obj (list 'lambda nil obj)))
     (if (and (listp obj) (not (eq (car obj) 'lambda)))
 	(error "not a function"))
     (if (consp obj)
@@ -135,10 +135,10 @@ redefine OBJECT if it is a symbol."
 	(let ((interactive (if (consp obj)
 			       (elt (assq 'interactive obj) 1)
 			     (elt (compiled-function-interactive obj) 1))))
-          (if (eq (car-safe (car-safe obj)) 'interactive)
-              (setq obj (cdr obj)))
-          (indent-to indent)
-          (insert " interactive: ")
+	  (if (eq (car-safe (car-safe obj)) 'interactive)
+	      (setq obj (cdr obj)))
+	  (indent-to indent)
+	  (insert " interactive: ")
 	  (if (eq (car-safe interactive) 'byte-code)
 	      (progn
 		(insert "\n")

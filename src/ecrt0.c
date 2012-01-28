@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
    this is the data format on startup:
   (vax) ap and fp are unpredictable as far as I know; don't use them.
   sp ->  word containing argc
-         word pointing to first arg string
+	 word pointing to first arg string
 	 [word pointing to next arg string]... 0 or more times
 	 0
 Optionally:
@@ -43,8 +43,8 @@ And always:
 /* On the 16000, at least in the one 4.2 system I know about,
   the initial data format is
   sp ->  word containing argc
-         word containing argp
-         word pointing to first arg string, and so on as above
+	 word containing argp
+	 word pointing to first arg string, and so on as above
 */
 
 #ifdef emacs

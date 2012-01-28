@@ -47,7 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 # include <utime.h>
 #endif
 
-#if defined(HAVE_TZNAME) 
+#if defined(HAVE_TZNAME)
 #ifndef tzname			/* For SGI.  */
 extern char *tzname[];		/* RS6000 and others want it this way.  */
 #endif
@@ -101,9 +101,9 @@ extern char *tzname[];		/* RS6000 and others want it this way.  */
 
    EMACS_TIME_EQUAL (TIME1, TIME2) is true iff TIME1 is the same as TIME2.
    EMACS_TIME_GREATER (TIME1, TIME2) is true iff TIME1 is greater than
-        TIME2.
+	TIME2.
    EMACS_TIME_EQUAL_OR_GREATER (TIME1, TIME2) is true iff TIME1 is
-        greater than or equal to TIME2.
+	greater than or equal to TIME2.
 
 */
 
@@ -204,7 +204,7 @@ do {								\
    ((time1).tv_sec == (time2).tv_sec &&				\
     (time1).tv_usec >= (time2).tv_usec))
 
-#define EMACS_SET_SECS_USECS(time, secs, usecs) 		\
+#define EMACS_SET_SECS_USECS(time, secs, usecs)		\
   (EMACS_SET_SECS (time, secs), EMACS_SET_USECS (time, usecs))
 
 #ifdef emacs

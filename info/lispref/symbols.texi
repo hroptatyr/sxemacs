@@ -581,6 +581,3 @@ Both of the above functions do order-insensitive comparisons.
 (plists-equal '(foo "hello" bar "goodbye") '(bar "goodbye" foo "hello"))
      @result{} t
 @end example
-
-
-

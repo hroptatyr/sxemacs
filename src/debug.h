@@ -62,7 +62,7 @@ extern struct debug_classes active_debug_classes;
 	{								\
 	  if (action == DEBUG_STDERR)					\
 	    stderr_out ("Assertion failed in %s at line %d\n",		\
-			__FILE__, __LINE__);		       		\
+			__FILE__, __LINE__);				\
 	  else								\
 	    abort ();							\
 	}								\

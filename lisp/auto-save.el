@@ -400,7 +400,7 @@ Hashed files are not understood, see `auto-save-hash-p'."
 Includes everything that can get us into trouble Unix.")
 
 ;; This code based on code in Bill Perry's url.el.
-    
+
 (defun auto-save-escape-name (str)
   "Escape any evil nasty characters in a potential filename.
 Uses quoted-printable-style escaping -- e.g. the dreaded =3D.

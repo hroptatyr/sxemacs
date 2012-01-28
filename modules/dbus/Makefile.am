@@ -76,7 +76,7 @@ BITCHENV = EMACSPACKAGEPATH= SOURCE_TREE_ROOT=$(abs_top_srcdir) BUILD_TREE_ROOT=
 BATCH = $(BITCHENV) $(BITCH)
 RM = rm -f
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## the libtool approach
@@ -91,5 +91,4 @@ SUFFIXES = .doc.c
 ## Create assembler output (debugging purposes only)
 .c.s:
 	$(COMPILE) -S -c $(cflags) $<
-
 

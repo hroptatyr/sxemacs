@@ -184,10 +184,10 @@ respectively."
       0
     (save-excursion
       (save-restriction
-        (widen)
+	(widen)
 	(narrow-to-region start end)
 	(goto-char start)
-        (vertical-motion (buffer-size))))))
+	(vertical-motion (buffer-size))))))
 
 
 ;; Resize the minibuffer window to contain the minibuffer's contents.

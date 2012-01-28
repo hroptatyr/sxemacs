@@ -62,7 +62,7 @@ EXTRA_libmm_a_SOURCES = \
 	sound-jack.c sound-nas.c sound-oss.c sound-pulse.c \
 	dgif_lib.c gif_io.c
 libmm_a_CFLAGS = $(AM_CFLAGS) -Wall
-libmm_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general) $(MM_CPPFLAGS) $(X_CFLAGS) 
+libmm_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general) $(MM_CPPFLAGS) $(X_CFLAGS)
 libmm_a_LIBADD = $(libmm_objs)
 libmm_a_DEPENDENCIES = $(libmm_a_LIBADD)
 libmm_a_ldflags = $(MM_LIBS)
@@ -73,7 +73,7 @@ header_HEADERS= $(acgen_headers) $(libmm_a_headers)
 noinst_LIBRARIES=libmm.a
 
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## Create preprocessor output (debugging purposes only)

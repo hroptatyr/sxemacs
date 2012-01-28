@@ -774,4 +774,3 @@ This user option holds the function to call to select a buffer from the
 @samp{Buffers} menu.  @code{switch-to-buffer} is a good choice, as is
 @code{pop-to-buffer}.
 @end defopt
-

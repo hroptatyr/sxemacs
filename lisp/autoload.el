@@ -235,12 +235,12 @@ the section of autoloads for a file.")
 	  easy-mmode-define-minor-mode easy-mmode-define-global-mode
 	  define-minor-mode defun* defmacro*)
 	"`defun'-like operators that use `autoload' to load the library.")
-      
+
       (defvar autoload-make-autoload-complex-operators
 	'(easy-mmode-define-minor-mode easy-mmode-define-global-mode
 	  define-minor-mode)
 	"`defun'-like operators to macroexpand before using `autoload'.")
-      
+
       (put 'autoload 'doc-string-elt 3)
       (put 'defun    'doc-string-elt 3)
       (put 'defun*   'doc-string-elt 3)
@@ -407,12 +407,12 @@ and TRIM-NAME (result of calling `autoload-trim-file-name' on FILE)."
     (setq file (expand-file-name file))
     ;; #### FSF 21.2.  Do we want this?
 ;     (let* ((source-truename (file-truename file))
-; 	   (dir-truename (file-name-as-directory
-; 			  (file-truename default-directory)))
-; 	   (len (length dir-truename)))
+;	   (dir-truename (file-name-as-directory
+;			  (file-truename default-directory)))
+;	   (len (length dir-truename)))
 ;       (if (and (< len (length source-truename))
-; 	       (string= dir-truename (substring source-truename 0 len)))
-; 	  (setq file (substring source-truename len))))
+;	       (string= dir-truename (substring source-truename 0 len)))
+;	  (setq file (substring source-truename len))))
 
     ;; Check for suppression form (XEmacs)
     (let* ((dir (file-name-directory file))
@@ -455,21 +455,21 @@ and TRIM-NAME (result of calling `autoload-trim-file-name' on FILE)."
 	      ;; place we need the syntax table is when snarfing the Lisp
 	      ;; function name.
 	      (set-syntax-table emacs-lisp-mode-syntax-table))
-; 	    (if visited
-; 		(set-buffer visited)
-; 	      ;; It is faster to avoid visiting the file.
-; 	      (set-buffer (get-buffer-create " *generate-autoload-file*"))
-; 	      (kill-all-local-variables)
-; 	      (erase-buffer)
-; 	      (setq buffer-undo-list t
-; 		    buffer-read-only nil)
-; 	      ;; This doesn't look right for C files, but it is.  The only
-; 	      ;; place we need the syntax table is when snarfing the Lisp
-; 	      ;; function name.
-; 	      (emacs-lisp-mode)
-; 	      (if literal
-; 		  (insert-file-contents-literally file nil)
-; 		(insert-file-contents file nil)))
+;	    (if visited
+;		(set-buffer visited)
+;	      ;; It is faster to avoid visiting the file.
+;	      (set-buffer (get-buffer-create " *generate-autoload-file*"))
+;	      (kill-all-local-variables)
+;	      (erase-buffer)
+;	      (setq buffer-undo-list t
+;		    buffer-read-only nil)
+;	      ;; This doesn't look right for C files, but it is.  The only
+;	      ;; place we need the syntax table is when snarfing the Lisp
+;	      ;; function name.
+;	      (emacs-lisp-mode)
+;	      (if literal
+;		  (insert-file-contents-literally file nil)
+;		(insert-file-contents file nil)))
 	    (unless (setq autoloads-done
 			  (funcall fun-to-call outbuf load-name trim-name))
 	      (return-from generate-autoload-type-section))
@@ -498,19 +498,19 @@ and TRIM-NAME (result of calling `autoload-trim-file-name' on FILE)."
 	  ;; we alone and our successors can update the file.  The file itself
 	  ;; will work fine in older XEmacsen, but they won't be able to
 	  ;; update autoloads -- hence, to build.
-; 	  ;; Break that line at spaces, to avoid very long lines.
-; 	  ;; Make each sub-line into a comment.
-; 	  (with-current-buffer outbuf
-; 	    (save-excursion
-; 	      (forward-line -1)
-; 	      (while (not (eolp))
-; 		(move-to-column 64)
-; 		(skip-chars-forward "^ \n")
-; 		(or (eolp)
-; 		    (insert "\n" generate-autoload-section-continuation)))))
+;	  ;; Break that line at spaces, to avoid very long lines.
+;	  ;; Make each sub-line into a comment.
+;	  (with-current-buffer outbuf
+;	    (save-excursion
+;	      (forward-line -1)
+;	      (while (not (eolp))
+;		(move-to-column 64)
+;		(skip-chars-forward "^ \n")
+;		(or (eolp)
+;		    (insert "\n" generate-autoload-section-continuation)))))
 	  ;; XEmacs: This was commented out before.  #### Correct?
-; 	  (insert ";;; Generated autoloads from "
-; 		  (autoload-trim-file-name file) "\n")
+;	  (insert ";;; Generated autoloads from "
+;		  (autoload-trim-file-name file) "\n")
 	  ;; XEmacs -- handle suppression
 	  (when suppress-form
 	    (insert "\n;;; Suppress form from _pkg.el\n")
@@ -690,7 +690,7 @@ The file is assumed to be already loaded and in the current buffer."
 				   (symbol-value-in-buffer 'default-directory
 							   outbuf)) outbuf)
 	(princ ")\n" outbuf)
-	       
+
 	(goto-char (point-min))
 	(while (not (eobp))
 	  (skip-chars-forward " \t\n\f")
@@ -834,8 +834,8 @@ at the beginning of lines and ^L characters."
   "Returns relative pathname of FILE including the last directory."
   (setq file (expand-file-name file))
   (file-relative-name file (file-name-directory
-                            (directory-file-name
-                             (file-name-directory file)))))
+			    (directory-file-name
+			     (file-name-directory file)))))
 
 (defun autoload-read-section-header ()
   "Read a section header form.
@@ -897,10 +897,10 @@ equal to `autoload-file-name')."
 	;; up-to-date and recompile when we build.
 
 	;; FSF 21.2: [not applicable to XEmacs]
-; 	(or (> (buffer-size) 0)
-; 	    (error "Autoloads file %s does not exist" buffer-file-name))
-; 	(or (file-writable-p buffer-file-name)
-; 	    (error "Autoloads file %s is not writable" buffer-file-name))
+;	(or (> (buffer-size) 0)
+;	    (error "Autoloads file %s does not exist" buffer-file-name))
+;	(or (file-writable-p buffer-file-name)
+;	    (error "Autoloads file %s is not writable" buffer-file-name))
 
 	;; NOTE: The rest of this function is totally changed from FSF.
 	;; Hence, not synched.
@@ -939,24 +939,24 @@ equal to `autoload-file-name')."
 
 (defun parse-command-line (cmdl)
   (let ((newcmdl (dllist))
-        (cmdlpl (make-skiplist))
-        (mm (compile-regexp "^--"))
-        (ign (compile-regexp #r"^-\(?:batch\|nd\|vanilla\)"))
-        (ign2 (compile-regexp "^-[lf]$")))
+	(cmdlpl (make-skiplist))
+	(mm (compile-regexp "^--"))
+	(ign (compile-regexp #r"^-\(?:batch\|nd\|vanilla\)"))
+	(ign2 (compile-regexp "^-[lf]$")))
     (while (car cmdl)
       (cond ((string-match mm (car cmdl))
-             (let ((key (intern (car cmdl)))
-                   (val (car (cdr-safe cmdl))))
-               (put-skiplist cmdlpl key val)
-               (setq cmdl (cdr-safe cmdl))))
-            ((string-match ign2 (car cmdl))
-             ;; ignore a pair of parameters
-             (setq cmdl (cdr-safe cmdl)))
-            ((string-match ign (car cmdl))
-             ;; ignore this single parameter
-             )
-            (t
-             (dllist-append newcmdl (car cmdl))))
+	     (let ((key (intern (car cmdl)))
+		   (val (car (cdr-safe cmdl))))
+	       (put-skiplist cmdlpl key val)
+	       (setq cmdl (cdr-safe cmdl))))
+	    ((string-match ign2 (car cmdl))
+	     ;; ignore a pair of parameters
+	     (setq cmdl (cdr-safe cmdl)))
+	    ((string-match ign (car cmdl))
+	     ;; ignore this single parameter
+	     )
+	    (t
+	     (dllist-append newcmdl (car cmdl))))
       (setq cmdl (cdr-safe cmdl)))
     (put newcmdl :tweaks cmdlpl)
     newcmdl))
@@ -970,32 +970,32 @@ equal to `autoload-file-name')."
     (error "batch-update-directory-autoloads: may be used only with -batch"))
 
   (let* ((cmds (parse-command-line (cdr-safe command-line-args)))
-         (pl (get cmds :tweaks)))
+	 (pl (get cmds :tweaks)))
 
     (unless (get-skiplist pl '--autoload-dir-name)
       (put-skiplist pl '--autoload-dir-name
-                    (expand-file-name default-directory)))
+		    (expand-file-name default-directory)))
     (unless (get-skiplist pl '--autoload-file-name)
       (put-skiplist pl '--autoload-file-name
-                    (expand-file-name autoload-file-name
-                                      (get-skiplist pl '--autoload-dir-name))))
+		    (expand-file-name autoload-file-name
+				      (get-skiplist pl '--autoload-dir-name))))
     (unless (get-skiplist pl '--feature-prefix)
       (put-skiplist pl '--feature-prefix
-                    (file-name-nondirectory
-                     (directory-file-name
-                      (expand-file-name
-                       (get-skiplist pl '--autoload-dir-name))))))
+		    (file-name-nondirectory
+		     (directory-file-name
+		      (expand-file-name
+		       (get-skiplist pl '--autoload-dir-name))))))
 
     (create-autoload-files cmds t)))
 
 (defun create-autoload-files (bunch &optional force)
   (let* ((pl (get bunch :tweaks))
-         (relative (get-skiplist pl '--relative-to))
-         (al-file (get-skiplist pl '--autoload-file-name))
-         (fprefix (get-skiplist pl '--feature-prefix)))
+	 (relative (get-skiplist pl '--relative-to))
+	 (al-file (get-skiplist pl '--autoload-file-name))
+	 (fprefix (get-skiplist pl '--feature-prefix)))
     (mapc-inplace
      #'(lambda (dir)
-         (expand-file-name dir relative))
+	 (expand-file-name dir relative))
      bunch)
     (update-autoload-files (dllist-to-list bunch) fprefix al-file force)))
 

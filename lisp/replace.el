@@ -415,7 +415,7 @@ It serves as a menu to find any of the occurrences in this buffer.
 		     (read-from-minibuffer
 		      (format "List lines matching regexp (default `%s'): "
 			      default) nil nil nil 'regexp-history nil
-                              default)
+			      default)
 		   (read-from-minibuffer
 		    "List lines matching regexp: "
 		    nil nil nil
@@ -440,7 +440,7 @@ It serves as a menu to find any of the occurrences in this buffer.
 	(prevpos (point-min))
 	;; The rest of this function is very different from FSF.
 	;; Presumably that's due to Jamie's misfeature
-        (final-context-start (make-marker)))
+	(final-context-start (make-marker)))
     (if (not list-matching-lines-whole-buffer)
 	(save-excursion
 	  (beginning-of-line)
@@ -614,7 +614,7 @@ The valid answers include `act', `skip', `act-and-show',
     (next-command-event event)))
 
 (defun perform-replace (from-string replacements
-		        query-flag regexp-flag delimited-flag
+			query-flag regexp-flag delimited-flag
 			&optional repeat-count map)
   "Subroutine of `query-replace'.  Its complexity handles interactive queries.
 Don't use this in your own program unless you want to query and set the mark
@@ -863,8 +863,8 @@ Zero means the entire text matched by the whole regexp or whole string.
 STRING should be given if the last search was by `string-match' on STRING."
   (if (match-beginning num)
       (if string
-          (substring string (match-beginning num) (match-end num))
-        (buffer-substring (match-beginning num) (match-end num)))))
+	  (substring string (match-beginning num) (match-end num))
+	(buffer-substring (match-beginning num) (match-end num)))))
 
 (defmacro save-match-data (&rest body)
   "Execute BODY forms, restoring the global value of the match data."

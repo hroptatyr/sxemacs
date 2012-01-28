@@ -431,7 +431,7 @@ int window_divider_width(struct window *w);
        : XINT (win->modeline_shadow_thickness)))
 
 #define MODELINE_SHADOW_THICKNESS(win)				\
- (MODELINE_OFF_SHADOW_THICKNESS_ADJUSTED (win) > 10 		\
+ (MODELINE_OFF_SHADOW_THICKNESS_ADJUSTED (win) > 10		\
   ? 10								\
   : MODELINE_OFF_SHADOW_THICKNESS_ADJUSTED (win))
 

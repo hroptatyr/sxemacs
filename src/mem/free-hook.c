@@ -1,4 +1,4 @@
-/* 
+/*
 This file is part of SXEmacs
 
 SXEmacs is free software: you can redistribute it and/or modify
@@ -583,7 +583,7 @@ debug_gcpro5(char *file, int line, struct gcpro *gcpro1, struct gcpro *gcpro2,
 void
 debug_gcpro6(char *file, int line, struct gcpro *gcpro1, struct gcpro *gcpro2,
 	     struct gcpro *gcpro3, struct gcpro *gcpro4, struct gcpro *gcpro5,
-             struct gcpro *gcpro6,
+	     struct gcpro *gcpro6,
 	     Lisp_Object * var1, Lisp_Object * var2, Lisp_Object * var3,
 	     Lisp_Object * var4, Lisp_Object * var5, Lisp_Object * var6)
 {
@@ -612,10 +612,10 @@ debug_gcpro6(char *file, int line, struct gcpro *gcpro1, struct gcpro *gcpro2,
 void
 debug_gcpro7(char *file, int line, struct gcpro *gcpro1, struct gcpro *gcpro2,
 	     struct gcpro *gcpro3, struct gcpro *gcpro4, struct gcpro *gcpro5,
-             struct gcpro *gcpro6, struct gcpro *gcpro7,
+	     struct gcpro *gcpro6, struct gcpro *gcpro7,
 	     Lisp_Object * var1, Lisp_Object * var2, Lisp_Object * var3,
-	     Lisp_Object * var4, Lisp_Object * var5, Lisp_Object * var6, 
-             Lisp_Object * var7)
+	     Lisp_Object * var4, Lisp_Object * var5, Lisp_Object * var6,
+	     Lisp_Object * var7)
 {
 	log_gcpro(file, line, gcpro5, gcpro5_type);
 	gcpro1->next = gcprolist;
@@ -645,10 +645,10 @@ debug_gcpro7(char *file, int line, struct gcpro *gcpro1, struct gcpro *gcpro2,
 void
 debug_gcpro8(char *file, int line, struct gcpro *gcpro1, struct gcpro *gcpro2,
 	     struct gcpro *gcpro3, struct gcpro *gcpro4, struct gcpro *gcpro5,
-             struct gcpro *gcpro6, struct gcpro *gcpro7, struct gcpro *gcpro8,
+	     struct gcpro *gcpro6, struct gcpro *gcpro7, struct gcpro *gcpro8,
 	     Lisp_Object * var1, Lisp_Object * var2, Lisp_Object * var3,
-	     Lisp_Object * var4, Lisp_Object * var5, Lisp_Object * var6, 
-             Lisp_Object * var7, Lisp_Object * var8)
+	     Lisp_Object * var4, Lisp_Object * var5, Lisp_Object * var6,
+	     Lisp_Object * var7, Lisp_Object * var8)
 {
 	log_gcpro(file, line, gcpro5, gcpro5_type);
 	gcpro1->next = gcprolist;

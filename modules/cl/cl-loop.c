@@ -5,7 +5,7 @@
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
   * This file is part of SXEmacs.
-  * 
+  *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
   * are met:
@@ -1124,7 +1124,7 @@ cl_loop_perform_for_i(cl_loop_for_clause_t *fc)
 	case FOR_EQUALS_THEN_CLAUSE:
 		if (fc->counter++) {
 			cl_loop_destructuring_bind(
-				(cl_loop_binder_f)Fset, fc->form1, 
+				(cl_loop_binder_f)Fset, fc->form1,
 				fc->curval = Feval(fc->then));
 		}
 		return;

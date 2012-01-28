@@ -69,7 +69,7 @@
 ;; -- avoided consing if at all possible.
 ;; -- didn't slow down operations on non-magic variables (therefore,
 ;;    storing the magic information using `put' is ruled out).
-;; 
+;;
 
 ;;; Code:
 
@@ -169,7 +169,7 @@ each of the handlers."
      (apply fun 'teach-extended-commands-p args)
      (apply fun 'teach-extended-commands-timeout args)))
 
-(set-magic-variable-handler 
+(set-magic-variable-handler
  'suggest-key-bindings 'other-predicate
  #'(lambda (sym fun args harg)
      (and (apply fun 'teach-extended-commands-p args)

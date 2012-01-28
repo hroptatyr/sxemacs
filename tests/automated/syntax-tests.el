@@ -18,7 +18,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -140,7 +140,7 @@
 		 skipped-test-reasons)
 	(Print-Skip "comment and parse-partial-sexp tests" reason))
     (c-mode)
-    
+
     (insert "// comment\n")
     (forward-comment -2)
     (Assert (eq (point) (point-min)))

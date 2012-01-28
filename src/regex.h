@@ -81,10 +81,10 @@ typedef unsigned reg_syntax_t;
 /* If this bit is set, then ^ and $ are always anchors (outside bracket
      expressions, of course).
    If this bit is not set, then it depends:
-        ^  is an anchor if it is at the beginning of a regular
-           expression or after an open-group or an alternation operator;
-        $  is an anchor if it is at the end of a regular expression, or
-           before a close-group or an alternation operator.
+	^  is an anchor if it is at the beginning of a regular
+	   expression or after an open-group or an alternation operator;
+	$  is an anchor if it is at the end of a regular expression, or
+	   before a close-group or an alternation operator.
 
    This bit could be (re)combined with RE_CONTEXT_INDEP_OPS, because
    POSIX draft 11.2 says that * etc. in leading positions is undefined.
@@ -199,7 +199,7 @@ extern reg_syntax_t re_syntax_options;
 	((RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS | RE_DEBUG) \
 	 & ~(RE_DOT_NOT_NULL | RE_INTERVALS | RE_CONTEXT_INDEP_OPS))
 
-#define RE_SYNTAX_POSIX_AWK 						\
+#define RE_SYNTAX_POSIX_AWK						\
 	(RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS	\
 	 | RE_INTERVALS	    | RE_NO_GNU_OPS)
 

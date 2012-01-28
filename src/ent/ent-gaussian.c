@@ -135,7 +135,7 @@ Bufbyte *bigg_to_string(bigg g, int base)
 	Bufbyte *intg_str;
 	Bufbyte *imag_str;
 	int intg_len, imag_len;
-        int sign, neg;
+	int sign, neg;
 
 	intg_str = (Bufbyte*)bigz_to_string(bigg_re(g), base);
 	imag_str = (Bufbyte*)bigz_to_string(bigg_im(g), base);
@@ -205,7 +205,7 @@ void bigg_set_bigz_bigz(bigg g, bigz z1, bigz z2)
 
 /* void bigc_set_bigg(bigc c, bigg g)
  * {
- * 	bigc_set_bigfr_bigfr(bigg_re(g), z1);
+ *	bigc_set_bigfr_bigfr(bigg_re(g), z1);
  * }
  */
 
@@ -454,7 +454,7 @@ Lisp_Object read_bigg_string(char *cp)
 		/* jump over a leading minus */
 		cp++;
 	}
-		
+
 	while ((*cp >= '0' && *cp <= '9'))
 		cp++;
 

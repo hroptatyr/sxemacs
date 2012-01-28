@@ -5,7 +5,7 @@
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
   * This file is part of SXEmacs.
-  * 
+  *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
   * are met:
@@ -233,7 +233,7 @@ void
 ase_digraph_add_edge_aa(ase_digraph_t dg, Lisp_Object n1, Lisp_Object n2)
 {
 /* auto-add nodes if necessary */
-	Lisp_Object n1sle, n2slr; 
+	Lisp_Object n1sle, n2slr;
 	skiplist_t n1e = NULL, n2r = NULL;
 
 	_ase_digraph_add_node(&n1sle, &n2slr, dg, n1);

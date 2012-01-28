@@ -717,8 +717,8 @@ encoding detection or end-of-line detection.
 		struct gcpro ngcpro1;
 
 		NGCPRO1(lstrm);
-               if (fd < 0)
-                      signal_file_error("Cannot open load file", file);
+	       if (fd < 0)
+		      signal_file_error("Cannot open load file", file);
 
 		lstrm = make_filedesc_input_stream(fd, 0, -1, LSTR_CLOSING);
 		/* 64K is used for normal files; 8K should be OK here because
@@ -940,12 +940,12 @@ static Lisp_Object locate_file_find_directory_hash_table(Lisp_Object directory)
    following semantics:
 
    a) nil    - no suffix, just search for file name intact
-               (semantically different from "empty suffix list", which
-               would be meaningless.)
+	       (semantically different from "empty suffix list", which
+	       would be meaningless.)
    b) list   - list of suffixes to append to file name.  Each of these
-               must be a string.
+	       must be a string.
    c) string - colon-separated suffixes to append to file name (backward
-               compatibility).
+	       compatibility).
 
    All of this got hairy, so I decided to use a mapper.  Calling a
    function for each suffix shouldn't slow things down, since
@@ -1634,7 +1634,7 @@ they default to 0 and (length STRING) respectively.
 static Lisp_Object
 ureader_find(Lisp_Object name)
 {
-        return Fcdr(Fassoc(name, Vureaders));
+	return Fcdr(Fassoc(name, Vureaders));
 }
 
 /*
@@ -1645,23 +1645,23 @@ ureader_find(Lisp_Object name)
 static Lisp_Object
 ureader_read(Lisp_Object ureader_fun, Lisp_Object readcharfun)
 {
-        Emchar c;
-        unsigned int oparens = 0;
-        struct gcpro gcpro1;
-        Lisp_Object instr;
+	Emchar c;
+	unsigned int oparens = 0;
+	struct gcpro gcpro1;
+	Lisp_Object instr;
 
 	Lstream_rewind(XLSTREAM(Vread_buffer_stream));
 	while ((c = readchar(readcharfun)) >= 0) {
-                if (c == '<')
-                        oparens++;
-                else if (c == '>') {
-                        if (oparens == 0)
-                                /* We got final closing paren */
-                                break;
-                        else
-                                oparens--;
-                }
-                Lstream_put_emchar(XLSTREAM (Vread_buffer_stream), c);
+		if (c == '<')
+			oparens++;
+		else if (c == '>') {
+			if (oparens == 0)
+				/* We got final closing paren */
+				break;
+			else
+				oparens--;
+		}
+		Lstream_put_emchar(XLSTREAM (Vread_buffer_stream), c);
 		QUIT;
 	}
 	if (c < 0)
@@ -1669,12 +1669,12 @@ ureader_read(Lisp_Object ureader_fun, Lisp_Object readcharfun)
 			       list1(READCHARFUN_MAYBE(readcharfun)));
 
 	Lstream_flush(XLSTREAM(Vread_buffer_stream));
-        GCPRO1(instr);
-        instr = make_string(resizing_buffer_stream_ptr
-                            (XLSTREAM(Vread_buffer_stream)),
-                            Lstream_byte_count(XLSTREAM(Vread_buffer_stream)));
+	GCPRO1(instr);
+	instr = make_string(resizing_buffer_stream_ptr
+			    (XLSTREAM(Vread_buffer_stream)),
+			    Lstream_byte_count(XLSTREAM(Vread_buffer_stream)));
 
-        RETURN_UNGCPRO(call1(ureader_fun, instr));
+	RETURN_UNGCPRO(call1(ureader_fun, instr));
 }
 
 
@@ -1977,7 +1977,7 @@ read_atom(Lisp_Object readcharfun, Emchar firstchar, int uninterned_symbol)
 			return read_bigfr_string(read_ptr);
 #endif	/* HAVE_MPFR */
 #if defined HAVE_MPF && defined WITH_GMP
-		if (isfloat_string(read_ptr) && (Vread_real_as == Qbigf)) 
+		if (isfloat_string(read_ptr) && (Vread_real_as == Qbigf))
 			return read_bigf_string(read_ptr);
 
 #endif	/* HAVE_MPF */
@@ -2665,7 +2665,7 @@ retry:
 			Emchar _c_ = reader_nextchar(readcharfun);
 			/* check for permutation syntax */
 			if (_c_ == '[') {
-				Lisp_Object perm = 
+				Lisp_Object perm =
 					read_vector(readcharfun, ']');
 				if (ase_permutation_f) {
 					return ase_permutation_f(perm);
@@ -2690,11 +2690,11 @@ retry:
 			 * structure syntax */
 			return read_structure(readcharfun);
 		case '<': {
-                        /* Check user readers */
-                        Lisp_Object uoname = read_string(readcharfun, ' ', 0);
-                        Lisp_Object ureader = ureader_find(uoname);
-                        if (!NILP(ureader))
-                                return ureader_read(ureader, readcharfun);
+			/* Check user readers */
+			Lisp_Object uoname = read_string(readcharfun, ' ', 0);
+			Lisp_Object ureader = ureader_find(uoname);
+			if (!NILP(ureader))
+				return ureader_read(ureader, readcharfun);
 
 			unreadchar(readcharfun, c);
 			return Fsignal(Qinvalid_read_syntax,
@@ -3081,7 +3081,7 @@ isbigq_string (const char *cp)
 	/* Possible minus/plus sign */
 	if (*cp == '-' || *cp == '+')
 		cp++;
-	
+
 	/* Numerator */
 	if (*cp < '0' || *cp > '9')
 		return 0;
@@ -3089,11 +3089,11 @@ isbigq_string (const char *cp)
 	do {
 		cp++;
 	} while (*cp >= '0' && *cp <= '9');
-	
+
 	/* Slash */
 	if (*cp++ != '/')
 		return 0;
-	
+
 	/* Denominator */
 	if (*cp < '0' || *cp > '9')
 		return 0;
@@ -3161,7 +3161,7 @@ read_list_conser(Lisp_Object readcharfun, void *state, Charcount len)
 		tem = Qnil;
 		ch = XCHAR(elt);
 #ifdef FEATUREP_SYNTAX
-		if (ch == s->terminator) {	
+		if (ch == s->terminator) {
 			/* deal with #+, #- reader macros */
 			unreadchar(readcharfun, s->terminator);
 			goto done;
@@ -3688,15 +3688,15 @@ character escape syntaxes or just read them incorrectly.
 	}
 #endif
 
-        /* User defined readers */
-        DEFVAR_LISP("ureaders", &Vureaders /*
+	/* User defined readers */
+	DEFVAR_LISP("ureaders", &Vureaders /*
 Alist of user defined readers.
 Car is ureader NAME, represented by string to match against when reading
-#<NAME bla-bla-bla> 
+#<NAME bla-bla-bla>
 Cdr is user function called with one arg - string.
 Function must return lisp object or signal error.
-                                           */
-                );
+					   */
+		);
 }
 
 /* lread.c ends here */

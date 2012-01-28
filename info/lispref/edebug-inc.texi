@@ -1088,7 +1088,7 @@ name.
 
 Unless you are using SXEmacs, Emacs 19+ or XEmacs, this macro is only
 defined in Edebug, so you may want to use the following which is
-equivalent: 
+equivalent:
 @code{(put '@var{macro} 'edebug-form-spec '@var{specification})}
 @end defmac
 

@@ -867,7 +867,7 @@ nothing is done (and @code{nil} is returned).  Otherwise @code{t} is
 returned.
 @end defun
 
-The following functions are 
+The following functions are
 
 @defun image-instance-name image-instance
 This function returns the name of the given image instance.  The name is
@@ -1510,15 +1510,15 @@ makes use of recursive layouts.
 
 @example
 (make-glyph
- `[layout 
-   :orientation horizontal 
-   :vertically-justify top 
-   :horizontally-justify center 
+ `[layout
+   :orientation horizontal
+   :vertically-justify top
+   :horizontally-justify center
    :border [string :data "Search"]
-   :items 
-   ([layout :orientation vertical 
+   :items
+   ([layout :orientation vertical
             :justify top	; implies left also
-            :items 
+            :items
             ([string :data "Search for:"]
      	[button :descriptor "Match Case"
      		:style toggle
@@ -1555,7 +1555,7 @@ makes use of recursive layouts.
      		:callback-ex
      		(lambda (image-instance event)
      		  (isearch-dehighlight)
-     		  (delete-frame 
+     		  (delete-frame
      		   (event-channel event)))])])])
 @end example
 

@@ -7,7 +7,7 @@ originaly wrote by
 
 modified for mule-2.0 by
 	Sep. 10th '94
-        MUKAIGAWA Shin'ichi
+	MUKAIGAWA Shin'ichi
 	shin@ari.ncl.omron.co.jp
 
    Copyright (C) 1990 Free Software Foundation, Inc.
@@ -59,7 +59,9 @@ and this notice must be preserved on all copies.  */
    working alloca function and it should be used.
    At least, gcc for 88000 supports inline alloca. */
 
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 
 /* Memory management mechanism is different on Mach, so emacs-supplied
    malloc.c does not work. */

@@ -464,7 +464,7 @@ DEFUN("set-instantiator-property", Fset_instantiator_property, 3, 3, 0,	/*
 Destructively set the property KEYWORD of INSTANTIATOR to VALUE.
 If the property is not set then it is added to a copy of the
 instantiator and the new instantiator returned.
-Use `set-glyph-image' on glyphs to register instantiator changes.  
+Use `set-glyph-image' on glyphs to register instantiator changes.
 */
       (instantiator, keyword, value))
 {
@@ -3736,6 +3736,7 @@ The return value will be one of 'buffer, 'pointer, or 'icon.
 	case GLYPH_ICON:
 		return Qicon;
 	}
+	return Qnil;
 }
 
 Lisp_Object
@@ -4011,7 +4012,7 @@ glyph_do_layout(Lisp_Object glyph_or_image, int width, int height,
 }
 
 /*****************************************************************************
- *                     glyph cachel functions                         	     *
+ *                     glyph cachel functions	     *
  *****************************************************************************/
 
 /* #### All of this is 95% copied from face cachels.  Consider
@@ -4169,7 +4170,7 @@ compute_glyph_cachel_usage(glyph_cachel_dynarr * glyph_cachels,
 #endif				/* MEMORY_USAGE_STATS */
 
 /*****************************************************************************
- *                     subwindow cachel functions                         	     *
+ *                     subwindow cachel functions	     *
  *****************************************************************************/
 /* Subwindows are curious in that you have to physically unmap them to
    not display them. It is problematic deciding what to do in
@@ -4586,24 +4587,24 @@ subwindow_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 
 #ifdef HAVE_X_WINDOWS
 extern void x_subwindow_query_geometry(Lisp_Object image_instance,
-                                       int *width, int *height);
+				       int *width, int *height);
 
 static void
 subwindow_query_geometry(Lisp_Object image_instance, int *width,
 			 int *height, enum image_instance_geometry disp,
 			 Lisp_Object domain)
 {
-        if (IMAGE_INSTANCE_INITIALIZED(XIMAGE_INSTANCE(image_instance)))
-        {
-                /* Query real size of subwindow */
-                x_subwindow_query_geometry(image_instance, width, height);
-        } else {
-                /* Set them in case of initial layout instantiation */
-                if (width)
-                        *width = 20;
-                if (height)
-                        *height = 20;
-        }
+	if (IMAGE_INSTANCE_INITIALIZED(XIMAGE_INSTANCE(image_instance)))
+	{
+		/* Query real size of subwindow */
+		x_subwindow_query_geometry(image_instance, width, height);
+	} else {
+		/* Set them in case of initial layout instantiation */
+		if (width)
+			*width = 20;
+		if (height)
+			*height = 20;
+	}
 }
 #else
 /* This is just a backup in case no-one has assigned a suitable geometry.

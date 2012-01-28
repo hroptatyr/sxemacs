@@ -21,13 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /* Synched up with: FSF 19.31. */
 
-/* The following line tells the configuration script what sort of 
+/* The following line tells the configuration script what sort of
    operating system this machine is likely to run.
    USUAL-OPSYS="note"
 
 NOTE-START
 Sun 1, 2 and 3 (-machine=sun1, -machine=sun2, -machine=sun3;
-                -opsystem=bsd4-2 or -opsystem=sunos4)
+		-opsystem=bsd4-2 or -opsystem=sunos4)
 
   Whether you should use sun1, sun2 or sun3 depends on the
 		   VERSION OF THE OPERATING SYSTEM

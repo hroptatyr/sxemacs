@@ -52,32 +52,32 @@
 (defun byte-compile-dest-file (filename)
   "Convert an Emacs Lisp source file name to a compiled file name."
   (let ((outfile (if (string-match lispdir-regexp filename)
-                     (file-name-sans-extension
-                      (substring filename (match-end 0)))
-                   filename)))
+		     (file-name-sans-extension
+		      (substring filename (match-end 0)))
+		   filename)))
     (expand-file-name (concat outfile ".elc") destdir)))
 
 (defun parse-command-line (cmdl)
   (let ((newcmdl (dllist))
-        (cmdlpl (make-skiplist))
-        (mm (compile-regexp "^--"))
-        (ign (compile-regexp "^-[^-]")))
+	(cmdlpl (make-skiplist))
+	(mm (compile-regexp "^--"))
+	(ign (compile-regexp "^-[^-]")))
     (while (car cmdl)
       (let* ((file (car cmdl))
-             (current (expand-file-name file sourcedir))
-             (current (if (file-exists-p current)
-                          current
-                        (expand-file-name file destdir))))
-        (cond ((string-match mm file)
-               (let ((key (intern file))
-                     (val (car (cdr-safe cmdl))))
-                 (put-skiplist cmdlpl key val)
-                 (setq cmdl (cdr-safe cmdl))))
-              ((string-match ign file)
-               (setq cmdl (cdr-safe cmdl)))
-              ((string-match emacs-lisp-file-regexp current)
-               (dllist-append newcmdl current))
-              (t nil)))
+	     (current (expand-file-name file sourcedir))
+	     (current (if (file-exists-p current)
+			  current
+			(expand-file-name file destdir))))
+	(cond ((string-match mm file)
+	       (let ((key (intern file))
+		     (val (car (cdr-safe cmdl))))
+		 (put-skiplist cmdlpl key val)
+		 (setq cmdl (cdr-safe cmdl))))
+	      ((string-match ign file)
+	       (setq cmdl (cdr-safe cmdl)))
+	      ((string-match emacs-lisp-file-regexp current)
+	       (dllist-append newcmdl current))
+	      (t nil)))
       (setq cmdl (cdr-safe cmdl)))
     (put newcmdl :tweaks cmdlpl)
     newcmdl))
@@ -91,18 +91,18 @@
   (mapc-internal
    #'(lambda (file)
        (when (file-newer-than-file-p file (byte-compile-dest-file file))
-         (dllist-append files-to-compile file)))
+	 (dllist-append files-to-compile file)))
    files))
 
 (setq problem-files (dllist))
 (mapc-internal
  #'(lambda (file)
      (condition-case nil
-         (byte-compile-file file)
+	 (byte-compile-file file)
        (error
-        (progn
-          (dllist-append problem-files file)
-          (message "Dinn work: %s" file)))))
+	(progn
+	  (dllist-append problem-files file)
+	  (message "Dinn work: %s" file)))))
  files-to-compile)
 
 ;; (mapc-internal

@@ -27,7 +27,7 @@
 #ifndef __GNUC__
 /* Make room for enough symbols, so dispnew.c does not fail.  */
 /* XEmacs: cognot@ensg.u-nancy.fr: C_SWITCH_SYSTEM already defined in hpux8.h,
-                           -D_BSD makes hp CC choke on process.c
+			   -D_BSD makes hp CC choke on process.c
 #define C_SWITCH_SYSTEM "-Wp,-H200000 -D_BSD"
 */
 #undef C_SWITCH_SYSTEM

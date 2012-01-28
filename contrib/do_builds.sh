@@ -3,8 +3,8 @@
 # A script to do automatic builds with several different configurations
 #
 # (C) 2008 Nelson Ferreira
-# 
-#  
+#
+#
 # This program is free software; you can redistribute it and/or modify it
 # under a BSD-like licence.
 #
@@ -64,7 +64,7 @@ MAKE_TAGS=""
 # Yes or Y
 REMOVE_ON_SUCCESS=""
 #
-# Report the build status with an email? 
+# Report the build status with an email?
 # Yes or Y (All)
 # Failures or F (Failures only)
 # Success or S  (Successes only)
@@ -96,7 +96,7 @@ fi
 STATUS=""
 if [ -n "${AUTOGEN}"  ]; then
     CURDIR="$(pwd)"
-    cd "${SOURCE}" 
+    cd "${SOURCE}"
     PREFIX=$(pwd)
     if [ -n "${HAMMER}" ]; then
 	echo HAMMER: ${HAMMER}
@@ -112,7 +112,7 @@ if [ -n "${BUILD_TAGS}" ]; then
     # Let's build ourselfs the tags for this source tree,
     mkdir -p ./++TAGS
     CURDIR="$(pwd)"
-    cd ./++TAGS 
+    cd ./++TAGS
     eval "${PREFIX}/configure" || STATUS="FAIL_CONFIGURE_$?"
     if [ -z "${STATUS}" ]; then
 	make tags || STATUS="FAIL_TAGS_$?"
@@ -137,19 +137,19 @@ for f in *.conf; do
     fi
     mkdir -p "./${build_name}"
     CURDIR="$(pwd)"
-    cd "./${build_name}" 
+    cd "./${build_name}"
     eval "${PREFIX}/configure ${CONF_OPTS}" || STATUS="FAIL_CONFIGURE_$?"
     if [ "${STATUS}" = "FAIL_CONFIGURE_127" -a -f "./Installation" -a -f "./config.log" ]; then
 	if [ $(tail -1 ./config.log) = "configure: exit 0" ]; then
 	    STATUS="FAIL_CONFIGURE_0"
-        fi
+	fi
     fi
     if [ -z "${STATUS}" -o "${STATUS}" = "FAIL_CONFIGURE_0" ]; then
 	STATUS="Success"
 	make ${MAKE_ARGS} || STATUS="FAIL_MAKE_$?"
 	if [ "${STATUS}" = "FAIL_MAKE_0" ]; then
 	    STATUS="Success"
-        fi
+	fi
 	if egrep '^make.*:.*Error' ,,beta.out; then
 	    STATUS="${STATUS}_ERROR_IN_BUILD"
 	else
@@ -184,7 +184,7 @@ for f in *.conf; do
 		CLI="${CLI} -eval '(setq build-rpt-email \"${MAIL_SUCCESS_TO}\")'"
 	    fi
 	    CLI="${CLI} -eval '(if (send-build-rpt \"${STATUS}\") (kill-emacs 0) (kill-emacs 1))'"
-	    eval "src/sxemacs -batch ${CLI}" || DO_REPORT_FAILURE="YES" STATUS="${STATUS}-Build-Rpt-Failed-$?" 
+	    eval "src/sxemacs -batch ${CLI}" || DO_REPORT_FAILURE="YES" STATUS="${STATUS}-Build-Rpt-Failed-$?"
 	else
 	    DO_REPORT_FAILURE="YES"
 	fi
@@ -200,4 +200,3 @@ for f in *.conf; do
     fi
     do_log "Finished building ${build_name}: ${STATUS}"
 done
-    

@@ -44,7 +44,7 @@
 ;;->
 ;;->c	Redistribute civs from overfull sectors into connected underfull ones
 ;;->	  The functions typically named by empire-ideal-civ-fcn control
-;;->          based in part on empire-sector-civ-threshold  
+;;->          based in part on empire-sector-civ-threshold
 ;;->m	Redistribute military using levels given by empire-ideal-mil-fcn
 ;;->p	Redistribute excess population to highways for max pop growth
 ;;->	  Excess is any sector so full babies will not be born.
@@ -173,4 +173,3 @@ and then returns."
 		  (set-window-configuration config))))))))
 
 ;;; help-macro.el
-

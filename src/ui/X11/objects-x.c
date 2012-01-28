@@ -534,9 +534,9 @@ static void x_finalize_font_instance(Lisp_Font_Instance * f)
    were the same sizes, which would probably be good enough.
 
    More late-breaking news: on RS/6000 AIX 3.2.4, the expression
-        XLoadQueryFont (dpy, "-*-Fixed-Medium-R-*-*-*-130-75-75-*-*-ISO8859-1")
+	XLoadQueryFont (dpy, "-*-Fixed-Medium-R-*-*-*-130-75-75-*-*-ISO8859-1")
    actually returns the font
-        -Misc-Fixed-Medium-R-Normal--13-120-75-75-C-80-ISO8859-1
+	-Misc-Fixed-Medium-R-Normal--13-120-75-75-C-80-ISO8859-1
    which is crazy, because that font doesn't even match that pattern!  It is
    also not included in the output produced by `xlsfonts' with that pattern.
 

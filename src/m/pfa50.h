@@ -49,7 +49,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* SX/A has alloca in the PW library.  */
 
 #define LIB_STANDARD "-lPW -lc"
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 
 /* SX/A uses terminfo and lib/curses   */
 

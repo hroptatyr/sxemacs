@@ -229,26 +229,3 @@ modified. If any other user tries to modify that file, it will inform
 the user about the lock and provide some
 options. For more information on protection against simultaneous
 editing, @xref{Interlocking,,,sxemacs,SXEmacs User's Manual}.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

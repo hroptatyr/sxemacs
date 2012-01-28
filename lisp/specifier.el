@@ -109,7 +109,7 @@ otherwise return t."
 	      (valid-instantiator-p (cdr inst-pair) specifier-type))
 	 ;; case (c)
 	 inst-pair)
-	 
+
 	(t
 	 (if noerror t
 	   (signal 'error (list "Invalid specifier tag set"
@@ -434,11 +434,11 @@ applied like above and the resulting specification is added."
       (add-spec-list-to-specifier specifier spec-list))
      (force
       (set-specifier specifier
-                     (apply func
-                            (or (and (valid-specifier-domain-p locale)
-                                     (specifier-instance specifier))
-                                default) args)
-                     locale tag-set)))))
+		     (apply func
+			    (or (and (valid-specifier-domain-p locale)
+				     (specifier-instance specifier))
+				default) args)
+		     locale tag-set)))))
 
 (defmacro let-specifier (specifier-list &rest body)
   "Add specifier specs, evaluate forms in BODY and restore the specifiers.
@@ -599,7 +599,7 @@ detail in the doc string for `current-display-table'."
 (or (valid-specifier-tag-p 'tty)
     (define-specifier-tag 'tty (lambda (dev) (eq (device-type dev) 'tty))))
 (or (valid-specifier-tag-p 'mswindows)
-    (define-specifier-tag 'mswindows (lambda (dev) 
+    (define-specifier-tag 'mswindows (lambda (dev)
 				       (eq (device-type dev) 'mswindows))))
 
 ;; Add special tag for use by initialization code.  Code that

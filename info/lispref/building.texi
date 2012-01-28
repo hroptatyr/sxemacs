@@ -78,11 +78,11 @@ out---the extra time is not too severe a problem.
 even if there is already a dumped @file{sxemacs}.  Normally you wouldn't
 want to do that; but the Makefiles do this when you rebuild SXEmacs using
 @samp{make all-elc}, which builds SXEmacs and simultaneously compiles any
-out-of-date Lisp files. 
+out-of-date Lisp files.
 
   You need @file{temacs} in order to compile Lisp files.  However, you
 also need the compiled Lisp files in order to dump out
-@file{sxemacs}.  If both of these are missing or corrupted, you are 
+@file{sxemacs}.  If both of these are missing or corrupted, you are
 out of luck unless you're able to bootstrap @file{sxemacs} from
 @file{temacs}.  Note that @samp{make all-elc} actually loads the
 alternative loadup file @file{loadup-el.el}, which works like
@@ -144,7 +144,7 @@ to the system configuration; look at @code{system-configuration} instead.
 @example
 @group
 (emacs-version)
-  @result{} "SXEmacs: hroptatyr@@sxemacs.org--sxemacs/sxemacs--hrop--22.1.2--patch-15, 
+  @result{} "SXEmacs: hroptatyr@@sxemacs.org--sxemacs/sxemacs--hrop--22.1.2--patch-15,
                  built Fri Apr 29 18:44:05 2005 on marlin.math.tu-berlin.de"
 @end group
 @end example

@@ -259,17 +259,17 @@ main(int argc, char **argv)
 	for (i = 1; i < argc; i++) {
 		int j;
 
-                if (argc > i + 1 && !strcmp (argv[i], "-d")) {
-                        /* XEmacs change; allow more than one chdir. The
-                           idea is that the second chdir is to source-lisp,
-                           and that any Lisp files not under there have the
-                           full path specified.  */
-                        i += 1;
-                        if (chdir (argv[i]) < 0) {
+		if (argc > i + 1 && !strcmp (argv[i], "-d")) {
+			/* XEmacs change; allow more than one chdir. The
+			   idea is that the second chdir is to source-lisp,
+			   and that any Lisp files not under there have the
+			   full path specified.  */
+			i += 1;
+			if (chdir (argv[i]) < 0) {
 				fatal("Could not change to directory ", argv[i]);
 			}
-                        continue;
-                } else if (argv[i][0] == '-') {
+			continue;
+		} else if (argv[i][0] == '-') {
 			i++;
 			continue;
 		}
@@ -308,15 +308,15 @@ static void
 put_filename (const char *filename)
 {
 /* XEmacs change; don't strip directory information. */
-        /* <= because sizeof includes the nul byte at the end. Not quite
-           right, because it should include the length of the symbol +
-           "\037[VF]" instead of simply 10. */
-        assert(sizeof("\037S\n") + strlen(filename) + 10 
-               <= DOC_MAX_FILENAME_LENGTH);
+	/* <= because sizeof includes the nul byte at the end. Not quite
+	   right, because it should include the length of the symbol +
+	   "\037[VF]" instead of simply 10. */
+	assert(sizeof("\037S\n") + strlen(filename) + 10
+	       <= DOC_MAX_FILENAME_LENGTH);
 
-        putc (037, outfile);
-        putc ('S', outfile);
-        fprintf (outfile, "%s\n", filename);
+	putc (037, outfile);
+	putc ('S', outfile);
+	fprintf (outfile, "%s\n", filename);
 	return;
 }
 
@@ -629,7 +629,7 @@ scan_c_file(const char *filename, const char *mode)
 		c = getc(infile);
 		/*
 		 * SXEmacs uses proper indentation so we need to
-		 * search for `\t' instead of ' ' here. 
+		 * search for `\t' instead of ' ' here.
 		 */
 		if (c == '\t') {
 			while (c == '\t') {
@@ -732,7 +732,7 @@ scan_c_file(const char *filename, const char *mode)
 				fprintf(outfile, "\tCDOC%s(\"%s\", \"\\\n",
 					defvarflag ? "SYM" : "SUBR", buf);
 			} else {
-                                put_filename (filename); /* XEmacs addition */
+				put_filename (filename); /* XEmacs addition */
 				putc(037, outfile);
 				putc(defvarflag ? 'V' : 'F', outfile);
 				fprintf(outfile, "%s\n", buf);
@@ -813,7 +813,7 @@ eof:
 
  Adds the filename a symbol or function was found in before its docstring;
  there's no need for this with the load-history available, but we do it for
- consistency with the C parsing code. 
+ consistency with the C parsing code.
  */
 
 static void
@@ -838,7 +838,11 @@ read_lisp_symbol(FILE *infile, char *buffer)
 		c = getc(infile);
 		if (c == '\\') {
 			/* FSF has *(++fillp), which is wrong. */
-			*fillp++ = getc(infile);
+			c = getc(infile);
+			if( c < 0 )
+				/* IO error... */
+				return;
+			*fillp++ = (char)(c);
 		} else if (c == ' ' ||
 			   c == '\t' ||
 			   c == '\n' ||
@@ -1024,61 +1028,61 @@ scan_lisp_file(const char *filename, const char *mode)
 			}
 
 		} else if (!strcmp(buffer, "custom-declare-variable")) {
-                        char c1 = 0, c2 = 0;
-                        type = 'V';
+			char c1 = 0, c2 = 0;
+			type = 'V';
 
-                        c = getc (infile);
-                        if (c == '\'') {
-                                read_lisp_symbol (infile, buffer);
-                        } else {
-                                if (c != '(') {
-                                        fprintf(stderr, "\
+			c = getc (infile);
+			if (c == '\'') {
+				read_lisp_symbol (infile, buffer);
+			} else {
+				if (c != '(') {
+					fprintf(stderr, "\
 ## unparsable name in custom-declare-variable in %s\n",
 						filename);
-                                        continue;
-                                }
-                                read_lisp_symbol (infile, buffer);
-                                if (strcmp (buffer, "quote")) {
-                                        fprintf(stderr, "\
+					continue;
+				}
+				read_lisp_symbol (infile, buffer);
+				if (strcmp (buffer, "quote")) {
+					fprintf(stderr, "\
 ## unparsable name in custom-declare-variable in %s\n",
 						filename);
-                                        continue;
-                                }
-                                read_lisp_symbol (infile, buffer);
-                                c = getc (infile);
-                                if (c != ')') {
-                                        fprintf(stderr, "\
+					continue;
+				}
+				read_lisp_symbol (infile, buffer);
+				c = getc (infile);
+				if (c != ')') {
+					fprintf(stderr, "\
 ## unparsable quoted name in custom-declare-variable in %s\n",
 						filename);
-                                        continue;
-                                }
-                        }
+					continue;
+				}
+			}
 
-                        if (saved_string == 0) {
-                                /* Skip to end of line; remember the two
-                                   previous chars.  */
-                                while (c != '\n' && c >= 0) {
-                                        c2 = c1;
-                                        c1 = c;
-                                        /* SXEmacs: shame we can't do this. */
-                                        /* c = getc_skipping_iso2022(infile); */
-                                        getc (infile);
-                                }
-	  
-                                /* If two previous characters were " and \,
-                                   this is a doc string.  Otherwise, there is
-                                   none.  */
-                                if (c2 != '"' || c1 != '\\') {
+			if (saved_string == 0) {
+				/* Skip to end of line; remember the two
+				   previous chars.  */
+				while (c != '\n' && c >= 0) {
+					c2 = c1;
+					c1 = c;
+					/* SXEmacs: shame we can't do this. */
+					/* c = getc_skipping_iso2022(infile); */
+					(void)getc (infile);
+				}
+
+				/* If two previous characters were " and \,
+				   this is a doc string.  Otherwise, there is
+				   none.  */
+				if (c2 != '"' || c1 != '\\') {
 #ifdef DEBUG
-                                        fprintf(stderr, "\
+					fprintf(stderr, "\
 ## non-docstring in %s (%s)\n",
 						buffer, filename);
 #endif	/* DEBUG */
-                                        continue;
-                                }
-                        }
+					continue;
+				}
+			}
 
-                } else if (!strcmp(buffer, "fset") ||
+		} else if (!strcmp(buffer, "fset") ||
 			   !strcmp(buffer, "defalias")) {
 			char c1 = 0, c2 = 0;
 			type = 'F';
@@ -1201,7 +1205,7 @@ scan_lisp_file(const char *filename, const char *mode)
 
 		   In the latter case, the opening quote (and leading
 		   backslash-newline) have already been read.  */
-                put_filename (filename); /* XEmacs addition */
+		put_filename (filename); /* XEmacs addition */
 		putc(037, outfile);
 		putc(type, outfile);
 		fprintf(outfile, "%s\n", buffer);

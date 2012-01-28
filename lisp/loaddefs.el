@@ -55,7 +55,7 @@
 ;; It is no longer necessary.  Instead use autoload.el to maintain them
 ;; for you.  Just insert ";;;###autoload" before defuns or defmacros you
 ;; want to be autoloaded, or other forms you want copied into loaddefs.el
-;; (defvars, key definitions, etc.).  For example, 
+;; (defvars, key definitions, etc.).  For example,
 ;;	;;;###autoload
 ;;	(defun foobar () ....)
 ;;	;;;###autoload (define-key global-map "f" 'foobar)

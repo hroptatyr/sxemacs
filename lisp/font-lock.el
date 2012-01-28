@@ -67,7 +67,7 @@
 ;; string of the variable `font-lock-keywords' for the appropriate syntax.
 ;;
 ;; The default value for `lisp-font-lock-keywords' is the value of the variable
-;; `lisp-font-lock-keywords-1'.  You may like `lisp-font-lock-keywords-2' 
+;; `lisp-font-lock-keywords-1'.  You may like `lisp-font-lock-keywords-2'
 ;; better; it highlights many more words, but is slower and makes your buffers
 ;; be very visually noisy.
 ;;
@@ -119,7 +119,7 @@
 ;; doesn't work.  Or maybe it allows you to think less and drift off to sleep.
 ;;
 ;; So, here are my opinions/advice/guidelines:
-;; 
+;;
 ;; - Use the same face for the same conceptual object, across all modes.
 ;;   i.e., (b) above, all modes that have items that can be thought of as, say,
 ;;   keywords, should be highlighted with the same face, etc.
@@ -327,98 +327,98 @@ string text when fontifying."
  FONT-LOCK-KEYWORDS := List of FONT-LOCK-FORM's.
 
  FONT-LOCK-FORM     :== MATCHER
-                      | (MATCHER . MATCH)
-                      | (MATCHER . FACE-FORM)
-                      | (MATCHER . HIGHLIGHT)
-                      | (MATCHER HIGHLIGHT ...)
-                      | (eval . FORM)
+		      | (MATCHER . MATCH)
+		      | (MATCHER . FACE-FORM)
+		      | (MATCHER . HIGHLIGHT)
+		      | (MATCHER HIGHLIGHT ...)
+		      | (eval . FORM)
 
  MATCHER            :== A string containing a regexp.
-                      | A variable containing a regexp to search for.
-                      | A function to call to make the search.
-                        It is called with one arg, the limit of the search,
-                        and should leave MATCH results in the XEmacs global
-                        match data.
+		      | A variable containing a regexp to search for.
+		      | A function to call to make the search.
+			It is called with one arg, the limit of the search,
+			and should leave MATCH results in the XEmacs global
+			match data.
 
  MATCH              :== An integer match subexpression number from MATCHER.
 
  FACE-FORM           :== The symbol naming a defined face.
-                      | Expression whos value is the face name to use.  If you
-                        want FACE-FORM to be a symbol that evaluates to a face,
-                        use a form like \"(progn sym)\".
+		      | Expression whos value is the face name to use.  If you
+			want FACE-FORM to be a symbol that evaluates to a face,
+			use a form like \"(progn sym)\".
 
  HIGHLIGHT          :== MATCH-HIGHLIGHT
-                      | MATCH-ANCHORED
+		      | MATCH-ANCHORED
 
  FORM               :== Expression returning a FONT-LOCK-FORM, evaluated when
-                        the FONT-LOCK-FORM is first used in a buffer.  This
-                        feature can be used to provide a FONT-LOCK-FORM that
-                        can only be generated when Font Lock mode is actually
-                        turned on.
+			the FONT-LOCK-FORM is first used in a buffer.  This
+			feature can be used to provide a FONT-LOCK-FORM that
+			can only be generated when Font Lock mode is actually
+			turned on.
 
  MATCH-HIGHLIGHT    :== (MATCH FACE-FORM OVERRIDE LAXMATCH)
 
  OVERRIDE           :== t        - overwrite existing fontification
-                      | 'keep    - only parts not already fontified are
-                                   highlighted.
-                      | 'prepend - merge faces, this fontification has
-                                   precedence over existing
-                      | 'append  - merge faces, existing fontification has
-                                   precedence over
-                                   this face.
+		      | 'keep    - only parts not already fontified are
+				   highlighted.
+		      | 'prepend - merge faces, this fontification has
+				   precedence over existing
+		      | 'append  - merge faces, existing fontification has
+				   precedence over
+				   this face.
 
  LAXMATCH           :== If non-nil, no error is signalled if there is no MATCH
-                        in MATCHER.
+			in MATCHER.
 
  MATCH-ANCHORED     :== (ANCHOR-MATCHER PRE-MATCH-FORM \\
-                                          POST-MATCH-FORM MATCH-HIGHLIGHT ...)
+					  POST-MATCH-FORM MATCH-HIGHLIGHT ...)
 
  ANCHOR-MATCHER     :== Like a MATCHER, except that the limit of the search
-                        defaults to the end of the line after PRE-MATCH-FORM
-                        is evaluated.  However, if PRE-MATCH-FORM returns a
-                        position greater than the end of the line, that
-                        position is used as the limit of the search.  It is
-                        generally a bad idea to return a position greater than
-                        the end of the line, i.e., cause the ANCHOR-MATCHER
-                        search to span lines.
+			defaults to the end of the line after PRE-MATCH-FORM
+			is evaluated.  However, if PRE-MATCH-FORM returns a
+			position greater than the end of the line, that
+			position is used as the limit of the search.  It is
+			generally a bad idea to return a position greater than
+			the end of the line, i.e., cause the ANCHOR-MATCHER
+			search to span lines.
 
  PRE-MATCH-FORM     :== Evaluated before the ANCHOR-MATCHER is used, therefore
-                        can be used to initialize before, ANCHOR-MATCHER is
-                        used.  Typically, PRE-MATCH-FORM is used to move to
-                        some position relative to the original MATCHER, before
-                        starting with the ANCHOR-MATCHER.
+			can be used to initialize before, ANCHOR-MATCHER is
+			used.  Typically, PRE-MATCH-FORM is used to move to
+			some position relative to the original MATCHER, before
+			starting with the ANCHOR-MATCHER.
 
  POST-MATCH-FORM    :== Like PRE-MATCH-FORM, but used to clean up after the
-                        ANCHOR-MATCHER.  It might be used to move, before
-                        resuming with MATCH-ANCHORED's parent's MATCHER.
+			ANCHOR-MATCHER.  It might be used to move, before
+			resuming with MATCH-ANCHORED's parent's MATCHER.
 
 For example, an element of the first form highlights (if not already highlighted):
 
   \"\\\\\\=<foo\\\\\\=>\"                    Discrete occurrences of \"foo\" in the value
-                                 of the variable `font-lock-keyword-face'.
+				 of the variable `font-lock-keyword-face'.
 
   (\"fu\\\\(bar\\\\)\" . 1)            Substring \"bar\" within all occurrences of
-                                 \"fubar\" in the value of
-                                 `font-lock-keyword-face'.
+				 \"fubar\" in the value of
+				 `font-lock-keyword-face'.
 
   (\"fubar\" . fubar-face)         Occurrences of \"fubar\" in the value of
-                                 `fubar-face'.
+				 `fubar-face'.
 
   (\"foo\\\\|bar\" 0 foo-bar-face t) Occurrences of either \"foo\" or \"bar\" in the
-                                 value of `foo-bar-face', even if already
-                                 highlighted.
+				 value of `foo-bar-face', even if already
+				 highlighted.
 
   (fubar-match 1 fubar-face)     The first subexpression within all
-                                 occurrences of whatever the function
-                                 `fubar-match' finds and matches in the value
-                                 of `fubar-face'.
+				 occurrences of whatever the function
+				 `fubar-match' finds and matches in the value
+				 of `fubar-face'.
 
   (\"\\\\\\=<anchor\\\\\\=>\" (0 anchor-face) (\"\\\\\\=<item\\\\\\=>\" nil nil (0 item-face)))
    -------------- ---------------  ------------ --- --- -------------
        |            |               |            |   |          |
    MATCHER          |         ANCHOR-MATCHER     |   +------+ MATCH-HIGHLIGHT
-             MATCH-HIGHLIGHT                 PRE-MATCH-FORM |
-                                                           POST-MATCH-FORM
+	     MATCH-HIGHLIGHT                 PRE-MATCH-FORM |
+							   POST-MATCH-FORM
 
   Discrete occurrences of \"anchor\" in the value of `anchor-face', and
   subsequent discrete occurrences of \"item\" (on the same line) in the value
@@ -661,7 +661,7 @@ The corresponding face should be set using `edit-faces' or the
 (defvar font-lock-warning-face 'font-lock-warning-face
   "This variable should not be set.
 It is present only for reasons of backwards compatibility.
-The corresponding face should be set using `edit-faces' or the 
+The corresponding face should be set using `edit-faces' or the
 `set-face-*' functions.")
 (defvar font-lock-doc-string-face 'font-lock-doc-string-face
   "This variable should not be set.
@@ -1002,7 +1002,7 @@ see the variables `c-font-lock-extra-types', `c++-font-lock-extra-types',
 	   ;; If the keywords were compiled before, compile them again.
 	   (if was-compiled
 	       (setq font-lock-keywords
-                     (font-lock-compile-keywords font-lock-keywords)))))))
+		     (font-lock-compile-keywords font-lock-keywords)))))))
 
 (defun font-lock-update-removed-keyword-alist (mode keywords how)
   "Update `font-lock-removed-keywords-alist' when adding new KEYWORDS to MODE."
@@ -1109,7 +1109,7 @@ happens, so the major mode can be corrected."
 	   ;; If the keywords were compiled before, compile them again.
 	   (if was-compiled
 	       (setq font-lock-keywords
-                     (font-lock-compile-keywords font-lock-keywords)))))))
+		     (font-lock-compile-keywords font-lock-keywords)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;        actual code        ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1203,7 +1203,7 @@ See the variable `font-lock-keywords' for customization."
 			'font-lock-after-change-function t)
 	   (setq font-lock-defaults-computed nil
 		 font-lock-keywords nil)
-	   ;; We have no business doing this here, since 
+	   ;; We have no business doing this here, since
 	   ;; pre-idle-hook is global.	Other buffers may
 	   ;; still be in font-lock mode.  -dkindred@cs.cmu.edu
 	   ;; (remove-hook 'pre-idle-hook 'font-lock-pre-idle-hook)
@@ -1371,7 +1371,7 @@ This can take a while for large buffers."
       (or was-on (font-lock-mode 1))
       (font-lock-unfontify-region (point-min) (point-max) t)
       ;;    (buffer-syntactic-context-flush-cache)
-    
+
       ;; If a ^G is typed during fontification, abort the fontification, but
       ;; return normally (do not signal.)  This is to make it easy to abort
       ;; fontification if it's taking a long time, without also causing the
@@ -1428,7 +1428,7 @@ This can take a while for large buffers."
 ;; The following must be rethought, since keywords can override fontification.
 ;      ;; Now scan for keywords, but not if we are inside a comment now.
 ;      (or (and (not font-lock-keywords-only)
-;	       (let ((state (parse-partial-sexp beg end nil nil 
+;	       (let ((state (parse-partial-sexp beg end nil nil
 ;						font-lock-cache-state)))
 ;		 (or (nth 4 state) (nth 7 state))))
 ;	  (font-lock-fontify-keywords-region beg end))
@@ -1623,7 +1623,7 @@ is currently ignored."
       (when (or (nth 3 state) (nth 4 state))
 	(setq string (nth 3 state) beg (point))
 	(setq state (parse-partial-sexp (point) end nil nil state 'syntax-table))
-	(font-lock-set-face beg (point) (if string 
+	(font-lock-set-face beg (point) (if string
 					    font-lock-string-face
 					  font-lock-comment-face)))
       ;;
@@ -1744,26 +1744,26 @@ Optional argument OBJECT is the string or buffer containing the text."
 HIGHLIGHT should be of the form MATCH-HIGHLIGHT,
 see `font-lock-syntactic-keywords'."
   (let* ((match (nth 0 highlight))
- 	 (start (match-beginning match)) (end (match-end match))
- 	 (value (nth 1 highlight))
- 	 (override (nth 2 highlight)))
+	 (start (match-beginning match)) (end (match-end match))
+	 (value (nth 1 highlight))
+	 (override (nth 2 highlight)))
     (unless (numberp (car-safe value))
       (setq value (eval value)))
     (cond ((not start)
- 	   ;; No match but we might not signal an error.
- 	   (or (nth 3 highlight)
- 	       (error "No match %d in highlight %S" match highlight)))
- 	  ((not override)
- 	   ;; Cannot override existing fontification.
- 	   (or (map-extents 'extent-property (current-buffer)
+	   ;; No match but we might not signal an error.
+	   (or (nth 3 highlight)
+	       (error "No match %d in highlight %S" match highlight)))
+	  ((not override)
+	   ;; Cannot override existing fontification.
+	   (or (map-extents 'extent-property (current-buffer)
 			    start end 'syntax-table)
 	       (font-lock-set-syntax start end value)))
- 	  ((eq override t)
- 	   ;; Override existing fontification.
+	  ((eq override t)
+	   ;; Override existing fontification.
 	   (font-lock-set-syntax start end value))
- 	  ((eq override 'keep)
- 	   ;; Keep existing fontification.
- 	   (font-lock-fillin-text-property start end
+	  ((eq override 'keep)
+	   ;; Keep existing fontification.
+	   (font-lock-fillin-text-property start end
 					   'syntax-table 'font-lock value)))))
 
 (defun font-lock-fontify-syntactic-anchored-keywords (keywords limit)
@@ -1771,22 +1771,22 @@ see `font-lock-syntactic-keywords'."
  KEYWORDS should be of the form MATCH-ANCHORED, see `font-lock-keywords',
  LIMIT can be modified by the value of its PRE-MATCH-FORM."
   (let ((matcher (nth 0 keywords)) (lowdarks (nthcdr 3 keywords)) highlights
- 	;; Evaluate PRE-MATCH-FORM.
- 	(pre-match-value (eval (nth 1 keywords))))
+	;; Evaluate PRE-MATCH-FORM.
+	(pre-match-value (eval (nth 1 keywords))))
     ;; Set LIMIT to value of PRE-MATCH-FORM or the end of line.
     (if (and (numberp pre-match-value) (> pre-match-value (point)))
- 	(setq limit pre-match-value)
+	(setq limit pre-match-value)
       (save-excursion (end-of-line) (setq limit (point))))
     (save-match-data
       ;; Find an occurrence of `matcher' before `limit'.
       (while (if (stringp matcher)
- 		 (re-search-forward matcher limit t)
- 	       (funcall matcher limit))
- 	;; Apply each highlight to this instance of `matcher'.
- 	(setq highlights lowdarks)
- 	(while highlights
- 	  (font-lock-apply-syntactic-highlight (car highlights))
- 	  (setq highlights (cdr highlights)))))
+		 (re-search-forward matcher limit t)
+	       (funcall matcher limit))
+	;; Apply each highlight to this instance of `matcher'.
+	(setq highlights lowdarks)
+	(while highlights
+	  (font-lock-apply-syntactic-highlight (car highlights))
+	  (setq highlights (cdr highlights)))))
     ;; Evaluate POST-MATCH-FORM.
     (eval (nth 2 keywords))))
 
@@ -1891,7 +1891,7 @@ START should be at the beginning of a line."
 	    (font-lock-compile-keywords font-lock-keywords)))
     (let* ((case-fold-search font-lock-keywords-case-fold-search)
 	   (keywords (cdr font-lock-keywords))
-	   (bufname (buffer-name)) 
+	   (bufname (buffer-name))
 	   (progress 5) (old-progress 5)
 	   (iter 0)
 	   (nkeywords (length keywords))
@@ -1900,8 +1900,8 @@ START should be at the beginning of a line."
       ;; Fontify each item in `font-lock-keywords' from `start' to `end'.
       ;; In order to measure progress accurately we need to know how
       ;; many keywords we have and how big the region is. Then progress
-      ;; is ((pos - start)/ (end - start) * nkeywords 
-      ;; 	+ iteration / nkeywords) * 100
+      ;; is ((pos - start)/ (end - start) * nkeywords
+      ;;	+ iteration / nkeywords) * 100
       (while keywords
 	;;
 	;; Find an occurrence of `matcher' from `start' to `end'.
@@ -2086,13 +2086,13 @@ Each keyword has the form (MATCHER HIGHLIGHT ...).  See `font-lock-keywords'."
 				      (boundp n))
 				 n
 			       nil))))
-		(setq font-lock-keywords 
+		(setq font-lock-keywords
 		      (symbol-value
 		       (or (funcall try (get major-mode 'font-lock-keywords))
 			   (funcall try (concat major "-font-lock-keywords"))
 			   (funcall try (and (string-match "-mode\\'" major)
-					     (concat (substring 
-						      major 0 
+					     (concat (substring
+						      major 0
 						      (match-beginning 0))
 						     "-font-lock-keywords")))
 			   'font-lock-keywords)))))
@@ -2115,7 +2115,7 @@ Each keyword has the form (MATCHER HIGHLIGHT ...).  See `font-lock-keywords'."
 	    ;; older way:
 	    ;; cleverly examine the syntax table.
 	    (font-lock-examine-syntax-table))
-	   
+
 	  ;; Syntax table?
 	  (if (nth 3 defaults)
 	      (let ((slist (nth 3 defaults)))
@@ -2152,7 +2152,7 @@ Each keyword has the form (MATCHER HIGHLIGHT ...).  See `font-lock-keywords'."
 ;; for SYNTAX-BEGIN.  Thus the calculation of the cache is usually
 ;; faster but not infallible, so we risk mis-fontification.  --sm.
 
-(put 'c-mode 'font-lock-defaults 
+(put 'c-mode 'font-lock-defaults
      '((c-font-lock-keywords
 	c-font-lock-keywords-1 c-font-lock-keywords-2 c-font-lock-keywords-3)
        nil nil ((?_ . "w")) beginning-of-defun))
@@ -2165,7 +2165,7 @@ Each keyword has the form (MATCHER HIGHLIGHT ...).  See `font-lock-keywords'."
 	c++-font-lock-keywords-3)
        nil nil ((?_ . "w") (?~ . "w")) beginning-of-defun))
 
-(put 'java-mode 'font-lock-defaults 
+(put 'java-mode 'font-lock-defaults
      '((java-font-lock-keywords
 	java-font-lock-keywords-1 java-font-lock-keywords-2
 	java-font-lock-keywords-3)
@@ -2431,10 +2431,10 @@ Each keyword has the form (MATCHER HIGHLIGHT ...).  See `font-lock-keywords'."
   ;; belonging to it) is expected to by skip-able by `forward-sexp', and items
   ;; are expected to be separated with a "," or ";".
   (if (looking-at (concat "[ \t*&]*"
-                          #r"\(\(?:\sw\|\s_\)+\)"
-                          #r"\(::\(\(?:\sw\|\s_\)+\)\)?"
-                          "[ \t]*"
-                          #r"\((\)?"))
+			  #r"\(\(?:\sw\|\s_\)+\)"
+			  #r"\(::\(\(?:\sw\|\s_\)+\)\)?"
+			  "[ \t]*"
+			  #r"\((\)?"))
       (save-match-data
 	(condition-case nil
 	    (save-restriction
@@ -2501,7 +2501,7 @@ Each keyword has the form (MATCHER HIGHLIGHT ...).  See `font-lock-keywords'."
    ;; These are all anchored at the beginning of line for speed.
    ;;
    ;; Fontify function name definitions (GNU style; without type on line).
-   
+
    ;; In FSF this has the simpler definition of "\\sw+" for ctoken.
    ;; I'm not sure if ours is more correct.
    ;; This is a subset of the next rule, and is slower when present. --dmoore
@@ -2517,14 +2517,14 @@ Each keyword has the form (MATCHER HIGHLIGHT ...).  See `font-lock-keywords'."
    ;; x?x?x?y?z should always be: (x(xx?)?)?y?z --dmoore
    (list (concat
 	  "^\\("
-          "\\(" ctoken "[ \t]+\\)"	; type specs; there can be no
+	  "\\(" ctoken "[ \t]+\\)"	; type specs; there can be no
 	  "\\("
-          "\\(" ctoken "[ \t]+\\)"	; more than 3 tokens, right?
-          "\\(" ctoken "[ \t]+\\)"
+	  "\\(" ctoken "[ \t]+\\)"	; more than 3 tokens, right?
+	  "\\(" ctoken "[ \t]+\\)"
 	  "?\\)?\\)?"
-          "\\([*&]+[ \t]*\\)?"		; pointer
-          "\\(" ctoken "\\)[ \t]*(")	; name
-         10 'font-lock-function-name-face)
+	  "\\([*&]+[ \t]*\\)?"		; pointer
+	  "\\(" ctoken "\\)[ \t]*(")	; name
+	 10 'font-lock-function-name-face)
    ;;
    ;; This is faster but not by much.  I don't see why not.
    ;(list (concat "^\\(" ctoken "\\)[ \t]*(") 1 'font-lock-function-name-face)
@@ -2534,8 +2534,8 @@ Each keyword has the form (MATCHER HIGHLIGHT ...).  See `font-lock-keywords'."
    ;;
    ;; Fontify structure names (in structure definition form).
    (list (concat "^\\(typedef[ \t]+struct\\|struct\\|static[ \t]+struct\\)"
-      	   "[ \t]+\\(" ctoken "\\)[ \t]*\\(\{\\|$\\)")
-         2 'font-lock-function-name-face)
+	   "[ \t]+\\(" ctoken "\\)[ \t]*\\(\{\\|$\\)")
+	 2 'font-lock-function-name-face)
    ;;
    ;; Fontify case clauses.  This is fast because its anchored on the left.
    '("case[ \t]+\\(\\(\\sw\\|\\s_\\)+\\)[ \t]+:". 1)
@@ -2728,7 +2728,7 @@ This adds highlighting of Java documentation tags, such as @see.")
 
 (defvar java-font-lock-type-regexp
   (concat #r"\<\(boolean\|byte\|char\|double\|float\|int"
-          #r"\|long\|short\|void\)\>")
+	  #r"\|long\|short\|void\)\>")
   "Regexp which should match a primitive type.")
 
 (defvar java-font-lock-identifier-regexp
@@ -2754,7 +2754,7 @@ The name is assumed to begin with a capital letter.")
   (setq java-font-lock-keywords-1
 	(list
 	 ;; Keywords:
-	 (list        
+	 (list
 	  (concat
 	   #r"\<\("
 	   #r"break\|byvalue\|"
@@ -2779,7 +2779,7 @@ The name is assumed to begin with a capital letter.")
 	 (list (concat #r"\<\(class\|interface\)\>\s *"
 		       java-font-lock-identifier-regexp)
 	       2 'font-lock-function-name-face)
-        
+
 	 ;; Package declarations:
 	 (list (concat #r"\<\(package\|import\)\>\s *"
 		       java-font-lock-identifier-regexp)
@@ -2789,7 +2789,7 @@ The name is assumed to begin with a capital letter.")
 		     nil nil '(1 (if (equal (char-after (match-end 0)) ?.)
 				     'font-lock-reference-face
 				   'font-lock-type-face))))
-	 
+
 	 ;; Constructors:
 	 (list (concat
 		"^\\s *\\(" java-modifier-regexp "\\s +\\)*"
@@ -2829,7 +2829,7 @@ The name is assumed to begin with a capital letter.")
 
   ;; Types and declared variable names:
   (setq java-font-lock-keywords-2
-	(append 
+	(append
 
 	 java-font-lock-keywords-1
 	 (list
@@ -2899,11 +2899,11 @@ The name is assumed to begin with a capital letter.")
 		  (goto-char (match-end 1))
 		  (goto-char (match-end 0))
 		  (1 font-lock-variable-name-face))))))
-	
+
   ;; Modifier keywords and Java doc tags
   (setq java-font-lock-keywords-3
 	(append
- 
+
 	 '(
 	   ;; Feature scoping:
 	   ;; These must come first or the Modifiers from keywords-1 will
@@ -2913,7 +2913,7 @@ The name is assumed to begin with a capital letter.")
 	   (#r"\<protected\>" 0 font-lock-preprocessor-face)
 	   (#r"\<public\>"    0 font-lock-reference-face))
 	 java-font-lock-keywords-2
- 
+
 	 (list
 
 	  ;; Javadoc tags
@@ -2933,11 +2933,11 @@ The name is assumed to begin with a capital letter.")
 		      '(goto-char (match-end 0)) nil
 		      '(1 (if (equal (char-after (match-end 0)) ?.)
 			      'font-lock-reference-face 'font-lock-type-face) t)))
-    
-	  ;; Doc tag - Cross-references, usually to methods 
+
+	  ;; Doc tag - Cross-references, usually to methods
 	  '("@see\\s +\\(\\S *[^][ \t\n\r\f(){},.;:]\\)"
 	    1 font-lock-function-name-face t)
-    
+
 	  ;; Doc tag - docRoot (1.3)
 	  '(#r"\({ *@docRoot *}\)"
 	    0 font-lock-keyword-face t)
@@ -2950,7 +2950,7 @@ The name is assumed to begin with a capital letter.")
 	  ;; Doc tag - Links
 	  '(#r"{ *@link\s +\(\(\S +\)\|\(\S +\s +\S +\)\) *}"
 	    1 font-lock-function-name-face t)
-    
+
 	  )))
   )
 
@@ -3025,7 +3025,7 @@ The name is assumed to begin with a capital letter.")
      3 (if (match-beginning 2) 'bold 'italic) keep))
   "Default expressions to highlight in TeX modes.")
 
-(defconst ksh-font-lock-keywords 
+(defconst ksh-font-lock-keywords
   (list
    '(#r"\(^\|[^\$\\]\)#.*" . font-lock-comment-face)
    '(#r"\<\(if\|then\|else\|elif\|fi\|case\|esac\|for\|do\|done\|foreach\|in\|end\|select\|while\|repeat\|time\|function\|until\|exec\|command\|coproc\|noglob\|nohup\|nocorrect\|source\|autoload\|alias\|unalias\|export\|set\|echo\|eval\|cd\|log\|compctl\)\>" . font-lock-keyword-face)
@@ -3034,7 +3034,7 @@ The name is assumed to begin with a capital letter.")
    )
   "Additional expressions to highlight in ksh-mode.")
 
-(defconst sh-font-lock-keywords 
+(defconst sh-font-lock-keywords
   (list
    '(#r"\(^\|[^\$\\]\)#.*" . font-lock-comment-face)
    '(#r"\<\(if\|then\|else\|elif\|fi\|case\|esac\|for\|do\|done\|in\|while\|exec\|export\|set\|echo\|eval\|cd\)\>" . font-lock-keyword-face)

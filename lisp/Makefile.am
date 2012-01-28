@@ -15,7 +15,7 @@
 ## General Public License for more details.
 
 ## You should have received a copy of the GNU General Public License
-## along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Process this file with automake to produce Makefile.in
 
@@ -56,10 +56,10 @@ ETAGS = $(top_builddir)/lib-src/etags
 TAGS_DEPENDENCIES = $(ETAGS)
 ETAGS_ARGS =
 
-sxepkg_DATA = 
-xepkg_DATA = 
-mulepkg_DATA = 
-sitepkg_DATA = 
+sxepkg_DATA =
+xepkg_DATA =
+mulepkg_DATA =
+sitepkg_DATA =
 
 subdirs = ffi mule term
 
@@ -81,8 +81,8 @@ corelispels =								\
 	cus-edit.el cus-face.el cus-file.el cus-load.el cus-start.el	\
 	custom.el derived.el device.el dialog-items.el dialog.el	\
 	disass.el disp-table.el dragdrop.el easy-mmode.el easymenu.el	\
-	emod-utils.el etags.el events.el extents.el faces.el ffi.el 	\
-	files-nomule.el files.el fill.el float-sup.el font-lock.el 	\
+	emod-utils.el etags.el events.el extents.el faces.el ffi.el	\
+	files-nomule.el files.el fill.el float-sup.el font-lock.el	\
 	font-menu.el font.el fontl-hooks.el format.el frame.el          \
 	glyphs.el gnuserv.el gpm.el gui.el gutter-items.el gutter.el	\
 	help-macro.el help-nomule.el help.el hyper-apropos.el indent.el	\
@@ -114,7 +114,7 @@ mulelispels =								\
 	mule/cyrillic.el mule/english.el mule/ethiopic.el		\
 	mule/european.el mule/greek.el mule/hebrew.el mule/japanese.el	\
 	mule/kinsoku.el mule/korean.el mule/latin.el mule/misc-lang.el	\
-	mule/mule-category.el mule/ccl.el mule/mule-charset.el  	\
+	mule/mule-category.el mule/ccl.el mule/mule-charset.el	\
 	mule/mule-cmds.el mule/mule-coding.el mule/mule-help.el		\
 	mule/mule-init.el mule/mule-misc.el mule/mule-tty-init.el	\
 	mule/mule-x-init.el mule/thai-xtis-chars.el mule/thai-xtis.el	\
@@ -132,15 +132,15 @@ termlispels =								\
 
 builtels =                                                              \
 	auto-autoloads.el custom-load.el finder-inf.el                  \
-	custom-defines.el 
+	custom-defines.el
 
 ffibuiltels =                                                           \
-        ffi/auto-autoloads.el ffi/custom-load.el                        \
-        ffi/custom-defines.el
+	ffi/auto-autoloads.el ffi/custom-load.el                        \
+	ffi/custom-defines.el
 
 mulebuiltels =                                                          \
-        mule/auto-autoloads.el mule/custom-load.el                      \
-        mule/custom-defines.el
+	mule/auto-autoloads.el mule/custom-load.el                      \
+	mule/custom-defines.el
 
 
 if HAVE_FFI
@@ -150,7 +150,7 @@ if WITH_MULE
 builtels += $(mulebuiltels)
 endif
 
-nocompile_elfiles = 
+nocompile_elfiles =
 compile_elfiles = $(compile_bldchainels) $(corelispels) $(termlispels)
 if HAVE_FFI
 compile_elfiles += $(ffilispels)

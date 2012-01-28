@@ -512,7 +512,7 @@ extern Lisp_Object Qnil;
    {
      LIST_LOOP_3 (elt, list, tail)
        {
-         execute_code_here;
+	 execute_code_here;
        }
    }
 
@@ -640,7 +640,7 @@ PRIVATE_EXTERNAL_LIST_LOOP_6 (elt, list, len, tail,			\
 #define PRIVATE_EXTERNAL_LIST_LOOP_6(elt, list, len, hare,		\
 				     tortoise, suspicion_length)	\
 	for (tortoise = hare = list, len = 0;				\
-	     								\
+									\
 	     (CONSP (hare) ? ((elt = XCAR (hare)), 1) :			\
 	      (NILP (hare) ? 0 :					\
 	       (signal_malformed_list_error (list), 0)));		\
@@ -719,7 +719,7 @@ do {									\
 	    list = XCDR (tail_##elt);				\
 	  else							\
 	    XCDR (prev_tail_##elt) = XCDR (tail_##elt);		\
-          /* Keep tortoise from ever passing hare. */		\
+	  /* Keep tortoise from ever passing hare. */		\
 	  len_##elt = 0;					\
 	}							\
       else							\
@@ -842,7 +842,7 @@ EXTERNAL_PROPERTY_LIST_LOOP_7 (key, value, list, len, tail,		\
 		     tortoise_##key, CIRCULAR_LIST_SUSPICION_LENGTH)
 
 #define EXTERNAL_PROPERTY_LIST_LOOP_7(key, value, list, len, hare,	\
-                             tortoise, suspicion_length)		\
+			     tortoise, suspicion_length)		\
   for (tortoise = hare = list, len = 0;					\
 									\
        ((CONSP (hare) &&						\
@@ -2319,18 +2319,18 @@ void debug_gcpro5(char *, int, struct gcpro *, struct gcpro *, struct gcpro *,
 		  struct gcpro *, struct gcpro *, Lisp_Object *, Lisp_Object *,
 		  Lisp_Object *, Lisp_Object *, Lisp_Object *);
 void debug_gcpro6(char *, int, struct gcpro *, struct gcpro *, struct gcpro *,
-		  struct gcpro *, struct gcpro *, struct gcpro *, Lisp_Object *, 
-                  Lisp_Object *, Lisp_Object *, Lisp_Object *, Lisp_Object *, 
-                  Lisp_Object *);
+		  struct gcpro *, struct gcpro *, struct gcpro *, Lisp_Object *,
+		  Lisp_Object *, Lisp_Object *, Lisp_Object *, Lisp_Object *,
+		  Lisp_Object *);
 void debug_gcpro7(char *, int, struct gcpro *, struct gcpro *, struct gcpro *,
-		  struct gcpro *, struct gcpro *, struct gcpro *, struct gcpro *, 
-                  Lisp_Object *, Lisp_Object *, Lisp_Object *, Lisp_Object *, 
-                  Lisp_Object *, Lisp_Object *, Lisp_Object *);
+		  struct gcpro *, struct gcpro *, struct gcpro *, struct gcpro *,
+		  Lisp_Object *, Lisp_Object *, Lisp_Object *, Lisp_Object *,
+		  Lisp_Object *, Lisp_Object *, Lisp_Object *);
 void debug_gcpro8(char *, int, struct gcpro *, struct gcpro *, struct gcpro *,
 		  struct gcpro *, struct gcpro *, struct gcpro *, struct gcpro *,
-                  struct gcpro *, Lisp_Object *, Lisp_Object *,
-		  Lisp_Object *, Lisp_Object *, Lisp_Object *, Lisp_Object *, 
-                  Lisp_Object *, Lisp_Object *);
+		  struct gcpro *, Lisp_Object *, Lisp_Object *,
+		  Lisp_Object *, Lisp_Object *, Lisp_Object *, Lisp_Object *,
+		  Lisp_Object *, Lisp_Object *);
 void debug_ungcpro(char *, int, struct gcpro *);
 
 #define GCPRO1(v) \
@@ -2347,13 +2347,13 @@ void debug_ungcpro(char *, int, struct gcpro *);
 	       &v1,&v2,&v3,&v4,&v5)
 #define GCPRO6(v1,v2,v3,v4,v5,v6)                                         \
   debug_gcpro6 (__FILE__, __LINE__,&gcpro1,&gcpro2,&gcpro3,&gcpro4,&gcpro5,&gcpro6, \
-                &v1,&v2,&v3,&v4,&v5,&v6)
+		&v1,&v2,&v3,&v4,&v5,&v6)
 #define GCPRO7(v1,v2,v3,v4,v5,v6,v7)                                      \
  debug_gcpro7 (__FILE__, __LINE__,&gcpro1,&gcpro2,&gcpro3,&gcpro4,&gcpro5,&gcpro6,&gcpro7,\
 	       &v1,&v2,&v3,&v4,&v5,&v6,&v7)
 #define GCPRO8(v1,v2,v3,v4,v5,v6,v7,v8)                                   \
   debug_gcpro8 (__FILE__, __LINE__,&gcpro1,&gcpro2,&gcpro3,&gcpro4,&gcpro5,&gcpro6,&gcpro7,&gcpro8, \
-                &v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8)
+		&v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8)
 #define UNGCPRO \
  debug_ungcpro(__FILE__, __LINE__,&gcpro1)
 
@@ -2371,13 +2371,13 @@ void debug_ungcpro(char *, int, struct gcpro *);
 	       &ngcpro5,&v1,&v2,&v3,&v4,&v5)
 #define NGCPRO6(v1,v2,v3,v4,v5,v6)                                         \
   debug_gcpro6 (__FILE__, __LINE__,&ngcpro1,&ngcpro2,&ngcpro3,&ngcpro4,&ngcpro5,&ngcpro6, \
-                &v1,&v2,&v3,&v4,&v5,&v6)
+		&v1,&v2,&v3,&v4,&v5,&v6)
 #define NGCPRO7(v1,v2,v3,v4,v5,v6,v7)                                     \
  debug_gcpro7 (__FILE__, __LINE__,&ngcpro1,&ngcpro2,&ngcpro3,&ngcpro4,&ngcpro5,&ngcpro6,&ngcpro7,\
 	       &v1,&v2,&v3,&v4,&v5,&v6,&v7)
 #define NGCPRO8(v1,v2,v3,v4,v5,v6,v7,v8)                                  \
   debug_gcpro8 (__FILE__, __LINE__,&ngcpro1,&ngcpro2,&ngcpro3,&ngcpro4,&ngcpro5,&ngcpro6,&ngcpro7,&ngcpro8, \
-                &v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8)
+		&v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8)
 #define NUNGCPRO \
  debug_ungcpro(__FILE__, __LINE__,&ngcpro1)
 
@@ -2395,13 +2395,13 @@ void debug_ungcpro(char *, int, struct gcpro *);
 	       &nngcpro5,&v1,&v2,&v3,&v4,&v5)
 #define NNGCPRO6(v1,v2,v3,v4,v5,v6)                                         \
   debug_gcpro6 (__FILE__, __LINE__,&nngcpro1,&nngcpro2,&nngcpro3,&nngcpro4,&nngcpro5,&nngcpro6, \
-                &v1,&v2,&v3,&v4,&v5,&v6)
+		&v1,&v2,&v3,&v4,&v5,&v6)
 #define NNGCPRO7(v1,v2,v3,v4,v5,v6,v7)                                    \
  debug_gcpro7 (__FILE__, __LINE__,&nngcpro1,&nngcpro2,&nngcpro3,&nngcpro4,&nngcpro5,&nngcpro6,&nngcpro7,\
 	       &v1,&v2,&v3,&v4,&v5,&v6,&v7)
 #define NNGCPRO8(v1,v2,v3,v4,v5,v6,v7,v8)                                 \
   debug_gcpro8 (__FILE__, __LINE__,&nngcpro1,&nngcpro2,&nngcpro3,&nngcpro4,&nngcpro5,&nngcpro6,&nngcpro7,&nngcpro8, \
-                &v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8)
+		&v1,&v2,&v3,&v4,&v5,&v6,&v7,&v8)
 #define NNUNGCPRO \
  debug_ungcpro(__FILE__, __LINE__,&nngcpro1)
 
@@ -2690,12 +2690,12 @@ typedef unsigned long uintptr_t;
 #endif
 
 /************************************************************************/
-/*		              Misc definitions        	                */
+/*		              Misc definitions	                */
 /************************************************************************/
 #include "dllist.h"
 
 /************************************************************************/
-/*		             Other numeric types      	                */
+/*		             Other numeric types	                */
 /************************************************************************/
 
 /* more allocation goodies, C99 wise */
@@ -3047,8 +3047,8 @@ Lisp_Object call1_trapping_errors(char*, Lisp_Object, Lisp_Object);
 Lisp_Object call2_trapping_errors(char*,
 				  Lisp_Object, Lisp_Object, Lisp_Object);
 Lisp_Object call3_trapping_errors(char*,
-				  Lisp_Object, Lisp_Object, Lisp_Object, 
-                                  Lisp_Object);
+				  Lisp_Object, Lisp_Object, Lisp_Object,
+				  Lisp_Object);
 Lisp_Object call_with_suspended_errors(lisp_fn_t, volatile Lisp_Object,
 				       Lisp_Object, Error_behavior, int, ...);
 /* C Code should be using internal_catch, record_unwind_p, condition_case_1 */
@@ -3269,7 +3269,7 @@ void print_symbol(Lisp_Object, Lisp_Object, int);
  * representation of an integral type.  Add a few bytes for truncation,
  * optional sign prefix, and null byte terminator.
  * 2.40824 == log (256) / log (10).
- * 
+ *
  * We don't use floating point since Sun cc (buggily?) cannot use
  * floating point computations to define a compile-time integral
  * constant.

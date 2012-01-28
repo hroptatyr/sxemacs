@@ -119,7 +119,7 @@ AC_DEFUN([SXE_CHECK_LIBC], [dnl
 AC_DEFUN([SXE_CHECK_LIBC_VERSION], [dnl
 	libc_version=""
 	AC_MSG_CHECKING(for standard C library version information)
-	
+
 	case "$ac_cv_build" in
 	*-*-linux*)
 		dnl #### who would ever _not_ be running the distro's libc?
@@ -131,19 +131,19 @@ AC_DEFUN([SXE_CHECK_LIBC_VERSION], [dnl
 			libc_version=`dpkg-query --showformat='${version}' --show libc6`
 			libc_version="GNU libc $libc_version (Debian)"
 		elif test -f /etc/slackware-version ; then
-                        slackver=`cat /etc/slackware-version`
+			slackver=`cat /etc/slackware-version`
 			libc_version=`/lib/libc.so.6|head -1|cut -d ' ' -f7|tr -d ,`
-                        if test "x$libc_version" = "x"; then
-                                libc_version=`/lib64/libc.so.6|head -1|cut -d ' ' -f7|tr -d ,`
-                        fi
+			if test "x$libc_version" = "x"; then
+				libc_version=`/lib64/libc.so.6|head -1|cut -d ' ' -f7|tr -d ,`
+			fi
 			libc_version="GNU libc $libc_version ($slackver)"
 		dnl need SuSE et al checks here...
 		fi
 		dnl #### Tested on Debian, does this actually work elsewhere?  ;-)
 		dnl #### NO! -hroptatyr
-	        dnl if test -z "$libc_version"; then
+		dnl if test -z "$libc_version"; then
 		dnl   libc_version=`ls /lib/libc-*.so | sed -e 's,/lib/libc-\(.*\)\.so,\1,'`
-	        dnl fi
+		dnl fi
 
 		if test -z "$libc_version"; then
 		AC_RUN_IFELSE([AC_LANG_SOURCE([[
@@ -155,9 +155,9 @@ libc_file_we_use=`$LDD ./conftest | grep libc | sed -e "s/.*=>\(.*\) .*$/\1/"`],
 		;;
 
 	*-*-aix*)
-		libc_version="bos.rte.libc `lslpp -Lqc bos.rte.libc | cut -f3 -d:`" 
+		libc_version="bos.rte.libc `lslpp -Lqc bos.rte.libc | cut -f3 -d:`"
 		;;
-	
+
 	*-*-solaris*)
 		libc=`pkginfo -l SUNWcsl | grep VERSION: | awk '{print $2}'`
 		libc_version="SUNWcsl $libc"
@@ -264,10 +264,10 @@ AC_DEFUN([SXE_CHECK_BASIC_TYPES], [dnl
 
 	## we used to do:
 	## if test "$ac_cv_sizeof_short" = 0; then
-	## 	echo ""
-	## 	echo "*** PANIC *** Configure tests are not working - compiler is broken."
-	## 	echo "*** PANIC *** Please examine config.log for compilation errors."
-	## 	exit 1
+	##	echo ""
+	##	echo "*** PANIC *** Configure tests are not working - compiler is broken."
+	##	echo "*** PANIC *** Please examine config.log for compilation errors."
+	##	exit 1
 	## fi
 
 	## treat RETSIGTYPE specially since we've kicked the detection
@@ -338,7 +338,7 @@ AC_DEFUN([SXE_CHECK_BASIC_FUNS], [dnl
 
 AC_DEFUN([SXE_CHECK_SIGNALS], [dnl
 	SXE_CHECK_HEADERS([string.h])
-        AC_CHECK_FUNCS([strsignal])
+	AC_CHECK_FUNCS([strsignal])
 	AC_CHECK_DECLS([sys_siglist], [], [], [
 #include <signal.h>
 /* NetBSD declares sys_siglist in unistd.h.  */
@@ -363,17 +363,17 @@ AC_DEFUN([SXE_CHECK_INTPTR_T], [dnl
 	fi
 
 	dnl if test "$ac_cv_header_inttypes_h" != "yes"; then
-	dnl 	AC_MSG_CHECKING([for intptr_t in sys/types.h])
-	dnl 	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+	dnl	AC_MSG_CHECKING([for intptr_t in sys/types.h])
+	dnl	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 	dnl #include <sys/types.h>
 	dnl ]], [[
 	dnl intptr_t x;
 	dnl ]])], [dnl
-	dnl 		AC_MSG_RESULT(yes)
-	dnl 		AC_DEFINE([HAVE_INTPTR_T_IN_SYS_TYPES_H], [1],
+	dnl		AC_MSG_RESULT(yes)
+	dnl		AC_DEFINE([HAVE_INTPTR_T_IN_SYS_TYPES_H], [1],
 	dnl			[Description here!])
-	dnl 		], [dnl
-	dnl 		AC_MSG_RESULT(no)])
+	dnl		], [dnl
+	dnl		AC_MSG_RESULT(no)])
 	dnl fi
 ])dnl SXE_CHECK_INTPTR_T
 

@@ -214,23 +214,23 @@ The keywords allowed are
    [ \"name\" callback <active-p> ]
    [ \"name\" callback <active-p> \"suffix\" ]
    [ \"name\" callback :<keyword> <value>  :<keyword> <value> ... ]
-  
+
   The name is the string to display on the button; it is filtered through the
   resource database, so it is possible for resources to override what string
   is actually displayed.
-  
+
   Accelerators can be indicated in the string by putting the sequence
   \"%_\" before the character corresponding to the key that will invoke
   the button.  Uppercase and lowercase accelerators are equivalent.  The
   sequence \"%%\" is also special, and is translated into a single %.
-  
+
   If the `callback' of a button is a symbol, then it must name a command.
   It will be invoked with `call-interactively'.  If it is a list, then it is
   evaluated with `eval'.
-  
+
   One (and only one) of the buttons may be `nil'.  This marker means that all
   following buttons should be flushright instead of flushleft.
-  
+
   Though the keyword/value syntax is supported for dialog boxes just as in
   popup menus, the only keyword which is both meaningful and fully implemented
   for dialog box buttons is `:active'.
@@ -300,20 +300,20 @@ name can change as a result of selecting a different printer device.  If
 a device is specified, then changes are stored into the settings object
 currently selected into that printer.  If a settings object is supplied,
 then changes are recorded into it, and, it is selected into a
-printer, then changes are propagated to that printer 
+printer, then changes are propagated to that printer
 too.
 
 Return value is nil if the user has canceled the dialog.  Otherwise, it
 is a new plist, with the following properties:
   name                   Printer device name, even if unchanged by the user.
   from-page              First page to print, 1-based.  Returned if
-                         `selected-page-button' is `pages'.
-                         user, then this value is not included in the plist.
+			 `selected-page-button' is `pages'.
+			 user, then this value is not included in the plist.
   to-page                Last page to print, inclusive, 1-based.  Returned if
-                         `selected-page-button' is `pages'.
+			 `selected-page-button' is `pages'.
   copies                 Number of copies to print.  Always returned.
   selected-page-button   Which page button was selected (`all', `selection',
-                         or `pages').
+			 or `pages').
 
 The DEVICE is destroyed and an error is signaled in case of
 initialization problem with the new printer.
@@ -497,13 +497,13 @@ See also the `print' dialog box type."
 		     (set-face-background 'modeline [default background] frame)
 		     ;; resize before mapping
 		     (when cl-autosize
-		       (set-frame-pixel-size 
+		       (set-frame-pixel-size
 			frame
-			(image-instance-width 
-			 (glyph-image-instance cl-spec 
+			(image-instance-width
+			 (glyph-image-instance cl-spec
 					       (frame-selected-window frame)))
-			(image-instance-height 
-			 (glyph-image-instance cl-spec 
+			(image-instance-height
+			 (glyph-image-instance cl-spec
 					       (frame-selected-window frame)))))
 		     ;; somehow, even though the resizing is supposed
 		     ;; to be while the frame is not visible, a

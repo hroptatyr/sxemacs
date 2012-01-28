@@ -1,4 +1,3 @@
-
 @node Reading Mail, Calendar/Diary, Sending Mail, Top
 @chapter Reading Mail
 @cindex mail

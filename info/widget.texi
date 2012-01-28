@@ -21,18 +21,18 @@
 @top The Emacs Widget Library
 
 @menu
-* Introduction::                
-* User Interface::              
-* Programming Example::         
-* Setting Up the Buffer::       
-* Basic Types::                 
-* Sexp Types::                  
-* Widget Properties::           
-* Defining New Widgets::        
-* Widget Browser::              
-* Widget Minor Mode::           
-* Utilities::                   
-* Widget Wishlist::             
+* Introduction::
+* User Interface::
+* Programming Example::
+* Setting Up the Buffer::
+* Basic Types::
+* Sexp Types::
+* Widget Properties::
+* Defining New Widgets::
+* Widget Browser::
+* Widget Minor Mode::
+* Utilities::
+* Widget Wishlist::
 * Widget Internals::
 @end menu
 
@@ -54,7 +54,7 @@ The basic widgets are:
 @item link
 Areas of text with an associated action.  Intended for hypertext links
 embedded in text.
-@item push-button 
+@item push-button
 Like link, but intended for stand-alone buttons.
 @item editable-field
 An editable text field.  It can be either variable or fixed length.
@@ -68,14 +68,14 @@ buttons.  The options are implemented as widgets.  All options will be
 visible in the buffer.
 @item item
 A simple constant widget intended to be used in the @code{menu-choice} and
-@code{radio-button-choice} widgets. 
+@code{radio-button-choice} widgets.
 @item choice-item
 A button item only intended for use in choices.  When invoked, the user
 will be asked to select another option from the choice widget.
 @item toggle
 A simple @samp{on}/@samp{off} switch.
 @item checkbox
-A checkbox (@samp{[ ]}/@samp{[X]}). 
+A checkbox (@samp{[ ]}/@samp{[X]}).
 @item editable-list
 Create an editable list.  The user can insert or delete items in the
 list.  Each list item is itself a widget.
@@ -88,28 +88,28 @@ supposed to fill out a number of fields, each of which has a specific
 meaning.  The user is not supposed to change or delete any of the text
 between the fields.  Examples of forms in Emacs are the @file{forms}
 package (of course), the customize buffers, the mail and news compose
-modes, and the @sc{html} form support in the @file{w3} browser.  
+modes, and the @sc{html} form support in the @file{w3} browser.
 
 The advantages for a programmer of using the @code{widget} package to
 implement forms are:
 
 @enumerate
 @item
-More complex fields than just editable text are supported. 
+More complex fields than just editable text are supported.
 @item
 You can give the user immediate feedback if he enters invalid data in a
 text field, and sometimes prevent entering invalid data.
-@item 
+@item
 You can have fixed sized fields, thus allowing multiple field to be
 lined up in columns.
 @item
-It is simple to query or set the value of a field. 
-@item 
+It is simple to query or set the value of a field.
+@item
 Editing happens in buffer, not in the mini-buffer.
-@item 
+@item
 Packages using the library get a uniform look, making them easier for
 the user to learn.
-@item 
+@item
 As support for embedded graphics improve, the widget library will
 extended to support it.  This means that your code using the widget
 library will also use the new graphic features by automatic.
@@ -121,7 +121,7 @@ create any widgets, the code has been split in two files:
 @table @file
 @item widget.el
 This will declare the user variables, define the function
-@code{define-widget}, and autoload the function @code{widget-create}. 
+@code{define-widget}, and autoload the function @code{widget-create}.
 @item wid-edit.el
 Everything else is here, there is no reason to load it explicitly, as
 it will be autoloaded when needed.
@@ -151,7 +151,7 @@ Numbers: count to three below
 @b{[INS]} @b{[DEL]} @i{One}
 @b{[INS]} @b{[DEL]} @i{Eh, two?}
 @b{[INS]} @b{[DEL]} @i{Five!}
-@b{[INS]} 
+@b{[INS]}
 
 Select multiple:
 
@@ -228,7 +228,7 @@ field.  Option fields are created by the @code{menu-choice} widget.  In
 the example, @samp{@b{Choose}} is an option field tag.
 @item The @samp{@b{[INS]}} and @samp{@b{[DEL]}} buttons.
 Activating these will insert or delete elements from an editable list.
-The list is created by the @code{editable-list} widget. 
+The list is created by the @code{editable-list} widget.
 @item Embedded Buttons.
 The @samp{@b{_other work_}} is an example of an embedded
 button. Embedded buttons are not associated with a fields, but can serve
@@ -246,10 +246,10 @@ become unselected.
 These are explicit buttons made with the @code{push-button} widget.  The main
 difference from the @code{link} widget is that the buttons are will be
 displayed as GUI buttons when possible.
-enough. 
+enough.
 @end table
 
-To make them easier to locate, buttons are emphasized in the buffer.  
+To make them easier to locate, buttons are emphasized in the buffer.
 
 @deffn Face widget-button-face
 Face used for buttons.
@@ -317,7 +317,7 @@ Interface}).
   (widget-insert "\nSee also ")
   (widget-create 'link
                  :notify (lambda (&rest ignore)
-                           (widget-value-set widget-example-repeat 
+                           (widget-value-set widget-example-repeat
                                              '("En" "To" "Tre"))
                            (widget-setup))
                  "other work")
@@ -351,7 +351,7 @@ Interface}).
                  '(item "One") '(item "Another One.") '(item "A Final One."))
   (widget-insert "\n")
   (widget-create 'push-button
-                 :notify (lambda (&rest ignore) 
+                 :notify (lambda (&rest ignore)
                            (if (= (length (widget-value widget-example-repeat))
                                   3)
                                (message "Congratulation!")
@@ -389,8 +389,8 @@ that are part of @var{type}.
 Delete @var{widget} and remove it from the buffer.
 @end defun
 
-@defun widget-setup 
-Setup a buffer to support widgets. 
+@defun widget-setup
+Setup a buffer to support widgets.
 
 This should be called after creating all the widgets and before allowing
 the user to edit them.
@@ -400,7 +400,7 @@ the user to edit them.
 If you want to insert text outside the widgets in the form, the
 recommended way to do that is with @code{widget-insert}.
 
-@defun widget-insert 
+@defun widget-insert
 Insert the arguments, either strings or characters, at point.
 The inserted text will be read only.
 @end defun
@@ -451,7 +451,7 @@ The following @samp{%} escapes are available:
 The text inside will be marked as a button.
 
 By default, the text will be shown in @code{widget-button-face}, and
-surrounded by brackets. 
+surrounded by brackets.
 
 @defopt widget-button-prefix
 String to prefix buttons.
@@ -487,7 +487,7 @@ Insert the string specified by @code{:tag} here, or the @code{princ}
 representation of the value if there is no tag.
 
 @item %%
-Insert a literal @samp{%}. 
+Insert a literal @samp{%}.
 @end table
 
 @item :button-face
@@ -512,11 +512,11 @@ The value of the symbol is expanded according to this table.
 
 @item :doc
 The string inserted by the @samp{%d} or @samp{%h} escape in the format
-string.  
+string.
 
 @item :tag
 The string inserted by the @samp{%t} escape in the format
-string.  
+string.
 
 @item :tag-glyph
 Name of image to use instead of the string specified by `:tag' on
@@ -582,7 +582,7 @@ implemented.
 @item
 Widgets with tabbing order @code{-1} are ignored.
 
-@item 
+@item
 (Unimplemented) When on a widget with tabbing order @var{n}, go to the
 next widget in the buffer with tabbing order @var{n+1} or @code{nil},
 whichever comes first.
@@ -605,7 +605,7 @@ arguments, which will be used when creating the @code{radio-button} or
 @end table
 
 @deffn {User Option} widget-glyph-directory
-Directory where glyphs are found.  
+Directory where glyphs are found.
 Widget will look here for a file with the same name as specified for the
 image, with either a @samp{.xpm} (if supported) or @samp{.xbm} extension.
 @end deffn
@@ -616,21 +616,21 @@ If non-nil, allow glyphs to appear on displays where they are supported.
 
 
 @menu
-* link::                        
-* url-link::                    
-* info-link::                   
-* push-button::                 
-* editable-field::              
-* text::                        
-* menu-choice::                 
-* radio-button-choice::         
-* item::                        
-* choice-item::                 
-* toggle::                      
-* checkbox::                    
-* checklist::                   
-* editable-list::               
-* group::                       
+* link::
+* url-link::
+* info-link::
+* push-button::
+* editable-field::
+* text::
+* menu-choice::
+* radio-button-choice::
+* item::
+* choice-item::
+* toggle::
+* checkbox::
+* checklist::
+* editable-list::
+* group::
 @end menu
 
 @node link, url-link, Basic Types, Basic Types
@@ -645,7 +645,7 @@ TYPE ::= (link [KEYWORD ARGUMENT]...  [ VALUE ])
 
 The @var{value}, if present, is used to initialize the @code{:value}
 property.  The value should be a string, which will be inserted in the
-buffer. 
+buffer.
 
 By default the link will be shown in brackets.
 
@@ -668,7 +668,7 @@ TYPE ::= (url-link [KEYWORD ARGUMENT]...  URL)
 @end example
 
 When this link is invoked, the @sc{www} browser specified by
-@code{browse-url-browser-function} will be called with @var{url}. 
+@code{browse-url-browser-function} will be called with @var{url}.
 
 @node info-link, push-button, url-link, Basic Types
 @comment  node-name,  next,  previous,  up
@@ -681,7 +681,7 @@ TYPE ::= (info-link [KEYWORD ARGUMENT]...  ADDRESS)
 @end example
 
 When this link is invoked, the built-in info browser is started on
-@var{address}. 
+@var{address}.
 
 @node  push-button, editable-field, info-link, Basic Types
 @comment  node-name,  next,  previous,  up
@@ -695,7 +695,7 @@ TYPE ::= (push-button [KEYWORD ARGUMENT]...  [ VALUE ])
 
 The @var{value}, if present, is used to initialize the @code{:value}
 property. The value should be a string, which will be inserted in the
-buffer. 
+buffer.
 
 By default the tag will be shown in brackets.
 
@@ -732,7 +732,7 @@ contain it.  The content is not truncated to size.
 
 @item :value-face
 Face used for highlighting the editable field.  Default is
-@code{widget-field-face}. 
+@code{widget-field-face}.
 
 @item :secret
 Character used to display the value.  You can set this to e.g. @code{?*}
@@ -748,7 +748,7 @@ which matches everything.
 Keymap used in the editable field.  The default value is
 @code{widget-field-keymap}, which allows you to use all the normal
 editing commands, even if the buffer's major mode suppress some of them.
-Pressing return invokes the function specified by @code{:action}. 
+Pressing return invokes the function specified by @code{:action}.
 @end table
 
 @node text, menu-choice, editable-field, Basic Types
@@ -775,7 +775,7 @@ match any value matching at least one of the specified @var{type}
 arguments.
 
 @table @code
-@item :void 
+@item :void
 Widget type used as a fallback when the value does not match any of the
 specified @var{type} arguments.
 
@@ -785,13 +785,13 @@ choice through the minibuffer.
 
 @item :children
 A list whose car is the widget representing the currently chosen type in
-the buffer. 
+the buffer.
 
 @item :choice
 The current chosen type
 
-@item :args 
-The list of types. 
+@item :args
+The list of types.
 @end table
 
 @node radio-button-choice, item, menu-choice, Basic Types
@@ -821,7 +821,7 @@ Replaced with the buffer representation of the @var{type} widget.
 @item %b
 Replace with the radio button.
 @item %%
-Insert a literal @samp{%}. 
+Insert a literal @samp{%}.
 @end table
 
 @item button-args
@@ -837,17 +837,17 @@ The widgets representing each type.
 @item :choice
 The current chosen type
 
-@item :args 
-The list of types. 
+@item :args
+The list of types.
 @end table
 
 You can add extra radio button items to a @code{radio-button-choice}
 widget after it has been created with the function
-@code{widget-radio-add-item}. 
+@code{widget-radio-add-item}.
 
 @defun widget-radio-add-item widget type
 Add to @code{radio-button-choice} widget @var{widget} a new radio button item of type
-@var{type}. 
+@var{type}.
 @end defun
 
 Please note that such items added after the @code{radio-button-choice}
@@ -882,7 +882,7 @@ The @var{value}, if present, is used to initialize the @code{:value}
 property.  The value should be a string, which will be inserted in the
 buffer as a button.  Activating the button of a @code{choice-item} is
 equivalent to activating the parent widget.  This widget will only match
-the specified value. 
+the specified value.
 
 @node toggle, checkbox, choice-item, Basic Types
 @comment  node-name,  next,  previous,  up
@@ -902,7 +902,7 @@ The following extra properties are recognized.
 @table @code
 @item :on
 String representing the `on' state.  By default the string @samp{on}.
-@item :off 
+@item :off
 String representing the `off' state.  By default the string @samp{off}.
 @item :on-glyph
 Name of a glyph to be used instead of the `:on' text string, on emacsen
@@ -952,7 +952,7 @@ Replaced with the buffer representation of the @var{type} widget.
 @item %b
 Replace with the checkbox.
 @item %%
-Insert a literal @samp{%}. 
+Insert a literal @samp{%}.
 @end table
 
 @item :greedy
@@ -972,8 +972,8 @@ The widgets representing the checkboxes.
 @item :children
 The widgets representing each type.
 
-@item :args 
-The list of types. 
+@item :args
+The list of types.
 @end table
 
 @node editable-list, group, checklist, Basic Types
@@ -987,7 +987,7 @@ TYPE ::= (editable-list [KEYWORD ARGUMENT]... TYPE)
 @end example
 
 The value is a list, where each member represents one widget of type
-@var{type}. 
+@var{type}.
 
 The following extra properties are recognized.
 
@@ -1004,7 +1004,7 @@ Insert the @b{[INS]} button.
 @item %d
 Insert the @b{[DEL]} button.
 @item %%
-Insert a literal @samp{%}. 
+Insert a literal @samp{%}.
 @end table
 
 @item :insert-button-args
@@ -1040,7 +1040,7 @@ Syntax:
 TYPE ::= (group [KEYWORD ARGUMENT]... TYPE...)
 @end example
 
-The value is a list, with one member for each @var{type}.  
+The value is a list, with one member for each @var{type}.
 
 @node Sexp Types, Widget Properties, Basic Types, Top
 @comment
@@ -1050,10 +1050,10 @@ A number of widgets for editing s-expressions (lisp types) are also
 available.  These basically fall in the following categories.
 
 @menu
-* constants::                   
-* generic::                     
-* atoms::                       
-* composite::                   
+* constants::
+* generic::
+* atoms::
+* composite::
 @end menu
 
 @node constants, generic, Sexp Types, Sexp Types
@@ -1075,7 +1075,7 @@ property and can be any s-expression.
 
 @deffn Widget const
 This will display any valid s-expression in an immutable part of the
-buffer. 
+buffer.
 @end deffn
 
 There are two variations of the @code{const} widget, namely
@@ -1107,7 +1107,7 @@ TYPE ::= (sexp [KEYWORD ARGUMENT]...  [ VALUE ])
 
 @deffn Widget sexp
 This will allow you to edit any valid s-expression in an editable buffer
-field. 
+field.
 
 The @code{sexp} widget takes the same keyword arguments as the
 @code{editable-field} widget.
@@ -1119,7 +1119,7 @@ The @code{sexp} widget takes the same keyword arguments as the
 
 The atoms are s-expressions that does not consist of other
 s-expressions.  A string is an atom, while a list is a composite type.
-You can edit the value of an atom with the following widgets.  
+You can edit the value of an atom with the following widgets.
 
 The syntax for all the atoms are
 
@@ -1149,7 +1149,7 @@ Allows you to enter a character in an editable field.
 @deffn Widget file
 Allows you to edit a file name in an editable field.  If you invoke
 the tag button, you can edit the file name in the mini-buffer with
-completion. 
+completion.
 
 Keywords:
 @table @code
@@ -1206,7 +1206,7 @@ will be displayed in the buffer, and be editable to the user.
 @deffn Widget cons
 The value of a @code{cons} widget is a cons-cell where the car is the
 value of the first component and the cdr is the value of the second
-component.  There must be exactly two components. 
+component.  There must be exactly two components.
 @end deffn
 
 @deffn Widget list
@@ -1237,7 +1237,7 @@ specification:
                     string string)))
 @end example
 
-The value of a widget of this type will either have the form 
+The value of a widget of this type will either have the form
 @samp{(file t)} or @code{(file string string)}.
 
 This concept of inline is probably hard to understand.  It was certainly
@@ -1254,7 +1254,7 @@ and has a similar syntax.
 Allows you to specify a type which must be a list whose elements all
 belong to given set.  The elements of the list is not significant.  This
 is implemented on top of the @code{checklist} basic widget, and has a
-similar syntax. 
+similar syntax.
 @end deffn
 
 @deffn Widget repeat
@@ -1285,7 +1285,7 @@ modifying the value of a widget before the user is allowed to edit the
 widget again.  It is enough to call @code{widget-setup} once if you
 modify multiple widgets.  This is currently only necessary if the widget
 contains an editing field, but may be necessary for other widgets in the
-future. 
+future.
 
 If your application needs to associate some information with the widget
 objects, for example a reference to the item being edited, it can be
@@ -1308,7 +1308,7 @@ Non-nil if @var{widget} has a value (even nil) for property @var{property}.
 @end defun
 
 Occasionally it can be useful to know which kind of widget you have,
-i.e. the name of the widget type you gave when the widget was created. 
+i.e. the name of the widget type you gave when the widget was created.
 
 @defun widget-type widget
 Return the name of @var{widget}, a symbol.
@@ -1337,7 +1337,7 @@ a widget is really active, you must therefore activate both itself and
 all its ancestors.
 
 @lisp
-(while widget 
+(while widget
   (widget-apply widget :activate)
   (setq widget (widget-get widget :parent)))
 @end lisp
@@ -1364,7 +1364,7 @@ arguments.
 Define a new widget type named @var{name} from @code{class}.
 
 @var{name} and class should both be symbols, @code{class} should be one
-of the existing widget types. 
+of the existing widget types.
 
 The third argument @var{DOC} is a documentation string for the widget.
 
@@ -1394,7 +1394,7 @@ conversions, you can use @code{identity} as your @code{:convert-widget}
 function.
 
 The following additional keyword arguments are useful when defining new
-widgets: 
+widgets:
 @table @code
 @item :convert-widget
 Method to convert type-specific components of a widget type before
@@ -1474,9 +1474,9 @@ The following predefined function can be used here:
 Delete all @code{:children} and @code{:buttons} in @var{widget}.
 @end defun
 
-@item :value-get 
+@item :value-get
 Function to extract the value of a widget, as it is displayed in the
-buffer. 
+buffer.
 
 The following predefined function can be used here:
 
@@ -1519,11 +1519,11 @@ for this widget and does not have to check whether it matches.
 If you want to define a new widget from scratch, use the @code{default}
 widget as its base.
 
-@deffn Widget default 
-Widget used as a base for other widgets. 
+@deffn Widget default
+Widget used as a base for other widgets.
 
 It provides most of the functionality that is referred to as ``by
-default'' in this text. 
+default'' in this text.
 @end deffn
 
 In implementing complex hierarchical widgets (@emph{e.g.}, using the
@@ -1593,7 +1593,7 @@ When called interactively, use the position of point.
 
 There is a minor mode for manipulating widgets in major modes that
 doesn't provide any support for widgets themselves.  This is mostly
-intended to be useful for programmers doing experiments. 
+intended to be useful for programmers doing experiments.
 
 @deffn Command widget-minor-mode
 Toggle minor mode for traversing widgets.
@@ -1624,11 +1624,11 @@ This is only meaningful for radio buttons or checkboxes in a list.
 @section Wishlist
 
 @itemize @bullet
-@item 
+@item
 It should be possible to add or remove items from a list with @kbd{C-k}
 and @kbd{C-o} (suggested by @sc{rms}).
 
-@item 
+@item
 The @samp{[INS]} and @samp{[DEL]} buttons should be replaced by a single
 dash (@samp{-}).  The dash should be a button that, when invoked, ask
 whether you want to add or delete an item (@sc{rms} wanted to git rid of
@@ -1646,9 +1646,9 @@ Make indentation work with glyphs and proportional fonts.
 
 @item
 Add commands to show overview of object and class hierarchies to the
-browser. 
+browser.
 
-@item 
+@item
 Find a way to disable mouse highlight for inactive widgets.
 
 @item
@@ -1670,15 +1670,15 @@ Add @code{widget} widget for editing widget specifications.
 Find clean way to implement variable length list.
 See @code{TeX-printer-list} for an explanation.
 
-@item 
+@item
 @kbd{C-h} in @code{widget-prompt-value} should give type specific help.
 
-@item 
+@item
 A mailto widget.
 
-@item 
+@item
 @kbd{C-e e} in a fixed size field should go to the end of the text in
-the field, not the end of the field itself. 
+the field, not the end of the field itself.
 
 @item
 Use an overlay instead of markers to delimit the widget.  Create

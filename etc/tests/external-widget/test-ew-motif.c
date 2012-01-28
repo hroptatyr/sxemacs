@@ -95,7 +95,7 @@ main(int argc, char **argv)
 
 		strcpy(labarr, "window:");
 		for (i = 0; i < no_ews; i++) {
-			int sz = snprintf(tmpbuf, sizeof(tmpbuf), 
+			int sz = snprintf(tmpbuf, sizeof(tmpbuf),
 					  " %d", XtWindow(emacscli[i]));
 			assert(sz>=0 && sz<sizeof(tmpbuf));
 			strcat(labarr, tmpbuf);

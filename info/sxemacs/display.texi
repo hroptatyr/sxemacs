@@ -1,4 +1,3 @@
-
 @node Display, Search, Registers, Top
 @chapter Controlling the Display
 
@@ -139,7 +138,7 @@ scroll the buffer by that many lines; if that is enough to bring point back
 into visibility, that is what happens.
 
 @vindex scroll-conservatively
-  If you set @code{scroll-step} to a small value because you want to use 
+  If you set @code{scroll-step} to a small value because you want to use
 arrow keys to scroll the screen without recentering, the redisplay
 preemption will likely make SXEmacs keep recentering the screen when
 scrolling fast, regardless of @code{scroll-step}.  To prevent this, set
@@ -232,8 +231,8 @@ to start, or zero, meaning don't echo at all.  @xref{Echo Area}.
 @vindex ctl-arrow
   If the variable @code{ctl-arrow} is @code{nil}, control characters in the
 buffer are displayed with octal escape sequences, all except newline and
-tab.  If its value is @code{t}, then control characters will be printed 
-with an up-arrow, for example @kbd{^A}.  
+tab.  If its value is @code{t}, then control characters will be printed
+with an up-arrow, for example @kbd{^A}.
 
 If its value is not @code{t} and not @code{nil}, then characters whose
 code is greater than 160 (that is, the space character (32) with its

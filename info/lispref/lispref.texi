@@ -220,7 +220,7 @@ Reference Manual, corresponding to SXEmacs version 22.1.
 * PostgreSQL Support::      Interfacing to the PostgreSQL libpq library.
 * OpenSSL Support::         Interfacing to the OpenSSL libcrypto/libssl libs
 * Enhanced Number Types::   Using advanced numerical and mathematical
-                              features 
+                              features
 * Internationalization::    How Emacs supports different languages and
                               cultural conventions.
 * Foreign Functions::	    Accessing functions in external

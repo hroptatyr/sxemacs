@@ -151,9 +151,11 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 	struct gc_cache_cell *cell = NULL, *next = NULL, *prev = NULL;
 	struct gcv_and_mask gcvm;
 
-	if ((!!cache->head) != (!!cache->tail))
+	if (cache == NULL)
 		abort();
-	else if (cache->head && (cache->head->prev || cache->tail->next))
+	else if ((!!cache->head) != (!!cache->tail))
+		abort();
+	else if (cache->head && cache->tail && (cache->head->prev || cache->tail->next))
 		abort();
 	else {
 		gcvm.mask = mask;
@@ -161,12 +163,12 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 
 #ifdef GCCACHE_HASH
 
-		if (gethash(&gcvm, cache->table, 
+		if (gethash(&gcvm, cache->table,
 			    (const void **)((void*)&cell)))
 #else				/* !GCCACHE_HASH */
 
 		/* start at the end (most recently used) */
-		cell = cache->tail;	
+		cell = cache->tail;
 		while (cell) {
 			if (gc_cache_eql(&gcvm, &cell->gcvm))
 				break;
@@ -176,11 +178,9 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 
 		/* #### This whole file needs some serious overhauling. */
 		if (!(mask | GCTile) && cell->gc->values.tile)
-			cell = 0;
+			cell = NULL;
 		else if (!(mask | GCStipple) && cell->gc->values.stipple)
-			cell = 0;
-		
-		if (cell)
+			cell = NULL;
 #endif				/* !GCCACHE_HASH */
 
 		{
@@ -189,38 +189,44 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 			   be collected than a cell that was accessed
 			   less recently.
 			*/
-			if (cell && cell == cache->tail)
-				return cell->gc;
-			
-			next = cell->next;
-			prev = cell->prev;
-			if (prev)
-				prev->next = next;
-			if (next)
-				next->prev = prev;
-			if (cache->head == cell)
-				cache->head = next;
-			cell->next = 0;
-			cell->prev = cache->tail;
-			cache->tail->next = cell;
-			cache->tail = cell;
-			if (cache->head == cell)
+
+			if (!cell) {
 				abort();
-			else if (cell->next)
-				abort();
-			else if (cache->head->prev)
-				abort();
-			else if (cache->tail->next)
-				abort();
-			if (cell)
-				return cell->gc;
-			else
 				return NULL;
+			} else {
+				if (cell == cache->tail)
+					return cell->gc;
+				next = cell->next;
+				prev = cell->prev;
+				if (prev)
+					prev->next = next;
+				if (next)
+					next->prev = prev;
+				if (cache->head == cell)
+					cache->head = next;
+				cell->next = NULL;
+				cell->prev = cache->tail;
+				if (cache->tail)
+					cache->tail->next = cell;
+				else
+					abort();
+				cache->tail = cell;
+				if (cache->head == cell)
+					abort();
+				else if (cell->next)
+					abort();
+				else if (cache->head != NULL && cache->head->prev)
+					abort();
+				else if (cache->tail != NULL && cache->tail->next)
+					abort();
+				return cell->gc;
+			}
 		}
-		
+
 		/* else, cache miss. */
-		
-		if (cache->size == GC_CACHE_SIZE)
+		if (cache == NULL)
+			abort();
+		else if (cache->size == GC_CACHE_SIZE)
 			/* Reuse the first cell on the list
 			   (least-recently-used).  Remove it from the
 			   list, and unhash it from the table.
@@ -249,7 +255,7 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 			   it in. */
 			memcpy(&cell->gcvm.gcv, gcv, sizeof(XGCValues));
 			cell->gcvm.mask = mask;
-		
+
 			/* Put the cell on the end of the list. */
 			cell->next = 0;
 			cell->prev = cache->tail;
@@ -264,7 +270,7 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 			puthash(&cell->gcvm, cell, cache->table);
 #endif
 			/* Now make and return the GC. */
-			cell->gc = XCreateGC(cache->dpy, cache->window, 
+			cell->gc = XCreateGC(cache->dpy, cache->window,
 					     mask, gcv);
 			/* debug */
 			assert(cell->gc == gc_cache_lookup(cache, gcv, mask));

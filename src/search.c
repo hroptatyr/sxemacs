@@ -333,7 +333,7 @@ compile_pattern(Lisp_Object pattern,
 static void
 compre_prfun(Lisp_Object obj, Lisp_Object pcfun, int escflag)
 {
-	write_fmt_str(pcfun, "#<compiled regexp %lx", 
+	write_fmt_str(pcfun, "#<compiled regexp %lx",
 		      (long unsigned int)((COMPRE_GET(obj))->buffer));
 	if (escflag);
 }
@@ -747,7 +747,7 @@ fast_string_match(Lisp_Object regexp, const Bufbyte * nonreloc,
 	fixup_internal_substring(nonreloc, reloc, offset, &length);
 
 
-	
+
 	if (!NILP(reloc)) {
 		if (no_quit) {
 			newnonreloc = XSTRING_DATA(reloc);

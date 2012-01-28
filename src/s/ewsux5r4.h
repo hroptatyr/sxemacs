@@ -1,6 +1,6 @@
 /* Synched up with: Mule 2.0.  Not in FSF. */
 
-/* Definitions file for GNU Emacs running on NEC's EWS-UX/V(Rel4.2) 
+/* Definitions file for GNU Emacs running on NEC's EWS-UX/V(Rel4.2)
 						   (System V Release 4.2) */
 
 #include "usg5-4-2.h"

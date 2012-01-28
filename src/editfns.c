@@ -607,7 +607,7 @@ On Unix it is obtained from TMPDIR, with /tmp as the default.
 
 		strcpy(path, "/tmp/");
 		strncat(path, user_login_name(NULL), _POSIX_PATH_MAX);
-                path[sizeof(path)-1]=0;
+		path[sizeof(path)-1]=0;
 		if (lstat(path, &st) < 0 && errno == ENOENT) {
 			mkdir(path, 0700);	/* ignore retval -- checked next anyway. */
 		}
@@ -615,31 +615,31 @@ On Unix it is obtained from TMPDIR, with /tmp as the default.
 		    S_ISDIR(st.st_mode)) {
 			tmpdir = path;
 		} else {
-		        const char* home_env = getenv("HOME");
+			const char* home_env = getenv("HOME");
 			if ( home_env ) {
 				strncpy(path, home_env, sizeof(path)-1);
 				strncat(path, "/tmp/", sizeof(path)-1);
 				if (stat(path, &st) < 0 && errno == ENOENT) {
 					int fd;
-					char warnpath[ 
-						/* strlen(".created_by_sxemacs") */ 
+					char warnpath[
+						/* strlen(".created_by_sxemacs") */
 						19 + _POSIX_PATH_MAX + 1];
 					mkdir(path, 0700);	/* ignore retvals */
 					strncpy(warnpath, path, _POSIX_PATH_MAX);
 					warnpath[sizeof(warnpath)-1]=0;
-					
+
 					/* we already are reserved these 20 bytes... */
 					strcat(warnpath, ".created_by_sxemacs");
 					if ((fd = open(warnpath, O_WRONLY | O_CREAT,
 						       0644)) > 0) {
 						write(fd, "SXEmacs created this directory "
-						          "because /tmp/<yourname> "
-						          "was unavailable -- \nPlease check !\n",  89);
+							  "because /tmp/<yourname> "
+							  "was unavailable -- \nPlease check !\n",  89);
 						close(fd);
 					}
 				}
 			}
-			if (stat(path, &st) == 0 && st.st_uid == (uid_t) myuid 
+			if (stat(path, &st) == 0 && st.st_uid == (uid_t) myuid
 			    && S_ISDIR(st.st_mode)) {
 				tmpdir = path;
 			} else {
@@ -917,7 +917,7 @@ The time is returned as a big integer.
 
 	EMACS_GET_TIME(t);
 	bigz_init(btime);
-	
+
 	bigz_set_long(btime, EMACS_SECS(t));
 	mpz_mul_ui(btime, btime, 1000000UL);
 	mpz_add_ui(btime, btime, EMACS_USECS(t));
@@ -1050,7 +1050,7 @@ time will be 0.
 	return list3(make_float(user), make_float(sys), make_float(real));
 }
 
-DEFUN("uptime", Fuptime, 0, 1, "P", /* 
+DEFUN("uptime", Fuptime, 0, 1, "P", /*
 Display SXEmacs \"uptime\".
 
 When called interactively, without a prefix arg, return a list of 4
@@ -1162,7 +1162,7 @@ TIME is specified as (HIGH LOW . IGNORED) or (HIGH . LOW), as from
 `current-time' and `file-attributes'.  If TIME is not specified it
 defaults to the current time.
 
-If compiled with ENT, TIME may also be a big integer representing 
+If compiled with ENT, TIME may also be a big integer representing
 the number of microseconds since the Epoch, as output by
 `current-btime'.
 
@@ -1563,7 +1563,7 @@ the data it can't find.
 			/* No local time zone name is available; use "+-NNNN"
 			   instead.  */
 			int am = (offset < 0 ? -offset : offset) / 60;
-			int sz = snprintf(buf, sizeof(buf), "%c%02d%02d", 
+			int sz = snprintf(buf, sizeof(buf), "%c%02d%02d",
 					  (offset < 0 ? '-' : '+'),
 					  am / 60, am % 60);
 			assert(sz>=0 && (size_t)sz < sizeof(buf));

@@ -15,7 +15,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Just load the file to run the test.
 
@@ -47,4 +47,3 @@
   (test-match 0  "[^$(B4A(Ba]" "b$(B4A(Bab$(B4A;z(Bba")
   (test-match 5  "$(B4A(B[^$(B4A(Ba]" "a$(B4A(Bab$(B4A4A;z(Bba")
   )
-

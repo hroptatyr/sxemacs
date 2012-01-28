@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 					putchar(c);
 
 					if ((i & group_by) == group_by)
-						getc(fp);
+						(void)getc(fp);
 				}
 
 				if (c == ' ') {
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 
 					if (fread(buf, 1, 18, fp)!=18) /* skip 18 bytes */
 						if(feof(fp))
-							break;	
+							break;
 				}
 			}
 		} else {

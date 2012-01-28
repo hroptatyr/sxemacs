@@ -54,12 +54,12 @@
       (name plane final)
       (make-charset
        name (concat "CNS 11643 Plane " plane " (Chinese traditional)")
-       `(registry 
-         ,(concat "CNS11643[.-]\\(.*[.-]\\)?" plane "$")
-         dimension 2
-         chars 94
-         final ,final
-         graphic 0))
+       `(registry
+	 ,(concat "CNS11643[.-]\\(.*[.-]\\)?" plane "$")
+	 dimension 2
+	 chars 94
+	 final ,final
+	 graphic 0))
       (modify-syntax-entry   name "w")
       (modify-category-entry name ?t)
       ))
@@ -133,7 +133,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Chinese GB2312 (simplified) 
+;;; Chinese GB2312 (simplified)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (make-coding-system
@@ -200,7 +200,7 @@
       (insert-buffer-substring buf from to))
     (declare-fboundp (encode-hz-region 1 (point-max)))
     nil))
-	   
+
 (set-language-info-alist
  "Chinese-GB" '((setup-function . setup-chinese-gb-environment-internal)
 		(charset chinese-gb2312 sisheng)

@@ -539,7 +539,7 @@ store_modifier(KeyCode code, const char *name, struct mod_clo_s *clo)
 		;
 #endif
 	} else if (modifier_index == clo->meta_bit &&
-		   clo->old != clo->meta_bit) {	
+		   clo->old != clo->meta_bit) {
 		modwarn(code, name, clo->meta_bit, "Meta", clo);
 	} else if (modifier_index == clo->super_bit &&
 		   clo->old != clo->super_bit) {
@@ -1167,7 +1167,7 @@ x_keysym_to_emacs_keysym(KeySym keysym, int simple_p)
 			default: {
 				char buf[64];
 				int sz = snprintf(buf, sizeof(buf),
-						  "unknown-keysym-0x%X", 
+						  "unknown-keysym-0x%X",
 						  (int)keysym);
 				assert(sz>=0 && (size_t)sz < sizeof(buf));
 				return KEYSYM(buf);
@@ -1219,7 +1219,7 @@ x_to_emacs_keysym(XKeyPressedEvent * event, int simple_p)
 	Status status;
 #ifdef XIM_XLIB
 	XIC xic = NULL;
-	struct frame * f = 
+	struct frame * f =
 		x_any_window_to_frame(get_device_from_display(event->display),event->window);
 	if (f)
 		xic = FRAME_X_XIC(f);
@@ -2027,9 +2027,9 @@ static void handle_client_message(struct frame *f, XEvent * event)
 	}
 }
 
-/* #### I'm struggling to understand how the X event loop really works. 
+/* #### I'm struggling to understand how the X event loop really works.
    Here is the problem:
-   
+
    When widgets get mapped / changed etc the actual display updates
    are done asynchronously via X events being processed - this
    normally happens when XtAppProcessEvent() gets called. However, if
@@ -2184,7 +2184,7 @@ static void emacs_Xt_handle_magic_event(Lisp_Event * emacs_event)
 			FRAME_X_TOTALLY_VISIBLE_P(f) =
 			    (event->xvisibility.state == VisibilityUnobscured);
 			/* Note that the fvwm pager only sends VisibilityNotify
-			   when changing pages. Is this all we need to do ? 
+			   when changing pages. Is this all we need to do ?
 			   JV */
 			/* Nope.  We must at least trigger a redisplay here.
 			   Since this case seems similar to MapNotify, I've
@@ -2242,6 +2242,10 @@ static void Xt_timeout_callback(XtPointer closure, XtIntervalId * id)
 	struct Xt_timeout *t2 = pending_timeouts;
 
 	/* Remove this one from the set of pending timeouts */
+	if(timeout == NULL) {
+		abort();
+		return;
+	}
 	if (t2 == timeout) {
 		pending_timeouts = pending_timeouts->next;
 	} else {
@@ -2249,7 +2253,8 @@ static void Xt_timeout_callback(XtPointer closure, XtIntervalId * id)
 			t2 = t2->next;
 		}
 		assert(t2->next);
-		t2->next = t2->next->next;
+		if(t2->next)
+			t2->next = t2->next->next;
 	}
 	/* Add this one to the queue of completed timeouts */
 	timeout->next = NULL;
@@ -2734,7 +2739,7 @@ static void describe_event_window(Window window, Display * display)
 	if (f) {
 		int len = XSTRING_LENGTH(f->name) + 4;
 		char buf[len];
-		
+
 		int sz = snprintf(buf, len, " \"%s\"", XSTRING_DATA(f->name));
 		assert(sz >= 0 && sz < len);
 		write_string_to_stdio_stream(stderr, 0, (Bufbyte*)buf, 0,
@@ -3402,7 +3407,7 @@ emacs_Xt_event_pending_p(int user_p)
 	   conditions by using a temporary variable */
 	tick_count_val = quit_check_signal_tick_count;
 	if (last_quit_check_signal_tick_count != tick_count_val
-#if !defined (SIGIO) 
+#if !defined (SIGIO)
 	    || (XtIMXEvent & XtAppPending(Xt_app_con))
 #endif
 	    ) {

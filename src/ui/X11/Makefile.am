@@ -47,7 +47,7 @@ TAGS_DEPENDENCIES = $(ETAGS)
 
 all_sources=
 noinst_LIBRARIES=
-header_HEADERS=$(acgen_headers) 
+header_HEADERS=$(acgen_headers)
 
 ## just a trick :( we create these libraries to get the object files
 if DESCEND_LWLIB
@@ -66,7 +66,7 @@ libsxeX_a_headers = \
 libsxeX_a_sources = \
 	EmacsFrame.c EmacsShell.c EmacsManager.c
 if WITH_EXTW
-libsxeX_a_sources += ExternalShell.c 
+libsxeX_a_sources += ExternalShell.c
 ## extw-Xt-nonshared.c extw-Xlib-nonshared.c where are these????
 endif
 libsxeX_a_SOURCES = $(libsxeX_a_headers) $(libsxeX_a_sources)
@@ -79,10 +79,10 @@ noinst_LIBRARIES += libsxeX.a
 all_sources += $(libsxeX_a_sources) $(libsxeX_a_LIBADD:.o=.c)
 
 libsxeuiX11_a_headers = \
-	balloon_help.h 						\
-	console-x.h extw-Xlib.h extw-Xt.h 			\
-	glyphs-x.h gui-x.h objects-x.h xgccache.h 		\
-	offix-cursors.h offix-types.h offix.h scrollbar-x.h 	\
+	balloon_help.h						\
+	console-x.h extw-Xlib.h extw-Xt.h			\
+	glyphs-x.h gui-x.h objects-x.h xgccache.h		\
+	offix-cursors.h offix-types.h offix.h scrollbar-x.h	\
 	xmmanagerp.h xmprimitivep.h xmu.h
 libsxeuiX11_a_sources =  \
 	console-x.c device-x.c event-Xt.c frame-x.c			\
@@ -98,7 +98,7 @@ all_sources += $(libsxeuiX11_a_sources) $(libsxeuiX11_objs:.o=.c)
 
 noinst_LIBRARIES += libsxeuiX11.a
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## Create preprocessor output (debugging purposes only)

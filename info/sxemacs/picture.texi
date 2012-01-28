@@ -1,4 +1,3 @@
-
 @node Picture, Sending Mail, Abbrevs, Top
 @chapter Editing Pictures
 @cindex pictures
@@ -27,7 +26,7 @@ run special picture editing commands.
 
   One of these keys, @kbd{C-c C-c}, is pretty important.  Often a picture
 is part of a larger file that is usually edited in some other major mode.
-@kbd{M-x edit-picture} records the name of the previous major mode. 
+@kbd{M-x edit-picture} records the name of the previous major mode.
 You can then use the @kbd{C-c C-c} command (@code{picture-mode-exit}) to
 restore that mode.  @kbd{C-c C-c} also deletes spaces from the ends of
 lines, unless you give it a numeric argument.
@@ -100,7 +99,7 @@ with the same contents below the current line.@refill
 
 @kindex C-c C-d (Picture mode)
 @findex delete-char
- 
+
   To actually delete parts of the picture, use @kbd{C-w}, or with
 @kbd{C-c C-d} (which is defined as @code{delete-char}, as @kbd{C-d} is
 in other modes), or with one of the picture rectangle commands
@@ -164,7 +163,7 @@ C-b} (@code{picture-motion-reverse}) moves in the opposite direction.
 
 @node Tabs in Picture, Rectangles in Picture, Insert in Picture, Picture
 @section Picture Mode Tabs
- 
+
 @kindex M-TAB
 @findex picture-tab-search
 @vindex picture-tab-chars

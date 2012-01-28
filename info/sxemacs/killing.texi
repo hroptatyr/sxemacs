@@ -1,4 +1,3 @@
-
 @iftex
 @chapter Killing and Moving Text
 
@@ -95,7 +94,7 @@ existed previously (even zero).
 the current line. If the current line is blank, it deletes all blank lines
 preceding the current line as well as leaving one blank line, the current
 line.  @kbd{M-^} (@code{delete-indentation}) joins the current line and
-the previous line, or, if given an argument, joins the current line and 
+the previous line, or, if given an argument, joins the current line and
 the next line by deleting a newline and all surrounding spaces, possibly
 leaving a single space.  @xref{Indentation,M-^}.
 
@@ -415,7 +414,7 @@ making that text be the @b{Primary} selection.
 
 @item
 Click the middle button in the other application, pasting the @b{Primary}
-selection. 
+selection.
 @end itemize
 
 With some other applications (notably, the OpenWindows and Motif tools) you
@@ -460,15 +459,15 @@ Insert the current selection into the buffer at point.
 Deletes the text in the primary selection without copying it to the kill
 ring or the Clipboard.
 @item M-x x-kill-primary-selection
-Deletes the text in the primary selection and copies it to 
+Deletes the text in the primary selection and copies it to
 both the kill ring and the Clipboard.
 @item M-x x-mouse-kill
-Kill the text between point and the mouse and copy it to 
+Kill the text between point and the mouse and copy it to
 the clipboard and to the cut buffer.
 @item M-x x-own-secondary-selection
-Make a secondary X selection of the given argument. 
+Make a secondary X selection of the given argument.
 @item M-x x-own-selection
-Make a primary X selection of the given argument.  
+Make a primary X selection of the given argument.
 @item M-x x-set-point-and-insert-selection
 Set point where clicked and insert the primary selection or the
 cut buffer.
@@ -521,10 +520,10 @@ mouse and text selected with point and the mark by setting the variable
 @item
 The text selected with the mouse becomes both the X selection and the
 Emacs selected region. You can use menu-bar commands as well as Emacs
-region commands on it. 
+region commands on it.
 @item
 The text selected with point and the mark is not highlighted. You can
-only use Emacs region commands on it, not the menu-bar items. 
+only use Emacs region commands on it, not the menu-bar items.
 @end itemize
 
   Active regions originally come from Zmacs, the Lisp Machine editor.
@@ -551,7 +550,7 @@ those commands whose semantics are to mark an area, such as @code{mark-defun}.
 @item
 The region is deactivated after each command that is executed, except that
 motion commands do not change whether the region is active or not.
-@end itemize 
+@end itemize
 
 @code{set-mark-command} (@kbd{C-SPC}) pushes a mark and activates the
 region.  Moving the cursor with normal motion commands (@kbd{C-n},
@@ -600,13 +599,13 @@ It is reset to @code{nil} after each user command is executed.
 When @code{zmacs-regions} is @code{t}, programs can make the region between
 point and mark go into the active (highlighted) state by using the
 function @code{zmacs-activate-region}. Only a small number of commands
-should ever do this. 
+should ever do this.
 
 @findex zmacs-deactivate-region
 When @code{zmacs-regions} is @code{t}, programs can deactivate the region
 between point and the mark by using @code{zmacs-deactivate-region}.
 Note: you should not have to call this function; the command loop calls
-it when appropriate. 
+it when appropriate.
 
 @node Accumulating Text, Rectangles, Using X Selections, Top
 @section Accumulating Text

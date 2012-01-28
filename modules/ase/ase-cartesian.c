@@ -5,7 +5,7 @@
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
   * This file is part of SXEmacs.
-  * 
+  *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
   * are met:
@@ -365,7 +365,7 @@ dimension, use 0 to denote a free subspace.
 
 #define EMODNAME	ase_cartesian
 
-void 
+void
 EMOD_PUBINIT(void)
 {
 	/* constructors */

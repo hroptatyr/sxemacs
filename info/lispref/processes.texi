@@ -151,7 +151,7 @@ subprocess actually terminates before quitting.  If during that time the
 user types another @kbd{C-g}, that kills the subprocess instantly with
 @code{SIGKILL} and quits immediately.  @xref{Quitting}.
 
-Note: The synchronous subprocess functions returned @code{nil} in 
+Note: The synchronous subprocess functions returned @code{nil} in
 FSF Emacs 18.  In version 19, they return an indication of how the
 process terminated.
 
@@ -1157,8 +1157,8 @@ off.  This makes it possible to use the Lisp debugger to debug the
 sentinel.  @xref{Debugger}.
 
   In earlier Emacs versions, every sentinel that did regexp searching or
-matching had to explicitly save and restore the match data.  
-SXEmacs does this automatically; sentinels never need to do it 
+matching had to explicitly save and restore the match data.
+SXEmacs does this automatically; sentinels never need to do it
 explicitly. @xref{Match Data}.
 
 @defun set-process-sentinel process sentinel
@@ -1308,7 +1308,7 @@ that the UDP protocol does not guard against lost packets.
 @defun open-network-server-stream name buffer-or-name host service &optional protocol acceptor filter sentinel
 This function establishes listening for TCP connections for a service
 to the local host. It returns a process object to represent the listening
-connection. 
+connection.
 
 When a new connection request arrives, it is automatically
 accepted. A network-stream process is automatically created for that
@@ -1317,7 +1317,7 @@ acceptor function is called. If defined filter and sentinel are set
 for the new connection process .
 
 Input and output work as for other process objects.
-@code{delete-process} closes the connection.  
+@code{delete-process} closes the connection.
 
 
 The @var{name} argument is name for process.  It is modified if
@@ -1329,11 +1329,11 @@ Listening Process output goes at end of that buffer, unless you
 specify an output stream or filter function to handle the output. No
 real process output of listening process is expected. However the
 name of this buffer will be used as a base for generating a new
-buffer name for the accepted connections.  
+buffer name for the accepted connections.
 
 If @var{buffer-or-name} is @code{nil}, this process is not
 associated with any buffer. In this case a filter should be specified
-otherwise there will be no way to retrieve the process output.  
+otherwise there will be no way to retrieve the process output.
 
 When @var{buffer-or-name} is @code{auto} a buffer is automatically
 created for the accepted connection.

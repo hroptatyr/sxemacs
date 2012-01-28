@@ -1,4 +1,4 @@
-/* Utility definitions for C code of SXEmacs 
+/* Utility definitions for C code of SXEmacs
 
    Copyright (C) 1985-1987, 1992-1995 Free Software Foundation, Inc.
    Copyright (C) 1993-1996 Richard Mlynarik.
@@ -167,7 +167,7 @@ extern char *strdup(const char *s);
 #ifndef PRINTF_ARGS
 # if defined (__GNUC__) && (__GNUC__ >= 2)
 #  define PRINTF_ARGS(string_index,first_to_check) \
-          __attribute__ ((format (printf, string_index, first_to_check)))
+	  __attribute__ ((format (printf, string_index, first_to_check)))
 # else
 #  define PRINTF_ARGS(string_index,first_to_check)
 # endif				/* GNUC */
@@ -178,23 +178,23 @@ extern char *strdup(const char *s);
 #  if ((__GNUC__ > 2) || (__GNUC__ == 2) && (__GNUC_MINOR__ >= 5))
 #   define DOESNT_RETURN void
 #   define DECLARE_DOESNT_RETURN(decl) \
-           extern void decl __attribute__ ((noreturn))
+	   extern void decl __attribute__ ((noreturn))
 #   define DECLARE_DOESNT_RETURN_GCC_ATTRIBUTE_SYNTAX_SUCKS(decl,str,idx) \
      /* Should be able to state multiple independent __attribute__s, but  \
-        the losing syntax doesn't work that way, and screws losing cpp */ \
-           extern void decl \
-                  __attribute__ ((noreturn, format (printf, str, idx)))
+	the losing syntax doesn't work that way, and screws losing cpp */ \
+	   extern void decl \
+		  __attribute__ ((noreturn, format (printf, str, idx)))
 #  else
 #   define DOESNT_RETURN void volatile
 #   define DECLARE_DOESNT_RETURN(decl) extern void volatile decl
 #   define DECLARE_DOESNT_RETURN_GCC_ATTRIBUTE_SYNTAX_SUCKS(decl,str,idx) \
-           extern void volatile decl PRINTF_ARGS(str,idx)
+	   extern void volatile decl PRINTF_ARGS(str,idx)
 #  endif			/* GNUC 2.5 */
 # else
 #  define DOESNT_RETURN void
 #  define DECLARE_DOESNT_RETURN(decl) extern void decl
 #  define DECLARE_DOESNT_RETURN_GCC_ATTRIBUTE_SYNTAX_SUCKS(decl,str,idx) \
-          extern void decl PRINTF_ARGS(str,idx)
+	  extern void decl PRINTF_ARGS(str,idx)
 # endif				/* GNUC */
 #endif
 

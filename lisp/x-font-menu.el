@@ -72,7 +72,7 @@ It must be set at run-time.")
 This is run the first time that a font-menu is needed for each device.
 If you don't like the lazy invocation of this function, you can add it to
 `create-device-hook' and that will make the font menus respond more quickly
-when they are selected for the first time.  If you add fonts to your system, 
+when they are selected for the first time.  If you add fonts to your system,
 or if you change your font path, you can call this to re-initialize the menus."
   ;; by Stig@hackvan.com
   ;; #### - this should implement a `menus-only' option, which would
@@ -135,11 +135,11 @@ or if you change your font path, you can call this to re-initialize the menus."
 	     (setq sizes (cons (car common) sizes)))
 	    (setq common (cdr common)))
 	  (setq sizes (delq 0 sizes))))
-    
+
     (setq families (sort families 'string-lessp)
 	  weights  (sort weights 'string-lessp)
 	  sizes    (sort sizes '<))
-    
+
     (dolist (entry cache)
       (aset entry 1 (sort (aref entry 1) 'string-lessp))
       (aset entry 2 (sort (aref entry 2) '<)))
@@ -202,18 +202,18 @@ or if you change your font path, you can call this to re-initialize the menus."
       (setq entry  (vassoc family (aref dcache 0))))
     (when (null entry)
       (return-from x-font-menu-font-data (make-vector 5 nil)))
-    
+
     (when (string-match x-font-regexp name)
       (setq weight (capitalize    (match-string 1 name)))
       (setq size   (string-to-int (match-string 6 name))))
-      
+
     (when (string-match x-font-regexp truename)
       (when (not (member weight (aref entry 1)))
 	(setq weight (capitalize (match-string 1 truename))))
       (when (not (member size   (aref entry 2)))
 	(setq size (string-to-int (match-string 6 truename))))
       (setq slant (capitalize (match-string 2 truename))))
-      
+
     (vector entry family size weight slant)))
 
 (defun x-font-menu-load-font (family weight size slant resolution)

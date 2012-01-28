@@ -20,7 +20,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -44,7 +44,7 @@
 ;;; Definitely do not use Silence-Message with Check-Message.
 ;;; In general it should probably only be used on code that prepares for a
 ;;; test, not on tests.
-;;; 
+;;;
 ;;; You run the tests using M-x test-emacs-test-file,
 ;;; or $(EMACS) -batch -l .../test-harness.el -f batch-test-emacs file ...
 ;;; which is run for you by the `make check' target in the top-level Makefile.
@@ -142,8 +142,8 @@ The output file's name is made by appending `c' to the end of FILENAME."
       (let ((buffer-file-name filename)
 	    (default-major-mode 'emacs-lisp-mode)
 	    (enable-local-eval nil))
-        (normal-mode)
-        (setq filename buffer-file-name)))
+	(normal-mode)
+	(setq filename buffer-file-name)))
     (test-harness-from-buffer input-buffer filename)
     (kill-buffer input-buffer)
     ))
@@ -154,12 +154,12 @@ The output file's name is made by appending `c' to the end of FILENAME."
 
     (with-current-buffer buffer
       (save-excursion
-        (when (re-search-forward ";;;###eval-me-first" nil t)
-          (let* ((p1 (point))
-                 (p2 (progn
-                       (forward-sexp)
-                       (point))))
-            (eval-region p1 p2)))))
+	(when (re-search-forward ";;;###eval-me-first" nil t)
+	  (let* ((p1 (point))
+		 (p2 (progn
+		       (forward-sexp)
+		       (point))))
+	    (eval-region p1 p2)))))
 
     (goto-char (point-min) buffer)
     (condition-case error-info
@@ -211,12 +211,12 @@ The output file's name is made by appending `c' to the end of FILENAME."
 	`(let ((test-harness-failure-tag "KNOWN BUG")
 	       (test-harness-success-tag "PASS (FAILURE EXPECTED)"))
 	  ,@body))
-    
+
       (defmacro Implementation-Incomplete-Expect-Failure (&rest body)
 	`(let ((test-harness-failure-tag "IMPLEMENTATION INCOMPLETE")
 	       (test-harness-success-tag "PASS (FAILURE EXPECTED)"))
 	  ,@body))
-    
+
       (defun Print-Failure (fmt &rest args)
 	(setq fmt (format "%s: %s" test-harness-failure-tag fmt))
 	(if (noninteractive) (apply #'message fmt args))
@@ -266,7 +266,7 @@ BODY is a sequence of expressions and may contain several tests."
 	    (Print-Failure "Assertion failed: (equal %S %S) => (equal %S %S)"
 			   (quote ,object1) (quote ,object2) ,object1 ,object2)
 	    (incf assertion-failures))
-	   (t (Print-Failure "(equal %S %S) ==> error: %S" 
+	   (t (Print-Failure "(equal %S %S) ==> error: %S"
 			     (quote ,object1) (quote ,object2) error-info)
 	      (incf other-failures)
 	      )))
@@ -281,7 +281,7 @@ BODY is a sequence of expressions and may contain several tests."
 	    (Print-Failure "Assertion failed: (not (equal %S %S)) => (not (equal %S %S))"
 			   (quote ,object1) (quote ,object2) ,object1 ,object2)
 	    (incf assertion-failures))
-	   (t (Print-Failure "(not (equal %S %S)) ==> error: %S" 
+	   (t (Print-Failure "(not (equal %S %S)) ==> error: %S"
 			     (quote ,object1) (quote ,object2) error-info)
 	      (incf other-failures)
 	      )))
@@ -498,11 +498,11 @@ BODY is a sequence of expressions and may contain several tests."
 				   (point))
 				 (point-max))
 		 (funcall temp-buffer-show-function show-buffer))
-              (select-window
-               (prog1 (selected-window)
-                 (select-window (display-buffer (current-buffer)))
-                 (goto-char test-harness-results-point-max)
-                 (recenter 1)))))))))
+	      (select-window
+	       (prog1 (selected-window)
+		 (select-window (display-buffer (current-buffer)))
+		 (goto-char test-harness-results-point-max)
+		 (recenter 1)))))))))
 
 (defun batch-test-emacs-1 (file)
   (condition-case error-info

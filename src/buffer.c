@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
    FSF: long ago.
    JWZ: some changes for Lemacs, long ago. (e.g. separate buffer
-        list per frame.)
+	list per frame.)
    Mly: a few changes for buffer-local vars, 19.8 or 19.9.
    Ben Wing: some changes and cleanups for Mule, 19.12.
  */
@@ -704,8 +704,8 @@ even if a buffer with that name exists.
 
 	count = 1;
 	while (1) {
-                prt = snprintf(number, sizeof(number), "<%d>", ++count);
-	        assert(prt>=0 && (size_t)prt < sizeof(number));
+		prt = snprintf(number, sizeof(number), "<%d>", ++count);
+		assert(prt>=0 && (size_t)prt < sizeof(number));
 		gentemp = concat2(name, build_string(number));
 		if (!NILP(ignore)) {
 			tem = Fstring_equal(gentemp, ignore);
@@ -812,7 +812,7 @@ No argument or nil as argument means use current buffer as BUFFER.
     { int mask = XINT (buffer_local_flags.slot);		\
       if (mask == 0 || mask == -1				\
 	  || ((mask > 0) && (buf->local_var_flags & mask)))	\
-        result = Fcons (Fcons (syms->slot, buf->slot), result);	\
+	result = Fcons (Fcons (syms->slot, buf->slot), result);	\
     }
 #include "bufslots.h"
 #undef MARKED_SLOT
@@ -1618,7 +1618,7 @@ the normal hook `change-major-mode-hook'.
 
 	kill_specifier_buffer_locals(Fcurrent_buffer());
 
-        changing_major_mode = 1;
+	changing_major_mode = 1;
 
 	/* Force modeline redisplay.  Useful here because all major mode
 	   commands call this function.  */
@@ -2681,7 +2681,7 @@ of the text area.
 	DEFVAR_BUFFER_LOCAL_MAGIC("tab-width", tab_width	/*
 *Distance between tab stops (for display of tab characters), in columns.
 Automatically becomes buffer-local when set in any fashion.
-								 */ 
+								 */
 				  , redisplay_variable_changed);
 
 	DEFVAR_BUFFER_LOCAL_MAGIC("ctl-arrow", ctl_arrow	/*
@@ -2696,7 +2696,7 @@ The interpretation of this variable is likely to change in the future.
 Automatically becomes buffer-local when set in any fashion.
 This variable does not apply to characters whose display is specified
 in the current display table (if there is one).
-								 */ 
+								 */
 				  , redisplay_variable_changed);
 
 #if 0				/* #### Make this a specifier! */
@@ -2714,7 +2714,7 @@ Automatically becomes buffer-local when set in any fashion.
 Note that this is overridden by the variable
 `truncate-partial-width-windows' if that variable is non-nil
 and this buffer is not full-frame width.
-									 */ 
+									 */
 				  , redisplay_variable_changed);
 
 	DEFVAR_BUFFER_LOCAL("default-directory", directory	/*
@@ -2723,7 +2723,7 @@ Each buffer has its own value of this variable.
 								 */ );
 
 #ifdef FILE_CODING
-	DEFVAR_BUFFER_DEFAULTS("default-buffer-file-coding-system", 
+	DEFVAR_BUFFER_DEFAULTS("default-buffer-file-coding-system",
 			       buffer_file_coding_system	/*
 Default value of `buffer-file-coding-system' for buffers that do not override it.
 This is the same as (default-value 'buffer-file-coding-system).
@@ -3045,8 +3045,8 @@ static int directory_is_current_directory(Extbyte * pwd)
 		   format anyway..
 		*/
 		pwd_internal=pwd;
-		
-	} 
+
+	}
 	if( pwd_internal == NULL ) {
 		return 0;
 	}
@@ -3070,8 +3070,8 @@ void init_initial_directory(void)
 	   when PWD is right, and may avoid a fatal error.  */
 	if ((pwd = (Extbyte *) getenv("PWD")) != NULL
 	    && directory_is_current_directory(pwd)
-            && strlen(pwd) < sizeof(initial_directory) )
-                strcpy(initial_directory, (char *)pwd);
+	    && strlen(pwd) < sizeof(initial_directory) )
+		strcpy(initial_directory, (char *)pwd);
 	else
 	if (getcwd(initial_directory, MAXPATHLEN) == NULL)
 		fatal("`getcwd' failed: %s\n", strerror(errno));

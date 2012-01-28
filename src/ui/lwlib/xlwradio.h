@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  *
  * Author: Edward A. Falk
  *         falk@falconer.vip.best.com
- *  
+ *
  * Date:   June 30, 1997
  */
 
@@ -59,7 +59,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  font			Font		XFontStructx*	XtDefaultFont
  foreground		Foreground	Pixel		XtDefaultForeground
  height			Height		Dimension	text height
- highlightThickness 	Thickness	Dimension	2
+ highlightThickness	Thickness	Dimension	2
  insensitiveBorder	sensitive	Pixmap		Gray
  internalHeight		Height		Dimension	2
  internalWidth		Width		Dimension	4
@@ -85,7 +85,7 @@ typedef struct _RadioClassRec *RadioWidgetClass;
 typedef struct _RadioRec *RadioWidget;
 
 /************************************************************
- * 
+ *
  * Public Functions
  *
  ************************************************************/

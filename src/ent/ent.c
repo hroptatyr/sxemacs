@@ -301,7 +301,7 @@ If optional argument PRECISION is non-nil, its value
 #endif	/* HAVE_MPF */
 	}
 
-        /* fallback to 'float */
+	/* fallback to 'float */
 	return Fcoerce_number(number, Qfloat, precision);
 }
 
@@ -471,7 +471,7 @@ int ase_optable_index(Lisp_Object arg)
 	case Lisp_Type_Record: {
 		enum lrecord_type type =
 			XRECORD_LHEADER_IMPLEMENTATION(arg)->lrecord_type_index;
-		
+
 		switch ((unsigned int)type) {
 		case lrecord_type_marker:
 			return INT_T;
@@ -583,17 +583,17 @@ TYPE is one of the symbols:
 - 'fixnum or 'int     to convert to built-in integers
 - 'bigz or 'bignum    to convert to bigz integers
 - 'integer            to convert to the most suitable type out of
-                      'bigz or 'int
+		      'bigz or 'int
 
 - 'bigq or 'ratio     to convert to bigq fractions
 - 'rational           to convert to the most suitable type out of
-                      'bigq, 'bigz or 'int
+		      'bigq, 'bigz or 'int
 
 - 'float              to convert to built-in floats
 - 'bigf or 'bigfloat  to convert to bigf floats
 - 'bigfr              to convert to bigfr floats
-- 'real               to convert to the type indicated by 
-                      `read-real-as' with a fallback to 'float
+- 'real               to convert to the type indicated by
+		      `read-real-as' with a fallback to 'float
 
 - 'bigg               to convert to a Gaussian
 - 'bigc               to convert to a bigc complex number
@@ -654,7 +654,7 @@ cases; the information is silently lost.
 	}
 #endif /* HAVE_MPF */
 #if defined HAVE_MPFR && defined WITH_MPFR
-	else if (EQ(type, Qbigfr)) { 
+	else if (EQ(type, Qbigfr)) {
 		la.precision = internal_get_precision(precision);
 		return ent_lift(number, BIGFR_T, &la);
 	}
@@ -671,7 +671,7 @@ cases; the information is silently lost.
 		else if (Vread_real_as == Qbigfr)
 			return ent_lift(number, BIGFR_T, &la);
 #endif
-		else 
+		else
 			return ent_lift(number, FLOAT_T, &la);
 	}
 #if defined(HAVE_PSEUG) && defined WITH_PSEUG
@@ -935,7 +935,7 @@ arbitrary-precision floats.
 	DEFVAR_LISP("read-real-as", &Vread_real_as /*
 *Indicate how real numbers should be read.
 If set to `nil' or 'float, reals are always converted to floats.
-If set to 'bigf or 'bigfr, reals are read as MPF floats or MPFR 
+If set to 'bigf or 'bigfr, reals are read as MPF floats or MPFR
 floats respectively.
 						   */);
 	Vread_real_as = Qfloat;

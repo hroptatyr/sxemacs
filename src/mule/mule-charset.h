@@ -572,7 +572,16 @@ CHARSET_BY_ATTRIBUTES(unsigned int type, unsigned char final, int dir)
 			     final < countof(chlook->charset_by_attributes[0])
 			     && dir <
 			     countof(chlook->charset_by_attributes[0][0]));
-	return chlook->charset_by_attributes[type][final][dir];
+#if defined(DEBUG_SXEMACS) && DEBUG_SXEMACS
+	if( dir < 0 || ! (dir < 2 && final < 128 && type < 4) ) {
+		assert(dir >= 0);
+		assert(dir < 2);
+		assert(final < 128);
+		assert(type < 4);
+		return Qnil;
+	} else
+#endif
+		return chlook->charset_by_attributes[type][final][dir];
 }
 
 /* Table of number of bytes in the string representation of a character
@@ -587,8 +596,12 @@ extern const Bytecount rep_bytes_by_first_byte[0xA0];
 extern_inline int REP_BYTES_BY_FIRST_BYTE(Bufbyte fb);
 extern_inline int REP_BYTES_BY_FIRST_BYTE(Bufbyte fb)
 {
-	type_checking_assert(fb < 0xA0);
-	return rep_bytes_by_first_byte[fb];
+	int inbounds = (fb < (sizeof(rep_bytes_by_first_byte)/sizeof(Bytecount)));
+	type_checking_assert(inbounds);
+	if(inbounds)
+		return rep_bytes_by_first_byte[fb];
+	else
+		return 1;
 }
 
 /************************************************************************/

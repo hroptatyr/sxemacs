@@ -18,7 +18,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -34,25 +34,25 @@
 ;; ---------------------------------
 (dolist (strings '((#r"xyz"   "xyz")	 ; no backslashes
 		   (#r"\xyz"  "\\xyz")   ; backslash at start
-                   (#r"\\xyz" "\\\\xyz") ; backslashes at start
-                   (#r"\nxyz" "\\nxyz")  ; escape seq. at start
-                   (#r"\"xyz" "\\\"xyz") ; quote at start
-                   (#r"xy\z"  "xy\\z")   ; backslash in middle
-                   (#r"xy\\z" "xy\\\\z") ; backslashes in middle
-                   (#r"xy\nz" "xy\\nz")  ; escape seq. in middle
-                   (#r"xy\"z" "xy\\\"z") ; quote in middle
-                   ;;(#r"xyz\"  "xyz\\")   ; backslash at end: error
-                   (#r"xyz\\" "xyz\\\\") ; backslashes at end
-                   (#r"xyz\n" "xyz\\n")  ; escape seq. at end
-                   (#r"xyz\"" "xyz\\\"") ; quote at end
-                   ))
+		   (#r"\\xyz" "\\\\xyz") ; backslashes at start
+		   (#r"\nxyz" "\\nxyz")  ; escape seq. at start
+		   (#r"\"xyz" "\\\"xyz") ; quote at start
+		   (#r"xy\z"  "xy\\z")   ; backslash in middle
+		   (#r"xy\\z" "xy\\\\z") ; backslashes in middle
+		   (#r"xy\nz" "xy\\nz")  ; escape seq. in middle
+		   (#r"xy\"z" "xy\\\"z") ; quote in middle
+		   ;;(#r"xyz\"  "xyz\\")   ; backslash at end: error
+		   (#r"xyz\\" "xyz\\\\") ; backslashes at end
+		   (#r"xyz\n" "xyz\\n")  ; escape seq. at end
+		   (#r"xyz\"" "xyz\\\"") ; quote at end
+		   ))
   (Assert (apply #'string= strings)))
 
 ;; Odd number of backslashes at the end
 ;; ------------------------------------
 (dolist (string '("#r\"xyz\\\""         ; `#r"abc\"': escaped delimiter
-                  "#r\"xyz\\\\\\\""     ; `#r"abc\\\"': escaped delimiter
-                  ))
+		  "#r\"xyz\\\\\\\""     ; `#r"abc\\\"': escaped delimiter
+		  ))
   (with-temp-buffer
     (insert string)
     (Check-Error end-of-file (eval-buffer))))
@@ -60,16 +60,16 @@
 ;; Alternate string/regex delimiters
 ;; ---------------------------------
 (dolist (string '("#r/xyz/"             ; Perl syntax
-                  "#r:ix/xyz/"          ; Extended Perl syntax
-                  "#r|xyz|"             ; TeX syntax
-                  "#r[xyz]"             ; (uncommon) Perl syntax
-                  "#r<xyz>"             ; Perl6 syntax?
-                  "#r(xyz)"             ; arbitrary santax
-                  "#r{xyz}"             ; arbitrary santax
-                  "#r,xyz,"             ; arbitrary santax
-                  "#r!xyz!"             ; arbitrary santax
-                  ))
+		  "#r:ix/xyz/"          ; Extended Perl syntax
+		  "#r|xyz|"             ; TeX syntax
+		  "#r[xyz]"             ; (uncommon) Perl syntax
+		  "#r<xyz>"             ; Perl6 syntax?
+		  "#r(xyz)"             ; arbitrary santax
+		  "#r{xyz}"             ; arbitrary santax
+		  "#r,xyz,"             ; arbitrary santax
+		  "#r!xyz!"             ; arbitrary santax
+		  ))
   (with-temp-buffer
     (insert string)
     (Check-Error-Message invalid-read-syntax "unrecognized raw string"
-                         (eval-buffer))))
+			 (eval-buffer))))

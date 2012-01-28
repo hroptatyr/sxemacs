@@ -1,4 +1,3 @@
-
 @node Mark, Mouse Selection, Help, Top
 @chapter Selecting Text
 @cindex mark
@@ -10,10 +9,10 @@ part of the current buffer. You can select text in two ways:
 @itemize @bullet
 @item
 You use special keys to select text by defining a region between point
-and the mark. 
+and the mark.
 @item
 If you are running SXEmacs under X, you can also select text
-with the mouse. 
+with the mouse.
 @end itemize
 
 @section The Mark and the Region
@@ -23,7 +22,7 @@ between point and the mark is called @dfn{the region}.  You can move
 point or the mark to adjust the boundaries of the region.  It doesn't
 matter which one is set first chronologically, or which one comes
 earlier in the text.
-  
+
   Once the mark has been set, it remains until it is set again at
 another place.  The mark remains fixed with respect to the preceding
 character if text is inserted or deleted in a buffer.  Each Emacs
@@ -96,7 +95,7 @@ they forget where it is. But you can see where the mark is with the
 command @kbd{C-x C-x} (@code{exchange-point-and-mark}) which puts the
 mark where point was and point where the mark was.  The extent of the
 region is unchanged, but the cursor and point are now at the previous
-location of the mark. 
+location of the mark.
 
 @kindex C-<
 @kindex C->
@@ -107,7 +106,7 @@ buffer while leaving point at its original location. If you supply an
 argument to @kbd{C-<} (@code{mark-beginning-of-buffer}), the mark is pushed
 @var{n}/10 of the way from the true beginning of the buffer. You can
 also set the mark at the end of a buffer with @kbd{C->}
-(@code{mark-end-of-buffer}). It pushes the mark to the end of the buffer, 
+(@code{mark-end-of-buffer}). It pushes the mark to the end of the buffer,
 leaving point alone. Supplying an argument to the command pushes the mark
 @var{n}/10 of the way from the true end of the buffer.
 
@@ -116,7 +115,7 @@ the variable @code{zmacs-regions} to @code{t}. This makes the current
 region (defined by point and mark) highlight and makes it available as
 the X clipboard selection, which means you can use the menu bar items on
 it.  @xref{Active Regions}, for more information.
- 
+
   @kbd{C-x C-x} is also useful when you are satisfied with the location of
 point but want to move the mark; do @kbd{C-x C-x} to put point there and
 then you can move it.  A second use of @kbd{C-x C-x}, if necessary, puts
@@ -151,7 +150,7 @@ Indent it with @kbd{C-x @key{TAB}} or @kbd{C-M-\} (@pxref{Indentation}).
 
   There are commands for placing point and the mark around a textual
 object such as a word, list, paragraph or page.
- 
+
 @table @kbd
 @item M-@@
 Set mark after end of next word (@code{mark-word}).  This command and

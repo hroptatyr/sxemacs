@@ -3,8 +3,8 @@
 # An example hook script for the "post-receive" event.
 #
 # (C) 2012 Nelson Ferreira
-# 
-#  
+#
+#
 # This program is free software; you can redistribute it and/or modify it
 # under a BSD-like licence.
 #
@@ -32,7 +32,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 # --------
-# 
+#
 # You might need to adjust the GIT_CONTRIB_HOOKS location.
 # Recent versions of git will have post-receive-email.
 # Check at http://git-scm.org for the latest version
@@ -51,6 +51,6 @@ read oldrev newrev refname
 if [ "$refname" = "refs/heads/for-steve" ]; then
    diff=$(git diff ${oldrev}..${newrev} | head -1)
    if [ -n "$diff" ]; then
-        echo "$oldrev $newrev $refname" | . ${GIT_CONTRIB_HOOKS}/post-receive-email
+	echo "$oldrev $newrev $refname" | . ${GIT_CONTRIB_HOOKS}/post-receive-email
    fi
 fi

@@ -74,4 +74,3 @@ This function maps @var{function} over entries in @var{range-table},
 calling it with three args, the beginning and end of the range and the
 corresponding value.
 @end defun
-

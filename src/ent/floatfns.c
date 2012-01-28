@@ -998,7 +998,7 @@ If second optional argument PRECISION is given, use its value
 		bigc_sqrt(ent_scratch_bigc, XBIGC_DATA(bcnumber));
 		return make_bigc_bc(ent_scratch_bigc);
 #endif	/* HAVE_MPC */
-	} 
+	}
 
 	if (NILP(precision));
 	return wrong_type_argument(Qnumberp, number);
@@ -1552,7 +1552,7 @@ Return the smallest integer no less than NUMBER.  (Round toward +inf.)
 #if defined HAVE_MPZ && (defined WITH_GMP || defined WITH_MP)
 	if (INTEGERP(number))
 #else  /* !HAVE_MPZ */
- 	if (INTP(number))
+	if (INTP(number))
 #endif	/* HAVE_MPZ */
 		return number;
 
@@ -1617,7 +1617,7 @@ greater than NUMBER/DIVISOR.
 	if (NILP(divisor)) {
 		return Ffloor(number, make_int(1L));
 
-	} 
+	}
 
 	/* !NILP(divisor) */
 
@@ -1974,7 +1974,7 @@ Return the canonical norm of NUMBER.
 		quatern_norm(ent_scratch_bigz, XQUATERN_DATA(number));
 		return make_bigz_bz(ent_scratch_bigz);
 #endif
-	} 
+	}
 
 	/* what should the rest do? */
 	return Fcanonical_norm(wrong_type_argument(Qnumberp, number));
@@ -2066,7 +2066,7 @@ Return the smallest integer no less than NUMBER, as a float.
 #if defined HAVE_MPFR && defined WITH_MPFR
 	if (BIGFRP(number)) {
 		bigfr_set_prec(ent_scratch_bigfr, XBIGFR_GET_PREC(number));
-		
+
 		bigfr_ceil(ent_scratch_bigfr, XBIGFR_DATA(number));
 		return make_bigfr_bfr(ent_scratch_bigfr);
 	}
@@ -2101,7 +2101,7 @@ Return the largest integer no greater than NUMBER, as a float.
 #if defined HAVE_MPFR && defined WITH_MPFR
 	if (BIGFRP(number)) {
 		bigfr_set_prec(ent_scratch_bigfr, XBIGFR_GET_PREC(number));
-		
+
 		bigfr_floor(ent_scratch_bigfr, XBIGFR_DATA(number));
 		return make_bigfr_bfr(ent_scratch_bigfr);
 	}
@@ -2135,7 +2135,7 @@ Return the nearest integer to NUMBER, as a float.
 #if defined HAVE_MPFR && defined WITH_MPFR
 	if (BIGFRP(number)) {
 		bigfr_set_prec(ent_scratch_bigfr, XBIGFR_GET_PREC(number));
-		
+
 		bigfr_rint(ent_scratch_bigfr, XBIGFR_DATA(number));
 		return make_bigfr_bfr(ent_scratch_bigfr);
 	}
@@ -2158,7 +2158,7 @@ Rounds the value toward zero.
 */
       (number))
 {
-        fpfloat d;
+	fpfloat d;
 #if defined HAVE_MPF && defined WITH_GMP
 	if (BIGFP(number)) {
 		bigf_set_prec(ent_scratch_bigf, XBIGF_GET_PREC(number));
@@ -2171,7 +2171,7 @@ Rounds the value toward zero.
 #if defined HAVE_MPFR && defined WITH_MPFR
 	if (BIGFRP(number)) {
 		bigfr_set_prec(ent_scratch_bigfr, XBIGFR_GET_PREC(number));
-		
+
 		bigfr_trunc(ent_scratch_bigfr, XBIGFR_DATA(number));
 		return make_bigfr_bfr(ent_scratch_bigfr);
 	}

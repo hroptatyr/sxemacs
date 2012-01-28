@@ -15,7 +15,7 @@
 ## General Public License for more details.
 
 ## You should have received a copy of the GNU General Public License
-## along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Process this file with automake to produce Makefile.in
 
@@ -44,10 +44,10 @@ bldlispdir = $(abs_top_builddir)/lisp
 sxelwlibdir = $(top_srcdir)/src/ui/lwlib
 bldlwlibdir = $(top_builddir)/src/ui/lwlib
 
-sitemodule_DATA = 
+sitemodule_DATA =
 
 EXTRA_DIST = autogen.sh
-SUBDIRS = 
+SUBDIRS =
 if DESCEND_ASE
 SUBDIRS += ase
 endif

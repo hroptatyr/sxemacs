@@ -67,17 +67,17 @@ static int x_inhibit_scrollbar_slider_size_change(void)
 /* A device method. */
 static void x_free_scrollbar_instance(struct scrollbar_instance *instance)
 {
-        if ( instance && instance->scrollbar_data ) {
+	if ( instance && instance->scrollbar_data ) {
 
-                if (SCROLLBAR_X_NAME(instance))
-                        xfree(SCROLLBAR_X_NAME(instance));
-                
-                if (SCROLLBAR_X_WIDGET(instance)) {
-                        if (XtIsManaged(SCROLLBAR_X_WIDGET(instance)))
-                                XtUnmanageChild(SCROLLBAR_X_WIDGET(instance));
+		if (SCROLLBAR_X_NAME(instance))
+			xfree(SCROLLBAR_X_NAME(instance));
 
-                        lw_destroy_all_widgets(SCROLLBAR_X_ID(instance));
-                }
+		if (SCROLLBAR_X_WIDGET(instance)) {
+			if (XtIsManaged(SCROLLBAR_X_WIDGET(instance)))
+				XtUnmanageChild(SCROLLBAR_X_WIDGET(instance));
+
+			lw_destroy_all_widgets(SCROLLBAR_X_ID(instance));
+		}
 		xfree(instance->scrollbar_data);
 	}
 }

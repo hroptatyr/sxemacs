@@ -71,9 +71,9 @@
 (load "dump-paths.el")
 
 (let ((autol (packages-list-autoloads
-              (if (getenv "BUILD_TREE_ROOT")
-                  (expand-file-name "lisp" (getenv "BUILD_TREE_ROOT"))
-                (concat default-directory "../lisp")))))
+	      (if (getenv "BUILD_TREE_ROOT")
+		  (expand-file-name "lisp" (getenv "BUILD_TREE_ROOT"))
+		(concat default-directory "../lisp")))))
 
   ;;(print (prin1-to-string autol))
   (while autol
@@ -88,8 +88,8 @@
 
 (let (preloaded-file-list site-load-packages need-to-dump dumped-exe)
   (load (if (getenv "SOURCE_TREE_ROOT")
-            (expand-file-name "lisp/dumped-lisp.el" (getenv "SOURCE_TREE_ROOT"))
-          (concat default-directory "../lisp/dumped-lisp.el")))
+	    (expand-file-name "lisp/dumped-lisp.el" (getenv "SOURCE_TREE_ROOT"))
+	  (concat default-directory "../lisp/dumped-lisp.el")))
 
   (setq dumped-exe
 	(cond ((file-exists-p "../src/sxemacs") "../src/sxemacs")
@@ -98,12 +98,12 @@
   ;; Path setup
   (let ((package-preloaded-file-list
 	 (packages-collect-package-dumped-lisps late-package-load-path)))
- 
+
     (setq preloaded-file-list
- 	  (append package-preloaded-file-list
- 		  preloaded-file-list
+	  (append package-preloaded-file-list
+		  preloaded-file-list
 		  '("bytecomp")
- 		  packages-hardcoded-lisp)))
+		  packages-hardcoded-lisp)))
 
   (load (concat default-directory "../site-packages") t t)
   (setq preloaded-file-list
@@ -123,21 +123,21 @@
 	       arg)))
 	    (when (and dumped-exe
 		       (or (let ((frobel
-                                  (if (getenv "SOURCE_TREE_ROOT")
-                                      (expand-file-name
-                                       (concat "lisp/" frob ".el")
-                                       (getenv "SOURCE_TREE_ROOT"))
-                                    (concat "../lisp/" frob ".el"))))
-                             (and (file-exists-p frobel)
-                                  (file-newer-than-file-p frobel dumped-exe)))
-                           (let ((frobelc
-                                  (if (getenv "BUILD_TREE_ROOT")
-                                      (expand-file-name
-                                       (concat "lisp/" frob ".elc")
-                                       (getenv "BUILD_TREE_ROOT"))
-                                    (concat "../lisp/" frob ".elc"))))
-                             (and (file-exists-p frobelc)
-                                  (file-newer-than-file-p frobelc dumped-exe)))))
+				  (if (getenv "SOURCE_TREE_ROOT")
+				      (expand-file-name
+				       (concat "lisp/" frob ".el")
+				       (getenv "SOURCE_TREE_ROOT"))
+				    (concat "../lisp/" frob ".el"))))
+			     (and (file-exists-p frobel)
+				  (file-newer-than-file-p frobel dumped-exe)))
+			   (let ((frobelc
+				  (if (getenv "BUILD_TREE_ROOT")
+				      (expand-file-name
+				       (concat "lisp/" frob ".elc")
+				       (getenv "BUILD_TREE_ROOT"))
+				    (concat "../lisp/" frob ".elc"))))
+			     (and (file-exists-p frobelc)
+				  (file-newer-than-file-p frobelc dumped-exe)))))
 	      (setq need-to-dump t)))
 
 ;      (if (null (member (file-name-nondirectory arg)

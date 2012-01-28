@@ -86,7 +86,7 @@ m4_define([__SXE_MAKE_ADDER], [
 			]SXE_ADD_[]$1[]_OBJ([$i])[
 		done
 	])dnl
-	
+
 	m4_define([SXE_SUBST_]$1[_OBJS], [
 		AC_SUBST($2_objs)
 		## subst additional vars
@@ -144,33 +144,33 @@ AC_DEFUN([SXE_SUBST_STATMOD_A], [AC_SUBST(statmod_archives)])
 dnl SXE_APPEND(value, varname)
 AC_DEFUN([SXE_APPEND],
 [SXE_CONSECUTIVE_UNDUP($2,"$[$2] [$1]")
- if test "$extra_verbose" = "yes"; then 
+ if test "$extra_verbose" = "yes"; then
 	echo "    Appending \"[$1]\" to [$2]
-        (now \"$[$2]\")"
+	(now \"$[$2]\")"
  fi])
 
 dnl SXE_PREPEND(value, varname)
 AC_DEFUN([SXE_PREPEND],
 [SXE_CONSECUTIVE_UNDUP($2,"[$1] $[$2]")
- if test "$extra_verbose" = "yes"; then 
+ if test "$extra_verbose" = "yes"; then
 	echo "    Prepending \"[$1]\" to [$2]
-        (now \"$[$2]\")"
+	(now \"$[$2]\")"
  fi])
 
 dnl SXE_APPEND(value, varname)
 AC_DEFUN([SXE_APPEND_UNDUP],
 [SXE_UNDUP($2,"$[$2] [$1]")
- if test "$extra_verbose" = "yes"; then 
+ if test "$extra_verbose" = "yes"; then
 	echo "    Appending and dedupping \"[$1]\" to [$2]
-        (now \"$[$2]\")"
+	(now \"$[$2]\")"
  fi])
 
 dnl SXE_PREPEND(value, varname)
 AC_DEFUN([SXE_PREPEND_UNDUP],
 [SXE_UNDUP($2,"[$1] $[$2]")
- if test "$extra_verbose" = "yes"; then 
+ if test "$extra_verbose" = "yes"; then
 	echo "    Prepending and dedupping \"[$1]\" to [$2]
-        (now \"$[$2]\")"
+	(now \"$[$2]\")"
  fi])
 
 dnl SXE_DIE(message)
@@ -235,16 +235,16 @@ AC_DEFUN([SXE_CANONICALISE_PATH], [dnl
 			    -e "s|^/amd/|/net/|")
 	fi
 
-dnl 	if test -d "[$]tmpp"; then
-dnl 		## the easy way ...
-dnl 		## just let the filesystem implementation do the hard work
-dnl 		tmpp[]=$(cd [$]tmpp[] && echo $(pwd))
-dnl 	elif test -f "[$]tmpp"; then
-dnl 		## the easy way ...
-dnl 		## just let the filesystem implementation do the hard work
-dnl 		tmpp[]=$(cd $(dirname [$]tmpp[]) && \
-dnl 			echo $(pwd)/$(basename [$]tmpp[]))
-dnl 	else
+dnl	if test -d "[$]tmpp"; then
+dnl		## the easy way ...
+dnl		## just let the filesystem implementation do the hard work
+dnl		tmpp[]=$(cd [$]tmpp[] && echo $(pwd))
+dnl	elif test -f "[$]tmpp"; then
+dnl		## the easy way ...
+dnl		## just let the filesystem implementation do the hard work
+dnl		tmpp[]=$(cd $(dirname [$]tmpp[]) && \
+dnl			echo $(pwd)/$(basename [$]tmpp[]))
+dnl	else
 		## simple magic
 		canonicalised="no"
 		while test "$canonicalised" = "no"; do

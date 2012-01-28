@@ -61,7 +61,7 @@ Only takes effect when `lisp-initd-byte-compile-elisp' is non-nil.")
   "Kill the byte-compile Compile Log buffers")
 
 
-(defvar lisp-initd-gather-func #'directory-files 
+(defvar lisp-initd-gather-func #'directory-files
   "Function used to gather the files used in init.  For acceptable
 arguments see `directory-files'.  The function is expected to return a
 sorted list of absolute pathnames, accept and honor the MATCH argument
@@ -75,15 +75,15 @@ If DO-INIT is non-nil the file is loaded."
   (let* ((initd-dir    (file-name-as-directory
 			(expand-file-name
 			 (or dir lisp-initd-dir))))
-         (initd-file   (or file lisp-initd-basename))
+	 (initd-file   (or file lisp-initd-basename))
 	 (initd-el     (expand-file-name (concat initd-file ".el")
-					 (paths-construct-path 
+					 (paths-construct-path
 					  (list initd-dir ".."))))
-         (initd-elc    (concat initd-el "c"))
-         (initd-files  (funcall lisp-initd-gather-func initd-dir
+	 (initd-elc    (concat initd-el "c"))
+	 (initd-files  (funcall lisp-initd-gather-func initd-dir
 				t "^.*\.el$" nil t))
 	 (init-file     (if lisp-initd-byte-compile-elisp initd-elc initd-el))
-         init-buffer)
+	 init-buffer)
 
     ;; No use in keeping an outdate byte-compiled file...
     (when (and (file-exists-p initd-el)
@@ -101,19 +101,19 @@ If DO-INIT is non-nil the file is loaded."
       (message "Recompiling init files....")
       (setq init-buffer (generate-new-buffer (concat "*" initd-el "*")))
       (with-current-buffer init-buffer
-        (set-visited-file-name initd-el)
+	(set-visited-file-name initd-el)
 	(insert ";; This is an automatically generated file.\n"
 		";; DO NOT EDIT\n"
 		";;\n")
 	(insert "(message \"Compiled " initd-dir " loading started\")\n")
-	(mapc 
+	(mapc
 	 #'(lambda (current)
 	     (condition-case err
 		 (insert "(condition-case err (progn\n"
 			 ";; ------------------------------------\n"
 			 ";; " current "\n"
-			 (save-excursion	
-			   (save-restriction 
+			 (save-excursion
+			   (save-restriction
 			     (with-temp-buffer
 			       (insert-file-contents current)
 			       (eval-buffer)
@@ -121,15 +121,15 @@ If DO-INIT is non-nil the file is loaded."
 			 "\n"
 			 ";; ----------------------------------\n"
 			 ")\n"
-			 "(error (message \"Error loading " current 
+			 "(error (message \"Error loading " current
 			 ": \\\"%S\\\" (signal:\'%S\' . data:\'%S\')\" "
 			 "err (car err) (cdr err))))\n"
 			 ";; ----------------------------------\n\n")
 	       (error
 		(progn
-		  (insert "(warn \"\\\"" current 
+		  (insert "(warn \"\\\"" current
 			  "\\\" not inserted "
-			  (replace-regexp-in-string 
+			  (replace-regexp-in-string
 			   "\"" "\\\""
 			   (format (concat "due to syntax error: %S"
 					   " (signal:%S . data:%S)")
@@ -163,7 +163,7 @@ If DIR, a string, is omitted `lisp-initd-dir' is used.  DIR can be
 either a complete path, or the last element of a path.  If the latter,
 DIR is expanded against the _parent_ directory of `lisp-initd-dir'.
 
-Optional file arg, FILE is the name of the file to be loaded.  
+Optional file arg, FILE is the name of the file to be loaded.
 If it is omitted, `lisp-initd-basename' is used.
 
 See `lisp-initd-compile'."
@@ -173,12 +173,11 @@ See `lisp-initd-compile'."
   (when dir
     (unless (string-match "/" dir)
       (setq dir (file-name-as-directory
-		 (expand-file-name dir (paths-construct-path 
+		 (expand-file-name dir (paths-construct-path
 					(list lisp-initd-dir "..")))))))
   (when current-prefix-arg
     (setq file (read-string "File: ")))
-    
+
   (lisp-initd-compile dir file t))
 
 (provide 'lisp-initd)
-

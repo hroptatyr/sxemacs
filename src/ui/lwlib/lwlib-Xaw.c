@@ -286,7 +286,7 @@ void xaw_pop_instance(widget_instance * instance, Boolean up)
 				while (topmost->core.parent &&
 				       XtIsRealized(topmost->core.parent) &&
 				       /* HAVE_SESSION adds an unmapped parent widget that
-				          we should ignore here. */
+					  we should ignore here. */
 				       topmost->core.parent->core.
 				       mapped_when_managed)
 					topmost = topmost->core.parent;
@@ -405,7 +405,7 @@ make_dialog(const char *name, Widget parent, Boolean pop_up_p,
 		   I want the separator to take up the slack between the buttons on
 		   the right and the buttons on the left (that is I want the buttons
 		   after the separator to be packed against the right edge of the
-		   window) but I can't seem to make it do it.  
+		   window) but I can't seem to make it do it.
 		 */
 		ac = 0;
 		XtSetArg(av[ac], XtNfromHoriz, button);
@@ -434,7 +434,7 @@ make_dialog(const char *name, Widget parent, Boolean pop_up_p,
 		button = XtCreateManagedWidget("separator",
 					       /* labelWidgetClass, */
 					       /* This has to be Command to fake out
-					          the Dialog widget... */
+						  the Dialog widget... */
 					       commandWidgetClass,
 					       dialog, av, ac);
 	}
@@ -575,7 +575,7 @@ xaw_generic_callback(Widget widget, XtPointer closure, XtPointer call_data)
 #else
 	/* Damn!  Athena doesn't give us a way to hang our own data on the
 	   buttons, so we have to go find it...  I guess this assumes that
-	   all instances of a button have the same call data. 
+	   all instances of a button have the same call data.
 
 	   ... Which is a totally bogus assumption --andyp */
 	{
@@ -594,7 +594,7 @@ xaw_generic_callback(Widget widget, XtPointer closure, XtPointer call_data)
 		}
 		if (val)
 			user_data = val->call_data;
-		else 
+		else
 			abort();
 	}
 #endif

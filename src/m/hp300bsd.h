@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /* Synched up with: FSF 19.31. */
 
-/* The following line tells the configuration script what sort of 
+/* The following line tells the configuration script what sort of
    operating system this machine is likely to run.
    USUAL-OPSYS="bsd4-3"  */
 
@@ -33,7 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #define CRT0_DUMMIES one_dummy,
 
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 
 #define LOAD_AVE_TYPE long
 #define LOAD_AVE_CVT(x) ((int) (((double) (x)) / 2048.0 * 100.0))

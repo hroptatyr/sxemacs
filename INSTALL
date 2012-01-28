@@ -234,7 +234,7 @@ install them and incorporate them into SXEmacs.
     http://www.remotesensing.org/libtiff/
 
   - xface (base64 encoded xbm):
-    http://ftp.xemacs.org/pub/xemacs/aux/compface-1.5.1.tar.gz
+    http://ftp.xemacs.org/pub/xemacs/aux/compface-1.5.2.tar.gz
 
   The configure option to control media libraries is --with-image.  It
   defaults to `all'.

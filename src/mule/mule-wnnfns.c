@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* Synched up with: Mule 2.3.  Not in FSF. */
 
 /*      Jserver Interface for Mule
-        Coded by Yutaka Ishikawa at ETL (yisikawa@etl.go.jp)
-                 Satoru Tomura   at ETL (tomura@etl.go.jp)
+	Coded by Yutaka Ishikawa at ETL (yisikawa@etl.go.jp)
+		 Satoru Tomura   at ETL (tomura@etl.go.jp)
 	Modified for Wnn4 library by
 		 Toshiaki Shingu (shingu@cpr.canon.co.jp)
 		 Hiroshi Kuribayashi (kuri@nff.ncl.omron.co.jp) */

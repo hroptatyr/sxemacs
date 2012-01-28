@@ -172,7 +172,7 @@ BODY contains code that will be executed each time the mode is (de)activated.
   These following keyword arguments are supported:
 :group GROUP	Custom group name to use in all generated `defcustom' forms.
 :global GLOBAL	If non-nil specifies that the minor mode is not meant to be
-              	buffer-local, so don't make the variable MODE buffer-local.
+		buffer-local, so don't make the variable MODE buffer-local.
 		By default, the mode is buffer-local.
 :init-value VAL	Same as the INIT-VALUE argument.
 :lighter SPEC	Same as the LIGHTER argument.
@@ -184,7 +184,7 @@ other hook.
 MODE-hook: run if the mode is toggled.
 MODE-on-hook: run if the mode is activated.
 MODE-off-hook: run if the mode is deactivated.
- 
+
 \(defmacro easy-mmode-define-minor-mode
   (MODE DOC &optional INIT-VALUE LIGHTER KEYMAP &rest BODY)...\)
 
@@ -238,12 +238,12 @@ For example, you could write
     ;; Add default properties to LIGHTER.
 ;; #### FSF comments this out in 21.3.
 ;     (unless (or (not (stringp lighter))
-; 		(get-text-property 0 'local-map lighter)
-; 		(get-text-property 0 'keymap lighter))
+;		(get-text-property 0 'local-map lighter)
+;		(get-text-property 0 'keymap lighter))
 ;       (setq lighter
-; 	    (propertize lighter
-; 			'local-map modeline-minor-mode-map ; XEmacs change
-; 			'help-echo "mouse-3: minor mode menu")))
+;	    (propertize lighter
+;			'local-map modeline-minor-mode-map ; XEmacs change
+;			'help-echo "mouse-3: minor mode menu")))
 
     `(progn
        ;; Define the variable to enable or disable the mode.

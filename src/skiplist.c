@@ -5,7 +5,7 @@
  * Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
  *
  * This file is part of SXEmacs.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -354,7 +354,7 @@ skiplist_find_hash_return_level(skiplist_t slist, hcode_t hash)
 			     (tmphash < hash);
 		     tmp = next_node(tmp) ) {}
 		result = tmp;
- 	}
+	}
 
 	return result;
 }
@@ -404,15 +404,15 @@ mark_skiplist(Lisp_Object obj)
 		mark_object(node_data_value(parent_node(tmp)));
 	}
 
-        mark_object(XSKIPLIST_PLIST(obj));
+	mark_object(XSKIPLIST_PLIST(obj));
 	return XSKIPLIST_PLIST(obj);
 }
 
 static void
 print_skiplist(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
-	write_fmt_str(printcharfun, "#<skiplist :size %lu  :levels %lu >", 
-		      (long unsigned int)XSKIPLIST_NNODES(obj), 
+	write_fmt_str(printcharfun, "#<skiplist :size %lu  :levels %lu >",
+		      (long unsigned int)XSKIPLIST_NNODES(obj),
 		      (long unsigned int)XSKIPLIST_NLEVELS(obj));
 }
 
@@ -464,8 +464,8 @@ Return the property list of SKIPLIST.
 */
       (skiplist))
 {
-        CHECK_SKIPLIST(skiplist);
-        return XSKIPLIST_PLIST(skiplist);
+	CHECK_SKIPLIST(skiplist);
+	return XSKIPLIST_PLIST(skiplist);
 }
 
 static const struct lrecord_description skiplist_description[] = {
@@ -838,7 +838,7 @@ with the original.
 {
 
 	CHECK_SKIPLIST(skiplist);
-	
+
 	return copy_skiplist(XSKIPLIST(skiplist));
 }
 
@@ -861,7 +861,7 @@ DEFUN("skiplist-union", Fskiplist_union, 0, MANY, 0, /*
 Return the union skiplist of SKIPLISTS.
 Args are &rest SKIPLIST.
 
-The union is a skiplist containing all key-value-pairs which are 
+The union is a skiplist containing all key-value-pairs which are
 in at least one of the SKIPLISTS.
 
 Note: Key-value-pairs with equal keys and distinct values are
@@ -977,11 +977,11 @@ may remove or reput the entry currently being processed by FUNCTION.
 	Lisp_Object args[3];
 	skiplist_level_t lev;
 	struct gcpro gcpro1, gcpro2;
-        
-        CHECK_SKIPLIST(skiplist);
+
+	CHECK_SKIPLIST(skiplist);
 
 	GCPRO2(function, skiplist);
-        sl = XSKIPLIST(skiplist);
+	sl = XSKIPLIST(skiplist);
 	lev = next_node(skiplist_foot(sl)); /* start at the bottom */
 	while (lev) {
 		args[0] = function;

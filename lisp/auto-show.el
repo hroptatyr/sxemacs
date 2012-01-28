@@ -78,7 +78,7 @@ This variable is automatically local in each buffer where it is set."
 
 (make-variable-buffer-local 'auto-show-mode)
 
-(defcustom auto-show-shift-amount 8 
+(defcustom auto-show-shift-amount 8
   "*Extra columns to scroll. for automatic horizontal scrolling."
   :type 'integer
   :group 'auto-show)
@@ -128,7 +128,7 @@ that the region will be visible when `auto-show-make-point-visible'
 is next called (this happens after every command)."
   (if (auto-show-should-take-action-p)
       (let* ((scroll (window-hscroll))	;how far window is scrolled
-	     (w-width (- (window-width) 
+	     (w-width (- (window-width)
 			 (if (> scroll 0)
 			     2 1)))	;how wide window is on the screen
 	     (right-col (+ scroll w-width))
@@ -153,7 +153,7 @@ See also the command `auto-show-mode'."
   (if (auto-show-should-take-action-p)
       (let* ((col (current-column))	;column on line point is at
 	     (scroll (window-hscroll))	;how far window is scrolled
-	     (w-width (- (window-width) 
+	     (w-width (- (window-width)
 			 (if (> scroll 0)
 			     2 1)))	;how wide window is on the screen
 	     (right-col (+ scroll w-width)))
@@ -166,7 +166,7 @@ See also the command `auto-show-mode'."
 	    (if (or (> col right-col)	;to the right of the screen
 		    (and (= col right-col)
 			 (not (eolp))))
-		(scroll-left (+ auto-show-shift-amount 
+		(scroll-left (+ auto-show-shift-amount
 				(- col (+ scroll w-width))))))))))
 
 ;; XEmacs change:
