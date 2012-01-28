@@ -3150,7 +3150,7 @@ execute_internal_event(Lisp_Object event)
 			       every time the file descriptor becomes
 			       active, so the filter function forces this
 			       by returning 0.  Emacs must not interpret
-			       this as a closed pipe. 
+			       this as a closed pipe.
 
 			       We don't do ToolTalk anymore, but come
 			       back and revisit this for D-Bus */
@@ -3425,7 +3425,7 @@ munge_keymap_translate(struct command_builder *builder,
       -- nil (there is no binding)
       -- a keymap (part of a command has been specified)
       -- a command (anything that satisfies `commandp'; this includes
-                    some symbols, lists, subrs, strings, vectors, and
+		    some symbols, lists, subrs, strings, vectors, and
 		    compiled-function objects)
  */
 static Lisp_Object
@@ -3900,7 +3900,7 @@ current_events_into_vector(struct command_builder *command_builder)
       -- nil (there is no binding)
       -- a keymap (part of a command has been specified)
       -- a command (anything that satisfies `commandp'; this includes
-                    some symbols, lists, subrs, strings, vectors, and
+		    some symbols, lists, subrs, strings, vectors, and
 		    compiled-function objects)
  */
 static Lisp_Object
@@ -4870,17 +4870,17 @@ asyneq_handle_event(event_queue_t eq)
 void
 asyneq_handle_non_command_event(event_queue_t eq)
 {
-        Lisp_Object eqev = Qnil;
+	Lisp_Object eqev = Qnil;
 
-        WITH_DLLIST_TRAVERSE(
-                eq_queue(eq),
-                if (!command_event_p((Lisp_Object)dllist_item)) {
-                        eqev = (Lisp_Object)dllist_pop_inner(eq_queue(eq), _el);
-                        break;
-                });
+	WITH_DLLIST_TRAVERSE(
+		eq_queue(eq),
+		if (!command_event_p((Lisp_Object)dllist_item)) {
+			eqev = (Lisp_Object)dllist_pop_inner(eq_queue(eq), _el);
+			break;
+		});
 
-        if (!NILP(eqev)) {
-                execute_internal_event(eqev);
+	if (!NILP(eqev)) {
+		execute_internal_event(eqev);
 	}
 	return;
 }
@@ -5227,7 +5227,7 @@ Modifier keys are sticky within the inverval specified by
 									  */ );
 	modifier_keys_are_sticky = 0;
 
-	DEFVAR_LISP("modifier-keys-sticky-time", 
+	DEFVAR_LISP("modifier-keys-sticky-time",
 		    &Vmodifier_keys_sticky_time	/*
 *Modifier keys are sticky within this many milliseconds.
 If you don't want modifier keys sticking to be bounded, set this to
@@ -5239,7 +5239,7 @@ Currently only implemented under X Window System.
 	Vmodifier_keys_sticky_time = make_int(500);
 
 #ifdef HAVE_XIM
-	DEFVAR_LISP("composed-character-default-binding", 
+	DEFVAR_LISP("composed-character-default-binding",
 		    &Vcomposed_character_default_binding	/*
 The default keybinding to use for key events from composed input.
 Window systems frequently have ways to allow the user to compose
@@ -5273,19 +5273,19 @@ ommand-events) An event taken from `unread-command-events'.
 ommand-event) An event taken from `unread-command-event'.
 
 event queue) An event taken from an internal queue.
-             Events end up on this queue when
-             `enqueue-eval-event' is called or when
-             user or eval events are received while
-             SXEmacs is blocking (e.g. in `sit-for',
-             `sleep-for', or `accept-process-output',
-             or while waiting for the reply to an
-             X selection).
+	     Events end up on this queue when
+	     `enqueue-eval-event' is called or when
+	     user or eval events are received while
+	     SXEmacs is blocking (e.g. in `sit-for',
+	     `sleep-for', or `accept-process-output',
+	     or while waiting for the reply to an
+	     X selection).
 
-rd-translate-table) The result of an event translated 
-                    through keyboard-translate-table.  Note 
-                    that in this case, two events are 
-                    printed even though only one is really
-                    generated.
+rd-translate-table) The result of an event translated
+		    through keyboard-translate-table.  Note
+		    that in this case, two events are
+		    printed even though only one is really
+		    generated.
 
 A faked C-g resulting when SXEmacs receives
 a SIGINT (e.g. C-c was pressed in SXEmacs'
@@ -5439,7 +5439,7 @@ Be sure you do all of the above checking for C-g and focus, too!
 
 (defun test-them ()
   (let ((start (current-time))
-        end)
+	end)
     (add-timeout 2 'testee nil)
     (sit-for 5)
     (add-timeout 2 'testee nil)

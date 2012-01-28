@@ -5,7 +5,7 @@
  * Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
  *
  * This file is part of SXEmacs.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -137,7 +137,7 @@ void
 eq_delegate_work(event_queue_t eq)
 {
 	int cur = eq_queue_size(eq);
-	while (cur--) { 
+	while (cur--) {
 		eq_queue_trigger(eq);
 	}
 	return;
@@ -147,108 +147,108 @@ eq_delegate_work(event_queue_t eq)
 static void
 eq_worker_th_blksig(void)
 {
-        EMACS_BLOCK_SIGNAL(SIGINT);	/* ANSI */
-        EMACS_BLOCK_SIGNAL(SIGILL);	/* ANSI */
-        EMACS_BLOCK_SIGNAL(SIGABRT);	/* ANSI */
-        EMACS_BLOCK_SIGNAL(SIGFPE);	/* ANSI */
-        EMACS_BLOCK_SIGNAL(SIGSEGV);	/* ANSI */
-        EMACS_BLOCK_SIGNAL(SIGTERM);	/* ANSI */
-        
+	EMACS_BLOCK_SIGNAL(SIGINT);	/* ANSI */
+	EMACS_BLOCK_SIGNAL(SIGILL);	/* ANSI */
+	EMACS_BLOCK_SIGNAL(SIGABRT);	/* ANSI */
+	EMACS_BLOCK_SIGNAL(SIGFPE);	/* ANSI */
+	EMACS_BLOCK_SIGNAL(SIGSEGV);	/* ANSI */
+	EMACS_BLOCK_SIGNAL(SIGTERM);	/* ANSI */
+
 #if defined SIGHUP
-        EMACS_BLOCK_SIGNAL(SIGHUP);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGHUP);	/* POSIX */
 #endif
 #if defined SIGQUIT
-        EMACS_BLOCK_SIGNAL(SIGQUIT);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGQUIT);	/* POSIX */
 #endif
 #if defined SIGTRAP
-        EMACS_BLOCK_SIGNAL(SIGTRAP);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGTRAP);	/* POSIX */
 #endif
 #if defined SIGUSR1
-        EMACS_BLOCK_SIGNAL(SIGUSR1);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGUSR1);	/* POSIX */
 #endif
 #if defined SIGUSR2
-        EMACS_BLOCK_SIGNAL(SIGUSR2);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGUSR2);	/* POSIX */
 #endif
 #if defined SIGPIPE
-        EMACS_BLOCK_SIGNAL(SIGPIPE);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGPIPE);	/* POSIX */
 #endif
 #if defined SIGALRM
-        EMACS_BLOCK_SIGNAL(SIGALRM);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGALRM);	/* POSIX */
 #endif
 #if defined SIGCHLD
-        EMACS_BLOCK_SIGNAL(SIGCHLD);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGCHLD);	/* POSIX */
 #endif
 #if defined SIGCONT
-        EMACS_BLOCK_SIGNAL(SIGCONT);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGCONT);	/* POSIX */
 #endif
 #if defined SIGSTOP
-        EMACS_BLOCK_SIGNAL(SIGSTOP);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGSTOP);	/* POSIX */
 #endif
 #if defined SIGTSTP
-        EMACS_BLOCK_SIGNAL(SIGTSTP);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGTSTP);	/* POSIX */
 #endif
 #if defined SIGTTIN
-        EMACS_BLOCK_SIGNAL(SIGTTIN);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGTTIN);	/* POSIX */
 #endif
 #if defined SIGTTOU
-        EMACS_BLOCK_SIGNAL(SIGTTOU);	/* POSIX */
+	EMACS_BLOCK_SIGNAL(SIGTTOU);	/* POSIX */
 #endif
 
 #if defined SIGBUS
-        EMACS_BLOCK_SIGNAL(SIGBUS);	/* XPG5 */
+	EMACS_BLOCK_SIGNAL(SIGBUS);	/* XPG5 */
 #endif
 #if defined SIGPOLL
-        EMACS_BLOCK_SIGNAL(SIGPOLL);	/* XPG5 */
+	EMACS_BLOCK_SIGNAL(SIGPOLL);	/* XPG5 */
 #endif
 #if defined SIGPROF
-        EMACS_BLOCK_SIGNAL(SIGPROF);	/* XPG5 */
+	EMACS_BLOCK_SIGNAL(SIGPROF);	/* XPG5 */
 #endif
 #if defined SIGSYS
-        EMACS_BLOCK_SIGNAL(SIGSYS);	/* XPG5 */
+	EMACS_BLOCK_SIGNAL(SIGSYS);	/* XPG5 */
 #endif
 #if defined SIGURG
-        EMACS_BLOCK_SIGNAL(SIGURG);	/* XPG5 */
+	EMACS_BLOCK_SIGNAL(SIGURG);	/* XPG5 */
 #endif
 #if defined SIGXCPU
-        EMACS_BLOCK_SIGNAL(SIGXCPU);	/* XPG5 */
+	EMACS_BLOCK_SIGNAL(SIGXCPU);	/* XPG5 */
 #endif
 #if defined SIGXFSZ
-        EMACS_BLOCK_SIGNAL(SIGXFSZ);	/* XPG5 */
+	EMACS_BLOCK_SIGNAL(SIGXFSZ);	/* XPG5 */
 #endif
 #if defined SIGVTALRM
-        EMACS_BLOCK_SIGNAL(SIGVTALRM);	/* XPG5 */
+	EMACS_BLOCK_SIGNAL(SIGVTALRM);	/* XPG5 */
 #endif
 
 #if defined SIGIO
-        EMACS_BLOCK_SIGNAL(SIGIO);	/* BSD 4.2 */
+	EMACS_BLOCK_SIGNAL(SIGIO);	/* BSD 4.2 */
 #endif
 #if defined SIGWINCH
-        EMACS_BLOCK_SIGNAL(SIGWINCH);	/* BSD 4.3 */
+	EMACS_BLOCK_SIGNAL(SIGWINCH);	/* BSD 4.3 */
 #endif
 
 #if defined SIGEMT
-        EMACS_BLOCK_SIGNAL(SIGEMT);
+	EMACS_BLOCK_SIGNAL(SIGEMT);
 #endif
 #if defined SIGINFO
-        EMACS_BLOCK_SIGNAL(SIGINFO);
+	EMACS_BLOCK_SIGNAL(SIGINFO);
 #endif
 #if defined SIGHWE
-        EMACS_BLOCK_SIGNAL(SIGHWE);
+	EMACS_BLOCK_SIGNAL(SIGHWE);
 #endif
 #if defined SIGPRE
-        EMACS_BLOCK_SIGNAL(SIGPRE);
+	EMACS_BLOCK_SIGNAL(SIGPRE);
 #endif
 #if defined SIGUME
-        EMACS_BLOCK_SIGNAL(SIGUME);
+	EMACS_BLOCK_SIGNAL(SIGUME);
 #endif
 #if defined SIGDLK
-        EMACS_BLOCK_SIGNAL(SIGDLK);
+	EMACS_BLOCK_SIGNAL(SIGDLK);
 #endif
 #if defined SIGCPULIM
-        EMACS_BLOCK_SIGNAL(SIGCPULIM);
+	EMACS_BLOCK_SIGNAL(SIGCPULIM);
 #endif
 #if defined SIGIOT
-        EMACS_BLOCK_SIGNAL(SIGIOT);
+	EMACS_BLOCK_SIGNAL(SIGIOT);
 #endif
 #if defined SIGLOST
 # if !defined HAVE_BDWGC || !defined EF_USE_BDWGC
@@ -256,29 +256,29 @@ eq_worker_th_blksig(void)
 # endif	 /* BDWGC case */
 #endif
 #if defined SIGSTKFLT
-        EMACS_BLOCK_SIGNAL(SIGSTKFLT);
+	EMACS_BLOCK_SIGNAL(SIGSTKFLT);
 #endif
 #if defined SIGUNUSED
-        EMACS_BLOCK_SIGNAL(SIGUNUSED);
+	EMACS_BLOCK_SIGNAL(SIGUNUSED);
 #endif
 #if defined SIGDANGER
-        EMACS_BLOCK_SIGNAL(SIGDANGER);	/* AIX */
+	EMACS_BLOCK_SIGNAL(SIGDANGER);	/* AIX */
 #endif
 #if defined SIGMSG
-        EMACS_BLOCK_SIGNAL(SIGMSG);
+	EMACS_BLOCK_SIGNAL(SIGMSG);
 #endif
 #if defined SIGSOUND
-        EMACS_BLOCK_SIGNAL(SIGSOUND);
+	EMACS_BLOCK_SIGNAL(SIGSOUND);
 #endif
 #if defined SIGRETRACT
-        EMACS_BLOCK_SIGNAL(SIGRETRACT);
+	EMACS_BLOCK_SIGNAL(SIGRETRACT);
 #endif
 #if defined SIGGRANT
-        EMACS_BLOCK_SIGNAL(SIGGRANT);
+	EMACS_BLOCK_SIGNAL(SIGGRANT);
 #endif
 #if defined SIGPWR
 # if !defined HAVE_BDWGC || !defined EF_USE_BDWGC
-        EMACS_BLOCK_SIGNAL(SIGPWR);
+	EMACS_BLOCK_SIGNAL(SIGPWR);
 # endif	 /* BDWGC case */
 #endif
 }
@@ -292,7 +292,7 @@ eq_worker_th(void *eqwptr)
 	work_handler_t hdl;
 	struct gcpro gcpro1;
 
-        eq_worker_th_blksig();
+	eq_worker_th_blksig();
 
 	GCPRO1(ljob);
 listen:

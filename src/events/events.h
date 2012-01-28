@@ -78,7 +78,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 			not occurring until the next event occurs.
 
  handle_magic_event_cb	SXEmacs calls this with an event structure which
-  			contains window-system dependent information that
+			contains window-system dependent information that
 			SXEmacs doesn't need to know about, but which must
 			happen in order.  If the next_event_cb never returns
 			an event of type "magic", this will never be used.
@@ -96,20 +96,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 			value it can deal with.
 
  remove_timeout_cb	Called with an int, the id number of a wakeup to
- 			discard.  This id number must have been returned by
+			discard.  This id number must have been returned by
 			the add_timeout_cb.  If the given wakeup has
 			already expired, this should do nothing.
 
  select_process_cb	These callbacks tell the underlying implementation to
  unselect_process_cb	add or remove a file descriptor from the list of fds
-  			which are polled for inferior-process input.  When
+			which are polled for inferior-process input.  When
 			input becomes available on the given process
 			connection, an event of type "process" should be
 			generated.
 
  select_console_cb	These callbacks tell the underlying implementation
  unselect_console_cb	to add or remove a console from the list of consoles
-                        which are polled for user-input.
+			which are polled for user-input.
 
  select_device_cb	These callbacks are used by Unixoid event loops
  unselect_device_cb	(those that use select() and file descriptors and
@@ -175,7 +175,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 			If this is an integer, it will be in the printing
 			ASCII range: >32 and <127.
     modifiers		Bucky-bits on that key: control, meta, etc.
-                        Also includes buttons.
+			Also includes buttons.
 			For many keys, Shift is not a bit; that is implicit
 			in the keyboard layout.
 
@@ -183,7 +183,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  button_release_event
     button		What button went down or up.
     modifiers		Bucky-bits on that button: shift, control, meta, etc.
-                        Also includes other buttons (not the one pressed).
+			Also includes other buttons (not the one pressed).
     x, y		Where it was at the button-state-change (in pixels).
 
  pointer_motion_event
