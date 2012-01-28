@@ -65,7 +65,7 @@ are preserved on all copies.
 
 
 Emacs is the extensible, customizable, self-documenting real-time
-display editor.  This Info file will help you get started on using 
+display editor.  This Info file will help you get started on using
 SXEmacs.  It corresponds to SXEmacs version 19.13.
 
 @end ifnottex
@@ -86,8 +86,8 @@ located on the extreme right of the frame). With it, you learn Emacs by
 using Emacs on a specially designed file which describes commands, tells
 you when to try them, and then explains the results you see.
 
-  The first few chapters will introduce you to some basic Emacs commands. 
-Later on, some examples of simple customizations will be shown. 
+  The first few chapters will introduce you to some basic Emacs commands.
+Later on, some examples of simple customizations will be shown.
 
   To find the documentation on a particular command, look in the index.
 Keys (character commands) and command names have separate indexes.  There
@@ -124,7 +124,7 @@ Other Features of SXEmacs
 * Modes::                       Major and Minor modes in SXEmacs
 * Files::                       Visiting, Saving and Listing Files
 * Other Customizations::        Customizing Variables, Modes, etc
-* Select and Move::             Selecting text and moving text 
+* Select and Move::             Selecting text and moving text
 * Search and Replace::          Searching and Replacing text
 
 
@@ -159,18 +159,18 @@ Basic Editing Commands
 * Insert::                      Insert text in Emacs by simply typing at
                                 the cursor position.
 * Cursor Position::             Moving Around the cursor in the buffer,
-* Erase::                       Different commands for erasing text 
+* Erase::                       Different commands for erasing text
 * Numeric Argument::            Giving Numeric Arguments to commands
 * Undo::                        Undoing Changes made by mistake
 
-Customize key bindings and menus 
+Customize key bindings and menus
 
 * Customizing key Bindings::    Changing Key Bindings
 * Customizing Menus::           Adding, Deleting, Enabling and Disabling Menus
 
 Help
 
-* The Help Menu::               Items on the Help Menu                
+* The Help Menu::               Items on the Help Menu
 
 Major and Minor Modes
 
@@ -194,7 +194,7 @@ Selecting and Moving Text
 * Selecting Text::              Select a region of text by setting the Mark
 * Mouse::                       Selecting Text with Mouse
 * Region Operation::            Various ways to operate on a selected text
-* Moving Text::                 Moving Text 
+* Moving Text::                 Moving Text
 * Accumulating text::           Accumulating Text from several buffers
 
 No sub menu for the node search and replace
@@ -286,4 +286,3 @@ can use it afterward.
 @bindingoffset = 0.5in
 @parindent = 0pt
 @end iftex
-

@@ -133,7 +133,7 @@ current when you use this command, because the effects apply globally to
 the SXEmacs session.  The supported language environments include:
 
 @quotation
-ASCII, Chinese-BIG5, Chinese-GB, Croatian, Cyrillic-ALT, Cyrillic-ISO, 
+ASCII, Chinese-BIG5, Chinese-GB, Croatian, Cyrillic-ALT, Cyrillic-ISO,
 Cyrillic-KOI8, Cyrillic-Win, Czech, English, Ethiopic, French, German,
 Greek, Hebrew, IPA, Japanese, Korean, Latin-1, Latin-2, Latin-3, Latin-4,
 Latin-5, Norwegian, Polish, Romanian, Slovenian, Thai-XTIS, Vietnamese.
@@ -263,7 +263,7 @@ Display a list of all the supported input methods.
 input method name with the minibuffer; the name normally starts with the
 language environment that it is meant to be used with.  The variable
 @code{current-input-method} records which input method is selected.
-  
+
 @findex toggle-input-method
 @kindex C-\
   Input methods use various sequences of ASCII characters to stand for
@@ -468,23 +468,23 @@ the usual three variants to specify the kind of end-of-line conversion.
 @c #### This section is out of date.  The following set-*-coding-system
 @c functions are known:
 
-@c set-buffer-file-coding-system 
+@c set-buffer-file-coding-system
 @c set-buffer-file-coding-system-for-read
 @c set-buffer-process-coding-system
-@c set-console-tty-coding-system 
+@c set-console-tty-coding-system
 @c set-console-tty-input-coding-system
 @c set-console-tty-output-coding-system
 @c set-default-buffer-file-coding-system
-@c set-default-coding-systems    
+@c set-default-coding-systems
 @c set-default-file-coding-system
-@c set-file-coding-system        
+@c set-file-coding-system
 @c set-file-coding-system-for-read
-@c set-keyboard-coding-system    
-@c set-pathname-coding-system    
-@c set-process-coding-system     
+@c set-keyboard-coding-system
+@c set-pathname-coding-system
+@c set-process-coding-system
 @c set-process-input-coding-system
 @c set-process-output-coding-system
-@c set-terminal-coding-system    
+@c set-terminal-coding-system
 
 @c Some are marked as broken.  Agenda: (1) Update this section using
 @c docstrings.  Note that they may be inaccurate.  (2) Correct the

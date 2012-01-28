@@ -13,9 +13,9 @@
   An @dfn{extent} is somewhat the generalisation of a marker object
 within the text.
 
-  To be precise, An extent is a region of text (a start position and 
-an end position) that is displayed in a particular face and can have 
-certain other properties such as being read-only.  Extents can overlap 
+  To be precise, An extent is a region of text (a start position and
+an end position) that is displayed in a particular face and can have
+certain other properties such as being read-only.  Extents can overlap
 each other.  SXEmacs efficiently handles buffers with large numbers of
 extents in them.
 

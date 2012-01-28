@@ -1,4 +1,3 @@
-
 @node Undo, Minibuffer, Basic, Top
 @chapter Undoing Changes
 @cindex undo

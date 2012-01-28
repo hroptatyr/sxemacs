@@ -1,4 +1,3 @@
-
 @node Minibuffer, M-x, Undo, Top
 @chapter The Minibuffer
 @cindex minibuffer
@@ -156,7 +155,7 @@ the minibuffer might read:
         Find File: chocolate_bar.c [no completions, confirm]
 @end example
 If you press @kbd{Return} again, that confirms the filename. Otherwise,
-you can continue editing it. 
+you can continue editing it.
 
  SXEmacs supports recursive use of the minibuffer.  However, it is easy
 to do this by accident (because of autorepeating keyboards, for example)
@@ -202,7 +201,7 @@ you are completing a name in which case does not matter, case may be
 ignored for completion's sake if specified by program.
 
 When a completion list is displayed, the completions will highlight as
-you move the mouse over them.  Clicking the middle mouse button on any 
+you move the mouse over them.  Clicking the middle mouse button on any
 highlighted completion will ``select'' it just as if you had typed it in
 and hit @key{RET}.
 
@@ -262,7 +261,7 @@ Select the highlighted text under the mouse as a minibuffer response.
 When the minibuffer is being used to prompt the user for a completion,
 any valid completions which are visible on the screen will be highlighted
 when the mouse moves over them.  Clicking @key{button2} will select the
-highlighted completion and exit the minibuffer.  
+highlighted completion and exit the minibuffer.
 (@code{minibuf-select-highlighted-completion}).
 @end table
 

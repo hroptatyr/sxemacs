@@ -8,14 +8,14 @@
 can also learn the basic editing commands by typing @kbd{Control-h t}
 (@code{help-with-tutorial} OR by selecting @b{Emacs Tutorial} from the
 @b{Help} menu on the menu bar. Most of the Emacs commands will use the
-@key{CONTROL} key or the @key{META} key. The following abbreviations 
+@key{CONTROL} key or the @key{META} key. The following abbreviations
 will be used for the @key{CONTROL} and @key{META} key in this manual:
 
 @table @kbd
 @item C-<chr>
 This means that you should hold down the @key{CONTROL} key while typing
 @kbd{<chr>}. For example, if the command is @kbd{C-g}, you should hold
-the @key{CONTROL} key and type @key{g}. 
+the @key{CONTROL} key and type @key{g}.
 @item M-<chr>
 This means that you should hold down the @kbd{META} key while typing
 @kbd{<chr>}. If there is no @kbd{META} key on your keyboard, use the
@@ -27,17 +27,17 @@ type @kbd{ESC}, release it and type @kbd{x}.
 
 @table @key
 @item SPC
-Space bar. 
+Space bar.
 @item RET
 Return key.
 @item LFD
 Linefeed key.
 @item TAB
-Tab. 
+Tab.
 @item ESC
 Escape.
 @item SFT
-Shift. 
+Shift.
 @end table
 
 @comment  node-name,  next,  previous,  up
@@ -45,7 +45,7 @@ Shift.
 * Insert::                      Insert text in Emacs by simply typing at
                                 the cursor position.
 * Cursor Position::             Moving Around the cursor in the buffer,
-* Erase::                       Different commands for erasing text 
+* Erase::                       Different commands for erasing text
 * Numeric Argument::            Giving Numeric Arguments to commands
 * Undo::                        Undoing Changes made by mistake
 @end menu
@@ -60,7 +60,7 @@ type them. Emacs will automatically insert the characters that you type
 into the buffer at the cursor. The cursor moves forward, but if you
 prefer to have text characters replace (overwrite) existing text
 characters, you can enable the @b{Overstrike} option from the
-@b{Options} menu in the menu bar. 
+@b{Options} menu in the menu bar.
 
 @kindex DEL
 @cindex deletion
@@ -121,7 +121,7 @@ given in parenthesis. You can also invoke these commands by typing
 @findex goto-line
 @table @kbd
 @item C-b
-Move the cursor backward one character (@code{backward-char}). 
+Move the cursor backward one character (@code{backward-char}).
 @item C-f
 Move the cursor forward one character (@code{forward-char}).
 @item C-p
@@ -151,7 +151,7 @@ Goto char:
 @end example
 
 @noindent
-You should then type in a number right after the colon 
+You should then type in a number right after the colon
 and hit the @kbd{RETURN} key again. After reading a number @var{n} this
 command will move the cursor to character number @var{n}.
 Position 1 is the beginning of the buffer. For example, if you type
@@ -193,7 +193,7 @@ This command will display the current line number in the echo area.
 
 @table @kbd
 @item @key{DEL}
-If you press @key{DEL} i.e. the @dfn{delete} key, it will delete the 
+If you press @key{DEL} i.e. the @dfn{delete} key, it will delete the
 character before the cursor (@code{delete-backward-char}).
 @item C-d
 This will delete the character after the cursor (@code{delete-char}).
@@ -219,7 +219,7 @@ Zap to char:
 
 Type any char and press the @key{RET} key. For example, if you type
 @samp{p} then the entire text starting from the position of the cursor
-until the first occurrence of @samp{p} is killed. 
+until the first occurrence of @samp{p} is killed.
 @end table
 
 
@@ -281,7 +281,7 @@ current buffer. There are two undo commands:
 @kindex C-x u
 @item C-x u
 Undo one batch of changes (usually, one command's worth).
-(@code{undo}). 
+(@code{undo}).
 @item C-_
 The same as above, but this command might not be obvious to type on some
 keyboards so it might be better to use the above command.
@@ -289,13 +289,3 @@ keyboards so it might be better to use the above command.
 
   @xref{Undoing Changes,,,sxemacs,SXEmacs User's Manual}, for more information on
 undoing changes.
-  
-  
-
-
-
-
-
-
-
-  

@@ -1,4 +1,3 @@
-
 @iftex
 @unnumbered XEmacs Features
 
@@ -6,14 +5,14 @@ SXEmacs Note:  This section of the manual @emph{has not} been updated to
 SXEmacs conditions.  In the future it will describe the differences
 between XEmacs and SXEmacs.
 
-This section describes the difference between Emacs Version 18 and 
+This section describes the difference between Emacs Version 18 and
 XEmacs.
 
 @unnumberedsec General Changes
 
 @itemize @bullet
 @ignore
-@item 
+@item
 XEmacs has a new vi emulation mode called evi mode.  To
 start evi mode in Emacs, type the command @kbd{M-x evi}.  If you want
 Emacs to automatically put you in evi-mode all the time, include this
@@ -25,7 +24,7 @@ line in your init file:
 @xref{Init File}.
 @end ignore
 
-@item 
+@item
 XEmacs has a new vi emulation mode called ``viper'' mode.  To start
 viper mode in XEmacs, type the command @kbd{M-x viper-mode}.  If you
 want XEmacs to automatically put you in viper-mode all the time, include
@@ -60,12 +59,12 @@ heights, are supported.
 @item
 There is a new @file{tags} package and a new UNIX manual browsing
 package. They are similar to earlier versions; for more information look
-at the source code. 
+at the source code.
 
 @item
 There is a new implementation of Dired, with many new features. The
 online info for Dired, @i{not} the Dired node of Emacs info, provides
-more detail. 
+more detail.
 
 @item
 GNUS (a network news reader), VM (an alternative mail reader), ILISP (a
@@ -96,10 +95,10 @@ Any existing subdirectories of the Emacs Lisp directory are now added to the
 
 @item
 On some machines, you can change the audible bell using the
-@code{sound-alist} variable. @xref{Audible Bell} for more information. 
+@code{sound-alist} variable. @xref{Audible Bell} for more information.
 
 @item
-You can use multiple X windows to display multiple Emacs frames. 
+You can use multiple X windows to display multiple Emacs frames.
 
 @item
 You can use the X selection mechanism to copy material from other
@@ -110,17 +109,17 @@ Selection} for more information.
 @item
 By default, the variable @code{zmacs-regions} is set to highlight the region
 between point and the mark.  This unifies X selection and Emacs selection
-behavior.  
+behavior.
 
 @item
 XEmacs has a menu bar for mouse-controlled operations in addition to
 keystrokes.  @xref{Pull-down Menus}.
 
 @item
-You can look in the file @file{/usr/local/lib/xemacs-19.11/etc/Emacs.ad} for 
-a list of Emacs X resources.  You can set these resources in your X 
-environment to set your preferences for color, fonts, location, and the size 
-of XEmacs frames.  Refer to your X documentation for more information 
+You can look in the file @file{/usr/local/lib/xemacs-19.11/etc/Emacs.ad} for
+a list of Emacs X resources.  You can set these resources in your X
+environment to set your preferences for color, fonts, location, and the size
+of XEmacs frames.  Refer to your X documentation for more information
 about resources.
 
 @unnumberedsec New Commands and Variables
@@ -227,14 +226,14 @@ editing, region, and window operations using the mouse:
 @code{mouse-track-delete-and-insert}, @code{mouse-track-insert}, and
 @code{mouse-window-to-region}.
 
-@findex compare-windows 
+@findex compare-windows
 @item
 @code{compare-windows} takes an argument @var{ignore-whitespace}.
 The argument means ignore changes in whitespace.
 
 @end itemize
 
-You can conditionalize your @file{.emacs} file as follows so that XEmacs 
+You can conditionalize your @file{.emacs} file as follows so that XEmacs
 commands are invoked only when you are in XEmacs:
 
 @cindex version number
@@ -303,7 +302,7 @@ These new variables are only present in XEmacs:
 
 @vindex minibuffer-confirm-incomplete
 @item
-@code{minibuffer-confirm-incomplete} prompts for confirmation in 
+@code{minibuffer-confirm-incomplete} prompts for confirmation in
 contexts where @code{completing-read} allows answers that are not valid
 completions.
 

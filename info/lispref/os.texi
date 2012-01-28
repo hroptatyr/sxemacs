@@ -909,7 +909,7 @@ two elements are integers.  Thus, you can use times obtained from
 
 @example
 @group
-(current-time-string) 
+(current-time-string)
      @result{} "Fri May  6 21:35:58 2005"
 @end group
 @end example
@@ -1638,7 +1638,7 @@ concentrator manufacturers?  This question has no simple answer.
   One reason why we are reluctant to cater to the problems caused by
 @kbd{C-s} and @kbd{C-q} is that they are gratuitous.  There are other
 techniques (albeit less common in practice) for flow control that
-preserve transparency of the character stream.  
+preserve transparency of the character stream.
 
 Note also that their use for flow control is not an official standard.
 Interestingly, on the model 33 teletype with a paper tape punch (which

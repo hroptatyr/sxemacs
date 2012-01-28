@@ -424,7 +424,7 @@ Note: This is not the same as the function @code{face-font} in FSF Emacs.
 This function returns the name of the font of face @var{face}, or
 @code{nil} if it is unspecified.  This is basically equivalent to
 @code{(font-name (face-font @var{face}) @var{domain})} except that
-it does not cause an error if @var{face}'s font is @code{nil}. 
+it does not cause an error if @var{face}'s font is @code{nil}.
 
 Note: This function is named @code{face-font} in FSF Emacs.
 @end defun

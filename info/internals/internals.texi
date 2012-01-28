@@ -128,7 +128,7 @@ This Info file contains v1.5 of the SXEmacs Internals Manual, November, 2005.
 * Allocation of Objects in SXEmacs Lisp::
 * Dumping::
 * Events and the Event Loop::
-* Asynchronous Events; Quit Checking::  
+* Asynchronous Events; Quit Checking::
 * Evaluation; Stack Frames; Bindings::
 * Symbols and Variables::
 * Buffers and Textual Representation::
@@ -242,22 +242,22 @@ Events and the Event Loop
 * Main Loop::
 * Specifics of the Event Gathering Mechanism::
 * Specifics About the Emacs Event::
-* Event Queues::                
-* Event Stream Callback Routines::  
+* Event Queues::
+* Event Stream Callback Routines::
 * Other Event Loop Functions::
-* Stream Pairs::                
+* Stream Pairs::
 * Converting Events::
 * Dispatching Events; The Command Builder::
-* Focus Handling::              
-* Editor-Level Control Flow Modules::  
+* Focus Handling::
+* Editor-Level Control Flow Modules::
 
 Asynchronous Events; Quit Checking
 
-* Signal Handling::             
-* Control-G (Quit) Checking::   
-* Profiling::                   
-* Asynchronous Timeouts::       
-* Exiting::                     
+* Signal Handling::
+* Control-G (Quit) Checking::
+* Profiling::
+* Asynchronous Timeouts::
+* Exiting::
 
 Evaluation; Stack Frames; Bindings
 
@@ -387,7 +387,7 @@ the history is well-known from the middle of 1985.  A time line is:
 
 @itemize @bullet
 @item
-GNU Emacs version 13 (the first public release we know of) was 
+GNU Emacs version 13 (the first public release we know of) was
 released on March 20, 1985.
 @item
 GNU Emacs version 15 (15.34) was released on May 7, 1985 and
@@ -6869,14 +6869,14 @@ The DOC file contents should probably end up in the dump file.
 * Main Loop::
 * Specifics of the Event Gathering Mechanism::
 * Specifics About the Emacs Event::
-* Event Queues::                
-* Event Stream Callback Routines::  
+* Event Queues::
+* Event Stream Callback Routines::
 * Other Event Loop Functions::
-* Stream Pairs::                
+* Stream Pairs::
 * Converting Events::
 * Dispatching Events; The Command Builder::
-* Focus Handling::              
-* Editor-Level Control Flow Modules::  
+* Focus Handling::
+* Editor-Level Control Flow Modules::
 @end menu
 
 @node Introduction to Events
@@ -7671,11 +7671,11 @@ code is loaded).
 @cindex asynchronous events
 
 @menu
-* Signal Handling::             
-* Control-G (Quit) Checking::   
-* Profiling::                   
-* Asynchronous Timeouts::       
-* Exiting::                     
+* Signal Handling::
+* Control-G (Quit) Checking::
+* Profiling::
+* Asynchronous Timeouts::
+* Exiting::
 @end menu
 
 @node Signal Handling
@@ -7773,9 +7773,9 @@ at places that are relatively safe -- in particular, if an error occurs,
 nothing will get completely trashed.
 
 @item
-Now, let's look at QUIT again.  
+Now, let's look at QUIT again.
 
-@item 
+@item
 
 UNFINISHED.  Note, however, that as of the point when this comment got
 committed to CVS (mid-2001), the interaction between reading @kbd{C-g}
@@ -10516,7 +10516,7 @@ and every usage - and this would be extremely memory and cpu intensive.
 Widget-glyphs (a.k.a native widgets) are not cached in this way. This is
 because widget-glyph image-instances on screen are toolkit windows, and
 thus cannot be reused in multiple SXEmacs domains. Thus widget-glyphs are
-cached on an SXEmacs window basis.  
+cached on an SXEmacs window basis.
 
 Any action on a glyph first consults the cache before actually
 instantiating a widget.

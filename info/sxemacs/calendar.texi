@@ -17,7 +17,7 @@ calendar features that are independent of any particular date.  To exit
 the calendar, type @kbd{q}.  @xref{Calendar, Customizing the Calendar
 and Diary,, lispref, The SXEmacs Lisp Reference Manual}, for customization
 information about the calendar and diary.
- 
+
 @menu
 * Calendar Motion::        Moving through the calendar; selecting a date.
 * Scroll Calendar::        Bringing earlier or later months onto the screen.
@@ -47,7 +47,7 @@ calendar.
 @menu
 * Calendar Unit Motion::       Moving by days, weeks, months, and years.
 * Move to Beginning or End::   Moving to start/end of weeks, months, and years.
-* Specified Dates::            Moving to the current date or another 
+* Specified Dates::            Moving to the current date or another
                                specific date.
 @end menu
 
@@ -127,7 +127,7 @@ arguments in Calendar mode even without the Meta modifier.  For example,
 weeks (months, years) as starting on particular dates.  So Calendar mode
 provides commands to move to the beginning or end of a week, month or
 year:
- 
+
 @table @kbd
 @kindex C-a @r{(Calendar mode)}
 @findex calendar-beginning-of-week
@@ -453,7 +453,7 @@ window.
 @findex calendar-unmark
   To view the distribution of holidays for all the dates shown in the
 calendar, use the @kbd{x} command.  This displays the dates that are
-holidays in a different face (or places a @samp{*} after these dates, if 
+holidays in a different face (or places a @samp{*} after these dates, if
 display with multiple faces is not available). The command applies both
 to the currently visible months and to other months that subsequently
 become visible by scrolling.  To turn marking off and erase the current
@@ -607,7 +607,7 @@ display the list of the phases of the moon for the current month and the
 preceding and succeeding months.  For information about a different
 month, use @kbd{C-u M-x phases-of-moon}, which prompts for the month and
 year.
- 
+
   The dates and times given for the phases of the moon are given in
 local time (corrected for daylight savings, when appropriate); but if
 the variable @code{calendar-time-zone} is void, Coordinated Universal
@@ -875,7 +875,7 @@ calendar round (@code{calendar-previous-calendar-round-date}).
 @cindex Mayan long count
   To understand these commands, you need to understand the Mayan calendars.
 The @dfn{long count} is a counting of days with these units:
- 
+
 @display
 1 kin = 1 day@ @ @ 1 uinal = 20 kin@ @ @ 1 tun = 18 uinal
 1 katun = 20 tun@ @ @ 1 baktun = 20 katun
@@ -1118,7 +1118,7 @@ important to remember that the buffer displayed contains the @emph{entire}
 diary file, with portions of it concealed from view.  This means, for
 instance, that the @kbd{C-f} (@code{forward-char}) command can put point
 at what appears to be the end of the line, but what is in reality the
-middle of some concealed line.  
+middle of some concealed line.
 
   @emph{Be careful when editing the diary entries!}  Inserting
 additional lines or adding/deleting characters in the middle of a
@@ -1179,7 +1179,7 @@ all dates in the diary in the European manner, and also uses European
 style for displaying diary dates.  (Note that there is no comma after
 the @var{monthname} in the European style.)  To go back to the (default)
 American style of writing dates, type @kbd{M-x american-calendar}.
- 
+
   You can use the name of a day of the week as a generic date which
 applies to any date falling on that day of the week.  You can abbreviate
 the day of the week to three letters (with or without a period) or spell
@@ -1229,7 +1229,7 @@ For example, @kbd{C-u i w} makes a nonmarking weekly diary entry.
 
   When you modify the diary file, be sure to save the file before
 exiting Emacs.
- 
+
 @node Special Diary Entries,, Adding to Diary, Diary
 @subsection Special Diary Entries
 
@@ -1246,13 +1246,13 @@ sexp entries:
 
 @table @kbd
 @item i a
-Add an anniversary diary entry for the selected date 
+Add an anniversary diary entry for the selected date
 (@code{insert-anniversary-diary-entry}).
 @item i b
-Add a block diary entry for the current region 
+Add a block diary entry for the current region
 (@code{insert-block-diary-entry}).
 @item i c
-Add a cyclic diary entry starting at the date 
+Add a cyclic diary entry starting at the date
 (@code{insert-cyclic-diary-entry}).
 @end table
 
@@ -1331,7 +1331,7 @@ specifies a regularly occurring event by offsets specified in days,
 weeks, and months.  It is comparable to a crontab entry interpreted by
 the @code{cron} utility.  Here is a nonmarking, floating diary entry
 that applies to the last Thursday in November:
- 
+
 @findex diary-float
 @example
 &%%(diary-float 11 4 -1) American Thanksgiving
@@ -1420,7 +1420,7 @@ Emacs.  @xref{Init File}.
 calendar automatically displays a list of holidays for the current
 three-month period.  The holiday list appears in a separate
 window.
- 
+
 @vindex mark-diary-entries-in-calendar
   You can set the variable @code{mark-diary-entries-in-calendar} to
 @code{t} in order to mark any dates with diary entries.  This takes
@@ -1772,7 +1772,7 @@ savings time.
   Emacs uses these expressions to determine the starting date of
 daylight savings time for the holiday list  and for correcting times of
 day in the solar and lunar calculations.
- 
+
   The values for Cambridge, Massachusetts are as follows:
 
 @example
@@ -1823,7 +1823,7 @@ minutes.  The value for Cambridge, Massachusetts is 60.
 after midnight local time when the transition to and from daylight
 savings time should occur.  For Cambridge, Massachusetts both variables'
 values are 120.
- 
+
 @node Diary Customizing
 @subsubsection Customizing the Diary
 
@@ -1926,7 +1926,7 @@ European style is this list:
 Notice the use of @code{backup} in the third pattern, because it needs
 to match part of a word beyond the date itself to distinguish it from
 the fourth pattern.
- 
+
 @node Hebrew/Islamic Entries
 @subsubsection Hebrew- and Islamic-Date Diary Entries
 
@@ -1934,9 +1934,9 @@ the fourth pattern.
 well as entries based on the world-standard Gregorian calendar.
 However, because recognition of such entries is time-consuming and most
 people don't use them, you must explicitly enable their use.  If you
-want the diary to recognize Hebrew-date diary entries, for example, 
+want the diary to recognize Hebrew-date diary entries, for example,
 you must do this:
- 
+
 @vindex nongregorian-diary-listing-hook
 @vindex nongregorian-diary-marking-hook
 @findex list-hebrew-diary-entries
@@ -1986,7 +1986,7 @@ are nonmarking if they are preceded with an ampersand (@samp{&}).
   Here is a table of commands used in the calendar to create diary entries
 that match the selected date and other dates that are similar in the Hebrew
 or Islamic calendar:
- 
+
 @table @kbd
 @item i h d
 Add a diary entry for the Hebrew date corresponding to the selected date
@@ -1998,7 +1998,7 @@ entry matches any date that has the same Hebrew day-within-month as the
 selected date.
 @item i h y
 Add a diary entry for the day of the Hebrew year corresponding to the
-selected date (@code{insert-yearly-hebrew-diary-entry}).  This diary 
+selected date (@code{insert-yearly-hebrew-diary-entry}).  This diary
 entry matches any date which has the same Hebrew month and day-within-month
 as the selected date.
 @item i i d
@@ -2021,9 +2021,9 @@ selected date (@code{insert-yearly-islamic-diary-entry}).
   These commands work much like the corresponding commands for ordinary
 diary entries: they apply to the date that point is on in the calendar
 window, and what they do is insert just the date portion of a diary entry
-at the end of your diary file.  You must then insert the rest of the 
+at the end of your diary file.  You must then insert the rest of the
 diary entry.
- 
+
 @node Fancy Diary Display
 @subsubsection Fancy Diary Display
 @vindex diary-display-hook
@@ -2033,7 +2033,7 @@ diary entry.
 hook @code{diary-display-hook}.  The default value of this hook
 (@code{simple-diary-display}) hides the irrelevant diary entries and
 then displays the buffer.  However, if you specify the hook as follows,
- 
+
 @cindex diary buffer
 @findex fancy-diary-display
 @example
@@ -2084,7 +2084,7 @@ first within each day.
   Fancy diary display also has the ability to process included diary
 files.  This permits a group of people to share a diary file for events
 that apply to all of them.  Lines in the diary file of this form:
- 
+
 @smallexample
 #include "@var{filename}"
 @end smallexample
@@ -2245,7 +2245,7 @@ diary for any date, but does nothing particularly useful.)
 
   These functions can be used to construct sexp diary entries based on
 the Hebrew calendar in certain standard ways:
- 
+
 @cindex rosh hodesh
 @findex diary-rosh-hodesh
 @cindex parasha, weekly

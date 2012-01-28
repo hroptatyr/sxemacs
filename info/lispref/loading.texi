@@ -177,7 +177,7 @@ followed then by the @file{/user/bil/emacs} directory, the
 which are then followed by the standard directories for Lisp code.
 
 The command line options @samp{-l} or @samp{-load} specify a Lisp
-library to load as part of SXEmacs startup.  
+library to load as part of SXEmacs startup.
 
 @ignore @c stupid
 Since this file might be in the current directory, Emacs 18 temporarily
@@ -278,7 +278,7 @@ loaded in the process of compiling those same files, so that existing
 out-of-date @samp{.elc} files do not make it mess things up.)
 @end defopt
 
-  To learn how @code{load} is used to build SXEmacs, 
+  To learn how @code{load} is used to build SXEmacs,
 see @ref{Building SXEmacs}.
 
 

@@ -129,14 +129,14 @@ its value.  Major modes should not set this variable---they should set
 
 @itemize @bullet
 @item
-SXEmacs can rename the original file so that it becomes a backup file, 
+SXEmacs can rename the original file so that it becomes a backup file,
 and then write the buffer being saved into a new file.  After this
 procedure, any other names (i.e., hard links) of the original file now
 refer to the backup file.  The new file is owned by the user doing the
 editing, and its group is the default for new files written by the user
 in that directory.
 
-@item 
+@item
 SXEmacs can copy the original file into a backup file, and then
 overwrite the original file with new contents.  After this procedure,
 any other names (i.e., hard links) of the original file still refer to
@@ -659,4 +659,3 @@ the modified contents---but only if @code{revert-buffer-function} is
 Font Lock mode uses this hook to recompute the fonts for the updated
 buffer contents.
 @end defvar
-

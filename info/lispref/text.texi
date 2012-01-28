@@ -395,7 +395,7 @@ the mark after the inserted text.  The value is @code{nil}.
 This command inserts the last character typed; it does so @var{count}
 times, before point, and returns @code{nil}.  Most printing characters
 are bound to this command.  In routine use, @code{self-insert-command}
-is the most frequently called function in SXEmacs, but programs rarely 
+is the most frequently called function in SXEmacs, but programs rarely
 use it except to install it on a keymap.
 
 In an interactive call, @var{count} is the numeric prefix argument.
@@ -2505,7 +2505,7 @@ types that are reasonably flexible, and not too hard to encode.
 FSF Emacs supplies a notion of a @emph{text field}, which is a region
 of text where every character has the same value of the @code{field}
 property.  It is used to identify regions of a buffer used for
-communicating with an external process, for example.  
+communicating with an external process, for example.
 
 SXEmacs supplies a compatible interface.  In SXEmacs, the @code{field}
 property can be set as either an extent property or a text property,

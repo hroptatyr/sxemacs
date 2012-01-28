@@ -54,7 +54,7 @@ macros are not functions.
 A @dfn{command} is a possible definition for a key sequence---we count
 mouse events and menu accesses as key sequences for this purpose. More
 formally, within SXEmacs lisp, a command is something that
-@code{command-execute} can invoke. 
+@code{command-execute} can invoke.
 
 Some functions are commands; a function written in Lisp is a command if
 it contains an interactive declaration. A trivial interactive
@@ -71,7 +71,7 @@ The symbol is a function as well if the definition is a function.
 
 In the case where you want to call a command in reaction to a
 user-generated event, you'll need to bind it to that event.  For how to
-do this, see @xref{Key Binding Commands}. 
+do this, see @xref{Key Binding Commands}.
 @xref{Command Overview}.
 
 @item keystroke command
@@ -1246,4 +1246,3 @@ See @ref{Mapping Functions}.
 @item undefined
 See @ref{Key Lookup}.
 @end table
-

@@ -112,7 +112,7 @@ shows messages one at a time as they are reached.
 context of general-purpose window systems such as X, but not identical.
 The X Window System places X windows on the screen; SXEmacs uses one or
 more X windows as frames, and subdivides them into
-SXEmacs windows.  When you use SXEmacs on a character-only terminal, 
+SXEmacs windows.  When you use SXEmacs on a character-only terminal,
 SXEmacs treats the whole terminal screen as one frame.
 
 @cindex terminal frame
@@ -1771,7 +1771,7 @@ It could be defined as follows:
 @end deffn
 
 @deffn Command enlarge-window-pixels count &optional side window
-This function makes the selected window @var{count} pixels larger.  
+This function makes the selected window @var{count} pixels larger.
 When called from Lisp, optional second argument @var{side}
 non-@code{nil} means to grow sideways @var{count} pixels, and optional
 third argument @var{window} specifies the window to change instead of

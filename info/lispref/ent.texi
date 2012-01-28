@@ -38,7 +38,7 @@ convenient set of additional functionality which is (hopefully) widely
 used in the future, and a consistent concept for dealing with
 numeric computations from within emacs lisp.
 
-  The feature itself must be considered experimental, though.  Howbeit 
+  The feature itself must be considered experimental, though.  Howbeit
 programmers can benefit from extremely increased performance, even
 with the current implementation.
 
@@ -47,7 +47,7 @@ with the current implementation.
 * Types of Numbers::		How do C types reflect in elisp.
 * Unions of Number Types::	Categories of numbers.
 * Coercion::			Converting from on number type to
-				  another. 
+				  another.
 * Revised Arithmetics::		How ENT modifies arithmetics.
 * Revised Formatting::		New output formatting features.
 * Number Theoretic Functions::	Functions provided by ENT concerning
@@ -83,7 +83,7 @@ there, and what is additionally available due to re-implementation.
 
 @menu
 * GNU-MP::			The GNU multi-precision arithmetic
-				  library (GMP). 
+				  library (GMP).
 * BSD-MP::			The BSD multi-precision library.
 * MPFR::			Multi-precision floats with correct.
 				  rounding (based on GMP).
@@ -994,7 +994,7 @@ otherwise.
   The read syntax of @samp{quatern}s is similar to the read syntax for
 complex numbers.  The lisp reader interprets
 @code{@var{a}+@var{b}i+@var{c}j+@var{d}k} as @samp{quatern} whenever
-@var{a}, @var{b}, @var{c} and @var{d} are all rational integers.  We 
+@var{a}, @var{b}, @var{c} and @var{d} are all rational integers.  We
 call @var{a} the z-part, @var{b} the i-part, @var{c} the j-part
 and @var{d} the k-part of the quaternion.
 
@@ -1061,7 +1061,7 @@ SXEmacs lisp environment by a category called @samp{number}.  The
 category @samp{number} (deductively) consists of all SXEmacs lisp
 objects which can be used in the arithmetical functions @code{+} and
 @code{*}, and which possess a @dfn{canonical norm}, i.e. for which the
-function @code{canonical-norm} returns a value. 
+function @code{canonical-norm} returns a value.
 
   Of course, in our deductive approach, we wish to fragment the
 category @samp{number} seamlessly into several subcategories.  You can
@@ -1291,7 +1291,7 @@ measure if a float number would fit in one type or the other.
 @defvar read-real-as
 Indicate how real numbers should be read.
 If set to `nil' or 'float, reals are always converted to floats.
-If set to 'bigf or 'bigfr, reals are read as MPF floats or MPFR 
+If set to 'bigf or 'bigfr, reals are read as MPF floats or MPFR
 floats respectively.
 @end defvar
 
@@ -1633,7 +1633,7 @@ See @code{coerce}.
 TYPE is one of the symbols:
 - @var{fixnum} or @var{int}  to convert to built-in integers
 - @var{bigz} or @var{bignum} to convert to bigz integers
-- @var{integer}              to convert to the most suitable type out 
+- @var{integer}              to convert to the most suitable type out
                              of @var{bigz} or @var{int}
 
 - @var{bigq} or @var{ratio}  to convert to bigq fractions
@@ -1643,7 +1643,7 @@ TYPE is one of the symbols:
 - @var{float}                to convert to built-in floats
 - @var{bigf} or @var{bigfloat}  to convert to bigf floats
 - @var{bigfr}                to convert to bigfr floats
-- @var{real}                 to convert to the type indicated by 
+- @var{real}                 to convert to the type indicated by
                              @var{read-real-as} with a fallback to
                              @var{float}
 
@@ -1774,7 +1774,7 @@ There are some abbreviated forms for number coercion.
 Return the ordinary integer numerically equal to @var{number}.
 The optional argument @var{precision} is unused.
 
-This is equivalent to 
+This is equivalent to
 @code{(coerce-number @var{number} 'int precision)}
 @end defun
 
@@ -1782,7 +1782,7 @@ This is equivalent to
 Return the MPZ number numerically equal to @var{number}.
 The optional argument @var{precision} is unused.
 
-This is equivalent to 
+This is equivalent to
 @code{(coerce-number @var{number} 'bigz precision)}
 @end defun
 
@@ -1790,7 +1790,7 @@ This is equivalent to
 Return the MPQ number numerically equal to @var{number}.
 The optional argument @var{precision} is unused.
 
-This is equivalent to 
+This is equivalent to
 @code{(coerce-number @var{number} 'bigq precision)}
 @end defun
 
@@ -1798,7 +1798,7 @@ This is equivalent to
 Return a rational most suitable to represent @var{number}.
 The optional argument @var{precision} is unused.
 
-This is equivalent to 
+This is equivalent to
 @code{(coerce-number @var{number} 'rational precision)}
 @end defun
 
@@ -1811,7 +1811,7 @@ Return the MPF number numerically equal to @var{number}.
 If optional argument @var{precision} is non-@code{nil}, its value
 (an integer) is used as precision.
 
-This is equivalent to 
+This is equivalent to
 @code{(coerce-number @var{number} 'bigf precision)}
 @end defun
 
@@ -1820,7 +1820,7 @@ Return the MPFR number numerically equal to @var{number}.
 If optional argument @var{precision} is non-@code{nil}, its value
 (an integer) is used as precision.
 
-This is equivalent to 
+This is equivalent to
 @code{(coerce-number @var{number} 'bigfr precision)}
 @end defun
 
@@ -1830,7 +1830,7 @@ equal to @var{number}.
 If optional argument @var{precision} is non-@code{nil}, its value
 (an integer) is used as precision.
 
-This is equivalent to 
+This is equivalent to
 @code{(coerce-number @var{number} 'real precision)}
 @end defun
 
@@ -1839,7 +1839,7 @@ This is equivalent to
 Return the Gaussian number numerically equal to @var{number}.
 The optional argument @var{precision} is unused.
 
-This is equivalent to 
+This is equivalent to
 @code{(coerce-number @var{number} 'bigg precision)}
 @end defun
 
@@ -1848,7 +1848,7 @@ Return the MPC number numerically equal to @var{number}.
 If optional argument @var{precision} is non-@code{nil}, its value
 (an integer) is used as precision.
 
-This is equivalent to 
+This is equivalent to
 @code{(coerce-number @var{number} 'bigc precision)}
 @end defun
 
@@ -2054,10 +2054,10 @@ arguments, possibly leaving a rest.
 The arguments must be numbers, characters or markers.
 With one argument, reciprocates the argument.
 
-The division of @var{a} and @var{b} is defined as the 
-largest number @var{c} such that (* @var{b} @var{c}) is 
+The division of @var{a} and @var{b} is defined as the
+largest number @var{c} such that (* @var{b} @var{c}) is
 less or equal @var{a}.
-Hereby, @var{c} lies in the larger category of @var{a} 
+Hereby, @var{c} lies in the larger category of @var{a}
 and @var{b}.
 
 The rest can be queried by `mod'.
@@ -2461,7 +2461,7 @@ with the unary plus.
   If GMP is available, some number theoretic functions are in effect.
 Most of which accept, unlike in number theory, all kinds of numbers.
 In that case coercion to the target range (mostly integer) takes
-place. 
+place.
 
 @defun primep number &optional certainty-threshold
 Return @code{nil} if @var{number} is known to be composite,
@@ -2488,17 +2488,17 @@ Return the greatest common divisor of the arguments.
 @ifinfo
 Return the extended gcd of the arguments.
 The result is a list of integers, where the car is the actual gcd
-and the cdr consists of coefficients, @var{s1}, @dots{}, @var{sn}, 
+and the cdr consists of coefficients, @var{s1}, @dots{}, @var{sn},
 such that @var{s1}*@var{arg1} + @dots{} + @var{sn}*@var{argn} = gcd.
 @end ifinfo
 @iftex
 Return the extended gcd of the arguments.
 The result is a list of integers, where the car is the actual gcd
-and the cdr consists of coefficients, 
+and the cdr consists of coefficients,
 @tex
 $s_1, @dots{}, s_n$,
-@end tex 
-such that 
+@end tex
+such that
 @tex
 $\sum_{i=1}^n s_i arg_i = gcd$.
 @end tex
@@ -2551,21 +2551,21 @@ Return @code{t} if @var{number} is divisible by @var{d},
 @end defun
 
 @defun congruentp number c m
-Return @code{t} if @var{number} is congruent to @var{c} 
+Return @code{t} if @var{number} is congruent to @var{c}
 modulo @var{m}, @code{nil} otherwise.
 @end defun
 
 
 @defun perfect-power-p number
 Return @code{t} if @var{number} is a perfect power, @code{nil} otherwise.
-An integer @var{number} is said to be a perfect power if there 
+An integer @var{number} is said to be a perfect power if there
 exist integers, @var{a} and @var{b}, such that
 @samp{@var{a}^@var{b} = @var{number}}.
 @end defun
 
 @defun perfect-square-p number
 Return @code{t} if @var{number} is a perfect square, @code{nil} otherwise.
-An integer @var{number} is said to be a perfect square if there 
+An integer @var{number} is said to be a perfect square if there
 exists an integer @var{b} such that
 @samp{@var{b}^2 = @var{number}}.
 @end defun

@@ -76,7 +76,7 @@ Here is an example:
 
 @group
 (silly-loop 40000000)
-@result{} ("Mon May  2 14:02:28 2005" 
+@result{} ("Mon May  2 14:02:28 2005"
     "Mon May  2 14:02:43 2005")  ; @r{15 seconds}
 @end group
 
@@ -259,7 +259,7 @@ If it is @code{nil}, these files are ignored.
 If it is non-@code{nil} or an integer greater than 0, the user is asked
 whether to compile each such file.
 If it is 0 or less, the file in question is compiled quietly, i.e. the
-user is not asked. 
+user is not asked.
 Note: @var{flag} is not optional in FSF Emacs.
 
 If the third optional argument @var{norecursion} is non-@code{nil},
@@ -554,7 +554,7 @@ This is completely ignored.  For backwards compatibility.
 @end defvar
 
 @defun byte-compiler-options &rest args
-Set some compilation-parameters for this file.  
+Set some compilation-parameters for this file.
 This will affect only the file in which it appears; this does nothing when
 evaluated, or when loaded from a @file{.el} file.
 

@@ -1,11 +1,10 @@
-
 @node Programs, Running, Text, Top
 @chapter Editing Programs
 @cindex Programming Languages
 @cindex Lisp
 
   SXEmacs provides specialized support for editing source files for many
-different programming languages. For example it is possible to 
+different programming languages. For example it is possible to
 
 @itemize @bullet
 @item
@@ -78,7 +77,7 @@ Ruby, Scheme, Simula, SQL, Tcl, Unix Shell scripts, and VHDL. Some of
 these language have seperate manuals, and some times more than one mode
 may be available for a language.  For example, there are several
 variants of Lisp mode, which differ in the way they interface to Lisp
-execution.  @xref{Lisp Modes}. 
+execution.  @xref{Lisp Modes}.
 
   Major modes for programming language support are distributed in
 optional SXEmacs packages (@pxref{Packages}) that must be installed
@@ -115,7 +114,7 @@ tab as if it were the equivalent number of spaces (using the command
 @code{backward-delete-char-untabify}).  This makes it possible to rub out
 indentation one column at a time without worrying whether it is made up of
 spaces or tabs.  In these modes, use @kbd{C-b C-d} to delete a tab
-character before point. 
+character before point.
 
   Programming language modes define paragraphs to be separated only by
 blank lines, so that the paragraph commands remain useful.  Auto Fill mode,
@@ -306,8 +305,8 @@ but which backs up over the argument declarations, function name, and
 returned data type so that the entire C function is inside the region.
 
 @findex compile-defun
-To compile and evaluate the current defun, use @kbd{M-x compile-defun}. 
-This function prints the results in the minibuffer. If you include an 
+To compile and evaluate the current defun, use @kbd{M-x compile-defun}.
+This function prints the results in the minibuffer. If you include an
 argument, it inserts the value in the current buffer after the defun.
 
   Emacs assumes that any open-parenthesis found in the leftmost column is
@@ -326,7 +325,7 @@ required scanning back to the beginning of the buffer for every
 function.  To speed this up, Emacs was changed to assume
 that any @samp{(} (or other character assigned the syntactic class of
 opening-delimiter) at the left margin is the start of a defun.  This
-heuristic is nearly always right; however, it mandates the convention 
+heuristic is nearly always right; however, it mandates the convention
 described above.
 
 @node Grinding, Matching, Defuns, Programs
@@ -524,7 +523,7 @@ is a closing delimiter is typed, the cursor moves momentarily to the
 location of the matching opening delimiter, provided that is visible on
 the screen.  If it is not on the screen, some text starting with that
 opening delimiter is displayed in the echo area.  Either way, you see
-the grouping you are closing off. 
+the grouping you are closing off.
 
   In Lisp, automatic matching applies only to parentheses.  In C, it
 also applies to braces and brackets.  Emacs knows which characters to regard
@@ -538,7 +537,7 @@ correct matches are specified in the syntax table.
 @vindex blink-matching-paren
 @vindex blink-matching-paren-distance
   Two variables control parenthesis matching displays.
-@code{blink-matching-paren} turns the feature on or off. The default is 
+@code{blink-matching-paren} turns the feature on or off. The default is
 @code{t} (match display is on); @code{nil} turns it off.
 @code{blink-matching-paren-distance} specifies how many characters back
 Emacs searches to find a matching opening delimiter.  If the match is
@@ -630,7 +629,7 @@ valid command which you could bind directly to a key if you wanted to.
 use the command @kbd{Meta-@key{LFD}} (@code{indent-new-comment-line}),
 which terminates the comment you are typing, creates a new blank line
 afterward, and begins a new comment indented under the old one.  If
-Auto Fill mode is on and you go past the fill column while typing, the 
+Auto Fill mode is on and you go past the fill column while typing, the
 comment is continued in just this fashion.  If point is
 not at the end of the line when you type @kbd{M-@key{LFD}}, the text on
 the rest of the line becomes part of the new comment line.
@@ -766,7 +765,7 @@ the symbol name around or adjacent to point as its default.
 @findex manual-entry
   The @kbd{M-x manual-entry} command gives you access to documentation
 on Unix commands, system calls, and libraries.  The command reads a
-topic as an argument, and displays the Unix manual page for that topic. 
+topic as an argument, and displays the Unix manual page for that topic.
 @code{manual-entry} always searches all 8 sections of the
 manual and concatenates all the entries it finds.  For example,
 the topic @samp{termcap} finds the description of the termcap library
@@ -1279,7 +1278,7 @@ match.
 
 If the cdr of the elements of this list are strings, they are
 assumed to name a tags file.  If they name a directory, the string
-@file{tags} is appended to them to get the file name.  If they are not 
+@file{tags} is appended to them to get the file name.  If they are not
 strings, they are evaluated and must return an appropriate string.
 
 For example:
@@ -1294,17 +1293,17 @@ For example:
 @end example
 
 The example defines the tags table alist in the following way:
- 
+
 @itemize @bullet
 @item
-Anything in the directory @file{/usr/src/public/perl/} 
-should use the @file{TAGS} file @file{/usr/src/public/perl/perl-3.0/TAGS}. 
+Anything in the directory @file{/usr/src/public/perl/}
+should use the @file{TAGS} file @file{/usr/src/public/perl/perl-3.0/TAGS}.
 @item
 Files ending in @file{.el} should use the @file{TAGS} file
-@file{/usr/local/emacs/src/TAGS}. 
+@file{/usr/local/emacs/src/TAGS}.
 @item
-Anything in or below the directory @file{/jbw/gnu/} should use the 
-@file{TAGS} file @file{/usr15/degree/stud/jbw/gnu/TAGS}.  
+Anything in or below the directory @file{/jbw/gnu/} should use the
+@file{TAGS} file @file{/usr15/degree/stud/jbw/gnu/TAGS}.
 @end itemize
 
 If you had a file called @file{/usr/jbw/foo.el}, it would use both
@@ -1343,7 +1342,7 @@ instead of using @code{visit-tags-table}.  The value of the variable
 @code{tags-file-name} is the name of the tags table used by all buffers.
 This is for backward compatibility, and is largely supplanted by the
 variable @code{tag-table-alist}.
- 
+
 @node Find Tag, Tags Search, Select Tags Table, Tags
 @subsection Finding a Tag
 
@@ -1574,11 +1573,11 @@ rich, customizable and quite efficient.
 variables (@pxref{Mode Hooks}). In addition to this conventional
 behavior all the CC Mode major modes will also run hooks in
 @code{c-mode-common-hook} @emph{before} invoking the major mode specific
-hook. 
+hook.
 
   CC Mode runs any hooks in @code{c-initialization-hook} exactly once
 when it is first loaded.
-  
+
   CC Mode is a very comprehensive and flexible system and full
 description of its capabilities is beyond the scope of this manual.  It
 is strongly recommended that the reader consult the CC Mode
@@ -1645,7 +1644,7 @@ few of the the supported styles are listed below.
 @itemize @bullet
 @item
 ``gnu'' --- The recommeded style from the Free Software Foundation for
-GNU software. 
+GNU software.
 @item
 ``k&r'' --- The classic style from Kernighan and Ritchie.
 @item
@@ -1664,7 +1663,7 @@ is the ``java'' style (this is governed by the variable
 @code{c-basic-offset} as the basic indentation level (this buffer local
 variable is used in all CC Mode language modes though its name might
 suggest otherwise). All indentation is, by default, expressed in
-multiples of @code{c-basic-offset}. 
+multiples of @code{c-basic-offset}.
 
   Each style defines a default value for @code{c-basic-offset}, for the
 ``gnu'' style sets it to 2. A very common customization scenario is
@@ -1959,7 +1958,7 @@ Fortran mode, so you do not need to change them.
 
   The normal Emacs comment command @kbd{C-x ;} has not been redefined.
 It can therefore be used if you use @samp{!} comments, but is useless in
-Fortran mode otherwise. 
+Fortran mode otherwise.
 
 @kindex C-c ; (Fortran mode)
 @findex fortran-comment-region

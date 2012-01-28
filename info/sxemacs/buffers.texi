@@ -1,4 +1,3 @@
-
 @node Buffers, Windows, Files, Top
 @chapter Using Multiple Buffers
 
@@ -117,7 +116,7 @@ buffer list:@refill
  MR Buffer         Size  Mode           File
  -- ------         ----  ----           ----
 .*  emacs.tex      383402 Texinfo       /u2/emacs/man/emacs.tex
-    *Help*         1287  Fundamental    
+    *Help*         1287  Fundamental
     files.el       23076 Emacs-Lisp     /u2/emacs/lisp/files.el
   % RMAIL          64042 RMAIL          /u/rms/RMAIL
  *% man            747   Dired          /u2/emacs/man/
@@ -200,7 +199,7 @@ Offer to kill each buffer, one by one.
 @findex kill-buffer
 @findex kill-some-buffers
 @kindex C-x k
- 
+
   @kbd{C-x k} (@code{kill-buffer}) kills one buffer, whose name you
 specify in the minibuffer.  If you type just @key{RET} in the
 minibuffer, the default, killing the current buffer, is used.  If the
@@ -285,7 +284,7 @@ Immediately select the buffer in another window as if by @kbd{C-x 4 b},
 leaving @samp{*Buffer List*} visible.
 @item q
 Immediately select this buffer, and display any buffers previously
-flagged with the @kbd{m} command in other windows.  If there are no 
+flagged with the @kbd{m} command in other windows.  If there are no
 buffers flagged with @kbd{m}, this command is equivalent to @kbd{1}.
 @item m
 Flag this buffer to be displayed in another window if the @kbd{q}
@@ -302,7 +301,7 @@ requested, or you can kill that buffer or pay no further attention to it.
  All that @code{buffer-menu} does directly is create and select a
 suitable buffer, and turn on Buffer Menu mode.  All the other
 capabilities of the buffer menu are implemented by special commands
-provided in Buffer Menu mode.  
+provided in Buffer Menu mode.
 
   The only difference between @code{buffer-menu} and @code{list-buffers} is
 that @code{buffer-menu} selects the @samp{*Buffer List*} buffer and

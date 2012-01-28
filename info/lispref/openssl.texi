@@ -102,7 +102,7 @@ is denoted OpenSSL.
 
 
 @node openssl General
-@subsection General information 
+@subsection General information
 
 In this section we deal with informative functions which kind of
 reflect the underlying library capabilities.  It is very hard to say
@@ -331,7 +331,7 @@ is @emph{not} cryptographically secure.
 
   Message digests are widely used in modern information
 infrastructure.  They are derived from (collision free) one-way hash
-functions. 
+functions.
 
   A hash function (such as @samp{md5} or @samp{sha1}) is a function
 with following properties:
@@ -344,7 +344,7 @@ with following properties:
 @item well definedness: computing a hash value from the same
   source data twice yields the same result
 @item efficiency: computing hash values is efficient (ideally
-  with complexity O(n)) on the input, but it is hard to 
+  with complexity O(n)) on the input, but it is hard to
   compute a preimage for a given hash value.
 @end enumerate
 
@@ -464,7 +464,7 @@ performance on long strings, like the buffer string here.
 (let ((st (current-btime))
       (b (buffer-string)))
   (dotimes (i 100000)
-    (base16-encode-string 
+    (base16-encode-string
       (ossl-digest 'md5 b)))
   (- (current-btime) st))
   @result{} 31697926
@@ -484,7 +484,7 @@ file.
 
 @example
 @group
-freundt@@muck:~> ls -sh ~/temp/pdftex-1.30.3.tar.bz2 
+freundt@@muck:~> ls -sh ~/temp/pdftex-1.30.3.tar.bz2
 3.2M /home/freundt/temp/pdftex-1.30.3.tar.bz2
 @end group
 
@@ -621,7 +621,7 @@ unique key and IV.
 @var{count} (a positive integer) is the iteration count to use. This
 indicates how often the hash algorithm is called recursively.
 
-Note: You probably want to put a wrapping encoder function 
+Note: You probably want to put a wrapping encoder function
 (like @code{base16-encode-string}) around it, since this returns
 binary string data.
 @end defun
@@ -665,7 +665,7 @@ vector inside:
 
 @group
 (base16-encode-string
- (get 
+ (get
   (ossl-bytes-to-key 'AES-256-OFB 'SHA512 "somesalt" "secret" 1)
   'iv))
   @result{} "2ce56b4d64a9ef097761ced99e0f6726"
@@ -1005,7 +1005,7 @@ That is, create a random key/iv pair for the symmetric encryption with
 @var{cipher} and encrypt that key/iv asymmetrically with the provided
 public key.
 
-The envelope returned is a list 
+The envelope returned is a list
 @code{(@var{encrypted_string} @var{encrypted_key} @var{encrypted_iv})}
 where
 @var{encrypted_string} is the (symmetrically) encrypted message
@@ -1050,7 +1050,7 @@ In the following example we reuse the keys generated above.
         iv (nth 2 envl))
   (mapcar #'base16-encode-string envl))
   @result{} ("0e6a38b28efea3ca4901b268c141d7ac23ed5f8fa598d23d9846fe3ec1
-       47278e" 
+       47278e"
       "167911a73b0a228b24e78bdd37197ec95b21bed3bbd62d1915d8fac791
        7915fd49fdd9774e7906ca53ed3bf4fb20de8339e628d469a496f7351c
        06fddda49b71c90e73e31c406cfb0f0fb7411d1c9d49842603c45415cc
@@ -1409,8 +1409,8 @@ Regard that function as convenience function.
   @result{} #<network connection "moz" (443 . "addons.mozilla.org") state:run>
 
 (setq m (ossl-ssl-handshake p))
-  @result{} #<OpenSSL socket layer: TLSv1 on top of 
-       #<secure network connection "moz" 
+  @result{} #<OpenSSL socket layer: TLSv1 on top of
+       #<secure network connection "moz"
          (443 . "addons.mozilla.org") state:run>>
 
 ;; @r{Let's examine @samp{p}}
@@ -1718,7 +1718,7 @@ a verbose string in the cdr.
   @result{} (#<OpenSSL X509 Certificate iss:/C=ZA/
         O=Thawte Consulting (Pty) Ltd./CN=Thawte SGC CA
         sub:/C=US/O=VeriSign, Inc./OU=Class 3 Public Primary
-        Certification Authority; RSA public key, size 1024> 
+        Certification Authority; RSA public key, size 1024>
       #<OpenSSL X509 Certificate iss:/C=ZA/ST=Western Cape/
         L=Cape Town/O=Thawte Consulting (Pty) Ltd/OU=Security/
         CN=www.thawte.com sub:/C=ZA/O=Thawte Consulting (Pty) Ltd./
@@ -1814,5 +1814,3 @@ Return the signature type of @var{cert}.
   @result{} none
 @end group
 @end example
-
-

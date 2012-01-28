@@ -146,7 +146,7 @@ following @var{forms}, in textual order, returning the result of
 @section Conditionals
 @cindex conditional evaluation
 
-  Conditional control structures choose among alternatives.  SXEmacs 
+  Conditional control structures choose among alternatives.  SXEmacs
 Lisp has two conditional forms: @code{if}, which is much the same as in
 other languages, and @code{cond}, which is a generalized case
 statement.
@@ -929,7 +929,7 @@ executed, and control resumes following the handler.
 The handler executes in the environment of the @code{condition-case}
 that established it; all functions called within that
 @code{condition-case} have already been exited, and the handler cannot
-return to them. 
+return to them.
 
 If there is no applicable handler for the error, the current command is
 terminated and control returns to the editor command loop, because the

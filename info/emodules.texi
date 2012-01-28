@@ -123,33 +123,33 @@ support documentation.
 * Index::                       Concept Index
 
 @c @c Can't do that when using the simple node structure
-@c 
+@c
 @c  --- The Detailed Node Listing ---
-@c 
+@c
 @c Anatomy of a Module
-@c 
+@c
 @c * Special Header Files::        Better include <emodules-ng.h>
 @c * Recognised Functions::        Specially treated functions
 @c * Recognised Variables::        Specially treated variables
 @c * Loading other Modules::       How to load dependent modules
-@c 
+@c
 @c @c @c museum section?
 @c @c Using @code{ellcc}
-@c @c 
+@c @c
 @c @c * Compile Mode::                Compiling modules using ellcc
 @c @c * Initialization Mode::         Generating documentation and variables
 @c @c * Link Mode::                   Creating the final loadable module
 @c @c * Other ellcc options::         Other useful options
 @c @c * Environment Variables::       How to control ellcc
-@c 
+@c
 @c Building your Module
-@c 
+@c
 @c * Configuring::                 How to
 @c * Compiling and linking::       How to
 @c * More Ideas::                  Other things you might want
-@c 
+@c
 @c Defining Functions
-@c 
+@c
 @c * Using DEFUN::                 Using the DEFUN macro to define functions
 @c * Declaring Functions::         Declaring functions to the Lisp reader
 @end menu
@@ -214,7 +214,7 @@ developers perspective though, a lot more is provided.
 @c the location of @value{emacs} internal header files etc.  The program will also
 @c invoke the linker correctly to created the final shared object which is
 @c loaded into @value{emacs}.
-@c 
+@c
 @c @item
 @c @cindex header files
 @c   CEmacs also makes all of the relevant @value{emacs} internal header files
@@ -226,7 +226,7 @@ developers perspective though, a lot more is provided.
 @c @xref{Top,,,internals,@value{emacs} Internals Manual}, for a
 @c more complete discussion on how to extend and understand @value{emacs}.  All of
 @c the rules for C modules are discussed there.
-@c 
+@c
 @c @item
 @c @cindex samples
 @c   Part of the @value{emacs} distribution is a set of sample modules.  These are
@@ -236,7 +236,7 @@ developers perspective though, a lot more is provided.
 @c the samples carefully, and maybe even use them as a basis for making
 @c your own modules.  Most of the concepts required for writing extension
 @c modules are covered in the samples.
-@c 
+@c
 @c @item
 @c @cindex documentation
 @c @cindex help
@@ -307,15 +307,15 @@ probably need to include other header files as well.
 @c @c Bullshit
 @c @table @file
 @c @item lisp.h
-@c 
+@c
 @c @item sysdep.h
-@c 
+@c
 @c @item window.h
-@c 
+@c
 @c @item buffer.h
-@c 
+@c
 @c @item insdel.h
-@c 
+@c
 @c @item frame.h
 @c @end table
 
@@ -465,7 +465,7 @@ you had to do.
 
 @deffn macro REQUIRE name &rest names
 Proclaim the requisite emodules of @var{name}.  Set up and fill the
-@code{dependencies} variable from @var{names} as discussed above. 
+@code{dependencies} variable from @var{names} as discussed above.
 @end deffn
 
 
@@ -538,7 +538,7 @@ void compute_lotto_numbers(void)
                 @dots{}
         @}
         @dots{}
-@}       
+@}
 @end group
 @end example
 
@@ -681,7 +681,7 @@ possible on some platforms but in general not portable.
 @item
 The @file{make-docfile} utility can always be very easily found when
 you know the location of an installed SXEmacs binary.  Instead of
-calling @file{make-docfile} directly you would call 
+calling @file{make-docfile} directly you would call
 @code{sxemacs --make-docfile} and pass all arguments you would
 normally pass thereafter.
 
@@ -739,44 +739,44 @@ make-docfile [--modname <name>] -E <outfile> <infile> [<infile> @dots{}]
 @c @node Compile Mode, Initialization Mode, Using ellcc, Using ellcc
 @c @section Compile Mode
 @c @cindex compiling
-@c 
+@c
 @c By default, @code{ellcc} is in @dfn{compile} mode.  This means that it
 @c assumes that all of the command line arguments are C compiler arguments,
 @c and that you want to compile the specified source file or files.  You
 @c can force compile mode by specifying the @code{--mode=compile} argument
 @c to @code{ellcc}.
-@c 
+@c
 @c In this mode, @code{ellcc} is simply a front-end to the same C compiler
 @c that was used to create the @value{emacs} binary itself.  All @code{ellcc}
 @c does in this mode is insert a few extra command line arguments before
 @c the arguments you specify to @code{ellcc} itself.  @code{ellcc} will
 @c then invoke the C compiler to compile your module, and will return the
 @c same exit codes and messages that your C compiler does.
-@c 
+@c
 @c By far the easiest way to compile modules is to construct a
 @c @file{Makefile} as you would for a normal program, and simply insert, at
 @c some appropriate place something similar to:
-@c 
+@c
 @c @example
 @c @cartouche
 @c CC=ellcc --mode=compile
-@c 
+@c
 @c .c.o:
 @c     $(CC) $(CFLAGS) -c $<
 @c @end cartouche
 @c @end example
-@c 
+@c
 @c After this, all you need to do is provide simple @code{make} rules for
 @c compiling your module source files.  Since modules are most useful when
 @c they are small and self-contained, most modules will have a single
 @c source file, aside from the module specific initialization file (see
 @c below for details).
-@c 
+@c
 @c @node Initialization Mode, Link Mode, Compile Mode, Using ellcc
 @c @section Initialization Mode
 @c @cindex initialization
 @c @cindex documentation
-@c 
+@c
 @c @value{emacs} uses a rather bizarre way of documenting variables and
 @c functions.  Rather than have the documentation for compiled functions
 @c and variables passed as static strings in the source code, the
@@ -785,7 +785,7 @@ make-docfile [--modname <name>] -E <outfile> <infile> [<infile> @dots{}]
 @c the documentation from these comments, producing the @value{emacs} @file{DOC}
 @c file, which the internal help engine scans when the documentation for a
 @c function or variable is requested.
-@c 
+@c
 @c Due to the internal construction of Lisp objects, subrs and other such
 @c things, adding documentation for a compiled function or variable in a
 @c compiled module, at any time after @value{emacs} has been @dfn{dumped} is
@@ -793,7 +793,7 @@ make-docfile [--modname <name>] -E <outfile> <infile> [<infile> @dots{}]
 @c from the difficulties thanks to your friend @code{ellcc} and some
 @c internal trickery in the module loading code.  This is all done using
 @c the @dfn{initialization} mode of @code{ellcc}.
-@c 
+@c
 @c The result of running @code{ellcc} in initialization mode is a C source
 @c file which you compile with (you guessed it) @code{ellcc} in compile
 @c mode.  Initialization mode is where you set the module name, version,
@@ -801,19 +801,19 @@ make-docfile [--modname <name>] -E <outfile> <infile> [<infile> @dots{}]
 @c functions and variables in your module.  There are several options that
 @c you are required to pass @code{ellcc} in initialization mode, the first
 @c of which is the mode switch itself, @code{--mode=init}.
-@c 
+@c
 @c Next, you need to specify the name of the C source code file that
 @c @code{ellcc} will produce, and you specify this using the
 @c @code{--mod-output=FILENAME} argument.  @var{FILENAME} is the name of
 @c the C source code file that will contain the module variables and
 @c @code{docs_of_module} function.
-@c 
+@c
 @c As discussed previously, each module requires a short @dfn{handle} or
 @c module name.  This is specified with the @code{--mod-name=NAME} option,
 @c where @var{NAME} is the abbreviated module name.  This @var{NAME} must
 @c consist only of characters that are valid in C function and variable
 @c names.
-@c 
+@c
 @c The module version is specified using @code{--mod-version=VERSION}
 @c argument, with @var{VERSION} being any arbitrary version string.  This
 @c version can be passed as an optional second argument to the Lisp
@@ -821,55 +821,55 @@ make-docfile [--modname <name>] -E <outfile> <infile> [<infile> @dots{}]
 @c module loading command @code{emodules_load}.  This version string is
 @c used to distinguish between different versions of the same module, and
 @c to ensure that the module is loaded at a specific version.
-@c 
+@c
 @c Last, but not least, is the module title.  Specified using the
 @c @code{--mod-title=TITLE} option, the specified @var{TITLE} is used when
 @c the list of loaded modules is displayed.  The module title serves no
 @c purpose other than to inform the user of the function of the module.
 @c This string should be brief, as it has to be formatted to fit the
 @c screen.
-@c 
+@c
 @c Following all of these parameters, you need to provide the list of all
 @c source code modules that make up your module.  These are the files which
 @c are scanned by @file{make-docfile}, and provide the information required
 @c to populate the @code{docs_of_module} function.  Below is a sample
 @c @file{Makefile} fragment which indicates how all of this is used.
-@c 
+@c
 @c @example
 @c @cartouche
 @c CC=ellcc --mode=compile
 @c LD=ellcc --mode=link
 @c MODINIT=ellcc --mode=init
 @c CFLAGS=-O2 -DSOME_STUFF
-@c 
+@c
 @c .c.o:
 @c     $(CC) $(CFLAGS) -c $<
-@c 
+@c
 @c MODNAME=sample
 @c MODVER=1.0.0
 @c MODTITLE="Small sample module"
-@c 
+@c
 @c SRCS=modfile1.c modfile2.c modfile3.c
 @c OBJS=$(SRCS:.c=.o)
-@c 
+@c
 @c all: sample.ell
 @c clean:
 @c     rm -f $(OBJS) sample_init.o sample.ell
-@c 
+@c
 @c install: all
 @c     mkdir `ellcc --mod-location`/mymods > /dev/null
 @c     cp sample.ell `ellcc --mod-location`/mymods/sample.ell
-@c 
+@c
 @c sample.ell: $(OBJS) sample_init.o
 @c     $(LD) --mod-output=$@ $(OBJS) sample_init.o
-@c 
+@c
 @c sample_init.o: sample_init.c
 @c sample_init.c: $(SRCS)
 @c     $(MODINIT) --mod-name=$(MODNAME) --mod-version=$(MODVER) \
 @c     --mod-title=$(MODTITLE) --mod-output=$@ $(SRCS)
 @c @end cartouche
 @c @end example
-@c 
+@c
 @c The above @file{Makefile} is, in fact, complete, and would compile the
 @c sample module, and optionally install it.  The @code{--mod-location}
 @c argument to @code{ellcc} will produce, on the standard output, the base
@@ -885,11 +885,11 @@ make-docfile [--modname <name>] -E <outfile> <infile> [<infile> @dots{}]
 @c the loader attempts to use are @file{.so}, @file{.ell} and @file{.dll}.  You
 @c can use any of these extensions, although @file{.ell} is the preferred
 @c extension.
-@c 
+@c
 @c @node Link Mode, Other ellcc options, Initialization Mode, Using ellcc
 @c @section Link Mode
 @c @cindex linking
-@c 
+@c
 @c Once all of your source code files have been compiled (including the
 @c generated init file) you need to link them all together to create the
 @c loadable module.  To do this, you invoke @code{ellcc} in link mode, by
@@ -898,7 +898,7 @@ make-docfile [--modname <name>] -E <outfile> <infile> [<infile> @dots{}]
 @c that all other arguments are passed on directly to the system compiler
 @c or linker, along with any other required arguments to create the
 @c loadable module.
-@c 
+@c
 @c The module has complete access to all symbols that were present in the
 @c dumped @value{emacs}, so you do not need to link against libraries that were
 @c linked in with the main executable.  If your library uses some other
@@ -907,115 +907,115 @@ make-docfile [--modname <name>] -E <outfile> <infile> [<infile> @dots{}]
 @c sure you invoke it correctly in the @file{Makefile}.  See the sample
 @c @file{Makefile} above for an example of a well constructed
 @c @file{Makefile} that invoked the linker correctly.
-@c 
+@c
 @c @node Other ellcc options, Environment Variables, Link Mode, Using ellcc
 @c @section Other @code{ellcc} options
 @c @cindex paths
-@c 
+@c
 @c Aside from the three main @code{ellcc} modes described above,
 @c @code{ellcc} can accept several other options.  These are typically used
 @c in a @file{Makefile} to determine installation paths.  @code{ellcc} also
 @c allows you to over-ride several of its built-in compiler and linker
 @c options using environment variables.  Here is the complete list of
 @c options that @code{ellcc} accepts.
-@c 
+@c
 @c @table @code
 @c @item --mode=compile
 @c Enables compilation mode.  Use this to compile source modules.
-@c 
+@c
 @c @item --mode=link
 @c Enabled link edit mode.  Use this to create the final module.
-@c 
+@c
 @c @item --mode=init
 @c Used to create the documentation function and to initialize other
 @c required variables.  Produces a C source file that must be compiled with
 @c @code{ellcc} in compile mode before linking the final module.
-@c 
+@c
 @c @item --mode=verbose
 @c Enables verbose mode.  This will show you the commands that are being
 @c executed, as well as the version number of @code{ellcc}.  If you specify
 @c this option twice, then some extra debugging information is displayed.
-@c 
+@c
 @c @item --mod-name=NAME
 @c Sets the short internal module @var{NAME} to the string specified,
 @c which must consist only of valid C identifiers.  Required during
 @c initialization mode.
-@c 
+@c
 @c @item --mod-version=VERSION
 @c Sets the internal module @var{VERSION} to the specified string.
 @c Required during initialization mode.
-@c 
+@c
 @c @item --mod-title=TITLE
 @c Sets the module descriptive @var{TITLE} to the string specified.  This
 @c string can contain any printable characters, but should not be too
 @c long.  It is required during initialization mode.
-@c 
+@c
 @c @item --mod-output=FILENAME
 @c Used to control the output file name.  This is used during
 @c initialization mode to set the name of the C source file that will be
 @c created to @var{FILENAME}.  During link mode, it sets the name of the
 @c final loadable module to @var{FILENAME}.
-@c 
+@c
 @c @item --mod-location
 @c This will print the name of the standard module installation path on the
 @c standard output and immediately exit @code{ellcc}.  Use this option to
 @c determine the directory prefix of where you should install your modules.
-@c 
+@c
 @c @item --mod-site-location
 @c This will print the name of the site specific module location and exit.
-@c 
+@c
 @c @item --mod-archdir
 @c Prints the name of the root of the architecture-dependent directory that
 @c @value{emacs} searches for architecture-dependent files.
-@c 
+@c
 @c @item --mod-config
 @c Prints the name of the configuration for which @value{emacs} and @code{ellcc}
 @c were compiled.
 @c @end table
-@c 
+@c
 @c @node Environment Variables,  , Other ellcc options, Using ellcc
 @c @section Environment Variables
 @c @cindex environment variables
-@c 
+@c
 @c During its normal operation, @code{ellcc} uses the compiler and linker
 @c flags that were determined at the time @value{emacs} was configured.  In
 @c certain rare circumstances you may wish to over-ride the flags passed to
 @c the compiler or linker, and you can do so using environment variables.
 @c The table below lists all of the environment variables that @code{ellcc}
 @c recognizes.
-@c 
+@c
 @c @table @code
 @c @item ELLCC
 @c @cindex @code{ELLCC}
 @c This is used to over-ride the name of the C compiler that is invoked by
 @c @code{ellcc}.
-@c 
+@c
 @c @item ELLLD
 @c @cindex @code{ELLLD}
 @c Sets the name of the link editor to use to created the final module.
-@c 
+@c
 @c @item ELLCFLAGS
 @c @cindex @code{ELLCFLAGS}
 @c Sets the compiler flags passed on when compiling source modules.  This
 @c only sets the basic C compiler flags.  There are certain hard-coded
 @c flags that will always be passed.
-@c 
+@c
 @c @item ELLLDFLAGS
 @c @cindex @code{ELLLDFLAGS}
 @c Sets the flags passed on to the linker.  This does @strong{not} include
 @c the flags for enabling PIC mode.  This just sets basic linker flags.
-@c 
+@c
 @c @item ELLDLLFLAGS
 @c @cindex @code{ELLDLLFLAGS}
 @c Sets the flags passed to the linker that are required to created shared
 @c and loadable objects.
-@c 
+@c
 @c @item ELLPICFLAGS
 @c @cindex @code{ELLPICFLAGS}
 @c Sets the C compiler option required to produce an object file that is
 @c suitable for including in a shared library.  This option should turn on
 @c PIC mode, or the moral equivalent thereof on the target system.
-@c 
+@c
 @c @item ELLMAKEDOC
 @c @cindex @code{ELLMAKEDOC}
 @c Sets the name of the @file{make-docfile} program to use.  Usually
@@ -1263,4 +1263,3 @@ echo area.  The names are the emodules' @emph{internal}.
 @printindex cp
 
 @bye
-

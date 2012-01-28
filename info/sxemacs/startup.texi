@@ -192,5 +192,3 @@ Is the path where SXEmacs looks for data files.  It contains package data
 directories as well as @code{data-directory}.
 
 @end table
-
-

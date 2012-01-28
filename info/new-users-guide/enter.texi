@@ -16,15 +16,15 @@ at any one time. For more information, @xref{Buffers,,,sxemacs,SXEmacs User's
 Manual}.
 
 @item File
-A @b{file} is a region of disk space holding characters. Emacs edits a file by 
-reading it into a buffer, editing that buffer and writing out the buffer 
+A @b{file} is a region of disk space holding characters. Emacs edits a file by
+reading it into a buffer, editing that buffer and writing out the buffer
 back to the file. To save your work permanently you have to write it to a file.
 So after you load and work with a file, you have to save it back.
 
 @item Windows
-A @b{window} is a rectangular region in which a buffer is displayed. You can 
-open multiple windows with multiple buffers and edit them by selecting the 
-corresponding buffer. Initially, when you start emacs, it will automatically 
+A @b{window} is a rectangular region in which a buffer is displayed. You can
+open multiple windows with multiple buffers and edit them by selecting the
+corresponding buffer. Initially, when you start emacs, it will automatically
 open up a window for you.
 @end table
 
@@ -44,21 +44,21 @@ open up a window for you.
 @cindex entering SXEmacs
 
 To enter Emacs type @kbd{sxemacs} and press the Return key at the
-shell i.e. @kbd{sxemacs @key{RET}}. 
+shell i.e. @kbd{sxemacs @key{RET}}.
 This will bring up an emacs window with @samp{*scratch*} as the default
-buffer because Emacs must always have a buffer to work on. Then choose 
-the @b{Open...} option from the @b{File} menu on the menubar at the top 
+buffer because Emacs must always have a buffer to work on. Then choose
+the @b{Open...} option from the @b{File} menu on the menubar at the top
 of the frame. It will prompt you to enter a filename. After you enter
 the filename, Emacs will read that file into the current buffer. You can
 also type :
 @example
-@kbd{sxemacs <filename> @key{RET}} 
+@kbd{sxemacs <filename> @key{RET}}
 @end example
 directly which will bring up
-an Emacs frame with the @dfn{filename} as the buffer. 
- 
+an Emacs frame with the @dfn{filename} as the buffer.
 
-@comment 
+
+@comment
 @node Frame, Exiting, Enter, Entering
 @section Emacs Frame
 @cindex open another file
@@ -76,13 +76,13 @@ the functions provided by the pull-down menus.
 
   The Emacs frame has a rectangle shaped box at the extreme right and you can
 drag it up or down to scroll the window accordingly. Clicking on the
-arrows also serves the same purpose. 
+arrows also serves the same purpose.
 
   The last line in your window is @samp{the Mode line} which will give
 you a description of what's going on in that particular
 window. @xref{Mode Line}, for more
 information. Below the mode line is the @samp{Echo area}. Emacs uses
-this area to interact with the user. @xref{Echo Area}. 
+this area to interact with the user. @xref{Echo Area}.
 
   If you wish to open another file in a new window after you enter
 SXEmacs, select @b{Open in New Frame...} from the @b{File} menu, which
@@ -102,32 +102,32 @@ frames or by switching between buffers.
 @cindex shrinking SXEmacs frame
 
 There are two commands for exiting Emacs, one for @dfn{suspending} Emacs
-and the other for @dfn{killing} Emacs. @dfn{Suspending} means stopping 
-Emacs temporarily and returning control to the shell, allowing you to 
-resume editing 
+and the other for @dfn{killing} Emacs. @dfn{Suspending} means stopping
+Emacs temporarily and returning control to the shell, allowing you to
+resume editing
 later in the same Emacs job, with the same files, same kill ring, same
 undo history, and so on.  This is the usual way to exit.  @dfn{Killing}
 Emacs means destroying the Emacs job.  You can run Emacs again later,
 but you will get a fresh Emacs; there is no way to resume the same
-editing session after it has been killed. 
+editing session after it has been killed.
 
 @kindex C-z
 @findex suspend-emacs
 @kindex C-x C-c
 @findex save-buffers-kill-emacs
- 
+
 @table @kbd
 @item C-z
 Suspend Emacs (@code{suspend-emacs}).  If used under the X window system,
-this command will shrink the X window containing the Emacs frame to an 
+this command will shrink the X window containing the Emacs frame to an
 icon. Clicking on the icon will resume that Emacs process
-again. @xref{Exiting Emacs,,,sxemacs,SXEmacs User's Manual}. 
+again. @xref{Exiting Emacs,,,sxemacs,SXEmacs User's Manual}.
 
 @item C-x C-c
-Kill Emacs (@code{save-buffers-kill-emacs}). You can also select 
+Kill Emacs (@code{save-buffers-kill-emacs}). You can also select
 @b{Exit Emacs} option from the @b{File} menu to kill that Emacs
 process. If you haven't saved the file, Emacs will ask you if you wish
-to save the file before killing that process. 
+to save the file before killing that process.
 @end table
 
 
@@ -226,12 +226,12 @@ Now you need to give a file name to open, for example if the file name
 is @file{myfile}, you will type @file{myfile} after
 @file{/usr/lib/x11/} and press the @key{Return} key. If you pause for
 more than a second while typing, you will see the characters that you
-type in the @dfn{echo area}. 
+type in the @dfn{echo area}.
 @item
   The @dfn{echo area} also prints error messages. For example, if you
 misspell @samp{usr} and type @file{/urs/lib/x11/myfile} @key{RETURN} in
-the above example you might get an error message. Since 
-Emacs will not be able to find the @file{/urs} 
+the above example you might get an error message. Since
+Emacs will not be able to find the @file{/urs}
 directory, the @dfn{echo area} will say:
 
 @example
@@ -244,9 +244,3 @@ will print informative messages in the @dfn{echo area}. @xref{The Echo
 Area,,,sxemacs,SXEmacs User's Manual}, for more information on the @dfn{echo
 area}.
 @end itemize
-
-
-
-
-
-  

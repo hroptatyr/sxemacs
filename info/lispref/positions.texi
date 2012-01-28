@@ -204,7 +204,7 @@ This function moves point forward @var{count} words (or backward if
 @var{count} is negative).  Normally it returns @code{t}.  If this motion
 encounters the beginning or end of the buffer, or the limits of the
 accessible portion when narrowing is in effect, point stops there and
-the value is @code{nil}.  
+the value is @code{nil}.
 
 @var{count} defaults to @code{1} and @var{buffer} defaults to the
 current buffer.

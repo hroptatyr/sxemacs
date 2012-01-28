@@ -477,9 +477,9 @@ Do you want speed or comfort or flexibility or memory frugality?
 @c creation    ++       o       -            -
 @c prepend     ++       --      -            --
 @c append      ++       --      ++           --
-@c search      --       o       +            +  
-@c modify      ++       +       o            ++ 
-@c sort        -        -       -            ++ 
+@c search      --       o       +            +
+@c modify      ++       +       o            ++
+@c sort        -        -       -            ++
 
 @end itemize
 
@@ -674,7 +674,7 @@ its own and the detection resides at a central location, for example
 in the library's main file.
 
 @example
-(when 
+(when
   ;; check if SXEmacs is build with ENT support (bigq submodule)
   (and (featurep 'ent) (featurep 'bigq))
 
@@ -914,7 +914,7 @@ comments usually explain how the code on the same line does its job.
 In Lisp mode and related modes, the @kbd{M-;}
 (@code{indent-for-comment}) command automatically inserts such a
 @samp{;} in the right place, or aligns such a comment if it is already
-present. 
+present.
 
 This and following examples are taken from the SXEmacs sources.
 

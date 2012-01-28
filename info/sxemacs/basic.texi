@@ -497,7 +497,7 @@ the column that the cursor is in, and other miscellaneous information about
 point.  It prints a line in the echo area that looks like this:
 
 @example
-Char: c (0143, 99, 0x63)  point=18862 of 24800(76%)  column 53 
+Char: c (0143, 99, 0x63)  point=18862 of 24800(76%)  column 53
 @end example
 
 @noindent
@@ -506,7 +506,7 @@ Char: c (0143, 99, 0x63)  point=18862 of 24800(76%)  column 53
 
   The four values after @samp{Char:} describe the character that follows
 point, first by showing it and then by giving its character code in
-octal, decimal and hex. 
+octal, decimal and hex.
 
   @samp{point=} is followed by the position of point expressed as a character
 count.  The front of the buffer counts as position 1, one character later
@@ -523,7 +523,7 @@ additional text describing the current visible range.  For example, it
 might say:
 
 @smallexample
-Char: c (0143, 99, 0x63)  point=19674 of 24575(80%) <19591 - 19703>  column 69 
+Char: c (0143, 99, 0x63)  point=19674 of 24575(80%) <19591 - 19703>  column 69
 @end smallexample
 
 @noindent
