@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* PTX has System V streams.  */
 #define SYSV_STREAMS
 
-/* Leave out -lPW since it conflicts with term.o and because we're not sure 
+/* Leave out -lPW since it conflicts with term.o and because we're not sure
    if the alloca found there by autoconf should be trusted on PTX.  */
 #define LIB_STANDARD "-lc"
 
@@ -123,7 +123,7 @@ struct timezone {
   }								\
   strcpy (pty_name, slavename);
 
-/* Define these to prevent the default logic in process.c:allocate_pty 
+/* Define these to prevent the default logic in process.c:allocate_pty
    from being used.  */
 #define PTY_NAME_SPRINTF
 #define PTY_TTY_NAME_SPRINTF

@@ -17,6 +17,6 @@
 #define HAVE_PTYS
 #endif
 
-/* TAB3 is defined in Unix98, but darwin doesn't have it. 
+/* TAB3 is defined in Unix98, but darwin doesn't have it.
    OXTABS is the traditional BSD equivalent. */
 #define TAB3 OXTABS

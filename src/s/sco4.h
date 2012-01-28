@@ -69,7 +69,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #define LIBS_SYSTEM "-lsocket -lPW"
 
 /* SCO has gettimeofday in socket library */
-/* Autoconf should determine this, but for now, 
+/* Autoconf should determine this, but for now,
    play safe to avoid error rather than deleting this
    and risking the wrong result.  */
 #ifndef HAVE_GETTIMEOFDAY
