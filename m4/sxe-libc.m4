@@ -226,10 +226,12 @@ AC_DEFUN([SXE_CHECK_BASIC_TYPES], [dnl
 	## checks for typedefs
 	AC_TYPE_INT16_T
 	AC_TYPE_INT32_T
+	AC_TYPE_INT64_T
 	AC_TYPE_INT8_T
 	AC_TYPE_MODE_T
 	AC_TYPE_OFF_T
 	AC_TYPE_PID_T
+	AC_TYPE_INTPTR_T
 	## next one is obsolete, it is safe to assume that RETSIGTYPE
 	## is always `void' these days
 	dnl AC_TYPE_SIGNAL
@@ -256,6 +258,7 @@ AC_DEFUN([SXE_CHECK_BASIC_TYPES], [dnl
 	AC_CHECK_SIZEOF([long long int], [0])
 	AC_CHECK_SIZEOF([wchar_t], [0])
 	AC_CHECK_SIZEOF([void *], [0])
+	AC_CHECK_SIZEOF([float], [0])
 	AC_CHECK_SIZEOF([double], [0])
 	AC_CHECK_SIZEOF([long double], [0])
 	AC_CHECK_SIZEOF([size_t], [0])
@@ -350,8 +353,6 @@ AC_DEFUN([SXE_CHECK_SIGNALS], [dnl
 ])dnl SXE_CHECK_SIGNALS
 
 AC_DEFUN([SXE_CHECK_INTPTR_T], [dnl
-	dnl not AC_CHECK_TYPE; lisp.h does hairy conditional typedef
-	dnl why not? let's test it...
 	SXE_CHECK_HEADERS([inttypes.h])
 	AC_CHECK_TYPE([intptr_t], [], [], [
 #if defined HAVE_SYS_TYPES_H
