@@ -1,10 +1,10 @@
 /* Visually check 256 color capability of terminal
  *
  * (C) 2008 Nelson Ferreira
- *   
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under a BSD-like licence.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * Redistributions of source code must retain the above copyright notice, this
@@ -45,20 +45,20 @@ static char term_buffer[8192];
 /*
  * For the capabilities
  */
-char    *setfore = NULL, 
-	*setback = NULL,  
-	*resetcolor = NULL, 
-	*standstr = NULL, 
+char    *setfore = NULL,
+	*setback = NULL,
+	*resetcolor = NULL,
+	*standstr = NULL,
 	*exit_stand = NULL,
-	*inicolor_str = NULL, 
+	*inicolor_str = NULL,
 	*clrnames  = NULL,
-	*bold = NULL,    
+	*bold = NULL,
 	*dim = NULL,
 	*reverse = NULL,
 	*blinking = NULL,
-	*exit_attr = NULL, 
+	*exit_attr = NULL,
 	*opair = NULL;
-      
+
 int      maxcolors = 0,
 	maxpairs  = 0,
 	do_force_16  = 0;
@@ -94,7 +94,7 @@ void init_terminal_data ()
 /*******************
  * Print a band with background of all available colors
  */
-void colormap( int do_boldstand ) 
+void colormap( int do_boldstand )
 {
 	int back;
 	for( back = 0; back < maxcolors; back++ ) {
@@ -134,13 +134,13 @@ void colormap( int do_boldstand )
 
 
 /*********************
- * Print a table with all the fore and background 
+ * Print a table with all the fore and background
  * color combinations, with bold and optionally standout
  */
-void combinations_of_colors(int do_standout, int do_boldstand) 
+void combinations_of_colors(int do_standout, int do_boldstand)
 {
 	int fore, back;
-	for( fore = 0; fore < maxcolors; fore ++ ) 
+	for( fore = 0; fore < maxcolors; fore ++ )
 		for( back = 0; back < maxcolors; back ++ ) {
 			char *strF, *strB;
 			char *sstrF, *sstrB;
@@ -160,11 +160,11 @@ void combinations_of_colors(int do_standout, int do_boldstand)
 			printf( "\n" );
 		}
 	printf( "\n" );
-	  
+
 }
 
 
-/** Query and assign a capability 
+/** Query and assign a capability
  */
 void capability(char**buf,char*code,char**var,char*message)
 {
@@ -196,7 +196,7 @@ void get_capabilities()
 	if (maxpairs <= 0 ) {
 		printf("I am sorry, your terminal does not have the max color pairs information\n");
 	}
-	
+
 	capability(&buf,"AF",&setfore,
 		   "I am sorry, your terminal does not have the set foreground color string in the capabilities");
 	capability(&buf,"AB",&setback,
@@ -234,14 +234,14 @@ void query_rgb()
 	int i, fd=fileno(stdin);
 	long mode;
 	struct termios ts;
-	
-	if ( ! isatty(fd) || ! isatty(fileno(stdout)) ) 
+
+	if ( ! isatty(fd) || ! isatty(fileno(stdout)) )
 		printf("Sorry, but stdin and/or stdout is not the terminal tty so I cannot query it\n");
 	else {
-		if ( ! inicolor_str ) 
+		if ( ! inicolor_str )
 			printf("According to your terminal info this terminal rgb query will hang. Press ^C to abort the query.\n");
 
-		/* 
+		/*
 		 * We need to do the equivalent of cbreak()
 		 */
 		tcgetattr(fd,&ts);
@@ -252,14 +252,14 @@ void query_rgb()
 
 		/* Ask for the colors */
 		for ( i = 0 ; 1 ; i ++ ) {
-			char buffer[1000], 
-				*buf=buffer, 
+			char buffer[1000],
+				*buf=buffer,
 				*end=buffer+sizeof(buffer)-1;
 			int interrupted = 0;
-			
+
 			/* This is a string retrieved from Noah
 			 * Friedmans xterm-frobs.el. I could not find
-			 * any termcap entry that verifies it 
+			 * any termcap entry that verifies it
 			 */
 			printf("\e]4;%d;?;\e\\",i);
 			fflush(stdout);
@@ -268,7 +268,7 @@ void query_rgb()
 				fd_set fdsr, fdse,fdsw;
 				int fds;
 				struct timeval t;
-				
+
 				t.tv_sec = 0;
 				t.tv_usec = 100000; /* 100ms */
 
@@ -288,14 +288,14 @@ void query_rgb()
 				}
 				read(fd,buf,1);
 				if ( *buf == '\\') {
-					/* The response sequence ends with the only "\" 
+					/* The response sequence ends with the only "\"
 					   of the response
 					*/
 					break;
 				}
 				if ( *buf == '' ) {
-					/* 
-					   If the terminal did not reply, chances are 
+					/*
+					   If the terminal did not reply, chances are
 					   this is not supported and the user used ^C
 					*/
 					interrupted=1;
@@ -359,15 +359,15 @@ void force_ansi()
 int
 main( int argc, char *argv[] )
 {
-  int     do_colormap = 0, 
-	  do_combinations = 0, 
-	  do_standout = 0, 
+  int     do_colormap = 0,
+	  do_combinations = 0,
+	  do_standout = 0,
 	  do_boldstand = 0,
 	  do_query = 0;
 
   { /* Process arguments */
 	  int i;
-	  
+
 	  for( i = 1; i < argc; i++ ) {
 		  if( ! strcmp(argv[i],"-m") )
 			  do_colormap = 1;
@@ -410,8 +410,8 @@ main( int argc, char *argv[] )
   if ( inicolor_str ) printf("To init color    : ^[%s\n", inicolor_str+1);
   if ( clrnames )   printf("To color names   : ^[%s\n", clrnames+1);
   if ( opair )      printf("To original pairs: ^[%s\n",   opair+1);
-  
-  
+
+
 
   /*
    * Let's try the ANSI defaults

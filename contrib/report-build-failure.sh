@@ -1,11 +1,11 @@
 #!/bin/sh
 #
-# Send email to sxemacs-builds list about build failure. 
+# Send email to sxemacs-builds list about build failure.
 # NOTE: At the time of last change, you HAVE to be a subscriber for
 # your email to actually be delivered to the list
 #
 # (C) 2008 Nelson Ferreira
-#   
+#
 # This program is free software; you can redistribute it and/or modify it
 # under a BSD-like licence.
 #
@@ -208,14 +208,14 @@ if [ -n "${MSRCDIR}" -a -d "${MSRCDIR}/{arch}" -a -n "${TLA}"  -a -n "${GREP}"  
     cd "${MSRCDIR}"
     TREE="$(${TLA} tree-version)"
     PATCH="$(${TLA} revisions | ${TAIL} -1)"
-    echo "Tree : ${TREE}" 
-    echo "Patch: ${PATCH}" 
+    echo "Tree : ${TREE}"
+    echo "Patch: ${PATCH}"
     echo ""
     LAST_MAIN="$(${TLA} log-versions | ${GREP} -- '--main--' | ${TAIL} -1)"
     LAST_MAIN_PATCH="$(${TLA} revisions $LAST_MAIN | ${TAIL} -1)"
     if [ "${TREE}" != "${LAST_MAIN}" -o "${PATCH}" != "${LAST_MAIN_PATCH}" ]; then
-	echo "Main : $LAST_MAIN" 
-	echo "Patch: $LAST_MAIN_PATCH" 
+	echo "Main : $LAST_MAIN"
+	echo "Patch: $LAST_MAIN_PATCH"
 	echo ""
     fi
     DIFF_NAME=/tmp/tla-changes-${USER}-$$-${attachment}.log
@@ -237,7 +237,7 @@ echo ""
 if [ -n "${SRCDIR}" ]; then
     echo " Source in ${SRCDIR}"
 fi
-if [ -n "${BLDDIR}" -a "${SRCDIR}" != "${BLDDIR}" ]; then 
+if [ -n "${BLDDIR}" -a "${SRCDIR}" != "${BLDDIR}" ]; then
     echo " Build  in ${BLDDIR}"
 fi
 
@@ -258,7 +258,7 @@ for f in beta make-all make-check-temacs make-check make-install; do
     if [ -f "./,,${f}.out" ]; then
 	echo "> Contents of $(pwd)/,,${f}.out"
 	echo ""
-	${GREP} "$KREGEXP" ./,,${f}.out | ${GREP} -v "$RREGEXP" 
+	${GREP} "$KREGEXP" ./,,${f}.out | ${GREP} -v "$RREGEXP"
     fi
 done
 
