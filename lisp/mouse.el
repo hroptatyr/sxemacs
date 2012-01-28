@@ -117,12 +117,12 @@ between point and mark."
   (interactive "P")
   ;; we fallback to the clipboard if the current selection is not existent
   (let ((text (or (get-selection-no-error 'PRIMARY   'UTF8_STRING)
-                  (get-selection-no-error 'PRIMARY   'STRING)
-                  (and check-cutbuffer-p (get-cutbuffer))
-                  (get-selection-no-error 'CLIPBOARD 'UTF8_STRING)
-                  (get-selection-no-error 'CLIPBOARD 'STRING)
-                  (error "no selection: PRIMARY or CLIPBOARD")
-                  )))
+		  (get-selection-no-error 'PRIMARY   'STRING)
+		  (and check-cutbuffer-p (get-cutbuffer))
+		  (get-selection-no-error 'CLIPBOARD 'UTF8_STRING)
+		  (get-selection-no-error 'CLIPBOARD 'STRING)
+		  (error "no selection: PRIMARY or CLIPBOARD")
+		  )))
     (cond (move-point-event
 	   (mouse-set-point move-point-event)
 	   (push-mark (point)))
@@ -1057,7 +1057,7 @@ at the initial click position."
 	     (not (= start end)))
 	;; I guess cutbuffers should do something with rectangles too.
 	;; does anybody use them?
-        (x-store-cutbuffer (buffer-substring start end)))))
+	(x-store-cutbuffer (buffer-substring start end)))))
 
 (defun mouse-track-activate-rectangular-selection ()
   (if (consp default-mouse-track-extent)
@@ -1264,7 +1264,7 @@ at the initial click position."
 ;;;	  ;;
 ;;;	  (if nil ; (eq default-mouse-track-type 'char)
 ;;;	      (let ((after-end-p (and (not (eobp))
-;;; 				      (eolp)
+;;;				      (eolp)
 ;;;				      (> (point) (car result)))))
 ;;;		(if after-end-p
 ;;;		    (progn
@@ -1522,17 +1522,17 @@ and `mode-motion-hook'."
 	  (glyph-extent (highlight-extent glyph-extent t))
 	  (t (highlight-extent nil nil)))
     (cond ((extentp help)
-           (or inhibit-help-echo
-               (eq help last-help-echo-object) ;save some time
+	   (or inhibit-help-echo
+	       (eq help last-help-echo-object) ;save some time
 	       (eq (selected-window) (minibuffer-window))
-               (let ((hprop (extent-property help 'help-echo)))
-                 (setq last-help-echo-object help)
-                 (or (stringp hprop)
-                     (setq hprop (funcall hprop help)))
-                 (and hprop (show-help-echo hprop)))))
+	       (let ((hprop (extent-property help 'help-echo)))
+		 (setq last-help-echo-object help)
+		 (or (stringp hprop)
+		     (setq hprop (funcall hprop help)))
+		 (and hprop (show-help-echo hprop)))))
 	  ((and (featurep 'toolbar)
-                (toolbar-button-p help)
-                (toolbar-button-enabled-p help))
+		(toolbar-button-p help)
+		(toolbar-button-enabled-p help))
 	   (or (not toolbar-help-enabled)
 	       (eq help last-help-echo-object) ;save some time
 	       (eq (selected-window) (minibuffer-window))
@@ -1541,7 +1541,7 @@ and `mode-motion-hook'."
 		 (or (stringp hstring)
 		     (setq hstring (funcall hstring help)))
 		 (and hstring (show-help-echo hstring)))))
-          (last-help-echo-object
+	  (last-help-echo-object
 	   (clear-help-echo)))
     (if mouse-grabbed-buffer (setq buffer mouse-grabbed-buffer))
     (if (and buffer (symbol-value-in-buffer 'mode-motion-hook buffer nil))

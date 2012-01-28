@@ -76,7 +76,7 @@ will be created to put the glyph into."
   "Remove gutter element PROP from GUTTER-SPECIFIER in optional LOCALE.
 This is a convenience function for removing gutter elements."
   (modify-specifier-instances gutter-specifier #'plist-remprop (list prop)
-                              'force nil locale tag-set))
+			      'force nil locale tag-set))
 
 (defun set-gutter-element-visible-p (gutter-visible-specifier-p
 				     prop &optional visible-p
@@ -104,7 +104,7 @@ Given GUTTER-VISIBLE-SPECIFIER-P and gutter element PROP, return
 non-nil if it is visible in optional DOMAIN."
   (let ((spec (specifier-instance gutter-visible-specifier-p domain)))
     (or (and (listp spec) (memq 'buffers-tab spec))
- 	spec)))
+	spec)))
 
 (defun set-gutter-dirty-p (gutter-or-location)
   "Make GUTTER-OR-LOCATION dirty to force redisplay updates."
@@ -114,9 +114,9 @@ non-nil if it is visible in optional DOMAIN."
 	    (eq gutter-or-location 'bottom)
 	    (eq gutter-or-location 'left)
 	    (eq gutter-or-location 'right))
-    (or (gutter-specifier-p gutter-or-location) 
+    (or (gutter-specifier-p gutter-or-location)
 	(setq gutter-or-location
-	      (eval (intern (concat 
+	      (eval (intern (concat
 			     (symbol-name gutter-or-location)
 			     "-gutter")))))
     (set-specifier-dirty-flag gutter-or-location)))
@@ -182,5 +182,3 @@ corresponding symbol occurs in the gutter-visible instantiator."
   )
 
 ;;; gutter.el ends here.
-
-

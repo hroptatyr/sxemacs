@@ -75,21 +75,21 @@ TYPE is a Common Lisp type specifier."
 	((and (eq type 'character) (stringp x) (= (length x) 1)) (aref x 0))
 	((and (eq type 'character) (symbolp x)) (coerce (symbol-name x) type))
 	((and (eq type 'character) (char-int-p x)) (int-char x))
-        ((and (featurep 'number-types)
-              (memq type '(int fixnum
-                           bigz bignum
-                           integer
-                           bigq ratio
-                           rational
-                           float
-                           bigf bigfloat
-                           bigfr
-                           real
-                           bigg
-                           bigc
-                           ;;complex
-                           ))
-              (coerce-number x type)))
+	((and (featurep 'number-types)
+	      (memq type '(int fixnum
+			   bigz bignum
+			   integer
+			   bigq ratio
+			   rational
+			   float
+			   bigf bigfloat
+			   bigfr
+			   real
+			   bigg
+			   bigc
+			   ;;complex
+			   ))
+	      (coerce-number x type)))
 	((and (eq type 'integer) (characterp x)) (char-int x))
 	((eq type 'float) (float x))
 	((eq type 'bit-vector) (if (bit-vector-p x) x
@@ -393,20 +393,20 @@ If so, return the true (non-nil) value returned by PREDICATE."
     "Return the greatest common divisor of the arguments."
     (let ((a (abs (or (cl-pop args) 0))))
       (while args
-        (let ((b (abs (cl-pop args))))
-          (while (> b 0) (setq b (% a (setq a b))))))
+	(let ((b (abs (cl-pop args))))
+	  (while (> b 0) (setq b (% a (setq a b))))))
       a)))
 
 (unless (fboundp #'lcm)
   (defun lcm (&rest args)
     "Return the least common multiple of the arguments."
     (if (memq 0 args)
-        0
+	0
       (let ((a (abs (or (cl-pop args) 1))))
-        (while args
-          (let ((b (abs (cl-pop args))))
-            (setq a (* (/ a (gcd a b)) b))))
-        a))))
+	(while args
+	  (let ((b (abs (cl-pop args))))
+	    (setq a (* (/ a (gcd a b)) b))))
+	a))))
 
 (defun isqrt (a)
   "Return the integer square root of the argument."

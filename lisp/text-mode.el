@@ -176,7 +176,7 @@ The argument NLINES says how many lines to center."
 	(delete-horizontal-space)
 	(setq line-length (current-column))
 	(if (> (- fill-column lm line-length) 0)
-	    (indent-line-to 
+	    (indent-line-to
 	     (+ lm (/ (- fill-column lm line-length) 2))))))
     (cond ((null nlines)
 	   (setq nlines 0))

@@ -130,7 +130,7 @@ See `keyboard-translate-table' for more information."
  ;; bindings of the corresponding keys by default, but that made the display
  ;; of M-x describe-bindings much harder to read, so now we'll just bind them
  ;; to self-insert by default.  Not a big difference...
- 
+
 (put 'kp-0 'ascii-character ?0)
 (put 'kp-1 'ascii-character ?1)
 (put 'kp-2 'ascii-character ?2)

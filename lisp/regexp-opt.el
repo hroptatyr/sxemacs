@@ -43,10 +43,10 @@
 ;; For example:
 ;;
 ;; (let ((strings '("cond" "if" "when" "unless" "while"
-;; 		    "let" "let*" "progn" "prog1" "prog2"
-;; 		    "save-restriction" "save-excursion" "save-window-excursion"
-;; 		    "save-current-buffer" "save-match-data"
-;; 		    "catch" "throw" "unwind-protect" "condition-case")))
+;;		    "let" "let*" "progn" "prog1" "prog2"
+;;		    "save-restriction" "save-excursion" "save-window-excursion"
+;;		    "save-current-buffer" "save-match-data"
+;;		    "catch" "throw" "unwind-protect" "condition-case")))
 ;;   (concat "(" (regexp-opt strings t) "\\>"))
 ;;  => "(\\(c\\(?:atch\\|ond\\(?:ition-case\\)?\\)\\|if\\|let\\*?\\|prog[12n]\\|save-\\(?:current-buffer\\|excursion\\|match-data\\|restriction\\|window-excursion\\)\\|throw\\|un\\(?:less\\|wind-protect\\)\\|wh\\(?:en\\|ile\\)\\)\\>"
 ;;
@@ -114,20 +114,20 @@ by \\=\\< and \\>."
 
 (defconst regexp-opt-not-groupie*-re
   (let* ((harmless-ch "[^\\\\[]")
-         (esc-pair-not-lp "\\\\[^(]")
-         (class-harmless-ch "[^][]")
-         (class-lb-harmless "[^]:]")
-         (class-lb-colon-maybe-charclass ":\\([a-z]+:]\\)?")
-         (class-lb (concat "\\[\\(" class-lb-harmless
-                           "\\|" class-lb-colon-maybe-charclass "\\)"))
-         (class
-          (concat "\\[^?]?"
-                  "\\(" class-harmless-ch
-                  "\\|" class-lb "\\)*"
-                  "\\[?]"))         ; special handling for bare [ at end of re
-         (shy-lp "\\\\(\\?:"))
+	 (esc-pair-not-lp "\\\\[^(]")
+	 (class-harmless-ch "[^][]")
+	 (class-lb-harmless "[^]:]")
+	 (class-lb-colon-maybe-charclass ":\\([a-z]+:]\\)?")
+	 (class-lb (concat "\\[\\(" class-lb-harmless
+			   "\\|" class-lb-colon-maybe-charclass "\\)"))
+	 (class
+	  (concat "\\[^?]?"
+		  "\\(" class-harmless-ch
+		  "\\|" class-lb "\\)*"
+		  "\\[?]"))         ; special handling for bare [ at end of re
+	 (shy-lp "\\\\(\\?:"))
     (concat "\\(" harmless-ch "\\|" esc-pair-not-lp
-            "\\|" class "\\|" shy-lp "\\)*"))
+	    "\\|" class "\\|" shy-lp "\\)*"))
   "Matches any part of a regular expression EXCEPT for non-shy \"\\\\(\"s")
 
 ;;;###autoload
@@ -141,11 +141,11 @@ in REGEXP."
     ;; Count the number of open parentheses in REGEXP.
     (let ((count 0) start)
       (while
-          (progn
-            (string-match regexp-opt-not-groupie*-re regexp start)
-            (setq start ( + (match-end 0) 2))  ; +2 for "\\(" after match-end.
-            (<= start (length regexp)))
-        (setq count (1+ count)))
+	  (progn
+	    (string-match regexp-opt-not-groupie*-re regexp start)
+	    (setq start ( + (match-end 0) 2))  ; +2 for "\\(" after match-end.
+	    (<= start (length regexp)))
+	(setq count (1+ count)))
       count)))
 
 ;;; Workhorse functions.

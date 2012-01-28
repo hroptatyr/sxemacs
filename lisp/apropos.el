@@ -56,7 +56,7 @@
 ;; Reading DOC file doesn't load nroff.
 ;; Added hypertext following of documentation, mouse-2 on variable gives value
 ;;   from buffer in active window.
-;; Added apropos-rewrite-regexp from FSF apropos. 
+;; Added apropos-rewrite-regexp from FSF apropos.
 ;;; Code:
 
 ;; I see a degradation of maybe 10-20% only.
@@ -334,7 +334,7 @@ With optional prefix ARG or if `apropos-do-all' is non-nil, also looks
 at the function and at the names and values of properties.
 Returns list of symbols and values found."
   (interactive "sApropos value (regexp): \nP")
-  (setq apropos-regexp (apropos-rewrite-regexp apropos-regexp))  
+  (setq apropos-regexp (apropos-rewrite-regexp apropos-regexp))
   (or do-all (setq do-all apropos-do-all))
   (setq apropos-accumulator ())
    (let (f v p)

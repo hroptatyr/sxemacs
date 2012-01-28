@@ -230,7 +230,7 @@ Output via `process-send-string' and input via buffer or filter (see
 `set-process-filter') are stream-oriented.  That means UDP datagrams are
 not guaranteed to be sent and received in discrete packets. (But small
 datagrams around 500 bytes that are not truncated by `process-send-string'
-are usually fine.)  Note further that UDP protocol does not guard against 
+are usually fine.)  Note further that UDP protocol does not guard against
 lost packets."
   (let (cs-r cs-w)
     (let (ret)

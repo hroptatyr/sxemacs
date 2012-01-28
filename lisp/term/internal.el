@@ -45,7 +45,7 @@
 ;; country code.
 (let* ((i 128)
       (modify (function
-	       (lambda (ch sy) 
+	       (lambda (ch sy)
 		 (modify-syntax-entry ch sy text-mode-syntax-table)
 		 (if-boundp 'tex-mode-syntax-table
 		     (modify-syntax-entry ch sy tex-mode-syntax-table))

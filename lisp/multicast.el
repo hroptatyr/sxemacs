@@ -59,8 +59,8 @@ ADDRESS specifies a standard multicast address \"dest/port/ttl\":
  ttl is the time-to-live (15 for site, 63 for region and 127 for world).
 
 WARNING: it is *strongly* recommended to avoid using groups beginning with
-         224 or 239. Such groups are considered 'admin' groups, and may
-         behave in a surprising way ..."
+	 224 or 239. Such groups are considered 'admin' groups, and may
+	 behave in a surprising way ..."
   (let (dest port ttl)
     ;; We check only the general form of the multicast address.
     ;; The rest will be handled by the internal function.

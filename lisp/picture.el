@@ -30,7 +30,7 @@
 
 ;;; Commentary:
 
-;; This code provides the picture-mode commands documented in the Emacs 
+;; This code provides the picture-mode commands documented in the Emacs
 ;; manual.  The screen is treated as a semi-infinite quarter-plane with
 ;; support for rectangle operations and `etch-a-sketch' character
 ;; insertion in any of eight directions.
@@ -425,10 +425,10 @@ prefix argument, the rectangle is actually killed, shifting remaining text."
   (let ((column (current-column))
 	(indent-tabs-mode nil))
     (prog1 (save-excursion
-             (if killp
-                 (delete-extract-rectangle start end)
-               (prog1 (extract-rectangle start end)
-                      (clear-rectangle start end))))
+	     (if killp
+		 (delete-extract-rectangle start end)
+	       (prog1 (extract-rectangle start end)
+		      (clear-rectangle start end))))
 	   (move-to-column-force column)
 	   ;; XEmacs addition:
 	   (setq zmacs-region-stays nil))))

@@ -164,28 +164,28 @@ Options are passed as keyword-value-pairs. Supported keywords are:
 :fstream ffi-fo - a file descriptor to which output is redirected."
   (while options
     (let ((option (car options))
-          (value (cadr options))
-          error)
+	  (value (cadr options))
+	  error)
       ;; Handle special cases in options
       (case option
-        ((:url :post-fields)
-         (unless (stringp value)
-           (error 'invalid-argument
-                  "curl:easy-setopt invalid option value(must be string)"
-                  option value))
-         (setq value (ffi-create-fo 'c-string value))
-         ;; Keep reference to value until context is destroyed
-         (push value (get ctx 'saved-values)))
+	((:url :post-fields)
+	 (unless (stringp value)
+	   (error 'invalid-argument
+		  "curl:easy-setopt invalid option value(must be string)"
+		  option value))
+	 (setq value (ffi-create-fo 'c-string value))
+	 ;; Keep reference to value until context is destroyed
+	 (push value (get ctx 'saved-values)))
 
-        ((:read-function :write-function)
-         (setq value (ffi-callback-fo value)))
+	((:read-function :write-function)
+	 (setq value (ffi-callback-fo value)))
 
-        ((:nobody :header :post :nosignal)
-         (setq value (ffi-create-fo 'int (if value 1 0)))))
+	((:nobody :header :post :nosignal)
+	 (setq value (ffi-create-fo 'int (if value 1 0)))))
 
       (setq error (curl:curl_easy_setopt ctx option value))
       (unless (zerop error)
-        (error 'invalid-operation "curl:easy-setopt error" error))
+	(error 'invalid-operation "curl:easy-setopt error" error))
 
       (setq options (cddr options)))))
 
@@ -196,7 +196,7 @@ context, see `curl:easy-setopt'."
   (let ((err (curl:curl_easy_perform ctx)))
     (unless (zerop err)
       (error 'invalid-operation "curl:easy-perform error"
-             (cdr (assq err curl:errors-alist))))
+	     (cdr (assq err curl:errors-alist))))
     err))
 
 (defun curl:easy-perform& (ctx sentinel fs)
@@ -208,7 +208,7 @@ object with key 'ctx to keep it accessible."
   (if (featurep 'workers)
       (let* ((job (ffi-call-function&
 		   (get 'curl:curl_easy_perform 'ffi-fun)
-                   ctx sentinel fs ctx)))
+		   ctx sentinel fs ctx)))
 	;; add ctx to plist of job
 	(put job 'ctx ctx)
 	job)
@@ -222,13 +222,13 @@ object with key 'ctx to keep it accessible."
 (defun curl:easy-getinfo (ctx what)
   "Get info from the context CTX about WHAT."
   (let* ((ival (cdr (assq what (ffi-enum-values 'curl-info))))
-         (itype (if (not (numberp ival))
-                    (error "Unsupported info" what)
-                  (ecase (lsh (logand #xf00000 ival) -20)
-                    (1 'c-string) (2 'long) (3 'double))))
-         (retfo (make-ffi-object itype)))
+	 (itype (if (not (numberp ival))
+		    (error "Unsupported info" what)
+		  (ecase (lsh (logand #xf00000 ival) -20)
+		    (1 'c-string) (2 'long) (3 'double))))
+	 (retfo (make-ffi-object itype)))
     (unless (zerop (curl:curl_easy_getinfo
-                    ctx what (ffi-address-of retfo)))
+		    ctx what (ffi-address-of retfo)))
       (error 'invalid-operation "curl:easy-getinfo error"))
     (ffi-get retfo)))
 
@@ -239,10 +239,10 @@ object with key 'ctx to keep it accessible."
   ((ptr pointer) (size int) (nmemb int) (stream pointer))
   "Writer to STREAM buffer."
   (let ((buf (ffi-pointer-to-lisp-object stream))
-        (rsz (* size nmemb)))
+	(rsz (* size nmemb)))
     (when (and (positivep rsz) (buffer-live-p buf))
       (with-current-buffer buf
-        (insert (ffi-get ptr :type (cons 'c-data rsz)))))
+	(insert (ffi-get ptr :type (cons 'c-data rsz)))))
     rsz))
 
 ;;;###autoload
@@ -265,24 +265,24 @@ works with HTTP URLs."
   (when current-prefix-arg
     ;; In case of C-u
     (and (y-or-n-p (format "Only download %s's HTTP header? "
-                           (file-basename file-or-buffer)))
-         (setq options (list :header t :nobody t))))
+			   (file-basename file-or-buffer)))
+	 (setq options (list :header t :nobody t))))
 
   (let* ((ctx (curl:easy-init))
-         (bufferp (bufferp file-or-buffer))
-         (fs (if bufferp
-                 (ffi-lisp-object-to-pointer file-or-buffer)
-               (c:fopen (expand-file-name file-or-buffer) "w"))))
+	 (bufferp (bufferp file-or-buffer))
+	 (fs (if bufferp
+		 (ffi-lisp-object-to-pointer file-or-buffer)
+	       (c:fopen (expand-file-name file-or-buffer) "w"))))
     (unwind-protect
-        (progn
-          (when bufferp
-            (curl:easy-setopt ctx :write-function 'curl:cb-write-to-buffer))
+	(progn
+	  (when bufferp
+	    (curl:easy-setopt ctx :write-function 'curl:cb-write-to-buffer))
 
-          ;; Avoid signalling!
-          (curl:easy-setopt ctx :nosignal t)
+	  ;; Avoid signalling!
+	  (curl:easy-setopt ctx :nosignal t)
 
-          (apply #'curl:easy-setopt ctx :fstream fs :url url options)
-          (curl:easy-perform ctx))
+	  (apply #'curl:easy-setopt ctx :fstream fs :url url options)
+	  (curl:easy-perform ctx))
       (unless bufferp (c:fclose fs))
       (curl:easy-cleanup ctx))))
 
@@ -308,31 +308,31 @@ is run.  Functions in there will be called with an argument JOB."
 					   (temp-directory)))))
   (when current-prefix-arg
     (and (y-or-n-p (format "Only download %s's HTTP header? "
-                           (file-basename file-or-buffer)))
-         (setq options (list :header t :nobody t))))
+			   (file-basename file-or-buffer)))
+	 (setq options (list :header t :nobody t))))
 
   (if (featurep 'workers)
       (let* ((ctx (curl:easy-init))
-             (bufferp (bufferp file-or-buffer))
-             (fs (if bufferp
-                     (ffi-lisp-object-to-pointer file-or-buffer)
-                   (c:fopen (expand-file-name file-or-buffer) "w"))))
-        (condition-case cerr
-            (progn
-              (when bufferp
-                (curl:easy-setopt ctx :write-function 'curl:cb-write-to-buffer))
+	     (bufferp (bufferp file-or-buffer))
+	     (fs (if bufferp
+		     (ffi-lisp-object-to-pointer file-or-buffer)
+		   (c:fopen (expand-file-name file-or-buffer) "w"))))
+	(condition-case cerr
+	    (progn
+	      (when bufferp
+		(curl:easy-setopt ctx :write-function 'curl:cb-write-to-buffer))
 
-              ;; Avoid signalling!
-              (curl:easy-setopt ctx :nosignal t)
+	      ;; Avoid signalling!
+	      (curl:easy-setopt ctx :nosignal t)
 
-              (apply #'curl:easy-setopt ctx :fstream fs :url url options)
-              (curl:easy-perform& ctx #'curl:easy-perform-sentinel
-                                  (cons bufferp fs)))
+	      (apply #'curl:easy-setopt ctx :fstream fs :url url options)
+	      (curl:easy-perform& ctx #'curl:easy-perform-sentinel
+				  (cons bufferp fs)))
 
-          ;; Close FS, cleanup CTX and resignal error
-          (t (unless bufferp (c:fclose fs))
-             (curl:easy-cleanup ctx)
-             (signal (car cerr) (cdr cerr)))))
+	  ;; Close FS, cleanup CTX and resignal error
+	  (t (unless bufferp (c:fclose fs))
+	     (curl:easy-cleanup ctx)
+	     (signal (car cerr) (cdr cerr)))))
     (error 'unimplemented "Asynchronous Event Queues")))
 
 ;;;###autoload

@@ -181,7 +181,7 @@ be affected."
 	  (list fun args
 		(nconc
 		 (list 'list
-		       (list 'quote 
+		       (list 'quote
 			     (intern (concat (symbol-name group) "-"
 					     (symbol-name fun)))))
 		 args))

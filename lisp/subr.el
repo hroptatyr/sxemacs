@@ -408,7 +408,7 @@ is a single function, it is changed to a list of functions.
 You can remove this hook yourself using `remove-hook-list'.
 
 See also `add-hook`, `remove-hook` and `add-one-shot-hook'."
-  (mapc (lambda (hook) 
+  (mapc (lambda (hook)
 	  (add-hook hook function append local))
 	hook-list))
 
@@ -424,7 +424,7 @@ the hook's buffer-local value rather than its default value.
 This makes the hook buffer-local if needed.
 To make a hook variable buffer-local, always use
 `make-local-hook', not `make-local-variable'."
-  (mapc (lambda (hook) 
+  (mapc (lambda (hook)
 	  (remove-hook hook function local))
 	hook-list))
 
@@ -444,9 +444,9 @@ other hooks, such as major mode hooks, can do the job."
   (if (member element (symbol-value list-var))
       (symbol-value list-var)
     (set list-var
-         (if append
-             (append (symbol-value list-var) (list element))
-           (cons element (symbol-value list-var))))))
+	 (if append
+	     (append (symbol-value list-var) (list element))
+	   (cons element (symbol-value list-var))))))
 
 ;; END SYNCHED WITH FSF 21.2
 
@@ -556,7 +556,7 @@ See also `with-temp-buffer'."
 	       (with-current-buffer ,temp-buffer
 		 ,@forms)
 	     (with-current-buffer ,temp-buffer
-               (widen)
+	       (widen)
 	       (write-region (point-min) (point-max) ,temp-file nil 0)))
 	 (and (buffer-name ,temp-buffer)
 	      (kill-buffer ,temp-buffer))))))
@@ -635,7 +635,7 @@ See also `with-temp-file' and `with-output-to-string'."
 ;   (declare (indent 0) (debug t))
 ;   `(unwind-protect
 ;        (let ((combine-after-change-calls t))
-; 	 . ,body)
+;	 . ,body)
 ;      (combine-after-change-execute)))
 
 
@@ -716,8 +716,8 @@ Zero means the entire text matched by the whole regexp or whole string.
 STRING should be given if the last search was by `string-match' on STRING."
   (if (match-beginning num)
       (if string
-          (substring string (match-beginning num) (match-end num))
-        (buffer-substring (match-beginning num) (match-end num)))))
+	  (substring string (match-beginning num) (match-end num))
+	(buffer-substring (match-beginning num) (match-end num)))))
 
 (defun match-string-no-properties (num &optional string)
   "Return string of text matched by last search, without text properties.
@@ -1267,11 +1267,11 @@ error
       invalid-read-syntax
       invalid-regexp
       structure-formation-error
-        list-formation-error
-          malformed-list
-            malformed-property-list
-          circular-list
-            circular-property-list
+	list-formation-error
+	  malformed-list
+	    malformed-property-list
+	  circular-list
+	    circular-property-list
     invalid-function
     no-catch
     undefined-keystroke-sequence
@@ -1301,20 +1301,20 @@ error
       buffer-read-only
     io-error
       file-error
-        file-already-exists
-        file-locked
-        file-supersession
-        end-of-file
+	file-already-exists
+	file-locked
+	file-supersession
+	end-of-file
       process-error
       network-error
       gui-error
-        dialog-box-error
+	dialog-box-error
       sound-error
       conversion-error
-        text-conversion-error
-        image-conversion-error
-        base64-conversion-error
-        selection-conversion-error
+	text-conversion-error
+	image-conversion-error
+	base64-conversion-error
+	selection-conversion-error
     arith-error
       range-error
       domain-error
@@ -1593,10 +1593,10 @@ properties to add to the result."
     (progn
       (setq abbrev-table-name-list '())
       (fset 'define-abbrev-table (function (lambda (name defs)
-                                   ;; These are fixed-up when abbrev.el loads.
-                                   (setq abbrev-table-name-list
-                                         (cons (cons name defs)
-                                               abbrev-table-name-list)))))))
+				   ;; These are fixed-up when abbrev.el loads.
+				   (setq abbrev-table-name-list
+					 (cons (cons name defs)
+					       abbrev-table-name-list)))))))
 
 ;;; `functionp' has been moved into C.
 
@@ -1755,7 +1755,7 @@ one is kept."
 
 ;; define-mail-user-agent is in simple.el.
 
-;; XEmacs; added. 
+;; XEmacs; added.
 (defun skip-chars-quote (string)
   "Return a string that means all characters in STRING will be skipped,
 if passed to `skip-chars-forward' or `skip-chars-backward'.

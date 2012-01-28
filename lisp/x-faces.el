@@ -73,9 +73,9 @@
 
 ;;; Regexps matching font names in "Host Portable Character Representation."
 ;;;
-(let ((- 		"[-?]")
+(let ((-		"[-?]")
       (foundry		"[^-]*")
-      (family 		"[^-]*")
+      (family		"[^-]*")
       (weight		#r"\(bold\|demibold\|medium\|black\)")	; 1
 ;     (weight\?		"\\(\\*\\|bold\\|demibold\\|medium\\|\\)")	; 1
       (weight\?		#r"\([^-]*\)")					; 1

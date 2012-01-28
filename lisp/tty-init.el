@@ -371,13 +371,13 @@
 (defvar tty-win-initted nil)
 
 (defun tty-color-list (&optional registered-only)
-  "Returns the list of colors the tty can handle. Since the tty will do color 
+  "Returns the list of colors the tty can handle. Since the tty will do color
 approximation, it will return all colors.
-When argument REGISTERED-ONLY is t `tty-color-list' will return only the 
+When argument REGISTERED-ONLY is t `tty-color-list' will return only the
 registered colors of the terminal."
   (if registered-only
       (tty-registered-color-list)
-    (nconc (tty-registered-color-list) 
+    (nconc (tty-registered-color-list)
 	   (x-color-list))))
 
 (defun init-tty-win ()

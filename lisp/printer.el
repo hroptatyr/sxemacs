@@ -226,7 +226,7 @@ Changes made are recorded internally."
 	 (props
 	  (condition-case err
 	      (make-dialog-box 'page-setup :device d
-			       :properties (declare-boundp 
+			       :properties (declare-boundp
 					    default-msprinter-frame-plist))
 	    (error
 	     (Printer-clear-device)
@@ -297,16 +297,16 @@ of how the buffer should be printed.
 
 PROPS, if given, is typically the plist returned from the call to
 `make-dialog-box' that displayed the Print box.  It contains properties
-relevant to us when we print.  
+relevant to us when we print.
 
 Recognized properties are the same as those in `make-dialog-box':
 
   name       Printer device name.  If omitted, the current system-selected
-             printer will be used.
+	     printer will be used.
   from-page  First page to print, 1-based. If omitted, printing starts from
-             the beginning.
+	     the beginning.
   to-page    Last page to print, inclusive, If omitted, printing ends at
-             the end.
+	     the end.
   copies     Number of copies to print.  If omitted, one copy is printed."
   (cond ((valid-specifier-tag-p 'msprinter)
 	 ;; loop, printing one copy of document per loop.  kill and

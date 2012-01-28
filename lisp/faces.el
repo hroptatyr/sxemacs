@@ -291,51 +291,51 @@ If PROPERTY is not a built-in property, then this function will
 The following symbols have predefined meanings:
 
  foreground         The foreground color of the face.
-                    For valid instantiators, see `make-color-specifier'.
+		    For valid instantiators, see `make-color-specifier'.
 
  background         The background color of the face.
-                    For valid instantiators, see `make-color-specifier'.
+		    For valid instantiators, see `make-color-specifier'.
 
  font               The font used to display text covered by this face.
-                    For valid instantiators, see `make-font-specifier'.
+		    For valid instantiators, see `make-font-specifier'.
 
  display-table      The display table of the face.
-                    This should be a vector of 256 elements.
+		    This should be a vector of 256 elements.
 
  background-pixmap  The pixmap displayed in the background of the face.
-                    Only used by faces on X and MS Windows devices.
-                    For valid instantiators, see `make-image-specifier'.
+		    Only used by faces on X and MS Windows devices.
+		    For valid instantiators, see `make-image-specifier'.
 
  underline          Underline all text covered by this face.
-                    For valid instantiators, see `make-face-boolean-specifier'.
+		    For valid instantiators, see `make-face-boolean-specifier'.
 
  strikethru         Draw a line through all text covered by this face.
-                    For valid instantiators, see `make-face-boolean-specifier'.
+		    For valid instantiators, see `make-face-boolean-specifier'.
 
  highlight          Highlight all text covered by this face.
-                    Only used by faces on TTY devices.
-                    For valid instantiators, see `make-face-boolean-specifier'.
+		    Only used by faces on TTY devices.
+		    For valid instantiators, see `make-face-boolean-specifier'.
 
  dim                Dim all text covered by this face.
-                    For valid instantiators, see `make-face-boolean-specifier'.
+		    For valid instantiators, see `make-face-boolean-specifier'.
 
  blinking           Blink all text covered by this face.
-                    Only used by faces on TTY devices.
-                    For valid instantiators, see `make-face-boolean-specifier'.
+		    Only used by faces on TTY devices.
+		    For valid instantiators, see `make-face-boolean-specifier'.
 
  reverse            Reverse the foreground and background colors.
-                    Only used by faces on TTY devices.
-                    For valid instantiators, see `make-face-boolean-specifier'.
+		    Only used by faces on TTY devices.
+		    For valid instantiators, see `make-face-boolean-specifier'.
 
  inherit	    Face name or face object from which to inherit attributes,
-                    or a list of such elements.  Attributes from inherited
-                    faces are merged into the face like an underlying face
-                    would be, with higher priority than underlying faces.
+		    or a list of such elements.  Attributes from inherited
+		    faces are merged into the face like an underlying face
+		    would be, with higher priority than underlying faces.
 
  doc-string         Description of what the face's normal use is.
-                    NOTE: This is not a specifier, unlike all
-                    the other built-in properties, and cannot
-                    contain locale-specific values."
+		    NOTE: This is not a specifier, unlike all
+		    the other built-in properties, and cannot
+		    contain locale-specific values."
 
   (setq face (get-face face))
   (if (memq property built-in-face-specifiers)
@@ -764,8 +764,8 @@ See `face-property-instance' for the semantics of the DOMAIN argument."
     (and (face-equal-loop common-props face1 face2 domain)
 	 (cond ((eq 'tty (device-type device))
 		(face-equal-loop tty-props face1 face2 domain))
- 	       ;; #### Why isn't this (console-on-window-system-p (device-console device))?
- 	       ;; #### FIXME!
+	       ;; #### Why isn't this (console-on-window-system-p (device-console device))?
+	       ;; #### FIXME!
 	       ((eq 'x (device-type device))
 		(face-equal-loop win-props face1 face2 domain))
 	       (t t)))))
@@ -852,7 +852,7 @@ the function to be called on it."
 	  (when (not (specifier-specs temp-sp 'global))
 	    ;; Try fallback via the official ways and then do it "by hand"
 	    (let* ((fallback (specifier-fallback sp))
-		   (fallback-sp 
+		   (fallback-sp
 		    (cond ((specifierp fallback) fallback)
 			  ;; just an inst list
 			  (fallback
@@ -917,8 +917,8 @@ the function to be called on it."
 	      (if (not first-valid)
 		  (setq first-valid inst-pair))
 	      (setq result (funcall func sp-inst device))
-              (if result
-                  (setq result (cons tag-set result))))))
+	      (if result
+		  (setq result (cons tag-set result))))))
       (setq inst-list (cdr inst-list)))
     (or result first-valid)))
 
@@ -1164,7 +1164,7 @@ specifics on exactly how this function works."
 
 ;; Size frobbing
 ;; Thx Jan Vroonhof, Ref xemacs-beta <87oflypbum.fsf@petteflet.ntlworld.com>
-;; Jan had a separate helper function 
+;; Jan had a separate helper function
 (defun make-face-size (face size &optional locale tags)
   "Adjust FACE to SIZE in LOCALE, if possible.
 
@@ -1681,7 +1681,7 @@ This is an Emacs compatibility function; consider using
 set-face-background-pixmap instead.
 
 PIXMAP should be a string, the name of a file of pixmap data.
-The directories listed in the variable `x-bitmap-file-path' 
+The directories listed in the variable `x-bitmap-file-path'
 under X is searched.
 
 Alternatively, PIXMAP may be a list of the form (WIDTH HEIGHT

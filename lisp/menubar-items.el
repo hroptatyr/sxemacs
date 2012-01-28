@@ -58,9 +58,9 @@ Return a list of (label value) lists with labels truncated to last
 LABEL-LENGTH characters of value."
   (mapcar #'(lambda (x)
 	      (if (<= (length x) label-length)
-                  (list x x)
-                (list
-                 (concat "..." (substring x (- label-length))) x)))
+		  (list x x)
+		(list
+		 (concat "..." (substring x (- label-length))) x)))
 	  (if (<= (length list) count)
 	      list
 	    (butlast list (- (length list) count)))))
@@ -531,11 +531,11 @@ See also `menu-split-long-menu'."
 	     menu
 	   (let ((items
 		  (submenu-generate-accelerator-spec
-                   (mapcar #'(lambda (label-value)
+		   (mapcar #'(lambda (label-value)
 			       (vector (first label-value)
 				       (list 'grep (second label-value))))
 			   (Menubar-items-truncate-history
-                            grep-history 10 50)))))
+			    grep-history 10 50)))))
 	     (append menu '("---") items))))
        ["%_Grep..." grep :active (fboundp 'grep)]
        ["%_Kill Grep" kill-compilation
@@ -644,7 +644,7 @@ See also `menu-split-long-menu'."
 			       (vector (first label-value)
 				       (list 'compile (second label-value))))
 			   (Menubar-items-truncate-history
-                            compile-history 10 50)))))
+			    compile-history 10 50)))))
 	     (append menu '("---") items))))
        ["%_Compile..." compile :active (fboundp 'compile)]
        ["%_Repeat Compilation" recompile :active (fboundp 'recompile)]
@@ -987,12 +987,12 @@ See also `menu-split-long-menu'."
 	 :active (and (boundp 'browse-url-browser-function)
 		      (fboundp 'browse-url-w3)
 		      (fboundp 'w3-fetch))]
-        ["Emacs-%_W3 (gnuclient)"
-         (customize-set-variable 'browse-url-browser-function 'browse-url-w3-gnudoit)
-         :style radio
-         :selected (and (boundp 'browse-url-browser-function)
-                        (eq browse-url-browser-function
-                            'browse-url-w3-gnudoit))
+	["Emacs-%_W3 (gnuclient)"
+	 (customize-set-variable 'browse-url-browser-function 'browse-url-w3-gnudoit)
+	 :style radio
+	 :selected (and (boundp 'browse-url-browser-function)
+			(eq browse-url-browser-function
+			    'browse-url-w3-gnudoit))
 	 :active (and (boundp 'browse-url-browser-function)
 		      (fboundp 'browse-url-w3-gnudoit))]
 	["%_Netscape"

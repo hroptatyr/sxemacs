@@ -159,7 +159,7 @@ even if it is inactive."
   "Make all visible windows the same height (approximately)."
   (interactive)
   (let ((count -1) levels newsizes size)
-        ;FSFmacs
+	;FSFmacs
 	;;; Don't count the lines that are above the uppermost windows.
 	;;; (These are the menu bar lines, if any.)
 	;(mbl (nth 1 (window-edges (frame-first-window (selected-frame))))))
@@ -168,8 +168,8 @@ even if it is inactive."
     (save-window-excursion
       (let (tops (prev-top -2))
 	(walk-windows (function (lambda (w)
-                        (setq tops (cons (nth 1 (window-pixel-edges w))
-                                         tops))))
+			(setq tops (cons (nth 1 (window-pixel-edges w))
+					 tops))))
 		      'nomini)
 	(setq tops (sort tops '<))
 	(while tops
@@ -184,17 +184,17 @@ even if it is inactive."
     (setq size (/ (window-pixel-height (frame-root-window)) count))
     (walk-windows (function
 		   (lambda (w)
-                    (select-window w)
-                    (let ((newtop (cdr (assq (nth 1 (window-pixel-edges))
-                                             levels)))
-                          (newbot (or (cdr (assq
+		    (select-window w)
+		    (let ((newtop (cdr (assq (nth 1 (window-pixel-edges))
+					     levels)))
+			  (newbot (or (cdr (assq
 					    (+ (window-pixel-height)
 					       (nth 1 (window-pixel-edges)))
 					    levels))
-                                      count)))
-                      (setq newsizes
-                            (cons (cons w (* size (- newbot newtop)))
-                                  newsizes)))))
+				      count)))
+		      (setq newsizes
+			    (cons (cons w (* size (- newbot newtop)))
+				  newsizes)))))
 		  'nomini)
     (walk-windows (function (lambda (w)
 			      (select-window w)
@@ -202,7 +202,7 @@ even if it is inactive."
 				(enlarge-window
 				 (/ (- newsize (window-pixel-height))
 				    (face-height 'default))))))
-                  'nomini)))
+		  'nomini)))
 
 ;;; I think this should be the default; I think people will prefer it--rms.
 (defcustom split-window-keep-point t
@@ -363,8 +363,8 @@ If `window-system', search all devices on window-system consoles.
 Any other non-nil value means search all devices."
   (let ((wins nil))
     (walk-windows (lambda (win)
-                    (push win wins))
-                  minibuf which-frames which-devices)
+		    (push win wins))
+		  minibuf which-frames which-devices)
     wins))
 
 ;;; window.el ends here

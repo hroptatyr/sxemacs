@@ -137,7 +137,7 @@
 
 (defun safe-idiv (a b)
   (let* ((q (/ (abs a) (abs b)))
-         (s (* (signum a) (signum b))))
+	 (s (* (signum a) (signum b))))
     (Values q (- a (* s q b)) s)))
 
 
@@ -191,4 +191,3 @@
 (provide 'cl-compat)
 
 ;;; cl-compat.el ends here
-

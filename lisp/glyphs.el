@@ -1056,34 +1056,34 @@ If unspecified in a particular domain, `nontext-pointer-glyph' is used.")
   ;; finish initializing sxemacs logo -- created internally because it
   ;; has a built-in bitmap
   (let ((temp-etcdir
-         (if (getenv "SOURCE_TREE_ROOT")
-             (expand-file-name "etc/" (getenv "SOURCE_TREE_ROOT"))
-           (expand-file-name "etc/" ".."))))
+	 (if (getenv "SOURCE_TREE_ROOT")
+	     (expand-file-name "etc/" (getenv "SOURCE_TREE_ROOT"))
+	   (expand-file-name "etc/" ".."))))
 
     (when debug-paths
       (princ (format "tempetc: %s\n" temp-etcdir)
-             'external-debugging-output))
+	     'external-debugging-output))
 
     (if (featurep 'xpm)
-        (set-glyph-image sxemacs-logo
-                         (expand-file-name
-                          (if emacs-beta-version
-                              "sxemacs-beta.xpm"
-                            "sxemacs.xpm") temp-etcdir)
-                         'global 'x))
+	(set-glyph-image sxemacs-logo
+			 (expand-file-name
+			  (if emacs-beta-version
+			      "sxemacs-beta.xpm"
+			    "sxemacs.xpm") temp-etcdir)
+			 'global 'x))
     (cond ((featurep 'xpm)
-           (set-glyph-image frame-icon-glyph
-                            (expand-file-name "sxemacs-icon.xpm" temp-etcdir)
-                            'global 'x))
-          ((featurep 'x)
-           (set-glyph-image frame-icon-glyph
-                            (expand-file-name "xemacs-icon2.xbm" temp-etcdir)
-                            'global 'x)))
+	   (set-glyph-image frame-icon-glyph
+			    (expand-file-name "sxemacs-icon.xpm" temp-etcdir)
+			    'global 'x))
+	  ((featurep 'x)
+	   (set-glyph-image frame-icon-glyph
+			    (expand-file-name "xemacs-icon2.xbm" temp-etcdir)
+			    'global 'x)))
 
     (if (featurep 'tty)
-        (set-glyph-image sxemacs-logo
-                         "SXEmacs <insert spiffy graphic logo here>"
-                         'global 'tty))))
+	(set-glyph-image sxemacs-logo
+			 "SXEmacs <insert spiffy graphic logo here>"
+			 'global 'tty))))
 
 (init-glyphs)
 

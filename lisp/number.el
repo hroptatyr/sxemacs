@@ -26,7 +26,7 @@
 ;;; Comments:
 ;; This file provides some additional functionality not worth
 ;; implementing in C.
-;; 
+;;
 ;; Note to myself: number.el is a stupid name :(
 
 
@@ -134,7 +134,7 @@ This is a convenience function analogous to `float'."
 (defun canonical-valuation (number)
   "Return the canonical valuation of NUMBER."
   (cond ((archimedeanp number)
-         (abs number))))
+	 (abs number))))
 
 
 (provide 'number)

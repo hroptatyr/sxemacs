@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 1992-4, 1997 Free Software Foundation, Inc.
 ;; Copyright (C) 1996, 2000 Ben Wing.
- 
+
 ;; Maintainer: SXEmacs Development Team
 ;; Keywords: extensions, dumped
 
@@ -98,7 +98,7 @@
   (add-local-hook 'pre-command-hook 'list-mode-extent-pre-hook)
   (set (make-local-variable 'next-line-add-newlines) nil)
   (setq list-mode-extent nil)
-;; It is visually disconcerting to have the text cursor disappear within list 
+;; It is visually disconcerting to have the text cursor disappear within list
 ;; buffers, especially when moving from window to window, so leave it
 ;; visible.  -- Bob Weiner, 06/20/1999
 ; (set-specifier text-cursor-visible-p nil (current-buffer))
@@ -334,7 +334,7 @@ If `completion-highlight-first-word-only' is non-nil, then only the start
 		       ;; be the selected-frame at the point this is
 		       ;; run.  We keep the selected-frame call around
 		       ;; just in case.
-               (window-width (get-lru-window (last-nonminibuf-frame)))
+	       (window-width (get-lru-window (last-nonminibuf-frame)))
 		     80))))
 	  (let ((count 0)
 		(max-width 0)
@@ -357,7 +357,7 @@ If `completion-highlight-first-word-only' is non-nil, then only the start
 		      (setq max-width len))
 		  (setq count (1+ count)
 			tail (cdr tail)))))
-        
+
 	    (setq max-width (+ 2 max-width)) ; at least two chars between cols
 	    (setq old-max-width max-width)
 	    (let ((rows (let ((cols (min (/ win-width max-width) count)))
@@ -368,7 +368,7 @@ If `completion-highlight-first-word-only' is non-nil, then only the start
 			      (setq max-width (/ win-width cols))
 			      (if (/= (% count cols) 0) ; want ceiling...
 				  (1+ (/ count cols))
-                                (/ count cols)))))))
+				(/ count cols)))))))
 	      (when
 		  (and cl-window-height
 		       (> rows cl-window-height))
@@ -395,9 +395,9 @@ If `completion-highlight-first-word-only' is non-nil, then only the start
 			(if (/= indent 0)
 			    (if bufferp
 				(indent-to indent 2)
-                              (while (progn (write-char ?\ )
-                                            (setq column (1+ column))
-                                            (< column indent)))))
+			      (while (progn (write-char ?\ )
+					    (setq column (1+ column))
+					    (< column indent)))))
 			(setq indent (+ indent max-width))
 			(let ((start (point))
 			      end)
@@ -480,18 +480,18 @@ buffer."
   (interactive)
   (message "Making completion list...")
   (let ((completions (all-completions (buffer-string)
-                                      minibuffer-completion-table
-                                      minibuffer-completion-predicate)))
+				      minibuffer-completion-table
+				      minibuffer-completion-predicate)))
     (message nil)
     (if (null completions)
-        (progn
-          (ding nil 'no-completion)
-          (temp-minibuffer-message " [No completions]"))
-        (with-output-to-temp-buffer "*Completions*"
+	(progn
+	  (ding nil 'no-completion)
+	  (temp-minibuffer-message " [No completions]"))
+	(with-output-to-temp-buffer "*Completions*"
 	  (funcall completion-display-completion-list-function
 		   (sort completions #'string-lessp))))))
 
-(define-derived-mode completion-list-mode list-mode 
+(define-derived-mode completion-list-mode list-mode
   "Completion List"
   "Major mode for buffers showing lists of possible completions.
 \\{completion-list-mode-map}"

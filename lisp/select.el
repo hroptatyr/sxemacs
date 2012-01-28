@@ -387,8 +387,8 @@ suitable internal representation otherwise."
   (when value
     (let ((handler-fn (cdr (assq type selection-converter-in-alist))))
       (if handler-fn
-          (apply handler-fn (list selection type value))
-        value))))
+	  (apply handler-fn (list selection type value))
+	value))))
 
 (defun select-convert-out (selection type value)
   "Attempt to convert the specified internal VALUE for the specified DATA-TYPE
@@ -669,9 +669,9 @@ nil if this is impossible, or a suitable representation otherwise."
 
 (defun select-convert-from-ip-address (selection type value)
   (if (and (stringp value)
-           (= (length value) 4))
+	   (= (length value) 4))
       (format "%d.%d.%d.%d"
-              (aref value 0) (aref value 1) (aref value 2) (aref value 3))))
+	      (aref value 0) (aref value 1) (aref value 2) (aref value 3))))
 
 (defun select-convert-to-atom (selection type value)
   (and (symbolp value) value))

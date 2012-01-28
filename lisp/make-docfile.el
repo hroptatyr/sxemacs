@@ -118,7 +118,7 @@
 	(append package-preloaded-file-list
 		preloaded-file-list
 		packages-hardcoded-lisp)
-	  
+
 	processed (cons "-d" processed)
 	processed (cons source-lisp processed)
 	;; Include loadup.el, which is never in preloaded-file-list:
@@ -127,22 +127,22 @@
   (while preloaded-file-list
     (setq arg0 (packages-add-suffix (car preloaded-file-list))
 	  arg (locate-library arg0)
-          absolute arg)
+	  absolute arg)
     (if (null arg)
 	(progn
 	  (message "Error: dumped file %s does not exist" arg0)
 	  ;; Uncomment in case of difficulties
-          ;(message "late-package-hierarchies: %S"
-          ;         late-package-hierarchies)
-          ;(message "guessed-roots: %S" (paths-find-emacs-roots
-          ;                              invocation-directory
-          ;                              invocation-name
-          ;                              #'paths-emacs-root-p))
-          ;(message "guessed-data-roots: %S" (paths-find-emacs-roots
-          ;                                   invocation-directory
-          ;                                   invocation-name
-          ;                                   #'paths-emacs-data-root-p))
-          )
+	  ;(message "late-package-hierarchies: %S"
+	  ;         late-package-hierarchies)
+	  ;(message "guessed-roots: %S" (paths-find-emacs-roots
+	  ;                              invocation-directory
+	  ;                              invocation-name
+	  ;                              #'paths-emacs-root-p))
+	  ;(message "guessed-data-roots: %S" (paths-find-emacs-roots
+	  ;                                   invocation-directory
+	  ;                                   invocation-name
+	  ;                                   #'paths-emacs-data-root-p))
+	  )
       (when (equal arg (expand-file-name arg0 source-lisp))
 	;; Use relative paths where possible, since this makes file lookup
 	;; in an installed XEmacs easier:
@@ -150,7 +150,7 @@
       (if (null (member arg processed))
 	  (progn
 	    (if (and (null docfile-out-of-date)
-                     ;; We need to check the absolute path here:
+		     ;; We need to check the absolute path here:
 		     (file-newer-than-file-p absolute docfile))
 		(setq docfile-out-of-date t))
 	    (setq processed (cons arg processed)))))

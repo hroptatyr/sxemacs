@@ -1205,7 +1205,7 @@ otherwise pop it")
 		      (and (cdr sig) (> max (cdr sig))))
 		  (byte-compile-warn
 	    "%s being defined to take %s%s, but was previously called with %s"
-	            (nth 1 form)
+		    (nth 1 form)
 		    (byte-compile-arglist-signature-string sig)
 		    (if (equal sig '(1 . 1)) " arg" " args")
 		    (byte-compile-arglist-signature-string (cons min max))))
@@ -1460,8 +1460,8 @@ recompile every `.el' file that already has a `.elc' file."
 				 (y-or-n-p (concat "Compile " source "? "))))))
 		 (progn ;(if (and noninteractive (not byte-compile-verbose))
 			;    (message "Compiling %s..." source))
-		        ; we do this in byte-compile-file.
-		        (if byte-recompile-directory-ignore-errors-p
+			; we do this in byte-compile-file.
+			(if byte-recompile-directory-ignore-errors-p
 			     (batch-byte-compile-1 source)
 			  (byte-compile-file source))
 			(or noninteractive
@@ -1546,8 +1546,8 @@ With prefix arg (noninteractively: 2nd arg), load the file after compiling."
       (let ((buffer-file-name filename)
 	    (default-major-mode 'emacs-lisp-mode)
 	    (enable-local-eval nil))
-        (normal-mode)
-        (setq filename buffer-file-name)))
+	(normal-mode)
+	(setq filename buffer-file-name)))
       (setq byte-compiler-error-flag nil)
     ;; It is important that input-buffer not be current at this call,
     ;; so that the value of point set in input-buffer
@@ -1774,9 +1774,9 @@ With argument, insert value in current buffer after the form."
 	       "\t (or (and (boundp 'epoch::version) epoch::version)\n"
 	       "\t     (and (not (featurep 'xemacs))\n"
 	       "\t          (<= emacs-major-version 19)\n"
-               "\t          (< emacs-minor-version 29))\n"
+	       "\t          (< emacs-minor-version 29))\n"
 	       "\t     (and (<= emacs-major-version 20)\n"
-               "\t          (< emacs-minor-version 14))))\n"
+	       "\t          (< emacs-minor-version 14))))\n"
 	       "    (error \"`"
 	       ;; prin1-to-string is used to quote backslashes.
 	       (substring (prin1-to-string (file-name-nondirectory filename))
@@ -2166,7 +2166,7 @@ list that represents a doc string reference.
 	  ((and (fboundp name)
 		(or (subrp (symbol-function name))
 		    (eq (car-safe (symbol-function name))
-		        (if macrop 'lambda 'macro))))
+			(if macrop 'lambda 'macro))))
 	   (if (memq 'redefine byte-compile-warnings)
 	       (byte-compile-warn "%s %s being redefined as a %s"
 				  (if (subrp (symbol-function name))
@@ -2326,36 +2326,36 @@ list that represents a doc string reference.
   ;; XEmacs change; our implementation byte compiles and gives warnings
   ;; about the default value code, which GNU's doesn't.
   (let* ((quoted-default (car-safe (cdr-safe (cdr-safe form))))
-         (to-examine (car-safe (cdr-safe quoted-default))))
+	 (to-examine (car-safe (cdr-safe quoted-default))))
     (if (memq 'free-vars byte-compile-warnings)
-        (setq byte-compile-bound-variables
-              (cons (cons (nth 1 (nth 1 form))
-                          byte-compile-global-bit)
-                    byte-compile-bound-variables)))
+	(setq byte-compile-bound-variables
+	      (cons (cons (nth 1 (nth 1 form))
+			  byte-compile-global-bit)
+		    byte-compile-bound-variables)))
     ;; Byte compile anything that smells like a lambda. I initially
     ;; considered limiting it to the :initialize, :set and :get args, but
     ;; that's not amazingly forward-compatible, and anyone expecting other
-    ;; things to be stored as data, not code, is unrealistic. 
+    ;; things to be stored as data, not code, is unrealistic.
      (loop
        for entry in-ref (nthcdr 4 form)
        do (cond ((and (eq 'function (car-safe entry))
-                      (consp (car-safe (cdr-safe entry))))
-                 (setf entry (copy-sequence entry))
-                 (setcar (cdr entry) (byte-compile-lambda (car (cdr entry)))))
-                ((and (eq 'lambda (car-safe entry)))
-                 (setf entry (byte-compile-lambda entry)))))
-     ;; Byte compile the default value, as we do for defvar. 
+		      (consp (car-safe (cdr-safe entry))))
+		 (setf entry (copy-sequence entry))
+		 (setcar (cdr entry) (byte-compile-lambda (car (cdr entry)))))
+		((and (eq 'lambda (car-safe entry)))
+		 (setf entry (byte-compile-lambda entry)))))
+     ;; Byte compile the default value, as we do for defvar.
      (when (consp (cdr-safe to-examine))
        (setq form (copy-sequence form))
        (setcdr (third form)
-               (list (byte-compile-top-level to-examine nil 'file)))
+	       (list (byte-compile-top-level to-examine nil 'file)))
        ;; And save a value to be examined in the custom UI, if that differs
        ;; from the init value.
        (unless (equal to-examine (car-safe (cdr (third form))))
-         (setf (nthcdr 4 form) (nconc
-                                (list :default 
-                                      (list 'quote to-examine))
-                                (nthcdr 4 form)))))
+	 (setf (nthcdr 4 form) (nconc
+				(list :default
+				      (list 'quote to-examine))
+				(nthcdr 4 form)))))
     form))
 
 
@@ -2610,14 +2610,14 @@ If FORM is a lambda or a macro, byte-compile it as a function."
 	    (while (cond
 		    ((memq (car (car rest)) '(byte-varref byte-constant))
 		     (setq tmp (car (cdr (car rest))))
-                     (if (if (eq (car (car rest)) 'byte-constant)
-                             (or (consp tmp)
-                                 (and (symbolp tmp)
-                                      (not (byte-compile-constant-symbol-p tmp)))))
-                         (if maycall
-                             (setq body (cons (list 'quote tmp) body)))
-                       (setq body (cons tmp body))))
-                    ((and maycall
+		     (if (if (eq (car (car rest)) 'byte-constant)
+			     (or (consp tmp)
+				 (and (symbolp tmp)
+				      (not (byte-compile-constant-symbol-p tmp)))))
+			 (if maycall
+			     (setq body (cons (list 'quote tmp) body)))
+		       (setq body (cons tmp body))))
+		    ((and maycall
 			  ;; Allow a funcall if at most one atom follows it.
 			  (null (nthcdr 3 rest))
 			  (setq tmp
@@ -2852,7 +2852,7 @@ If FORM is a lambda or a macro, byte-compile it as a function."
 	(list 'quote
 	  (or (car (cdr-safe function))
 	      (intern (concat "byte-"
-		        (symbol-name (or (car-safe function) function))))))
+			(symbol-name (or (car-safe function) function))))))
 	''emacs20-opcode t)
       (list 'byte-defop-compiler function compile-handler))))
 
@@ -2950,8 +2950,8 @@ If FORM is a lambda or a macro, byte-compile it as a function."
 (byte-defop-compiler integerp		1)
 (byte-defop-compiler skip-chars-forward     1-2+1)
 (byte-defop-compiler skip-chars-backward    1-2+1)
-(byte-defop-compiler (eql byte-eq) 	2)
-(byte-defop-compiler20 old-eq 	 	2)
+(byte-defop-compiler (eql byte-eq)	2)
+(byte-defop-compiler20 old-eq		2)
 (byte-defop-compiler20 old-memq		2)
 (byte-defop-compiler cons		2)
 (byte-defop-compiler aref		2)
@@ -3791,8 +3791,8 @@ If FORM is a lambda or a macro, byte-compile it as a function."
 	  compiled-clauses)
       (while clauses
 	(let* ((clause (car clauses))
-               (condition (car clause)))
-          (cond ((not (or (symbolp condition)
+	       (condition (car clause)))
+	  (cond ((not (or (symbolp condition)
 			  (and (listp condition)
 			       (let ((syms condition) (ok t))
 				 (while syms
@@ -3800,9 +3800,9 @@ If FORM is a lambda or a macro, byte-compile it as a function."
 				       (setq ok nil))
 				   (setq syms (cdr syms)))
 				 ok))))
-                 (byte-compile-warn
-                   "%s is not a symbol naming a condition or a list of such (in condition-case)"
-                   (prin1-to-string condition)))
+		 (byte-compile-warn
+		   "%s is not a symbol naming a condition or a list of such (in condition-case)"
+		   (prin1-to-string condition)))
 ;;                ((not (or (eq condition 't)
 ;;			  (and (stringp (get condition 'error-message))
 ;;			       (consp (get condition 'error-conditions)))))
@@ -3940,15 +3940,15 @@ If FORM is a lambda or a macro, byte-compile it as a function."
 			     fun var string))
 	`(put ',var 'variable-documentation ,string))
       (if (cdr (cdr form))		; `value' provided
-          (cond ((eq fun 'defconst)
-                 ;; `defconst' sets `var' unconditionally.
-                 `(setq ,var ,value))
-                ((eq fun 'defregexp)
-                 ;; `defregexp' sets `var' unconditionally, too
-                 `(setq ,var (compile-regexp ,value)))
-                (t
-                 ;; `defvar' sets `var' only when unbound.
-                 `(if (not (default-boundp ',var)) (set-default ',var ,value)))))
+	  (cond ((eq fun 'defconst)
+		 ;; `defconst' sets `var' unconditionally.
+		 `(setq ,var ,value))
+		((eq fun 'defregexp)
+		 ;; `defregexp' sets `var' unconditionally, too
+		 `(setq ,var (compile-regexp ,value)))
+		(t
+		 ;; `defvar' sets `var' only when unbound.
+		 `(if (not (default-boundp ',var)) (set-default ',var ,value)))))
       `',var))))
 
 (defun byte-compile-autoload (form)
@@ -4269,14 +4269,14 @@ it won't work in an interactive Emacs."
       (error "`batch-byte-compile-one-file-here' is to be used only with -batch"))
   ;; we hard-redefine it, since we ought to be called in batch mode only
   (fset 'byte-compile-dest-file
-        #'(lambda (filename)
-            "Convert an Emacs Lisp source file name to a compiled file name."
-            (let ((outfile
-                   (file-name-sans-extension
-                    (if (string-match "lisp/" filename)
-                        (substring filename (match-end 0))
-                      filename))))
-              (expand-file-name (concat outfile ".elc") default-directory))))
+	#'(lambda (filename)
+	    "Convert an Emacs Lisp source file name to a compiled file name."
+	    (let ((outfile
+		   (file-name-sans-extension
+		    (if (string-match "lisp/" filename)
+			(substring filename (match-end 0))
+		      filename))))
+	      (expand-file-name (concat outfile ".elc") default-directory))))
   (batch-byte-compile-one-file))
 
 (defun batch-byte-compile-1 (file)

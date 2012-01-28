@@ -52,7 +52,7 @@
       (x-init-specifier-from-resources
        (specifier-fallback scrollbar-width) 'natnum locale
        '("scrollbar.width" . "ScrollBar.Width")))
-      
+
   ;; lather, rinse, repeat.
   (x-init-specifier-from-resources
    (specifier-fallback scrollbar-height) 'natnum locale

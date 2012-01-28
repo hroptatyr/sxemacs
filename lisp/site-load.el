@@ -40,7 +40,7 @@
 This variable should be set by `site-load-package-file'.")
 
 ;; Load site specific packages for dumping with the XEmacs binary.
-(when (file-exists-p site-load-package-file) 
+(when (file-exists-p site-load-package-file)
   (let ((file))
     (load site-load-package-file t t t)
     ;; The `pureload' macro is provided as a clue that a package is

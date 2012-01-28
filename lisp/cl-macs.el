@@ -158,7 +158,7 @@ ARGLIST allows full Common Lisp conventions."
   (cond ((symbolp arg)
 	 ;; Do not upcase &optional, &key etc.
 	 (if (memq arg lambda-list-keywords)
-             arg
+	     arg
 	   (make-symbol (upcase (symbol-name arg)))))
 	((listp arg)
 	 (let ((arg (copy-list arg)) junk)
@@ -181,13 +181,13 @@ Supports Common Lisp lambda lists."
     (check-argument-type #'true-list-p arglist)
     (let ((print-gensym nil))
       (condition-case nil
-          (prin1-to-string
-           (cons (if (eq name 'cl-none) 'lambda name)
-                 (cond ((null arglist) nil)
-                       ((listp arglist) (cl-upcase-arg arglist))
-                       ((symbolp arglist)
-                        (cl-upcase-arg (list '&rest arglist)))
-                       (t (wrong-type-argument 'listp arglist)))))
+	  (prin1-to-string
+	   (cons (if (eq name 'cl-none) 'lambda name)
+		 (cond ((null arglist) nil)
+		       ((listp arglist) (cl-upcase-arg arglist))
+		       ((symbolp arglist)
+			(cl-upcase-arg (list '&rest arglist)))
+		       (t (wrong-type-argument 'listp arglist)))))
       (t "Not available")))))
 
 (defun cl-transform-lambda (form bind-block)
@@ -195,8 +195,8 @@ Supports Common Lisp lambda lists."
 	 (bind-defs nil) (bind-enquote nil)
 	 (bind-inits nil) (bind-lets nil) (bind-forms nil)
 	 (header nil) (simple-args nil)
-         (complex-arglist (cl-function-arglist bind-block args))
-         (doc ""))
+	 (complex-arglist (cl-function-arglist bind-block args))
+	 (doc ""))
     (while (or (stringp (car body)) (eq (car-safe (car body)) 'interactive))
       (push (pop body) header))
     (setq args (if (listp args) (copy-list args) (list '&rest args)))
@@ -218,15 +218,15 @@ Supports Common Lisp lambda lists."
     (or (eq bind-block 'cl-none)
 	(setq body (list (list* 'block bind-block body))))
     (setq simple-args (nreverse simple-args)
-          header (nreverse header))
+	  header (nreverse header))
     ;; Add CL lambda list to documentation, if the CL lambda list differs
     ;; from the non-CL lambda list. npak@ispras.ru
     (unless (equal complex-arglist
-                   (cl-function-arglist bind-block simple-args))
+		   (cl-function-arglist bind-block simple-args))
       (and (stringp (car header)) (setq doc (pop header)))
       (push (concat doc
-                    "\n\nCommon Lisp lambda list:\n" 
-                    "  " complex-arglist "\n\n")
+		    "\n\nCommon Lisp lambda list:\n"
+		    "  " complex-arglist "\n\n")
 	  header))
     (if (null args)
 	(list* nil simple-args (nconc header body))
@@ -1191,18 +1191,18 @@ either `being each foo' or `being the foos'.)
 	       ((memq word key-types)
 		(or (memq (car args) '(in of)) (error "Expected `of'"))
 		(let* ((map (cl-pop2 args))
-                       other-word
-                       (other (if (eq (car args) 'using)
-                                  (if (and (= (length (cadr args)) 2)
-                                           (memq (setq other-word (caadr args))
-                                                 key-types)
-                                           (not (eq (caadr args) word)))
-                                      (cadr (cl-pop2 args))
-                                    (error "Bad `using' clause"))
-                                (gensym))))
+		       other-word
+		       (other (if (eq (car args) 'using)
+				  (if (and (= (length (cadr args)) 2)
+					   (memq (setq other-word (caadr args))
+						 key-types)
+					   (not (eq (caadr args) word)))
+				      (cadr (cl-pop2 args))
+				    (error "Bad `using' clause"))
+				(gensym))))
 		  (when (memq word '(key-binding key-bindings))
-                    (setq var (prog1 other (setq other var)))
-                    (and other-word (setq word other-word)))
+		    (setq var (prog1 other (setq other var)))
+		    (and other-word (setq word other-word)))
 		  (setq loop-map-form
 			(list (if (memq word '(key-seq key-seqs))
 				  'cl-map-keymap-recursively 'cl-map-keymap)
@@ -1296,8 +1296,8 @@ either `being each foo' or `being the foos'.)
 
      ((memq word '(bvconcat bvconcating))
       (let ((what (cl-pop args))
-            (var (cl-loop-handle-accum #*)))
-        (cl-push (list 'progn (list 'callf 'bvconcat var what) t) loop-body)))
+	    (var (cl-loop-handle-accum #*)))
+	(cl-push (list 'progn (list 'callf 'bvconcat var what) t) loop-body)))
 
      ((memq word '(sum summing))
       (let ((what (cl-pop args))
@@ -1654,12 +1654,12 @@ Any use of setq to set the value of the symbol while in the scope of this
 definition is treated as if it were a setf.
 A binding for a symbol macro can be shadowed by `let' or `symbol-macrolet'."
   (cond ((not (symbolp symbol))
-         (error "define-symbol-macro: %S is not a symbol"
-                symbol))
-        (t
-         `(progn
-            (put ',symbol 'symbol-macro ',expansion)
-            ',symbol))))
+	 (error "define-symbol-macro: %S is not a symbol"
+		symbol))
+	(t
+	 `(progn
+	    (put ',symbol 'symbol-macro ',expansion)
+	    ',symbol))))
 
 (defvar cl-closure-vars nil)
 ;;;###autoload

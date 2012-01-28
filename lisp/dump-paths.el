@@ -36,7 +36,7 @@
 
   (when debug-paths
     (princ (format "SXEmacs thinks the roots of its hierarchy are:\n%S\n"
-                   roots)))
+		   roots)))
 
   (let* ((package-locations
 	  (packages-compute-package-locations
@@ -72,9 +72,9 @@
     (setq mule-lisp-directory '()))
 
   (setq ffi-lisp-directory
-        (when (fboundp #'ffi-defun)
-          (paths-find-ffi-lisp-directory roots
-                                         lisp-directory)))
+	(when (fboundp #'ffi-defun)
+	  (paths-find-ffi-lisp-directory roots
+					 lisp-directory)))
 
   (setq load-path (paths-construct-load-path roots
 					     '()
@@ -83,7 +83,7 @@
 					     lisp-directory
 					     nil
 					     mule-lisp-directory
-                                             ffi-lisp-directory))
+					     ffi-lisp-directory))
 
   (setq exec-directory (paths-find-exec-directory roots))
   (if debug-paths
