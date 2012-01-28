@@ -304,7 +304,7 @@ x_get_button_size(struct frame *f, Lisp_Object window,
 	if (left && tb->pushright)					\
 	  break;							\
 									\
-        size = x_get_button_size (f, window, tb, vert, pos);		\
+	size = x_get_button_size (f, window, tb, vert, pos);		\
 									\
 	if (vert)							\
 	  {								\
@@ -336,17 +336,17 @@ x_get_button_size(struct frame *f, Lisp_Object window,
 		tb->y = y;						\
 		tb->width = width;					\
 		tb->height = height;					\
-	        tb->border_width = border_width;			\
-	        tb->vertical = vert;					\
+		tb->border_width = border_width;			\
+		tb->vertical = vert;					\
 									\
-                if (tb->blank || NILP (tb->up_glyph))			\
+		if (tb->blank || NILP (tb->up_glyph))			\
 		  {							\
 		    int threed = (EQ (Qt, tb->up_glyph) ? 1 : 0);	\
 		    x_draw_blank_toolbar_button (f, x, y, width,	\
 						 height, threed,	\
 						 border_width, vert);	\
 		  }							\
-	        else							\
+		else							\
 		  x_output_toolbar_button (f, button);			\
 	      }								\
 	  }								\
