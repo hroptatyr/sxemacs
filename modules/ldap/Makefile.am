@@ -37,7 +37,7 @@ $(MODNAME)_i.c: $(ldap_ell_SOURCES)
 dist_modules_DATA = eldap.ell
 
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## Create preprocessor output (debugging purposes only)

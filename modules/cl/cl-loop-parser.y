@@ -140,7 +140,7 @@ do_clause {
 
 	EMOD_CL_DEBUG_LOOP("accepting DO clause\n");
 	dllist_append(iter, (void*)do_clause);
-} | 
+} |
 with_clause {
 	dllist_t pro = XDLLIST(lsen->prologue);
 	Lisp_Object with_clause = *context;
@@ -256,7 +256,7 @@ return_clause {
 	dllist_append(epi, (void*)return_clause);
 }
 /* | while | until | always | never | thereis
- * 	if | when | unless | else | end | named
+ *	if | when | unless | else | end | named
  */
 ;
 
@@ -463,7 +463,7 @@ for_arith_clause {
 	fc->for_subclause = FOR_ARITHMETIC_CLAUSE;
 	dllist_append(iter, (void*)for_clause);
 	dllist_append(pro, (void*)for_clause);
-} | 
+} |
 for_in_clause {
 	dllist_t pro = XDLLIST(lsen->prologue);
 	dllist_t iter = XDLLIST(lsen->iteration);
@@ -507,7 +507,7 @@ for_equals_then_clause {
 	fc->for_subclause = FOR_EQUALS_THEN_CLAUSE;
 	dllist_append(pro, (void*)for_clause);
 	dllist_append(iter, (void*)for_clause);
-} | 
+} |
 for_hash_clause {
 	dllist_t pro = XDLLIST(lsen->prologue);
 	dllist_t iter = XDLLIST(lsen->iteration);
@@ -700,7 +700,7 @@ TO
 };
 
 by:
-BY 
+BY
 {
 	Lisp_Object for_clause = *context;
 	cl_loop_for_clause_t *fc = get_dynacat(for_clause);
@@ -712,7 +712,7 @@ BY
 };
 
 below:
-BELOW 
+BELOW
 {
 	Lisp_Object for_clause = *context;
 	cl_loop_for_clause_t *fc = get_dynacat(for_clause);
@@ -728,7 +728,7 @@ BELOW
 
 
 above:
-ABOVE 
+ABOVE
 {
 	Lisp_Object for_clause = *context;
 	cl_loop_for_clause_t *fc = get_dynacat(for_clause);
@@ -902,4 +902,3 @@ USING
 #undef yyscan_t
 #undef yylval
 #undef yylloc
-

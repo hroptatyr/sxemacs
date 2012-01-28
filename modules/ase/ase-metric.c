@@ -5,7 +5,7 @@
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
   * This file is part of SXEmacs.
-  * 
+  *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
   * are met:
@@ -82,7 +82,7 @@ ase_metric_prnt(Lisp_Object obj, Lisp_Object pcf, int unused)
 				const char *name = subr_name(XSUBR(ldist));
 				write_fmt_string(pcf, " #'%s", name);
 			} else {
-			        write_c_string(" #'(lambda ...)", pcf);
+				write_c_string(" #'(lambda ...)", pcf);
 			}
 		}
 	}
