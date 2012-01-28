@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /*
  * RadioP.h - Private definitions for Radio widget
- * 
+ *
  * Author: Edward A. Falk
  *         falk@falconer.vip.best.com
- *  
+ *
  * Date:   June 30, 1997
  *
  */
@@ -83,7 +83,7 @@ extern RadioClassRec radioClassRec;
 
 /***************************************
  *
- *  Instance (widget) structure 
+ *  Instance (widget) structure
  *
  **************************************/
 

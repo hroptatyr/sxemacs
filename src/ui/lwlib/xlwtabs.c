@@ -16,7 +16,7 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
- /* Synched up with: Tabs.c 1.27.  
+ /* Synched up with: Tabs.c 1.27.
 
     #### This file contains essential XEmacs related fixes to the original
     verison of the Tabs widget. Be VERY careful about syncing if you ever

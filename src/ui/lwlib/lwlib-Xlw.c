@@ -341,7 +341,7 @@ xlw_update_scrollbar(widget_instance * instance, Widget widget,
 
 #ifdef LWLIB_TABS_LUCID
 /* tab control
-   
+
    lwlib is such an incredible hairy crock. I just cannot believe
    it! There are random dependencies between functions, there is a
    total lack of genericity, even though it initially appears to be

@@ -1,8 +1,8 @@
 /* Tabs Widget for SXEmacs.
     Copyright (C) 1999 Edward A. Falk
- 
+
  This file is part of SXEmacs.
- 
+
 SXEmacs is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
 Free Software Foundation, either version 3 of the License, or (at your
@@ -56,11 +56,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  border		     BorderColor	Pixel		XtDefaultForeground
  borderWidth	     BorderWidth	Dimension	1
  destroyCallback     Callback		Pointer		NULL
- hSpace 	     HSpace		Dimension	4
+ hSpace	     HSpace		Dimension	4
  height		     Height		Dimension	0
  mappedWhenManaged   MappedWhenManaged	Boolean		True
  orientation	     Orientation	XtOrientation	vertical
- vSpace 	     VSpace		Dimension	4
+ vSpace	     VSpace		Dimension	4
  width		     Width		Dimension	0
  x		     Position		Position	0
  y		     Position		Position	0
