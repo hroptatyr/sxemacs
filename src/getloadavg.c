@@ -51,7 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
    UMAX
    UMAX4_3
    __linux__			Linux: assumes /proc filesystem mounted.
-   				Support from Michael K. Johnson.
+				Support from Michael K. Johnson.
    __NetBSD__			NetBSD: assumes /kern filesystem mounted.
    __OpenBSD__			OpenBSD: ditto.
 

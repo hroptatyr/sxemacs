@@ -103,11 +103,11 @@ static struct hfctlack ACK =
 
 					/* read a buffer        */
 #define RD_BUF(f,p,l) \
-        while ((l)) \
-          if ((j = read((f),(p),(l))) < 0) \
-             if (errno != EINTR) return (-1); \
-             else continue; \
-          else { (l) -= j; (p) += j; }
+	while ((l)) \
+	  if ((j = read((f),(p),(l))) < 0) \
+	     if (errno != EINTR) return (-1); \
+	     else continue; \
+	  else { (l) -= j; (p) += j; }
 
 /*************** function prototypes ***************************/
 #ifdef __STDC__

@@ -334,7 +334,7 @@ void lock_file(Lisp_Object fn)
 	max_sz = strlen(lock_info.user) + strlen(lock_info.host)
 		+ LOCK_PID_MAX + 9;
 	locker = (char *)alloca(max_sz);
-	sz = snprintf(locker, max_sz, "%s@%s (pid %lu)", 
+	sz = snprintf(locker, max_sz, "%s@%s (pid %lu)",
 		      lock_info.user, lock_info.host,
 		      lock_info.pid);
 	assert(sz>=0 && sz < max_sz);
