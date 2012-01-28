@@ -42,7 +42,7 @@ AC_DEFUN([_SXE_MATH_ASSIGN_IFELSE], [
 	AC_REQUIRE([SXE_CHECK_MATHS_HEADERS])
 	AC_REQUIRE([SXE_CHECK_MATHS_TYPES])
 
-        AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #if defined HAVE_MATH_H
 # include <math.h>
 #endif
@@ -90,7 +90,7 @@ AC_DEFUN([SXE_CHECK_MATHS_SYM], [dnl
 	AC_REQUIRE([SXE_CHECK_MATHS_HEADERS])
 	AC_REQUIRE([SXE_CHECK_MATHS_TYPES])
 
-        SXE_MSG_CHECKING([for ]sym[])
+	SXE_MSG_CHECKING([for ]sym[])
 	_SXE_MATH_ASSIGN_IFELSE([]typesym[], []sym[], [dnl yes case
 		sxe_cv_maths_[]sym[]="yes"
 		AC_DEFINE([HAVE_MATHS_]sym[], [1],
@@ -303,7 +303,7 @@ AC_DEFUN([SXE_MATHS_FINITE], [
 	## could be an ordinary function, at least it should be
 	AC_CHECK_FUNCS([finite])
 
-        SXE_MSG_CHECKING([for working finite])
+	SXE_MSG_CHECKING([for working finite])
 	_SXE_MATH_ASSIGN_IFELSE([float], [0.0; finit(__test_assign);],
 		[sxe_cv_maths_finite="yes"], [sxe_cv_maths_finite="no"])
 	SXE_MSG_RESULT([$sxe_cv_maths_fpclassify])
@@ -322,7 +322,7 @@ AC_DEFUN([SXE_MATHS_FPCLASS], [
 	## could be an ordinary function, at least it should be
 	AC_CHECK_FUNCS([fpclass])
 
-        SXE_MSG_CHECKING([for working fpclass])
+	SXE_MSG_CHECKING([for working fpclass])
 	_SXE_MATH_ASSIGN_IFELSE([float], [0.0; fpclass(__test_assign);],
 		[sxe_cv_maths_fpclass="yes"], [sxe_cv_maths_fpclass="no"])
 	SXE_MSG_RESULT([$sxe_cv_maths_fpclass])
@@ -341,7 +341,7 @@ AC_DEFUN([SXE_MATHS_FPCLASSIFY], [
 	## could be an ordinary function, at least it should be
 	AC_CHECK_FUNCS([fpclassify __fpclassifyf __fpclassify __fpclassifyl])
 
-        SXE_MSG_CHECKING([for working fpclassify])
+	SXE_MSG_CHECKING([for working fpclassify])
 	_SXE_MATH_ASSIGN_IFELSE([float], [0.0; fpclassify(__test_assign);],
 		[sxe_cv_maths_fpclassify="yes"], [sxe_cv_maths_fpclassify="no"])
 	SXE_MSG_RESULT([$sxe_cv_maths_fpclassify])
@@ -360,8 +360,8 @@ AC_DEFUN([SXE_MATHS_ISINF], [
 	## could be an ordinary function, at least it should be
 	AC_CHECK_FUNCS([isinf __isinff __isinf __isinfl])
 
-        SXE_MSG_CHECKING([for working isinf])
-	_SXE_MATH_ASSIGN_IFELSE([float], [0.0; isinf(__test_assign);], 
+	SXE_MSG_CHECKING([for working isinf])
+	_SXE_MATH_ASSIGN_IFELSE([float], [0.0; isinf(__test_assign);],
 		[sxe_cv_maths_isinf="yes"], [sxe_cv_maths_isinf="no"])
 	SXE_MSG_RESULT([$sxe_cv_maths_isinf])
 
@@ -379,7 +379,7 @@ AC_DEFUN([SXE_MATHS_ISNAN], [
 	## could be an ordinary function, at least it should be
 	AC_CHECK_FUNCS([isnan __isnanf __isnan __isnanl])
 
-        SXE_MSG_CHECKING([for working isnan])
+	SXE_MSG_CHECKING([for working isnan])
 	_SXE_MATH_ASSIGN_IFELSE([float], [0.0; isnan(__test_assign);],
 		[sxe_cv_maths_isnan="yes"], [sxe_cv_maths_isnan="no"])
 	SXE_MSG_RESULT([$sxe_cv_maths_isnan])
@@ -398,7 +398,7 @@ AC_DEFUN([SXE_MATHS_SIGNBIT], [
 	## could be an ordinary function, at least it should be
 	AC_CHECK_FUNCS([signbit __signbitf __signbit __signbitl])
 
-        SXE_MSG_CHECKING([for working signbit])
+	SXE_MSG_CHECKING([for working signbit])
 	_SXE_MATH_ASSIGN_IFELSE([float], [-1.0; signbit(__test_assign);],
 		[sxe_cv_maths_signbit="yes"], [sxe_cv_maths_signbit="no"])
 	SXE_MSG_RESULT([$sxe_cv_maths_signbit])
@@ -587,7 +587,7 @@ AC_DEFUN([SXE_CHECK_MPFR], [dnl
 
 	popdef([ACTION_IF_FOUND])
 	popdef([ACTION_IF_NOT_FOUND])
-])dnl SXE_CHECK_MPFR	
+])dnl SXE_CHECK_MPFR
 
 AC_DEFUN([_SXE_CHECK_MPFR], [dnl
 	SXE_DUMP_LIBS
@@ -679,7 +679,7 @@ AC_DEFUN([_SXE_CHECK_MPC], [dnl
 		AC_DEFINE([HAVE_MPC_SET_UI_FR], [1], [Whether simple mpc_set_ui_fr is available])
 	fi
 	if test "$ac_cv_lib_mpc_mpc_init" = "yes" -o \
-	        "$ac_cv_lib_mpc_mpc_init2" = "yes"; then
+		"$ac_cv_lib_mpc_mpc_init2" = "yes"; then
 		mpc_can_be_initted="yes"
 	fi
 	if test "$ac_cv_header_mpc_h" = "yes" -a \
@@ -854,7 +854,7 @@ int main(int c, char **v)
 
 	surprise = str_to_fpfloat("0.0") + (o4 = str_to_fpfloat("1.4"));
 
-	if (surprise == o4) 
+	if (surprise == o4)
 #if fpfloat_cand_long_double_p
 	{
 		fpfloat_cand gtdouble_s = str_to_fpfloat("1.0e+513");
@@ -877,7 +877,7 @@ int main(int c, char **v)
 		return 0;
 	}
 #else
-	        return 0;
+		return 0;
 #endif
 	else
 		return 1;

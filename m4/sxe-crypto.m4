@@ -23,7 +23,7 @@ AC_DEFUN([SXE_OPENSSL_VERSION], [dnl
 	allowed_versions="0.9.7[e-z] 0.9.8* 0.9.9* 1.0.0*"
 	OPENSSL_SANE_P=no
 	for ver in $allowed_versions; do
-               if echo "$OPENSSL_VERSION" | ${GREP-grep} -q "$ver"; then
+	       if echo "$OPENSSL_VERSION" | ${GREP-grep} -q "$ver"; then
 			OPENSSL_SANE_P="yes"
 			break;
 		fi
@@ -104,7 +104,7 @@ AC_DEFUN([SXE_CHECK_OPENSSL_LOCS], [dnl
 	AC_CHECK_LIB([ssl], [SSL_connect],
 		[have_libssl=yes], [have_libssl=no])
 	if test "$ac_cv_header_openssl_crypto_h $have_libcrypto $have_libssl" != "yes yes yes"; then
-	        OPENSSL_LIBS=""
+		OPENSSL_LIBS=""
 		unset ac_cv_header_openssl_crypto_h
 		unset ac_cv_lib_crypto_OPENSSL_cleanse
 		SXE_TRY_OPENSSL_BIN_PREFIX
@@ -148,7 +148,7 @@ AC_DEFUN([SXE_CHECK_OPENSSL_FEATURES], [dnl
 	if test "$openssl_no_dh" = "yes"; then
 		AC_DEFINE([OPENSSL_NO_DH], [1], [Description here!])
 	fi
-	
+
 	dnl check for libssl support
 	AC_CHECK_LIB([ssl], [SSL_new], [openssl_ssl=yes], [openssl_ssl=no])
 	if test "$openssl_ssl" = "yes"; then
@@ -194,31 +194,31 @@ AC_DEFUN([SXE_CHECK_OPENSSL_FUNCS], [dnl
 		SSL_get_peer_certificate X509_verify_cert_error_string dnl
 		SSL_get_verify_result SSL_get_current_cipher SSL_CIPHER_get_bits])
 	if test x"$ac_TLSv1_client_method" = xyes; then
-	        AC_DEFINE([HAVE_TLSV1_CLIENT_METHOD], 1, [TLSv1 client methods available])
+		AC_DEFINE([HAVE_TLSV1_CLIENT_METHOD], 1, [TLSv1 client methods available])
 	fi
 	if test x"$ac_SSLv2_client_method" = xyes; then
-	        AC_DEFINE([HAVE_SSLV2_CLIENT_METHOD], 1, [SSLv2 client methods available])
+		AC_DEFINE([HAVE_SSLV2_CLIENT_METHOD], 1, [SSLv2 client methods available])
 	fi
 	if test x"$ac_SSLv3_client_method" = xyes; then
-	        AC_DEFINE([HAVE_SSLV3_CLIENT_METHOD], 1, [SSLv3 client methods available])
+		AC_DEFINE([HAVE_SSLV3_CLIENT_METHOD], 1, [SSLv3 client methods available])
 	fi
 	if test x"$ac_SSLv23_client_method" = xyes; then
-	        AC_DEFINE([HAVE_SSLV23_CLIENT_METHOD], 1, [SSLv23 client methods available])
+		AC_DEFINE([HAVE_SSLV23_CLIENT_METHOD], 1, [SSLv23 client methods available])
 	fi
 	if test x"$ac_TLSv1_server_method" = xyes; then
-	        AC_DEFINE([HAVE_TLSV1_SERVER_METHOD], 1, [TLSv1 server methods available])
+		AC_DEFINE([HAVE_TLSV1_SERVER_METHOD], 1, [TLSv1 server methods available])
 	fi
 	if test x"$ac_SSLv2_server_method" = xyes; then
-	        AC_DEFINE([HAVE_SSLV2_SERVER_METHOD], 1, [SSLv2 server methods available])
+		AC_DEFINE([HAVE_SSLV2_SERVER_METHOD], 1, [SSLv2 server methods available])
 	fi
 	if test x"$ac_SSLv3_server_method" = xyes; then
-	        AC_DEFINE([HAVE_SSLV3_SERVER_METHOD], 1, [SSLv3 server methods available])
+		AC_DEFINE([HAVE_SSLV3_SERVER_METHOD], 1, [SSLv3 server methods available])
 	fi
 	if test x"$ac_SSLv23_server_method" = xyes; then
-	        AC_DEFINE([HAVE_SSLV23_SERVER_METHOD], 1, [SSLv23 server methods available])
+		AC_DEFINE([HAVE_SSLV23_SERVER_METHOD], 1, [SSLv23 server methods available])
 	fi
 	if test x"$ac_ssl_verify_cert_chain" = xyes; then
-	        AC_DEFINE([HAVE_SSL_VERIFY_CERT_CHAIN], 1, [ssl_verify_cert_chain available])
+		AC_DEFINE([HAVE_SSL_VERIFY_CERT_CHAIN], 1, [ssl_verify_cert_chain available])
 	fi
 	SXE_RESTORE_LIBS
 ])dnl SXE_CHECK_OPENSSL_FUNCS
@@ -231,12 +231,12 @@ AC_DEFUN([SXE_CHECK_OPENSSL], [dnl
 	dnl defines OPENSSL_VERSION and OPENSSL_SANE_P
 	SXE_OPENSSL_VERSION
 	if test "$OPENSSL_SANE_P" = "yes"; then
-	   	SXE_CHECK_OPENSSL_LOCS
-	   	if test "$have_libssl $have_libcrypto" = "yes yes"; then
+		SXE_CHECK_OPENSSL_LOCS
+		if test "$have_libssl $have_libcrypto" = "yes yes"; then
 			have_openssl=yes
 			SXE_CHECK_OPENSSL_FEATURES
 			SXE_CHECK_OPENSSL_FUNCS
-           	fi
+		fi
 	fi
 ])dnl SXE_CHECK_OPENSSL
 

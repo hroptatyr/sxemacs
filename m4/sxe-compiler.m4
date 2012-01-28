@@ -67,7 +67,7 @@ AC_DEFUN([SXE_CHECK_CC_VERSION], [dnl
 	dnl non-gcc machine-specific magic - contributions welcome
 	*)
 		case "$ac_cv_build" in
-		*-*-aix*   ) 
+		*-*-aix*   )
 			dnl Yes, it's this ugly for AIX...
 			realcc=`which $SXEMACS_CC`
 			dnl Might be a symlink created by replaceCset command
@@ -165,7 +165,7 @@ AC_DEFUN([SXE_CHECK_CC_EXTERN_INLINE_DARWIN], [
 	gcc*\ 4.0.1* | * )
 		# For now we assume all MacOS compilers
 		# are not able to handle EXTERN_INLINE
-		AC_DEFINE([SXE_STATIC_EXTERN_INLINE], [1], 
+		AC_DEFINE([SXE_STATIC_EXTERN_INLINE], [1],
 			[The MacOS gcc does not support extern inline])
 		sxe_cc_gnu89_extern_inline="no"
 		;;
@@ -305,7 +305,7 @@ AC_DEFUN([SXE_CHECK_CC_CHAR], [dnl
 #define _VA_LIST va_list
 typedef void *__gnuc_va_list;
 typedef __gnuc_va_list va_list;]],[[1]])], [dnl
-		AC_MSG_RESULT(yes) 
+		AC_MSG_RESULT(yes)
 		AC_DEFINE([NEED_GNUC_VA_LIST], [1], [Description here!])], [dnl
 		AC_MSG_RESULT(no)])
 	fi
@@ -402,7 +402,7 @@ AC_DEFUN([SXE_DO_CC_HACKS], [dnl
 		SXE_DIE("Building with g++ is not supported")
 	fi
 
-	
+
 ])dnl SXE_DO_CC_HACKS
 
 AC_DEFUN([SXE_CHECK_CC_NESTED_FUNS], [dnl
@@ -740,7 +740,7 @@ AC_DEFUN([SXE_OPTIFLAGS], [dnl
 		echo ""
 		optiflags="-O3"
 	fi
-	
+
 	SXE_CHECK_COMPILER_FLAGS([$optiflags], [:], [
 		echo ""
 		echo "********************************************************"
@@ -926,26 +926,26 @@ AC_DEFUN([SXE_CC_MAXOPT_GNU], [dnl
 	fi
 
 	## these belong to the corresponding MAXOPT macro
-dnl 	SXE_CHECK_COMPILER_FLAGS([-xopenmp], [
-dnl 		optiflags="$optiflags -xopenmp"
-dnl 		sxe_cv_feat_omp="yes"
-dnl 		])
-dnl 	SXE_CHECK_COMPILER_FLAGS([-openmp], [
-dnl 		optiflags="$optiflags -openmp"
-dnl 		sxe_cv_feat_omp="yes"
-dnl 		])
-dnl 	SXE_CHECK_COMPILER_FLAGS([-mp], [
-dnl 		optiflags="$optiflags -mp"
-dnl 		sxe_cv_feat_omp="yes"
-dnl 		])
-dnl 	SXE_CHECK_COMPILER_FLAGS([-omp], [
-dnl 		optiflags="$optiflags -omp"
-dnl 		sxe_cv_feat_omp="yes"
-dnl 		])
-dnl 	SXE_CHECK_COMPILER_FLAGS([-qsmp=omp], [
-dnl 		optiflags="$optiflags -qsmp=omp"
-dnl 		sxe_cv_feat_omp="yes"
-dnl 		])
+dnl	SXE_CHECK_COMPILER_FLAGS([-xopenmp], [
+dnl		optiflags="$optiflags -xopenmp"
+dnl		sxe_cv_feat_omp="yes"
+dnl		])
+dnl	SXE_CHECK_COMPILER_FLAGS([-openmp], [
+dnl		optiflags="$optiflags -openmp"
+dnl		sxe_cv_feat_omp="yes"
+dnl		])
+dnl	SXE_CHECK_COMPILER_FLAGS([-mp], [
+dnl		optiflags="$optiflags -mp"
+dnl		sxe_cv_feat_omp="yes"
+dnl		])
+dnl	SXE_CHECK_COMPILER_FLAGS([-omp], [
+dnl		optiflags="$optiflags -omp"
+dnl		sxe_cv_feat_omp="yes"
+dnl		])
+dnl	SXE_CHECK_COMPILER_FLAGS([-qsmp=omp], [
+dnl		optiflags="$optiflags -qsmp=omp"
+dnl		sxe_cv_feat_omp="yes"
+dnl		])
 	## add -lgomp to ldflags
 	if test "$sxe_cv_feat_omp" = "yes"; then
 		LDFLAGS="$LDFLAGS -lgomp"
@@ -958,9 +958,9 @@ dnl 		])
 
 	## would be nice to have this but it triggers too many
 	## meaningless warnings
-dnl 	## -fstrict-aliasing for gcc-2.95+
-dnl 	SXE_CHECK_COMPILER_FLAGS([-fstrict-aliasing],
-dnl 		[optiflags="$optiflags -fstrict-aliasing"])
+dnl	## -fstrict-aliasing for gcc-2.95+
+dnl	SXE_CHECK_COMPILER_FLAGS([-fstrict-aliasing],
+dnl		[optiflags="$optiflags -fstrict-aliasing"])
 
 	SXE_CHECK_COMPILER_FLAGS([-fearly-inlining],
 		[optiflags="$optiflags -fearly-inlining"])
@@ -1546,7 +1546,7 @@ AC_DEFUN([SXE_CHECK_C99_NJSF], [dnl
 ]],[[
 return 0;
 ]])],  [AC_MSG_RESULT(yes)
-        have_c99="yes"],
+	have_c99="yes"],
        [c_switch_site=$sace_c_switch_site
 		AC_MSG_RESULT(no)
 		AC_MSG_WARN([C99 not supported, reverting option append])
@@ -1602,7 +1602,7 @@ extern void f(void*restrict[]);
 			[Define restrict to nothing])
 	fi
 	AC_MSG_RESULT([$typeofname])
-])dnl SXE_CHECK_BROKEN_RESTRICT	
+])dnl SXE_CHECK_BROKEN_RESTRICT
 
 AC_DEFUN([SXE_STACK_FLAGS], [dnl
 	## actually this belongs to error-checking stuff
