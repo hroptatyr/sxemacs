@@ -249,9 +249,9 @@ print_pgconn(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		if (!(user = PQuser(P))) {
 			user = "";
 		}
-		write_fmt_string(printcharfun, "#<PGconn %s:%s %s/%s>",	
-				 (!strlen(host) ? 
-				  "localhost" : host) /* evil! */, 
+		write_fmt_string(printcharfun, "#<PGconn %s:%s %s/%s>",
+				 (!strlen(host) ?
+				  "localhost" : host) /* evil! */,
 				 port, user, db);
 	} else if (cst == CONNECTION_BAD) {
 		write_c_string("#<PGconn BAD>", printcharfun);
@@ -407,8 +407,8 @@ sxemacs_notice_processor(Lisp_PGconn *conn, const char *msg)
 	else {
 		running_asynch_code = 1;
 		call2_trapping_errors("Error in notice processor",
-                          sentinel, make_pgconn(conn),
-                          build_string(msg));
+			  sentinel, make_pgconn(conn),
+			  build_string(msg));
 		running_asynch_code = 0;
 	}
 }
@@ -524,7 +524,7 @@ surround it with single quotes, e.g., `keyword = \'a value\''.  Single
 quotes and backslashes within the value must be escaped with a backslash,
 i.e., \\\' and \\\\.
 
-The currently recognized parameter key words are: 
+The currently recognized parameter key words are:
 
 - host
 
@@ -621,7 +621,7 @@ Ignored (formerly, this specified where to send server debug output).
 
 This option determines whether or with what priority an SSL connection will
 be negotiated with the server.
-There are four modes: 
+There are four modes:
   - `disable' will attempt only an unencrypted SSL connection;
   - `allow' will negotiate, trying first a non-SSL connection, then if that
     fails, trying an SSL connection;
@@ -639,7 +639,7 @@ This option is deprecated in favour of the sslmode setting.
 
 If set to 1, an SSL connection to the server is required (this is equivalent
 to sslmode require). libpq will then refuse to connect if the server does
-not accept an SSL connection. 
+not accept an SSL connection.
 If set to 0 (default), libpq will negotiate the connection type with the
 server (equivalent to sslmode prefer).
 
@@ -690,7 +690,7 @@ indicated built-in defaults are used.
 		 * error. */
 		char buf[BLCKSZ];
 		strncpy(buf, error_message, sizeof(buf)-1);
-                buf[sizeof(buf) - 1] = '\0';
+		buf[sizeof(buf) - 1] = '\0';
 		if (P) {
 			/* storage for the error message gets erased when
 			 * call PQfinish */
@@ -741,7 +741,7 @@ See `pq-connectdb' for a complete description of conninfo.
 		/* capture the error message before destroying the object */
 		char buf[BLCKSZ];
 		strncpy(buf, error_message, sizeof(buf)-1);
-                buf[sizeof(buf) - 1] = '\0';
+		buf[sizeof(buf) - 1] = '\0';
 		if (P) {
 			strncpy(buf, PQerrorMessage(P), sizeof(buf)-1);
 			buf[sizeof(buf) - 1] = '\0';
