@@ -78,7 +78,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
    Define neither one if an assembler-language alloca
    in the file alloca.s should be used.	 */
 
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 
 /* Specify the font for X to use.
    This used to be Rom14.500; that's nice on the X server shipped with

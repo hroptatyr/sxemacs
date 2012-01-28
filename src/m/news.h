@@ -41,7 +41,9 @@ NOTE-END  */
 
 /* The News machine has alloca. */
 
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 
 /* Data type of load average, as read out of kmem.  */
 

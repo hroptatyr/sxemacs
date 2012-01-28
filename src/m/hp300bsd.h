@@ -33,7 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #define CRT0_DUMMIES one_dummy,
 
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 
 #define LOAD_AVE_TYPE long
 #define LOAD_AVE_CVT(x) ((int) (((double) (x)) / 2048.0 * 100.0))

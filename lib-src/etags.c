@@ -6267,7 +6267,7 @@ regex_tag_multiline ()
 				while (charno < rp->regs.end[0])
 					if (buffer[charno++] == '\n')
 						lineno++, linecharno = charno;
-				if (rp->name && rp->name[0] == '\0')
+				if (! rp->name || rp->name[0] == '\0')
 					name = NULL;
 				else /* make a named tag */
 					name = substitute (buffer, rp->name, &rp->regs);

@@ -63,7 +63,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /* lemacs change:  define HAVE_ALLOCA if gcc is being used */
 #ifdef __GNUC__
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 #else
 #define C_ALLOCA
 #endif

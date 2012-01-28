@@ -79,7 +79,9 @@ NOTE-END  */
 
 #ifdef USG
 #define LIB_STANDARD "-lPW -lc"
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 
 /* There is some bug in unexec in for usg 5.2 on a vax
    which nobody who runs such a system has yet tracked down. */
@@ -91,7 +93,9 @@ NOTE-END  */
 #endif				/* USG */
 
 #ifdef BSD
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 #endif				/* BSD */
 
 #ifdef BSD4_2

@@ -50,7 +50,9 @@ NOTE-END  */
 
 #if defined (OSF1) || defined (MACH)
 #undef C_ALLOCA
+#ifndef HAVE_ALLOCA
 #define HAVE_ALLOCA
+#endif
 #endif
 
 /* mcc@timessqr.gc.cuny.edu says this makes Emacs work with DECnet.  */
