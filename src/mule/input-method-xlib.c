@@ -418,7 +418,7 @@ XIM_init_frame (struct frame *f)
 void
 XIM_SetGeometry (struct frame *f)
 {
-        XIC      xic;
+	XIC      xic;
 	XIMStyle style;
 	XRectangle area;
 
@@ -427,8 +427,8 @@ XIM_SetGeometry (struct frame *f)
 	}
 	xic   = FRAME_X_XIC (f);
 
-        if (!xic) {
-                return;
+	if (!xic) {
+		return;
 	}
 	style = FRAME_X_XIC_STYLE (f);
 
@@ -710,7 +710,7 @@ EmacsXtCvtStringToXIMStyles (
 		XrmValue new_from;
 		XtAppContext the_app_con = XtDisplayToApplicationContext (dpy);
 
-		len = snprintf(buf, sizeof(buf), 
+		len = snprintf(buf, sizeof(buf),
 			       "Cannot convert string \"%s\" to type XIMStyles.\n"
 			       "Using default string \"%s\" instead.\n",
 			       fromVal->addr, DefaultXIMStyles);
@@ -804,7 +804,7 @@ best_style (XIMStyles *user, XIMStyles *xim)
 	return DEFAULTStyle; /* Default Style */
 }
 
-/* These lisp-callable functions will be sealed until xim-leim is needed. 
+/* These lisp-callable functions will be sealed until xim-leim is needed.
    Oct 22 1999 - kazz */
 #if 0
 /*
@@ -939,13 +939,13 @@ void
 describe_Window (Window win)
 {
 	char xwincmd[128];
-	int sz = snprintf (xwincmd, sizeof(xwincmd), 
+	int sz = snprintf (xwincmd, sizeof(xwincmd),
 			   "xwininfo -id 0x%x >&2; xwininfo -events -id 0x%x >&2",
 			   (int) win, (int) win);
 	if ( sz >= 0 && (size_t) sz < sizeof(xwincmd) ) {
 		int exit_code = system (xwincmd);
 		if (  exit_code != 0 )
-			stderr_out("command '%s' failed with exit code %d", 
+			stderr_out("command '%s' failed with exit code %d",
 				   xwincmd, exit_code);
 	} else
 		stderr_out("Could not generate wininfo command line");
