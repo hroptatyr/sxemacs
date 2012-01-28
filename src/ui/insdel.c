@@ -61,7 +61,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
       character "at" (i.e. following) a particular position can be
       obtained from the formula
 
-        buffer_start_address + memory_index(position) - 1
+	buffer_start_address + memory_index(position) - 1
 
       except in the case of characters at the gap position.
 
@@ -70,7 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
       Emchar:
       -------
-        This typedef represents a single Emacs character, which can be
+	This typedef represents a single Emacs character, which can be
 	ASCII, ISO-8859, or some extended character, as would typically
 	be used for Kanji.  Note that the representation of a character
 	as an Emchar is *not* the same as the representation of that
@@ -92,7 +92,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
       Bufbyte:
       --------
-        The data in a buffer or string is logically made up of Bufbyte
+	The data in a buffer or string is logically made up of Bufbyte
 	objects, where a Bufbyte takes up the same amount of space as a
 	char. (It is declared differently, though, to catch invalid
 	usages.) Strings stored using Bufbytes are said to be in
@@ -116,7 +116,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
       array of char:
       --------------
-        Strings that go in or out of Emacs are in "external format",
+	Strings that go in or out of Emacs are in "external format",
 	typedef'ed as an array of char or a char *.  There is more
 	than one external format (JIS, EUC, etc.) but they all
 	have similar properties.  They are modal encodings,
@@ -148,7 +148,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
       Charcount:
       ----------
-        This typedef represents a count of characters, such as
+	This typedef represents a count of characters, such as
 	a character offset into a string or the number of
 	characters between two positions in a buffer.  The
 	difference between two Bufpos's is a Charcount, and
@@ -157,7 +157,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
       Bytecount:
       ----------
-        Similar to a Charcount but represents a count of bytes.
+	Similar to a Charcount but represents a count of bytes.
 	The difference between two Bytind's is a Bytecount.
 
    Usage of the various representations:
@@ -3076,7 +3076,7 @@ void init_buffer_text(struct buffer *b)
 {
 	if (!b->base_buffer) {
 		SET_BUF_GAP_SIZE(b, 20);
-	        (void)BUFFER_ALLOC(
+		(void)BUFFER_ALLOC(
 			b->text->beg, BUF_GAP_SIZE(b) + BUF_END_SENTINEL_SIZE);
 		if (!BUF_BEG_ADDR(b))
 			memory_full();

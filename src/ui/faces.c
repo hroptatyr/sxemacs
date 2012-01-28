@@ -1725,7 +1725,7 @@ LOCALE, TAG-SET, EXACT-P, and HOW-TO-ADD are as in `copy-specifier'.
 
 #define COPY_PROPERTY(property) \
   Fcopy_specifier (fold->property, fnew->property, \
-                   locale, tag_set, exact_p, how_to_add);
+		   locale, tag_set, exact_p, how_to_add);
 
 	COPY_PROPERTY(foreground);
 	COPY_PROPERTY(background);
