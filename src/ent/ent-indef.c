@@ -332,7 +332,7 @@ indef_prod(Lisp_Object l, Lisp_Object r)
 		return make_indef(NOT_A_NUMBER);
 	}
 }
-static Lisp_Object 
+static Lisp_Object
 indef_div(Lisp_Object l, Lisp_Object r)
 {
 	if (INDEFP(l) && INDEFP(r))
@@ -348,7 +348,7 @@ indef_div(Lisp_Object l, Lisp_Object r)
 	} else if (COMPARABLEP(l) && INDEFP(r)) {
 		if (!COMPARABLE_INDEF_P(r))
 			return r;
-		else 
+		else
 			return Qzero;
 	} else if (INFINITYP(l) || INFINITYP(r)) {
 		return make_indef(COMPLEX_INFINITY);

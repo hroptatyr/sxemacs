@@ -55,24 +55,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
    octon     = octonion number (which library does that? lidia?) - NOT YET
 
-   Category unions: 
+   Category unions:
    ================
    rational        = integer + bigq
    real            = float + bigf + bigr
-                     (and everything else simulating real numbers)
+		     (and everything else simulating real numbers)
    comparable      = rational + real
-                     (and everything else that has a total order)
+		     (and everything else that has a total order)
    complex         = bigc + gaussian
    algebraic       = rational + ffelm + padic + gaussian
    archimedean     = rational + real + complex
-                     (and everything else with an archimedean valuation)
+		     (and everything else with an archimedean valuation)
    non-archimidean = padic + ffelm
 
    number    = archimedean + non-archimedean + quatern + octon
 
 
    The top-level configure script should define the symbols
-   HAVE_MPZ, HAVE_MPQ, HAVE_MPF, HAVE_MPFR and HAVE_MPC to indicate which 
+   HAVE_MPZ, HAVE_MPQ, HAVE_MPF, HAVE_MPFR and HAVE_MPC to indicate which
    it provides.
    If some type is not defined by the library, this is what happens:
 
@@ -132,7 +132,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #endif
 #if defined HAVE_MPC && defined WITH_MPC
 # include "ent/ent-mpc.h"
-#elif defined HAVE_PSEUC && defined WITH_PSEUC 
+#elif defined HAVE_PSEUC && defined WITH_PSEUC
 # include "ent/ent-pseumpc.h"
 #endif
 #if defined HAVE_ECM && defined WITH_ECM
