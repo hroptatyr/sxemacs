@@ -45,7 +45,7 @@ ETAGS = $(top_builddir)/lib-src/etags
 TAGS_DEPENDENCIES = $(ETAGS)
 
 all_sources=
-header_HEADERS = $(acgen_headers) 
+header_HEADERS = $(acgen_headers)
 
 noinst_LIBRARIES=
 
@@ -61,7 +61,7 @@ header_HEADERS += $(libsxemem_a_headers)
 noinst_LIBRARIES += libsxemem.a
 
 if USE_MEMALLOC
-libmemalloc_a_headers = 
+libmemalloc_a_headers =
 libmemalloc_a_sources =
 libmemalloc_a_SOURCES = $(libmemalloc_a_headers) $(libmemalloc_a_sources)
 EXTRA_libmemalloc_a_SOURCES = \
@@ -78,7 +78,7 @@ noinst_LIBRARIES += libmemalloc.a
 endif
 
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## Create preprocessor output (debugging purposes only)
