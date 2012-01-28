@@ -33,33 +33,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 struct Lisp_EffiObject {
 #ifdef SXEMACS
-        struct lcrecord_header header;
+	struct lcrecord_header header;
 #else
 	struct old_lcrecord_header header;
 #endif	/* SXEMACS */
-        Lisp_Object type;               /* type of ffi object */
-        Lisp_Object size;               /* size of ffi object type */
+	Lisp_Object type;               /* type of ffi object */
+	Lisp_Object size;               /* size of ffi object type */
 
 	Lisp_Object plist;              /* properties list */
 
-        /* Foreign stuff */
-        int fotype;
+	/* Foreign stuff */
+	int fotype;
 #define EFFI_FOT_NONE  0                /* fop is not used */
 #define EFFI_FOT_BIND  2                /* fop is reference to foreign data */
 #define EFFI_FOT_FUNC  3                /* fop is pointer to function */
 
-        /*
-         * Declared as union just for the style, there no problem to
-         * always use fop.generic to access pointer.
-         */
-        union {
-                void *ptr;              /* pointer to foreign data */
+	/*
+	 * Declared as union just for the style, there no problem to
+	 * always use fop.generic to access pointer.
+	 */
+	union {
+		void *ptr;              /* pointer to foreign data */
 		void *fun;              /* pointer to foreign function */
-                void *generic;          /* generic storer */
-        } fop;
+		void *generic;          /* generic storer */
+	} fop;
 
-        size_t storage_size;            /* size of storage */
-        char fostorage[0];              /* storage */
+	size_t storage_size;            /* size of storage */
+	char fostorage[0];              /* storage */
 };
 
 #define EFFIO_HAS_FOP(fo) ((fo)->fotype != EFFI_FOT_NONE)

@@ -102,13 +102,13 @@ void Lstream_fungetc (Lstream *stream, int c)
 	Function equivalents of the above macros.
 
 Lstream_data_count Lstream_read (Lstream *stream, void *data,
-                                 Lstream_data_count size)
+				 Lstream_data_count size)
 	Read SIZE bytes of DATA from the stream.  Return the number of
 	bytes read.  0 means EOF. -1 means an error occurred and no
 	bytes were read.
 
 Lstream_data_count Lstream_write (Lstream *stream, void *data,
-                                  Lstream_data_count size)
+				  Lstream_data_count size)
 	Write SIZE bytes of DATA to the stream.  Return the number of
 	bytes written.  -1 means an error occurred and no bytes were
 	written.
@@ -983,7 +983,7 @@ make_filedesc_stream_1(int filedesc, int offset, int count, int flags,
 		       const char *mode)
 {
 	Lisp_Object obj = Qnil;
-        if (filedesc < 0)
+	if (filedesc < 0)
 		return obj;
 	lstream_t lstr = Lstream_new(lstream_filedesc, mode);
 	filedesc_stream_t fstr = FILEDESC_STREAM_DATA(lstr);

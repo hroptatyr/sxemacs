@@ -141,7 +141,7 @@ struct media_substream {
 	Lisp_Media_Stream *up;
 
 	/* data and handling issues */
-	media_type type; 
+	media_type type;
 
 	union {
 		mtype_audio_properties *aprops;
@@ -269,7 +269,7 @@ struct Lisp_Media_Stream {
 	media_substream *first;	/* pointer to first substream */
 	media_substream *last;	/* pointer to last substream */
 
-	media_kind kind; 
+	media_kind kind;
 	media_driver driver;
 
 	union {

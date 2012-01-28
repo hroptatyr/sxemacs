@@ -5,7 +5,7 @@
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
   * This file is part of SXEmacs.
-  * 
+  *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
   * are met:
@@ -232,7 +232,7 @@ ase_dheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
 	EMOD_ASE_DEBUG_HEAP("d:0x%08lx@0x%08lx shall be printed...\n",
 			    (long unsigned int)h, (long unsigned int)obj);
 
-	write_fmt_str(pcf, "#<ase:heap :dense :size %u", 
+	write_fmt_str(pcf, "#<ase:heap :dense :size %u",
 		      (unsigned int)ase_dheap_size(h));
 
 	if (ase_heap_opts_coloured(h)) {
@@ -270,7 +270,7 @@ ase_wheap_prnt(Lisp_Object obj, Lisp_Object pcf, int SXE_UNUSED(foo))
 
 	EMOD_ASE_DEBUG_HEAP("w:0x%08lx@0x%08lx shall be printed...\n",
 			    (long unsigned int)h, (long unsigned int)obj);
-	write_fmt_string(pcf, "#<ase:heap :weak :size %u", 
+	write_fmt_string(pcf, "#<ase:heap :weak :size %u",
 			 (unsigned int)ase_wheap_size(h));
 
 	if (ase_heap_opts_coloured(h)) {

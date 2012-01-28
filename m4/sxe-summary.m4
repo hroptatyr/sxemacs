@@ -112,7 +112,7 @@ elif test "${sxemacs_betaname}" != ""; then
   echo "    WARNING: troubleshooting information available."
   echo "    WARNING: ---------------------------------------------------------"
 fi
-unset tmp_enabled 
+unset tmp_enabled
 
 
 echo "
@@ -171,9 +171,9 @@ fi
 case "$with_menubars" in
   lucid ) echo "  Using Lucid menubars." ;;
   motif ) echo "  Using Motif menubars."
-          echo "  *WARNING*  The Motif menubar implementation is currently buggy."
-          echo "             We recommend using the Lucid menubar instead."
-          echo "             Re-run configure with --with-menubars='lucid'." ;;
+	  echo "  *WARNING*  The Motif menubar implementation is currently buggy."
+	  echo "             We recommend using the Lucid menubar instead."
+	  echo "             Re-run configure with --with-menubars='lucid'." ;;
   * )      echo "  No support for menubars."   ;;
 esac
 case "$with_scrollbars" in
@@ -184,12 +184,12 @@ case "$with_scrollbars" in
 esac
 case "$with_dialogs" in
   motif  ) echo "  Using Motif dialog boxes."
-           if test "$unexec" = "unexaix.o"; then if test "`uname -v`" = 4 -a "`uname -r`" -ge 3; then
-             echo "  *WARNING*  The Motif dialog boxes cause problems on AIX 4.3 and higher."
-             echo "             We recommend using the Athena dialog boxes instead."
-             echo "             Install libXaw and re-run configure with --with-dialogs='athena'."
-             echo "             Read the PROBLEMS file for more information."
-           fi; fi ;;
+	   if test "$unexec" = "unexaix.o"; then if test "`uname -v`" = 4 -a "`uname -r`" -ge 3; then
+	     echo "  *WARNING*  The Motif dialog boxes cause problems on AIX 4.3 and higher."
+	     echo "             We recommend using the Athena dialog boxes instead."
+	     echo "             Install libXaw and re-run configure with --with-dialogs='athena'."
+	     echo "             Read the PROBLEMS file for more information."
+	   fi; fi ;;
   athena ) echo "  Using Athena dialog boxes."     ;;
   * )      echo "  No support for dialog boxes." ;;
 esac

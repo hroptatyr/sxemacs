@@ -5,7 +5,7 @@
  * Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
  *
  * This file is part of SXEmacs.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -574,7 +574,7 @@ Lisp_Object ase_empty_interval(void)
 Lisp_Object ase_empty_interval_union(void)
 {
 	Lisp_Object result = Qnil;
-	ase_interval_union_item_t u = NULL; 
+	ase_interval_union_item_t u = NULL;
 	ase_interval_union_t i = NULL;
 
 	u = _ase_make_interval_union_item(Qase_empty_interval);
@@ -778,7 +778,7 @@ _ase_interval_bounds_disjoint_p(ase_interval_t a1, ase_interval_t a2)
 	}
 }
 
-static Lisp_Object 
+static Lisp_Object
 _ase_interval_interior_contains_obj_p(
 	ase_cartesian_t iip1, ase_cartesian_t iip2)
 {
@@ -832,7 +832,7 @@ _ase_interval_union_contains_obj_p(ase_interval_union_t iu, Lisp_Object obj)
 	return Qnil;
 }
 
-static Lisp_Object 
+static Lisp_Object
 _ase_interval_union_contains_intv_p(ase_interval_union_t iu, ase_interval_t a)
 {
 	ase_interval_union_item_t u = ase_interval_union(iu);
@@ -847,7 +847,7 @@ _ase_interval_union_contains_intv_p(ase_interval_union_t iu, ase_interval_t a)
 	return Qnil;
 }
 
-static Lisp_Object 
+static Lisp_Object
 _ase_interval_union_contains_intr_p(
 	ase_interval_union_t iu, ase_cartesian_t iip)
 {
@@ -864,7 +864,7 @@ _ase_interval_union_contains_intr_p(
 	return Qnil;
 }
 
-static Lisp_Object 
+static Lisp_Object
 _ase_interval_union_contains_union_p(
 	ase_interval_union_t iu1, ase_interval_union_t iu2)
 {
@@ -1562,7 +1562,7 @@ _ase_intersect_union_intv(ase_interval_union_t iu, ase_interval_t a)
 {
 	ase_interval_union_item_t u = ase_interval_union(iu);
 	struct ase_interval_union_item_s ures, *ur = &ures;
-	
+
 	ur->current = Qase_empty_interval;
 	ur->next = NULL;
 	while (u) {
@@ -1607,7 +1607,7 @@ _ase_intersect_union_intr(ase_interval_union_t iu, ase_cartesian_t c)
 {
 	ase_interval_union_item_t u = ase_interval_union(iu);
 	struct ase_interval_union_item_s ures, *ur = &ures;
-	
+
 	ur->current = Qase_empty_interval;
 	ur->next = NULL;
 	while (u) {
@@ -1654,7 +1654,7 @@ _ase_intersect_union_union(ase_interval_union_t iu1, ase_interval_union_t iu2)
 {
 	ase_interval_union_item_t u = ase_interval_union(iu1);
 	struct ase_interval_union_item_s ures, *ur = &ures;
-	
+
 	ur->current = Qase_empty_interval;
 	ur->next = NULL;
 	while (u) {
@@ -1994,7 +1994,7 @@ _ase_subtract_intv_union(ase_interval_t a, ase_interval_union_item_t u)
 
 		na = _ase_subtract_union_intv(na, a2);
 
-		if (!na) 
+		if (!na)
 			break;
 		u = u->next;
 	}
@@ -2040,7 +2040,7 @@ _ase_subtract_intr_union(ase_cartesian_t c, ase_interval_union_item_t u)
 
 		na = _ase_subtract_union_intr(na, c2);
 
-		if (!na) 
+		if (!na)
 			break;
 		u = u->next;
 	}
@@ -2090,7 +2090,7 @@ _ase_subtract_union_union(ase_interval_union_t iu1, ase_interval_union_t iu2)
 			na = _ase_subtract_union_intr(na, c);
 		}
 
-		if (!na) 
+		if (!na)
 			break;
 		u = u->next;
 	}
@@ -2347,7 +2347,7 @@ _ase_interval_union_boundary(ase_interval_union_item_t u)
 			ur->next = tmp;
 		} else {
 			ur->next = tmp->next;
-		        _ase_interval_union_item_fini(tmp);
+			_ase_interval_union_item_fini(tmp);
 		}
 		while (ur->next)
 			ur = ur->next;
@@ -2610,7 +2610,7 @@ _ase_heapsort_sift(Lisp_Object *args, int start, int count,
 
 	while (2*root  + 1 < count) {
 		child = 2*root + 1;
-         
+
 		if (child < count-1 && lessp(args[child], args[child+1]))
 			child++;
 		if (lessp(args[root], args[child])) {

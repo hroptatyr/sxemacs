@@ -470,9 +470,9 @@ The type may be the strings \"px\", \"pix\", or \"pixel\" (pixels), \"pt\" or
 				    (boundp 'x-font-regexp)
 				    x-font-regexp)
  (let
-     ((- 		"[-?]")
+     ((-		"[-?]")
       (foundry		"[^-]*")
-      (family 		"[^-]*")
+      (family		"[^-]*")
       ;(weight		#r"\(bold\|demibold\|medium\|black\)")
       (weight\?		#r"\([^-]*\)")
       ;(slant		#r"\([ior]\)")

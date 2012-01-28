@@ -106,7 +106,7 @@ See <...> for the specific control codes.
 @node subbuffer
 @subsection The sub-buffer
 
-A program that talks to terminal expects the terminal to have a fixed size. 
+A program that talks to terminal expects the terminal to have a fixed size.
 If the program is talking a terminal emulator program such as @code{xterm},
 that size can be changed (if the xterm window is re-sized), but programs
 still assume a logical terminal that has a fixed size independent

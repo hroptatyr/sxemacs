@@ -29,7 +29,7 @@ struct tty_color_instance_data {
 	Lisp_Object symbol;	/* so we don't have to constantly call Fintern() */
 };
 
-#define TTY_COLOR_INSTANCE_DATA(c) 				\
+#define TTY_COLOR_INSTANCE_DATA(c)				\
   ((struct tty_color_instance_data *)((c)->data))
 
 #define COLOR_INSTANCE_TTY_SYMBOL(c) (TTY_COLOR_INSTANCE_DATA (c)->symbol)
@@ -38,7 +38,7 @@ struct tty_font_instance_data {
 	Lisp_Object charset;
 };
 
-#define TTY_FONT_INSTANCE_DATA(c) 				\
+#define TTY_FONT_INSTANCE_DATA(c)				\
   ((struct tty_font_instance_data *) (c)->data)
 
 #define FONT_INSTANCE_TTY_CHARSET(c) (TTY_FONT_INSTANCE_DATA (c)->charset)

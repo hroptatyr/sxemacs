@@ -4,13 +4,13 @@
 
 #include "sun3.h"
 
-/* The following line tells the configuration script what sort of 
+/* The following line tells the configuration script what sort of
    operating system this machine is likely to run.
    USUAL-OPSYS="note"
 
 NOTE-START
 Sun with software floating point (-machine=sun3-soft;
-			          -opsystem=bsd4-2 or -opsystem=sunos4)
+				  -opsystem=bsd4-2 or -opsystem=sunos4)
 
   Versions 1, 2, and 3 of the operating system are derived from
   Berkeley 4.2, meaning that you should use -opsystem=bsd4-2.

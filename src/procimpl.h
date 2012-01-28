@@ -48,8 +48,8 @@ struct process_methods {
 				     Lisp_Object service, Lisp_Object protocol,
 				     void **vinfd, void **voutfd);
 	void (*open_network_server_stream) (Lisp_Object name, Lisp_Object host,
-                                            Lisp_Object service, Lisp_Object protocol,
-                                            void **vinfd, void **voutfd);
+					    Lisp_Object service, Lisp_Object protocol,
+					    void **vinfd, void **voutfd);
 	void (*network_server_accept) (Lisp_Object process);
 	Lisp_Object (*network_process_listener) (Lisp_Object process);
 #ifdef HAVE_MULTICAST

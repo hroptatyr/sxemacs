@@ -160,15 +160,15 @@
   ;; multi-for
   (Assert
    (equal
-    (cl:loop for x from 1 to 10 
-	     for y = nil then x 
+    (cl:loop for x from 1 to 10
+	     for y = nil then x
 	     collect (list x y))
     '((1 nil) (2 2) (3 3) (4 4) (5 5) (6 6) (7 7) (8 8) (9 9) (10 10))))
 
   (Assert
    (equal
-    (cl:loop for x from 1 to 10 
-	     and y = nil then x 
+    (cl:loop for x from 1 to 10
+	     and y = nil then x
 	     collect (list x y))
     '((1 nil) (2 1) (3 2) (4 3) (5 4) (6 5) (7 6) (8 7) (9 8) (10 9))))
 
@@ -242,7 +242,7 @@
 
   (Assert
    (= (let* ((series '(1.25 4.5 5.5)))
-	(cl:loop for v in series 
+	(cl:loop for v in series
 		 sum (* 2.0 v)))
       22.5))
 

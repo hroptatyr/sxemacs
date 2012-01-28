@@ -2101,4 +2101,3 @@ char in the range @samp{' '} to @samp{'~'}).
 This function returns @code{t} if @var{object} is a category table value.
 Valid values are @code{nil} or a bit vector of size 95.
 @end defun
-

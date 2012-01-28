@@ -176,9 +176,9 @@
 (defvar about-other-current-hackers '(peanuthorst))
 
 (defvar about-once-and-future-hackers
-  '(adrian aj ajc alastair baw ben bw cgw chr craig cthomp daiki dan darrylo 
-	   devin dkindred dmoore dv eb fabrice golubev gunnar heatxsink hbs hisashi 
-	   hmuller hniksic hobley jan jareth jason jens jmiller jonathan juhp 
+  '(adrian aj ajc alastair baw ben bw cgw chr craig cthomp daiki dan darrylo
+	   devin dkindred dmoore dv eb fabrice golubev gunnar heatxsink hbs hisashi
+	   hmuller hniksic hobley jan jareth jason jens jmiller jonathan juhp
 	   jwz kazz kirill kyle larsi marcpa martin mcook mly morioka mta myrkraverk
 	   ograf olivier oscar pelegri pez piper pittman rendhalver rickc rose
 	   rossini slb sperber stig stigb thiessel tomonori tuck turnbull vin
@@ -369,22 +369,22 @@
 	 (normal-range (- msglen width))
 	 (long-border-interval 1.5)
 	 (long-default-interval 0.15)
-         submsg)
+	 submsg)
     (if (< msglen width)
-        (display-message 'no-log (concat leader msg))
+	(display-message 'no-log (concat leader msg))
       (while t
-        (dotimes (i msglen)
-          (setq submsg (if (< i normal-range)
-                           (substring msg i (+ i width))
-                         ;; Rolling is needed.
-                         (concat (substring msg i)
-                                 (substring msg 0 (- (+ i width) msglen)))))
-          (display-message 'no-log (concat leader submsg))
-          (unless (sit-for (cond
-                            ((eq i 0) long-border-interval)
-                            (t long-default-interval)))
-            (return-from about-rolling-message)))
-          (garbage-collect)))))
+	(dotimes (i msglen)
+	  (setq submsg (if (< i normal-range)
+			   (substring msg i (+ i width))
+			 ;; Rolling is needed.
+			 (concat (substring msg i)
+				 (substring msg 0 (- (+ i width) msglen)))))
+	  (display-message 'no-log (concat leader submsg))
+	  (unless (sit-for (cond
+			    ((eq i 0) long-border-interval)
+			    (t long-default-interval)))
+	    (return-from about-rolling-message)))
+	  (garbage-collect)))))
 
 ;; Main entry page.
 
@@ -678,8 +678,8 @@ England.  He'd quite like to have his own company one day, but has yet
 to think of that killer product...
 
 See also ")
-        (about-url-link 'alastair nil "Visit Alastair's home page")
-        (widget-insert ".\n"))
+	(about-url-link 'alastair nil "Visit Alastair's home page")
+	(widget-insert ".\n"))
     (baw
      (widget-insert "
 As of November 2000, I am a software engineer with the Pythonlabs at
@@ -702,39 +702,39 @@ to fend off the legions of groupies that seem to follow me everywhere.
     Milk Me Daddy
     (C) 1990 Warsaw
     ===============
-    Oh daddy with your fingers pink 
-    From whose udders do you drink? 
-    Thy milk offends with putrid stink 
-    I'll vomit now, lactose I think 
+    Oh daddy with your fingers pink
+    From whose udders do you drink?
+    Thy milk offends with putrid stink
+    I'll vomit now, lactose I think
 
-    If I could dream, I'd be a cow 
-    Not horse, or mule, or barnyard sow 
-    The cud I'd chew would drip and how! 
-    So milk me daddy, milk me now! 
+    If I could dream, I'd be a cow
+    Not horse, or mule, or barnyard sow
+    The cud I'd chew would drip and how!
+    So milk me daddy, milk me now!
 
-    My bovine nature knows no bounds 
-    I'd naught awake at midnight sounds 
-    Of teens approaching o'er the grounds 
-    To tip with glee, then screech like clowns 
+    My bovine nature knows no bounds
+    I'd naught awake at midnight sounds
+    Of teens approaching o'er the grounds
+    To tip with glee, then screech like clowns
 
-    And so I stare into this glass 
-    Of sweaty juice, I gulp so fast 
-    Each drop I lick, down to the last 
-    The vertigo I know will pass 
+    And so I stare into this glass
+    Of sweaty juice, I gulp so fast
+    Each drop I lick, down to the last
+    The vertigo I know will pass
 
-    My mother smiles and pats my head 
-    She's proud of me, so she has said 
-    My pop just now gets out of bed 
-    His eyes quite comatose and red 
+    My mother smiles and pats my head
+    She's proud of me, so she has said
+    My pop just now gets out of bed
+    His eyes quite comatose and red
 
-    He'll empathize my milky fate 
-    Whilest sopping gravy from his plate 
-    And as the hour is getting late 
-    His belly taut with all he ate 
+    He'll empathize my milky fate
+    Whilest sopping gravy from his plate
+    And as the hour is getting late
+    His belly taut with all he ate
 
-    He isn't often quite so chatty 
-    His arteries clogged with meat so fatty 
-    With burps that launch soup, thick and splatty 
+    He isn't often quite so chatty
+    His arteries clogged with meat so fatty
+    With burps that launch soup, thick and splatty
     Oh how I wish you'd milk me daddy\n\n\t")
      (about-url-link 'baw nil "Visit Barry's home page")
      (widget-insert "\n"))
@@ -952,8 +952,8 @@ believe now. Oh well, such is life.\n"))
 In real life most of the time my name is Sebastian Freundt.
 I'm a mathematician at the ")
      (about-url-link "http://www.math.tu-berlin.de"
-                     "Technical University of Berlin"
-                     "www.math.tu-berlin.de")
+		     "Technical University of Berlin"
+		     "www.math.tu-berlin.de")
      (widget-insert ".
 My main task there is to hack at the computer algebra system KANT/KASH,
 and incorporate the ideas of the SCIEnce project.
@@ -1196,8 +1196,8 @@ teaches networking basics, Internet technologies (you know, all these
 xxML and hairy script languages !)  and the Scheme language.\n"))
     (peanuthorst
      (widget-insert "
-Horst is a student still working towards his HSC. He has a Unit II 
-certification in Information Technology already, and is studying 
+Horst is a student still working towards his HSC. He has a Unit II
+certification in Information Technology already, and is studying
 Chemistry, German, and Physics.
 
 He started using XEmacs relatively recently, when he started with Linux
@@ -1214,7 +1214,7 @@ I did my PhD at UCB and a postdoc at CSL/PARC.  I joined Sun in 1990,
 spent some time in DevPro (that is when I made my contribution to
 XEmacs) and joined JavaSoft in fall '95, where I've been the lead for
 several JSP-related specifications and JAX-RPC.  I'm currently the Web
-Layer architect for J2EE. 
+Layer architect for J2EE.
 
 I was born in Barcelona and I grew up mostly in Caracas; I have two kids
 and I speak only catalan to them; I can juggle some (career, family, and
@@ -1328,11 +1328,11 @@ development and design of a CAD framework for analog integrated
 circuits with special emphasis on distributed software concepts. He
 has now joined HP as technical consultant.
 
-                      All of the buildings,
-                      all of the cars
-                      were once just a dream
-                      in somebody's head.\n
-                                     P. Gabriel\n"))
+		      All of the buildings,
+		      all of the cars
+		      were once just a dream
+		      in somebody's head.\n
+				     P. Gabriel\n"))
     (tomonori
      (widget-insert
       "
@@ -1482,7 +1482,7 @@ using Epoch.\n"))
     (dkindred
      (widget-insert "
 Darrell tends to come out of the woodwork a couple of weeks
-before a new release with a flurry of fixes for bugs that 
+before a new release with a flurry of fixes for bugs that
 annoy him.  He hopes he's spared you from a core dump or two.\n"))
     (dmoore
      (widget-insert "
@@ -1527,7 +1527,7 @@ consider a bug.\n"))
     (gunnar
      (widget-insert
       "
-Sorry, no information about my XEmacs contributions yet.\n"))	
+Sorry, no information about my XEmacs contributions yet.\n"))
     (hbs
      (widget-insert "
 Part of the original (pre-19.0) Lucid Emacs development team.  Harlan
@@ -1536,7 +1536,7 @@ are original to the Lucid version of Emacs, including extents and hash
 tables.\n"))
     (heatxsink
      (widget-insert "
-Sorry, no information about my SXEmacs contributions yet.\n"))	
+Sorry, no information about my SXEmacs contributions yet.\n"))
     (hisashi
      (widget-insert
       "

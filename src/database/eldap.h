@@ -49,7 +49,7 @@ DECLARE_LRECORD(ldap, Lisp_LDAP);
   CHECK_LDAP (ldap);							\
   if (!XLDAP (ldap)->ld)						\
     signal_simple_error ("Attempting to access closed LDAP connection",	\
-                         ldap);						\
+			 ldap);						\
 } while (0)
 
 Lisp_Object Fldapp(Lisp_Object object);

@@ -1,4 +1,3 @@
-
 @node Sending Mail, Reading Mail, Picture, Top
 @chapter Sending Mail
 @cindex mail
@@ -35,7 +34,7 @@ back later (or never).  If you use the @kbd{C-x m} command again when you
 have been composing another message but have not sent it, a new mail
 buffer will be created; in this way, you can compose multiple messages
 at once.  You can switch back to and complete an unsent message by using
-the normal buffer selection mechanisms.  
+the normal buffer selection mechanisms.
 
 @kbd{C-u C-x m} is another way to switch back to a message in progress:
 it will search for an existing, unsent mail message buffer and select it.
@@ -181,7 +180,7 @@ again be in trouble because you forgot to delete an old alias from your
 @file{.mailrc} and a new local user is given a userid which conflicts
 with one of your aliases.
 
-@vindex mail-abbrev-mode-regexp 
+@vindex mail-abbrev-mode-regexp
 Your mail alias abbrevs are in effect only when point is in an
 appropriate header field. The mail aliases will not expand in the body
 of the message, or in other header fields.  The default mode-specific
@@ -207,7 +206,7 @@ following in your @file{.mailrc} file:
 
 That is, if you want an address to have embedded spaces, simply surround
 it with double-quotes.  The quotes are necessary because the format of
-the @file{.mailrc} file uses spaces as address delimiters.  
+the @file{.mailrc} file uses spaces as address delimiters.
 
 Aliases in the @file{.mailrc} file may be nested. For example, assume
 you define aliases like:
@@ -310,7 +309,7 @@ on the prefix @kbd{C-c C-f} (@samp{C-f} is for ``field'').  They are
 @kbd{C-c C-f C-t} (@code{mail-to}) to move to the @samp{To} field, @kbd{C-c
 C-f C-s} (@code{mail-subject}) for the @samp{Subject} field, and @kbd{C-c
 C-f C-c} (@code{mail-cc}) for the @samp{CC} field.  These fields have
-special motion commands because they are edited most frequently. 
+special motion commands because they are edited most frequently.
 
 
 @kindex C-c C-w (Mail mode)

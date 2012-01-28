@@ -18,7 +18,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -317,7 +317,7 @@
       (set-extent-properties e props)
       (put e 'detachable nil)
       (Assert (not (get e 'detachable)))
-    
+
       (Assert (not (extent-detached-p e)))
 
       (delete-region 4 5)

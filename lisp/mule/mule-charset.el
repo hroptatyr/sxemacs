@@ -58,15 +58,15 @@ BUFFER defaults to the current buffer if omitted."
 (defun charsets-in-string (string)
   "Return a list of the charsets in STRING."
   (let ((i 0)
- 	(len (length string))
- 	prev-charset charset list)
+	(len (length string))
+	prev-charset charset list)
     (while (< i len)
       (setq charset (char-charset (aref string i)))
       (if (not (eq prev-charset charset))
- 	  (progn
- 	    (setq prev-charset charset)
- 	    (or (memq charset list)
- 		(setq list (cons charset list)))))
+	  (progn
+	    (setq prev-charset charset)
+	    (or (memq charset list)
+		(setq list (cons charset list)))))
       (setq i (1+ i)))
     list))
 

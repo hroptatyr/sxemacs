@@ -54,22 +54,22 @@ typedef struct {
 
 /* Order size using quicksort.  This implementation incorporates
    four optimizations discussed in Sedgewick:
-   
-   1. Non-recursive, using an explicit stack of pointer that store the 
-      next array partition to sort.  To save time, this maximum amount 
-      of space required to store an array of MAX_INT is allocated on the 
-      stack.  Assuming a 32-bit integer, this needs only 32 * 
+
+   1. Non-recursive, using an explicit stack of pointer that store the
+      next array partition to sort.  To save time, this maximum amount
+      of space required to store an array of MAX_INT is allocated on the
+      stack.  Assuming a 32-bit integer, this needs only 32 *
       sizeof (stack_node) == 136 bits.  Pretty cheap, actually.
 
    2. Choose the pivot element using a median-of-three decision tree.
-      This reduces the probability of selecting a bad pivot value and 
+      This reduces the probability of selecting a bad pivot value and
       eliminates certain extraneous comparisons.
 
    3. Only quicksorts TOTAL_ELEMS / MAX_THRESH partitions, leaving
-      insertion sort to order the MAX_THRESH items within each partition.  
+      insertion sort to order the MAX_THRESH items within each partition.
       This is a big win, since insertion sort is faster for small, mostly
       sorted array segments.
-   
+
    4. The larger of the two sub-partitions is always pushed onto the
       stack first, with the algorithm then concentrating on the
       smaller partition.  This *guarantees* no more than log (n)
@@ -81,7 +81,7 @@ int total_elems;
 int size;
 int (*cmp) ();
 {
-	/* Allocating SIZE bytes for a pivot buffer facilitates a better 
+	/* Allocating SIZE bytes for a pivot buffer facilitates a better
 	   algorithm below since we can do comparisons directly on the pivot. */
 	char *pivot_buffer = (char *)alloca(size);
 	int max_thresh = MAX_THRESH * size;
@@ -99,8 +99,8 @@ int (*cmp) ();
 				char *pivot = pivot_buffer;
 				{
 					/* Select median value from among LO, MID, and HI. Rearrange
-					   LO and HI so the three values are sorted. This lowers the 
-					   probability of picking a pathological pivot value and 
+					   LO and HI so the three values are sorted. This lowers the
+					   probability of picking a pathological pivot value and
 					   skips a comparison for both the LEFT_PTR and RIGHT_PTR. */
 
 					char *mid =
@@ -121,8 +121,8 @@ int (*cmp) ();
 				left_ptr = lo + size;
 				right_ptr = hi - size;
 
-				/* Here's the famous ``collapse the walls'' section of quicksort.  
-				   Gotta like those tight inner loops!  They are the main reason 
+				/* Here's the famous ``collapse the walls'' section of quicksort.
+				   Gotta like those tight inner loops!  They are the main reason
 				   that this algorithm runs much faster than others. */
 				do {
 					while (CMP(left_ptr, pivot) < 0)
@@ -146,7 +146,7 @@ int (*cmp) ();
 			}
 
 			/* Set up pointers for next iteration.  First determine whether
-			   left and right partitions are below the threshold size. If so, 
+			   left and right partitions are below the threshold size. If so,
 			   ignore one or both.  Otherwise, push the larger partition's
 			   bounds on the stack and continue sorting the smaller one. */
 
@@ -169,8 +169,8 @@ int (*cmp) ();
 	}
 
 	/* Once the BASE_PTR array is partially sorted by quicksort the rest
-	   is completely sorted using insertion sort, since this is efficient 
-	   for partitions below MAX_THRESH size. BASE_PTR points to the beginning 
+	   is completely sorted using insertion sort, since this is efficient
+	   for partitions below MAX_THRESH size. BASE_PTR points to the beginning
 	   of the array to sort, and END_PTR points at the very last element in
 	   the array (*not* one beyond it!). */
 
@@ -194,7 +194,7 @@ int (*cmp) ();
 		if (tmp_ptr != base_ptr)
 			SWAP(tmp_ptr, base_ptr, size);
 
-		/* Insertion sort, running from left-hand-side up to `right-hand-side.' 
+		/* Insertion sort, running from left-hand-side up to `right-hand-side.'
 		   Pretty much straight out of the original GNU qsort routine. */
 
 		for (run_ptr = base_ptr + size;

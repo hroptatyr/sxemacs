@@ -38,7 +38,7 @@
 ;; IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ;;; Commentary:
-;; 
+;;
 ;;    Here are a number of utils for interacting with emodules, such
 ;;    as finding them, loading them.  That sort of thing.
 ;;
@@ -46,7 +46,7 @@
 
 ;;; Todo:
 ;;
-;;     
+;;
 
 ;;; Code:
 (defvar emodule-completions nil

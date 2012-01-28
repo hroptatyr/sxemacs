@@ -62,11 +62,11 @@ DECLARE_LRECORD(indef, Lisp_Indef);
 #define indef_data(f) ((f)->data)
 #define XINDEF_DATA(x) indef_data(XINDEF(x))
 
-#define INFINITYP(x) 							\
+#define INFINITYP(x)							\
 	(INDEFP(x) && (XINDEF_DATA(x) < END_OF_INFINITIES))
-#define COMPARABLE_INDEF_P(x) 						\
+#define COMPARABLE_INDEF_P(x)						\
 	(INFINITYP(x) && (XINDEF_DATA(x) < END_OF_COMPARABLE_INFINITIES))
-#define INFINITE_POINT_P(x) 						\
+#define INFINITE_POINT_P(x)						\
 	(INFINITYP(x) && (XINDEF_DATA(x) > END_OF_COMPARABLE_INFINITIES))
 #define NOT_A_NUMBER_P(x)				\
 	(INDEFP(x) && (XINDEF_DATA(x) > END_OF_INFINITIES))

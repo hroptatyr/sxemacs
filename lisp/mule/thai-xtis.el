@@ -68,7 +68,7 @@
 ;; rx' == (tis620-to-thai-xtis-second-byte-bitpattern rx)
 ;; r3 == "no vower nor tone"
 ;; r4 == (charset-id 'thai-xtis)
-;; 
+;;
 ;;          |               input (= r0)
 ;;   state  |--------------------------------------------
 ;;          |  consonant  |    vowel    |    tone
@@ -82,9 +82,9 @@
 ;;  r1 == C | WRITE r1,r2 | WRITE r1,r2 | WRITE r1,r2|r0'
 ;;  r2 == V | r1 = r0     | WRITE r0,r3 | r1 = r2 = 0
 ;;          | r2 = 0      | r1 = r2 = 0 |
-;; 
-;; 
-;;          |               input (= r0) 
+;;
+;;
+;;          |               input (= r0)
 ;;   state  |-----------------------------------------
 ;;          |    symbol   |    ASCII    |     EOF
 ;; ---------+-------------+-------------+-------------

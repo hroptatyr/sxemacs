@@ -132,8 +132,8 @@ dnl $3 = allowed values, can be [og_any]
 AC_DEFUN([OG_MULTIARG_PROCESS], [dnl
 	pushdef([og_group], [translit([$1],[-],[_])])
 	new_default=
-        for og_val in $2 `echo "$withval" | sed -e 's/,/ /g'`; do
-	        og_arg=invalid
+	for og_val in $2 `echo "$withval" | sed -e 's/,/ /g'`; do
+		og_arg=invalid
 		case "$og_val" in
 		dnl all and none are only permitted as the first in the list.
 		no | none )		new_default=no ;;
@@ -150,9 +150,9 @@ AC_DEFUN([OG_MULTIARG_PROCESS], [dnl
 			esac
 		])
 		if test -n "$new_default"; then
-dnl 			for og_item in "[$3]"; do
-dnl 				with_[]og_group[]_$og_item="$new_default"
-dnl 			done
+dnl			for og_item in "[$3]"; do
+dnl				with_[]og_group[]_$og_item="$new_default"
+dnl			done
 			with_[]og_group[]_[]patsubst([$3],[ ],[=$new_default; with_[]og_group[]_])[]=$new_default
 				new_default=
 				og_arg=valid
@@ -170,7 +170,7 @@ OG_ERROR_ADDITIONAL_VERBOSITY($1)
 )
 		fi
 	done
-        popdef([og_group])
+	popdef([og_group])
 ])
 
 dnl helper for OG_MULTIARG_HELP_STINGS
@@ -208,7 +208,7 @@ AC_DEFUN([OG_MULTIARG_WITH], [# Option Group --with-$1 (multiarg)
 	sxe_with_options="$sxe_with_options $1"
 
 	pushdef([og_group], [translit([$1],[-],[_])])
-        pushdef([og_DefVal],ifelse($3,,auto,$3))
+	pushdef([og_DefVal],ifelse($3,,auto,$3))
 	pushdef([OG_MULTIARG_ITEM], dnl
 		_OG_MULTIARG_ITEM($1, $[1], $[2], $[3]))
 	pushdef([OG_MULTIARG_MUTEX], dnl
@@ -230,13 +230,13 @@ AC_DEFUN([OG_MULTIARG_WITH], [# Option Group --with-$1 (multiarg)
 
 	pushdef([OG_HELP_STRING], [AS_HELP_STRING($[1], $[2])])
 	pushdef([og_desc], [dnl
-patsubst([$2], [^[ 	]AS_HELP_STRING], [AS_HELP_STRING])])
+patsubst([$2], [^[	]AS_HELP_STRING], [AS_HELP_STRING])])
 	pushdef([og_helps], [dnl
-patsubst(patsubst(patsubst([OG_MULTIARG_HELP_STRINGS($5)], [^[ 	]+], []), [[ 	]+$], []), [^[ 	]*
+patsubst(patsubst(patsubst([OG_MULTIARG_HELP_STRINGS($5)], [^[	]+], []), [[	]+$], []), [^[	]*
 ], [])])
 
 	dnl I personally shoot everybody who fiddles with the whitespace here!!!!
-        AC_ARG_WITH($1, [
+	AC_ARG_WITH($1, [
 og_desc[]ifelse($5,[og_any],,[
 AS_HELP_STRING([], OG_MULTIARG_POSSVAL(og_items))
 AS_HELP_STRING([], OG_MULTIARG_MORE_ON_POSSVALS)
@@ -322,7 +322,7 @@ AC_DEFUN([OG_MULTIARG_SUMMARY], [# Option Group --with-$1 (multiarg)
 	pushdef([og_mutices], [$sxe_og_[]og_group[]_mutices])
 	pushdef([indent], [ifelse([$3],[],[],[$3])])
 
-        for og_val in og_items; do
+	for og_val in og_items; do
 		if eval "test \"\$have_[]og_group[]_${og_val}\" = \"yes\""; then
 			if eval "test \"\$with_[]og_group[]_${og_val}\" \
 			   != \"yes\""; then

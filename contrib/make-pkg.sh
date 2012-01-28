@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # (C) 2008 Nelson Ferreira
-#   
+#
 # This program is free software; you can redistribute it and/or modify it
 # under a BSD-like licence.
 #

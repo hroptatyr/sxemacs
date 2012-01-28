@@ -12,7 +12,7 @@ provide certain features which can be turned off or on at any
 time. Emacs can only be in one major mode at any time, but it can turn
 on several minor modes at the same time. After you have selected any
 major or minor mode, you can select @b{Describe Mode} from the @b{Help}
-menu and you will get documentation about those modes. 
+menu and you will get documentation about those modes.
 
 @comment  node-name,  next,  previous,  up
 @menu
@@ -57,10 +57,10 @@ the menu bar.
         Some of the available modes in SXEmacs are :
 
 @table @b
-@item fundamental-mode 
+@item fundamental-mode
 @cindex fundamental-mode
 When you start SXEmacs, usually you start with the default "Fundamental"
-mode. This mode has no special definitions or settings.   
+mode. This mode has no special definitions or settings.
 
 @item nroff-mode
 @cindex nroff-mode
@@ -137,7 +137,7 @@ The minor modes in Emacs provide some optional features which you can
 turn on or off. Any number of minor modes can be active at the same time
 with any major mode. You can enable a minor mode in one buffer and
 disable it in other mode. To enable a minor mode, for example the
-font-lock mode type the following command: 
+font-lock mode type the following command:
 
 @example
 M-x font-lock-mode
@@ -149,7 +149,7 @@ positive argument will always turn the mode on. Whenever you type this
 command, it will turn the mode on if it was off, OR it will turn it off
 if it was on i.e. it toggles. Look at the mode-line at the bottom of the
 frame. If it says FLock in parentheses, then it means that this
-mode is on, otherwise it is off. 
+mode is on, otherwise it is off.
 
 The following are some of the minor modes available in SXEmacs. To enable
 any one of them type "M-x" in front of them.
@@ -160,13 +160,13 @@ any one of them type "M-x" in front of them.
 
 You can also choose this mode by selecting the @b{Syntax Highlighting}
 menu item from the @b{Options} menu on the menu-bar at the
-top. If you wish to have this mode enabled permanently, choose 
+top. If you wish to have this mode enabled permanently, choose
 @b{Save Options} from the @b{Options} menu. @xref{Options Menu}, for
 more information on the Options menu.  You can also add statements in
 your @file{init.el} file. For each major mode in which you wish to
 enable this minor mode, you need a statement in your @file{init.el}
 file. The following example shows how to enable the font-lock mode when
-the major mode is c-mode. 
+the major mode is c-mode.
 
 @example
 (add-hook 'c-mode-hook          'turn-on-font-lock)
@@ -182,20 +182,20 @@ be displayed in red, variables in black, functions in blue and other
 keywords in different colors and fonts. When you select @b{More} from
 the @b{Syntax Highlighting} option, you get very detailed display of
 colors and fonts; function names within comments themselves might appear
-in a different font and color.  
+in a different font and color.
 
 @item auto-fill-mode
 @findex auto-fill-mode
 Enabling this mode will provide automatic word-wrapping. The @key{SPC}
 key will break lines i.e. insert newlines as you type to prevent lines
-from becoming too long. 
+from becoming too long.
 
 @item overwrite-mode
 @cindex overwrite-mode
 When you enable this mode, the text that you type will replace the
 existing text rather than moving it to the right (the default case). You
 can enable this mode by selecting @b{Overstrike} menu-item from the
-@b{Options} menu from the menu-bar. 
+@b{Options} menu from the menu-bar.
 
 @item abbrev-mode
 @cindex abbrev-mode
@@ -203,10 +203,10 @@ After you enable this mode, you can define words which will expand into
 some different text i.e. you can define abbreviations. For example, you
 might define "expand" to "expand will eventually expand to this
 text". After this definition you will be able to get "expand will
-eventually expand to this text" simply by typing 
+eventually expand to this text" simply by typing
 
 @example
-expand @key{SPC} 
+expand @key{SPC}
 @end example
 
 @noindent
@@ -222,11 +222,11 @@ case of a system crash.
 @item line-number-mode
 @cindex line-number-mode
 After you enable this mode, the line number at which your cursor is
-present will be displayed continuously in the mode line. 
+present will be displayed continuously in the mode line.
 
 @item blink-paren
 @cindex blink-paren
-To enable this command, just type 
+To enable this command, just type
 @example
 M-x blink-paren
 @end example
@@ -241,4 +241,3 @@ information on the @b{Paren Highlighting} option.
 
 For information on some other modes, look at the SXEmacs User's Manual
 and the associated files.
-

@@ -18,7 +18,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -139,7 +139,7 @@ public static void main(String[] args) throws java.io.IOException
 (defbug 7
   (string-match "\\(\\s-\\|$\\)" "å"))
 
-  
+
 ;;;; -------------------------------------------------------------------
 ;;;; Bugs below this line have been fixed.
 ;;;; Keep these for regression testing

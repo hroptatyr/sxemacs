@@ -47,18 +47,18 @@
   "Non-nil when the current emacs is SXEmacs.")
 
 ;; Can't make this constant for now because it causes an error in
-;; update-elc.el. 
+;; update-elc.el.
 (defvar source-lisp (file-name-directory (expand-file-name (nth 2 command-line-args))) "\
-Root of tree containing the Lisp source code for the current build. 
+Root of tree containing the Lisp source code for the current build.
 Differs from `lisp-directory' if this SXEmacs has been installed. ")
 
 (defconst build-directory (expand-file-name ".." (expand-file-name ".." invocation-directory)) "\
-Root of tree containing object files and executables produced by build. 
-Differs from `source-directory' if configured with --srcdir option, a practice 
+Root of tree containing object files and executables produced by build.
+Differs from `source-directory' if configured with --srcdir option, a practice
 recommended for developers.")
 
 (defconst source-directory (expand-file-name ".." source-lisp)  "\
-Root of tree containing source code for the current build. 
+Root of tree containing source code for the current build.
 Used during loadup and for documenting source of symbols defined in C.")
 
 (defvar preloaded-file-list nil "\
@@ -71,13 +71,13 @@ with the exception of `loadup.el'.")
 ;(start-profiling)
 
 (defun compute-build-root (dir)
-  "Given DIR as basis, traverse parent-wards until the cookie 
+  "Given DIR as basis, traverse parent-wards until the cookie
 file .sxemacs.source.tree is found."
   (when (stringp dir)
     (while (and (file-readable-p dir)
-                (not (string-equal "/" dir))
-                (not (file-exists-p
-                      (expand-file-name ".sxemacs.source.tree" dir))))
+		(not (string-equal "/" dir))
+		(not (file-exists-p
+		      (expand-file-name ".sxemacs.source.tree" dir))))
       (setq dir (expand-file-name ".." dir)))
     dir))
 
@@ -89,7 +89,7 @@ file .sxemacs.source.tree is found."
 		(not (memq 'quick-build internal-error-checking)))
 	   30000 3000000)))
 
-  
+
 ;; This is awfully damn early to be getting an error, right?
 (call-with-condition-handler 'really-early-error-handler
     #'(lambda ()
@@ -109,20 +109,20 @@ file .sxemacs.source.tree is found."
 		  (kill-buffer (current-buffer)))))
 
 	(let ((build-root (compute-build-root invocation-directory))
-              (source-tree-root (getenv "SOURCE_TREE_ROOT"))
-              (build-tree-root (getenv "BUILD_TREE_ROOT")))
+	      (source-tree-root (getenv "SOURCE_TREE_ROOT"))
+	      (build-tree-root (getenv "BUILD_TREE_ROOT")))
 	  (setq load-path
-                (list (expand-file-name "lisp" build-root)
-                      (expand-file-name "lisp" build-tree-root)
-                      (expand-file-name "lisp" source-tree-root)))
+		(list (expand-file-name "lisp" build-root)
+		      (expand-file-name "lisp" build-tree-root)
+		      (expand-file-name "lisp" source-tree-root)))
 	  (setq module-load-path
-                (list (expand-file-name "modules" build-root)
-                      (expand-file-name "modules" build-tree-root)
-                      (expand-file-name "modules" source-tree-root)))
-          (unless (file-exists-p (car load-path))
-            (setq load-path (cdr load-path)))
-          (unless (file-exists-p (car module-load-path))
-            (setq module-load-path (cdr module-load-path))))
+		(list (expand-file-name "modules" build-root)
+		      (expand-file-name "modules" build-tree-root)
+		      (expand-file-name "modules" source-tree-root)))
+	  (unless (file-exists-p (car load-path))
+	    (setq load-path (cdr load-path)))
+	  (unless (file-exists-p (car module-load-path))
+	    (setq module-load-path (cdr module-load-path))))
 
 	;; message not defined yet ...
 	(external-debugging-output (format "\nUsing load-path %s" load-path))
@@ -144,13 +144,13 @@ file .sxemacs.source.tree is found."
 	;; #### This code is duplicated in two other places.
 	(let ((temp-path (expand-file-name "." (car load-path))))
 	  (setq load-path
-                (nconc
-                 (mapcar
-                  #'(lambda (i) (concat i "/"))
-                  (directory-files temp-path t "^[^-.]"
-                                   nil 'dirs-only))
-                 (cons (file-name-as-directory temp-path)
-                       load-path))))
+		(nconc
+		 (mapcar
+		  #'(lambda (i) (concat i "/"))
+		  (directory-files temp-path t "^[^-.]"
+				   nil 'dirs-only))
+		 (cons (file-name-as-directory temp-path)
+		       load-path))))
 
 	(setq load-warn-when-source-newer t ; Used to be set to nil at the end
 	      load-warn-when-source-only  t) ; Set to nil at the end
@@ -177,8 +177,8 @@ file .sxemacs.source.tree is found."
 	      ;;(print (format "guessed-roots: %S" (paths-find-emacs-roots invocation-directory invocation-name)))
 	      nil)))
 
-        (let ((f (locate-file "dumped-lisp.el" load-path)))
-          (load f))
+	(let ((f (locate-file "dumped-lisp.el" load-path)))
+	  (load f))
 
 	(let ((files preloaded-file-list)
 	      file)
@@ -252,7 +252,7 @@ file .sxemacs.source.tree is found."
       ;; load-history) is normally done in lread.c after reading the
       ;; entirety of a file, something which never happens for loadup.el.
       current-load-list nil)
-;; Make the path to this file look a little nicer: 
+;; Make the path to this file look a little nicer:
 (setcar (car load-history) (file-truename (caar load-history)))
 
 (garbage-collect)
@@ -336,7 +336,7 @@ file .sxemacs.source.tree is found."
       ;; This is handled earlier in the build process.
       ;; (condition-case () (delete-file "sxemacs") (file-error nil))
       (when-fboundp 'really-free
-        (really-free))
+	(really-free))
       (dump-emacs invf dmpf)
       (kill-emacs))))
 

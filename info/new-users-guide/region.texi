@@ -12,10 +12,10 @@ edit only that part of the buffer. This selected buffer is called a
 @itemize @bullet
 @item
 You use special keys to select text by defining a region between the
-cursor and @dfn{the mark} (which you set). 
+cursor and @dfn{the mark} (which you set).
 @item
 If you are running SXEmacs under X, you can also select text
-with the mouse. 
+with the mouse.
 @end itemize
 
 @comment  node-name,  next,  previous,  up
@@ -23,7 +23,7 @@ with the mouse.
 * Selecting Text::              Select a region of text by setting the Mark
 * Mouse::                       Selecting Text with Mouse
 * Region Operation::            Various ways to operate on a selected text
-* Moving Text::                 Moving Text 
+* Moving Text::                 Moving Text
 * Accumulating text::           Accumulating Text from several buffers
 @end menu
 
@@ -37,7 +37,7 @@ with the mouse.
 @findex mark-beginning-of-buffer
 @findex mark-end-of-buffer
 @findex exchange-point-and-mark
-  To define a region you need to set @dfn{the mark} at one end of it and 
+  To define a region you need to set @dfn{the mark} at one end of it and
 move the cursor to the other end. Once you set the mark, it remains
 there until you set it again to some other place. Each buffer has its
 own @dfn{mark ring} (a place where Emacs remembers 16 previous
@@ -48,7 +48,7 @@ following commands:
 @item C-@key{SPC}
 This command will set @dfn{the mark} at the position of your cursor
 (@code{set-mark-command}).  You can move your cursor around and @dfn{the
-mark} will stay there. 
+mark} will stay there.
 @item C-x C-x
 Interchange mark and point (@code{exchange-point-and-mark}). Since Emacs
 will have only one cursor, after you move the cursor it will be unable
@@ -56,7 +56,7 @@ to show you where you set the @dfn{the mark}. In order to see @dfn{the
 mark} you can type the command @kbd{C-x C-x} which will put your cursor
 on the position of your mark and your mark on the position of your
 cursor. Use the command again to reset the positions of your cursor and
-mark. 
+mark.
 @item C-<
 This command will push the mark at the beginning of the buffer without
 changing the position of your cursor.
@@ -91,7 +91,7 @@ these steps:
 Move the mouse cursor over the character at the beginning of the region of
 text you want to select.
 @item
-Press and hold the left mouse button. 
+Press and hold the left mouse button.
 @item
 While holding the left mouse button down, drag the cursor to the
 character at the end of the region of text you want to select.
@@ -131,7 +131,7 @@ Text,,,sxemacs,SXEmacs User's Manual}).
 You can convert the case of the text with @kbd{C-x C-l} or @kbd{C-x C-u}
 If you type @kbd{C-x C-u} the selected text will become all
 upper-case. If you type @kbd{C-x C-l} the selected text will become all
-lower-case. 
+lower-case.
 @item
 Print hardcopy with @kbd{M-x
 print-region}. @xref{Hardcopy,,,sxemacs,SXEmacs User's Manual}, for more
@@ -156,11 +156,11 @@ Indent it with @kbd{C-x @key{TAB}} or @kbd{C-M-\}
   The most common way to move or copy text in Emacs is through
 @dfn{killing} or @samp{cutting} it and then @dfn{yanking} or
 @samp{pasting} it. You can also use the @b{Cut} or @b{Copy} option from
-the @b{Edit} menu for killing and copying respectively. @xref{Edit menu}, 
+the @b{Edit} menu for killing and copying respectively. @xref{Edit menu},
 for reviewing the commands for killing text. All the killed text
 in Emacs is recorded in the @dfn{kill ring}. Since there is only one
 kill ring in Emacs, you can kill text in one buffer and yank it in
-another buffer. To @samp{paste} or 
+another buffer. To @samp{paste} or
 @samp{yank} the killed text you can use the following commands:
 @table @kbd
 @item C-y
@@ -174,7 +174,7 @@ from the buffer.
 Append next kill to last batch of killed text
 (@code{append-next-kill}). This command will append whatever you killed
 last to what you kill now. Then later you will be able to yank the
-entire appended text from the @dfn{kill ring}. 
+entire appended text from the @dfn{kill ring}.
 @end table
 
 @comment  node-name,  next,  previous,  up
@@ -192,7 +192,7 @@ entire appended text from the @dfn{kill ring}.
 
   The following commands can be used for accumulating text from
 different buffers into one place or for copying one region of text into
-many buffers: 
+many buffers:
 
 @table @kbd
 @item M-x append-to-buffer
@@ -201,7 +201,7 @@ Append region to contents of specified buffer
 @key{RET}, Emacs will prompt you for a buffer name. You will see a
 message in the echo area:
 @example
-Append to buffer: (default <buffer name>) 
+Append to buffer: (default <buffer name>)
 @end example
 @noindent
 After you type in a buffer name, a copy of the region will be inserted
@@ -227,7 +227,7 @@ the end of the contents of the specified file.
 @noindent
 @xref{Accumulating Text,,,sxemacs,SXEmacs User's Manual}, for more
 information regarding this topic.
-  
+
   You can also use @dfn{rectangle commands} for operating on rectangular
 areas of text. @xref{Rectangles,,,sxemacs,SXEmacs User's Manual}, for more
 information regarding rectangle commands.
@@ -237,22 +237,4 @@ text or positions. Each register has a one character name and they can
 store @dfn{regions}, a @dfn{rectangle}, or a @dfn{mark} i.e. a cursor
 position. Whatever you store in register stays there until you store
 something else in that register. To find out about commands which
-manipulate registers @xref{Registers,,,sxemacs,SXEmacs User's Manual}. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+manipulate registers @xref{Registers,,,sxemacs,SXEmacs User's Manual}.

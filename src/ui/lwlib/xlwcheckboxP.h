@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /*
  * CheckboxP.h - Private definitions for Checkbox widget
- * 
+ *
  * Author: Edward A. Falk
  *         falk@falconer.vip.best.com
- *  
+ *
  * Date:   June 30, 1997
  */
 
@@ -60,7 +60,7 @@ extern CheckboxClassRec checkboxClassRec;
 
 /***************************************
  *
- *  Instance (widget) structure 
+ *  Instance (widget) structure
  *
  **************************************/
 

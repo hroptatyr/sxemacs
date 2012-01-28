@@ -103,17 +103,17 @@ extern_inline int WORD_SYNTAX_P(Lisp_Char_Table * table, Emchar c)
     ELisp  unused  |comment bits |     unused      |   syntax code
      tag           | | | | | | | |                 |
     stuff          | | | | | | | |                 |
-                   | | | | | | | |                 |
-                   | | | | | | | |                 `--> prefix flag
-                   | | | | | | | |
-                   | | | | | | | `--> comment end style B, second char
-                   | | | | | | `----> comment end style A, second char
-                   | | | | | `------> comment end style B, first char
-                   | | | | `--------> comment end style A, first char
-                   | | | `----------> comment start style B, second char
-                   | | `------------> comment start style A, second char
-                   | `--------------> comment start style B, first char
-                   `----------------> comment start style A, first char
+		   | | | | | | | |                 |
+		   | | | | | | | |                 `--> prefix flag
+		   | | | | | | | |
+		   | | | | | | | `--> comment end style B, second char
+		   | | | | | | `----> comment end style A, second char
+		   | | | | | `------> comment end style B, first char
+		   | | | | `--------> comment end style A, first char
+		   | | | `----------> comment start style B, second char
+		   | | `------------> comment start style A, second char
+		   | `--------------> comment start style B, first char
+		   `----------------> comment start style A, first char
 
   In a 64-bit integer, there would be 32 more unused bits between
   the tag and the comment bits.
@@ -221,14 +221,14 @@ determine that no second character is needed to terminate the comment.
     ((startp) ? SYNTAX_FIRST_CHAR_START :		\
      SYNTAX_FIRST_CHAR_END) & (style))			\
    && (SYNTAX_COMMENT_BITS (b) &			\
-    ((startp) ? SYNTAX_SECOND_CHAR_START : 		\
+    ((startp) ? SYNTAX_SECOND_CHAR_START :		\
      SYNTAX_SECOND_CHAR_END) & (style)))
 
 #define SYNTAX_COMMENT_MASK_START(a, b)			\
   ((STYLE_FOUND_P (a, b, 1, SYNTAX_COMMENT_STYLE_A)	\
     ? SYNTAX_COMMENT_STYLE_A				\
     : (STYLE_FOUND_P (a, b, 1, SYNTAX_COMMENT_STYLE_B)	\
-         ? SYNTAX_COMMENT_STYLE_B			\
+	 ? SYNTAX_COMMENT_STYLE_B			\
 	 : 0)))
 
 #define SYNTAX_COMMENT_MASK_END(a, b)			\
@@ -487,24 +487,24 @@ void update_syntax_cache(int pos, int count);
     syntax_cache.object = (OBJECT);					\
     if (NILP (syntax_cache.object))					\
       {									\
-        XSETBUFFER (syntax_cache.object, syntax_cache.buffer);		\
+	XSETBUFFER (syntax_cache.object, syntax_cache.buffer);		\
       }									\
     else if (EQ (syntax_cache.object, Qt))				\
       {									\
-        XSETBUFFER (syntax_cache.object, syntax_cache.buffer);		\
+	XSETBUFFER (syntax_cache.object, syntax_cache.buffer);		\
       }									\
     else if (STRINGP (syntax_cache.object))				\
       {									\
-        /* do nothing */;						\
+	/* do nothing */;						\
       }									\
     else if (BUFFERP (syntax_cache.object))				\
       {									\
-        syntax_cache.buffer = XBUFFER (syntax_cache.object);		\
+	syntax_cache.buffer = XBUFFER (syntax_cache.object);		\
       }									\
     else								\
       {									\
-        /* OBJECT must be buffer/string/t/nil */			\
-        assert(0);							\
+	/* OBJECT must be buffer/string/t/nil */			\
+	assert(0);							\
       }									\
     syntax_cache.current_syntax_table					\
       = syntax_cache.buffer->mirror_syntax_table;			\
@@ -531,13 +531,13 @@ void update_syntax_cache(int pos, int count);
    & (SYNTAX_CODE_COMMENT_BITS (b) & SYNTAX_SECOND_CHAR_END))
 
 #define SYNTAX_CODES_COMMENT_MASK_START(a, b)			\
-  (SYNTAX_CODES_MATCH_START_P (a, b, SYNTAX_COMMENT_STYLE_A) 	\
+  (SYNTAX_CODES_MATCH_START_P (a, b, SYNTAX_COMMENT_STYLE_A)	\
    ? SYNTAX_COMMENT_STYLE_A					\
    : (SYNTAX_CODES_MATCH_START_P (a, b, SYNTAX_COMMENT_STYLE_B)	\
       ? SYNTAX_COMMENT_STYLE_B					\
       : 0))
 #define SYNTAX_CODES_COMMENT_MASK_END(a, b)			\
-  (SYNTAX_CODES_MATCH_END_P (a, b, SYNTAX_COMMENT_STYLE_A) 	\
+  (SYNTAX_CODES_MATCH_END_P (a, b, SYNTAX_COMMENT_STYLE_A)	\
    ? SYNTAX_COMMENT_STYLE_A					\
    : (SYNTAX_CODES_MATCH_END_P (a, b, SYNTAX_COMMENT_STYLE_B)	\
       ? SYNTAX_COMMENT_STYLE_B					\

@@ -41,7 +41,7 @@
 ;;       ==> 0
 ;;
 ;; To create database in memory use (sqlite-open ":memory:")
-;; 
+;;
 ;; Custom collations:
 ;;
 ;;     (defun Nfirst-collation (s1 s2)
@@ -168,15 +168,15 @@
   (bound pointer) (length int) (cleanup int))
 
 (cffi:defcfun ("sqlite3_bind_parameter_count"
-               sqlite:bind-parameter-count) int
+	       sqlite:bind-parameter-count) int
   (statement sqlite-statement))
 
 (cffi:defcfun ("sqlite3_bind_parameter_index"
-               sqlite:bind-parameter-index) int
+	       sqlite:bind-parameter-index) int
   (statement sqlite-statement) (column c-string))
 
 (cffi:defcfun ("sqlite3_bind_parameter_name"
-               sqlite:bind-parameter-name) c-string
+	       sqlite:bind-parameter-name) c-string
   (statement sqlite-statement)
   (position int))
 
@@ -234,13 +234,13 @@
 ERROR is message to be signaled."
   (let ((tuple (cdr (assq result sqlite-error-codes))))
     (cond ((and tuple (eq (first tuple) 'sqlite-error))
-           (error 'sqlite-sql-error (if (equal error "not an error") "" error)
-                  :code 1 :name (first tuple)
-                  :comment (second tuple)))
-          (tuple
-           (error 'sqlite-error error
-                  :code result :name (first tuple) :comment (second tuple)))
-          (t result))))
+	   (error 'sqlite-sql-error (if (equal error "not an error") "" error)
+		  :code 1 :name (first tuple)
+		  :comment (second tuple)))
+	  (tuple
+	   (error 'sqlite-error error
+		  :code result :name (first tuple) :comment (second tuple)))
+	  (t result))))
 
 ;;}}}
 ;;{{{ Open/close database
@@ -262,9 +262,9 @@ ERROR is message to be signaled."
   "Try to open SQLite dabase stored in FILE.
 On success return database object."
   (let* ((db (make-ffi-object 'sqlite))
-         (result (sqlite:open-internal
-                  (expand-file-name file) (ffi-address-of db)))
-         (retdb (ffi-get db)))
+	 (result (sqlite:open-internal
+		  (expand-file-name file) (ffi-address-of db)))
+	 (retdb (ffi-get db)))
     (sqlite-check-result result (sqlite:errmsg retdb))
     (push retdb sqlite-databases)
     retdb))
@@ -286,11 +286,11 @@ On success return database object."
 (defun sqlite-prepare (db sql)
   "For DB prepare statement for given SQL."
   (let ((stat (make-ffi-object 'sqlite-statement))
-        (tail (make-ffi-object 'pointer)))
+	(tail (make-ffi-object 'pointer)))
     (sqlite-check-result
      (sqlite:prepare db sql (length sql)
-                     (ffi-address-of stat)
-                     (ffi-address-of tail))
+		     (ffi-address-of stat)
+		     (ffi-address-of tail))
      (sqlite:errmsg db))
     (ffi-get stat)))
 
@@ -301,31 +301,31 @@ Optional COPY-FLAG is one of `sqlite-STATIC' or `sqlite-TRANSIENT'
 \(the default one\).  You must know exactly what you are doing if you
 provide COPY-FLAG argument."
   (let ((key (if (integerp key-object)
-                 key-object
-               (sqlite:bind-parameter-index
-                statement
-                (if (symbolp key-object)
-                    (concat ":" (symbol-name key-object))
-                  key-object)))))
+		 key-object
+	       (sqlite:bind-parameter-index
+		statement
+		(if (symbolp key-object)
+		    (concat ":" (symbol-name key-object))
+		  key-object)))))
     (when key
       (cond ((null value) (sqlite:bind-null statement key))
-            ((integerp value)
-             (sqlite:bind-int statement key value))
-            ((floatp value)
-             (sqlite:bind-double statement key value))
-            ((stringp value)
-             (sqlite:bind-text statement key value (length value)
-                               (or copy-flag sqlite-STATIC)))
-            ((and (consp value) (eq (car value) 'blob)
-                  (stringp (cdr value)))
-             (let ((bval (ffi-create-fo `(c-data . ,(length (cdr value)))
-                                        (cdr value))))
-               (sqlite:bind-blob
-                statement key bval (length (cdr value))
-                (or copy-flag sqlite-STATIC))))
-            (t (error 'sqlite-datatype-error value
-                      :comment (concat "Attempt to insert data not one of "
-                                       "integer, float, text, or blob."))))
+	    ((integerp value)
+	     (sqlite:bind-int statement key value))
+	    ((floatp value)
+	     (sqlite:bind-double statement key value))
+	    ((stringp value)
+	     (sqlite:bind-text statement key value (length value)
+			       (or copy-flag sqlite-STATIC)))
+	    ((and (consp value) (eq (car value) 'blob)
+		  (stringp (cdr value)))
+	     (let ((bval (ffi-create-fo `(c-data . ,(length (cdr value)))
+					(cdr value))))
+	       (sqlite:bind-blob
+		statement key bval (length (cdr value))
+		(or copy-flag sqlite-STATIC))))
+	    (t (error 'sqlite-datatype-error value
+		      :comment (concat "Attempt to insert data not one of "
+				       "integer, float, text, or blob."))))
       )))
 
 (defun sqlite-bind-seq (statement sequence)
@@ -343,9 +343,9 @@ provide COPY-FLAG argument."
 BINDING could be plist, list or vector."
   (when binding
     (cond ((and (listp binding) (keywordp (car binding)))
-           (sqlite-bind-plist statement binding))
-          ((or (vectorp binding) (listp binding))
-           (sqlite-bind-seq statement binding)))
+	   (sqlite-bind-plist statement binding))
+	  ((or (vectorp binding) (listp binding))
+	   (sqlite-bind-seq statement binding)))
     t))
 
 (defun sqlite-fetch-column (statement index)
@@ -357,8 +357,8 @@ There is currently no way to specify a casting operation."
     (2 (sqlite:column-double statement index))
     (3 (sqlite:column-text statement index))
     (4 (let ((blob (sqlite:column-blob statement index))
-             (blen (sqlite:column-bytes statement index)))
-         (ffi-get blob :type (cons 'c-data blen))))
+	     (blen (sqlite:column-bytes statement index)))
+	 (ffi-get blob :type (cons 'c-data blen))))
     (5 nil)))
 
 (defun sqlite-fetch (statement)
@@ -367,7 +367,7 @@ nil is returned for empty row."
   (when (= sqlite-ROW (sqlite:step statement))
     (let ((cols (sqlite:column-count statement)))
       (loop for i from 0 below cols
-        collect (sqlite-fetch-column statement i)))))
+	collect (sqlite-fetch-column statement i)))))
 
 (defun sqlite-reset (statement &optional clear-bindings)
   "Reset STATEMENT, so it could be used again.
@@ -394,14 +394,14 @@ TYPE is one of:
  'immediate
 Default is deffered."
   (let ((ttype (multiple-value-bind (major minor sub)
-                   (mapcar 'string-to-int
-                           (split-string-by-char (sqlite:version) ?\.))
-                 (setq major major)     ; shut up compiler
-                 (if (or (>= minor 0) (>= sub 8))
-                     (cond ((eq type 'exclusive) " exclusive ")
-                           ((eq type 'immediate) " immediate ")
-                           (t " "))
-                   " "))))
+		   (mapcar 'string-to-int
+			   (split-string-by-char (sqlite:version) ?\.))
+		 (setq major major)     ; shut up compiler
+		 (if (or (>= minor 0) (>= sub 8))
+		     (cond ((eq type 'exclusive) " exclusive ")
+			   ((eq type 'immediate) " immediate ")
+			   (t " "))
+		   " "))))
     (sqlite-execute db (concat "begin" ttype "transaction;") :begin nil)))
 
 (defun sqlite-commit (db)
@@ -414,17 +414,17 @@ Default is deffered."
 
 (defmacro* sqlite-with-transaction ((database &optional type) &body body)
   (let ((db-err (gensym "dberror"))
-        (db-obj (gensym "dbobject")))
+	(db-obj (gensym "dbobject")))
     `(let ((,db-obj ,database)
-           (,db-err t))
+	   (,db-err t))
        (sqlite-begin-transaction ,db-obj ,type)
        (unwind-protect
-           (prog1
-               (progn ,@body)
-             (setq ,db-err nil))
-         (if ,db-err
-             (sqlite-rollback ,db-obj)
-           (sqlite-commit ,db-obj))))))
+	   (prog1
+	       (progn ,@body)
+	     (setq ,db-err nil))
+	 (if ,db-err
+	     (sqlite-rollback ,db-obj)
+	   (sqlite-commit ,db-obj))))))
 (put 'sqlite-with-transaction 'lisp-indent-function 'defun)
 
 ;;}}}
@@ -432,17 +432,17 @@ Default is deffered."
 
 (defmacro* sqlite-with-prep ((statement-var db sql &optional bind) &body body)
   (let ((db-obj (gensym "dbobject"))
-        (sql-in (gensym "sqlin"))
-        (bind-in (gensym "bindin")))
+	(sql-in (gensym "sqlin"))
+	(bind-in (gensym "bindin")))
     `(let* ((,db-obj ,db)
-            (,sql-in ,sql)
-            (,bind-in ,bind)
-            (,statement-var (sqlite-prepare ,db-obj ,sql-in)))
+	    (,sql-in ,sql)
+	    (,bind-in ,bind)
+	    (,statement-var (sqlite-prepare ,db-obj ,sql-in)))
        (unwind-protect
-           (progn
-             (sqlite-bind ,statement-var ,bind-in)
-             ,@body)
-         (sqlite-flush ,statement-var)))))
+	   (progn
+	     (sqlite-bind ,statement-var ,bind-in)
+	     ,@body)
+	 (sqlite-flush ,statement-var)))))
 (put 'sqlite-with-prep 'lisp-indent-function 'defun)
 
 (defun sqlite-execute (db sql &optional bind begin)
@@ -452,9 +452,9 @@ BIND specifies bindings for SQL query.
 If BEGIN is given, then perform a transaction."
   (if begin
       (sqlite-with-transaction (db)
-        (sqlite-with-prep (st db sql bind)
-          (sqlite-check-result (sqlite:step st) (sqlite:errmsg db))
-          t))
+	(sqlite-with-prep (st db sql bind)
+	  (sqlite-check-result (sqlite:step st) (sqlite:errmsg db))
+	  t))
     (sqlite-with-prep (st db sql bind)
       (sqlite-check-result (sqlite:step st) (sqlite:errmsg db))
       t)))
@@ -480,8 +480,8 @@ BIND specifies bindings for SQL query."
   ((user-data 'pointer) (len1 'int) (str1 'pointer)
    (len2 'int) (str2 'pointer))
   (let ((fun (ffi-pointer-to-lisp-object user-data))
-        (s1 (ffi-get str1 :type (cons 'c-data len1)))
-        (s2 (ffi-get str2 :type (cons 'c-data len2))))
+	(s1 (ffi-get str1 :type (cons 'c-data len1)))
+	(s2 (ffi-get str2 :type (cons 'c-data len2))))
     (funcall fun s1 s2)))
 
 (defun sqlite-create-collation (db name compare-function)
@@ -491,11 +491,11 @@ COMPARE-FUNCTION must get exactly two string arguments and return:
    0  if strings are equal
    1  if first string is greater then second"
   (let* ((ccolls (get db 'custom-collations))
-         (colla (assoc name ccolls)))
+	 (colla (assoc name ccolls)))
     (if colla
-        (setcdr colla compare-function)
+	(setcdr colla compare-function)
       (put db 'custom-collations
-           (cons (cons name compare-function) ccolls))))
+	   (cons (cons name compare-function) ccolls))))
   (sqlite-check-result
    (sqlite:create-collation
     db name sqlite-UTF-8
@@ -506,20 +506,20 @@ COMPARE-FUNCTION must get exactly two string arguments and return:
 (defun sqlite-remove-collation (db name)
   "For DB remove collation by NAME."
   (let* ((ccolls (get db 'custom-collations))
-         (colla (assoc name ccolls)))
+	 (colla (assoc name ccolls)))
     (when colla
       (sqlite-check-result
        (sqlite:create-collation
-        db name sqlite-UTF-8
-        (ffi-lisp-object-to-pointer (cdr colla))
-        (ffi-null-pointer))
+	db name sqlite-UTF-8
+	(ffi-lisp-object-to-pointer (cdr colla))
+	(ffi-null-pointer))
        (sqlite:errmsg db))
       ;; Remove it from custom-collations
       (put db 'custom-collations (del-alist name ccolls))
       t)))
 
 ;;}}}
-            
+
 (provide 'ffi-sqlite)
 
 ;;; ffi-sqlite.el ends here

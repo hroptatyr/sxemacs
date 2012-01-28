@@ -18,7 +18,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -209,7 +209,7 @@
       (value 4 6 25))
     do
     (let* ((ht (make-hash-table :weakness weakness))
-           (my-obj (cons ht ht)))
+	   (my-obj (cons ht ht)))
       (garbage-collect)
       (puthash my-obj 1 ht)
       (puthash 2 my-obj ht)
@@ -218,22 +218,22 @@
       (puthash 32 (cons ht ht) ht)
       (puthash (cons ht ht) (cons ht ht) ht)
       (let ((k-sum 0) (v-sum 0))
-        (maphash #'(lambda (k v)
-                     (when (integerp k) (incf k-sum k))
-                     (when (integerp v) (incf v-sum v)))
-                 ht)
-        (Assert (eq 38 k-sum))
-        (Assert (eq 25 v-sum)))
+	(maphash #'(lambda (k v)
+		     (when (integerp k) (incf k-sum k))
+		     (when (integerp v) (incf v-sum v)))
+		 ht)
+	(Assert (eq 38 k-sum))
+	(Assert (eq 25 v-sum)))
       (Assert (eq 6 (hash-table-count ht)))
       (garbage-collect)
       (Assert (eq expected-count (hash-table-count ht)))
       (let ((k-sum 0) (v-sum 0))
-        (maphash #'(lambda (k v)
-                     (when (integerp k) (incf k-sum k))
-                     (when (integerp v) (incf v-sum v)))
-                 ht)
-        (Assert (eq expected-k-sum k-sum))
-        (Assert (eq expected-v-sum v-sum))))))
+	(maphash #'(lambda (k v)
+		     (when (integerp k) (incf k-sum k))
+		     (when (integerp v) (incf v-sum v)))
+		 ht)
+	(Assert (eq expected-k-sum k-sum))
+	(Assert (eq expected-v-sum v-sum))))))
 
 ;;; Test the ability to puthash and remhash the current elt of a maphash
 (let ((ht (make-hash-table :test 'eql)))

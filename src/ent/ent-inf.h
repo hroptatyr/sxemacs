@@ -4,7 +4,7 @@
   Copyright (C) 2006 Nelson Ferreira
 
   Author:  Sebastian Freundt
-           Nelson Ferreira
+	   Nelson Ferreira
 
 This file is part of SXEmacs
 
@@ -55,7 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #if defined HAVE_MATHS_SIGNBIT || defined HAVE_SIGNBIT
 # define sxe_signbit	signbit
 #elif defined HAVE_MATHS_FPCLASS || defined HAVE_FPCLASS
-# define sxe_signbit(x) (fpclass(x) == FP_NINF || fpclass(x) == FP_NDENORM || fpclass(x) == FP_NZERO || fpclass(x) == FP_NNORM) 
+# define sxe_signbit(x) (fpclass(x) == FP_NINF || fpclass(x) == FP_NDENORM || fpclass(x) == FP_NZERO || fpclass(x) == FP_NNORM)
 #else  /* !HAVE_SIGNBIT */
 # define sxe_signbit(x)	((x) < 0)
 # warning Your signbit() computation is vile.  Consider scrapping your machine.

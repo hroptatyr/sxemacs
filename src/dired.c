@@ -128,7 +128,7 @@ static int pathname_matches_p(Lisp_Object, Lisp_Object,
 static char *
 dired_realpath(const char *file)
 {
-	char *result = xmalloc_atomic(4096); 	
+	char *result = xmalloc_atomic(4096);
 
 	if ( realpath(file, result) == NULL ) {
 		xfree(result);
@@ -285,7 +285,7 @@ dfr_inner(dirent_t *res,
 		 * check against the bloom filter.
 		 */
 		canon_name = CANONICALISE_FILENAME(statnam);
-		
+
 		if (canon_name) {
 			/* now, recycle full name */
 			fullname = make_ext_string(
@@ -328,7 +328,7 @@ dfr_inner(dirent_t *res,
 	   - With the former variant it is NOT possible to have
 	   the trivial filenames on the result list, since a
 	   match against "^[.]$" would exclude everything, while
-	   actually it was likely meant to _solely_ exclude "." 
+	   actually it was likely meant to _solely_ exclude "."
 	   from the result list
 	   - Furthermore, we _MUST_ traverse in preorder,
 	   otherwise there is the possibility that pathnames are
@@ -707,7 +707,7 @@ Optional argument MAXDEPTH \(a positive integer\) specifies the
 maximal recursion depth, use 0 to emulate old `directory-files'.
 
 Optional argument SYMLINK-IS-FILE specifies whether symlinks
-should be resolved \(which is the default behaviour\) or whether 
+should be resolved \(which is the default behaviour\) or whether
 they are treated as ordinary files \(non-nil\), in the latter
 case symlinks to directories are not recurred.
 
@@ -1055,8 +1055,8 @@ file_name_completion(Lisp_Object file, Lisp_Object directory, int all_flag,
 					       ==
 					       XSTRING_CHAR_LENGTH(bestmatch)))
 					     /* If there is more than one exact match aside from
-					        case, and one of them is exact including case,
-					        prefer that one.  */
+						case, and one of them is exact including case,
+						prefer that one.  */
 					     && 0 > scmp_1(p2,
 							   XSTRING_DATA(file),
 							   file_name_length, 0)

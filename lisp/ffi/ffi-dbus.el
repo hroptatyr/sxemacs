@@ -145,7 +145,7 @@ the queue. ")
   (dummy4 :pointer))
 
 (cffi:defcfun ("dbus_connection_send_with_reply_and_block"
-               dbus:connection-send-with-reply-and-block) :pointer
+	       dbus:connection-send-with-reply-and-block) :pointer
   (connection :pointer)
   (message :pointer)
   (timeout_milliseconds :int)
@@ -157,24 +157,24 @@ the queue. ")
   (serial :pointer))
 
 (cffi:defcfun ("dbus_connection_read_write"
-               dbus:connection-read-write) dbus-bool
+	       dbus:connection-read-write) dbus-bool
   (connection :pointer)
   (timeout-milliseconds :int))
 
 (cffi:defcfun ("dbus_connection_read_write_dispatch"
-               dbus:connection-read-write-dispatch) dbus-bool
+	       dbus:connection-read-write-dispatch) dbus-bool
   (connection :pointer)
   (timeout-milliseconds :int))
 
 (cffi:defcfun ("dbus_connection_pop_message"
-               dbus:connection-pop-message) :pointer
+	       dbus:connection-pop-message) :pointer
   (connection :pointer))
 
 (cffi:defcfun ("dbus_connection_flush" dbus:connection-flush) :void
   (connection :pointer))
 
 (cffi:defcfun ("dbus_connection_register_object_path"
-               dbus:connection-register-object-path) dbus-bool
+	       dbus:connection-register-object-path) dbus-bool
   (connection :pointer)
   (path :string)
   (vtable :pointer)
@@ -206,7 +206,7 @@ the queue. ")
 ;;{{{ Message functions
 
 (cffi:defcfun ("dbus_message_new_method_call"
-               dbus:message-new-method-call) :pointer
+	       dbus:message-new-method-call) :pointer
   (destination :string)
   (path :string)
   (interface :string)
@@ -218,57 +218,57 @@ the queue. ")
   &rest)
 
 (cffi:defcfun ("dbus_message_append_args"
-               dbus:message-append-args) dbus-bool
+	       dbus:message-append-args) dbus-bool
   (message :pointer)
   (first-arg-type :int)
   &rest)
 
 (cffi:defcfun ("dbus_message_get_interface"
-               dbus:message-get-interface) :string
+	       dbus:message-get-interface) :string
   (message :pointer))
 
 (cffi:defcfun ("dbus_message_get_member"
-               dbus:message-get-member) :string
+	       dbus:message-get-member) :string
   (message :pointer))
 
 (cffi:defcfun ("dbus_message_get_path"
-               dbus:message-get-path) :string
+	       dbus:message-get-path) :string
   (message :pointer))
 
 (cffi:defcfun ("dbus_message_unref" dbus:message-unref) :void
   (message :pointer))
 
 (cffi:defcfun ("dbus_message_is_method_call"
-               dbus:message-is-method-call) dbus-bool
+	       dbus:message-is-method-call) dbus-bool
   (message :pointer)
   (interface :string)
   (method :string))
 
 (cffi:defcfun ("dbus_message_iter_init"
-               dbus:message-iter-init) dbus-bool
+	       dbus:message-iter-init) dbus-bool
   (message :pointer)
   (iter :pointer))
 
 (cffi:defcfun ("dbus_message_iter_get_arg_type"
-               dbus:message-iter-get-arg-type) :int
+	       dbus:message-iter-get-arg-type) :int
   (iter :pointer))
 
 (cffi:defcfun ("dbus_message_iter_get_basic"
-               dbus:message-iter-get-basic) :void
+	       dbus:message-iter-get-basic) :void
   (iter :pointer)
   (value :pointer))
 
 (cffi:defcfun ("dbus_message_new_method_return"
-               dbus:message-new-method-return) :pointer
+	       dbus:message-new-method-return) :pointer
   (method_call :pointer))
 
 (cffi:defcfun ("dbus_message_iter_init_append"
-               dbus:message-iter-init-append) :void
+	       dbus:message-iter-init-append) :void
   (message :pointer)
   (iter :pointer))
 
 (cffi:defcfun ("dbus_message_iter_append_basic"
-               dbus:message-iter-append-basic) dbus-bool
+	       dbus:message-iter-append-basic) dbus-bool
   (iter :pointer)
   (type :int)
   (value :pointer))
@@ -278,8 +278,8 @@ the queue. ")
 ;;; TODO: elisp-friendly d-bus implementation.
 ;;   - Use macros, like python-dbus uses its decorators
 (defstruct (dbus-connection (:type vector) :named
-                            (:print-function
-                             (lambda (dc s pl)
+			    (:print-function
+			     (lambda (dc s pl)
 			       (setq pl pl) ; steenkin byte-compiler! --SY.
 			       (princ (format "#<dbus connection: %s>"
 					      (dbus-connection-object dc)) s))))
@@ -292,13 +292,13 @@ the queue. ")
   "Create connection to D-Bus.
 Return newly created connection structure."
   (let ((dcon (make-dbus-connection :bus-name bus-name
-                                    :object object-path)))
+				    :object object-path)))
     (setf (dbus-connection-ffi-error dcon)
-          (cffi:foreign-alloc 'dbus-error))
+	  (cffi:foreign-alloc 'dbus-error))
     (dbus:error-init (dbus-connection-ffi-error dcon))
     (setf (dbus-connection-ffi-conn dcon)
-          (dbus:bus-get DBUS_BUS_SESSION
-                        (dbus-connection-ffi-error dcon)))
+	  (dbus:bus-get DBUS_BUS_SESSION
+			(dbus-connection-ffi-error dcon)))
     dcon))
 
 (defmacro* define-dbus-signal (dcon iface signature &rest body)

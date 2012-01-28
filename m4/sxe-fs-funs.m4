@@ -98,9 +98,9 @@ AC_DEFUN([_SXE_CHECK_REALPATH_RETVAL_OWNER], [dnl
 	## anything ... took me fucking ages to find out what's going on
 	## so let's drink to the morons responsible for THAT!
 	AC_MSG_CHECKING([to whom belongs the object returned by realpath])
-        if test "$opsys" = "darwin"; then
-           resvar=user
-        else
+	if test "$opsys" = "darwin"; then
+	   resvar=user
+	else
 	AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #ifdef HAVE_STDLIB_H
 #  include <stdlib.h>
@@ -142,7 +142,7 @@ int main()
 		resvar[=user],
 		resvar[=sys],
 		resvar[=sys])
-        fi
+	fi
 	AC_MSG_RESULT([$]resvar)
 
 	if test "$[]resvar[]" = "user"; then
@@ -161,9 +161,9 @@ AC_DEFUN([_SXE_CHECK_REALPATH_ON_PROTECTED_MEMORY], [dnl
 	pushdef([resvar], [sxe_func_realpath_accepts_protmem])
 
 	AC_MSG_CHECKING([whether realpath can operate on protected mem blocks])
-        if test "$opsys" = "darwin"; then
-           resvar=no
-        else
+	if test "$opsys" = "darwin"; then
+	   resvar=no
+	else
 	AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #ifdef HAVE_STDLIB_H
 #  include <stdlib.h>
@@ -173,7 +173,7 @@ AC_DEFUN([_SXE_CHECK_REALPATH_ON_PROTECTED_MEMORY], [dnl
 #define PATH_MAX 4096
 #endif
 
-int realpath_can_operate_on_protected_mem_blocks() 
+int realpath_can_operate_on_protected_mem_blocks()
 {
 	char resv[PATH_MAX];
 	realpath("/bin/sh", NULL);
@@ -189,7 +189,7 @@ int main()
 		resvar[=yes],
 		resvar[=no],
 		resvar[=no])
-        fi
+	fi
 	AC_MSG_RESULT([$]resvar)
 
 	if test "$[]resvar[]" = "yes"; then
@@ -270,7 +270,7 @@ AC_DEFUN([SXE_CHECK_DIRNAME], [dnl
 	## and since we all hate working systems we do our best
 	## to break these so called standards wherever we can
 	##
-	## Passage from coreutils: 
+	## Passage from coreutils:
 	## In general, we can't use the builtin `dirname' function if available,
 	## since it has different meanings in different environments. In some
 	## environments the builtin `dirname' modifies its argument.
@@ -382,10 +382,10 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_RETVAL_OWNER], [dnl
 	## values are either "sys" or "user"
 	pushdef([resvar], [sxe_func_dirname_retval_owner])
 
-        malloc_check=${MALLOC_CHECK_}
-        ## Turn off the stupid glibc 2.5 stack trace check. We *know* we may
-        ## do something bad here :-) 
-        MALLOC_CHECK_=0
+	malloc_check=${MALLOC_CHECK_}
+	## Turn off the stupid glibc 2.5 stack trace check. We *know* we may
+	## do something bad here :-)
+	MALLOC_CHECK_=0
 	export MALLOC_CHECK_
 	## this test is especially critical, because some systems do not
 	## allocate memory for the user when the return value is "."
@@ -394,9 +394,9 @@ AC_DEFUN([_SXE_CHECK_DIRNAME_RETVAL_OWNER], [dnl
 	## anything ... took me fucking ages to find out what's going on
 	## so let's drink to the morons responsible for THAT!
 	AC_MSG_CHECKING([to whom belongs the object returned by dirname])
-        if test "$opsys" = "darwin" ; then
-           resvar=sys
-        else
+	if test "$opsys" = "darwin" ; then
+	   resvar=sys
+	else
 	AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #ifdef HAVE_LIBGEN_H
 #  include <libgen.h>
@@ -435,11 +435,11 @@ int main()
 		resvar[=sys],
 		resvar[=sys])
 	fi
-        if test "${malloc_check}" = "" ; then
+	if test "${malloc_check}" = "" ; then
 		unset MALLOC_CHECK_
-        else 
-        	MALLOC_CHECK_=${malloc_check}
-        fi
+	else
+		MALLOC_CHECK_=${malloc_check}
+	fi
 	AC_MSG_RESULT([$]resvar)
 
 	if test "$[]resvar[]" = "user"; then

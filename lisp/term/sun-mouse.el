@@ -75,9 +75,9 @@ MOUSE-LIST is a list of atoms specifying a mouse hit according to these rules:
   * One of these atoms specifies the active region of the definition.
 	text, scrollbar, modeline, minibuffer
   * One or two or these atoms specify the button or button combination.
-        left, middle, right, double
+	left, middle, right, double
   * Any combination of these atoms specify the active shift keys.
-        control, shift, meta
+	control, shift, meta
   * With a single unshifted button, you can add
 	up
     to indicate an up-click.

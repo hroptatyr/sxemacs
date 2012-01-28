@@ -8,14 +8,14 @@ in dumped-lisp.el and is not itself listed.")
 
 (setq preloaded-file-list
       (assemble-list
-        "backquote" 		; needed for defsubst etc.
+	"backquote"		; needed for defsubst etc.
 	"bytecomp-runtime"	; define defsubst
 	"find-paths"
 	"packages"		; Bootstrap run-time lisp environment
 	"setup-paths"
 	"dump-paths"
-	"subr" 			; load the most basic Lisp functions
-	"replace" 		; match-string used in version.el.
+	"subr"			; load the most basic Lisp functions
+	"replace"		; match-string used in version.el.
 	; Ignore compiled-by-mistake version.elc
 	"version.el"
 	"cl"
@@ -50,7 +50,7 @@ in dumped-lisp.el and is not itself listed.")
 	"simple"
 	"keydefs"		; Before loaddefs so that keymap vars exist.
 	"abbrev"
-        "number"
+	"number"
 	"derived"
 	"minibuf"
 	"list-mode"
@@ -68,7 +68,7 @@ in dumped-lisp.el and is not itself listed.")
 	"lisp-initd"
 	"misc"
 	"loadhist"		; Must be dumped before loaddefs is loaded
-				; Used by help. 
+				; Used by help.
 	;; (pureload "profile")
 	(unless-feature mule "help-nomule")
 	"help"
@@ -214,9 +214,9 @@ in dumped-lisp.el and is not itself listed.")
 
 ;; preload the TTY init code.
 	(when-feature tty "tty-init")
-        "x-color"
-        "cus-face"
-        "font-lock"
+	"x-color"
+	"cus-face"
+	"font-lock"
 	"fontl-hooks"
 	"auto-show"
 	(when-feature ldap "ldap")

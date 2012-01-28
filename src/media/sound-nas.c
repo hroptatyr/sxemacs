@@ -9,9 +9,9 @@
  * that the above copyright notice appear in all copies and that both that
  * copyright notice and this permission notice appear in supporting
  * documentation, and that the name Network Computing Devices, Inc. not be
- * used in advertising or publicity pertaining to distribution of this 
+ * used in advertising or publicity pertaining to distribution of this
  * software without specific, written prior permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED 'AS-IS'.  NETWORK COMPUTING DEVICES, INC.,
  * DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING WITHOUT
  * LIMITATION ALL IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
@@ -176,7 +176,7 @@ sound_nas_print(Lisp_Object device, Lisp_Object pcfun, int ef)
 	write_c_string(" :server-handle ", pcfun);
 	if (snd->aud == NULL)
 		write_c_string("#b0rked", pcfun);
-	else 
+	else
 		write_fmt_str(pcfun, "0x%x", (unsigned int)snd->aud);
 
 	return;
@@ -458,7 +458,7 @@ nas_event_handler(AuServer *aud, AuEvent *ev, AuEventHandlerRec *hnd)
 		     nas_state(event->cur_state),
 		     nas_reason(event->reason),
 		     (uint32_t)event->num_bytes);
-	
+
 	if (event->num_bytes > INT_MAX) {
 		NAS_CRITICAL("num_bytes > 2GB, server buggy?\n");
 	}
@@ -519,7 +519,7 @@ nas_empty_event_queue(snsd_t *snsd)
 {
 	AuEvent ev;
 	int result = 0;
-	
+
 	while (AuScanForTypedEvent(
 		       snsd->snd->aud, AuEventsQueuedAfterFlush,
 		       AuTrue, AuEventTypeElementNotify, &ev)) {
@@ -656,7 +656,7 @@ sound_nas_play(audio_job_t aj)
 	/* find physical output device */
 	snsd->dev = nas_find_device(snd->aud, snsd->mtap->channels);
 
-	if (snsd->dev == AuNone || 
+	if (snsd->dev == AuNone ||
 	    !(snsd->flow = AuCreateFlow(snd->aud, NULL))) {
 		/* No physical output device found or flow creation failed. */
 		NAS_DEBUG_C("no physical devices for this stream\n");

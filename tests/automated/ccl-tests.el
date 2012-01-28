@@ -15,7 +15,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Section 0.  Useful functions to construct test suites.
 
@@ -56,7 +56,7 @@
 	  ccl-test-last-register-state
 	  string)))
     (if (not not-check-coding-system)
-	(Assert (string= 
+	(Assert (string=
 		 str2
 		 (decode-coding-string
 		  string 'ccl-test-coding-system))))
@@ -123,7 +123,7 @@
     '(1 (read r0)
 	(loop
 	  (write-read-repeat r0))))
-  (make-coding-system 
+  (make-coding-system
    'ccl-test-coding-system
    'ccl
    "CCL TEST temprary coding-system."
@@ -243,7 +243,7 @@
      (string= (ccl-test-on-stream `(1 ((read r0)
 				       (loop
 					 (r0 += 3)
-			 		 (write-read-repeat r0))))
+					 (write-read-repeat r0))))
 				  str)
 	      str2)))
 
@@ -298,7 +298,7 @@
 		      "...")))
     (Assert
      (string=
-      (ccl-test-on-stream 
+      (ccl-test-on-stream
        `(1 ((loop
 	      (read-multibyte-character r0 r1)
 	      (write-multibyte-character r0 r1)
@@ -429,7 +429,7 @@
 	     (10000 . -1) (10001 . -1) (10002 . -1) (10003 . -1)
 	     (10004 . -1) (19999 . -1) (20000 . 5) (20001 . 5)
 	     (20002 . 5) (30000 . 6) (20004 . 5) (20005 . 5) (20006 . 5)))
-	   
+
       (Assert-Equal
 	       (mapcar
 		(lambda (val)
@@ -565,7 +565,7 @@
 		      [72 lambda]
 		      [20000 20000 20001 20002 nil 20004 20005 20006]
 		      [1006 2006 2007 2008 2009 2010]
-		      ([20003 30000 30010 ccl-test-arith-1 30030 30040 
+		      ([20003 30000 30010 ccl-test-arith-1 30030 30040
 			      ccl-test-arith-1 30060]
 		       [1001010 50 51 52 53 54 55]))
 		     [t t 0 1000000]

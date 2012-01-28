@@ -25,7 +25,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 (require 'ffi)
@@ -80,15 +80,15 @@ STREAM is object returned by call to `c:fopen' function.
 Empty stream is returned if end-of-file indicated.
 Error raises if some error occurs."
   (let* ((fod (make-ffi-object (cons 'c-data size)))
-         (rsz (c:fread-1 fod 1 size stream)))
+	 (rsz (c:fread-1 fod 1 size stream)))
     (if (zerop rsz)
-        (cond ((c:feof-p stream) "")
-              ((c:ferror-p stream)
-               (error 'io-error "c:fread error"
-                      (c:strerror (ffi-get c:errno))))
-              (t (error 'io-error "c:fread unknown error")))
+	(cond ((c:feof-p stream) "")
+	      ((c:ferror-p stream)
+	       (error 'io-error "c:fread error"
+		      (c:strerror (ffi-get c:errno))))
+	      (t (error 'io-error "c:fread unknown error")))
       (ffi-get fod :type (cons 'c-data rsz)))))
-    
+
 (cffi:defcfun ("fwrite" c:fwrite-1) unsigned-int
   "Elisp binding to fwrite(3).
 Consider using `c:fwrite' in your programs."
@@ -128,27 +128,27 @@ The argument MODE is a string beginning with one of the following
 sequences (Additional characters may follow these sequences.):
 
 ``r''   Open text file for reading.  The stream is positioned at the
-        beginning of the file.
+	beginning of the file.
 
 ``r+''  Open for reading and writing.  The stream is positioned at the
-        beginning of the file.
+	beginning of the file.
 
 ``w''   Truncate file to zero length or create text file for writing.
-        The stream is positioned at the beginning of the file.
+	The stream is positioned at the beginning of the file.
 
 ``w+''  Open for reading and writing.  The file is created if it does not
-        exist, otherwise it is truncated.  The stream is positioned at
-        the beginning of the file.
+	exist, otherwise it is truncated.  The stream is positioned at
+	the beginning of the file.
 
 ``a''   Open for writing.  The file is created if it does not exist.  The
-        stream is positioned at the end of the file.  Subsequent writes
-        to the file will always end up at the then current end of file,
-        irrespective of any intervening fseek(3) or similar.
+	stream is positioned at the end of the file.  Subsequent writes
+	to the file will always end up at the then current end of file,
+	irrespective of any intervening fseek(3) or similar.
 
 ``a+''  Open for reading and writing.  The file is created if it does not
-        exist.  The stream is positioned at the end of the file.  Subse-
-        quent writes to the file will always end up at the then current
-        end of file, irrespective of any intervening fseek(3) or similar.
+	exist.  The stream is positioned at the end of the file.  Subse-
+	quent writes to the file will always end up at the then current
+	end of file, irrespective of any intervening fseek(3) or similar.
 
 The mode string can also include the letter ``b'' either as a third char-
 acter or as a character between the characters in any of the two-charac-
@@ -157,7 +157,7 @@ ISO/IEC 9899:1990 (``ISO C90'') and has no effect; the ``b'' is ignored."
   (let ((rv (c:fopen-1 file mode)))
     (when (ffi-null-p rv)
       (error 'file-error "c:fopen open error"
-             file (c:strerror (ffi-get c:errno))))
+	     file (c:strerror (ffi-get c:errno))))
     rv))
 
 (cffi:defcfun ("dup" c:dup) int

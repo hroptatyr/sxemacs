@@ -121,12 +121,12 @@ The arguments to this command are as follow:
 
 CHILD:     the name of the command for the derived mode.
 PARENT:    the name of the command for the parent mode (e.g. `text-mode')
-           or nil if there is no parent.
+	   or nil if there is no parent.
 NAME:      a string which will appear in the status line (e.g. \"Hypertext\")
 DOCSTRING: an optional documentation string--if you do not supply one,
-           the function will attempt to invent something useful.
+	   the function will attempt to invent something useful.
 BODY:      forms to execute just before running the
-           hooks for the new mode.  Do not use `interactive' here.
+	   hooks for the new mode.  Do not use `interactive' here.
 
 BODY can start with a bunch of keyword arguments.  The following keyword
   arguments are currently understood:
@@ -302,7 +302,7 @@ which more-or-less shadow %s's corresponding tables."
 		    ", as the final step\nduring initialization.")))
 
     (unless (or (string-match (regexp-quote "\\{") docstring)
-                (string-match (regexp-quote "\\[") docstring))
+		(string-match (regexp-quote "\\[") docstring))
       ;; And don't forget to put the mode's keymap.
       (setq docstring (concat docstring "\n\n\\{" (symbol-name map) "}")))
 

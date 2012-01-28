@@ -287,7 +287,7 @@ Returns t if the feature was successfully required."
 ;; | `ignore-errors' is a compiled Lisp macro
 ;; |   -- loaded from "cl-macs"
 ;; | (ignore-errors &rest BODY)
-;; | 
+;; |
 ;; | Documentation:
 ;; | Execute FORMS; if an error occurs, return nil.
 ;; | Otherwise, return result of last FORM.
@@ -434,7 +434,7 @@ Returns t if the feature was successfully required."
 ;;   (Ultimate reductionism -- no brackets, no parens.  This is the form, in
 ;;    that, that the 'f1, 'f2, etc. took, which where in fact "long"
 ;;    forms.)
-;; 
+;;
 ;; '(control C)
 ;;
 ;;   (You cannot use '(control shift c) here.  This applies whenever Shift +
@@ -509,7 +509,7 @@ forward, and defaults to 1.  Buffers whose name begins with a space
 Omits normally invisible buffers (those whose name begins with a space)."
   (not (null (string-match "\\` " (buffer-name buf)))))
 
-(defvar Init-buffers-tab-grouping-regexp 
+(defvar Init-buffers-tab-grouping-regexp
   '("^\\(gnus-\\|message-mode\\|mime/viewer-mode\\)"
     "^\\(emacs-lisp-\\|lisp-\\)")
 ;; If non-nil, a list of regular expressions for buffer grouping.
@@ -530,7 +530,7 @@ Omits normally invisible buffers (those whose name begins with a space)."
   (if (boundp 'buffers-tab-selection-function)
       (funcall buffers-tab-selection-function buffer-to-select buf1)
     (let ((mode1 (symbol-name (symbol-value-in-buffer 'major-mode buf1)))
-	  (mode2 (symbol-name (symbol-value-in-buffer 'major-mode 
+	  (mode2 (symbol-name (symbol-value-in-buffer 'major-mode
 						      buffer-to-select)))
 	  (modenm1 (symbol-value-in-buffer 'mode-name buf1))
 	  (modenm2 (symbol-value-in-buffer 'mode-name buffer-to-select)))
@@ -538,7 +538,7 @@ Omits normally invisible buffers (those whose name begins with a space)."
 		 (eq modenm1 modenm2)
 		 (and (string-match "^[^-]+-" mode1)
 		      (string-match
-		       (concat "^" (regexp-quote 
+		       (concat "^" (regexp-quote
 				    (substring mode1 0 (match-end 0))))
 		       mode2))
 		 (and Init-buffers-tab-grouping-regexp
@@ -637,19 +637,19 @@ backward, and defaults to 1.  Buffers whose name begins with a space
 ;; (when (console-on-window-system-p)
 ;;     (global-set-key "\C-x\C-c"
 ;;       #'(lambda () (interactive)
-;; 	  (beep)
-;; 	  (message "Use the \"File/Exit XEmacs\" menu item to exit XEmacs"))))
+;;	  (beep)
+;;	  (message "Use the \"File/Exit XEmacs\" menu item to exit XEmacs"))))
 
 ;; ;; Make C-k always delete the whole line, which is what most people want,
 ;; ;; anyway.
 ;; (setq kill-whole-line 'always)
 ;; ;; M-k does the old behavior (kill to end of line).
 ;; (global-set-key '(meta k) #'(lambda ()
-;; 			      (interactive)
-;; 			      (if (fboundp 'historical-kill-line)
-;; 				  (call-interactively #'historical-kill-line)
-;; 				(let ((kill-whole-line nil))
-;; 				  (call-interactively #'kill-line)))))
+;;			      (interactive)
+;;			      (if (fboundp 'historical-kill-line)
+;;				  (call-interactively #'historical-kill-line)
+;;				(let ((kill-whole-line nil))
+;;				  (call-interactively #'kill-line)))))
 ;; ;; and Meta-Shift-K does what used to be on M-k, and should
 ;; ;; (hopefully) even work under TTY's.
 ;; (global-set-key '(meta K) 'kill-sentence)
@@ -658,7 +658,7 @@ backward, and defaults to 1.  Buffers whose name begins with a space
 ;; ;; on recent XEmacs versions.
 ;; (cond ((boundp 'shifted-motion-keys-select-region)
 ;;        (setq shifted-motion-keys-select-region t))
-;;       ;; otherwise, try the pc-select package -- 
+;;       ;; otherwise, try the pc-select package --
 ;;       ((Init-safe-require 'pc-select)
 ;;        (pc-select-mode 1)))
 
@@ -742,14 +742,14 @@ This checks in turn:
 (defun toggle-profiling ()
   "Start profiling, or stop it and print results.
 This lets you figure out where time is being spent when executing Lisp code."
-  (interactive)  
-  (if (profiling-active-p) 
-      (progn  
-	(stop-profiling) 
+  (interactive)
+  (if (profiling-active-p)
+      (progn
+	(stop-profiling)
 	(message "...Finished profiling")
 	(profile-results))
-    (message "Profiling...") 
-    (clear-profiling-info) 
+    (message "Profiling...")
+    (clear-profiling-info)
     (start-profiling)))
 
 ;; Note that sequences of C-c plus a letter are specifically
@@ -1003,13 +1003,13 @@ previous with \\[backward-sexp]."
 ;;
 ;; ...which is probably a whee bit loooooong. --SY.
 ;; (if (or (equal frame-title-format "%S: %b")
-;; 	(equal frame-title-format "%b - XEmacs"))
+;;	(equal frame-title-format "%b - XEmacs"))
 ;;     (setq frame-title-format
-;; 	  (concat "%b - XEmacs "
-;; 		  (progn (string-match "\\(.*?\\)\\( XEmacs Lucid\\)?$"
-;; 				       emacs-version)
-;; 			 (match-string 1 emacs-version))
-;; 		  " [" invocation-directory invocation-name "]")))
+;;	  (concat "%b - XEmacs "
+;;		  (progn (string-match "\\(.*?\\)\\( XEmacs Lucid\\)?$"
+;;				       emacs-version)
+;;			 (match-string 1 emacs-version))
+;;		  " [" invocation-directory invocation-name "]")))
 ;;
 ;; To get a similar thing in SXEmacs, try...
 (setq frame-title-format
@@ -1107,24 +1107,24 @@ previous with \\[backward-sexp]."
 ;  ((and running-sxemacs
 ;        (console-on-window-system-p))
 ;   (let* ((root-p (eq 0 (user-uid)))
-; 	 (dpy (or (getenv "DISPLAY") ""))
-; 	 (remote-p (not
-; 		    (or (string-match "^\\(\\|unix\\|localhost\\):" dpy)
-; 			(let ((s (system-name)))
-; 			  (if (string-match "\\.\\(netscape\\|mcom\\)\\.com" s)
-; 			      (setq s (substring s 0 (match-beginning 0))))
-; 			  (string-match (concat "^" (regexp-quote s)) dpy)))))
-; 	 (bg (cond (root-p "coral2")
-; 		   (remote-p "palegreen1")
-; 		   (t nil))))
+;	 (dpy (or (getenv "DISPLAY") ""))
+;	 (remote-p (not
+;		    (or (string-match "^\\(\\|unix\\|localhost\\):" dpy)
+;			(let ((s (system-name)))
+;			  (if (string-match "\\.\\(netscape\\|mcom\\)\\.com" s)
+;			      (setq s (substring s 0 (match-beginning 0))))
+;			  (string-match (concat "^" (regexp-quote s)) dpy)))))
+;	 (bg (cond (root-p "coral2")
+;		   (remote-p "palegreen1")
+;		   (t nil))))
 ;     (cond (bg
-; 	   (let ((def (color-name (face-background 'default)))
-; 		 (faces (face-list)))
-; 	     (while faces
-; 	       (let ((obg (face-background (car faces))))
-; 		 (if (and obg (equal def (color-name obg)))
-; 		     (set-face-background (car faces) bg)))
-; 	       (setq faces (cdr faces)))))))))
+;	   (let ((def (color-name (face-background 'default)))
+;		 (faces (face-list)))
+;	     (while faces
+;	       (let ((obg (face-background (car faces))))
+;		 (if (and obg (equal def (color-name obg)))
+;		     (set-face-background (car faces) bg)))
+;	       (setq faces (cdr faces)))))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1293,12 +1293,12 @@ Key-bindings:
 ;;; Load crypt, which is a package for automatically decoding and reencoding
 ;;; files by various methods - for example, you can visit a .Z or .gz file,
 ;;; edit it, and have it automatically re-compressed when you save it again.
-;;; 
+;;;
 ; (setq crypt-encryption-type 'pgp   ; default encryption mechanism
 ;       crypt-confirm-password t	   ; make sure new passwords are correct
 ;       ;crypt-never-ever-decrypt t  ; if you don't encrypt anything, set this to
-; 				   ; tell it not to assume that "binary" files
-; 				   ; are encrypted and require a password.
+;				   ; tell it not to assume that "binary" files
+;				   ; are encrypted and require a password.
 ;       )
 ; (Init-safe-require 'crypt)
 
@@ -1466,8 +1466,8 @@ Key-bindings:
 
 ;;; ********************
 ;;; W3 is a browser for the World Wide Web, and takes advantage of the very
-;;; latest redisplay features in XEmacs.  You can access it simply by typing 
-;;; 'M-x w3'; however, if you're unlucky enough to be on a machine that is 
+;;; latest redisplay features in XEmacs.  You can access it simply by typing
+;;; 'M-x w3'; however, if you're unlucky enough to be on a machine that is
 ;;; behind a firewall, you will have to do something like this first:
 
 ;(setq w3-use-telnet t
@@ -1487,4 +1487,3 @@ Key-bindings:
 ;; and thus the named file is unreadable.
 (when Init-inhibit-custom-file-p
   (setq custom-file (make-temp-name "/tmp/non-existent-")))
-

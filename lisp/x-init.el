@@ -234,10 +234,10 @@
 	       ;; is managing, so assume all MIT displays are Suns...  HA HA!
 	       (string-equal "MIT X Consortium" vendor)
 	       (string-equal "X Consortium" vendor))
-           ;; Ok, we think this could be a Sun keyboard.  Run the Sun code.
+	   ;; Ok, we think this could be a Sun keyboard.  Run the Sun code.
 	   (x-win-init-sun))
-          ((string-match "XFree86" vendor)
-           ;; Those XFree86 people do some weird keysym stuff, too.
+	  ((string-match "XFree86" vendor)
+	   ;; Those XFree86 people do some weird keysym stuff, too.
 	   (x-win-init-xfree86)))))
 
 
@@ -266,8 +266,8 @@
     (setq character-set-property 'x-iso8859/1) ; see x-iso8859-1.el
 
     (setq initial-frame-plist (if initial-frame-unmapped-p
-                                  '(initially-unmapped t)
-                                nil))
+				  '(initially-unmapped t)
+				nil))
     (setq pre-x-win-initted t)))
 
 (defvar x-win-initted nil)
@@ -281,7 +281,7 @@
     ;; Open the X display when this file is loaded
     ;; (Note that the first frame is created later.)
     (setq x-initial-argv-list (cons (car command-line-args)
-                                    command-line-args-left))
+				    command-line-args-left))
     ;; Locate the app-defaults directory
     (when (and (boundp 'x-app-defaults-directory)
 	       (null x-app-defaults-directory))
@@ -300,7 +300,7 @@
     ;; because the icon initialization needs to access the display to get
     ;; any toolbar-related color resources.
     (if (and (not (featurep 'infodock)) (featurep 'toolbar))
-        (init-x-toolbar))
+	(init-x-toolbar))
     (if (and (featurep 'infodock) (featurep 'toolbar))
 	(require 'id-x-toolbar))
     (if (featurep 'gutter) (init-gutter))

@@ -238,7 +238,7 @@ tty_output_display_block(struct window *w, struct display_line *dl, int block,
 	if (end < 0)
 		end = Dynarr_length(rba);
 
-        buf = Dynarr_new(Emchar);
+	buf = Dynarr_new(Emchar);
 
 	while (elt < end && Dynarr_atp(rba, elt)->xpos < start_pixpos) {
 		elt++;
@@ -571,7 +571,7 @@ static void tty_stream_putc( int c )
 {
 	if ( tty_stream )
 		Lstream_putc(tty_stream, c);
-}			
+}
 
 static void send_tty_escseq(struct console *c, char *escseq)
 {
@@ -579,7 +579,7 @@ static void send_tty_escseq(struct console *c, char *escseq)
 		SXE_MUTEX_INIT(&tty_mutex);
 		tty_mutex_inited = 1;
 	}
-	WITH_SXE_MUTEX(&tty_mutex, 
+	WITH_SXE_MUTEX(&tty_mutex,
 		       {
 			       tty_stream = XLSTREAM(CONSOLE_TTY_DATA(c)->outstream);
 			       tputs(escseq,1,(tputs_fun)tty_stream_putc);
@@ -603,7 +603,7 @@ set_foreground_to(struct console *c, Lisp_Object sym)
 
 		if (TTY_SD(c).set_afore_ ) {
 			/* inevitable warning? */
-			escseq = (Bufbyte*) 
+			escseq = (Bufbyte*)
 				emacs_tparam((TTY_SD(c).set_afore_),
 					     NULL, 0,
 					     XINT(idx),
@@ -633,7 +633,7 @@ set_background_to(struct console *c, Lisp_Object sym)
 
 		if (TTY_SD(c).set_aback_ ) {
 			/* inevitable warning */
-			escseq = (Bufbyte*) 
+			escseq = (Bufbyte*)
 				emacs_tparam((TTY_SD(c).set_aback_),
 					     NULL, 0,
 					     XINT(idx),
@@ -830,7 +830,7 @@ void set_tty_modes(struct console *c)
 {
 	if (!CONSOLE_TTY_P(c))
 		return;
-	
+
 	OUTPUT1_IF(c, (TTY_SD(c).init_motion_));
 	OUTPUT1_IF(c, (TTY_SD(c).cursor_visible_));
 	OUTPUT1_IF(c, (TTY_SD(c).keypad_on_));
@@ -993,7 +993,7 @@ static void tty_ring_bell(struct device *d, int volume, int pitch, int duration)
 
 int init_tty_for_redisplay(struct device *d, char *terminal_type)
 {
-	int force_colorterm = assume_colorterm || 
+	int force_colorterm = assume_colorterm ||
 		getenv("COLOR_TERM") != NULL ||
 		getenv("COLORTERM") != NULL;
 
@@ -1001,7 +1001,7 @@ int init_tty_for_redisplay(struct device *d, char *terminal_type)
 	/* According to the man page a terminfo/termcap cannot be
 	   longer than 4096 so we should be golden here
 	*/
-	char entry_buffer[4098]; 
+	char entry_buffer[4098];
 	char *bufptr;
 	struct console *c = XCONSOLE(DEVICE_CONSOLE(d));
 	char *ttype = terminal_type;
@@ -1022,7 +1022,7 @@ int init_tty_for_redisplay(struct device *d, char *terminal_type)
 #ifdef SIGTTOU
 		EMACS_UNBLOCK_SIGNAL(SIGTTOU);
 #endif
-		/* Under Linux at least, <0 is returned for TTY_TYPE_UNDEFINED. --ben 
+		/* Under Linux at least, <0 is returned for TTY_TYPE_UNDEFINED. --ben
 		 */
 		if (status <= 0) {
 			if ( ! strcmp( ttype, "xterm-256color" ) ) {
@@ -1034,7 +1034,7 @@ int init_tty_for_redisplay(struct device *d, char *terminal_type)
 			} else if ( ! strcmp( ttype, "xterm" ) ) {
 				ttype = "vt100";
 				continue;
-			} 
+			}
 			return TTY_TYPE_UNDEFINED;
 		}
 	} while( status <= 0 );
@@ -1203,7 +1203,7 @@ int init_tty_for_redisplay(struct device *d, char *terminal_type)
 	 */
 
 	term_get_fkeys(c->function_key_map, &bufptr);
-	
+
 	{
 		/* check for ANSI set-foreground and set-background strings,
 		   and assume color if so.
@@ -1220,43 +1220,43 @@ int init_tty_for_redisplay(struct device *d, char *terminal_type)
 			DEVICE_CLASS(d) = Qcolor;
 			/* These cases should be rare. Most termcap
 			 * entries will have both colors and pairs
-			 * defined. However let's play it safe :) 
+			 * defined. However let's play it safe :)
 			 */
 			if ( colors == 0 && pairs > 0 ) {
 				/* try to determine colors from pairs.
 				 * Most common cases first.
 				 */
-				if ( pairs == 64 ) 
+				if ( pairs == 64 )
 					colors = 8;
-				else if ( pairs == 256 ) 
+				else if ( pairs == 256 )
 					colors = 16;
-				else 
+				else
 					/* Naive isqrt algorithm. */
-					for( colors=1; 
-                                             colors*colors < pairs; 
-                                             colors ++ );
+					for( colors=1;
+					     colors*colors < pairs;
+					     colors ++ );
 			}
 			if ( pairs == 0 && colors > 0 )
 				/* try to determine pairs from colors */
 				pairs = colors * colors;
 			CONSOLE_TTY_DATA(c)->maxcolors = colors;
 			CONSOLE_TTY_DATA(c)->maxpairs = pairs;
-			
+
 			/* Most terminals that report 8 colors will
-                           make bold brighter */
-			CONSOLE_TTY_DATA(c)->is_bold_brighter = 
-				(colors == 8 && TTY_SD(c).turn_on_bold_ ) 
-                                ? 1 : 0; 
+			   make bold brighter */
+			CONSOLE_TTY_DATA(c)->is_bold_brighter =
+				(colors == 8 && TTY_SD(c).turn_on_bold_ )
+				? 1 : 0;
 			/* Most terminals do not have brighter background
 			   colors, however the REAL X11R6 xterm and rxvt do
 			   allow reverse to achieve this.  Sadly there
 			   is no way to autodetect. Since the Hue is very
-                           different on the 8 basic colors and most users
-                           will hopefully use xterm or rxvt.
+			   different on the 8 basic colors and most users
+			   will hopefully use xterm or rxvt.
 			*/
-			CONSOLE_TTY_DATA(c)->is_reverse_brighter = 
-                                (colors == 8 && TTY_SD(c).turn_on_reverse_) 
-                                ? 1 : 0; 
+			CONSOLE_TTY_DATA(c)->is_reverse_brighter =
+				(colors == 8 && TTY_SD(c).turn_on_reverse_)
+				? 1 : 0;
 		}
 		else if ( force_colorterm ) {
 			DEVICE_CLASS(d) = Qcolor;
@@ -1264,17 +1264,17 @@ int init_tty_for_redisplay(struct device *d, char *terminal_type)
 			TTY_SD(c).set_afore_ = "\e[3%p1%dm";
 			CONSOLE_TTY_DATA(c)->maxcolors = 8;
 			CONSOLE_TTY_DATA(c)->maxpairs = 64;
-			CONSOLE_TTY_DATA(c)->is_bold_brighter = 
-				(TTY_SD(c).turn_on_bold_ ) ? 1 : 0; 
-			if ( ! 	TTY_SD(c).orig_pair_ ) 
+			CONSOLE_TTY_DATA(c)->is_bold_brighter =
+				(TTY_SD(c).turn_on_bold_ ) ? 1 : 0;
+			if ( !	TTY_SD(c).orig_pair_ )
 				TTY_SD(c).orig_pair_ = "\e[39;49m";
 
 		} else {
 			DEVICE_CLASS(d) = Qmono;
 			CONSOLE_TTY_DATA(c)->maxcolors = 2;
 			CONSOLE_TTY_DATA(c)->maxpairs = 4;
-			CONSOLE_TTY_DATA(c)->is_bold_brighter = 0; 
-			CONSOLE_TTY_DATA(c)->is_reverse_brighter = 0; 
+			CONSOLE_TTY_DATA(c)->is_bold_brighter = 0;
+			CONSOLE_TTY_DATA(c)->is_reverse_brighter = 0;
 		}
 	}
 

@@ -1,4 +1,4 @@
-;;; mule-help.el --- Mule-ized Help functions 
+;;; mule-help.el --- Mule-ized Help functions
 
 ;; Copyright (C) 1997 by Free Software Foundation, Inc.
 
@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 

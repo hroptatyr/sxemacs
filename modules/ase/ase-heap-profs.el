@@ -44,8 +44,8 @@
    (push "." load-path)
    (when (and (boundp 'load-file-name) (stringp load-file-name))
      (push (expand-file-name "../tests/benchmark"
-                             (file-name-directory load-file-name))
-           load-path))
+			     (file-name-directory load-file-name))
+	   load-path))
    (require 'benchmark)))
 
 (require 'ase-heap)

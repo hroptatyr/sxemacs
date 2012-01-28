@@ -121,7 +121,7 @@ minibuffer is reinvoked while it is the selected window."
 
 (defvar minibuffer-default nil
   "Default value for minibuffer input.")
-  
+
 (defvar minibuffer-local-map
   (let ((map (make-sparse-keymap 'minibuffer-local-map)))
     map)
@@ -181,10 +181,10 @@ minibuffer is reinvoked while it is the selected window."
 
 (defvar read-expression-map (let ((map (make-sparse-keymap
 					'read-expression-map)))
-                              (set-keymap-parents map
+			      (set-keymap-parents map
 						  (list minibuffer-local-map))
-                              (define-key map "\M-\t" 'lisp-complete-symbol)
-                              map)
+			      (define-key map "\M-\t" 'lisp-complete-symbol)
+			      map)
   "Minibuffer keymap used for reading Lisp expressions.")
 
 (defvar read-shell-command-map
@@ -347,9 +347,9 @@ minibuffer history if its length is less than that value."
 	 (princ (cadr error-object) stream)))
 
 (defun read-from-minibuffer (prompt &optional initial-contents
-                                    keymap
-                                    readp
-                                    history
+				    keymap
+				    readp
+				    history
 				    abbrev-table
 				    default)
   "Read a string from the minibuffer, prompting with string PROMPT.
@@ -379,13 +379,13 @@ Seventh arg DEFAULT, if non-nil, will be returned when user enters
 See also the variable `completion-highlight-first-word-only' for
   control over completion display."
   (if (and (not enable-recursive-minibuffers)
-           (> (minibuffer-depth) 0)
-           (eq (selected-window) (minibuffer-window)))
+	   (> (minibuffer-depth) 0)
+	   (eq (selected-window) (minibuffer-window)))
       (error "Command attempted to use minibuffer while in minibuffer"))
 
   (if (and minibuffer-max-depth
 	   (> minibuffer-max-depth 0)
-           (>= (minibuffer-depth) minibuffer-max-depth))
+	   (>= (minibuffer-depth) minibuffer-max-depth))
       (minibuffer-max-depth-exceeded))
 
   ;; catch this error before the poor user has typed something...
@@ -398,25 +398,25 @@ See also the variable `completion-highlight-first-word-only' for
 
   (if (noninteractive)
       (progn
-        ;; XEmacs in -batch mode calls minibuffer: print the prompt.
-        (message "%s" (gettext prompt))
-        ;;#### force-output
+	;; XEmacs in -batch mode calls minibuffer: print the prompt.
+	(message "%s" (gettext prompt))
+	;;#### force-output
 
-        ;;#### Should this even be falling though to the code below?
-        ;;#### How does this stuff work now, anyway?
-        ))
+	;;#### Should this even be falling though to the code below?
+	;;#### How does this stuff work now, anyway?
+	))
   (let* ((dir default-directory)
-         (owindow (selected-window))
+	 (owindow (selected-window))
 	 (oframe (selected-frame))
-         (window (minibuffer-window))
-         (buffer (if (eq (minibuffer-depth) 0)
-                     (window-buffer window)
+	 (window (minibuffer-window))
+	 (buffer (if (eq (minibuffer-depth) 0)
+		     (window-buffer window)
 		   (get-buffer-create (format " *Minibuf-%d"
 					      (minibuffer-depth)))))
-         (frame (window-frame window))
-         (mconfig (if (eq frame (selected-frame))
-                      nil (current-window-configuration frame)))
-         (oconfig (current-window-configuration))
+	 (frame (window-frame window))
+	 (mconfig (if (eq frame (selected-frame))
+		      nil (current-window-configuration frame)))
+	 (oconfig (current-window-configuration))
 	 ;; dynamic scope sucks sucks sucks sucks sucks sucks.
 	 ;; `M-x doctor' makes history a local variable, and thus
 	 ;; our binding above is buffer-local and doesn't apply
@@ -424,11 +424,11 @@ See also the variable `completion-highlight-first-word-only' for
 	 (_history_ history)
 	 (minibuffer-default default))
     (unwind-protect
-         (progn
-           (set-buffer (reset-buffer buffer))
-           (setq default-directory dir)
-           (make-local-variable 'print-escape-newlines)
-           (setq print-escape-newlines t)
+	 (progn
+	   (set-buffer (reset-buffer buffer))
+	   (setq default-directory dir)
+	   (make-local-variable 'print-escape-newlines)
+	   (setq print-escape-newlines t)
 	   (make-local-variable 'current-minibuffer-contents)
 	   (make-local-variable 'current-minibuffer-point)
 	   (make-local-variable 'initial-minibuffer-history-position)
@@ -443,103 +443,103 @@ See also the variable `completion-highlight-first-word-only' for
 	     (make-local-variable 'mouse-track-click-hook)
 	     (add-hook 'mouse-track-click-hook
 		       'minibuffer-smart-maybe-select-highlighted-completion))
-           (set-window-buffer window buffer)
-           (select-window window)
-           (set-window-hscroll window 0)
-           (buffer-enable-undo buffer)
-           (message nil)
-           (if initial-contents
-               (if (consp initial-contents)
-                   (progn
-                     (insert (car initial-contents))
-                     (goto-char (1+ (cdr initial-contents)))
+	   (set-window-buffer window buffer)
+	   (select-window window)
+	   (set-window-hscroll window 0)
+	   (buffer-enable-undo buffer)
+	   (message nil)
+	   (if initial-contents
+	       (if (consp initial-contents)
+		   (progn
+		     (insert (car initial-contents))
+		     (goto-char (1+ (cdr initial-contents)))
 		     (setq current-minibuffer-contents (car initial-contents)
 			   current-minibuffer-point (cdr initial-contents)))
 		 (insert initial-contents)
 		 (setq current-minibuffer-contents initial-contents
 		       current-minibuffer-point (point))))
-           (use-local-map (help-keymap-with-help-key
+	   (use-local-map (help-keymap-with-help-key
 			   (or keymap minibuffer-local-map)
 			   minibuffer-help-form))
-           (let ((mouse-grabbed-buffer
+	   (let ((mouse-grabbed-buffer
 		  (and minibuffer-smart-completion-tracking-behavior
 		       (current-buffer)))
-                 (current-prefix-arg current-prefix-arg)
+		 (current-prefix-arg current-prefix-arg)
 ;;                 (help-form minibuffer-help-form)
-                 (minibuffer-history-variable (cond ((not _history_)
-                                                     'minibuffer-history)
-                                                    ((consp _history_)
-                                                     (car _history_))
-                                                    (t
-                                                     _history_)))
-                 (minibuffer-history-position (cond ((consp _history_)
-                                                     (cdr _history_))
-                                                    (t
-                                                     0)))
-                 (minibuffer-scroll-window owindow))
+		 (minibuffer-history-variable (cond ((not _history_)
+						     'minibuffer-history)
+						    ((consp _history_)
+						     (car _history_))
+						    (t
+						     _history_)))
+		 (minibuffer-history-position (cond ((consp _history_)
+						     (cdr _history_))
+						    (t
+						     0)))
+		 (minibuffer-scroll-window owindow))
 	     (setq initial-minibuffer-history-position
 		   minibuffer-history-position)
 	     (if abbrev-table
 		 (setq local-abbrev-table abbrev-table
 		       abbrev-mode t))
 	     ;; This is now run from read-minibuffer-internal
-             ;(if minibuffer-setup-hook
-             ;    (run-hooks 'minibuffer-setup-hook))
-             ;(message nil)
+	     ;(if minibuffer-setup-hook
+	     ;    (run-hooks 'minibuffer-setup-hook))
+	     ;(message nil)
 
-             ;; Adjust the prompt
-             (flet ((fmt-prompt-stack (p ps)
-                      (if (not ps)
-                          p
-                        (fmt-prompt-stack (concat "[" (car ps) "]" p) (cdr ps)))))
-               (push prompt minibuffer-prompt-stack)
-               (setq prompt (fmt-prompt-stack prompt (cdr minibuffer-prompt-stack))))
+	     ;; Adjust the prompt
+	     (flet ((fmt-prompt-stack (p ps)
+		      (if (not ps)
+			  p
+			(fmt-prompt-stack (concat "[" (car ps) "]" p) (cdr ps)))))
+	       (push prompt minibuffer-prompt-stack)
+	       (setq prompt (fmt-prompt-stack prompt (cdr minibuffer-prompt-stack))))
 
-             (if (eq 't
-                     (catch 'exit
-                       (unwind-protect
-                           (if (> (recursion-depth) (minibuffer-depth))
-                               (let ((standard-output t)
-                                     (standard-input t))
-                                 (read-minibuffer-internal prompt))
-                             (read-minibuffer-internal prompt))
-                         (pop minibuffer-prompt-stack))))
-                       
-                 ;; Translate an "abort" (throw 'exit 't)
-                 ;;  into a real quit
-                 (signal 'quit '())
-               ;; return value
-               (let* ((val (progn (set-buffer buffer)
-                                  (if minibuffer-exit-hook
-                                      (run-hooks 'minibuffer-exit-hook))
-                                  (if (and (eq (char-after (point-min)) nil)
+	     (if (eq 't
+		     (catch 'exit
+		       (unwind-protect
+			   (if (> (recursion-depth) (minibuffer-depth))
+			       (let ((standard-output t)
+				     (standard-input t))
+				 (read-minibuffer-internal prompt))
+			     (read-minibuffer-internal prompt))
+			 (pop minibuffer-prompt-stack))))
+
+		 ;; Translate an "abort" (throw 'exit 't)
+		 ;;  into a real quit
+		 (signal 'quit '())
+	       ;; return value
+	       (let* ((val (progn (set-buffer buffer)
+				  (if minibuffer-exit-hook
+				      (run-hooks 'minibuffer-exit-hook))
+				  (if (and (eq (char-after (point-min)) nil)
 					   default)
 				      default
 				    (buffer-string))))
 		      (histval (if (and default (string= val ""))
 				   default
 				 val))
-                      (err nil))
-                 (if readp
-                     (condition-case e
-                         (let ((v (read-from-string val)))
-                           (if (< (cdr v) (length val))
-                               (save-match-data
-                                 (or (string-match "[ \t\n]*\\'" val (cdr v))
-                                     (error "Trailing garbage following expression"))))
-                           (setq v (car v))
-                           ;; total total kludge
-                           (if (stringp v) (setq v (list 'quote v)))
-                           (setq val v))
-                       (end-of-file
+		      (err nil))
+		 (if readp
+		     (condition-case e
+			 (let ((v (read-from-string val)))
+			   (if (< (cdr v) (length val))
+			       (save-match-data
+				 (or (string-match "[ \t\n]*\\'" val (cdr v))
+				     (error "Trailing garbage following expression"))))
+			   (setq v (car v))
+			   ;; total total kludge
+			   (if (stringp v) (setq v (list 'quote v)))
+			   (setq val v))
+		       (end-of-file
 			(setq err
 			      '(input-error "End of input before end of expression")))
 		       (error (setq err e))))
-                 ;; Add the value to the appropriate history list unless
-                 ;; it's already the most recent element, or it's only
-                 ;; two characters long.
-                 (if (and (symbolp minibuffer-history-variable)
-                          (boundp minibuffer-history-variable))
+		 ;; Add the value to the appropriate history list unless
+		 ;; it's already the most recent element, or it's only
+		 ;; two characters long.
+		 (if (and (symbolp minibuffer-history-variable)
+			  (boundp minibuffer-history-variable))
 		     (let ((list (symbol-value minibuffer-history-variable)))
 		       (or (eq list t)
 			   (null val)
@@ -552,8 +552,8 @@ See also the variable `completion-highlight-first-word-only' for
 				(if minibuffer-history-uniquify
 				    (cons histval (remove histval list))
 				  (cons histval list))))))
-                 (if err (signal (car err) (cdr err)))
-                 val))))
+		 (if err (signal (car err) (cdr err)))
+		 val))))
       ;; stupid display code requires this for some reason
       (set-buffer buffer)
       (buffer-disable-undo buffer)
@@ -606,8 +606,8 @@ See also the variable `completion-highlight-first-word-only' for
 	  (goto-char (point-min))
 	  (if (re-search-forward
 	       (concat "^(setq minibuffer-max-depth "
-                       #r"\([0-9]+\|'?nil\|'?()\))"
-                       "\n")
+		       #r"\([0-9]+\|'?nil\|'?()\))"
+		       "\n")
 	       nil t)
 	      (delete-region (match-beginning 0 ) (match-end 0))
 	    ;; Must have been disabled by default.
@@ -641,57 +641,57 @@ See also the variable `completion-highlight-first-word-only' for
       ;;  gets set. In this case, we want that ^G to be interpreted
       ;;  as a normal character, and act just like typeahead.
       (if (and quit-flag (not unread-command-event))
-          (setq unread-command-event (character-to-event (quit-char))
-                quit-flag nil)))))
+	  (setq unread-command-event (character-to-event (quit-char))
+		quit-flag nil)))))
 
 
 ;; Determines whether buffer-string is an exact completion
 (defun exact-minibuffer-completion-p (buffer-string)
   (cond ((not minibuffer-completion-table)
-         ;; Empty alist
-         nil)
-        ((vectorp minibuffer-completion-table)
-         (let ((tem (intern-soft buffer-string
-                                 minibuffer-completion-table)))
-           (if (or tem
-                   (and (string-equal buffer-string "nil")
-                        ;; intern-soft loses for 'nil
-                        (catch 'found
-                          (mapatoms #'(lambda (s)
+	 ;; Empty alist
+	 nil)
+	((vectorp minibuffer-completion-table)
+	 (let ((tem (intern-soft buffer-string
+				 minibuffer-completion-table)))
+	   (if (or tem
+		   (and (string-equal buffer-string "nil")
+			;; intern-soft loses for 'nil
+			(catch 'found
+			  (mapatoms #'(lambda (s)
 					(if (string-equal
 					     (symbol-name s)
 					     buffer-string)
 					    (throw 'found t)))
 				    minibuffer-completion-table)
-                          nil)))
-               (if minibuffer-completion-predicate
-                   (funcall minibuffer-completion-predicate
-                            tem)
-                   t)
-               nil)))
-        ((and (consp minibuffer-completion-table)
-              ;;#### Emacs-Lisp truly sucks!
-              ;; lambda, autoload, etc
-              (not (symbolp (car minibuffer-completion-table))))
-         (if (not completion-ignore-case)
-             (assoc buffer-string minibuffer-completion-table)
-             (let ((s (upcase buffer-string))
-                   (tail minibuffer-completion-table)
-                   tem)
-               (while tail
-                 (setq tem (car (car tail)))
-                 (if (or (equal tem buffer-string)
-                         (equal tem s)
-                        (if tem (equal (upcase tem) s)))
-                     (setq s 'win
-                           tail nil)    ;exit
-                     (setq tail (cdr tail))))
-               (eq s 'win))))
-        (t
-         (funcall minibuffer-completion-table
-                  buffer-string
-                  minibuffer-completion-predicate
-                  'lambda)))
+			  nil)))
+	       (if minibuffer-completion-predicate
+		   (funcall minibuffer-completion-predicate
+			    tem)
+		   t)
+	       nil)))
+	((and (consp minibuffer-completion-table)
+	      ;;#### Emacs-Lisp truly sucks!
+	      ;; lambda, autoload, etc
+	      (not (symbolp (car minibuffer-completion-table))))
+	 (if (not completion-ignore-case)
+	     (assoc buffer-string minibuffer-completion-table)
+	     (let ((s (upcase buffer-string))
+		   (tail minibuffer-completion-table)
+		   tem)
+	       (while tail
+		 (setq tem (car (car tail)))
+		 (if (or (equal tem buffer-string)
+			 (equal tem s)
+			(if tem (equal (upcase tem) s)))
+		     (setq s 'win
+			   tail nil)    ;exit
+		     (setq tail (cdr tail))))
+	       (eq s 'win))))
+	(t
+	 (funcall minibuffer-completion-table
+		  buffer-string
+		  minibuffer-completion-predicate
+		  'lambda)))
   )
 
 ;; 0 'none                 no possible completion
@@ -703,22 +703,22 @@ See also the variable `completion-highlight-first-word-only' for
 ;; 6 'uncompleted          no completion happened
 (defun minibuffer-do-completion-1 (buffer-string completion)
   (cond ((not completion)
-         'none)
-        ((eq completion t)
-         ;; exact and unique match
-         'unique)
-        (t
-         ;; It did find a match.  Do we match some possibility exactly now?
-         (let ((completedp (not (string-equal completion buffer-string))))
-           (if completedp
-               (progn
-                 ;; Some completion happened
-                 (erase-buffer)
-                 (insert completion)
-                 (setq buffer-string completion)))
-           (if (exact-minibuffer-completion-p buffer-string)
-               ;; An exact completion was possible
-               (if completedp
+	 'none)
+	((eq completion t)
+	 ;; exact and unique match
+	 'unique)
+	(t
+	 ;; It did find a match.  Do we match some possibility exactly now?
+	 (let ((completedp (not (string-equal completion buffer-string))))
+	   (if completedp
+	       (progn
+		 ;; Some completion happened
+		 (erase-buffer)
+		 (insert completion)
+		 (setq buffer-string completion)))
+	   (if (exact-minibuffer-completion-p buffer-string)
+	       ;; An exact completion was possible
+	       (if completedp
 ;; Since no callers need to know the difference, don't bother
 ;;  with this (potentially expensive) discrimination.
 ;;                 (if (eq (try-completion completion
@@ -726,58 +726,58 @@ See also the variable `completion-highlight-first-word-only' for
 ;;                                         minibuffer-completion-predicate)
 ;;                         't)
 ;;                     'completed-exact-unique
-                       'completed-exact
+		       'completed-exact
 ;;                     )
-                   'exact)
-               ;; Not an exact match
-               (if completedp
-                   'completed
-                   'uncompleted))))))
+		   'exact)
+	       ;; Not an exact match
+	       (if completedp
+		   'completed
+		   'uncompleted))))))
 
 
 (defun minibuffer-do-completion (buffer-string)
   (let* ((completion (try-completion buffer-string
-                                     minibuffer-completion-table
-                                     minibuffer-completion-predicate))
-         (status (minibuffer-do-completion-1 buffer-string completion))
-         (last last-exact-completion))
+				     minibuffer-completion-table
+				     minibuffer-completion-predicate))
+	 (status (minibuffer-do-completion-1 buffer-string completion))
+	 (last last-exact-completion))
     (setq last-exact-completion nil)
     (cond ((eq status 'none)
-           ;; No completions
-           (ding nil 'no-completion)
-           (temp-minibuffer-message " [No match]"))
-          ((eq status 'unique)
-           )
-          (t
-           ;; It did find a match.  Do we match some possibility exactly now?
-           (if (not (string-equal completion buffer-string))
-               (progn
-                 ;; Some completion happened
-                 (erase-buffer)
-                 (insert completion)
-                 (setq buffer-string completion)))
-           (cond ((eq status 'exact)
-                  ;; If the last exact completion and this one were
-                  ;;  the same, it means we've already given a
-                  ;;  "Complete but not unique" message and that the
-                  ;;  user's hit TAB again, so now we give help.
-                  (setq last-exact-completion completion)
-                  (if (equal buffer-string last)
-                      (minibuffer-completion-help)))
-                 ((eq status 'uncompleted)
-                  (if completion-auto-help
-                      (minibuffer-completion-help)
-                      (temp-minibuffer-message " [Next char not unique]")))
-                 (t
-                  nil))))
+	   ;; No completions
+	   (ding nil 'no-completion)
+	   (temp-minibuffer-message " [No match]"))
+	  ((eq status 'unique)
+	   )
+	  (t
+	   ;; It did find a match.  Do we match some possibility exactly now?
+	   (if (not (string-equal completion buffer-string))
+	       (progn
+		 ;; Some completion happened
+		 (erase-buffer)
+		 (insert completion)
+		 (setq buffer-string completion)))
+	   (cond ((eq status 'exact)
+		  ;; If the last exact completion and this one were
+		  ;;  the same, it means we've already given a
+		  ;;  "Complete but not unique" message and that the
+		  ;;  user's hit TAB again, so now we give help.
+		  (setq last-exact-completion completion)
+		  (if (equal buffer-string last)
+		      (minibuffer-completion-help)))
+		 ((eq status 'uncompleted)
+		  (if completion-auto-help
+		      (minibuffer-completion-help)
+		      (temp-minibuffer-message " [Next char not unique]")))
+		 (t
+		  nil))))
     status))
 
 
 ;;;; completing-read
 
 (defun completing-read (prompt table
-                        &optional predicate require-match
-                                  initial-contents history default)
+			&optional predicate require-match
+				  initial-contents history default)
   "Read a string in the minibuffer, with completion.
 
 PROMPT is a string to prompt with; normally it ends in a colon and a space.
@@ -809,9 +809,9 @@ DEFAULT, if non-nil, will be returned when the user enters an empty
 Completion ignores case if the ambient value of
   `completion-ignore-case' is non-nil."
   (let ((minibuffer-completion-table table)
-        (minibuffer-completion-predicate predicate)
-        (minibuffer-completion-confirm (if (eq require-match 't) nil t))
-        (last-exact-completion nil)
+	(minibuffer-completion-predicate predicate)
+	(minibuffer-completion-confirm (if (eq require-match 't) nil t))
+	(last-exact-completion nil)
 	ret)
     (setq ret (read-from-minibuffer prompt
 				    initial-contents
@@ -846,11 +846,11 @@ scroll the window of possible completions."
       (setq minibuffer-scroll-window nil))
   (let ((window minibuffer-scroll-window))
     (if (and window (windowp window) (window-buffer window)
-             (buffer-name (window-buffer window)))
+	     (buffer-name (window-buffer window)))
 	;; If there's a fresh completion window with a live buffer
 	;;  and this command is repeated, scroll that window.
 	(let ((obuf (current-buffer)))
-          (unwind-protect
+	  (unwind-protect
 	      (progn
 		(set-buffer (window-buffer window))
 		(if (pos-visible-in-window-p (point-max) window)
@@ -859,7 +859,7 @@ scroll the window of possible completions."
 		  ;; Else scroll down one frame.
 		  (scroll-other-window)))
 	    (set-buffer obuf))
-          nil)
+	  nil)
       (let ((status (minibuffer-do-completion (buffer-string))))
 	(if (eq status 'none)
 	    nil
@@ -886,17 +886,17 @@ a repetition of this command will exit."
     ;; Short-cut -- don't call minibuffer-do-completion if we already
     ;;  have an (possibly nonunique) exact completion.
     (if (exact-minibuffer-completion-p buffer-string)
-        (throw 'exit nil))
+	(throw 'exit nil))
     (let ((status (minibuffer-do-completion buffer-string)))
       (if (or (eq status 'unique)
-              (eq status 'exact)
-              (if (or (eq status 'completed-exact)
-                      (eq status 'completed-exact-unique))
-                  (if minibuffer-completion-confirm
-                      (progn (temp-minibuffer-message " [Confirm]")
-                             nil)
-                      t)))
-          (throw 'exit nil)))))
+	      (eq status 'exact)
+	      (if (or (eq status 'completed-exact)
+		      (eq status 'completed-exact-unique))
+		  (if minibuffer-completion-confirm
+		      (progn (temp-minibuffer-message " [Confirm]")
+			     nil)
+		      t)))
+	  (throw 'exit nil)))))
 
 
 (defun self-insert-and-exit ()
@@ -917,16 +917,16 @@ the character in question must be typed again)."
       (throw 'exit nil))
   (let ((buffer-string (buffer-string)))
     (if (exact-minibuffer-completion-p buffer-string)
-        (throw 'exit nil))
+	(throw 'exit nil))
     (let ((completion (if (not minibuffer-completion-table)
-                          t
-                          (try-completion buffer-string
-                                          minibuffer-completion-table
-                                          minibuffer-completion-predicate))))
+			  t
+			  (try-completion buffer-string
+					  minibuffer-completion-table
+					  minibuffer-completion-predicate))))
       (if (or (eq completion 't)
-              ;; Crockishly allow user to specify null string
-              (string-equal buffer-string ""))
-          (throw 'exit nil))
+	      ;; Crockishly allow user to specify null string
+	      (string-equal buffer-string ""))
+	  (throw 'exit nil))
       (if completion ;; rewritten for I18N3 snarfing
 	  (temp-minibuffer-message " [incomplete; confirm]")
 	(temp-minibuffer-message " [no completions; confirm]"))
@@ -934,12 +934,12 @@ the character in question must be typed again)."
 		     (prog1
 			 (next-command-event)
 		       (setq quit-flag nil)))))
-        (cond ((equal event last-command-event)
-               (throw 'exit nil))
-              ((equal (quit-char) (event-to-character event))
-               ;; Minibuffer abort.
-               (throw 'exit t)))
-        (dispatch-event event)))))
+	(cond ((equal event last-command-event)
+	       (throw 'exit nil))
+	      ((equal (quit-char) (event-to-character event))
+	       ;; Minibuffer abort.
+	       (throw 'exit t)))
+	(dispatch-event event)))))
 
 ;;;; minibuffer-complete-word
 
@@ -953,22 +953,22 @@ is added, provided that matches some possible completion.
 Return nil if there is no valid completion, else t."
   (interactive)
   (let* ((buffer-string (buffer-string))
-         (completion (try-completion buffer-string
-                                     minibuffer-completion-table
-                                     minibuffer-completion-predicate))
-         (status (minibuffer-do-completion-1 buffer-string completion)))
+	 (completion (try-completion buffer-string
+				     minibuffer-completion-table
+				     minibuffer-completion-predicate))
+	 (status (minibuffer-do-completion-1 buffer-string completion)))
     (cond ((eq status 'none)
-           (ding nil 'no-completion)
-           (temp-minibuffer-message " [No match]")
-           nil)
-          ((eq status 'unique)
-           ;; New message, only in this new Lisp code
-           (temp-minibuffer-message " [Sole completion]")
-           t)
-          (t
-           (cond ((or (eq status 'uncompleted)
-                      (eq status 'exact))
-                  (let ((foo #'(lambda (s)
+	   (ding nil 'no-completion)
+	   (temp-minibuffer-message " [No match]")
+	   nil)
+	  ((eq status 'unique)
+	   ;; New message, only in this new Lisp code
+	   (temp-minibuffer-message " [Sole completion]")
+	   t)
+	  (t
+	   (cond ((or (eq status 'uncompleted)
+		      (eq status 'exact))
+		  (let ((foo #'(lambda (s)
 				 (condition-case nil
 				     (if (try-completion
 					  (concat buffer-string s)
@@ -978,50 +978,50 @@ Return nil if there is no valid completion, else t."
 					   (goto-char (point-max))
 					   (insert s)
 					   t)
-                                       nil)
-                                   (error nil))))
-                        (char last-command-char))
-                    ;; Try to complete by adding a word-delimiter
-                    (or (and (characterp char) (> char 0)
-                             (funcall foo (char-to-string char)))
-                        (and (not (eq char ?\ ))
-                             (funcall foo " "))
-                        (and (not (eq char ?\-))
-                             (funcall foo "-"))
-                        (progn
-                          (if completion-auto-help
-                              (minibuffer-completion-help)
-                              ;; New message, only in this new Lisp code
+				       nil)
+				   (error nil))))
+			(char last-command-char))
+		    ;; Try to complete by adding a word-delimiter
+		    (or (and (characterp char) (> char 0)
+			     (funcall foo (char-to-string char)))
+			(and (not (eq char ?\ ))
+			     (funcall foo " "))
+			(and (not (eq char ?\-))
+			     (funcall foo "-"))
+			(progn
+			  (if completion-auto-help
+			      (minibuffer-completion-help)
+			      ;; New message, only in this new Lisp code
 			    ;; rewritten for I18N3 snarfing
 			    (if (eq status 'exact)
 				(temp-minibuffer-message
 				 " [Complete, but not unique]")
 			      (temp-minibuffer-message " [Ambiguous]")))
-                          nil))))
-                 (t
-                  (erase-buffer)
-                  (insert completion)
-                  ;; First word-break in stuff found by completion
-                  (goto-char (point-min))
-                  (let ((len (length buffer-string))
-                        n)
-                    (if (and (< len (length completion))
-                             (catch 'match
-                               (setq n 0)
-                               (while (< n len)
-                                 (if (char-equal
-                                       (upcase (aref buffer-string n))
-                                       (upcase (aref completion n)))
-                                     (setq n (1+ n))
-                                     (throw 'match nil)))
-                               t)
-                             (progn
-                               (goto-char (point-min))
-                               (forward-char len)
-                               (re-search-forward "\\W" nil t)))
-                        (delete-region (point) (point-max))
-                        (goto-char (point-max))))
-                  t))))))
+			  nil))))
+		 (t
+		  (erase-buffer)
+		  (insert completion)
+		  ;; First word-break in stuff found by completion
+		  (goto-char (point-min))
+		  (let ((len (length buffer-string))
+			n)
+		    (if (and (< len (length completion))
+			     (catch 'match
+			       (setq n 0)
+			       (while (< n len)
+				 (if (char-equal
+				       (upcase (aref buffer-string n))
+				       (upcase (aref completion n)))
+				     (setq n (1+ n))
+				     (throw 'match nil)))
+			       t)
+			     (progn
+			       (goto-char (point-min))
+			       (forward-char len)
+			       (re-search-forward "\\W" nil t)))
+			(delete-region (point) (point-max))
+			(goto-char (point-max))))
+		  t))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1147,7 +1147,7 @@ This is not enabled by default because
     (let ((kludge-string (concat (buffer-string) string)))
       (if (or (and (fboundp 'ange-ftp-ftp-path)
 		   (declare-fboundp (ange-ftp-ftp-path kludge-string)))
-	       (and (fboundp 'efs-ftp-path) 
+	       (and (fboundp 'efs-ftp-path)
 		    (declare-fboundp (efs-ftp-path kludge-string))))
 	   ;; #### evil evil evil, but more so.
 	   string
@@ -1302,7 +1302,7 @@ If N is negative, find the next or Nth next match."
 			(if minibuffer-history-sexp-flag
 			    (let ((print-level nil))
 			      (prin1-to-string (nth (1- pos) history)))
-                            (nth (1- pos) history)))
+			    (nth (1- pos) history)))
 	  (setq n (+ n (if (< n 0) 1 -1)))))
     (setq minibuffer-history-position pos)
     (setq current-minibuffer-contents (buffer-string)
@@ -1312,7 +1312,7 @@ If N is negative, find the next or Nth next match."
       (insert (if minibuffer-history-sexp-flag
 		  (let ((print-level nil))
 		    (prin1-to-string elt))
-                  elt)))
+		  elt)))
       (goto-char (point-min)))
   (if (or (eq (car (car command-history)) 'previous-matching-history-element)
 	  (eq (car (car command-history)) 'next-matching-history-element))
@@ -1491,34 +1491,34 @@ Prompts with PROMPT.  Optional second arg DEFAULT is value to return if user
 enters an empty line.  If optional third arg REQUIRE-MATCH is non-nil,
 only existing buffer names are allowed."
   (let ((prompt (if default
-                    (format "%s(default %s) "
-                            (gettext prompt) (if (bufferp default)
+		    (format "%s(default %s) "
+			    (gettext prompt) (if (bufferp default)
 						 (buffer-name default)
 					       default))
-                    prompt))
-        (alist (mapcar #'(lambda (b) (cons (buffer-name b) b))
-                       (buffer-list)))
-        result)
+		    prompt))
+	(alist (mapcar #'(lambda (b) (cons (buffer-name b) b))
+		       (buffer-list)))
+	result)
     (while (progn
-             (setq result (completing-read prompt alist nil require-match
-					   nil 'buffer-history 
+	     (setq result (completing-read prompt alist nil require-match
+					   nil 'buffer-history
 					   (if (bufferp default)
 					       (buffer-name default)
 					     default)))
-             (cond ((not (equal result ""))
-                    nil)
-                   ((not require-match)
-                    (setq result default)
-                    nil)
-                   ((not default)
-                    t)
-                   ((not (get-buffer default))
-                    t)
-                   (t
-                    (setq result default)
-                    nil))))
+	     (cond ((not (equal result ""))
+		    nil)
+		   ((not require-match)
+		    (setq result default)
+		    nil)
+		   ((not default)
+		    t)
+		   ((not (get-buffer default))
+		    t)
+		   (t
+		    (setq result default)
+		    nil))))
     (if (bufferp result)
-        (buffer-name result)
+	(buffer-name result)
       result)))
 
 (defun read-number (prompt &optional integers-only default-value)
@@ -1555,9 +1555,9 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
 ;; Quote "$" as "$$" to get it past substitute-in-file-name
 (defun un-substitute-in-file-name (string)
   (let ((regexp "\\$")
-        (olen (length string))
-        new
-        n o ch)
+	(olen (length string))
+	new
+	n o ch)
     (if (not (string-match regexp string))
 	string
       (setq n 1)
@@ -1583,13 +1583,13 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
 ;; improve the performance of this operation.
 (defun minibuf-directory-files (dir &optional match-regexp files-only)
   (let ((want-file (or (eq files-only nil) (eq files-only t)))
-        (want-dirs (or (eq files-only nil) (not (eq files-only t)))))
+	(want-dirs (or (eq files-only nil) (not (eq files-only t)))))
     (delete nil
-            (mapcar (function (lambda (f)
-                                (if (file-directory-p (expand-file-name f dir))
-                                    (and want-dirs (file-name-as-directory f))
-                                  (and want-file f))))
-                    (delete "." (directory-files dir nil match-regexp))))))
+	    (mapcar (function (lambda (f)
+				(if (file-directory-p (expand-file-name f dir))
+				    (and want-dirs (file-name-as-directory f))
+				  (and want-file f))))
+		    (delete "." (directory-files dir nil match-regexp))))))
 
 
 (defun read-file-name-2 (history prompt dir default
@@ -1600,15 +1600,15 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
   (setq dir (abbreviate-file-name dir t))
   (let* ((insert (cond ((and (not insert-default-directory)
 			     (not initial-contents))
-                        "")
-                       (initial-contents
-                        (cons (un-substitute-in-file-name
+			"")
+		       (initial-contents
+			(cons (un-substitute-in-file-name
 			       (concat dir initial-contents))
-                              (length dir)))
-                       (t
-                        (un-substitute-in-file-name dir))))
-         (val 
-                ;;  Hateful, broken, case-sensitive un*x
+			      (length dir)))
+		       (t
+			(un-substitute-in-file-name dir))))
+	 (val
+		;;  Hateful, broken, case-sensitive un*x
 ;;;                 (completing-read prompt
 ;;;                                  completer
 ;;;                                  dir
@@ -1649,12 +1649,12 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
 ;;;                 (set hist (cons e (cdr (symbol-value hist))))))))
 
     (cond ((not val)
-           (error "No file name specified"))
-          ((and default
-                (equal val (if (consp insert) (car insert) insert)))
-           default)
-          (t
-           (substitute-in-file-name val)))))
+	   (error "No file name specified"))
+	  ((and default
+		(equal val (if (consp insert) (car insert) insert)))
+	   default)
+	  (t
+	   (substitute-in-file-name val)))))
 
 ;; #### this function should use minibuffer-completion-table
 ;; or something.  But that is sloooooow.
@@ -1680,7 +1680,7 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
       (reset-buffer completion-buf)
       (let ((standard-output completion-buf))
 	(display-completion-list
-         (minibuf-directory-files full nil (if dir-p 'directory))
+	 (minibuf-directory-files full nil (if dir-p 'directory))
 	 :user-data dir-p
 	 :reference-buffer minibuf
 	 :activate-callback 'read-file-name-activate-callback)
@@ -1733,7 +1733,7 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
 		      initial-contents completer)))
 
 (defun read-file-name (prompt
-                       &optional dir default must-match initial-contents
+		       &optional dir default must-match initial-contents
 		       history)
   "Read file name, prompting with PROMPT and completing in directory DIR.
 This will prompt with a dialog box if appropriate, according to
@@ -1752,7 +1752,7 @@ Fifth arg INITIAL-CONTENTS specifies text to start with.  If this is not
 Sixth arg HISTORY specifies the history list to use.  Default is
  `file-name-history'.
 DIR defaults to current buffer's directory default."
-  (read-file-name-1 
+  (read-file-name-1
    'file (or history 'file-name-history)
    prompt dir (or default
 		  (and initial-contents
@@ -1767,7 +1767,7 @@ DIR defaults to current buffer's directory default."
    'read-file-name-internal))
 
 (defun read-directory-name (prompt
-                            &optional dir default must-match initial-contents
+			    &optional dir default must-match initial-contents
 			    history)
   "Read directory name, prompting with PROMPT and completing in directory DIR.
 This will prompt with a dialog box if appropriate, according to
@@ -1795,85 +1795,85 @@ DIR defaults to current buffer's directory default."
 	    string))
       ;; Not doing environment-variable completion hack
       (let* ((orig (if (equal string "") nil string))
-             (sstring (if orig (substitute-in-file-name string) string))
-             (specdir (if orig (file-name-directory sstring) nil))
-             (name    (if orig (file-name-nondirectory sstring) string))
-             (direct  (if specdir (expand-file-name specdir dir) dir)))
-        ;; ~username completion
-        (if (and (fboundp 'user-name-completion-1)
-                 (string-match "^[~]" name))
-            (let ((user (substring name 1)))
-              (cond ((eq action 'lambda)
-                     (file-directory-p name))
-                    ((eq action 't)
-                     ;; all completions
-                     (mapcar #'(lambda (p) (concat "~" p))
-                             (user-name-all-completions user)))
-                    (t;; 'nil
-                     ;; complete
-                     (let* ((val+uniq (user-name-completion-1 user))
-                            (val  (car val+uniq))
-                            (uniq (cdr val+uniq)))
-                       (cond ((stringp val)
-                              (if uniq
-                                  (file-name-as-directory (concat "~" val))
-                                (concat "~" val)))
-                             ((eq val t)
-                              (file-name-as-directory name))
-                             (t nil))))))
-          (funcall completer
-                   action
-                   orig
-                   sstring
-                   specdir
-                   direct
-                   name)))
+	     (sstring (if orig (substitute-in-file-name string) string))
+	     (specdir (if orig (file-name-directory sstring) nil))
+	     (name    (if orig (file-name-nondirectory sstring) string))
+	     (direct  (if specdir (expand-file-name specdir dir) dir)))
+	;; ~username completion
+	(if (and (fboundp 'user-name-completion-1)
+		 (string-match "^[~]" name))
+	    (let ((user (substring name 1)))
+	      (cond ((eq action 'lambda)
+		     (file-directory-p name))
+		    ((eq action 't)
+		     ;; all completions
+		     (mapcar #'(lambda (p) (concat "~" p))
+			     (user-name-all-completions user)))
+		    (t;; 'nil
+		     ;; complete
+		     (let* ((val+uniq (user-name-completion-1 user))
+			    (val  (car val+uniq))
+			    (uniq (cdr val+uniq)))
+		       (cond ((stringp val)
+			      (if uniq
+				  (file-name-as-directory (concat "~" val))
+				(concat "~" val)))
+			     ((eq val t)
+			      (file-name-as-directory name))
+			     (t nil))))))
+	  (funcall completer
+		   action
+		   orig
+		   sstring
+		   specdir
+		   direct
+		   name)))
       ;; An odd number of trailing $'s
       (let* ((start (match-beginning 3))
-             (env (substring string
-                             (cond ((= start (length string))
-                                    ;; "...$"
-                                    start)
-                                   ((= (aref string start) ?{)
-                                    ;; "...${..."
-                                    (1+ start))
-                                   (t
-                                    start))))
-             (head (substring string 0 (1- start)))
-             (alist #'(lambda ()
-                        (mapcar #'(lambda (x)
-                                    (cons (substring x 0 (string-match "=" x))
-                                          nil))
-                                process-environment))))
+	     (env (substring string
+			     (cond ((= start (length string))
+				    ;; "...$"
+				    start)
+				   ((= (aref string start) ?{)
+				    ;; "...${..."
+				    (1+ start))
+				   (t
+				    start))))
+	     (head (substring string 0 (1- start)))
+	     (alist #'(lambda ()
+			(mapcar #'(lambda (x)
+				    (cons (substring x 0 (string-match "=" x))
+					  nil))
+				process-environment))))
 
 	(cond ((eq action 'lambda)
-               nil)
-              ((eq action 't)
-               ;; all completions
-               (mapcar #'(lambda (p)
+	       nil)
+	      ((eq action 't)
+	       ;; all completions
+	       (mapcar #'(lambda (p)
 			   (if (and (> (length p) 0)
 				    ;;#### Unix-specific
 				    ;;####  -- need absolute-pathname-p
 				    (/= (aref p 0) ?/))
 			       (concat "$" p)
-                             (concat head "$" p)))
-                       (all-completions env (funcall alist))))
-              (t ;; nil
-               ;; complete
-               (let* ((e (funcall alist))
-                      (val (try-completion env e)))
-                 (cond ((stringp val)
-                        (if (string-match "[^A-Za-z0-9_]" val)
-                            (concat head
-                                    "${" val
-                                    ;; completed uniquely?
-                                    (if (eq (try-completion val e) 't)
-                                        "}" ""))
-                            (concat head "$" val)))
-                       ((eql val 't)
-                        (concat head
-                                (un-substitute-in-file-name (getenv env))))
-                       (t nil))))))))
+			     (concat head "$" p)))
+		       (all-completions env (funcall alist))))
+	      (t ;; nil
+	       ;; complete
+	       (let* ((e (funcall alist))
+		      (val (try-completion env e)))
+		 (cond ((stringp val)
+			(if (string-match "[^A-Za-z0-9_]" val)
+			    (concat head
+				    "${" val
+				    ;; completed uniquely?
+				    (if (eq (try-completion val e) 't)
+					"}" ""))
+			    (concat head "$" val)))
+		       ((eql val 't)
+			(concat head
+				(un-substitute-in-file-name (getenv env))))
+		       (t nil))))))))
 
 
 (defun read-file-name-internal (string dir action)
@@ -1881,42 +1881,42 @@ DIR defaults to current buffer's directory default."
    string dir action
    #'(lambda (action orig string specdir dir name)
       (cond ((eq action 'lambda)
-             (if (not orig)
-                 nil
-               (let ((sstring (condition-case nil
-                                  (expand-file-name string)
-                                (error nil))))
-                 (if (not sstring)
-                     ;; Some pathname syntax error in string
-                     nil
-                     (file-exists-p sstring)))))
-            ((eq action 't)
-             ;; all completions
-             (mapcar #'un-substitute-in-file-name
-                     (if (string= name "")
-                         (delete "./" (file-name-all-completions "" dir))
-                       (file-name-all-completions name dir))))
-            (t;; nil
-             ;; complete
-             (let* ((d (or dir default-directory))
+	     (if (not orig)
+		 nil
+	       (let ((sstring (condition-case nil
+				  (expand-file-name string)
+				(error nil))))
+		 (if (not sstring)
+		     ;; Some pathname syntax error in string
+		     nil
+		     (file-exists-p sstring)))))
+	    ((eq action 't)
+	     ;; all completions
+	     (mapcar #'un-substitute-in-file-name
+		     (if (string= name "")
+			 (delete "./" (file-name-all-completions "" dir))
+		       (file-name-all-completions name dir))))
+	    (t;; nil
+	     ;; complete
+	     (let* ((d (or dir default-directory))
 		    (val (file-name-completion name d)))
-               (if (and (eq val 't)
-                        (not (null completion-ignored-extensions)))
-                   ;;#### (file-name-completion "foo") returns 't
-                   ;;   when both "foo" and "foo~" exist and the latter
-                   ;;   is "pruned" by completion-ignored-extensions.
-                   ;; I think this is a bug in file-name-completion.
-                   (setq val (let ((completion-ignored-extensions '()))
-                               (file-name-completion name d))))
-               (if (stringp val)
-                   (un-substitute-in-file-name (if specdir
-                                                   (concat specdir val)
-                                                   val))
-                   (let ((tem (un-substitute-in-file-name string)))
-                     (if (not (equal tem orig))
-                         ;; substitute-in-file-name did something
-                         tem
-                         val)))))))))
+	       (if (and (eq val 't)
+			(not (null completion-ignored-extensions)))
+		   ;;#### (file-name-completion "foo") returns 't
+		   ;;   when both "foo" and "foo~" exist and the latter
+		   ;;   is "pruned" by completion-ignored-extensions.
+		   ;; I think this is a bug in file-name-completion.
+		   (setq val (let ((completion-ignored-extensions '()))
+			       (file-name-completion name d))))
+	       (if (stringp val)
+		   (un-substitute-in-file-name (if specdir
+						   (concat specdir val)
+						   val))
+		   (let ((tem (un-substitute-in-file-name string)))
+		     (if (not (equal tem orig))
+			 ;; substitute-in-file-name did something
+			 tem
+			 val)))))))))
 
 (defun read-directory-name-internal (string dir action)
   (read-file-name-internal-1
@@ -1935,27 +1935,27 @@ DIR defaults to current buffer's directory default."
 			 (mapcar fn
 				 ;; Wretched unix
 				 (delete "." l))))))
-        (cond ((eq action 'lambda)
-               ;; complete?
-               (if (not orig)
-                   nil
+	(cond ((eq action 'lambda)
+	       ;; complete?
+	       (if (not orig)
+		   nil
 		 (file-directory-p string)))
-              ((eq action 't)
-               ;; all completions
-               (funcall dirs #'(lambda (n)
+	      ((eq action 't)
+	       ;; all completions
+	       (funcall dirs #'(lambda (n)
 				 (un-substitute-in-file-name
 				  (file-name-as-directory n)))))
-              (t
-               ;; complete
-               (let ((val (try-completion
-                           name
-                           (funcall dirs
-                                    #'(lambda (n)
+	      (t
+	       ;; complete
+	       (let ((val (try-completion
+			   name
+			   (funcall dirs
+				    #'(lambda (n)
 					(list (file-name-as-directory
 					       n)))))))
-                 (if (stringp val)
-                     (un-substitute-in-file-name (if specdir
-                                                     (concat specdir val)
+		 (if (stringp val)
+		     (un-substitute-in-file-name (if specdir
+						     (concat specdir val)
 						   val))
 		   (let ((tem (un-substitute-in-file-name string)))
 		     (if (not (equal tem orig))
@@ -2112,7 +2112,7 @@ whether it is a file(/result) or a directory (/result/)."
 		   (when (featurep 'scrollbar)
 		     (set-specifier scrollbar-width 0 (current-buffer)))
 		   (setq truncate-lines t))))
-	    
+
 	    (set-buffer filebuf)
 	    (add-local-hook 'completion-setup-hook rfcshookfun)
 	    (when file-p
@@ -2253,7 +2253,7 @@ whether it is a file(/result) or a directory (/result/)."
 Prompting with string PROMPT.
 If the user enters null input, return second argument DEFAULT-CODING-SYSTEM.
 DEFAULT-CODING-SYSTEM can be a string, symbol, or coding-system object."
-  (intern (completing-read prompt obarray 'find-coding-system t nil nil 
+  (intern (completing-read prompt obarray 'find-coding-system t nil nil
 			   (cond ((symbolp default-coding-system)
 				  (symbol-name default-coding-system))
 				 ((coding-system-p default-coding-system)

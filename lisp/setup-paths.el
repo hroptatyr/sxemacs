@@ -65,8 +65,8 @@
 (defun paths-find-site-module-directory (roots)
   "Find the site modules directory of the XEmacs hierarchy."
   (paths-find-site-archdep-directory roots "site-modules"
-                                       nil
-                                       configure-site-module-directory))
+				       nil
+				       configure-site-module-directory))
 
 (defun paths-find-lisp-directory (roots)
   "Find the main Lisp directory of the XEmacs hierarchy."
@@ -85,7 +85,7 @@
 	(if (paths-file-readable-directory-p guess)
 	    guess
 	  (paths-find-version-archindep-directory
-           roots "mule-lisp" nil configure-mule-lisp-directory)))))
+	   roots "mule-lisp" nil configure-mule-lisp-directory)))))
 
 (defun paths-find-ffi-lisp-directory (roots &optional lisp-directory)
   "Find the FFI Lisp directory of the SXEmacs hierarchy."
@@ -97,18 +97,18 @@
 	(if (paths-file-readable-directory-p guess)
 	    guess
 	  (or (paths-find-version-archdep-directory
-               roots "ffi-lisp" nil)
-              (paths-find-version-archindep-directory
-               roots "ffi-lisp" nil))))))
+	       roots "ffi-lisp" nil)
+	      (paths-find-version-archindep-directory
+	       roots "ffi-lisp" nil))))))
 
 (defun paths-find-module-directory (roots)
   "Find the main modules directory of the SXEmacs hierarchy."
-  (or 
+  (or
    ;; for inplace stuff
    (paths-find-emacs-directory roots "" "modules"
-                               nil configure-module-directory)
+			       nil configure-module-directory)
    (paths-find-architecture-directory roots "modules"
-                                      nil configure-module-directory)))
+				      nil configure-module-directory)))
 
 (defun paths-construct-module-load-path
   (root module-directory &optional site-module-directory)
@@ -135,7 +135,7 @@ down."
     (let* ((user-path
 	    (and system-configuration
 		 user-init-directory
-		 (paths-find-recursive-load-path 
+		 (paths-find-recursive-load-path
 		  (list (paths-construct-path
 			 (list system-configuration "modules") user-init-directory))
 		  paths-module-load-path-depth)))
@@ -168,8 +168,8 @@ down."
 	  (and mule-lisp-directory
 	       (paths-find-recursive-load-path (list mule-lisp-directory)
 					       paths-mule-load-path-depth)))
- 	 (ffi-lisp-load-path
- 	  (and ffi-lisp-directory
+	 (ffi-lisp-load-path
+	  (and ffi-lisp-directory
 	       (paths-find-recursive-load-path (list ffi-lisp-directory)
 					       paths-ffi-load-path-depth)))
 	 (lisp-load-path
@@ -180,11 +180,11 @@ down."
 	  (and module-directory
 	       (paths-construct-module-load-path roots module-directory
 						 site-module-directory)))
-         (root-load-path
-          (paths-find-recursive-load-path
-           (mapcar #'(lambda (root)
-                       (expand-file-name "lisp" root))
-                   roots) 1)))
+	 (root-load-path
+	  (paths-find-recursive-load-path
+	   (mapcar #'(lambda (root)
+		       (expand-file-name "lisp" root))
+		   roots) 1)))
 
     (append env-load-path
 	    emod-load-path
@@ -193,7 +193,7 @@ down."
 	    mule-lisp-load-path
 	    ffi-lisp-load-path
 	    lisp-load-path
-            root-load-path
+	    root-load-path
 	    last-package-load-path)))
 
 (defun paths-construct-info-path (roots early-packages late-packages last-packages)
@@ -204,9 +204,9 @@ down."
       (list (paths-find-emacs-directory roots "share/" "info" nil configure-info-directory))
       (let ((info-directory
 	     (or (paths-find-version-archindep-directory
-                  roots "info" nil configure-info-directory)
-                 (paths-find-version-archdep-directory
-                  roots "info" nil configure-info-directory))))
+		  roots "info" nil configure-info-directory)
+		 (paths-find-version-archdep-directory
+		  roots "info" nil configure-info-directory))))
 	(and info-directory
 	     (list info-directory)))
       (packages-find-package-info-path early-packages)
@@ -238,7 +238,7 @@ down."
 (defun paths-find-exec-directory (roots)
   "Find the binary directory."
   (paths-find-architecture-directory roots "lib-src"
-                                     nil configure-exec-directory))
+				     nil configure-exec-directory))
 
 (defun paths-construct-exec-path (roots exec-directory
 				  early-packages late-packages last-packages)

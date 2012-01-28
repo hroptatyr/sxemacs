@@ -58,10 +58,10 @@ int _XtWaitForSomething(XtAppContext app,
 
 # ifndef XTHREADS
 #  define _XtwaitForSomething(timers,inputs,events,block,howlong,appCtx) \
-          _XtWaitForSomething(appCtx,events,timers,inputs,0,block,howlong)
+	  _XtWaitForSomething(appCtx,events,timers,inputs,0,block,howlong)
 # else
 #  define _XtwaitForSomething(timers,inputs,events,block,howlong,appCtx) \
-          _XtWaitForSomething(appCtx,events,timers,inputs,0,block,1,howlong)
+	  _XtWaitForSomething(appCtx,events,timers,inputs,0,block,1,howlong)
 # endif
 #else
 int _XtwaitForSomething(Boolean ignoreTimers,

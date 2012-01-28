@@ -44,99 +44,99 @@ extern unsigned int dump_id;
    information from the documentation file. */
 
 static Lisp_Object extract_object_file_name (int fd, EMACS_INT doc_pos,
-                                             SBufbyte *name_nonreloc,
-                                             Lisp_Object name_reloc,
-                                             int standard_doc_file)
+					     SBufbyte *name_nonreloc,
+					     Lisp_Object name_reloc,
+					     int standard_doc_file)
 {
-        Bufbyte buf[DOC_MAX_FILENAME_LENGTH+1];
-        Bufbyte *buffer = buf;
-        int buffer_size = sizeof (buf) - 1, space_left;
-        Bufbyte *from, *to;
-        REGISTER Bufbyte *p = buffer;
-        Lisp_Object return_me;
-        EMACS_INT position, seenS = 0;
+	Bufbyte buf[DOC_MAX_FILENAME_LENGTH+1];
+	Bufbyte *buffer = buf;
+	int buffer_size = sizeof (buf) - 1, space_left;
+	Bufbyte *from, *to;
+	REGISTER Bufbyte *p = buffer;
+	Lisp_Object return_me;
+	EMACS_INT position, seenS = 0;
 
-        position = doc_pos > buffer_size  ? 
-                doc_pos - buffer_size : 0; 
+	position = doc_pos > buffer_size  ?
+		doc_pos - buffer_size : 0;
 
-        if (0 > lseek (fd, position, 0)) {
-                if (name_nonreloc)
-                        name_reloc = build_string (name_nonreloc);
-                return_me = list3 (build_string
-                                   ("Position out of range in doc string file"),
-                                   name_reloc, make_int (position));
-                goto done;
-        }
+	if (0 > lseek (fd, position, 0)) {
+		if (name_nonreloc)
+			name_reloc = build_string (name_nonreloc);
+		return_me = list3 (build_string
+				   ("Position out of range in doc string file"),
+				   name_reloc, make_int (position));
+		goto done;
+	}
 
-        space_left = buffer_size - (p - buffer);
-        while (space_left > 0) {
-                int nread;
+	space_left = buffer_size - (p - buffer);
+	while (space_left > 0) {
+		int nread;
 
-                nread = read (fd, p, space_left);
-                if (nread < 0) {
-                        return_me
-                                = list1 (build_string
-                                         ("Read error on documentation file"));
-                        goto done;
-                }
+		nread = read (fd, p, space_left);
+		if (nread < 0) {
+			return_me
+				= list1 (build_string
+					 ("Read error on documentation file"));
+			goto done;
+		}
 
-                p[nread] = 0;
+		p[nread] = 0;
 
-                if (!nread)
-                        break;
+		if (!nread)
+			break;
 
-                p += nread;
-                space_left = buffer_size - (p - buffer);
-        }
+		p += nread;
+		space_left = buffer_size - (p - buffer);
+	}
 
-        /* First, search backward for the "\037S" that marks the beginning
-           of the file name, then search forward from that to the newline or
-           to the end of the buffer. */
-        from = p; 
+	/* First, search backward for the "\037S" that marks the beginning
+	   of the file name, then search forward from that to the newline or
+	   to the end of the buffer. */
+	from = p;
 
-        while (from > buf) {
-                --from;
-                if (seenS) {
-                        if ('\037' == *from) {
+	while (from > buf) {
+		--from;
+		if (seenS) {
+			if ('\037' == *from) {
 
-                                /* Got a file name; adjust `from' to point
-                                   to it, break out of the loop.  */
-                                from += 2;
-                                break; 
-                        }
-                }
-                /* Is *from 'S' ? */
-                seenS = ('S' == *from);
-        }
+				/* Got a file name; adjust `from' to point
+				   to it, break out of the loop.  */
+				from += 2;
+				break;
+			}
+		}
+		/* Is *from 'S' ? */
+		seenS = ('S' == *from);
+	}
 
-        if (buf == from) {
-                /* We've scanned back to the beginning of the buffer without
-                   hitting the file name. Either the file name plus the
-                   symbol name is longer than DOC_MAX_FILENAME_LENGTH--which
-                   shouldn't happen, because it'll trigger an assertion
-                   failure in make-docfile, the DOC file is corrupt, or it
-                   was produced by a version of make-docfile that doesn't
-                   store the file name with the symbol name and
-                   docstring.  */ 
-                return_me = list1 (build_string
-                                   ("Object file name not stored in doc file"));
-                goto done;
-        }
+	if (buf == from) {
+		/* We've scanned back to the beginning of the buffer without
+		   hitting the file name. Either the file name plus the
+		   symbol name is longer than DOC_MAX_FILENAME_LENGTH--which
+		   shouldn't happen, because it'll trigger an assertion
+		   failure in make-docfile, the DOC file is corrupt, or it
+		   was produced by a version of make-docfile that doesn't
+		   store the file name with the symbol name and
+		   docstring.  */
+		return_me = list1 (build_string
+				   ("Object file name not stored in doc file"));
+		goto done;
+	}
 
-        to = from;
-        /* Search for the end of the file name. */
-        while (++to < p) {
-                if ('\n' == *to || '\037' == *to) {
-                        break;
-                }
-        }
+	to = from;
+	/* Search for the end of the file name. */
+	while (++to < p) {
+		if ('\n' == *to || '\037' == *to) {
+			break;
+		}
+	}
 
-        /* Don't require the file name to end in a newline. */
-        return_me = make_string (from, to - from);
+	/* Don't require the file name to end in a newline. */
+	return_me = make_string (from, to - from);
 
 done:
 
-        return return_me;
+	return return_me;
 }
 
 /* Read and return doc string from open file descriptor FD
@@ -176,7 +176,7 @@ unparesseuxify_doc_string(int fd, EMACS_INT position,
 		/* Switch to a bigger buffer if we need one.  */
 		if (space_left == 0) {
 			char *old_buffer = buffer;
-                        buffer_size *= 2;
+			buffer_size *= 2;
 			if (buffer == buf) {
 				buffer = (char*)xmalloc_atomic(buffer_size + 1);
 				memcpy(buffer, old_buffer, p - old_buffer);
@@ -252,8 +252,8 @@ unparesseuxify_doc_string(int fd, EMACS_INT position,
 #define string_join(dest, s1, s2) \
   memcpy ((void *) dest, (void *) XSTRING_DATA (s1), XSTRING_LENGTH (s1)); \
   memcpy ((void *) ((Bufbyte *) dest + XSTRING_LENGTH (s1)), \
-          (void *) XSTRING_DATA (s2), XSTRING_LENGTH (s2));  \
-          dest[XSTRING_LENGTH (s1) + XSTRING_LENGTH (s2)] = '\0'
+	  (void *) XSTRING_DATA (s2), XSTRING_LENGTH (s2));  \
+	  dest[XSTRING_LENGTH (s1) + XSTRING_LENGTH (s2)] = '\0'
 
 /* Extract a doc string from a file.  FILEPOS says where to get it.
    (This could actually be byte code instructions/constants instead
@@ -347,7 +347,7 @@ get_doc_string(Lisp_Object filepos)
 	tem =
 	    unparesseuxify_doc_string(fd, position, name_nonreloc, name_reloc);
 	if (!INTP(Vinternal_doc_fd) || (fd != XINT(Vinternal_doc_fd))) {
-                Vinternal_doc_fd = make_int(-2);
+		Vinternal_doc_fd = make_int(-2);
 		close(fd);
 	} else
 		lseek(fd,0,0);
@@ -374,96 +374,96 @@ Lisp_Object read_doc_string(Lisp_Object filepos)
 }
 
 static Lisp_Object get_object_file_name (Lisp_Object filepos) {
-        REGISTER int fd = -1;
-        REGISTER SBufbyte *name_nonreloc = 0;
-        EMACS_INT position;
-        Lisp_Object file, tem;
-        Lisp_Object name_reloc = Qnil;
-        int standard_doc_file = 0;
+	REGISTER int fd = -1;
+	REGISTER SBufbyte *name_nonreloc = 0;
+	EMACS_INT position;
+	Lisp_Object file, tem;
+	Lisp_Object name_reloc = Qnil;
+	int standard_doc_file = 0;
 
-        if (INTP (filepos)) {
-                file = Vinternal_doc_file_name;
-                standard_doc_file = 1;
-                position = XINT (filepos);
+	if (INTP (filepos)) {
+		file = Vinternal_doc_file_name;
+		standard_doc_file = 1;
+		position = XINT (filepos);
 		if ( INTP(Vinternal_doc_fd) )
 			fd = XINT(Vinternal_doc_fd);
 		else
 			fd = -2;
-        } else if (CONSP (filepos) && INTP (XCDR (filepos))) {
-                file = XCAR (filepos);
-                position = XINT (XCDR (filepos));
-                if (position < 0)
-                        position = - position;
-        } else return Qnil;
+	} else if (CONSP (filepos) && INTP (XCDR (filepos))) {
+		file = XCAR (filepos);
+		position = XINT (XCDR (filepos));
+		if (position < 0)
+			position = - position;
+	} else return Qnil;
 
-        if (!STRINGP (file))
-                return Qnil;
+	if (!STRINGP (file))
+		return Qnil;
 
-        /* Put the file name in NAME as a C string.
-           If it is relative, combine it with Vdoc_directory.  */
+	/* Put the file name in NAME as a C string.
+	   If it is relative, combine it with Vdoc_directory.  */
 
-        tem = Ffile_name_absolute_p (file);
-        if (NILP (tem)) {
-                Bytecount minsize;
-                /* XEmacs: Move this check here.  OK if called during loadup to
-                   load byte code instructions. */
-                if (!STRINGP (Vdoc_directory))
-                        return Qnil;
+	tem = Ffile_name_absolute_p (file);
+	if (NILP (tem)) {
+		Bytecount minsize;
+		/* XEmacs: Move this check here.  OK if called during loadup to
+		   load byte code instructions. */
+		if (!STRINGP (Vdoc_directory))
+			return Qnil;
 
-                minsize = XSTRING_LENGTH (Vdoc_directory);
-                /* sizeof ("../lib-src/") == 12 */
-                if (minsize < 12)
-                        minsize = 12;
-                name_nonreloc = alloca_array (SBufbyte,
-                                              minsize +
-                                              XSTRING_LENGTH (file) + 8);
-                string_join (name_nonreloc, Vdoc_directory, file);
-        } else name_reloc = file;
+		minsize = XSTRING_LENGTH (Vdoc_directory);
+		/* sizeof ("../lib-src/") == 12 */
+		if (minsize < 12)
+			minsize = 12;
+		name_nonreloc = alloca_array (SBufbyte,
+					      minsize +
+					      XSTRING_LENGTH (file) + 8);
+		string_join (name_nonreloc, Vdoc_directory, file);
+	} else name_reloc = file;
 
-        if (fd < 0) {
-                int ofd;
+	if (fd < 0) {
+		int ofd;
 
-                if (purify_flag) {
-                        /* sizeof ("../lib-src/") == 12 */
-                        name_nonreloc 
-                                = alloca_array (SBufbyte,
-                                                12 + XSTRING_LENGTH (file) + 8);
-                        /* Preparing to dump; DOC file is probably not
-                           installed.  So check in ../lib-src. */
+		if (purify_flag) {
+			/* sizeof ("../lib-src/") == 12 */
+			name_nonreloc
+				= alloca_array (SBufbyte,
+						12 + XSTRING_LENGTH (file) + 8);
+			/* Preparing to dump; DOC file is probably not
+			   installed.  So check in ../lib-src. */
 
-                        strcpy (name_nonreloc, "../lib-src/");
-                        strcat (name_nonreloc, (char *)XSTRING_DATA (file));
+			strcpy (name_nonreloc, "../lib-src/");
+			strcat (name_nonreloc, (char *)XSTRING_DATA (file));
 
-                        fd = open (name_nonreloc, O_RDONLY | OPEN_BINARY, 0);
-                }
+			fd = open (name_nonreloc, O_RDONLY | OPEN_BINARY, 0);
+		}
 
-                ofd = open (name_nonreloc ? name_nonreloc :
-                            (char *)XSTRING_DATA (name_reloc),
-                            O_RDONLY | OPEN_BINARY, 0);
+		ofd = open (name_nonreloc ? name_nonreloc :
+			    (char *)XSTRING_DATA (name_reloc),
+			    O_RDONLY | OPEN_BINARY, 0);
 
-                if (fd == -2)
-                        Vinternal_doc_fd = make_int (ofd);
-                fd = ofd;
-        }
-        if (fd < 0) {
-                report_file_error ("Cannot open doc string file",
-                                   name_nonreloc ?
-                                   build_string (name_nonreloc) :
-                                   name_reloc);
-        }
+		if (fd == -2)
+			Vinternal_doc_fd = make_int (ofd);
+		fd = ofd;
+	}
+	if (fd < 0) {
+		report_file_error ("Cannot open doc string file",
+				   name_nonreloc ?
+				   build_string (name_nonreloc) :
+				   name_reloc);
+	}
 
-        tem = extract_object_file_name (fd, position, name_nonreloc, name_reloc,
-                                        standard_doc_file);
-        if (!INTP(Vinternal_doc_fd) || (fd != XINT(Vinternal_doc_fd))) {
-                Vinternal_doc_fd = make_int(-2);
+	tem = extract_object_file_name (fd, position, name_nonreloc, name_reloc,
+					standard_doc_file);
+	if (!INTP(Vinternal_doc_fd) || (fd != XINT(Vinternal_doc_fd))) {
+		Vinternal_doc_fd = make_int(-2);
 		close(fd);
 	} else
 		lseek(fd,0,0);
 
-        if (!STRINGP (tem))
-                signal_error (Qinvalid_byte_code, tem);
+	if (!STRINGP (tem))
+		signal_error (Qinvalid_byte_code, tem);
 
-        return tem;
+	return tem;
 }
 
 
@@ -477,76 +477,76 @@ weird_doc(Lisp_Object sym, const char *weirdness, const char *type, int pos)
 }
 
 DEFUN ("built-in-symbol-file", Fbuilt_in_symbol_file, 1, 2, 0, /*
-Return the C source file built-in symbol SYM comes from. 
-Don't use this.  Use the more general `symbol-file' (q.v.) instead. 
+Return the C source file built-in symbol SYM comes from.
+Don't use this.  Use the more general `symbol-file' (q.v.) instead.
 
-If TYPE is nil or omitted, any kind of definition is acceptable. 
+If TYPE is nil or omitted, any kind of definition is acceptable.
 If TYPE is `defun', then function, subr, special form or macro definitions
 are acceptable.
 If TYPE is `defvar', then variable definitions are acceptable.
 */
        (symbol, type))
 {
-        /* This function can GC */
-        Lisp_Object fun;
-        Lisp_Object filename = Qnil;
+	/* This function can GC */
+	Lisp_Object fun;
+	Lisp_Object filename = Qnil;
 
-        if (EQ(Ffboundp(symbol), Qt) && (EQ(type, Qnil) || EQ(type, Qdefun))) {
-                fun = Findirect_function (symbol);
+	if (EQ(Ffboundp(symbol), Qt) && (EQ(type, Qnil) || EQ(type, Qdefun))) {
+		fun = Findirect_function (symbol);
 
-                if (SUBRP (fun) || (CONSP(fun) && (EQ (Qmacro, Fcar_safe (fun)))
-                                    && (fun = Fcdr_safe (fun), SUBRP (fun)))) {
-                        if (XSUBR (fun)->doc == 0)
-                                return Qnil;
+		if (SUBRP (fun) || (CONSP(fun) && (EQ (Qmacro, Fcar_safe (fun)))
+				    && (fun = Fcdr_safe (fun), SUBRP (fun)))) {
+			if (XSUBR (fun)->doc == 0)
+				return Qnil;
 
-                        if ((EMACS_INT) XSUBR (fun)->doc >= 0) {
-                                weird_doc
-                                        (symbol,
-                                         "No file info available for function",
-                                         GETTEXT("function"), 0);
-                                return Qnil;
-                        } else {
-                                filename = get_object_file_name 
-                                        (make_int (-
-                                                   (EMACS_INT)
-                                                   XSUBR (fun)->doc));
-                                return filename;
-                        }
-                }
+			if ((EMACS_INT) XSUBR (fun)->doc >= 0) {
+				weird_doc
+					(symbol,
+					 "No file info available for function",
+					 GETTEXT("function"), 0);
+				return Qnil;
+			} else {
+				filename = get_object_file_name
+					(make_int (-
+						   (EMACS_INT)
+						   XSUBR (fun)->doc));
+				return filename;
+			}
+		}
 
-                if (COMPILED_FUNCTIONP (fun)
-                    || (CONSP(fun) && (EQ (Qmacro, Fcar_safe (fun)))
-                        && (fun = Fcdr_safe (fun),
-                            COMPILED_FUNCTIONP (fun)))) {
-                        Lisp_Object tem;
-                        Lisp_Compiled_Function *f = XCOMPILED_FUNCTION (fun);
+		if (COMPILED_FUNCTIONP (fun)
+		    || (CONSP(fun) && (EQ (Qmacro, Fcar_safe (fun)))
+			&& (fun = Fcdr_safe (fun),
+			    COMPILED_FUNCTIONP (fun)))) {
+			Lisp_Object tem;
+			Lisp_Compiled_Function *f = XCOMPILED_FUNCTION (fun);
 
-                        if (! (f->flags.documentationp))
-                                return Qnil;
-                        tem = compiled_function_documentation (f);
-                        if (NATNUMP (tem) || CONSP (tem)) {
-                                filename = get_object_file_name (tem);
-                                return filename;
-                        }
-                }
-        }
+			if (! (f->flags.documentationp))
+				return Qnil;
+			tem = compiled_function_documentation (f);
+			if (NATNUMP (tem) || CONSP (tem)) {
+				filename = get_object_file_name (tem);
+				return filename;
+			}
+		}
+	}
 
-        if (EQ(Fboundp(symbol), Qt) && (EQ(type, Qnil) || EQ(type, Qdefvar))) {
-                Lisp_Object doc_offset
-                        = Fget (symbol, Qvariable_documentation, Qnil);
+	if (EQ(Fboundp(symbol), Qt) && (EQ(type, Qnil) || EQ(type, Qdefvar))) {
+		Lisp_Object doc_offset
+			= Fget (symbol, Qvariable_documentation, Qnil);
 
-                if (!NILP(doc_offset)) {
-                        if (INTP(doc_offset)) {
-                                filename = get_object_file_name 
-                                        (XINT (doc_offset) > 0 ? doc_offset
-                                         : make_int (- XINT (doc_offset)));
-                        } else if (CONSP(doc_offset)) {
-                                filename = get_object_file_name(doc_offset);
-                        }
-                        return filename;
-                }
-        }
-        return Qnil;
+		if (!NILP(doc_offset)) {
+			if (INTP(doc_offset)) {
+				filename = get_object_file_name
+					(XINT (doc_offset) > 0 ? doc_offset
+					 : make_int (- XINT (doc_offset)));
+			} else if (CONSP(doc_offset)) {
+				filename = get_object_file_name(doc_offset);
+			}
+			return filename;
+		}
+	}
+	return Qnil;
 }
 
 DEFUN("documentation", Fdocumentation, 1, 2, 0,	/*
@@ -1036,7 +1036,7 @@ as the keymap for future \\=\\[COMMAND] substrings.
 \\=\\= quotes the following character and is discarded;
 thus, \\=\\=\\=\\= puts \\=\\= into the output, and \\=\\=\\=\\[ puts \\=\\[ into the output.
 */
-      (string)) 
+      (string))
 {
 	/* This function can GC */
 	Bufbyte *buf;
@@ -1268,9 +1268,9 @@ void syms_of_doc(void)
 	DEFSUBR(Fsnarf_documentation);
 	DEFSUBR(Fverify_documentation);
 	DEFSUBR(Fsubstitute_command_keys);
-        DEFSUBR(Fbuilt_in_symbol_file);
+	DEFSUBR(Fbuilt_in_symbol_file);
 
-        DEFSYMBOL (Qdefvar);
+	DEFSYMBOL (Qdefvar);
 }
 
 void vars_of_doc(void)

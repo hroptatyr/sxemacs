@@ -468,7 +468,7 @@ for (mps_bufcons = Qunbound,							\
 
 /* -------------------------------------------------------------- */
 /* (B) For working with the length (in bytes and characters) of a */
-/*     section of internally-formatted text 			  */
+/*     section of internally-formatted text			  */
 /* -------------------------------------------------------------- */
 
 static inline const Bufbyte*
@@ -735,13 +735,13 @@ extern_inline Bytind memind_to_bytind(struct buffer *buf, Memind x)
    ASSERT_VALID_BYTIND_BACKWARD_UNSAFE(buf, bi):
 	If error-checking is enabled, assert that the given byte index
 	is within range and satisfies ASSERT_VALID_BYTIND() and also
-        does not refer to the beginning of the buffer. (i.e. movement
+	does not refer to the beginning of the buffer. (i.e. movement
 	backwards is OK.) Otherwise, do nothing.
 
    ASSERT_VALID_BYTIND_FORWARD_UNSAFE(buf, bi):
 	If error-checking is enabled, assert that the given byte index
 	is within range and satisfies ASSERT_VALID_BYTIND() and also
-        does not refer to the end of the buffer. (i.e. movement
+	does not refer to the end of the buffer. (i.e. movement
 	forwards is OK.) Otherwise, do nothing.
 
    VALIDATE_BYTIND_BACKWARD(buf, bi):
@@ -1031,7 +1031,7 @@ Bufpos bytind_to_bufpos(struct buffer *buf, Bytind x);
   Typical use is
 
   TO_EXTERNAL_FORMAT (DATA, (ptr, len),
-                      LISP_BUFFER, buffer,
+		      LISP_BUFFER, buffer,
 		      Qfile_name);
 
   The source or sink can be specified in one of these ways:
@@ -1198,7 +1198,7 @@ dfc_convert_to_internal_format(dfc_conversion_type source_type,
 	} while (0)
 #define DFC_SOURCE_C_STRING_TO_ARGS(val)				\
 	do {								\
-	        dfc_source.data.ptr = (val);				\
+		dfc_source.data.ptr = (val);				\
 		assert(dfc_source.data.ptr != NULL);            \
 		dfc_source.data.len = strlen((const char*)		\
 					     (dfc_source.data.ptr));	\
@@ -1308,7 +1308,7 @@ typedef union {
 				   dfc_sink.data.len);			\
 		assert(!NILP(sink));					\
 	} while (0)
-		
+
 #define DFC_LISP_LSTREAM_USE_CONVERTED_DATA(sink)	/* data already used */
 #define DFC_LISP_BUFFER_USE_CONVERTED_DATA(sink)		\
 	Lstream_delete (XLSTREAM (dfc_sink.lisp_object))
@@ -1501,7 +1501,7 @@ do						\
     contiguous in memory.  Note that the character *at* N may not be
     contiguous in memory. */
 #define BI_BUF_FLOOR_OF(b, n)						\
-        (BI_BUF_BEGV (b) < (b)->text->gpt && (b)->text->gpt < (n) ?	\
+	(BI_BUF_BEGV (b) < (b)->text->gpt && (b)->text->gpt < (n) ?	\
 	 (b)->text->gpt : BI_BUF_BEGV (b))
 #define BUF_FLOOR_OF(b, n)						\
   bytind_to_bufpos (b, BI_BUF_FLOOR_OF (b, bufpos_to_bytind (b, n)))
@@ -1509,14 +1509,14 @@ do						\
 #define BI_BUF_CEILING_OF_IGNORE_ACCESSIBLE(b, n)			\
   ((n) < (b)->text->gpt && (b)->text->gpt < BI_BUF_Z (b) ?		\
    (b)->text->gpt : BI_BUF_Z (b))
-#define BUF_CEILING_OF_IGNORE_ACCESSIBLE(b, n) 				\
+#define BUF_CEILING_OF_IGNORE_ACCESSIBLE(b, n)				\
   bytind_to_bufpos							\
    (b, BI_BUF_CEILING_OF_IGNORE_ACCESSIBLE (b, bufpos_to_bytind (b, n)))
 
 #define BI_BUF_FLOOR_OF_IGNORE_ACCESSIBLE(b, n)				\
-        (BI_BUF_BEG (b) < (b)->text->gpt && (b)->text->gpt < (n) ?	\
+	(BI_BUF_BEG (b) < (b)->text->gpt && (b)->text->gpt < (n) ?	\
 	 (b)->text->gpt : BI_BUF_BEG (b))
-#define BUF_FLOOR_OF_IGNORE_ACCESSIBLE(b, n) 				\
+#define BUF_FLOOR_OF_IGNORE_ACCESSIBLE(b, n)				\
   bytind_to_bufpos							\
    (b, BI_BUF_FLOOR_OF_IGNORE_ACCESSIBLE (b, bufpos_to_bytind (b, n)))
 

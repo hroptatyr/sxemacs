@@ -5,7 +5,7 @@
  * Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
  *
  * This file is part of SXEmacs.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -477,11 +477,11 @@ mapcar1(size_t leni, Lisp_Object * vals,
 		Bytecount slen = XSTRING_LENGTH(sequence);
 		Bufbyte *p = NULL;
 		Bufbyte *end = NULL;
-                int speccount = specpdl_depth();
+		int speccount = specpdl_depth();
 		size_t i = 0;
 
-                XMALLOC_ATOMIC_OR_ALLOCA(p, slen, Bufbyte);
-                end = p + slen;
+		XMALLOC_ATOMIC_OR_ALLOCA(p, slen, Bufbyte);
+		end = p + slen;
 
 		memcpy(p, XSTRING_DATA(sequence), slen);
 
@@ -493,7 +493,7 @@ mapcar1(size_t leni, Lisp_Object * vals,
 				vals[i++] = result;
 			}
 		}
-                XMALLOC_UNBIND(p, slen, speccount);
+		XMALLOC_UNBIND(p, slen, speccount);
 	} else if (BIT_VECTORP(sequence)) {
 		Lisp_Bit_Vector *v = XBIT_VECTOR(sequence);
 
@@ -574,7 +574,7 @@ string_map_inplace(Lisp_Object function, Lisp_Object string)
 	}
 
 	UNGCPRO;
-} 
+}
 
 static void
 bit_vector_map_inplace(Lisp_Object function, Lisp_Object bitvec)
@@ -3598,10 +3598,10 @@ keys are optional and may appear anywhere.  In greater detail:
 
   To give a rough idea of the outcome sizes:
   family size   arity    #combinations   #permutations  #cartesians
-        2         2            1               2               4
-        4         2            6              12              16
-        8         4           70            1680            4096
-        9         4          126            3024            6561
+	2         2            1               2               4
+	4         2            6              12              16
+	8         4           70            1680            4096
+	9         4          126            3024            6561
 	9         5          126           15120           59049
 	9         6           84           60480          531441
 	9         7           36          181440         4782969
@@ -3645,7 +3645,7 @@ keys are optional and may appear anywhere.  In greater detail:
   - (1 1) if family is a dictionary and mode is 'pointwise or
     'combination
   - (1 1 ... 1)  if there are n families, irrespective of mode.
-     +-+- n -+ 
+     +-+- n -+
     So it is '(1 1) if two families are given, '(1 1 1) for 3 families
     and so forth.
 
@@ -4105,7 +4105,7 @@ may be a list, a vector, a dllist, a bit vector, or a string.
 
 	result = Fconcat(nargs, args);
 	XMALLOC_UNBIND(args, nargs, speccount);
-        return result;
+	return result;
 }
 
 DEFUN("mapcar", Fmapcar, 2, 2, 0,	/*
@@ -4117,16 +4117,16 @@ SEQUENCE may be a list, a vector, a dllist, a bit vector, or a string.
 {
 	size_t len = XINT(Flength(sequence));
 	Lisp_Object *args = NULL;
-        Lisp_Object result;
+	Lisp_Object result;
 	int speccount = specpdl_depth();
 
-        XMALLOC_OR_ALLOCA(args, len, Lisp_Object);
+	XMALLOC_OR_ALLOCA(args, len, Lisp_Object);
 
 	mapcar1(len, args, function, sequence);
 
 	result = Flist(len, args);
-        XMALLOC_UNBIND(args, len, speccount);
-        return result;
+	XMALLOC_UNBIND(args, len, speccount);
+	return result;
 }
 
 DEFUN("mapdllist", Fmapdllist, 2, 2, 0,	/*
@@ -4134,19 +4134,19 @@ Apply FUNCTION to each element of SEQUENCE; return a dllist of the results.
 The result is a list of the same length as SEQUENCE.
 SEQUENCE may be a list, a vector, a dllist, a bit vector, or a string.
 */
-      (function, sequence)) 
+      (function, sequence))
 {
 	size_t len = XINT(Flength(sequence));
 	Lisp_Object *args = NULL;
-        Lisp_Object result;
+	Lisp_Object result;
 	int speccount = specpdl_depth();
 
-        XMALLOC_OR_ALLOCA(args, len, Lisp_Object);
+	XMALLOC_OR_ALLOCA(args, len, Lisp_Object);
 
 	mapcar1(len, args, function, sequence);
 
 	result = Fdllist(len, args);
-        XMALLOC_UNBIND(args, len, speccount);
+	XMALLOC_UNBIND(args, len, speccount);
 	return result;
 }
 

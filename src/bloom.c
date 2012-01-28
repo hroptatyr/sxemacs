@@ -1311,4 +1311,3 @@ void vars_of_bloom(void)
 {
 	Fprovide(intern("bloom"));
 }
-

@@ -78,8 +78,8 @@ symbol."
   (unless (default-boundp symbol)
     ;; Use the saved value if it exists, otherwise the standard setting.
     (set-default symbol (if (get symbol 'saved-value)
-                            (eval (car (get symbol 'saved-value)))
-                          (eval value)))))
+			    (eval (car (get symbol 'saved-value)))
+			  (eval value)))))
 
 (defun custom-initialize-set (symbol value)
   "Initialize SYMBOL with VALUE.
@@ -92,10 +92,10 @@ This is like `custom-initialize-default', but uses the function specified by
 `:set' to initialize SYMBOL."
   (unless (default-boundp symbol)
     (funcall (or (get symbol 'custom-set) 'set-default)
-             symbol
-             (if (get symbol 'saved-value)
-                 (eval (car (get symbol 'saved-value)))
-               (eval value)))))
+	     symbol
+	     (if (get symbol 'saved-value)
+		 (eval (car (get symbol 'saved-value)))
+	       (eval value)))))
 
 (defun custom-initialize-reset (symbol value)
   "Initialize SYMBOL with VALUE.
@@ -108,14 +108,14 @@ or (last of all) VALUE.
 Like `custom-initialize-set', but use the function specified by
 `:get' to reinitialize SYMBOL if it is already bound."
     (funcall (or (get symbol 'custom-set) 'set-default)
-             symbol
-             (cond ((default-boundp symbol)
-                    (funcall (or (get symbol 'custom-get) 'default-value)
-                             symbol))
-                   ((get symbol 'saved-value)
-                    (eval (car (get symbol 'saved-value))))
-                   (t
-                    (eval value)))))
+	     symbol
+	     (cond ((default-boundp symbol)
+		    (funcall (or (get symbol 'custom-get) 'default-value)
+			     symbol))
+		   ((get symbol 'saved-value)
+		    (eval (car (get symbol 'saved-value))))
+		   (t
+		    (eval value)))))
 
 ;; XEmacs change; move to defsubst, since this is only called in one place
 ;; and usage of it clusters.
@@ -125,16 +125,16 @@ Like `custom-initialize-reset', but only use the `:set' function if
 not using the standard setting.
 For the standard setting, use `set-default'."
   (cond ((default-boundp symbol)
-         (funcall (or (get symbol 'custom-set) 'set-default)
-                  symbol
-                  (funcall (or (get symbol 'custom-get) 'default-value)
-                           symbol)))
-        ((get symbol 'saved-value)
-         (funcall (or (get symbol 'custom-set) 'set-default)
-                  symbol
-                  (eval (car (get symbol 'saved-value)))))
-        (t
-         (set-default symbol (eval value)))))
+	 (funcall (or (get symbol 'custom-set) 'set-default)
+		  symbol
+		  (funcall (or (get symbol 'custom-get) 'default-value)
+			   symbol)))
+	((get symbol 'saved-value)
+	 (funcall (or (get symbol 'custom-set) 'set-default)
+		  symbol
+		  (eval (car (get symbol 'saved-value)))))
+	(t
+	 (set-default symbol (eval value)))))
 
 (defun custom-declare-variable (symbol default doc &rest args)
   "Like `defcustom', but SYMBOL and DEFAULT are evaluated as normal arguments.
@@ -169,11 +169,11 @@ keyword in your own programs.  "
     (while args
       (let ((arg (car args)))
 	(setq args (cdr args))
-        (check-argument-type 'keywordp arg)
-        (let ((keyword arg)
-              (value (car args)))
-          (unless args
-            (signal 'error (list "Keyword is missing an argument" keyword)))
+	(check-argument-type 'keywordp arg)
+	(let ((keyword arg)
+	      (value (car args)))
+	  (unless args
+	    (signal 'error (list "Keyword is missing an argument" keyword)))
 	  (setq args (cdr args))
 	  (cond ((eq keyword :initialize)
 		 (setq initialize value))
@@ -193,10 +193,10 @@ keyword in your own programs.  "
 			   value)
 		   ;; Fast code for the common case.
 		   (put symbol 'custom-options (copy-sequence value))))
-                ;; In the event that the byte compile has compiled the init
-                ;; value, we want the value the UI sees to be uncompiled.
-                ((eq keyword :default)
-                 (put symbol 'standard-value (list value)))
+		;; In the event that the byte compile has compiled the init
+		;; value, we want the value the UI sees to be uncompiled.
+		((eq keyword :default)
+		 (put symbol 'standard-value (list value)))
 		(t
 		 (custom-handle-keyword symbol keyword value
 					'custom-variable))))))
@@ -221,37 +221,37 @@ The remaining arguments should have the form
 The following keywords are meaningful:
 
 :type	VALUE should be a widget type for editing the symbol's value.
-        The default is `sexp'.
+	The default is `sexp'.
 :options VALUE should be a list of valid members of the widget type.
 :group  VALUE should be a customization group.
-        Add SYMBOL to that group.
+	Add SYMBOL to that group.
 :link LINK-DATA
-        Include an external link after the documentation string for this
-        item.  This is a sentence containing an active field which
-        references some other documentation.
+	Include an external link after the documentation string for this
+	item.  This is a sentence containing an active field which
+	references some other documentation.
 
-        There are three alternatives you can use for LINK-DATA:
+	There are three alternatives you can use for LINK-DATA:
 
-        (custom-manual INFO-NODE)
-             Link to an Info node; INFO-NODE is a string which specifies
-             the node name, as in \"(emacs)Top\".  The link appears as
-             `[manual]' in the customization buffer.
+	(custom-manual INFO-NODE)
+	     Link to an Info node; INFO-NODE is a string which specifies
+	     the node name, as in \"(emacs)Top\".  The link appears as
+	     `[manual]' in the customization buffer.
 
-        (info-link INFO-NODE)
-             Like `custom-manual' except that the link appears in the
-             customization buffer with the Info node name.
+	(info-link INFO-NODE)
+	     Like `custom-manual' except that the link appears in the
+	     customization buffer with the Info node name.
 
-        (url-link URL)
-             Link to a web page; URL is a string which specifies the URL.
-             The link appears in the customization buffer as URL.
+	(url-link URL)
+	     Link to a web page; URL is a string which specifies the URL.
+	     The link appears in the customization buffer as URL.
 
-        You can specify the text to use in the customization buffer by
-        adding `:tag NAME' after the first element of the LINK-DATA; for
-        example, (info-link :tag \"foo\" \"(emacs)Top\") makes a link to the
-        Emacs manual which appears in the buffer as `foo'.
+	You can specify the text to use in the customization buffer by
+	adding `:tag NAME' after the first element of the LINK-DATA; for
+	example, (info-link :tag \"foo\" \"(emacs)Top\") makes a link to the
+	Emacs manual which appears in the buffer as `foo'.
 
-        An item can have more than one external link; however, most items
-        have none at all.
+	An item can have more than one external link; however, most items
+	have none at all.
 :initialize
 	VALUE should be a function used to initialize the
 	variable.  It takes two arguments, the symbol and value
@@ -264,25 +264,25 @@ The following keywords are meaningful:
 	The function takes one argument, a symbol, and should return
 	the current value for that symbol.  The default choice of function
 	is `custom-default-value'. #### XEmacs used to say `default-value';
-        is that right?
+	is that right?
 :require
 	VALUE should be a feature symbol.  If you save a value
 	for this option, then when your custom init file loads the value,
 	it does (require VALUE) first.
 :version
-        VALUE should be a string specifying that the variable was
-        first introduced, or its default value was changed, in Emacs
-        version VERSION.
+	VALUE should be a string specifying that the variable was
+	first introduced, or its default value was changed, in Emacs
+	version VERSION.
 :tag LABEL
-        Use LABEL, a string, instead of the item's name, to label the item
-        in customization menus and buffers.
+	Use LABEL, a string, instead of the item's name, to label the item
+	in customization menus and buffers.
 :load FILE
-        Load file FILE (a string) before displaying this customization
-        item.  Loading is done with `load', and only if the file is
-        not already loaded.
+	Load file FILE (a string) before displaying this customization
+	item.  Loading is done with `load', and only if the file is
+	not already loaded.
 :set-after VARIABLES
 	Specifies that SYMBOL should be set after the list of variables
-        VARIABLES when both have been customized.
+	VARIABLES when both have been customized.
 
 Read the section about customization in the Emacs Lisp manual for more
 information."
@@ -307,7 +307,7 @@ The remaining arguments should have the form
 The following KEYWORDs are defined:
 
 :group  VALUE should be a customization group.
-        Add FACE to that group.
+	Add FACE to that group.
 
 SPEC should be an alist of the form ((DISPLAY ATTS)...).
 
@@ -352,9 +352,9 @@ information."
       (setq args (cdr args))
       (check-argument-type 'keywordp arg)
       (let ((keyword arg)
-            (value (car args)))
-        (unless args
-          (signal 'error (list "Keyword is missing an argument" keyword)))
+	    (value (car args)))
+	(unless args
+	  (signal 'error (list "Keyword is missing an argument" keyword)))
 	(setq args (cdr args))
 	(cond ((eq keyword :prefix)
 	       (put symbol 'custom-prefix value))
@@ -386,7 +386,7 @@ The remaining arguments should have the form
 The following KEYWORDs are defined:
 
 :group  VALUE should be a customization group.
-        Add SYMBOL to that group.
+	Add SYMBOL to that group.
 
 Read the section about customization in the Emacs Lisp manual for more
 information."
@@ -438,11 +438,11 @@ Third argument TYPE is the custom option type."
       (setq args (cdr args))
       (check-argument-type 'keywordp arg)
       (let ((keyword arg)
-            (value (car args)))
-        (unless args
-          (signal 'error (list "Keyword is missing an argument" keyword)))
-        (setq args (cdr args))
-        (custom-handle-keyword symbol keyword value type)))))
+	    (value (car args)))
+	(unless args
+	  (signal 'error (list "Keyword is missing an argument" keyword)))
+	(setq args (cdr args))
+	(custom-handle-keyword symbol keyword value type)))))
 
 (defun custom-handle-keyword (symbol keyword value type)
   "For customization option SYMBOL, handle KEYWORD with VALUE.
@@ -457,7 +457,7 @@ Fourth argument TYPE is the custom option type."
 	 (custom-add-load symbol value))
 	((eq keyword :tag)
 	 (put symbol 'custom-tag value))
- 	((eq keyword :set-after)
+	((eq keyword :set-after)
 	 (custom-add-dependencies symbol value))
 	(t
 	 (signal 'error (list "Unknown keyword" keyword)))))
@@ -572,8 +572,8 @@ from THEME by `custom-make-theme-feature'."
       (check-argument-type 'keywordp arg)
       (let ((keyword arg)
 	    (value (car args)))
-        (unless args
-          (signal 'error (list "Keyword is missing an argument" keyword)))
+	(unless args
+	  (signal 'error (list "Keyword is missing an argument" keyword)))
 	(setq args (cdr args))
 	(cond ((eq keyword :short-description)
 	       (put theme 'theme-short-description value))
@@ -670,38 +670,38 @@ area when toggling value.
 ARGS may also contain boolean :toggle-only, whose non-nil value
 means that only toggle command will be defined."
   (let ((msg (plist-get args :message))
-        (toggle-fun (or (get var 'toggle-function)
-                        (intern (format "toggle-%S" var))))
-        (turn-on-fun (or (get var 'turn-on-function)
-                         (intern (format "turn-on-%S" var))))
-        (turn-off-fun (or (get var 'turn-off-function)
-                          (intern (format "turn-off-%S" var))))
-        (toggle-only (plist-get args :toggle-only)))
+	(toggle-fun (or (get var 'toggle-function)
+			(intern (format "toggle-%S" var))))
+	(turn-on-fun (or (get var 'turn-on-function)
+			 (intern (format "turn-on-%S" var))))
+	(turn-off-fun (or (get var 'turn-off-function)
+			  (intern (format "turn-off-%S" var))))
+	(toggle-only (plist-get args :toggle-only)))
     (mapc (lambda (p)
-            (setq args (plist-remprop args p)))
-          '(:message :toggle-only))
+	    (setq args (plist-remprop args p)))
+	  '(:message :toggle-only))
     `(progn
        (defcustom ,var ,value ,doc
-         :type 'boolean ,@args)
+	 :type 'boolean ,@args)
        (put ',var 'toggle-variable t)
        (defun ,toggle-fun (arg)
-         ,(format "Toggle `%s' on or off." var)
-         (interactive "_P")
-         (customize-set-variable
-          ',var (if (null arg)
-                    (not ,var)
-                  (> (prefix-numeric-value arg) 0)))
-         ,(when msg
-            `(message "%S is %s" ',var (if ,var "ON" "OFF"))))
+	 ,(format "Toggle `%s' on or off." var)
+	 (interactive "_P")
+	 (customize-set-variable
+	  ',var (if (null arg)
+		    (not ,var)
+		  (> (prefix-numeric-value arg) 0)))
+	 ,(when msg
+	    `(message "%S is %s" ',var (if ,var "ON" "OFF"))))
        (unless ,toggle-only
-         (defun ,turn-on-fun ()
-           ,(format "Turn on `%s'." var)
-           (interactive)
-           (,toggle-fun 1))
-         (defun ,turn-off-fun ()
-           ,(format "Turn off `%s'." var)
-           (interactive)
-           (,toggle-fun -1))))))
+	 (defun ,turn-on-fun ()
+	   ,(format "Turn on `%s'." var)
+	   (interactive)
+	   (,toggle-fun 1))
+	 (defun ,turn-off-fun ()
+	   ,(format "Turn off `%s'." var)
+	   (interactive)
+	   (,toggle-fun -1))))))
 
 ;;; Initializing.
 
@@ -747,7 +747,7 @@ the list would contain an entry for the `user' theme, too.
 See `custom-known-themes' for a list of known themes."
   (let ((old (get symbol prop)))
     (if (eq (car-safe (car-safe old)) theme)
-        (setq old (cdr old)))
+	(setq old (cdr old)))
     (put symbol prop (cons (list theme mode value) old))))
 
 (defvar custom-local-buffer nil
@@ -827,14 +827,14 @@ in SYMBOL's list property `theme-value' \(using `custom-push-theme')."
 		   (now (nth 2 entry))
 		   (requests (nth 3 entry))
 		   (comment (nth 4 entry))
-                   set)
+		   set)
 	      (when requests
 		(put symbol 'custom-requests requests)
 		(mapc 'require requests))
 	      (setq set (or (get symbol 'custom-set) 'custom-set-default))
 	      (put symbol 'saved-value (list value))
 	      (put symbol 'saved-variable-comment comment)
-              (custom-push-theme 'theme-value symbol theme 'set value)
+	      (custom-push-theme 'theme-value symbol theme 'set value)
 	      ;; Allow for errors in the case where the setter has
 	    ;; changed between versions, say, but let the user know.
 	    (condition-case data
@@ -857,7 +857,7 @@ in SYMBOL's list property `theme-value' \(using `custom-push-theme')."
 	  (let ((symbol (nth 0 args))
 		(value (nth 1 args)))
 	    (put symbol 'saved-value (list value))
-            (custom-push-theme 'theme-value symbol theme 'set value))
+	    (custom-push-theme 'theme-value symbol theme 'set value))
 	  (setq args (cdr (cdr args))))))))
 
 (defun custom-set-default (variable value)
@@ -879,8 +879,8 @@ this sets the local binding in that buffer instead."
 	  (stringp sexp)
 	  (numberp sexp)
 	  (vectorp sexp)
-;;;  	  (and (fboundp 'characterp)
-;;;  	       (characterp sexp))
+;;;	  (and (fboundp 'characterp)
+;;;	       (characterp sexp))
 	  )
       sexp
     (list 'quote sexp)))
@@ -990,14 +990,14 @@ See `custom-known-themes' for a list of known themes."
     (mapatoms (lambda (symbol)
 		;; This works even if symbol is both a variable and a
 		;; face.
-                (setq spec-list (get symbol 'theme-value))
-                (when spec-list
-                  (put symbol 'theme-value (custom-remove-theme spec-list theme))
-                  (custom-theme-reset-internal symbol 'user))
-                (setq spec-list (get symbol 'theme-face))
-                (when spec-list
-                  (put symbol 'theme-face (custom-remove-theme spec-list theme))
-                  (custom-theme-reset-internal-face symbol 'user))))))
+		(setq spec-list (get symbol 'theme-value))
+		(when spec-list
+		  (put symbol 'theme-value (custom-remove-theme spec-list theme))
+		  (custom-theme-reset-internal symbol 'user))
+		(setq spec-list (get symbol 'theme-face))
+		(when spec-list
+		  (put symbol 'theme-face (custom-remove-theme spec-list theme))
+		  (custom-theme-reset-internal-face symbol 'user))))))
 
 (defun custom-theme-load-themes (by-theme &rest body)
   "Load the themes specified by BODY.
@@ -1061,9 +1061,9 @@ THEME-SPEC-LIST."
   ;; it might have gone away without the user knowing.
   (let ((value (cdr (assoc theme theme-spec-list))))
     (if value
-        (if (eq (car value) 'set)
-            (cdr value)
-          (custom-theme-value (cadr value) theme-spec-list)))))
+	(if (eq (car value) 'set)
+	    (cdr value)
+	  (custom-theme-value (cadr value) theme-spec-list)))))
 
 
 (defun custom-theme-variable-value (variable theme)
@@ -1081,14 +1081,14 @@ If SYMBOL is not defined in TO-THEME, reset SYMBOL to the standard
 value.  See `custom-theme-variable-value'.  The standard value is
 stored in SYMBOL's property `standard-value'."
   (let ((value (custom-theme-variable-value symbol to-theme))
-        was-in-theme)
+	was-in-theme)
     (setq was-in-theme value)
     (setq value (or value (get symbol 'standard-value)))
     (when value
       (put symbol 'saved-value was-in-theme)
       (if (or (get 'force-value symbol) (default-boundp symbol))
-          (funcall (or (get symbol 'custom-set) 'set-default) symbol
-                   (eval (car value)))))
+	  (funcall (or (get symbol 'custom-set) 'set-default) symbol
+		   (eval (car value)))))
     value))
 
 
@@ -1103,8 +1103,8 @@ ARGS is a list of lists of the form
 This means reset VARIABLE to its value in TO-THEME."
   (custom-check-theme theme)
   (mapcar #'(lambda (arg)
-              (apply #'custom-theme-reset-internal arg)
-              (custom-push-theme 'theme-value (car arg) theme 'reset (cadr arg)))
+	      (apply #'custom-theme-reset-internal arg)
+	      (custom-push-theme 'theme-value (car arg) theme 'reset (cadr arg)))
 	  args))
 
 (defun custom-reset-variables (&rest args)

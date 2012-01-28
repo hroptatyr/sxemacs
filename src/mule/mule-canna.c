@@ -30,16 +30,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /*
 
   Authors: Akira Kon (kon@uxd.fc.nec.co.jp)
-           Ichiro Hirakura (hirakura@uxd.fc.nec.co.jp)
+	   Ichiro Hirakura (hirakura@uxd.fc.nec.co.jp)
 
   Functions defined in this file are
 
   (canna-key-proc key)
- 		key: single STRING
- 		RETURNS:
+		key: single STRING
+		RETURNS:
 			 Length of converted string if no error occurs.
 			 Error string if error occurs.
- 		DESCRIPTION:
+		DESCRIPTION:
 			 Convert a key input to a set of strings.  The
 			 strings contain both well-formed string and a
 			 intermediate result to show the translation
@@ -47,7 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 			 stored in specific variables.
 
   (canna-initialize)
-  		RETURNS:
+		RETURNS:
 			List of the following things:
 			- list of keys to toggle Japanese-mode
 			- error message

@@ -200,7 +200,7 @@ media_mad_open(Lisp_Media_Stream *ms)
 
 	/* create a substream */
 	mss = make_media_substream_append(ms);
-	
+
 	media_substream_type(mss) = MTYPE_AUDIO;
 	mtap = xnew_and_zero(mtype_audio_properties);
 
@@ -328,7 +328,7 @@ media_mad_read(media_substream *mss, void *outbuf, size_t length)
 		right_ch  = pcm->samples[1];
 
 		size += nframes;
-	  
+
 		MAD_DEBUG_S("frames: %d, samples: %d, size:%d\n",
 			    nframes, nframes*nchannels, size);
 

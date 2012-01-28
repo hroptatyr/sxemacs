@@ -55,10 +55,10 @@ only considered as a candidate to match `paragraph-start' or
 
 Prefix argument says to turn mode on if positive, off if negative.
 When the mode is turned on, if there are newlines in the buffer but no hard
-newlines, ask the user whether to mark as hard any newlines preceding a 
+newlines, ask the user whether to mark as hard any newlines preceding a
 `paragraph-start' line.  From a program, second arg INSERT specifies whether
 to do this; it can be `never' to change nothing, t or `always' to force
-marking, `guess' to try to do the right thing with no questions, nil 
+marking, `guess' to try to do the right thing with no questions, nil
 or anything else to ask the user.
 
 Newlines not marked hard are called \"soft\", and are always internal
@@ -192,7 +192,7 @@ to which the end of the previous line belongs, or the end of the buffer."
 	(while (and (not (bobp))
 		    (progn (move-to-left-margin)
 			   (looking-at paragraph-separate)))
-	  (forward-line -1)) 
+	  (forward-line -1))
 	(if (bobp)
 	    nil
 	  ;; Go to end of the previous (non-separating) line.

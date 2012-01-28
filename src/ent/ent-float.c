@@ -564,7 +564,7 @@ void syms_of_ent_float(void)
 void vars_of_ent_float(void)
 {
 	fpfloat f = 0.0, fp = 0.0;
-	
+
 	f = 1.0;
 	while ( (f > fp) &&
 		(f = 2.0 * (fp = f)) &&

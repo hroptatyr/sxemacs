@@ -5,7 +5,7 @@
  * Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
  *
  * This file is part of SXEmacs.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -50,14 +50,14 @@
    +------+          +------+          +------+
    | data |   nil    | data |   nil    | data |   nil
    +------+    ^     +------+    ^     +------+    ^
-          |\+--|--+          \+--|--+         |\+--|--+
-          | |ptr0-|---------->|ptr0-|---------|>|ptr0-|---->nil
-          | +--^--+           +--^--+         | +--^--+
-          |    |                 |            |    |
-           \+--|--+             head           \+--|--+
-            |ptr1-|---------------------------->|ptr1-|---->nil
-            +--^--+                             +--^--+
-               |                                   |
+	  |\+--|--+          \+--|--+         |\+--|--+
+	  | |ptr0-|---------->|ptr0-|---------|>|ptr0-|---->nil
+	  | +--^--+           +--^--+         | +--^--+
+	  |    |                 |            |    |
+	   \+--|--+             head           \+--|--+
+	    |ptr1-|---------------------------->|ptr1-|---->nil
+	    +--^--+                             +--^--+
+	       |                                   |
 +--------+     |                                  head
 |Skiplist+--->head
 +--------+

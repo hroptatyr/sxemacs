@@ -73,12 +73,12 @@ struct tty_console {
 	struct {
 		/* terminal inserts nulls, not
 		   spaces to fill whitespace on
-		   screen 
+		   screen
 		*/
 		unsigned int must_write_spaces:1;
-		
+
 		/* cursor movement commands
-		   work while in insert mode 
+		   work while in insert mode
 		*/
 		unsigned int insert_mode_motion:1;
 
@@ -90,7 +90,7 @@ struct tty_console {
 		unsigned int memory_above_frame:1;
 
 		/* display retained below screen */
-		unsigned int memory_below_frame:1;	
+		unsigned int memory_below_frame:1;
 		unsigned int meta_key:2;	/* 0 == mask off top bit;
 						   1 == top bit is meta;
 						   2 == top bit is useful as
@@ -221,7 +221,7 @@ struct tty_console {
 	/* Some flags relating to expanding the colors */
 	unsigned int is_bold_brighter    :1;
 	unsigned int is_reverse_brighter :1;
-        unsigned int nearest_color       :1;
+	unsigned int nearest_color       :1;
 };
 
 #define CONSOLE_TTY_DATA(c) CONSOLE_TYPE_DATA (c, tty)

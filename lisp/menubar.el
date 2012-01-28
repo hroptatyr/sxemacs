@@ -361,16 +361,16 @@ menu item called \"Item\" under the \"Foo\" submenu of \"Menu\".
 NEW-NAME is the string that the menu item will be printed as from now on."
   (check-type new-name string)
   (let* ((menubar current-menubar)
-         (pair (find-menu-item menubar path))
-         (item (car pair))
-         (menu (cdr pair)))
+	 (pair (find-menu-item menubar path))
+	 (item (car pair))
+	 (menu (cdr pair)))
     (or item
-        (signal 'error (list (if menu (gettext "No such menu item")
-                               (gettext "No such menu"))
-                             path)))
+	(signal 'error (list (if menu (gettext "No such menu item")
+			       (gettext "No such menu"))
+			     path)))
     (if (and (consp item)
-             (stringp (car item)))
-        (setcar item new-name)
+	     (stringp (car item)))
+	(setcar item new-name)
       (aset item 0 new-name))
     (set-menubar-dirty-flag)
     item))
@@ -386,46 +386,46 @@ NEW-NAME is the string that the menu item will be printed as from now on."
 (defun enable-menu-item-1 (path toggle-p on-p)
   (let (menu item)
     (if (and (vectorp path) (> (length path) 2)) ; limited syntax checking...
-        (setq item path)
+	(setq item path)
       (let* ((menubar current-menubar)
-             (pair (find-menu-item menubar path)))
-        (setq item (car pair)
-              menu (cdr pair))
-        (or item
-            (signal 'error (list (if menu
-                                     "No such menu item"
-                                   "No such menu")
-                                 path)))
-        (if (consp item)
-            (error "%S is a menu, not a menu item" path))))
+	     (pair (find-menu-item menubar path)))
+	(setq item (car pair)
+	      menu (cdr pair))
+	(or item
+	    (signal 'error (list (if menu
+				     "No such menu item"
+				   "No such menu")
+				 path)))
+	(if (consp item)
+	    (error "%S is a menu, not a menu item" path))))
     (if (or (> (length item) 4)
-            (and (symbolp (aref item 2))
-                 (= ?: (aref (symbol-name (aref item 2)) 0))))
-        ;; plist-like syntax
-        (let ((i 2)
-              (keyword (if toggle-p :selected :active))
-              (ok nil))
-          (while (< i (length item))
-            (cond ((eq (aref item i) keyword)
-                   (aset item (1+ i) on-p)
-                   (setq ok t)))
-            (setq i (+ i 2)))
-          (cond (ok nil)
-                (toggle-p
-                 (signal 'error (list "not a toggle menu item" item)))
-                (t
-                 ;; Need to copy the item to extend it, sigh...
-                 (let ((cons (memq item menu))
-                       (new-item (vconcat item (list keyword on-p))))
-                   (if cons
-                       (setcar cons (setq item new-item))
-                     (if menu
-                         (error "couldn't find %S on its parent?" item)
-                       (error "no %S slot to set: %S" keyword item)))))))
+	    (and (symbolp (aref item 2))
+		 (= ?: (aref (symbol-name (aref item 2)) 0))))
+	;; plist-like syntax
+	(let ((i 2)
+	      (keyword (if toggle-p :selected :active))
+	      (ok nil))
+	  (while (< i (length item))
+	    (cond ((eq (aref item i) keyword)
+		   (aset item (1+ i) on-p)
+		   (setq ok t)))
+	    (setq i (+ i 2)))
+	  (cond (ok nil)
+		(toggle-p
+		 (signal 'error (list "not a toggle menu item" item)))
+		(t
+		 ;; Need to copy the item to extend it, sigh...
+		 (let ((cons (memq item menu))
+		       (new-item (vconcat item (list keyword on-p))))
+		   (if cons
+		       (setcar cons (setq item new-item))
+		     (if menu
+			 (error "couldn't find %S on its parent?" item)
+		       (error "no %S slot to set: %S" keyword item)))))))
       ;; positional syntax
       (if toggle-p
-          (signal 'error (list "not a toggle menu item" item))
-        (aset item 2 on-p)))
+	  (signal 'error (list "not a toggle menu item" item))
+	(aset item 2 on-p)))
     (set-menubar-dirty-flag)
     item))
 
@@ -687,8 +687,8 @@ MENU-DESC and EVENT are as in the call to `popup-menu'."
 	      ((event-matches-key-specifier-p new-event (quit-char))
 	       (signal 'quit nil))
 	      ;; this function has been ordered to do essentially
-        ;; X-specifc processing after this check.
-	      ((not (popup-up-p))	
+	;; X-specifc processing after this check.
+	      ((not (popup-up-p))
 	       (setq unread-command-events (cons new-event
 						 unread-command-events))
 	       (throw 'popup-done nil))

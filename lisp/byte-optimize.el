@@ -531,8 +531,8 @@
 	  ((and (fboundp 'compiler-macroexpand)
 		(symbolp (car-safe form))
 		(get (car-safe form) 'cl-compiler-macro)
-	        (not (eq form
-		         (setq form (compiler-macroexpand form)))))
+		(not (eq form
+			 (setq form (compiler-macroexpand form)))))
 	   (byte-optimize-form form for-effect))
 
 	  ((not (symbolp fn))
@@ -699,7 +699,7 @@
 ;; Byte-compiled code with special number types is not readable by
 ;; SXEmacsen which do not have an mp spine.
 ;; Therefore always tag their usage using (featurep 'ent)
-;; or the like 
+;; or the like
 ;; - hroptatyr
 (defun byte-optimize-delay-constants-math (form start fun)
   ;; Merge all FORM's constants from number START, call FUN on them
@@ -710,20 +710,20 @@
 	(overflow (memq fun '(+ *))))
     (while (cdr (setq rest (cdr rest)))
       (if (if (featurep 'ent)
-              (numberp (car rest))
-            (integerp (car rest)))
+	      (numberp (car rest))
+	    (integerp (car rest)))
 	  (let (constants)
 	    (setq form (copy-sequence form)
 		  rest (nthcdr (1- start) form))
 	    (while (setq rest (cdr rest))
 	      (cond ((and (featurep 'ent)
-                          (rationalp (car rest)))
-                     (setq constants (cons (car rest) constants))
-                     (setcar rest nil))
-                    ((integerp (car rest))
-                     (setq constants (cons (car rest) constants))
-                     (setcar rest nil))
-                    ((realp (car rest))
+			  (rationalp (car rest)))
+		     (setq constants (cons (car rest) constants))
+		     (setcar rest nil))
+		    ((integerp (car rest))
+		     (setq constants (cons (car rest) constants))
+		     (setcar rest nil))
+		    ((realp (car rest))
 		     (setq constants
 			   (cons
 			    (coerce-number
@@ -741,24 +741,24 @@
 			       )))
 			    constants))
 		     (setcar rest nil))
-                    ((and (or (featurep 'bigc)
-                              (featurep 'bigg))
-                          (complexp (car rest)))
-                     (setq constants (cons (car rest) constants))
-                     (setcar rest nil))
-                    ((and (featurep 'resclass)
-                          (declare-fboundp (residue-class-p (car rest))))
-                     (setq constants (cons (car rest) constants))
-                     (setcar rest nil))))
+		    ((and (or (featurep 'bigc)
+			      (featurep 'bigg))
+			  (complexp (car rest)))
+		     (setq constants (cons (car rest) constants))
+		     (setcar rest nil))
+		    ((and (featurep 'resclass)
+			  (declare-fboundp (residue-class-p (car rest))))
+		     (setq constants (cons (car rest) constants))
+		     (setcar rest nil))))
 	    ;; If necessary, check now for overflow
 	    ;; that might be caused by reordering.
 	    (if (and overflow
 		     ;; We have overflow if the result of doing the arithmetic
 		     ;; on floats is not even close to the result
 		     ;; of doing it on integers.
-                     (not (featurep '(or bigz bigq bigf bigfr bigc bigg resclass)))
-                     ;; This assumption, of course, is not valid if we
-                     ;; have bigz numbers
+		     (not (featurep '(or bigz bigq bigf bigfr bigc bigg resclass)))
+		     ;; This assumption, of course, is not valid if we
+		     ;; have bigz numbers
 		     (not (byte-optimize-approx-equal
 			    (apply fun (mapcar 'float constants))
 			    (float (apply fun constants)))))
@@ -980,10 +980,10 @@
   (cond ((numberp (nth 1 form))
 	 (eval form))
 	((featurep 'ent)
-         ;; we cannot compare to 0 anymore, since there are coercion
-         ;; issues and even non-comparable types
-         form)
-        (byte-compile-delete-errors
+	 ;; we cannot compare to 0 anymore, since there are coercion
+	 ;; issues and even non-comparable types
+	 form)
+	(byte-compile-delete-errors
 	 (list '= (nth 1 form) 0))
 	(form)))
 
@@ -1591,7 +1591,7 @@
 	       (setq rest (cdr rest))
 	       (cond ((= tmp 1)
 		      (byte-compile-log-lap
- 		       "  %s discard\t-->\t<deleted>" lap0)
+		       "  %s discard\t-->\t<deleted>" lap0)
 		      (setq lap (delq lap0 (delq lap1 lap))))
 		     ((= tmp 0)
 		      (byte-compile-log-lap
@@ -1944,7 +1944,7 @@
 		 (byte-compile-log-lap
 		  "  %s: %s ... %s %s\t-->\t%s: %s %s: ... %s %s %s"
 		  (nth 1 (cdr lap2)) (car tmp)
-                  lap1 lap2
+		  lap1 lap2
 		  (nth 1 (cdr lap2)) (car tmp)
 		  (nth 1 newtag) 'byte-dup lap1
 		  (cons 'byte-goto newtag)
@@ -2013,7 +2013,7 @@
 	    lap1 (nth 1 rest))
       (if (memq (car lap0) byte-constref-ops)
 	  (if (not (eq (car lap0) 'byte-constant))
-	      (progn 
+	      (progn
 		(incf (gethash (cdr lap0) variable-frequency 0))
 		(or (memq (cdr lap0) byte-compile-variables)
 		    (setq byte-compile-variables

@@ -1,4 +1,3 @@
-
 @node Windows, Mule, Buffers, Top
 @chapter Multiple Windows
 @cindex windows

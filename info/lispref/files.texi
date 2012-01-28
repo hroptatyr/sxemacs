@@ -1200,7 +1200,7 @@ be an integer).  Only the low 12 bits of @var{mode} are used.
 @c Emacs 19 feature
 @defun set-default-file-modes mode
 This function sets the default file protection for new files created by
-SXEmacs and its subprocesses.  Every file created with SXEmacs initially 
+SXEmacs and its subprocesses.  Every file created with SXEmacs initially
 has this protection.  On Unix, the default protection is the bitwise
 complement of the ``umask'' value.
 
@@ -1854,7 +1854,7 @@ Optional argument @var{depth} (a positive integer) specifies the
 recursion depth, use @code{0} to emulate old @code{directory-files}.
 
 Optional argument @var{symlink_is_file} specifies whether symlinks
-should be resolved (which is the default behaviour) or whether 
+should be resolved (which is the default behaviour) or whether
 they are treated as ordinary files (non-@code{nil}), in the latter
 case symlinks to directories are not recurred.
 @end defun

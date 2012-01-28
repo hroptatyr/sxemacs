@@ -46,7 +46,7 @@ on the number of characters typed.")
 
 ;jwz: this is preloaded so don't ;;;###autoload
 (defvar auto-gc-threshold (/ gc-cons-threshold 3)
-  "*GC when this many bytes have been consed since the last GC, 
+  "*GC when this many bytes have been consed since the last GC,
 and the user has been idle for `auto-save-timeout' seconds.")
 
 (defun auto-save-itimer ()

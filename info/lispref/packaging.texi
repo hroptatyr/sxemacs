@@ -61,7 +61,7 @@ Packaging Lisp Libraries:
 @c * Frequently Asked Questions::  Questions and answers from the mailing list.
 
 Internals and Package Release Engineering:
-* Issues::                      
+* Issues::
 @end menu
 
 @node Package Overview, Package Terminology, , Packaging
@@ -304,7 +304,7 @@ tree are given below, @ref{Control Files}.
 
 The @file{packages} directory contains some auxiliary Lisp libraries
 used in the compilation and packaging process.  The content of these
-libraries is of interest primarily to the packaging engineers, @ref{The 
+libraries is of interest primarily to the packaging engineers, @ref{The
 Package Release Engineer View}.
 
 Finally, the @file{packages}, @file{packages/xemacs-packages}, and
@@ -349,7 +349,7 @@ top-level @file{Makefile} and by @file{XEmacs.rules}.
 @item Local.rules.inc
 a file to @code{include} in package @file{Makefile}s to be able to get
 at variables in @file{Local.rules} @emph{before} including
-@file{XEmacs.rules}. 
+@file{XEmacs.rules}.
 
 @c #### Add to "issues"
 @item package-compile.el
@@ -519,11 +519,11 @@ checking out the @file{packages} module.
 
 @table @code
 @item GNU cp
-@item GNU install 
+@item GNU install
 (or a BSD compatible install program).
-@item GNU make 
+@item GNU make
 (3.79 or later preferred).
-@item makeinfo 
+@item makeinfo
 (4.2 from texinfo-4.2)
 @item GNU tar
 (or equivalent).
@@ -551,7 +551,7 @@ directory of the packages source tree.
 @cindex package makefile targets
 @chapter @file{Makefile} targets
 The following targets can be used when running @code{make} to build the
-packages: 
+packages:
 
 @table @samp
 @item mostlyclean
@@ -564,7 +564,7 @@ files.  Also removes any generated .elc files, along with the normal
 
 @item distclean
 Use this when preparing a distribution.  It kills anything that can be
-rebuilt. 
+rebuilt.
 
 @item extraclean
 Does a @code{distclean} and also removes any backup files (@file{*~})
@@ -638,7 +638,7 @@ version you are using.
 @item BUILD_WITHOUT_MULE
 Set this to @samp{t} if you are using a non-Mule XEmacs.  The default is
 that this variable is not set (blank) which means to build @emph{with}
-Mule. 
+Mule.
 
 @item XEMACS_NATIVE_NT
 Set this to @samp{t} if you are using a native Microsoft Windows build
@@ -653,7 +653,7 @@ Under this directory will hang @file{xemacs-packages} and
 @var{MULE_INSTALLED_PACKAGES_ROOT}.  The default for this is
 @file{/usr/local/lib/xemacs}.  Which may not be what you want if you are
 developing XEmacs.  To quote the comments in
-@file{Local.rules.template}: 
+@file{Local.rules.template}:
 
 @quotation
 If you are developing XEmacs, you probably don't want to install the
@@ -683,11 +683,11 @@ close as you can get to @dfn{running in place} for the packages.
 
 @item NONMULE_INSTALLED_PACKAGES_ROOT
 This is where the non-Mule packages get installed to.  The default is
-@file{$@{XEMACS_INSTALLED_PACKAGES_ROOT@}/xemacs-packages}. 
+@file{$@{XEMACS_INSTALLED_PACKAGES_ROOT@}/xemacs-packages}.
 
 @item MULE_INSTALLED_PACKAGES_ROOT
 This is where the Mule packages get installed to.  The default is
-@file{$@{XEMACS_INSTALLED_PACKAGES_ROOT@}/mule-packages}. 
+@file{$@{XEMACS_INSTALLED_PACKAGES_ROOT@}/mule-packages}.
 
 @item NONMULE_PACKAGES
 A whitespace separated list of non-Mule packages to build/install.
@@ -724,7 +724,7 @@ The path to GNU/tar.  The default is @code{tar}.
 
 @item BZIP2
 The path to the bzip2 compression program.  The default is unset
-(blank).  If this is set @file{.tar.bz2} archives will be built 
+(blank).  If this is set @file{.tar.bz2} archives will be built
 @emph{in addition to} the @file{.tar.gz} archives.
 
 @item EXCLUDES
@@ -794,7 +794,7 @@ The path to msgfmt.  The default is @code{msgfmt}
 The path to your copy command (GNU cp).  The default is dependent on
 whether or not @var{symlink} is set (@samp{t}).
 
-If @var{symlink} is unset (blank), @var{RCOPY}'s default is 
+If @var{symlink} is unset (blank), @var{RCOPY}'s default is
 @code{cp -af}.  If @var{symlink} is set (@samp{t}), @var{RCOPY}'s
 default is @code{cp --force --recursive --symbolic-link}.
 @end table
@@ -861,7 +861,7 @@ field follows the example):
 @table @samp
 @item NAME
 The name of the package.  In the case of the example it is
-@samp{xemacs-base}. 
+@samp{xemacs-base}.
 
 @item standards-version
 Part of the internal package infrastructure, its value should always be
@@ -877,12 +877,12 @@ place-marker, @samp{VERSION} here.
 @item author-version
 This is the package's internal, or @samp{upstream} version number if it
 has one.  It is set from the @file{Makefile} variable
-@var{AUTHOR_VERSION}. 
+@var{AUTHOR_VERSION}.
 
 @item date
 This is the date of the last change made to the package.  It is
 auto-generated at build time, taken from the package's toplevel
-@file{ChangeLog}. 
+@file{ChangeLog}.
 
 @item build-date
 The date the package was built.  It is auto-generated.
@@ -896,7 +896,7 @@ An unused field, leave as @samp{xemacs}
 
 @item priority
 An unused field, can be any of @samp{high}, @samp{medium}, or
-@samp{low}. 
+@samp{low}.
 
 @item category
 The @samp{category} of the package.  It is taken from the
@@ -924,7 +924,7 @@ build time by @code{make bindist}.
 
 @item size
 The size in bytes of the package's binary tarball.  Generated at build
-time. 
+time.
 
 @item provides
 A whitespace separated list of @emph{all} the features the package
@@ -985,7 +985,7 @@ in @samp{PRELOADS}).
 
 There isn't much to an @xpms{} @file{Makefile}, basically it just
 contains a few @file{Makefile} variables and that's it.  See the
-example. 
+example.
 
 Here is a real world example, from the @samp{build} package:
 
@@ -1037,7 +1037,7 @@ you think that your package will need some special @file{Makefile}
 hackery contact the @email{xemacs-beta@@xemacs.org, XEmacs developers}.
 We distribute over 100 packages so the chances are good that you won't
 be the first to need such hackery and it is probably already catered
-for. 
+for.
 
 @subheading @file{Makefile} Variables Explained:
 A number of @file{make} variables are defined by the @xpms{}.  Some are
@@ -1145,7 +1145,7 @@ ELCS_1_DEST = $(PACKAGE)/extra
 @end example
 
 Would put the @var{ELCS_1} files for the package, @samp{foo} into
-@file{xemacs-packages/lisp/foo/extra/}. 
+@file{xemacs-packages/lisp/foo/extra/}.
 
 @item EARLY_GENERATED_LISP
 For additional @file{.el} files that will be generated before any
@@ -1157,7 +1157,7 @@ For additional @file{.el} files that will be generated at
 byte-compilation time.  You must write @file{Makefile} rules to build
 these files.
 
-@item PRELOADS 
+@item PRELOADS
 This is used if you need to pass extra command line arguments to
 XEmacs to build the package.  For instance, a specification for
 loading libraries containing macros before compiling the Lisp in the
@@ -1184,7 +1184,7 @@ defaults to @samp{.}.
 @item PACKAGE_SUPPRESS
 Place calls to @code{package-suppress} here to indicate Lisp libraries
 that should only be available to particular versions of XEmacs.  For
-example: 
+example:
 
 @example
 PACKAGE_SUPPRESS = \
@@ -1200,7 +1200,7 @@ It will appear in an upcoming version of XEmacs 21.5.
 @item STANDARD_DOCS
 Set this to @samp{t} if your package's Texinfo source file is located in
 the package's toplevel directory @emph{and} is named
-@file{$(PACKAGE).texi}. 
+@file{$(PACKAGE).texi}.
 
 @item EXPLICIT_DOCS
 Use this to explicitly list Texinfo sources that @emph{aren't} in the
@@ -1227,7 +1227,7 @@ extension.
 
 @item DOCS_TXI_EXTENSION
 Set this to @samp{t} if your Texinfo source files have a @samp{.txi}
-extension. 
+extension.
 
 @item EXTRA_DOC_FILES
 Files listed here will be installed to @file{.../man/$(PACKAGE)/}.  For
@@ -1264,7 +1264,7 @@ Would put files into @file{.../etc/$(PACKAGE)/foo/}.
 
 @item DATA_1_FILES ... DATA_35_FILES
 For data files that need to go into a different directory from
-@var{DATA_DEST}. 
+@var{DATA_DEST}.
 
 @item DATA_1_DEST ... DATA_35_DEST
 The name of the subdirectory for files specified in @var{DATA_n_FILES}.
@@ -1361,4 +1361,3 @@ Do maintain a detailed ChangeLog.
 @section Issues
 
 To be completed.
-

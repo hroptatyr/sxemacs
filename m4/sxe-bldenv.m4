@@ -4,12 +4,12 @@ AC_DEFUN([SXE_LD_EXPORT_DYNAMIC], [dnl
 	AC_MSG_CHECKING([if linker understands -export-dynamic])
 	SXE_DUMP_LIBS
 	LDFLAGS="-export-dynamic $LDFLAGS"
-        AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <stdlib.h>
 ]],[[
 return 0;
 ]])],  [AC_MSG_RESULT([yes])
-        have_ld_export_dynamic="yes"], [
+	have_ld_export_dynamic="yes"], [
 	AC_MSG_RESULT([no])
 	have_ld_export_dynamic="no"])
 	SXE_RESTORE_LIBS
@@ -20,12 +20,12 @@ AC_DEFUN([SXE_LD_NO_PIE], [dnl
 	AC_MSG_CHECKING([if linker understands -no_pie])
 	SXE_DUMP_LIBS
 	LDFLAGS="-no_pie $LDFLAGS"
-        AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <stdlib.h>
 ]],[[
 return 0;
 ]])],  [AC_MSG_RESULT([yes])
-        have_ld_no_pie="yes"], [
+	have_ld_no_pie="yes"], [
 	AC_MSG_RESULT([no])
 	have_ld_no_pie="no"])
 	SXE_RESTORE_LIBS
@@ -292,7 +292,7 @@ dnl AC_ARG_PROGRAM
 	##else
 	##	datadir='${prefix}/share'
 	fi
-	
+
 	if test "x$libdir" != 'x${exec_prefix}/lib'; then
 		AC_DEFINE([ARCHLIBDIR_USER_DEFINED], [1], [Description here!])
 		AC_DEFINE([MODULEDIR_USER_DEFINED], [1], [Description here!])

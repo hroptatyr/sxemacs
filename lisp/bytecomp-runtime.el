@@ -29,8 +29,8 @@
 
 ;; This file is dumped with SXEmacs.
 
-;; The code in this file should always be loaded, because it defines things 
-;; like "defsubst" which should work interpreted as well.  The code in 
+;; The code in this file should always be loaded, because it defines things
+;; like "defsubst" which should work interpreted as well.  The code in
 ;; bytecomp.el and byte-optimize.el can be loaded as needed.
 
 ;; interface to selectively inlining functions.
@@ -506,7 +506,7 @@ SYMBOL must be quoted and can be a list of SYMBOLS.  See also
 
 (put 'byte-compiler-options 'lisp-indent-hook 0)
 (defmacro byte-compiler-options (&rest args)
-  "Set some compilation-parameters for this file.  
+  "Set some compilation-parameters for this file.
 This will affect only the file in which it appears; this does nothing when
 evaluated, or when loaded from a .el file.
 
@@ -532,7 +532,7 @@ some subset of the following flags:
   obsolete	use of an obsolete function or variable.
   pedantic	warn of use of compatible symbols.
 
-If the first element if the list is `+' or `-' then the specified elements 
+If the first element if the list is `+' or `-' then the specified elements
 are added to or removed from the current set of warnings, instead of the
 entire set of warnings being overwritten.
 

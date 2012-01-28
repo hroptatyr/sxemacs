@@ -118,9 +118,9 @@ since they have special meaning in a regexp."
 is non-nil, and if STRING (either a string or a regular expression according
 to REGEXP-FLAG) contains uppercase letters."
   `(let ((case-fold-search
-          (if (and case-fold-search search-caps-disable-folding)
-              (no-upper-case-p ,string ,regexp-flag)
-            case-fold-search)))
+	  (if (and case-fold-search search-caps-disable-folding)
+	      (no-upper-case-p ,string ,regexp-flag)
+	    case-fold-search)))
      ,@body))
 (put 'with-search-caps-disable-folding 'lisp-indent-function 2)
 (put 'with-search-caps-disable-folding 'edebug-form-spec
@@ -133,8 +133,8 @@ function called interactively."
   `(let ((case-fold-search
 	  (if (and (interactive-p)
 		   case-fold-search search-caps-disable-folding)
-              (no-upper-case-p ,string ,regexp-flag)
-            case-fold-search)))
+	      (no-upper-case-p ,string ,regexp-flag)
+	    case-fold-search)))
      ,@body))
 (put 'with-interactive-search-caps-disable-folding 'lisp-indent-function 2)
 (put 'with-interactive-search-caps-disable-folding 'edebug-form-spec
@@ -576,14 +576,14 @@ Don't use this command in Lisp programs!
 			(/ (* size (prefix-numeric-value arg)) 10)))
 		 (point-max)))
     (cond (arg
-           ;; If we went to a place in the middle of the buffer,
-           ;; adjust it to the beginning of a line.
-           (forward-line 1))
+	   ;; If we went to a place in the middle of the buffer,
+	   ;; adjust it to the beginning of a line.
+	   (forward-line 1))
 	  ;; XEmacs change
 	  (scroll-to-end
-           ;; If the end of the buffer is not already on the screen,
-           ;; then scroll specially to put it near, but not at, the bottom.
-           (recenter -3)))))
+	   ;; If the end of the buffer is not already on the screen,
+	   ;; then scroll specially to put it near, but not at, the bottom.
+	   (recenter -3)))))
 
 ;; XEmacs (not in FSF)
 (defun mark-beginning-of-buffer (&optional arg)
@@ -597,8 +597,8 @@ With arg N, push mark N/10 of the way from the true beginning."
 			(/ (buffer-size) 10))
 		   (/ (+ 10 (* (buffer-size) (prefix-numeric-value arg))) 10))
 	       (point-min))
-             nil
-             t))
+	     nil
+	     t))
 (define-function 'mark-bob 'mark-beginning-of-buffer)
 
 ;; XEmacs (not in FSF)
@@ -613,9 +613,9 @@ With arg N, push mark N/10 of the way from the true end."
 			(* (prefix-numeric-value arg)
 			   (/ (buffer-size) 10))
 		      (/ (* (buffer-size) (prefix-numeric-value arg)) 10)))
-                 (point-max))
-             nil
-             t))
+		 (point-max))
+	     nil
+	     t))
 (define-function 'mark-eob 'mark-end-of-buffer)
 
 (defun mark-whole-buffer ()
@@ -678,7 +678,7 @@ BUFFER defaults to the current buffer."
   (with-current-buffer (or buffer (current-buffer))
     (let ((cnt (count-lines (point-min) (point-max))))
       (message "Buffer has %d lines, %d characters"
-               cnt (- (point-max) (point-min)))
+	       cnt (- (point-max) (point-min)))
       cnt)))
 
 ;;; Modified by Bob Weiner, 8/24/95, to print narrowed line number also.
@@ -781,7 +781,7 @@ See also `line-number'."
   (let* ((char (char-after (point))) ; XEmacs
 	 (beg (point-min))
 	 (end (point-max))
-         (pos (point))
+	 (pos (point))
 	 (total (buffer-size))
 	 (percent (if (> total 50000)
 		      ;; Avoid overflow from multiplying by 100!
@@ -1454,24 +1454,24 @@ visual feedback indicating the extent of the region being copied."
 	    ;; Inhibit quitting so we can make a quit here
 	    ;; look like a C-g typed as a command.
 	    (inhibit-quit t)
-            (win (selected-window))
-            (buf (current-buffer)))
+	    (win (selected-window))
+	    (buf (current-buffer)))
 	(if (pos-visible-in-window-p other-end win)
 	    (progn
 	      ;; FSF (I'm not sure what this does -sb)
 	      ;; Swap point and mark.
 	      (with-selected-window win
-                (with-current-buffer buf
-                  (goto-char other-end)))
-              (sit-for 1)
+		(with-current-buffer buf
+		  (goto-char other-end)))
+	      (sit-for 1)
 	      ;; Swap back.
 	      (with-selected-window win
-                (with-current-buffer buf
-                  (goto-char opoint)))
-              ;; If user quit, deactivate the mark
+		(with-current-buffer buf
+		  (goto-char opoint)))
+	      ;; If user quit, deactivate the mark
 	      ;; as C-g would as a command.
 	      (and quit-flag (mark)
-                   (zmacs-deactivate-region)))))))
+		   (zmacs-deactivate-region)))))))
 
 (defun append-next-kill ()
   "Cause following command, if it kills, to append to previous kill."
@@ -1825,13 +1825,13 @@ purposes.  See the documentation of `set-mark' for more information."
 	       (not (eq (marker-buffer (car global-mark-ring)) buffer))))
       ;; The last global mark pushed wasn't in this same buffer.
       (progn
-        (setq global-mark-ring (cons (copy-marker (mark-marker t buffer))
-                                     global-mark-ring))
-        (if (> (length global-mark-ring) global-mark-ring-max)
-            (progn
-              (move-marker (car (nthcdr global-mark-ring-max global-mark-ring))
-                           nil buffer)
-              (setcdr (nthcdr (1- global-mark-ring-max) global-mark-ring) nil)))))
+	(setq global-mark-ring (cons (copy-marker (mark-marker t buffer))
+				     global-mark-ring))
+	(if (> (length global-mark-ring) global-mark-ring-max)
+	    (progn
+	      (move-marker (car (nthcdr global-mark-ring-max global-mark-ring))
+			   nil buffer)
+	      (setcdr (nthcdr (1- global-mark-ring-max) global-mark-ring) nil)))))
   (setq dont-record-current-mark
 	(not (not (or (and in-shifted-motion-command
 			   (memq 'shifted-motion-commands
@@ -2432,8 +2432,8 @@ The goal column is stored in the variable `goal-column'."
   (interactive "_P") ; XEmacs
   (if column
       (progn
-        (setq goal-column nil)
-        (display-message 'command "No goal column"))
+	(setq goal-column nil)
+	(display-message 'command "No goal column"))
     (setq goal-column (current-column))
     (lmessage 'command
 	"Goal column %d (use %s with a prefix arg to unset it)"
@@ -2725,8 +2725,8 @@ comment.  Comments starting in column 0 are not moved."
 		     (skip-syntax-backward "^ " (match-beginning 0)))))
 	(setq begpos (point))
 	;; Compute desired indent.
-        ;; XEmacs change: Preserve indentation of comments starting in
-        ;; column 0, as documented.
+	;; XEmacs change: Preserve indentation of comments starting in
+	;; column 0, as documented.
 	(cond
 	 ((= (current-column) 0)
 	  (goto-char begpos))
@@ -2820,7 +2820,7 @@ not end the comment.  Blank lines do not get comments."
     (save-restriction
       (let ((cs comment-start) (ce comment-end)
 	    numarg)
-        (if (consp arg) (setq numarg t)
+	(if (consp arg) (setq numarg t)
 	  (setq numarg (prefix-numeric-value arg))
 	  ;; For positive arg > 1, replicate the comment delims now,
 	  ;; then insert the replicated strings just once.
@@ -2829,10 +2829,10 @@ not end the comment.  Blank lines do not get comments."
 		  ce (concat ce comment-end))
 	    (setq numarg (1- numarg))))
 	;; Loop over all lines from START to END.
-        (narrow-to-region start end)
-        (goto-char start)
-        (while (not (eobp))
-          (if (or (eq numarg t) (< numarg 0))
+	(narrow-to-region start end)
+	(goto-char start)
+	(while (not (eobp))
+	  (if (or (eq numarg t) (< numarg 0))
 	      (progn
 		;; Delete comment start from beginning of line.
 		(if (eq numarg t)
@@ -2843,7 +2843,7 @@ not end the comment.  Blank lines do not get comments."
 				(looking-at (regexp-quote cs)))
 		      (delete-char (length cs)))))
 		;; Delete comment end from end of line.
-                (if (string= "" ce)
+		(if (string= "" ce)
 		    nil
 		  (if (eq numarg t)
 		      (progn
@@ -2869,12 +2869,12 @@ not end the comment.  Blank lines do not get comments."
 			      (delete-char (length ce))))))))
 		(forward-line 1))
 	    ;; Insert at beginning and at end.
-            (if (looking-at "[ \t]*$") ()
-              (insert cs)
-              (if (string= "" ce) ()
-                (end-of-line)
-                (insert ce)))
-            (search-forward "\n" nil 'move)))))))
+	    (if (looking-at "[ \t]*$") ()
+	      (insert cs)
+	      (if (string= "" ce) ()
+		(end-of-line)
+		(insert ce)))
+	    (search-forward "\n" nil 'move)))))))
 
 ;; XEmacs
 (defun prefix-region (prefix)
@@ -2882,13 +2882,13 @@ not end the comment.  Blank lines do not get comments."
   (interactive "sPrefix string: ")
   (if prefix
       (let ((count (count-lines (mark) (point))))
- 	(goto-char (min (mark) (point)))
- 	(while (> count 0)
-          (setq count (1- count))
- 	  (beginning-of-line 1)
- 	  (insert prefix)
- 	  (end-of-line 1)
- 	  (forward-char 1)))))
+	(goto-char (min (mark) (point)))
+	(while (> count 0)
+	  (setq count (1- count))
+	  (beginning-of-line 1)
+	  (insert prefix)
+	  (end-of-line 1)
+	  (forward-char 1)))))
 
 
 (defun backward-word (&optional count buffer)
@@ -2953,26 +2953,26 @@ if you a newlines is reached first, move forward instead."
       (if (and (eq start oldpoint) (eq end oldpoint))
 	  ;; Point is neither within nor adjacent to a word.
 	  (and (not strict)
-               (progn
-                 ;; Look for preceding word in same line.
-                 (skip-syntax-backward "^w_"
-                                       (save-excursion
-                                         (beginning-of-line) (point)))
-                 (if (bolp)
+	       (progn
+		 ;; Look for preceding word in same line.
+		 (skip-syntax-backward "^w_"
+				       (save-excursion
+					 (beginning-of-line) (point)))
+		 (if (bolp)
 		     ;; No preceding word in same line.
 		     ;; Look for following word in same line.
-                     (progn
-                       (skip-syntax-forward "^w_"
+		     (progn
+		       (skip-syntax-forward "^w_"
 					    (save-excursion
-                                              (end-of-line) (point)))
-                       (setq start (point))
-                       (skip-syntax-forward "w_")
-                       (setq end (point)))
-                     (setq end (point))
-                     (skip-syntax-backward "w_")
-                     (setq start (point)))
+					      (end-of-line) (point)))
+		       (setq start (point))
+		       (skip-syntax-forward "w_")
+		       (setq end (point)))
+		     (setq end (point))
+		     (skip-syntax-backward "w_")
+		     (setq start (point)))
 		 (buffer-substring start end)))
-          (buffer-substring start end)))))
+	  (buffer-substring start end)))))
 
 (defcustom fill-prefix nil
   "*String for filling to insert at front of new line, or nil for none.
@@ -4004,8 +4004,8 @@ See the variable `zmacs-regions'.")
   (and zmacs-regions zmacs-region-active-p
        (or (marker-buffer (mark-marker t))
 	   (and (extent-live-p zmacs-region-extent)
-	        (buffer-live-p (extent-object zmacs-region-extent))
-	        (extent-object zmacs-region-extent)))))
+		(buffer-live-p (extent-object zmacs-region-extent))
+		(extent-object zmacs-region-extent)))))
 
 (defun zmacs-activate-region ()
   "Make the region between `point' and `mark' be active (highlighted),
@@ -4650,8 +4650,8 @@ The C code calls this periodically, right before redisplay."
       (setq warning-marker (make-marker))
       (set-marker warning-marker 1 buffer))
     (if temp-buffer-show-function
-        (progn
-          (funcall temp-buffer-show-function buffer)
+	(progn
+	  (funcall temp-buffer-show-function buffer)
 	  (mapc #'(lambda (win) (set-window-start win warning-marker))
 		(windows-of-buffer buffer nil t)))
       (set-window-start (display-buffer buffer) warning-marker))

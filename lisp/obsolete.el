@@ -57,7 +57,7 @@ If OLDVAR was bound and NEWVAR was not, Set NEWVAR to OLDVAR.
 
 Note: Use this before any other references (defvar/defcustom) to NEWVAR."
   (let ((needs-setting (and (boundp oldvar) (not (boundp newvar))))
-        (value (and (boundp oldvar) (symbol-value oldvar))))
+	(value (and (boundp oldvar) (symbol-value oldvar))))
      (defvaralias oldvar newvar)
      (make-obsolete-variable oldvar newvar)
      (and needs-setting (set newvar value))))
@@ -227,7 +227,7 @@ set Info-directory-list.")
 ;; Can't make this obsolete.  easymenu depends on it.
 (make-compatible 'add-menu 'add-submenu)
 
-(define-obsolete-function-alias 'package-get-download-menu 
+(define-obsolete-function-alias 'package-get-download-menu
   'package-ui-download-menu)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; minibuffer
@@ -262,7 +262,7 @@ set Info-directory-list.")
 
 (make-obsolete-variable 'executing-macro 'executing-kbd-macro)
 
-(define-compatible-function-alias 'interactive-form 
+(define-compatible-function-alias 'interactive-form
   'function-interactive) ;GNU 21.1
 (define-compatible-function-alias 'assq-delete-all
   'remassq) ;GNU 21.1
@@ -325,7 +325,7 @@ to the selected device."
     (when ms
       (declare-fboundp (play-media-stream ms device)))))
 (make-obsolete #'play-sound-file
-               "use `make-media-stream' and `play-media-stream' instead.")
+	       "use `make-media-stream' and `play-media-stream' instead.")
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; window-system objects

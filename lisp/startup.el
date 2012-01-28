@@ -206,11 +206,11 @@ In addition, the")
     (princ " following options are accepted:
   -sd                   Show dump ID.  Ignored when configured without --pdump.
   -nd                   Don't load the dump file.  Roughly like old temacs.
-                        Ignored when configured without --pdump.
+			Ignored when configured without --pdump.
   -t <device>           Use TTY <device> instead of the terminal for input
-                        and output.  This implies the -nw option.
+			and output.  This implies the -nw option.
   -nw                   Inhibit the use of any window-system-specific
-                        display code: use the current tty.
+			display code: use the current tty.
   -batch                Execute noninteractively (messages go to stderr).
   -debug-init           Enter the debugger if an error in the init file occurs.
   -unmapped             Do not map the initial frame.
@@ -239,8 +239,8 @@ In addition, the")
 			(princ " ")
 			(incf len))))))
       (while l
-        (let ((name (car (car l)))
-              (fn (cdr (car l)))
+	(let ((name (car (car l)))
+	      (fn (cdr (car l)))
 	      doc arg cons)
 	  (cond
 	   ((and (symbolp fn) (get fn 'undocumented)) nil)
@@ -261,7 +261,7 @@ In addition, the")
 	      (funcall insert name))
 	    (princ doc)
 	    (terpri))))
-        (setq l (cdr l))))
+	(setq l (cdr l))))
     (princ (concat "+N <file>             Start displaying <file> at line N.
 
 Anything else is considered a file name, and is placed into a buffer for
@@ -388,11 +388,11 @@ Type ^H^H^H (Control-h Control-h Control-h) to get more help options.\n")
 						invocation-name))
 
       (when debug-paths
-        (princ (format "invocation: p:%S n:%S\n"
-                       invocation-directory invocation-name)
-               'external-debugging-output)
-        (princ (format "emacs-roots:\n%S\n" emacs-roots)
-               'external-debugging-output))
+	(princ (format "invocation: p:%S n:%S\n"
+		       invocation-directory invocation-name)
+	       'external-debugging-output)
+	(princ (format "emacs-roots:\n%S\n" emacs-roots)
+	       'external-debugging-output))
 
       (if (null emacs-roots)
 	  (startup-find-roots-warning))
@@ -438,7 +438,7 @@ Type ^H^H^H (Control-h Control-h Control-h) to get more help options.\n")
       (setq window-setup-hook nil)
       (if error-data
 	  ;; re-signal, and don't allow continuation as that will probably
-          ;; wipe out the user's .emacs if she hasn't migrated yet!
+	  ;; wipe out the user's .emacs if she hasn't migrated yet!
 	  ;; Not applicable to SXEmacs --SY.
 	  (signal-error (car error-data) (cdr error-data))))
 
@@ -496,7 +496,7 @@ Type ^H^H^H (Control-h Control-h Control-h) to get more help options.\n")
        ((string= arg "-user-init-directory")
 	(setq user-init-directory (file-name-as-directory (pop args))))
        ((or (string= arg "-u")
- 	    (string= arg "-user"))
+	    (string= arg "-user"))
 	(let* ((user (pop args))
 	       (home-user (concat "~" user)))
 	  (setq user-init-directory (file-name-as-directory
@@ -524,13 +524,13 @@ Type ^H^H^H (Control-h Control-h Control-h) to get more help options.\n")
 
     (nreverse new-args)))
 
-(defconst initial-scratch-message 
+(defconst initial-scratch-message
   ";; This buffer is for notes you don't want to save, and for Lisp evaluation.
 ;; If you want to create a file, first visit that file with C-x C-f,
 ;; then enter the text in that file's own buffer.
 ;;
-;; In \"SXEmacs-speak\", `C-char' and `M-char' are abbreviations that mean 
-;; `Control+char' and `Meta+char' (hold down the Control or Meta key while 
+;; In \"SXEmacs-speak\", `C-char' and `M-char' are abbreviations that mean
+;; `Control+char' and `Meta+char' (hold down the Control or Meta key while
 ;; pressing `char').
 ;;
 ;; For Lisp evaluation, type an expression, move to the end and hit C-j.
@@ -694,7 +694,7 @@ If this is nil, no message will be displayed.")
 	      (if load-user-init-file-p
 		  (load-user-init-file))
 	      (setq init-file-had-error nil))
-          (error
+	  (error
 	   (message "Error in init file: %s" (error-message-string error))
 	   (display-warning 'initialization
 	     (format "An error has occurred while loading %s:
@@ -831,12 +831,12 @@ a new format, when variables have changed, etc."
   (interactive)
   (let ((e last-command-event))
     (and (button-press-event-p e)
-         (setq e (extent-at (event-point e)
-                            (event-buffer e)
-                            'startup-presentation-hack))
-         (setq e (extent-property e 'startup-presentation-hack))
-         (if (consp e)
-             (apply (car e) (cdr e))
+	 (setq e (extent-at (event-point e)
+			    (event-buffer e)
+			    'startup-presentation-hack))
+	 (setq e (extent-property e 'startup-presentation-hack))
+	 (if (consp e)
+	     (apply (car e) (cdr e))
 	   (while (keymapp (indirect-function e))
 	     (let ((map e)
 		   (overriding-local-map (indirect-function e)))
@@ -864,44 +864,44 @@ a new format, when variables have changed, etc."
 (defun splash-frame-present-hack (e v)
   ;;   (set-extent-property e 'mouse-face 'highlight)
   ;;   (set-extent-property e 'keymap
-  ;;    		       startup-presentation-hack-keymap)
+  ;;		       startup-presentation-hack-keymap)
   ;;   (set-extent-property e 'startup-presentation-hack v)
   ;;   (set-extent-property e 'help-echo
-  ;;    		       'startup-presentation-hack-help)
+  ;;		       'startup-presentation-hack-help)
   )
 
 (defun splash-frame-present (l)
   (cond ((stringp l)
-         (insert l))
-        ((eq (car-safe l) 'face)
-         ;; (face name string)
-         (let ((p (point)))
-           (splash-frame-present (elt l 2))
-           (if (fboundp 'set-extent-face)
-               (set-extent-face (make-extent p (point))
-                                (elt l 1)))))
-        ((eq (car-safe l) 'key)
-         (let* ((c (elt l 1))
-                (p (point))
-                (k (where-is-internal c nil t)))
-           (insert (if k (key-description k)
+	 (insert l))
+	((eq (car-safe l) 'face)
+	 ;; (face name string)
+	 (let ((p (point)))
+	   (splash-frame-present (elt l 2))
+	   (if (fboundp 'set-extent-face)
+	       (set-extent-face (make-extent p (point))
+				(elt l 1)))))
+	((eq (car-safe l) 'key)
+	 (let* ((c (elt l 1))
+		(p (point))
+		(k (where-is-internal c nil t)))
+	   (insert (if k (key-description k)
 		     (format "M-x %s" c)))
-           (if (fboundp 'set-extent-face)
-               (let ((e (make-extent p (point))))
-                 (set-extent-face e 'bold)
-                 (splash-frame-present-hack e c)))))
-        ((eq (car-safe l) 'funcall)
-         ;; (funcall (fun . args) string)
-         (let ((p (point)))
-           (splash-frame-present (elt l 2))
-           (if (fboundp 'set-extent-face)
-               (splash-frame-present-hack (make-extent p (point))
+	   (if (fboundp 'set-extent-face)
+	       (let ((e (make-extent p (point))))
+		 (set-extent-face e 'bold)
+		 (splash-frame-present-hack e c)))))
+	((eq (car-safe l) 'funcall)
+	 ;; (funcall (fun . args) string)
+	 (let ((p (point)))
+	   (splash-frame-present (elt l 2))
+	   (if (fboundp 'set-extent-face)
+	       (splash-frame-present-hack (make-extent p (point))
 					  (elt l 1)))))
 	((consp l)
 	 (mapcar 'splash-frame-present l))
-        (t
-         (backtrace 'external-debugging-output)
-         (error "WTF!?"))))
+	(t
+	 (backtrace 'external-debugging-output)
+	 (error "WTF!?"))))
 
 (defun startup-center-spaces (glyph)
   ;; Return the number of spaces to insert in order to center
@@ -1015,7 +1015,7 @@ Copyright (C) 2004 - 2009 Steve Youngs\n"))
 (defun display-splash-frame ()
   (let ((logo sxemacs-logo)
 	(buffer-read-only nil)
-        (cramped-p (eq 'tty (console-type))))
+	(cramped-p (eq 'tty (console-type))))
     (unless cramped-p (insert "\n"))
     (indent-to (startup-center-spaces logo))
     (set-extent-begin-glyph (make-extent (point) (point)) logo)
@@ -1028,9 +1028,9 @@ Copyright (C) 2004 - 2009 Steve Youngs\n"))
 	   (client-data `[ 1 ,(point) ,(current-buffer) ,elements ])
 	   tmout)
       (if (listp  elements) ;; A single element to display
-          (splash-frame-present (splash-frame-body))
+	  (splash-frame-present (splash-frame-body))
 	;; several elements to rotate
-        (splash-frame-present (aref elements 0))
+	(splash-frame-present (aref elements 0))
 	(setq tmout (add-timeout splash-frame-timeout
 				 'circulate-splash-frame-elements
 				 client-data splash-frame-timeout)))
@@ -1079,11 +1079,11 @@ It's idempotent, so call this as often as you like!"
 	  (packages-compute-package-locations user-init-directory)))
 
   (setq early-package-load-path
-        (packages-find-package-load-path early-packages)
-        late-package-load-path
-        (packages-find-package-load-path late-packages)
-        last-package-load-path
-        (packages-find-package-load-path last-packages))
+	(packages-find-package-load-path early-packages)
+	late-package-load-path
+	(packages-find-package-load-path late-packages)
+	last-package-load-path
+	(packages-find-package-load-path last-packages))
 
   (if debug-paths
       (progn
@@ -1117,20 +1117,20 @@ It's idempotent, so call this as often as you like!"
     (setq mule-lisp-directory '()))
 
   (setq ffi-lisp-directory
-        (when (fboundp #'ffi-defun)
-          (paths-find-ffi-lisp-directory roots
-                                         lisp-directory)))
+	(when (fboundp #'ffi-defun)
+	  (paths-find-ffi-lisp-directory roots
+					 lisp-directory)))
 
   ;; Modules
   (setq module-directory (paths-find-module-directory roots))
   (if debug-paths
       (princ (format "module-directory:\n%S\n" module-directory)
- 	     'external-debugging-output))
+	     'external-debugging-output))
   (setq site-module-directory (and (null inhibit-site-modules)
 				   (paths-find-site-module-directory roots)))
   (if (and debug-paths (null inhibit-site-modules))
       (princ (format "site-module-directory:\n%S\n" site-module-directory)
- 	     'external-debugging-output))
+	     'external-debugging-output))
 
   (setq load-path (paths-construct-load-path roots
 					     early-package-load-path
@@ -1139,7 +1139,7 @@ It's idempotent, so call this as often as you like!"
 					     lisp-directory
 					     nil
 					     mule-lisp-directory
-                                             ffi-lisp-directory))
+					     ffi-lisp-directory))
 
   (setq Info-directory-list
 	(paths-construct-info-path roots
@@ -1177,10 +1177,10 @@ It's idempotent, so call this as often as you like!"
 	     'external-debugging-output))
 
   (setq data-directory-list
-        (paths-construct-data-directory-list data-directory
-                                             early-packages
-                                             late-packages
-                                             last-packages))
+	(paths-construct-data-directory-list data-directory
+					     early-packages
+					     late-packages
+					     last-packages))
   (if debug-paths
       (princ (format "data-directory-list:\n%S\n" data-directory-list)
 	     'external-debugging-output)))
@@ -1221,7 +1221,7 @@ It's idempotent, so call this as often as you like!"
 	  (setq warnings (cdr warnings)))
 	(insert "Perhaps some directories don't exist, "
 		"or the SXEmacs executable,\n"
-                (concat invocation-directory invocation-name)
+		(concat invocation-directory invocation-name)
 		"\nis in a strange place?")
 
 	(princ "\nWARNING:\n" 'external-debugging-output)
@@ -1234,33 +1234,33 @@ It's idempotent, so call this as often as you like!"
   "Load autoloads from known locations."
 
   (when (and (not inhibit-autoloads)
-             (or lisp-directory module-directory))
+	     (or lisp-directory module-directory))
     ;; ordinary auto-autoloads in lisp/
     (let ((aalfile (file-name-sans-extension autoload-file-name)))
 
       (condition-case nil
-          (load (expand-file-name aalfile lisp-directory) nil t)
-        (error . nil))
+	  (load (expand-file-name aalfile lisp-directory) nil t)
+	(error . nil))
 
       ;; just load them all
       (mapc-internal
        #'(lambda (root)
-           (condition-case nil
-               (load (expand-file-name (concat "lisp/" aalfile) root) nil t)
-             (error . nil)))
+	   (condition-case nil
+	       (load (expand-file-name (concat "lisp/" aalfile) root) nil t)
+	     (error . nil)))
        emacs-roots)
 
       (when (featurep 'mule)
-        (load (expand-file-name aalfile
-                                (expand-file-name "mule" lisp-directory))
-              t t))
+	(load (expand-file-name aalfile
+				(expand-file-name "mule" lisp-directory))
+	      t t))
       (when (featurep 'modules)
-        (load (expand-file-name aalfile module-directory) t t))
+	(load (expand-file-name aalfile module-directory) t t))
 
       (when (fboundp #'ffi-defun)
-        (load (expand-file-name aalfile
-                                (expand-file-name "ffi" lisp-directory))
-              t t))))
+	(load (expand-file-name aalfile
+				(expand-file-name "ffi" lisp-directory))
+	      t t))))
 
   (unless inhibit-autoloads
     (unless inhibit-early-packages
@@ -1268,7 +1268,7 @@ It's idempotent, so call this as often as you like!"
     (if (and (not inhibit-early-packages) (not warn-early-package-shadows))
 	(let ((early-path (mapcar 'file-basename early-package-load-path))
 	      late-load-path)
-	  (mapc (lambda (path) 
+	  (mapc (lambda (path)
 		  (unless (member (file-basename path) early-path)
 		    (setq late-load-path (append late-load-path (list path)))))
 		late-package-load-path)

@@ -108,7 +108,7 @@ static int extra_bytes;
 #define PAGE (getpagesize ())
 #define ALIGNED(addr) (((unsigned long int) (addr) & (page_size - 1)) == 0)
 #define ROUNDUP(size) (((unsigned long int) (size) + page_size - 1) \
-                       & ~(page_size - 1))
+		       & ~(page_size - 1))
 #define ROUND_TO_PAGE(addr) (addr & (~(page_size - 1)))
 
 #define MEM_ALIGN sizeof(double)
@@ -553,7 +553,7 @@ static void update_heap_bloc_correspondence(bloc_ptr bloc, heap_ptr heap)
 		/* Advance through heaps, marking them empty,
 		   till we get to the one that B is in.  */
 		while (heap) {
-			if (heap->bloc_start <= b->data && 
+			if (heap->bloc_start <= b->data &&
 			    b->data <= heap->end)
 				break;
 			heap = heap->next;
@@ -566,7 +566,7 @@ static void update_heap_bloc_correspondence(bloc_ptr bloc, heap_ptr heap)
 				heap->free = heap->bloc_start;
 			} else {
 				/* ... and now abort if proven
-				   otherwise... 
+				   otherwise...
 				*/
 				abort();
 			}
@@ -912,7 +912,7 @@ void r_alloc_free(POINTER * ptr)
 	dead_bloc = find_bloc(ptr);
 	if (dead_bloc == NIL_BLOC)
 		abort();
-	else 
+	else
 		free_bloc(dead_bloc);
 	*ptr = 0;
 

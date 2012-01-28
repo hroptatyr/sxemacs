@@ -3,7 +3,7 @@
 # A script to setup your git area to contribute back to SXEmacs
 #
 # (C) 2008 Nelson Ferreira
-#   
+#
 # This program is free software; you can redistribute it and/or modify it
 # under a BSD-like licence.
 #
@@ -29,7 +29,7 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-# 
+#
 USER_EMAIL=$(git config user.email)
 if [ -z "$USER_EMAIL" ]; then
     echo "You need to setup your email address with:"

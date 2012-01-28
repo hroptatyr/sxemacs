@@ -68,7 +68,7 @@ the terminal type will be inferred from the TERM environment variable.
   If CONTROLLING-PROCESS is non-nil, it should be an integer
 specifying the process id of the process in control of the specified tty.  If
 it is nil, it is assumes to be the value returned by emacs-pid."
-  (make-device 'tty tty (list 'terminal-type terminal-type 
+  (make-device 'tty tty (list 'terminal-type terminal-type
 			      'controlling-process controlling-process)))
 
 (defun device-pixel-width (&optional device)
@@ -115,7 +115,7 @@ the toolbar, glyphs, etc."
 If DEVICE is not provided then the selected device is used."
   (or device (setq device (selected-device)))
   (or (symbolp name) (error "function name must be a symbol"))
-  (let ((devmeth (intern (concat (symbol-name 
+  (let ((devmeth (intern (concat (symbol-name
 				  (device-type device)) "-" (symbol-name name)))))
     (if (functionp devmeth)
 	(if args

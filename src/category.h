@@ -5,7 +5,7 @@
  * Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
  *
  * This file is part of SXEmacs.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -114,38 +114,38 @@ __nbits_right_of(int number, char bit)
 		/* main body */
 		"\n"
 		"	sarl $1, %[nmsk]	/* shift right and */\n"
-		"	adcb $0, %[cnt]	 	/* add 1 if carry was set*/\n"
+		"	adcb $0, %[cnt]		/* add 1 if carry was set*/\n"
 		"\n"
 		"	sarl $1, %[nmsk]	/* shift right and */\n"
-		"	adcb $0, %[cnt]	 	/* add 1 if carry was set*/\n"
+		"	adcb $0, %[cnt]		/* add 1 if carry was set*/\n"
 		"\n"
 		"	sarl $1, %[nmsk]	/* shift right and */\n"
-		"	adcb $0, %[cnt]	 	/* add 1 if carry was set*/\n"
-		"\n"
-		"	sarl $1, %[nmsk]	/* shift right and */\n"
-		/* maybe %[nmsk] is zero meanwhile, check for it and
-		 * return if so */
-		"	jz 0f\n"
-		"	adcb $0, %[cnt]	 	/* add 1 if carry was set*/\n"
-		"\n"
-		"	sarl $1, %[nmsk]	/* shift right and */\n"
-		"	adcb $0, %[cnt]	 	/* add 1 if carry was set*/\n"
+		"	adcb $0, %[cnt]		/* add 1 if carry was set*/\n"
 		"\n"
 		"	sarl $1, %[nmsk]	/* shift right and */\n"
 		/* maybe %[nmsk] is zero meanwhile, check for it and
 		 * return if so */
 		"	jz 0f\n"
-		"	adcb $0, %[cnt]	 	/* add 1 if carry was set*/\n"
+		"	adcb $0, %[cnt]		/* add 1 if carry was set*/\n"
+		"\n"
+		"	sarl $1, %[nmsk]	/* shift right and */\n"
+		"	adcb $0, %[cnt]		/* add 1 if carry was set*/\n"
 		"\n"
 		"	sarl $1, %[nmsk]	/* shift right and */\n"
 		/* maybe %[nmsk] is zero meanwhile, check for it and
 		 * return if so */
 		"	jz 0f\n"
-		"	adcb $0, %[cnt]	 	/* add 1 if carry was set*/\n"
+		"	adcb $0, %[cnt]		/* add 1 if carry was set*/\n"
+		"\n"
+		"	sarl $1, %[nmsk]	/* shift right and */\n"
+		/* maybe %[nmsk] is zero meanwhile, check for it and
+		 * return if so */
+		"	jz 0f\n"
+		"	adcb $0, %[cnt]		/* add 1 if carry was set*/\n"
 		"\n"
 		"	sarl $1, %[nmsk]	/* shift right and */\n"
 		"0:\n"
-		"	adcb $0, %[cnt]	 	/* add 1 if carry was set*/\n"
+		"	adcb $0, %[cnt]		/* add 1 if carry was set*/\n"
 #if !defined HAVE_ASM_RETVAL_IN_EBX
 		"	popl %%ebx		/* restore EBX */\n"
 #endif

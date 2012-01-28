@@ -20,7 +20,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -265,4 +265,3 @@
       (Assert (eq 1 (search-backward string nil t 5)))
       (goto-char (point-max))
       (Assert (not (search-backward string nil t 6))))))
-

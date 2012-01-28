@@ -164,7 +164,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 		assert(sz>=0 && sz<sizeof(pty_name));			\
 	} while(0)
 
-		
+
 
 /* This is how to get the device name of the control end of a pty.  */
 #define PTY_NAME_SPRINTF					\

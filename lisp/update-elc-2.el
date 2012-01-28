@@ -118,12 +118,12 @@
 
     ;; We descend recursively
     (let ((dirs (directory-files dir t nil t 'subdir))
-          dir)
+	  dir)
       (while (setq dir (pop dirs))
-        (when (and (not (member (file-name-nondirectory dir)
+	(when (and (not (member (file-name-nondirectory dir)
 				update-elc-ignored-dirs))
-                   (file-directory-p dir))
-          (do-update-elc-2 dir compile-stage-p seen))))
+		   (file-directory-p dir))
+	  (do-update-elc-2 dir compile-stage-p seen))))
 
     )))
 

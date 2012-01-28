@@ -173,7 +173,7 @@ void enqueue_focus_event(Widget wants_it, Lisp_Object frame, int in_p);
 
 /************************************************************************/
 /* convert from a series of RGB triples to an XImage formated for the   */
-/* proper display 							*/
+/* proper display							*/
 /************************************************************************/
 static XImage *convert_EImage_to_XImage(Lisp_Object device, int width,
 					int height, unsigned char *pic,
@@ -2094,7 +2094,7 @@ static void x_redisplay_widget(Lisp_Image_Instance * p)
 		wv = gui_items_to_widget_values
 		    (image_instance, IMAGE_INSTANCE_WIDGET_PENDING_ITEMS(p),
 		     /* #### this is not right; we need to keep track of which widgets
-		        want accelerators and which don't */ 0);
+			want accelerators and which don't */ 0);
 		wv->change = STRUCTURAL_CHANGE;
 	} else {
 		/* Assume the lotus position, breath deeply and chant to
@@ -2226,24 +2226,24 @@ static int x_widget_border_width(void)
 
 void
 x_subwindow_query_geometry(Lisp_Object image_instance,
-                           int *width, int *height);
+			   int *width, int *height);
 
 void
 x_subwindow_query_geometry(Lisp_Object image_instance,
-                           int *width, int *height)
+			   int *width, int *height)
 {
 	Lisp_Image_Instance *ii = XIMAGE_INSTANCE(image_instance);
-        Window droot;
+	Window droot;
 	int dx, dy;
-        unsigned int dbdw, dd, dw = 20, dh = 20;
+	unsigned int dbdw, dd, dw = 20, dh = 20;
 
-        XGetGeometry(IMAGE_INSTANCE_X_SUBWINDOW_DISPLAY(ii),
-                     (Window)IMAGE_INSTANCE_SUBWINDOW_ID(ii),
-                     &droot, &dx, &dy, &dw, &dh, &dbdw, &dd);
-        if (width)
-                *width = dw;
-        if (height)
-                *height = dh;
+	XGetGeometry(IMAGE_INSTANCE_X_SUBWINDOW_DISPLAY(ii),
+		     (Window)IMAGE_INSTANCE_SUBWINDOW_ID(ii),
+		     &droot, &dx, &dy, &dw, &dh, &dbdw, &dd);
+	if (width)
+		*width = dw;
+	if (height)
+		*height = dh;
 }
 
 #if 0
@@ -2890,7 +2890,7 @@ void image_instantiator_format_create_glyphs_x(void)
 	IIFORMAT_HAS_METHOD(autodetect, validate);
 	IIFORMAT_HAS_METHOD(autodetect, normalize);
 	IIFORMAT_HAS_METHOD(autodetect, possible_dest_types);
-	/* #### autodetect is flawed IMO: 
+	/* #### autodetect is flawed IMO:
 	   1. It makes the assumption that you can detect whether the user
 	   wanted a cursor or a string based on the data, since the data is a
 	   string you have to prioritise cursors. Instead we will force users

@@ -66,7 +66,7 @@ If CODE is invalid, return nil."
     (if (consp code)
 	(setq code (car code)))
     (if (or (not (integerp code))
-            (> (logand code 127) (length codes)))
+	    (> (logand code 127) (length codes)))
 	nil
       (with-output-to-string
        (let* ((spec (elt codes (logand code 127)))
@@ -102,41 +102,41 @@ STRING should be something acceptable as the second argument to
 `modify-syntax-entry'.
 If STRING is invalid, signal an error."
   (let* ((bflag nil)
-         (b3 0)
-         (ch0 (aref string 0))
-         (len (length string))
-         (code (string-match (regexp-quote (char-to-string ch0))
-                             (syntax-designator-chars)))
-         (i 2)
-         ch)
+	 (b3 0)
+	 (ch0 (aref string 0))
+	 (len (length string))
+	 (code (string-match (regexp-quote (char-to-string ch0))
+			     (syntax-designator-chars)))
+	 (i 2)
+	 ch)
     (or code
-        (error "Invalid syntax designator: %S" string))
+	(error "Invalid syntax designator: %S" string))
     (while (< i len)
       (setq ch (aref string i))
       (incf i)
       (case ch
-        (?1 (setq b3 (logior b3 128)))
-        (?2 (setq b3 (logior b3  32)))
-        (?3 (setq b3 (logior b3   8)))
-        (?4 (setq b3 (logior b3   2)))
-        (?5 (setq b3 (logior b3  64)))
-        (?6 (setq b3 (logior b3  16)))
-        (?7 (setq b3 (logior b3   4)))
-        (?8 (setq b3 (logior b3   1)))
-        (?a (case ch0
-              (?< (setq b3 (logior b3 128)))
-              (?> (setq b3 (logior b3   8)))))
-        (?b (case ch0
-              (?< (setq b3 (logior b3  64) bflag t))
-              (?> (setq b3 (logior b3   4) bflag t))))
-        (?p (setq code (logior code (lsh 1 7))))
-        (?\  nil) ;; ignore for compatibility
-        (otherwise
-         (error "Invalid syntax description flag: %S" string))))
+	(?1 (setq b3 (logior b3 128)))
+	(?2 (setq b3 (logior b3  32)))
+	(?3 (setq b3 (logior b3   8)))
+	(?4 (setq b3 (logior b3   2)))
+	(?5 (setq b3 (logior b3  64)))
+	(?6 (setq b3 (logior b3  16)))
+	(?7 (setq b3 (logior b3   4)))
+	(?8 (setq b3 (logior b3   1)))
+	(?a (case ch0
+	      (?< (setq b3 (logior b3 128)))
+	      (?> (setq b3 (logior b3   8)))))
+	(?b (case ch0
+	      (?< (setq b3 (logior b3  64) bflag t))
+	      (?> (setq b3 (logior b3   4) bflag t))))
+	(?p (setq code (logior code (lsh 1 7))))
+	(?\  nil) ;; ignore for compatibility
+	(otherwise
+	 (error "Invalid syntax description flag: %S" string))))
     ;; default single char style if `b' has not been seen
     (if (not bflag)
-        (case ch0
-          (?< (setq b3 (logior b3 128)))
+	(case ch0
+	  (?< (setq b3 (logior b3 128)))
 	  (?> (setq b3 (logior b3   8)))))
     (setq code (logior code (lsh b3 16)))
     (if (and (> len 1)
@@ -324,14 +324,14 @@ This is similar to `map-char-table', but works only on syntax tables, and
 	(invalid (gettext "**invalid**")) ;(empty "") ;constants
 	(standard-output (or stream standard-output))
 	;; #### I18N3 should temporarily set buffer to output-translatable
-        (in #'(lambda (string)
-                (princ ",\n\t\t\t\t ")
-                (princ string)))
+	(in #'(lambda (string)
+		(princ ",\n\t\t\t\t ")
+		(princ string)))
 	(syntax-string (syntax-code-to-string code)))
     (if (consp code)
 	(setq code (car code)))
     (if (null syntax-string)
-        (princ invalid)
+	(princ invalid)
       (princ syntax-string)
       (princ "\tmeaning: ")
       (princ (aref ["whitespace" "punctuation" "word-constituent"

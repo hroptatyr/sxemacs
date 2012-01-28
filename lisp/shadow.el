@@ -63,7 +63,7 @@ the file in position 2i+1.  Emacs Lisp file suffixes \(.el and .elc\)
 are stripped from the file names in the list.
 
 See the documentation for `list-load-path-shadows' for further information."
-  
+
   (let (shadows				; List of shadowings, to be returned.
 	dir				; The dir being currently scanned.
 	curr-files			; This dir's Emacs Lisp files.
@@ -75,7 +75,7 @@ See the documentation for `list-load-path-shadows' for further information."
 	(files-seen-this-dir		; Files seen so far in this dir.
 	 (make-hash-table :size 100 :test 'equal))
 	)
-  
+
     (dolist (path-elt (or path load-path))
 
       (setq dir (file-truename (or path-elt ".")))
@@ -93,11 +93,11 @@ See the documentation for `list-load-path-shadows' for further information."
 	(puthash dir t true-names)
 	(setq dir (or path-elt "."))
 	(setq curr-files (if (file-accessible-directory-p dir)
-                               (directory-files dir nil ".\\.elc?$" t)))
+			       (directory-files dir nil ".\\.elc?$" t)))
 	(and curr-files
 	     (not noninteractive)
 	     (message "Checking %d files in %s..." (length curr-files) dir))
-	
+
 	(clrhash files-seen-this-dir)
 
 	(dolist (file curr-files)
@@ -127,7 +127,7 @@ See the documentation for `list-load-path-shadows' for further information."
 	    ;; This test prevents us declaring that XXX.el shadows
 	    ;; XXX.elc (or vice-versa) when they are in the same directory.
 	    (puthash file t files-seen-this-dir)
-	      
+
 	    (if (setq orig-dir (gethash file file-dirs))
 		;; This file was seen before, we have a shadowing.
 		(setq shadows
@@ -183,7 +183,7 @@ considered to shadow a later file XXX.el, and vice-versa.
 When run interactively, the shadowings \(if any\) are displayed in a
 buffer called `*Shadows*'.  Shadowings are located by calling the
 \(non-interactive\) companion function, `find-emacs-lisp-shadows'."
-  
+
   (interactive)
   (let* ((path (copy-sequence load-path))
 	(tem path)

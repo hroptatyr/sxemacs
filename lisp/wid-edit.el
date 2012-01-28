@@ -330,7 +330,7 @@ menu will be used, otherwise the minibuffer is used."
   (mouse-set-point event)
   (let ((pos (event-point event)))
     (if (and pos (get-char-property pos 'button))
-        (widget-button-click event))))
+	(widget-button-click event))))
 
 ;;; Widget text specifications.
 ;;
@@ -419,7 +419,7 @@ invoking `widget-setup'."
     (when secret
       (let ((begin (widget-field-start field))
 	    (end (widget-field-end field)))
-	(when size 
+	(when size
 	  (while (and (> end begin)
 		      (eq (char-after (1- end)) ?\ ))
 	    (setq end (1- end))))
@@ -591,15 +591,15 @@ Suitable for use with `map-extents'."
 (defun widget-specify-active (widget)
   "Make WIDGET active for user modifications."
   (let ((inactive (widget-get widget :inactive))
-        (from (widget-get widget :from))
-        (to (widget-get widget :to)))
+	(from (widget-get widget :from))
+	(to (widget-get widget :to)))
     (when (and inactive (not (extent-detached-p inactive)))
       ;; Reactivate the buttons and fields covered by the extent.
       (map-extents 'widget-activation-widget-mapper
-                   nil from to :activate nil 'button-or-field)
+		   nil from to :activate nil 'button-or-field)
       ;; Reactivate the glyphs.
       (map-extents 'widget-activation-glyph-mapper
-                   nil from to :activate nil 'end-glyph)
+		   nil from to :activate nil 'end-glyph)
       (delete-extent inactive)
       (widget-put widget :inactive nil))))
 
@@ -723,10 +723,10 @@ ARGS are passed as extra arguments to the function."
   ;; of the widget type by `widget-prompt-value'.
   (unless prompt
     (setq prompt (or (and (widget-get widget :tag)
-                          (replace-in-string (widget-get widget :tag)
-                                             "^[ \t]+" "" t))
-                     default-prompt
-                     "Value")))
+			  (replace-in-string (widget-get widget :tag)
+					     "^[ \t]+" "" t))
+		     default-prompt
+		     "Value")))
   (widget-prompt-spaceify prompt))
 
 ;;;###autoload
@@ -739,10 +739,10 @@ The current value is assumed to be VALUE, unless UNBOUND is non-nil."
   (setq widget (widget-convert widget))
   (let ((answer (widget-apply widget
 			      :prompt-value
-                              (format "%s[%s]"
-                                      (widget-prompt widget prompt)
-                                      (widget-type widget))
-                              value unbound)))
+			      (format "%s[%s]"
+				      (widget-prompt widget prompt)
+				      (widget-type widget))
+			      value unbound)))
     (while (not (widget-apply widget :match answer))
       (setq answer (signal 'error (list "Answer does not match type"
 					answer (widget-type widget)))))
@@ -1811,11 +1811,11 @@ If that does not exists, call the value of `widget-complete-field'."
 	    (lambda ()			;?\]
 	      (setq button-end (point-marker))
 	      (set-marker-insertion-type button-end nil))
-	    (lambda ()			;?\{ 
+	    (lambda ()			;?\{
 	      (setq sample-begin (point)))
 	    (lambda ()			;?\}
 	      (setq sample-end (point)))
-	    (lambda ()			;?n 
+	    (lambda ()			;?n
 	      (when (widget-get widget :indent)
 		(insert ?\n)
 		(insert-char ?\  (widget-get widget :indent))))
@@ -2734,21 +2734,21 @@ Return an alist of (TYPE MATCH)."
 (defun widget-checklist-prompt-value (widget prompt value unbound)
   ;; Prompt for items to be selected, and the prompt for their value
   (let* ((args (widget-get widget :args))
-         (choices (mapcar (lambda (elt)
-                            (cons (widget-get elt :tag) elt))
-                          args))
-         (continue t)
-         value)
+	 (choices (mapcar (lambda (elt)
+			    (cons (widget-get elt :tag) elt))
+			  args))
+	 (continue t)
+	 value)
     (while continue
       (setq continue (completing-read
-                      (concat (widget-prompt-spaceify prompt)
-                              "select [ret. when done]: ")
-                      choices nil t))
+		      (concat (widget-prompt-spaceify prompt)
+			      "select [ret. when done]: ")
+		      choices nil t))
       (if (string= continue "")
-          (setq continue nil)
-        (push (widget-prompt-value (cdr (assoc continue choices))
-                                   prompt nil t)
-              value)))
+	  (setq continue nil)
+	(push (widget-prompt-value (cdr (assoc continue choices))
+				   prompt nil t)
+	      value)))
     (nreverse value)))
 
 (defun widget-checklist-validate (widget)
@@ -3203,29 +3203,29 @@ The parent of several `radio-button' widgets, one for each option."
     (widget-apply
      widget :value-to-external
      (if unbound
-         (mapcar #'(lambda (arg)
-                     (widget-prompt-value
-                      arg
-                      (concat (widget-prompt-spaceify prompt)
-                              (widget-prompt arg nil ""))
-                      nil t))
-                 args)
+	 (mapcar #'(lambda (arg)
+		     (widget-prompt-value
+		      arg
+		      (concat (widget-prompt-spaceify prompt)
+			      (widget-prompt arg nil ""))
+		      nil t))
+		 args)
        ;; If VALUE is bound, the situation is a bit more complex because we
        ;; have to split it into a list of default values for every child. Oh,
        ;; boy, do I miss 'cl here... -- dvl
        (let ((children args)
-             (defaults (widget-apply widget
+	     (defaults (widget-apply widget
 :value-to-internal value))
-             child default result)
-         (while (setq child (pop children))
-           (setq default (pop defaults))
-           (push
-            (widget-prompt-value
-             child
-             (concat (widget-prompt-spaceify prompt)
-                     (widget-prompt child nil ""))
-             default) result))
-         (nreverse result))))))
+	     child default result)
+	 (while (setq child (pop children))
+	   (setq default (pop defaults))
+	   (push
+	    (widget-prompt-value
+	     child
+	     (concat (widget-prompt-spaceify prompt)
+		     (widget-prompt child nil ""))
+	     default) result))
+	 (nreverse result))))))
 
 (defun widget-group-match (widget values)
   ;; Match if the components match.
@@ -3915,7 +3915,7 @@ Either the `:match' or the `:match-alternatives' property must be defined."
       ;; If VALUE is invalid (it doesn't match any choice), discard it by
       ;; considering it unbound:
       (unless old
-        (setq unbound t)))
+	(setq unbound t)))
     ;; Now offer the choice, providing the given default value when/where
     ;; appropriate:
     (while args
@@ -3926,22 +3926,22 @@ Either the `:match' or the `:match-alternatives' property must be defined."
 			current)
 		  choices)))
     (setq current
-          (let ((val (completing-read (concat prompt ": ") choices nil t
-                                      (when old
-                                        (widget-apply old :menu-tag-get)))))
-            (if (stringp val) ;; #### is this really needed ? --dvl
+	  (let ((val (completing-read (concat prompt ": ") choices nil t
+				      (when old
+					(widget-apply old :menu-tag-get)))))
+	    (if (stringp val) ;; #### is this really needed ? --dvl
 		(let ((try (try-completion val choices)))
 		  (when (stringp try) ;; #### and this ? --dvl
 		    (setq val try))
 		  (cdr (assoc val choices)))
 	      nil)))
     (if current
-        (widget-prompt-value current
-                             (concat (widget-prompt-spaceify prompt)
-                                     (widget-get current :tag))
-                             (unless unbound
-                               (when (eq current old) value))
-                             (or unbound (not (eq current old))))
+	(widget-prompt-value current
+			     (concat (widget-prompt-spaceify prompt)
+				     (widget-get current :tag))
+			     (unless unbound
+			       (when (eq current old) value))
+			     (or unbound (not (eq current old))))
       (and (not unbound) value))))
 
 (define-widget 'radio 'radio-button-choice
@@ -4085,8 +4085,8 @@ Here we attempt to define my-list as a choice of either the constant
 nil, or a cons-cell containing a sexp and my-lisp.  This will not work
 because the `choice' widget does not allow recursion.
 
-Using the `lazy' widget you can overcome this problem, as in this 
-example: 
+Using the `lazy' widget you can overcome this problem, as in this
+example:
 
   (define-widget 'sexp-list 'lazy
     \"A list of sexps.\"
@@ -4095,7 +4095,7 @@ example:
   :format "%{%t%}: %v"
   ;; We don't convert :type because we want to allow recursive
   ;; datastructures.  This is slow, so we should not create speed
-  ;; critical widgets by deriving from this. 
+  ;; critical widgets by deriving from this.
   :convert-widget 'widget-value-convert-widget
   :value-create 'widget-type-value-create
   :value-delete 'widget-children-value-delete
@@ -4124,10 +4124,10 @@ Store the newly created widget in the :children attribute.
 The value of the :type attribute should be an unconverted widget type."
   (let ((value (widget-get widget :value))
 	(type (widget-get widget :type)))
-    (widget-put widget :children 
-                (list (widget-create-child-value widget 
-                                                 (widget-convert type)
-                                                 value)))))
+    (widget-put widget :children
+		(list (widget-create-child-value widget
+						 (widget-convert type)
+						 value)))))
 
 (defun widget-type-default-get (widget)
   "Get default value from the :type attribute of WIDGET.

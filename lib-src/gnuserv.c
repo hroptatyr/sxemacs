@@ -10,7 +10,7 @@
  Copyright (C) 1989 Free Software Foundation, Inc.
 
  Author: Andy Norman (ange@hplb.hpl.hp.com), based on 'etc/server.c'
-         from the 18.52 GNU Emacs distribution.
+	 from the 18.52 GNU Emacs distribution.
 
  Please mail bugs and suggestions to the author at the above address.
 */

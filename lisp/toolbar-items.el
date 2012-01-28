@@ -59,7 +59,7 @@
 (defcustom toolbar-open-function 'find-file
   "*Function to call when the open icon is selected."
   :type '(radio (function-item find-file)
-                (function :tag "Other"))
+		(function :tag "Other"))
   :group 'toolbar)
 
 (defun toolbar-open ()
@@ -69,7 +69,7 @@
 (defcustom toolbar-dired-function 'dired
   "*Function to call when the dired icon is selected."
   :type '(radio (function-item dired)
-                (function :tag "Other"))
+		(function :tag "Other"))
   :group 'toolbar)
 
 (defun toolbar-dired (dir)
@@ -79,7 +79,7 @@
 (defcustom toolbar-save-function 'save-buffer
   "*Function to call when the save icon is selected."
   :type '(radio (function-item save-buffer)
-                (function :tag "Other"))
+		(function :tag "Other"))
   :group 'toolbar)
 
 (defun toolbar-save ()
@@ -89,7 +89,7 @@
 (defcustom toolbar-print-function 'lpr-buffer
   "*Function to call when the print icon is selected."
   :type '(radio (function-item lpr-buffer)
-                (function :tag "Other"))
+		(function :tag "Other"))
   :group 'toolbar)
 
 (defun toolbar-print ()
@@ -99,7 +99,7 @@
 (defcustom toolbar-cut-function 'kill-primary-selection
   "*Function to call when the cut icon is selected."
   :type '(radio (function-item kill-primary-selection)
-                (function :tag "Other"))
+		(function :tag "Other"))
   :group 'toolbar)
 
 (defun toolbar-cut ()
@@ -109,7 +109,7 @@
 (defcustom toolbar-copy-function 'copy-primary-selection
   "*Function to call when the copy icon is selected."
   :type '(radio (function-item copy-primary-selection)
-                (function :tag "Other"))
+		(function :tag "Other"))
   :group 'toolbar)
 
 (defun toolbar-copy ()
@@ -119,7 +119,7 @@
 (defcustom toolbar-paste-function 'yank-clipboard-selection
   "*Function to call when the paste icon is selected."
   :type '(radio (function-item yank-clipboard-selection)
-                (function :tag "Other"))
+		(function :tag "Other"))
   :group 'toolbar)
 
 (defun toolbar-paste ()
@@ -134,7 +134,7 @@
 (defcustom toolbar-undo-function 'undo
   "*Function to call when the undo icon is selected."
   :type '(radio (function-item undo)
-                (function :tag "Other"))
+		(function :tag "Other"))
   :group 'toolbar)
 
 (defun toolbar-undo ()
@@ -144,7 +144,7 @@
 (defcustom toolbar-replace-function 'query-replace
   "*Function to call when the replace icon is selected."
   :type '(radio (function-item query-replace)
-                (function :tag "Other"))
+		(function :tag "Other"))
   :group 'toolbar)
 
 (defun toolbar-replace ()
@@ -214,7 +214,7 @@ Mail readers known by default are vm, gnus, rmail, mh, pine, elm,
 		 (const vm) (const gnus) (const rmail) (const mh)
 		 (const pine) (const elm) (const mutt) (const exmh)
 		 (const netscape)
-                 (const send)
+		 (const send)
 		 (symbol :tag "Other"
 			 :validate (lambda (wid)
 				     (if (assq (widget-value wid)
@@ -443,7 +443,7 @@ Newsreaders known by default are gnus, rn, nn, trn, xrn, slrn, pine
   ;; do this now because errors will occur if the icon symbols
   ;; are not initted
   (set-specifier default-toolbar initial-toolbar-spec))
-  
+
 (defun toolbar-add-item-data ( icon-list &optional icon-dir )
   (if (eq icon-dir nil)
       (setq icon-dir toolbar-icon-directory))
@@ -468,7 +468,7 @@ Newsreaders known by default are gnus, rn, nn, trn, xrn, slrn, pine
 	       (concat prefix "-xx.xbm"))))))
    icon-list))
 
-(defvar toolbar-vector-open 
+(defvar toolbar-vector-open
   [toolbar-file-icon            toolbar-open	t       "Open a file"]
   "Define the vector for the \"Open\" toolbar button")
 
@@ -505,7 +505,7 @@ Newsreaders known by default are gnus, rn, nn, trn, xrn, slrn, pine
   "Define the vector for the \"Spell\" toolbar button")
 
 (defvar toolbar-vector-replace
-  [toolbar-replace-icon	        toolbar-replace	t	"Search & Replace"]  
+  [toolbar-replace-icon	        toolbar-replace	t	"Search & Replace"]
   "Define the vector for the \"Replace\" toolbar button")
 
 (defvar toolbar-vector-mail

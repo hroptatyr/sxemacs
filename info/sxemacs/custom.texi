@@ -1,4 +1,3 @@
-
 @node Customization, Quitting, Emulation, Top
 @chapter Customization
 @cindex customization
@@ -453,9 +452,9 @@ Attributes: [ ] Bold: [Toggle]  off (nil)
             [ ] Foreground: white       (sample)
             [ ] Background: blue        (sample)
             [ ] Inverse: [Toggle]  off (nil)
-            [ ] Stipple: 
-            [ ] Font Family: 
-            [ ] Size: 
+            [ ] Stipple:
+            [ ] Font Family:
+            [ ] Size:
             [ ] Strikethru: off
 @end smallexample
 
@@ -473,7 +472,7 @@ variable affects changing @samp{Bold} and @samp{Italic} attributes.
 @c background are @samp{black}, @samp{white}, @samp{gray}, @samp{gray1},
 @c and @samp{gray3}.  Emacs supports these shades of gray by using
 @c background stipple patterns instead of a color.
-@c 
+@c
   Setting, saving and resetting a face work like the same operations for
 options (@pxref{Changing an Option}).
 
@@ -509,7 +508,7 @@ Set up a customization buffer with just one group, @var{group}.
 @item M-x customize-apropos @key{RET} @var{regexp} @key{RET}
 Set up a customization buffer with all the options, faces and groups
 that match @var{regexp}.
-@item M-x customize-saved 
+@item M-x customize-saved
 Set up a customization buffer containing all options and faces that you
 have saved with customization buffers.
 @item M-x customize-customized
@@ -740,7 +739,7 @@ strings.  Presumably the file contains code in a language which is
 enough like Lisp for Lisp mode to be useful but in which comments
 start and end differently.  The prefix and suffix are used in the local
 variables list to make the list look like several lines of comments when
-the compiler or interpreter for that language reads the file. 
+the compiler or interpreter for that language reads the file.
 
   The start of the local variables list must be no more than 3000
 characters from the end of the file, and must be in the last page if the
@@ -852,7 +851,7 @@ set of commands again by invoking the macro.
 executed, but also becomes part of the definition of the macro.  @samp{Def}
 appears in the mode line to remind you of what is going on.  When you are
 finished, the @kbd{C-x )} command (@code{end-kbd-macro}) terminates the
-definition, without becoming part of it. 
+definition, without becoming part of it.
 
   For example,
 
@@ -1098,9 +1097,9 @@ definitions for the same key.  Or you can change the current buffer's
 local map, which affects all buffers using the same major mode.
 
 @menu
-* Interactive Rebinding::      Changing Key Bindings Interactively   
+* Interactive Rebinding::      Changing Key Bindings Interactively
 * Programmatic Rebinding::     Changing Key Bindings Programmatically
-* Key Bindings Using Strings:: Using Strings for Changing Key Bindings 
+* Key Bindings Using Strings:: Using Strings for Changing Key Bindings
 @end menu
 
 @node Interactive Rebinding
@@ -1112,7 +1111,7 @@ local map, which affects all buffers using the same major mode.
 @table @kbd
 @item M-x global-set-key @key{RET} @var{key} @var{cmd} @key{RET}
 Defines @var{key} globally to run @var{cmd}.
-@item M-x local-set-key @key{RET} @var{keys} @var{cmd} @key{RET} 
+@item M-x local-set-key @key{RET} @var{keys} @var{cmd} @key{RET}
 Defines @var{key} locally (in the major mode now in effect) to run
 @var{cmd}.
 @item M-x local-unset-key @key{RET} @var{keys} @key{RET}
@@ -1181,7 +1180,7 @@ Defines @var{keys} globally to run @var{cmd}.
 @item @code{(define-key @var{keymap} @var{keys} @var{def})}
 Defines @var{keys} to run @var{def} in the keymap @var{keymap}.
 @end table
- 
+
 @var{keymap} is a keymap object.
 
 @var{keys} is the sequence of keystrokes to bind.
@@ -1215,7 +1214,7 @@ representations of key sequences as vectors of keystrokes.
 @xref{Keystrokes}, for more information about the rules for constructing
 key sequences.
 
-Emacs allows you to abbreviate representations for key sequences in 
+Emacs allows you to abbreviate representations for key sequences in
 most places where there is no ambiguity.
 Here are some rules for abbreviation:
 
@@ -1237,13 +1236,13 @@ Here are some examples of programmatically binding keys:
 @example
 
 ;;;  Bind @code{my-command} to @key{f1}
-(global-set-key 'f1 'my-command)                
+(global-set-key 'f1 'my-command)
 
 ;;;  Bind @code{my-command} to @kbd{Shift-f1}
 (global-set-key '(shift f1) 'my-command)
 
 ;;; Bind @code{my-command} to @kbd{C-c Shift-f1}
-(global-set-key '[(control c) (shift f1)] 'my-command)  
+(global-set-key '[(control c) (shift f1)] 'my-command)
 
 ;;; Bind @code{my-command} to the middle mouse button.
 (global-set-key 'button2 'my-command)
@@ -1260,13 +1259,13 @@ Here are some examples of programmatically binding keys:
 @comment (global-set-key '(meta control backspace) 'my-command)
 @comment (global-set-key '(meta control h) 'my-command)
 @comment (global-set-key '(meta control H) 'my-command)
-@comment 
+@comment
 @comment ;; note that this binds two key sequences: ``control-j'' and ``linefeed''.
 @comment ;;
 @comment (global-set-key "\^J" 'my-command)
 
 @node Key Bindings Using Strings
-@subsubsection Using Strings for Changing Key Bindings 
+@subsubsection Using Strings for Changing Key Bindings
 
   For backward compatibility, you can still use strings to represent
 key sequences.  Thus you can use commands like the following:
@@ -1277,7 +1276,7 @@ key sequences.  Thus you can use commands like the following:
 @end example
 
 Note, however, that in some cases you may be binding more than one
-key sequence by using a single command.  This situation can 
+key sequence by using a single command.  This situation can
 arise because in ASCII, @kbd{C-i} and @key{TAB} have
 the same representation.  Therefore, when Emacs sees:
 
@@ -1311,11 +1310,11 @@ Here is a table of pairs of key sequences that behave in a
 similar fashion:
 
 @example
-        control h      backspace           
+        control h      backspace
         control l      clear
-        control i      tab 
-        control m      return              
-        control j      linefeed 
+        control i      tab
+        control m      return
+        control j      linefeed
         control [      escape
         control @@      control space
 @end example
@@ -1846,7 +1845,7 @@ one of the symbols, the associated sound data is played instead of the
 standard beep.  This only works if you are logged in on the console of a
 machine with audio hardware. To listen to a sound of the provided type,
 call the function @code{play-sound} with the argument @var{sound}. You
-can also set the volume of the sound with the optional argument 
+can also set the volume of the sound with the optional argument
 @var{volume}.@refill
 @cindex ding
 
@@ -1856,7 +1855,7 @@ Subsequent elements of the list are alternating keyword/value pairs:
 
 @table @code
 @item sound
-A string of raw sound data, or the name of another sound to play.   
+A string of raw sound data, or the name of another sound to play.
 The symbol @code{t} here means use the default X beep.
 
 @item volume
@@ -1893,7 +1892,7 @@ should be.  Elements of the @code{sound-alist} may override this value.
 This variable applies to the standard X bell sound as well as sound files.
 
 If the symbol @code{t} is in place of a sound-string, Emacs uses the
-default X beep.  This allows you to define beep-types of 
+default X beep.  This allows you to define beep-types of
 different volumes even when not running on the console.
 
 @findex load-sound-file
@@ -1933,7 +1932,7 @@ Completion was not possible
 @item y-or-n-p
 You type something other than the required @code{y} or @code{n}
 
-@item yes-or-no-p       
+@item yes-or-no-p
 You type something other than @code{yes} or @code{no}
 @end table
 
@@ -1965,13 +1964,13 @@ Swap the foreground and background colors of the given @var{face}.
 Make the font of the given @var{face} bold.  When called from a
 program, returns @code{nil} if this is not possible.
 @item M-x make-face-bold-italic
-Make the font of the given @var{face} bold italic.  
+Make the font of the given @var{face} bold italic.
 When called from a program, returns @code{nil} if not possible.
 @item M-x make-face-italic
-Make the font of the given @var{face} italic.  
+Make the font of the given @var{face} italic.
 When called from a program, returns @code{nil} if not possible.
 @item M-x make-face-unbold
-Make the font of the given @var{face} non-bold.  
+Make the font of the given @var{face} non-bold.
 When called from a program, returns @code{nil} if not possible.
 @item M-x make-face-unitalic
 Make the font of the given @var{face} non-italic.
@@ -1982,11 +1981,11 @@ When called from a program, returns @code{nil} if not possible.
 @item M-x make-face-smaller
 Make the font of the given @var{face} a little smaller.
 When called from a program, returns @code{nil} if not possible.
-@item M-x set-face-background 
+@item M-x set-face-background
 Change the background color of the given @var{face}.
 @item M-x set-face-background-pixmap
 Change the background pixmap of the given @var{face}.
-@item M-x set-face-font 
+@item M-x set-face-font
 Change the font of the given @var{face}.
 @item M-x set-face-foreground
 Change the foreground color of the given @var{face}.
@@ -2002,7 +2001,7 @@ You can exchange the foreground and background color of the selected
 @var{face} with the function @code{invert-face}. If the face does not
 specify both foreground and background, then its foreground and
 background are set to the background and foreground of the default face.
-When calling this from a program, you can supply the optional argument 
+When calling this from a program, you can supply the optional argument
 @var{frame} to specify which frame is affected; otherwise, all frames
 are affected.
 
@@ -2038,7 +2037,7 @@ environments is described in @ref{Face Resources}.
 You can set the background color of the specified @var{face} with the
 function @code{set-face-background}.  The argument @code{color} should
 be a string, the name of a color.  When called from a program, if the
-optional @var{frame} argument is provided, the face is changed only 
+optional @var{frame} argument is provided, the face is changed only
 in that frame; otherwise, it is changed in all frames.
 
 @findex set-face-background-pixmap
@@ -2064,10 +2063,10 @@ before the @code{x-bitmap-file-path} variable.
 You can set the font of the specified @var{face} with the function
 @code{set-face-font}.  The @var{font} argument should be a string, the
 name of a font.  When called from a program, if the
-optional @var{frame} argument is provided, the face is changed only 
+optional @var{frame} argument is provided, the face is changed only
 in that frame; otherwise, it is changed in all frames.
 
-@findex set-face-foreground 
+@findex set-face-foreground
 You can set the foreground color of the specified @var{face} with the
 function @code{set-face-foreground}.  The argument @var{color} should be
 a string, the name of a color.  If the optional @var{frame} argument is
@@ -2110,8 +2109,8 @@ the application class being used.
 
 The examples in this section assume the application class is @samp{Emacs}.
 
-The Emacs resources are generally set per-frame. Each Emacs frame can have 
-its own name or the same name as another, depending on the name passed to the 
+The Emacs resources are generally set per-frame. Each Emacs frame can have
+its own name or the same name as another, depending on the name passed to the
 @code{make-frame} function.
 
 You can specify resources for all frames with the syntax:
@@ -2216,7 +2215,7 @@ ApplicationShell (@code{Emacs.geometry}) if it is specified, otherwise
 from the geometry of the frame.
 
 @item
-For subsequent frames, the position is taken only from the frame, and 
+For subsequent frames, the position is taken only from the frame, and
 never from the ApplicationShell.
 @end itemize
 
@@ -2247,7 +2246,7 @@ complete discussion of how this works.
 Whether this frame should appear in the iconified state.
 
 @item @code{internalBorderWidth} (class @code{InternalBorderWidth}): int
-How many blank pixels to leave between the text and the edge of the 
+How many blank pixels to leave between the text and the edge of the
 window.
 
 @item @code{interline} (class @code{Interline}): int
@@ -2445,7 +2444,7 @@ displayed in.
 
 @item zmacs-region
 This is the face that mouse selections are displayed in.
- 
+
 @item isearch
 This is the face that the matched text being searched for is displayed
 in.
@@ -2527,7 +2526,7 @@ then one way to specify the font of the menubar would be
 Emacs*menubar*font: *-courier-medium-r-*-*-*-120-*-*-*-*-*-*
 @end example
 
-If both the Lucid Motif-lookalike menu widgets and X Font Sets are 
+If both the Lucid Motif-lookalike menu widgets and X Font Sets are
 configured to allow multilingual menubars, then one uses
 
 @example
@@ -2541,7 +2540,7 @@ XLFD is acceptable; specifying more than one for a given registry
 resources (eg, menubars) are ignored in favor of the corresponding
 .fontSet resources.
 
-If the Motif library is being used, then one would have to use 
+If the Motif library is being used, then one would have to use
 
 @example
 Emacs*menubar*fontList: *-courier-medium-r-*-*-*-120-*-*-*-*-*-*
@@ -2550,5 +2549,5 @@ Emacs*menubar*fontList: *-courier-medium-r-*-*-*-120-*-*-*-*-*-*
 because the Motif library uses the @code{fontList} resource name instead
 of @code{font}, which has subtly different semantics.
 
-The same is true of the scrollbars: They accept whichever resources are 
+The same is true of the scrollbars: They accept whichever resources are
 appropriate for the toolkit in use.

@@ -26,21 +26,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  * This package is an SSL implementation written
  * by Eric Young (eay@cryptsoft.com).
  * The implementation was written so as to conform with Netscapes SSL.
- * 
+ *
  * This library is free for commercial and non-commercial use as long as
  * the following conditions are aheared to.  The following conditions
  * apply to all code found in this distribution, be it the RC4, RSA,
  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
  * included with this distribution is covered by the same copyright terms
  * except that the holder is Tim Hudson (tjh@cryptsoft.com).
- * 
+ *
  * Copyright remains Eric Young's, and as such any Copyright notices in
  * the code are not to be removed.
  * If this package is used in a product, Eric Young should be given attribution
  * as the author of the parts of the library used.
  * This can be in the form of a textual message at program startup or
  * in documentation (online or textual) provided with the package.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -55,10 +55,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  *     Eric Young (eay@cryptsoft.com)"
  *    The word 'cryptographic' can be left out if the rouines from the library
  *    being used are not cryptographic related :-).
- * 4. If you include any Windows specific code (or a derivative thereof) from 
+ * 4. If you include any Windows specific code (or a derivative thereof) from
  *    the apps directory (application code) you must include an acknowledgement:
  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -70,7 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * The licence and distribution terms for any publically available version or
  * derivative of this code cannot be changed.  i.e. this code cannot simply be
  * copied and put under another distribution licence
@@ -97,11 +97,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  *  - all of EVP interface functionality minus `engine' support
  *  - all of PEM interface functionality
  *  - a simple SSL client
- * 
+ *
  *  In addition, we are trying hard to provide not only an exact elisp
  *  copy of openssl, but also a _comprehensive_ one
  *
- * 
+ *
  * * src/openssl.c: functions overview:
  *
  * - General
@@ -163,7 +163,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  *  ossl-connect - constructor for SSL connection objects
  *  ossl-finish - destructor of SSL connection objects
  *  ossl-pending - predicate if data is available for read
- *  ossl-read - 
+ *  ossl-read -
  *  ossl-write -
  *  ossl-x509-get-subject
  *  ossl-x509-get-issuer
@@ -172,7 +172,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  *  ossl-sslcipher-name
  *  ossl-sslcipher-bits
  *
- * 
+ *
  * * Todo (internally):
  *  - implement the usage of engines
  *  - implement X.509 stuff
@@ -277,7 +277,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  *    (ossl-ec-pkey-p pkey)
  *    ;; generate an ec (elliptic curve) key
  *    ;; Note: this is probably disabled in your openssl
- *    (when (featurep 'openssl-ec) 
+ *    (when (featurep 'openssl-ec)
  *      (setq pkey (ossl-ec-generate-key))
  *      (ossl-ec-pkey-p pkey))
  *
@@ -285,7 +285,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  *  Note: For these functions you must have enabled DH in your OpenSSL lib
  *    ;; not yet
  *
- *  - HYBRID 
+ *  - HYBRID
  *    (setq key (ossl-rsa-generate-key 2048 3))
  *    (setq enc (ossl-seal 'AES-256-ECB "a tight secret" key))
  *    (ossl-open 'AES-256-ECB (car enc) key (cadr enc) (caddr enc))
@@ -428,7 +428,7 @@ extern Lisp_Object Qfile_writable_p;
 /*
  *
  * AUXILIARY
- * 
+ *
  */
 DEFUN("ossl-version", Fossl_version, 0, 0, 0, /*
 Return a descriptive version number of the OpenSSL in use.
@@ -506,7 +506,7 @@ do {									\
 	if (!__md) {							\
 		EVP_cleanup();						\
 		return -1;						\
-	} 								\
+	}								\
 									\
 	__kl = fun(__md);						\
 									\
@@ -581,7 +581,7 @@ do {									\
 	if (!__ciph) {							\
 		EVP_cleanup();						\
 		return -1;						\
-	} 								\
+	}								\
 									\
 	__kl = fun(__ciph);						\
 									\
@@ -704,9 +704,9 @@ Return the operation mode of CIPHER.
 
 
 /*
- * 
+ *
  * RAND
- * 
+ *
  */
 DEFUN("ossl-rand-bytes", Fossl_rand_bytes, 1, 1, 0, /*
 Return COUNT bytes of randomness.
@@ -909,7 +909,7 @@ binary string data.
 			return Qnil;
 		}
 		EVP_DigestUpdate(mdctx, md_value, n);
-   	} while (n > 0);
+	} while (n > 0);
 
 	EVP_DigestFinal_ex(mdctx, md_value, &md_len);
 	EVP_MD_CTX_cleanup(mdctx);
@@ -922,10 +922,10 @@ binary string data.
 }
 
 
-/* 
+/*
  *
  * HMAC (aka keyed hashes)
- * 
+ *
  */
 DEFUN("ossl-hmac", Fossl_hmac, 3, 3, 0, /*
 Return the message authentication code of MSG
@@ -1052,7 +1052,7 @@ binary string data.
 			return Qnil;
 		}
 		HMAC_Update(hmacctx, outbuf, n);
-   	} while (n > 0);
+	} while (n > 0);
 
 	HMAC_Final(hmacctx, outbuf, &outlen);
 	HMAC_CTX_cleanup(hmacctx);
@@ -1065,10 +1065,10 @@ binary string data.
 }
 
 
-/* 
- * 
+/*
+ *
  * SYMMETRIC CIPHER
- * 
+ *
  */
 DEFUN("ossl-bytes-to-key", Fossl_bytes_to_key, 5, 5, 0, /*
 Derive a key and initialisation vector (iv) suitable for a cipher.
@@ -1090,7 +1090,7 @@ unique key and IV.
 COUNT \(a positive integer\) is the iteration count to use. This
 indicates how often the hash algorithm is called recursively.
 
-Note: You probably want to put a wrapping encoder function 
+Note: You probably want to put a wrapping encoder function
 \(like `base16-encode-string'\) around it, since this returns
 binary string data.
 */
@@ -1170,7 +1170,7 @@ you have compiled. See `ossl-available-ciphers'.
 
 STRING is the text to be encrypted.
 
-KEY should be a key generated suitably for this cipher, for example 
+KEY should be a key generated suitably for this cipher, for example
 by `ossl-bytes-to-key'.
 
 Optional fourth argument IV should be an initialisation vector
@@ -1363,7 +1363,7 @@ binary string data.
 	}
 
 	fseek(fp, 0, SEEK_END);
-	file_size = ftell(fp); 
+	file_size = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 
 
@@ -1538,7 +1538,7 @@ non-nil, use this IV instead.
 			   C_STRING_ALLOCA, string_ext, OSSL_CODING);
 	string_len = OSSL_STRING_LENGTH(string);
 
-	if (!string_len) 
+	if (!string_len)
 		error ("string must be of non-zero positive length.");
 
 	OpenSSL_add_all_algorithms();
@@ -1677,7 +1677,7 @@ encrypted data redirected.
 	}
 
 	fseek(fp, 0, SEEK_END);
-	file_size = ftell(fp); 
+	file_size = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 
 
@@ -1793,10 +1793,10 @@ encrypted data redirected.
 }
 
 
-/* 
- * 
+/*
+ *
  * ASYMMETRIC CIPHER
- * 
+ *
  */
 /* This is an opaque object for storing PKEYs in lisp */
 Lisp_Object Qevp_pkeyp;
@@ -1823,7 +1823,7 @@ print_evp_pkey(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	if (x509) {
 		X509_NAME *iss = X509_get_issuer_name(x509);
 		X509_NAME *sub = X509_get_subject_name(x509);
-		write_c_string(" X509 Certificate", printcharfun); 
+		write_c_string(" X509 Certificate", printcharfun);
 		write_c_string(" iss:", printcharfun);
 		write_c_string(X509_NAME_oneline(sub, NULL, 0), printcharfun);
 		write_c_string(" sub:", printcharfun);
@@ -1835,25 +1835,25 @@ print_evp_pkey(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 			write_c_string(";", printcharfun);
 
 		if (rsa_pkey_p(pkey))
-			write_c_string(" RSA", printcharfun); 
+			write_c_string(" RSA", printcharfun);
 		else if (dsa_pkey_p(pkey))
-			write_c_string(" DSA", printcharfun); 
+			write_c_string(" DSA", printcharfun);
 		else if (ec_pkey_p(pkey))
-			write_c_string(" EC", printcharfun); 
+			write_c_string(" EC", printcharfun);
 
 		if (ossl_pkey_has_private_data(pkey))
-			write_c_string(" private/public key", printcharfun); 
+			write_c_string(" private/public key", printcharfun);
 		else if (ossl_pkey_has_public_data(pkey))
-			write_c_string(" public key", printcharfun); 
+			write_c_string(" public key", printcharfun);
 		else
-			write_c_string(" empty key", printcharfun); 
+			write_c_string(" empty key", printcharfun);
 
 		if (EVP_PKEY_size(pkey) > 0) {
 			write_fmt_str(printcharfun, ", size %d", EVP_PKEY_size(pkey)*8);
 		}
 	}
 
-	write_c_string(">", printcharfun); 
+	write_c_string(">", printcharfun);
 
 	/* avoid some warning */
 	if (escapeflag);
@@ -1928,7 +1928,7 @@ Return t iff OBJECT is a pkey, nil otherwise.
 }
 
 DEFUN("ossl-pkey-size", Fossl_pkey_size, 1, 1, 0, /*
-Return the size a public key PKEY in bits. 
+Return the size a public key PKEY in bits.
 */
       (pkey))
 {
@@ -2153,7 +2153,7 @@ This function is not native OpenSSL.
 		error ("pkey1 must be of RSA type");
 	if (!rsa_pkey_p(pk2))
 		error ("pkey2 must be of RSA type");
-	
+
 	rk1 = (pk1->pkey).rsa;
 	rk2 = (pk2->pkey).rsa;
 
@@ -2300,7 +2300,7 @@ This function is not native OpenSSL.
 		error ("pkey1 must be of DSA type");
 	if (!dsa_pkey_p(pk2))
 		error ("pkey2 must be of DSA type");
-	
+
 	dk1 = (pk1->pkey).dsa;
 	dk2 = (pk2->pkey).dsa;
 
@@ -2501,11 +2501,11 @@ DEFUN("ossl-seal", Fossl_seal, 3, 3, 0, /*
 Return an envelope derived from encrypting STRING by CIPHER under PKEY
 with the hybrid technique.
 
-That is, create a random key/iv pair for the symmetric encryption with 
+That is, create a random key/iv pair for the symmetric encryption with
 CIPHER and encrypt that key/iv asymmetrically with the provided public
 key.
 
-The envelope returned is a list 
+The envelope returned is a list
 \(encrypted_string encrypted_key encrypted_iv\)
 where
 `encrypted_string' is the (symmetrically) encrypted message
@@ -2730,7 +2730,7 @@ That is, hash the message STRING with the message digest DIGEST and
 encrypt the result with the private key PKEY.
 
 Note: Due to some relationship between the public key system and the
-message digest you cannot use every digest algorithm with every 
+message digest you cannot use every digest algorithm with every
 private key type.
 The most certain results will be achieved using
 RSA keys with RSA-* digests, DSA keys with DSA-* digests.
@@ -3026,7 +3026,7 @@ PASSWORD is ignored in this case.
 	CHECK_SYMBOL(cipher);
 
 	OpenSSL_add_all_algorithms();
-	
+
 	if (NILP(cipher)) {
 		ciph = NULL;
 		pass = NULL;
@@ -3100,7 +3100,7 @@ Return PKEY as PEM encoded string.
 	EVP_PKEY *pk;
 	Lisp_Object result;
 	/* bio stuff */
-        BIO *b;
+	BIO *b;
 	/* gc stuff */
 	struct gcpro gcpro1;
 
@@ -3113,7 +3113,7 @@ Return PKEY as PEM encoded string.
 	if (!(b = BIO_new(BIO_s_null()))) {
 		UNGCPRO;
 		error("cannot open memory buffer");
-                return Qnil;
+		return Qnil;
 	}
 
 	result = build_string("");
@@ -3157,7 +3157,7 @@ PASSWORD is ignored in this case.
 	const EVP_CIPHER *ciph;
 	char *pass;
 	/* bio stuff */
-        BIO *b;
+	BIO *b;
 	struct gcpro gcpro1, gcpro2, gcpro3;
 
 	GCPRO3(pkey, cipher, password);
@@ -3174,7 +3174,7 @@ PASSWORD is ignored in this case.
 	CHECK_SYMBOL(cipher);
 
 	OpenSSL_add_all_algorithms();
-	
+
 	if (NILP(cipher)) {
 		ciph = NULL;
 		pass = NULL;
@@ -3200,7 +3200,7 @@ PASSWORD is ignored in this case.
 	if (!(b = BIO_new(BIO_s_null()))) {
 		UNGCPRO;
 		error("cannot open memory buffer");
-                return Qnil;
+		return Qnil;
 	}
 
 	result = build_string("");
@@ -3273,7 +3273,7 @@ print_ssl_conn(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	parent = XSSLCONN(obj)->parent;
 
 	write_c_string("#<OpenSSL socket layer: ", printcharfun);
-	if (conn == NULL) 
+	if (conn == NULL)
 		write_c_string("dead", printcharfun);
 	else
 		write_c_string(SSL_get_version(conn), printcharfun);
@@ -3486,30 +3486,30 @@ ossl_ssl_prepare_cmeth(Lisp_Object method)
 		error("sslv2 client method not supported");
 #endif
 	} else if (EQ(method, Qssl3)) {
-#if HAVE_SSLV3_CLIENT_METHOD 
+#if HAVE_SSLV3_CLIENT_METHOD
 		meth = (SSL_METHOD *)SSLv3_client_method();
 #else
 		error("sslv3 client method not supported");
 #endif
 	} else if (EQ(method, Qssl23)) {
-#if HAVE_SSLV23_CLIENT_METHOD 
+#if HAVE_SSLV23_CLIENT_METHOD
 		meth = (SSL_METHOD *)SSLv23_client_method();
 #else
 		error("sslv23 client method not supported");
 #endif
 	} else if (EQ(method, Qtls1)) {
-#if HAVE_TLSV1_CLIENT_METHOD 
+#if HAVE_TLSV1_CLIENT_METHOD
 		meth = (SSL_METHOD *)TLSv1_client_method();
 #else
 		error("tlsv1 client method not supported");
 #endif
-        } else {
-#if HAVE_TLSV1_CLIENT_METHOD 
+	} else {
+#if HAVE_TLSV1_CLIENT_METHOD
 		meth = (SSL_METHOD *)TLSv1_client_method();
 #else
 		error("default tlsv1 client method not supported");
 #endif
-        }
+	}
 	if (!RAND_status())
 		error("OSSL: not enough random data");
 
@@ -3541,25 +3541,25 @@ ossl_ssl_prepare_smeth(Lisp_Object method)
 		error("sslv2 client method not supported");
 #endif
 	} else if (EQ(method, Qssl3)) {
-#if HAVE_SSLV3_SERVER_METHOD 
+#if HAVE_SSLV3_SERVER_METHOD
 		meth = (SSL_METHOD *)SSLv3_server_method();
 #else
 		error("sslv3 client method not supported");
 #endif
 	} else if (EQ(method, Qssl23)) {
-#if HAVE_SSLV23_SERVER_METHOD 
+#if HAVE_SSLV23_SERVER_METHOD
 		meth = (SSL_METHOD *)SSLv23_server_method();
 #else
 		error("sslv23 client method not supported");
 #endif
 	} else if (EQ(method, Qtls1)) {
-#if HAVE_TLSV1_SERVER_METHOD 
+#if HAVE_TLSV1_SERVER_METHOD
 		meth = (SSL_METHOD *)TLSv1_server_method();
 #else
 		error("tlsv1 client method not supported");
 #endif
 	} else {
-#if HAVE_SSLV23_SERVER_METHOD 
+#if HAVE_SSLV23_SERVER_METHOD
 		meth = (SSL_METHOD *)SSLv23_server_method();
 #else
 		error("default sslv23 client method not supported");
@@ -4443,7 +4443,7 @@ the car and a verbose string in the cdr.
 
 	CHECK_SSLCONN(ssl_conn);
 
-	conn = XSSLCONN(ssl_conn)->ssl_conn;	
+	conn = XSSLCONN(ssl_conn)->ssl_conn;
 	vrc = SSL_get_verify_result(conn);
 
 	result = Fcons(

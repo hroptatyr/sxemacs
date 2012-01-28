@@ -197,11 +197,11 @@ run_window_configuration_hook ( Lisp_Object win )
 		win = Fselected_window(Qnil);
 
 	CHECK_WINDOW(win);
-   
+
 	w = XWINDOW (win);
 	frame = WINDOW_FRAME (w);
 	f = XFRAME (frame);
- 
+
 	if ( ! f->window_configuration_hook ) {
 		f->window_configuration_hook = 1;
 		va_run_hook_with_args(Qwindow_configuration_hook, 1, win);
@@ -581,7 +581,7 @@ struct buffer *window_display_buffer(struct window *w)
 	if (XFRAME(w->frame)->mirror_dirty)
 		update_frame_window_mirror(XFRAME(w->frame));
 	t = find_window_mirror(w);
-	if (!t) 
+	if (!t)
 	{
 		abort();
 		return NULL;
@@ -598,7 +598,7 @@ void set_window_display_buffer(struct window *w, struct buffer *b)
 	t = find_window_mirror(w);
 	if (!t)
 		abort();
-	else 
+	else
 		t->buffer = b;
 }
 
@@ -1141,7 +1141,7 @@ frame is used.
 }
 
 DEFUN("minibuffer-window", Fminibuffer_window, 0, 1, 0,	/*
-Return the window used now for minibuffers.  
+Return the window used now for minibuffers.
 If the optional argument CON-DEV-OR-FRAME is specified and is a frame,
 return the minibuffer window used by that frame.  If CON-DEV-OR-FRAME
 is a device, then the selected frame on that device will be used.  If
@@ -1912,7 +1912,7 @@ Normally, you cannot delete the last non-minibuffer-only frame (you
 must use `save-buffers-kill-emacs' or `kill-emacs').  However, if
 optional second argument FORCE is non-nil, you can delete the last
 frame. (This will automatically call `save-buffers-kill-emacs'.)
- 
+
 */
       (window, force))
 {
@@ -2057,7 +2057,7 @@ frame. (This will automatically call `save-buffers-kill-emacs'.)
 			    (sib,
 			     (WINDOW_WIDTH(XWINDOW(sib)) + WINDOW_WIDTH(w)), 1);
 
- 
+
 		run_window_configuration_hook( sib );
 
 	}
@@ -3012,7 +3012,7 @@ in the same place on the frame.  Doing this depends on
 the value of (window-start WINDOW), so if calling this function
 in a program gives strange scrolling, make sure the window-start
 value is reasonable when this function is called.
- 
+
 */
       (window))
 {
@@ -4129,13 +4129,13 @@ change_window_height(Lisp_Object window, int delta, Lisp_Object horizontalp,
 		parent = w->parent;
 		if (NILP(parent)) {
 			if (widthflag) {
-                                int new_pixsize;
-                                sizep = &CURSIZE (w);
-                                dim = CURCHARSIZE (w);
-                                new_pixsize = inpixels?(*sizep + delta):(dim+delta);
-                                set_window_pixsize (window, new_pixsize, 0, 0);
-                                return;
-                        }
+				int new_pixsize;
+				sizep = &CURSIZE (w);
+				dim = CURCHARSIZE (w);
+				new_pixsize = inpixels?(*sizep + delta):(dim+delta);
+				set_window_pixsize (window, new_pixsize, 0, 0);
+				return;
+			}
 			break;
 		}
 		if (widthflag ? !NILP(XWINDOW(parent)->hchild)
@@ -5923,7 +5923,7 @@ its value is -not- saved.
 	/* #### When using `push-window-configuration', often the minibuffer
 	   ends up as the selected window because functions run as the result
 	   of user interaction e.g. hyper-apropos. It seems to me the sensible
-	   thing to do is not record the minibuffer here. 
+	   thing to do is not record the minibuffer here.
 
 	   #### Unfortunately this is a change to previous behaviour,
 	   however logical it may be, so revert for the moment. */
@@ -6269,7 +6269,7 @@ Function(s) to call when a frame's window configuration has changed.
 
 Please see (Info-goto-node "(lispref)Window Configuration Hook") where all the
 details are documented.
-*/ ); 
+*/ );
 
 	Vwindow_configuration_hook = Qnil;
 
@@ -6320,9 +6320,9 @@ This is a specifier; use `set-specifier' to change it.
 	set_specifier_caching(Vhas_modeline_p,
 			      offsetof(struct window, has_modeline_p),
 			      /* #### It's strange that we need a special
-			         flag to indicate that the shadow-thickness
-			         has changed, but not one to indicate that
-			         the modeline has been turned off or on. */
+				 flag to indicate that the shadow-thickness
+				 has changed, but not one to indicate that
+				 the modeline has been turned off or on. */
 			      some_window_value_changed, 0, 0, 0);
 
 	DEFVAR_SPECIFIER("vertical-divider-always-visible-p", &Vvertical_divider_always_visible_p	/*

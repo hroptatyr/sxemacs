@@ -12,7 +12,7 @@ AC_DEFUN([SXE_PROG_MAKEINFO], [dnl
 		# This should be a good enough error message even in complement
 		# to the libtool missing
 		AC_MSG_ERROR([
-Could not find the makeinfo program. Check your PATH or install the texinfo package. 
+Could not find the makeinfo program. Check your PATH or install the texinfo package.
 For more details see the INSTALL and PROBLEMS files.
 SXEmacs generates the documentation during the build process.])
 		exit 1
@@ -118,8 +118,8 @@ AC_DEFUN([SXE_CHECK_BUILDCHAIN], [dnl
 	SXE_CHECK_AUTOTOOLS
 	SXE_CHECK_USER_VARS
 
-dnl 	dnl Soon ...
-dnl 	dnl m4_ifdef([LT_INIT], [LT_INIT], [AC_PROG_LIBTOOL])
+dnl	dnl Soon ...
+dnl	dnl m4_ifdef([LT_INIT], [LT_INIT], [AC_PROG_LIBTOOL])
 	AC_PROG_RANLIB
 	SXE_PROG_AR
 	SXE_PROG_MAKEINFO

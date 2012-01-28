@@ -143,11 +143,11 @@ printer proceeds to the next function on the list.")
 (defun print-custom-object (obj &optional stream pl)
   "Print custom object OBJ into STREAM using print level PL."
   (let ((cpfs custom-print-functions)
-        (ret nil))
+	(ret nil))
     (while cpfs
       (when (funcall (car cpfs) obj stream pl)
-        (setq cpfs nil
-              ret t))
+	(setq cpfs nil
+	      ret t))
       (setq cpfs (cdr cpfs)))
     ret))
 
@@ -155,7 +155,7 @@ printer proceeds to the next function on the list.")
   "Print object OBJ not using custom printers."
   (let ((custom-object-printer nil))
     (princ obj stream)))
-  
+
 ;; Install custom printer
 (setq custom-object-printer 'print-custom-object)
 
@@ -212,7 +212,7 @@ used on lists."
 (defmacro pushnew (x place &rest keys)
   "(pushnew X PLACE): insert X at the head of the list stored in PLACE.
 Like (push X PLACE), except that the list is unmodified if X is `eql'
-to an element already on the list.  
+to an element already on the list.
 Keywords supported: :test :test-not :key"
   (if (symbolp place) (list 'setq place (list* 'adjoin x place keys))
     (list* 'callf2 'adjoin x place keys)))

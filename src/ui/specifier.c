@@ -235,9 +235,9 @@ void prune_specifiers(void)
 #  define MARKED_P(a) 1
 #endif
 			assert(!MAGIC_SPECIFIER_P(sp)
-			       || ( BODILY_SPECIFIER_P(sp) && 
+			       || ( BODILY_SPECIFIER_P(sp) &&
 				    MARKED_P(sp->fallback) )
-			       || ( GHOST_SPECIFIER_P(sp) && 
+			       || ( GHOST_SPECIFIER_P(sp) &&
 				    MARKED_P(sp->magic_parent)));
 #undef MARKED_P
 			/* This specifier is garbage.  Remove it from the list. */

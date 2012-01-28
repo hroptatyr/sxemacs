@@ -539,12 +539,12 @@ is treated as a regexp.  See \\[isearch-forward] for more info."
 	  ;; #### What we really need is a buffer-local
 	  ;; overriding-local-map.  See isearch-pre-command-hook for
 	  ;; more details.
- 	  overriding-local-map (progn
- 				 (set-keymap-parents isearch-mode-map
- 				  (nconc (current-minor-mode-maps)
+	  overriding-local-map (progn
+				 (set-keymap-parents isearch-mode-map
+				  (nconc (current-minor-mode-maps)
 					 (and (current-local-map)
 					      (list (current-local-map)))))
- 				 isearch-mode-map)
+				 isearch-mode-map)
 	  isearch-selected-frame (selected-frame)
 
 	  )
@@ -771,7 +771,7 @@ If first char entered is \\[isearch-yank-word], then do word search instead."
 	  ;; like switch buffers and start another isearch, and return.
 ;;	(condition-case nil
 	  (isearch-done t t)
-          ;;#### What does this mean?  There is no such condition!
+	  ;;#### What does this mean?  There is no such condition!
 ;;	(exit nil))			; was recursive editing
 
 	  (unwind-protect
@@ -968,9 +968,9 @@ Deletes when `delete-key-deletes-forward' is t and C-h is used for deleting
 backwards."
   (interactive)
   (if (and delete-key-deletes-forward
-           (case (device-type)
-             ('tty (eq tty-erase-char ?\C-h))
-             ('x (not (x-keysym-on-keyboard-sans-modifiers-p 'backspace)))))
+	   (case (device-type)
+	     ('tty (eq tty-erase-char ?\C-h))
+	     ('x (not (x-keysym-on-keyboard-sans-modifiers-p 'backspace)))))
       (isearch-delete-char)
     (isearch-mode-help)))
 
@@ -1047,8 +1047,8 @@ backwards."
       (setq isearch-case-fold-search
 	    (no-upper-case-p isearch-string isearch-regexp)))
   (setq isearch-mode (if case-fold-search
-                         (if isearch-case-fold-search
-                             " Isearch"  ;As God Intended Mode
+			 (if isearch-case-fold-search
+			     " Isearch"  ;As God Intended Mode
 			   " ISeARch") ;Warn about evil case via StuDLYcAps.
 		       " Isearch")))
 
@@ -1291,9 +1291,9 @@ Obsolete."
   ;; Helper for isearch-complete and isearch-complete-edit
   ;; Return t if completion OK, nil if no completion exists.
   (let* ((ring (if isearch-regexp regexp-search-ring search-ring))
-         (alist (mapcar (function (lambda (string) (list string))) ring))
-         (completion-ignore-case case-fold-search)
-         (completion (try-completion isearch-string alist)))
+	 (alist (mapcar (function (lambda (string) (list string))) ring))
+	 (completion-ignore-case case-fold-search)
+	 (completion (try-completion isearch-string alist)))
     (cond
      ((eq completion t)
       ;; isearch-string stays the same
@@ -1435,12 +1435,12 @@ If there is no completion possible, say so and continue searching."
 			      (< (point) isearch-opoint)))
 		       "overwrapped "
 		     (if isearch-wrapped "wrapped "))
-  		   (if isearch-word "word ")
-  		   (if isearch-regexp "regexp ")
-  		   (if nonincremental "search" "I-search")
-  		   (if isearch-forward nil " backward")
+		   (if isearch-word "word ")
+		   (if isearch-regexp "regexp ")
+		   (if nonincremental "search" "I-search")
+		   (if isearch-forward nil " backward")
 		   ": "
-  		   )))
+		   )))
     (aset m 0 (upcase (aref m 0)))
     (gettext m)))
 
@@ -1809,9 +1809,9 @@ have special meaning in a regexp."
   "Eval BODY with `case-fold-search' let to nil if STRING contains
 uppercase letters and `search-caps-disable-folding' is t."
   `(let ((case-fold-search
-          (if (and case-fold-search search-caps-disable-folding)
-              (isearch-no-upper-case-p ,string)
-            case-fold-search)))
+	  (if (and case-fold-search search-caps-disable-folding)
+	      (isearch-no-upper-case-p ,string)
+	    case-fold-search)))
      ,@body))
 (make-obsolete 'with-caps-disable-folding 'with-search-caps-disable-folding)
 (put 'with-caps-disable-folding 'lisp-indent-function 1)

@@ -29,9 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* Authorship:
 
    Ben Wing: wrote, for 19.13 (Mule).  Some category table stuff
-             loosely based on the original Mule.
+	     loosely based on the original Mule.
    Jareth Hein: fixed a couple of bugs in the implementation, and
-   	     added regex support for categories with check_category_at
+	     added regex support for categories with check_category_at
  */
 
 #include <config.h>
@@ -1710,7 +1710,7 @@ Valid values are nil or a bit vector of size 95.
 
 /* Return 1 if CATEGORY_SET contains CATEGORY, else return 0.
    The faster version of `!NILP (Faref (category_set, category))'.  */
-#define CATEGORY_MEMBER(category, category_set)		 	\
+#define CATEGORY_MEMBER(category, category_set)			\
   (bit_vector_bit(XBIT_VECTOR (category_set), category - 32))
 
 /* Return 1 if there is a word boundary between two word-constituent

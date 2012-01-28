@@ -566,4 +566,3 @@ the name of the current frame (a frame's name is distinct from its
 title; the name is used for resource lookup, among other things, and the
 title is simply what appears above the window.)
 @end itemize
-

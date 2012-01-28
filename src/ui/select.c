@@ -278,7 +278,7 @@ It defaults to the selected device.
 DEFUN("register-selection-data-type", Fregister_selection_data_type, 1, 2, 0,	/*
 Register a new selection data type DATA-TYPE, optionally on the specified
 DEVICE. Returns the device-specific data type identifier, or nil if the
-device does not support this feature or the registration fails. 
+device does not support this feature or the registration fails.
 */
       (data_type, device))
 {
@@ -298,7 +298,7 @@ device does not support this feature or the registration fails.
 DEFUN("selection-data-type-name", Fselection_data_type_name, 1, 2, 0,	/*
 Retrieve the name of the specified selection data type DATA-TYPE, optionally
 on the specified DEVICE. Returns either a string or a symbol on success, and
-nil if the device does not support this feature or the type is not known. 
+nil if the device does not support this feature or the type is not known.
 */
       (data_type, device))
 {
@@ -791,7 +791,7 @@ type from which the selection should be converted; and the selection
 value.  These functions should return a suitable representation of the
 value, or nil to indicate that the conversion was not possible.
 
-See also `selection-converter-out-alist'. 
+See also `selection-converter-out-alist'.
 											*/ );
 	Vselection_converter_in_alist = Qnil;
 
@@ -805,7 +805,7 @@ The value passed will be *exactly the same value* that was given to
 return to a program calling `get-selection' with the appropriate
 parameters.
 
-See also `selection-converter-in-alist' and `selection-converter-out-alist'. 
+See also `selection-converter-in-alist' and `selection-converter-out-alist'.
 */ );
 	Vselection_coercion_alist = Qnil;
 
@@ -815,7 +815,7 @@ functions.  These functions will be called with four args; the name
 of the selection (typically PRIMARY, SECONDARY or CLIPBOARD); the type
 of the selection; and two selection values.  The functions are expected to
 return a value representing the catenation of the two values, or nil to
-indicate that this was not possible. 
+indicate that this was not possible.
 */ );
 	Vselection_appender_alist = Qnil;
 
@@ -826,14 +826,14 @@ with four args: the name of the selection (typically PRIMARY, SECONDARY
 or CLIPBOARD); the type of the selection; the value of the selection; and
 the buffer that has just been killed.  These functions should return a new
 selection value, or nil to indicate that the selection value should be
-deleted. 
+deleted.
 */ );
 	Vselection_buffer_killed_alist = Qnil;
 
 	DEFVAR_LISP("selection-coercible-types", &Vselection_coercible_types	/*
 A list of selection types that are coercible---that is, types that may be
 automatically converted to another type. Selection values with types in this
-list may be subject to conversion attempts to other types. 
+list may be subject to conversion attempts to other types.
 */
 		    );
 	Vselection_coercible_types = Qnil;

@@ -74,7 +74,7 @@ char *xrealpath(const char *path, char *restrict resolved_path)
 
 	/* Make a copy of the source path since we may need to modify it. */
 	strncpy(copy_path, path, sizeof(copy_path)-1);
-        copy_path[sizeof(copy_path)-1]='\0';
+	copy_path[sizeof(copy_path)-1]='\0';
 	path = copy_path;
 	max_path = copy_path + PATH_MAX - 2;
 

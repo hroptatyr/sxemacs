@@ -227,7 +227,7 @@ typedef struct glyph_block glyph_block;
 struct glyph_block {
 	Lisp_Object glyph;
 	Lisp_Object extent;
-	
+
 	face_index findex; /* Only used by margin routines.  */
 	int active;	   /* For begin/end glyph indicates type,
 			      otherwise for margin routines. */
@@ -485,15 +485,15 @@ extern int windows_structure_changed;
     Lisp_Object MTC_devcons, MTC_concons;			\
     DEVICE_LOOP_NO_BREAK (MTC_devcons, MTC_concons)		\
       {								\
-        Lisp_Object MTC_frmcons;				\
-        struct device *MTC_d = XDEVICE (XCAR (MTC_devcons));	\
-        DEVICE_FRAME_LOOP (MTC_frmcons, MTC_d)			\
+	Lisp_Object MTC_frmcons;				\
+	struct device *MTC_d = XDEVICE (XCAR (MTC_devcons));	\
+	DEVICE_FRAME_LOOP (MTC_frmcons, MTC_d)			\
 	  {							\
 	    struct frame *MTC_f = XFRAME (XCAR (MTC_frmcons));	\
-            MTC_f->object##_changed = 1;			\
+	    MTC_f->object##_changed = 1;			\
 	    MTC_f->modiff++;					\
 	  }							\
-        MTC_d->object##_changed = 1;				\
+	MTC_d->object##_changed = 1;				\
       }								\
     object##_changed = 1;					\
     object##_changed_set = 1; }					\

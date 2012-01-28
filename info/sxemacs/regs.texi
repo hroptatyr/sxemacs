@@ -1,4 +1,3 @@
-
 @node Registers, Display, Rectangles, Top
 @chapter Registers
 @cindex registers

@@ -89,7 +89,7 @@ emacs_tty_event_pending_p(int user_p)
 		/* (1) Any pending events in the dispatch queue? */
 		if (!NILP(dispatch_event_queue))
 			return 1;
-		
+
 		/* (2) Any TTY or process input available? */
 		if (poll_fds_for_input (non_fake_input_wait_mask))
 			return 1;
@@ -122,10 +122,10 @@ emacs_tty_event_pending_p(int user_p)
 #if 0
 		event_stream_drain_queue ();
 #endif
-		
+
 		if (!user_p)
 			return !NILP (dispatch_event_queue);
-		
+
 		EVENT_CHAIN_LOOP (event, dispatch_event_queue)
 		{
 			if (command_event_p (event))
@@ -155,18 +155,18 @@ tty_find_console_from_fd(int fd)
 static void
 emacs_tty_next_event(Lisp_Event * emacs_event)
 {
-        int ndesc;
-        int i;
-        SELECT_TYPE temp_mask;
-        EMACS_TIME time_to_block;
-        EMACS_SELECT_TIME select_time_to_block, *pointer_to_this;
+	int ndesc;
+	int i;
+	SELECT_TYPE temp_mask;
+	EMACS_TIME time_to_block;
+	EMACS_SELECT_TIME select_time_to_block, *pointer_to_this;
 
-        struct console *c;
-        Lisp_Process *p;
+	struct console *c;
+	Lisp_Process *p;
 
-        /* Wait for some event */
+	/* Wait for some event */
 	while (1) {
-                temp_mask = input_wait_mask;
+		temp_mask = input_wait_mask;
 
 		if (!get_low_level_timeout_interval(tty_timer_queue, &time_to_block))
 			/* no timer events; block indefinitely */
@@ -177,50 +177,50 @@ emacs_tty_next_event(Lisp_Event * emacs_event)
 		}
 
 		ndesc = select(MAXDESC, &temp_mask, 0, 0, pointer_to_this);
-                if (ndesc == 0) {
+		if (ndesc == 0) {
 			tty_timeout_to_emacs_event(emacs_event);
 			return;
-                } else if (ndesc > 0)
-                        break;
-        }
+		} else if (ndesc > 0)
+			break;
+	}
 
-        /* Look for a TTY event */
-        for (i = 0; i < MAXDESC; i++) {
-                /* To avoid race conditions (among other things, an infinite
-                   loop when called from Fdiscard_input()), we must return
-                   user events ahead of process events. */
-                if (!FD_ISSET(i, &temp_mask) || !FD_ISSET(i, &tty_only_mask))
-                        continue;
+	/* Look for a TTY event */
+	for (i = 0; i < MAXDESC; i++) {
+		/* To avoid race conditions (among other things, an infinite
+		   loop when called from Fdiscard_input()), we must return
+		   user events ahead of process events. */
+		if (!FD_ISSET(i, &temp_mask) || !FD_ISSET(i, &tty_only_mask))
+			continue;
 
-                c = tty_find_console_from_fd(i);
-                assert(c);
-                if (read_event_from_tty_or_stream_desc(emacs_event, c, i))
-                        return;
-        }
+		c = tty_find_console_from_fd(i);
+		assert(c);
+		if (read_event_from_tty_or_stream_desc(emacs_event, c, i))
+			return;
+	}
 
-        /* Look for a process event */
-        for (i = 0; i < MAXDESC; i++) {
-                if (!FD_ISSET(i, &temp_mask) || !FD_ISSET(i, &process_only_mask))
-                        continue;
+	/* Look for a process event */
+	for (i = 0; i < MAXDESC; i++) {
+		if (!FD_ISSET(i, &temp_mask) || !FD_ISSET(i, &process_only_mask))
+			continue;
 
-                p = get_process_from_usid(FD_TO_USID(i));
-                assert(p);
+		p = get_process_from_usid(FD_TO_USID(i));
+		assert(p);
 
-                XSETPROCESS(emacs_event->event.process.process, p);
-                emacs_event->event_type = process_event;
-                /* process events have nil as channel */
-                emacs_event->timestamp = 0;	/* #### */
-                return;
-        }
+		XSETPROCESS(emacs_event->event.process.process, p);
+		emacs_event->event_type = process_event;
+		/* process events have nil as channel */
+		emacs_event->timestamp = 0;	/* #### */
+		return;
+	}
 
-        /* We might get here when a fake event came through a signal. */
-        /* Return a dummy event, so that a cycle of the command loop will
-           occur. */
-        drain_signal_event_pipe();
-        emacs_event->event_type = eval_event;
-        /* eval events have nil as channel */
-        emacs_event->event.eval.function = Qidentity;
-        emacs_event->event.eval.object = Qnil;
+	/* We might get here when a fake event came through a signal. */
+	/* Return a dummy event, so that a cycle of the command loop will
+	   occur. */
+	drain_signal_event_pipe();
+	emacs_event->event_type = eval_event;
+	/* eval events have nil as channel */
+	emacs_event->event.eval.function = Qidentity;
+	emacs_event->event.eval.object = Qnil;
 }
 
 static void

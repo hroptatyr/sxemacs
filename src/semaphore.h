@@ -323,4 +323,3 @@ typedef void *sxe_semaphore_t;
 
 #endif
 #endif	/* INCLUDED_semaphore_h */
-

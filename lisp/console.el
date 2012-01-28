@@ -37,7 +37,7 @@ that the information is returned for; nil means the current console."
 
 (defun resume-pid-console (pid)
   "Resume the consoles with a controlling process of PID."
-  (mapc (lambda (c) 
+  (mapc (lambda (c)
 	  (if (and (eq (console-type c) 'tty)
 		   (eql pid (console-tty-controlling-process c)))
 	      (resume-console c)))

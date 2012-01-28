@@ -1,4 +1,4 @@
-;; kinsoku.el -- Kinsoku (line wrap) processing for XEmacs/Mule
+;; kinsoku.el -- Kinsoku (line wrap) processing for XEmacs/Mule -*- coding: iso-2022-7bit; -*-
 
 ;; Copyright (C) 1997 Free Software Foundation, Inc.
 ;; This file is part of Mule (MULtilingual Enhancement of XEmacs).
@@ -154,14 +154,14 @@
   "EOL kinsoku for GB2312.")
 (defvar kinsoku-big5-bol
   (concat  "$(0!"!#!$!%!&!'!(!)!*!+!,!-!.!/!0!1!2(B"
- 	   "$(0!3!4!5!6!7!8!9!:!;!<!=!?!A!C!E!G!I!K(B"
- 	   "$(0!M!O!Q(B	$(0!S!U!W!Y![!]!_!a!c!e!g!i!k!q(B"
- 	   "$(0"#"$"%"&"'"(")"*"+","2"3"4"j"k"l"x%7(B")
+	   "$(0!3!4!5!6!7!8!9!:!;!<!=!?!A!C!E!G!I!K(B"
+	   "$(0!M!O!Q(B	$(0!S!U!W!Y![!]!_!a!c!e!g!i!k!q(B"
+	   "$(0"#"$"%"&"'"(")"*"+","2"3"4"j"k"l"x%7(B")
   "BOL kinsoku for BIG5.")
 (defvar kinsoku-big5-eol
   (concat "$(0!>!@!B!D!F!H!J!L!N!P!R!T!V!X!Z!\!^!`!b(B"
- 	  "$(0!d!f!h!j!k!q!p"i"j"k"n"x$u$v$w$x$y$z${(B"
- 	  "$(0$|$}$~%!%"%#%$%%%&%'%(%)%*%+%:(B")
+	  "$(0!d!f!h!j!k!q!p"i"j"k"n"x$u$v$w$x$y$z${(B"
+	  "$(0$|$}$~%!%"%#%$%%%&%'%(%)%*%+%:(B")
   "EOL kinsoku for BIG5.")
 
 (define-category ?s "Kinsoku forbidden start of line characters")
@@ -256,7 +256,7 @@ point$B$,9TKv6XB'$K?($l$k>l9g$O9T$r=L$a$F!"6XB'$K?($l$J$$E@$rC5$9!#(B
 (defun kinsoku-process-extend ()
   "Move point forward to a permissable for line-breaking.
 $B9T$r?-$P$7$F6XB'$K?($l$J$$E@$X0\F0$9$k!#(B"
-  (let ((max-column (+ fill-column 
+  (let ((max-column (+ fill-column
 		       (if (and (numberp kinsoku-extend-limit)
 				(>= kinsoku-extend-limit 0))
 			   kinsoku-extend-limit
@@ -270,7 +270,7 @@ point$B$,9TKv6XB'$K?($l$k>l9g$O9T$r=L$a$F!"6XB'$K?($l$J$$E@$rC5$9!#(B
 		(not (eolp))
 		(or (kinsoku-eol-p)
 		    (kinsoku-bol-p)
-	            ;;; don't break in the middle of an English word
+		    ;;; don't break in the middle of an English word
 		    (and (char-in-category-p ch1 ?a)
 			 (setq ch2 (char-before))
 			 (char-in-category-p ch2 ?a)

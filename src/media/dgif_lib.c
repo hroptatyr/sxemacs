@@ -31,7 +31,7 @@ static void DGifBufferedInput(GifFileType * GifFile, GifByteType * NextByte);
 /******************************************************************************
 *   Open a new gif file for read, given by its name.			      *
 *   Returns GifFileType pointer dynamically allocated which serves as the gif *
-* info record. 								      *
+* info record.								      *
 ******************************************************************************/
 void DGifOpenFileName(GifFileType * GifFile, const char *FileName)
 {
@@ -358,7 +358,7 @@ void DGifGetExtensionNext(GifFileType * GifFile, GifByteType ** Extension)
 ******************************************************************************/
 int DGifCloseFile(GifFileType * GifFile)
 {
-        GifFilePrivateType *Private;
+	GifFilePrivateType *Private;
 
 	if (GifFile == NULL)
 		return -1;
@@ -810,7 +810,7 @@ void FreeExtension(SavedImage * Image)
 ******************************************************************************/
 SavedImage *MakeSavedImage(GifFileType * GifFile, SavedImage * CopyFrom)
 /*
- * Append an image block to the SavedImages array  
+ * Append an image block to the SavedImages array
  */
 {
 	SavedImage *sp;
@@ -872,7 +872,7 @@ SavedImage *MakeSavedImage(GifFileType * GifFile, SavedImage * CopyFrom)
 
 				/*
 				 * For the moment, the actual blocks can take their
-				 * chances with free().  We'll fix this later. 
+				 * chances with free().  We'll fix this later.
 				 */
 			}
 		}
@@ -936,9 +936,9 @@ ColorMapObject *MakeMapObject(int ColorCount, GifColorType * ColorMap)
 	Object->Colors =
 	    (GifColorType *) calloc(ColorCount, sizeof(GifColorType));
 	if (Object->Colors == (GifColorType *) NULL) {
-                free(Object);
+		free(Object);
 		return ((ColorMapObject *) NULL);
-        }
+	}
 
 	Object->ColorCount = ColorCount;
 	Object->BitsPerPixel = BitSize(ColorCount);

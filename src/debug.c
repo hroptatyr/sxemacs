@@ -70,9 +70,9 @@ sxemacs_debug_loop(enum debug_loop op, Lisp_Object class, Lisp_Object type)
       else if (op == X_VALIDATE)						\
 	return Qt;							\
       else if (op == X_SETTYPE)						\
-        active_debug_classes.types_of_##item = XINT (type);		\
+	active_debug_classes.types_of_##item = XINT (type);		\
       else if (op == X_TYPE)						\
-        retval = make_int (active_debug_classes.types_of_##item);	\
+	retval = make_int (active_debug_classes.types_of_##item);	\
       if (op == X_INIT) active_debug_classes.types_of_##item = VALBITS;	\
     }
 

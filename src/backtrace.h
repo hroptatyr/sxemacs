@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
    FSF: Original version; a long time ago.
    XEmacs: split out of some C files. (For some obscure reason, a header
-           file couldn't be used in FSF Emacs, but XEmacs doesn't have
+	   file couldn't be used in FSF Emacs, but XEmacs doesn't have
 	   that problem.)
    Mly (probably) or JWZ: Some changes.
  */
@@ -164,7 +164,7 @@ extern int specpdl_size;
   if (!SYMBOL_VALUE_MAGIC_P (SB_oldval) || UNBOUNDP (SB_oldval))	\
     {									\
       /* #### the following test will go away when we have a constant	\
-         symbol magic object */						\
+	 symbol magic object */						\
       if (EQ (SB_symbol, Qnil) ||					\
 	  EQ (SB_symbol, Qt)   ||					\
 	  SYMBOL_IS_KEYWORD (SB_symbol))				\

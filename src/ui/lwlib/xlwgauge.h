@@ -92,7 +92,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
       False unless upper & lower limits are both 0.
 
  +++++ The GetValue() callback proc is called with these arguments:
- 	static void
+	static void
 	myGetValue(gauge, client, rval)
 		Widget	gauge ;
 		XtPointer client ;

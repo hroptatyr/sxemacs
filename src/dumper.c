@@ -1076,7 +1076,7 @@ pdump(const char *dumpfile)
 	} else {
 		pdump_out = fdopen(pdump_fd, "w");
 		if ( pdump_out < 0 ) {
-			stderr_out("Could not fdopen dump file: %s %d", 
+			stderr_out("Could not fdopen dump file: %s %d",
 				   dumpfile, pdump_fd);
 			abort();
 		} else {
@@ -1092,14 +1092,14 @@ pdump(const char *dumpfile)
 			pdump_dump_opaques();
 			pdump_dump_rtables();
 			pdump_dump_root_objects();
-			
+
 			fclose(pdump_out);
 			close(pdump_fd);
-			
+
 			xfree(pdump_buf);
 
 			xfree(pdump_hash);
-			
+
 			Vterminal_console = t_console;
 			Vterminal_frame = t_frame;
 			Vterminal_device = t_device;
@@ -1267,16 +1267,16 @@ static int pdump_file_get(const char *path)
 
 static int pdump_file_try(char *exe_path, size_t size)
 {
-        char *w = exe_path + strlen(exe_path);
-        int sz;
-        size -= strlen(exe_path);
+	char *w = exe_path + strlen(exe_path);
+	int sz;
+	size -= strlen(exe_path);
 
 	do {
 
 #ifdef EMACS_PATCH_LEVEL
-		sz = snprintf(w, size, "-%d.%d.%d-%08x.dmp", 
-                         EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
-                         EMACS_PATCH_LEVEL, dump_id);
+		sz = snprintf(w, size, "-%d.%d.%d-%08x.dmp",
+			 EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
+			 EMACS_PATCH_LEVEL, dump_id);
 		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
 			if (pdump_load_check()) {
 				return 1;
@@ -1285,9 +1285,9 @@ static int pdump_file_try(char *exe_path, size_t size)
 		}
 #endif	/* EMACS_PATCH_LEVEL */
 #ifdef EMACS_BETA_VERSION
-		sz = snprintf(w, size, "-%d.%d.%d-%08x.dmp", 
-                         EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
-                         EMACS_BETA_VERSION, dump_id);
+		sz = snprintf(w, size, "-%d.%d.%d-%08x.dmp",
+			 EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
+			 EMACS_BETA_VERSION, dump_id);
 		if (sz >=0 && (size_t)sz < size && pdump_file_get(exe_path)) {
 			if (pdump_load_check()) {
 				return 1;
@@ -1373,8 +1373,8 @@ int pdump_load(const char *argv0)
 	if (p != dir) {
 		/* invocation-name includes a directory component -- presumably it
 		   is relative to cwd, not $PATH */
-                assert(strlen(dir) < sizeof(exe_path));
-                strncpy(exe_path, dir, sizeof(exe_path)-1);
+		assert(strlen(dir) < sizeof(exe_path));
+		strncpy(exe_path, dir, sizeof(exe_path)-1);
 		exe_path[sizeof(exe_path)-1]='\0';
 	} else {
 		const char *path = getenv("PATH");
@@ -1382,8 +1382,8 @@ int pdump_load(const char *argv0)
 
 		assert(path != NULL);
 		for (;;) {
-                        int remain = sizeof(exe_path)-1;
-                        exe_path[remain] = '\0';
+			int remain = sizeof(exe_path)-1;
+			exe_path[remain] = '\0';
 
 			p = path;
 			while (*p && *p != SEPCHAR) {
@@ -1392,23 +1392,23 @@ int pdump_load(const char *argv0)
 			if (p == path) {
 				exe_path[0] = '.';
 				w = exe_path + 1;
-                                --remain;
+				--remain;
 			} else {
-                                size_t len = (p - path) <= remain
-                                           ? (p-path) 
-                                           : remain;
+				size_t len = (p - path) <= remain
+					   ? (p-path)
+					   : remain;
 				memcpy(exe_path, path, len);
 				w = exe_path + len;
-                                remain -= len;
+				remain -= len;
 			}
 			if (!IS_DIRECTORY_SEP(w[-1]) && (remain > 0) ) {
 				*w++ = '/';
-                                remain--;
+				remain--;
 			}
-                        if (remain > 0) {
-                                strncpy(w, name, remain);
-                                w[remain]='\0';
-                        }
+			if (remain > 0) {
+				strncpy(w, name, remain);
+				w[remain]='\0';
+			}
 
 			/* Check that exe_path is executable and not a
 			 * directory */
@@ -1440,9 +1440,9 @@ int pdump_load(const char *argv0)
 #endif
 
 	/* Save exe_path because pdump_file_try() modifies it */
-        assert(strlen(exe_path) < sizeof(real_exe_path));
-        strcpy(real_exe_path, exe_path);
-        if (pdump_file_try(exe_path,sizeof(exe_path))
+	assert(strlen(exe_path) < sizeof(real_exe_path));
+	strcpy(real_exe_path, exe_path);
+	if (pdump_file_try(exe_path,sizeof(exe_path))
 	    || (xrealpath(real_exe_path, real_exe_path)
 		&& pdump_file_try(real_exe_path,sizeof(real_exe_path)))) {
 		pdump_load_finish();

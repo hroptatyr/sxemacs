@@ -161,16 +161,16 @@ media_sndfile_open(Lisp_Media_Stream *ms)
 
 	/* try to find a read function */
 	switch (sfinfo->format & 0xFF) {
-        case SF_FORMAT_ULAW:
-        case SF_FORMAT_ALAW:
-        case SF_FORMAT_PCM_U8:
+	case SF_FORMAT_ULAW:
+	case SF_FORMAT_ALAW:
+	case SF_FORMAT_PCM_U8:
 	case SF_FORMAT_PCM_S8:
 		mtap->samplewidth = 8;
 		mtap->framesize = mtap->channels;
 		/* stuff is read in as S16 values anyway */
 		mtap->msf = sxe_msf_S16;
 		break;
-        case SF_FORMAT_PCM_16:
+	case SF_FORMAT_PCM_16:
 		mtap->samplewidth = 16;
 		mtap->framesize = mtap->channels * 2;
 		mtap->msf = sxe_msf_S16;
@@ -185,12 +185,12 @@ media_sndfile_open(Lisp_Media_Stream *ms)
 		mtap->framesize = mtap->channels * 4;
 		mtap->msf = sxe_msf_S32;
 		break;
-        case SF_FORMAT_FLOAT:
+	case SF_FORMAT_FLOAT:
 		mtap->samplewidth = 32;
 		mtap->framesize = mtap->channels * 4;
 		mtap->msf = sxe_msf_FLT;
 		break;
-        default:
+	default:
 		xfree(sfinfo);
 		xfree(mtap);
 		media_stream_set_meths(ms, NULL);
@@ -308,18 +308,18 @@ media_sndfile_read(media_substream *mss, void *outbuf, size_t length)
 	fmt = mtap->msf;
 
 	switch (sfd->sfinfo->format & 0xFF) {
-        case SF_FORMAT_ULAW:
-        case SF_FORMAT_ALAW:
-        case SF_FORMAT_PCM_U8:
+	case SF_FORMAT_ULAW:
+	case SF_FORMAT_ALAW:
+	case SF_FORMAT_PCM_U8:
 	case SF_FORMAT_PCM_S8:
-        case SF_FORMAT_PCM_16:
+	case SF_FORMAT_PCM_16:
 		_read = sf_readf_short(sf, outbuf, length);
 		break;
 	case SF_FORMAT_PCM_24:
 	case SF_FORMAT_PCM_32:
 		_read = sf_readf_int(sf, outbuf, length);
 		break;
-        case SF_FORMAT_FLOAT:
+	case SF_FORMAT_FLOAT:
 		_read = sf_readf_float(sf, outbuf, length);
 		break;
 	default:

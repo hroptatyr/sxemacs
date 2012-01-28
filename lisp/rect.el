@@ -306,7 +306,7 @@ When called from a program, the rectangle's corners are START and END."
   (interactive "*r\nsString rectangle: ")
   (defvar pending-delete-mode)
   (apply-on-rectangle 'string-rectangle-line start end string
-                      (and (boundp 'pending-delete-mode) pending-delete-mode)))
+		      (and (boundp 'pending-delete-mode) pending-delete-mode)))
 
 ;;;###autoload
 (defun replace-rectangle (start end string)

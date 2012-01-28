@@ -49,7 +49,7 @@ static void reset_watch(void)
 }
 
 /* This call returns the time since the last reset_watch call.  The time
-   is returned as a string with the format  <seconds>.<micro-seconds> 
+   is returned as a string with the format  <seconds>.<micro-seconds>
    If reset_watch was not called yet, exit.  */
 
 static char *get_time(void)

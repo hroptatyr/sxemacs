@@ -113,7 +113,7 @@ template.  Forms following ,@ must evaluate to lists.
 
 Here is how to use backquotes:
   (setq p 'b
-        q '(c d e))
+	q '(c d e))
   `(a ,p ,@q)   -> (a b c d e)
   `(a . b)      -> (a . b)
   `(a . ,p)     -> (a . b)
@@ -229,13 +229,13 @@ This is an extremely rare thing to need to do in lisp."
 			   (cond ((eq dflag 'append)
 				  (cons a d ))
 				 (t (list a (bq-process-1 dflag d)))))))
-                ((eq aflag bq-dot-flag)
-                 (if (null dflag)
-                     (bq-comma a)
-                     (cons 'nconc
-                           (cond ((eq dflag 'nconc)
-                                  (cons a d))
-                                 (t (list a (bq-process-1 dflag d)))))))
+		((eq aflag bq-dot-flag)
+		 (if (null dflag)
+		     (bq-comma a)
+		     (cons 'nconc
+			   (cond ((eq dflag 'nconc)
+				  (cons a d))
+				 (t (list a (bq-process-1 dflag d)))))))
 		((null dflag)
 		 (if (memq aflag '(quote t nil))
 		     (cons 'quote (list a))

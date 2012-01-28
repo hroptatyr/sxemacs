@@ -537,7 +537,7 @@ child_setup(int in, int out, int err, char **new_argv, const char *current_dir)
 	   event-tty.c) to allow for stream devices to be handled correctly.
 	   There isn't much to do, in fact, and I'll fix it shortly.  That
 	   way, the Lisp definition can be used non-interactively too. */
-#if !defined (NO_SUBPROCESSES) 
+#if !defined (NO_SUBPROCESSES)
 	/* Close Emacs's descriptors that this process should not have.  */
 	close_process_descs();
 #endif				/* not NO_SUBPROCESSES */

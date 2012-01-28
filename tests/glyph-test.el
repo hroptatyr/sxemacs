@@ -1,8 +1,8 @@
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
  (setq im (make-glyph [xbm :file "xemacsicon.xbm"])))
 
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
  (make-glyph [string :data "xemacs"]))
 
@@ -14,48 +14,48 @@
 
 ;; button in a group
 (setq ok-select nil)
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
- (make-glyph 
-  (setq radio-button1 
+ (make-glyph
+  (setq radio-button1
 	[button :face widget
 		:descriptor ["ok1" (setq ok-select t)
 			     :style radio :selected ok-select]])))
 ;; button in a group
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
- (make-glyph 
+ (make-glyph
   (setq radio-button2
-	[button :descriptor ["ok2" (setq ok-select nil) :style radio 
+	[button :descriptor ["ok2" (setq ok-select nil) :style radio
 			     :selected (not ok-select)]])))
 ;; toggle button
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
  (setq tbutton
-       (make-glyph [button :descriptor ["ok3" (setq ok-select nil) 
-					:style toggle 
+       (make-glyph [button :descriptor ["ok3" (setq ok-select nil)
+					:style toggle
 					:selected (not ok-select)]])))
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
- (make-glyph 
+ (make-glyph
   (setq toggle-button
-	[button :descriptor ["ok4" :style toggle 
-			     :callback 
+	[button :descriptor ["ok4" :style toggle
+			     :callback
 			     (setq ok-select (not ok-select))
 			     :selected ok-select]])))
 
 ;; normal pushbutton
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
- (setq push-button 
+ (setq push-button
        (make-glyph [button :width 10 :height 2
 			   :face modeline-mousable
 			   :descriptor "ok" :callback foo
 			   :selected t])))
 ;; tree view
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
- (setq tree (make-glyph 
+ (setq tree (make-glyph
 	     [tree-view :width 10
 			:descriptor "My Tree"
 			:items (["One" foo]
@@ -65,9 +65,9 @@
 				"Three")])))
 
 ;; tab control
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
- (setq tab (make-glyph 
+ (setq tab (make-glyph
 	    [tab-control :descriptor "My Tab"
 			 :face highlight
 			 :orientation right
@@ -76,9 +76,9 @@
 				 ["Three" foo :selected nil])])))
 
 ;; progress gauge
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
- (setq pgauge (make-glyph 
+ (setq pgauge (make-glyph
 	       [progress-gauge :width 10 :height 2 :value 0
 			       :descriptor "ok"])))
 ;; progress the progress ...
@@ -90,9 +90,9 @@
     (sit-for 0.1)))
 
 ;; progress gauge in the modeline
-(setq global-mode-string 
+(setq global-mode-string
       (cons (make-extent nil nil)
-	    (setq pg (make-glyph 
+	    (setq pg (make-glyph
 		      [progress-gauge :width 5 :pixel-height 16
 				      :descriptor "ok"]))))
 ;; progress the progress ...
@@ -105,46 +105,46 @@
     (redisplay-frame)
     (sit-for 0.1)))
 
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
- (make-glyph 
+ (make-glyph
   [button :face modeline-mousable
 	  :descriptor "ok" :callback foo
 	  :image [xpm :file "../etc/xemacs-icon.xpm"]]))
 
 ;; normal pushbutton
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
  (setq pbutton
        (make-glyph [button :descriptor ["A Big Button" foo ]])))
 
 ;; edit box
-(set-extent-begin-glyph 
- (make-extent (point) (point)) 
+(set-extent-begin-glyph
+ (make-extent (point) (point))
  (make-glyph (setq edit-field [edit-field :pixel-width 50 :pixel-height 30
 					  :face bold-italic
 					  :descriptor ["Hello"]])))
 ;; combo box
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
  (make-glyph (setq combo-box
-		   [combo-box :width 10 :descriptor ["Hello"] 
+		   [combo-box :width 10 :descriptor ["Hello"]
 			      :items ("One" "Two" "Three")])))
 
 ;; label
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
  (make-glyph (setq label [label :pixel-width 150 :descriptor "Hello"])))
 
 ;; string
-(set-extent-begin-glyph 
+(set-extent-begin-glyph
  (make-extent (point) (point))
- (make-glyph 
+ (make-glyph
   (setq str
 	[string :data "Hello There"])))
 
 ;; scrollbar
-;(set-extent-begin-glyph 
+;(set-extent-begin-glyph
 ; (make-extent (point) (point))
 ; (make-glyph [scrollbar :width 50 :height 20 :descriptor ["Hello"]]))
 
@@ -153,7 +153,7 @@
 (set-extent-begin-glyph (make-extent (point) (point)) sw)
 
 ;; layout
-(setq layout 
+(setq layout
       (make-glyph
        `[layout :descriptor "The Layout"
 		:orientation vertical
@@ -168,7 +168,7 @@
 
 ;; another test layout
 (set-extent-begin-glyph
- (make-extent (point) (point)) 
+ (make-extent (point) (point))
  (setq layout-2
        (make-glyph `[layout :descriptor "The Layout"
 			    :orientation vertical
@@ -180,9 +180,9 @@
 				   :items ([progress-gauge :value 4 :width 10 :height 2
 							   :descriptor "ok"])])
 (setq test-toggle-widget nil)
-	
+
 (defun test-toggle (widget)
-  (set-extent-begin-glyph 
+  (set-extent-begin-glyph
    (make-extent (point) (point))
    (make-glyph (vector 'button
 		       :descriptor "ok"

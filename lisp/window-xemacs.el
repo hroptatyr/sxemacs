@@ -620,11 +620,11 @@ Returns the window displaying BUFFER."
 						 2)
 					      (window-height upper))
 					   nil upper))
-                       ;; Klaus Berndl <klaus.berndl@sdm.de>: Only in
-                       ;; this situation we shrink-to-fit but we can do
-                       ;; this first after we have displayed buffer in
-                       ;; window (s.b. (set-window-buffer window buffer))
-                       (setq shrink-it shrink-to-fit))))
+		       ;; Klaus Berndl <klaus.berndl@sdm.de>: Only in
+		       ;; this situation we shrink-to-fit but we can do
+		       ;; this first after we have displayed buffer in
+		       ;; window (s.b. (set-window-buffer window buffer))
+		       (setq shrink-it shrink-to-fit))))
 
 	       (setq window (get-lru-window target-frame)))
 
@@ -637,11 +637,11 @@ Returns the window displaying BUFFER."
 
 	     (set-window-buffer window buffer)
 
-             ;; Now window's previous buffer has been brought to the top
-             ;; of the MRU chain and window displays buffer - now we can
-             ;; shrink-to-fit if necessary
-             (if shrink-it
-                 (shrink-window-if-larger-than-buffer window))
+	     ;; Now window's previous buffer has been brought to the top
+	     ;; of the MRU chain and window displays buffer - now we can
+	     ;; shrink-to-fit if necessary
+	     (if shrink-it
+		 (shrink-window-if-larger-than-buffer window))
 
 	     (display-buffer-1 window)))))
     (or (equal wconfig (current-window-configuration))

@@ -95,7 +95,7 @@ Lisp_Object Vccl_program_table;
 	       cccccccccccccccccccc          rrr       XXXXX
   or
 	|------------- constant or other args ----------------|
-                     cccccccccccccccccccccccccccc
+		     cccccccccccccccccccccccccccc
 
    where, `cc...c' is a non-negative integer indicating constant value
    (the left most `c' is always 0) or an absolute jump address, `RRR'
@@ -674,8 +674,8 @@ static int stack_idx_of_map_multiple;
 				   r[7] = LOWER_BYTE (SJIS (Y, Z) */
 
 /* Terminate CCL program successfully.  */
-#define CCL_SUCCESS		   	\
-  do {				   	\
+#define CCL_SUCCESS			\
+  do {					\
     ccl->status = CCL_STAT_SUCCESS;	\
   /* The "if (1)" inhibits the warning	\
      "end-of loop code not reached" */	\
@@ -696,8 +696,8 @@ static int stack_idx_of_map_multiple;
 
 /* Terminate CCL program because of invalid command.  Should not occur
    in the normal case.  */
-#define CCL_INVALID_CMD		     	\
-  do {				     	\
+#define CCL_INVALID_CMD			\
+  do {					\
     ccl->status = CCL_STAT_INVALID_CMD;	\
   /* The "if (1)" inhibits the warning	\
      "end-of loop code not reached" */	\

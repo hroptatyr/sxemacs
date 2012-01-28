@@ -128,7 +128,7 @@ STYLE is a symbol describing the type of menu item.  The following are
 defined:
 
 toggle: A checkbox.
-        Currently just prepend the name with the string \"Toggle \".
+	Currently just prepend the name with the string \"Toggle \".
 radio: A radio button.
 nil: An ordinary menu item.
 

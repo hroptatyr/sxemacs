@@ -24,11 +24,11 @@
 ;;;  By default, Japanese is set as the primary environment.
 ;;;  You can change primary environment in `./lisp/site-init.el by
 ;;;  `set-primary-environment'.  For instance,
-;;;  	(set-primary-environment 'chinese)
+;;;	(set-primary-environment 'chinese)
 ;;;  makes Chinese the primary environment.
 ;;;  If you are still not satisfied with the settings, you can
 ;;;  override them after the above line.  For instance,
-;;;  	(set-default-buffer-file-coding-system 'big5)
+;;;	(set-default-buffer-file-coding-system 'big5)
 ;;;  makes big5 be used for file I/O by default.
 ;;;  If you are not satisfied with other default settings in this file,
 ;;;  override any of them also in `./lisp/site-init.el'.  For instance,
@@ -97,12 +97,12 @@ then `set-language-environment' is called with LANGUAGE-ENVIRONMENT.")
       (load (format "%s%s/locale-start"
 		    (locate-data-directory "start-files")
 		    lang) t t)))
-  
+
   (when current-language-environment
     ;; Translate remaining args on command line using file-name-coding-system
     (loop for arg in-ref command-line-args-left do
 	  (setf arg (decode-coding-string arg file-name-coding-system)))
-    
+
     ;; rman seems to be incompatible with encoded text
     (and-boundp 'Manual-use-rosetta-man
       (setq Manual-use-rosetta-man nil))
@@ -116,7 +116,7 @@ then `set-language-environment' is called with LANGUAGE-ENVIRONMENT.")
        (with-fboundp 'setenv
 	 (setenv "LC_MESSAGES" "C")
 	 (setenv "LC_TIME"     "C")))))
-  
+
   ;; Register available input methods by loading LEIM list file.
   (load "leim-list.el" 'noerror 'nomessage 'nosuffix)
   )

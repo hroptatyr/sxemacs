@@ -71,7 +71,7 @@ void XtNoClearRefreshWidget(Widget widget)
 	    (widget, &event, (Region) NULL);
 }
 
-/* 
+/*
  * Apply a function to all the subwidgets of a given widget recursively.
 */
 void XtApplyToWidgets(Widget w, XtApplyToWidgetsProc proc, XtPointer arg)

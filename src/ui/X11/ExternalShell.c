@@ -73,7 +73,7 @@ ERROR ! This ought not be getting compiled if EXTERNAL_WIDGET
    The data is formatted as follows:
 
    data.l[0] = who sent this message: external_shell_send (0) or
-               external_client_send (1)
+	       external_client_send (1)
    data.l[1] = message type (see enum en_extw_notify below)
    data.l[2-4] = data associated with this message
 

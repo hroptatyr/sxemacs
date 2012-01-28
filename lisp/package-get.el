@@ -33,7 +33,7 @@
 ;;	Retrieve a package and any other required packages from an archive
 ;;
 ;;
-;; Note (JV): Most of this no longer applies!  
+;; Note (JV): Most of this no longer applies!
 ;; Note (SY): Definitely no longer applies, but I'm leaving these
 ;;            comments here because there are some nifty ideas here.
 ;;
@@ -168,7 +168,7 @@ one version of a package available.")
   :group 'package-get)
 
 ;;;###autoload
-(defcustom package-get-package-index-file-location 
+(defcustom package-get-package-index-file-location
   (car (split-path (or (getenv "EMACSPACKAGEPATH") user-init-directory)))
   "*The directory where the package-index file can be found."
   :type 'directory
@@ -425,7 +425,7 @@ and remote access is likely in the near future."
   "Update an entry in `package-get-base'."
   (let ((existing (assq (car entry) package-get-base)))
     (if existing
-        (setcdr existing (cdr entry))
+	(setcdr existing (cdr entry))
       (setq package-get-base (cons entry package-get-base)))))
 
 (defun package-get-locate-file (file &optional nil-if-not-found no-remote)
@@ -437,7 +437,7 @@ If NO-REMOTE is non-nil never search remote locations."
   (if (file-name-absolute-p file)
       file
     (let ((site package-get-remote)
-          (expanded nil))
+	  (expanded nil))
       (when site
 	(unless (and no-remote (caar (list site)))
 	  (let ((expn (package-get-remote-filename (car (list site)) file)))
@@ -445,11 +445,11 @@ If NO-REMOTE is non-nil never search remote locations."
 		(setq site nil
 		      expanded expn)))))
       (or expanded
-          (and (not nil-if-not-found)
-               file)))))
+	  (and (not nil-if-not-found)
+	       file)))))
 
 (defun package-get-locate-index-file (no-remote)
-  "Locate the package-get index file.  
+  "Locate the package-get index file.
 
 Do not return remote paths if NO-REMOTE is non-nil.  If the index
 file doesn't exist in `package-get-package-index-file-location', ask
@@ -464,7 +464,7 @@ template."
 			      package-get-package-index-file-location))
 	    (progn
 	      (save-excursion
-		(set-buffer 
+		(set-buffer
 		 (find-file-noselect (expand-file-name
 				      package-get-base-filename
 				      package-get-package-index-file-location)))
@@ -508,13 +508,13 @@ Unless FORCE-CURRENT is non-nil never try to update the database."
   (interactive
    (let ((dflt (package-get-locate-index-file nil)))
      (list (read-file-name "Load package-get database: "
-                           (file-name-directory dflt)
-                           dflt
-                           t
-                           (file-name-nondirectory dflt)))))
+			   (file-name-directory dflt)
+			   dflt
+			   t
+			   (file-name-nondirectory dflt)))))
   (setq db-file (expand-file-name (or db-file
-                                      (package-get-locate-index-file
-				         (not force-current)))))
+				      (package-get-locate-index-file
+					 (not force-current)))))
   (if (not (file-exists-p db-file))
       (error 'file-error
 	     (format "Package-get database file `%s' does not exist" db-file)))
@@ -523,11 +523,11 @@ Unless FORCE-CURRENT is non-nil never try to update the database."
 	     (format "Package-get database file `%s' not readable" db-file)))
   (let ((buf (get-buffer-create "*package database*")))
     (unwind-protect
-        (save-excursion
-          (set-buffer buf)
-          (erase-buffer buf)
-          (insert-file-contents-literally db-file)
-          (package-get-update-base-from-buffer buf)
+	(save-excursion
+	  (set-buffer buf)
+	  (erase-buffer buf)
+	  (insert-file-contents-literally db-file)
+	  (package-get-update-base-from-buffer buf)
 	  (if (file-remote-p db-file)
 	      (package-get-maybe-save-index db-file)))
       (kill-buffer buf))))
@@ -560,21 +560,21 @@ START and END in the current buffer."
   (save-excursion
     (goto-char start)
     (if (not (re-search-forward "^(package-get-update-base-entry" nil t))
-        (error 'search-failed
+	(error 'search-failed
 	       "Buffer does not contain package-get database entries"))
     (beginning-of-line)
     (let ((count 0))
       (while (and (< (point) end)
-                  (re-search-forward "^(package-get-update-base-entry" nil t))
-        (beginning-of-line)
-        (let ((entry (read (current-buffer))))
-          (if (or (not (consp entry))
-                  (not (eq (car entry) 'package-get-update-base-entry)))
-              (error 'syntax-error
+		  (re-search-forward "^(package-get-update-base-entry" nil t))
+	(beginning-of-line)
+	(let ((entry (read (current-buffer))))
+	  (if (or (not (consp entry))
+		  (not (eq (car entry) 'package-get-update-base-entry)))
+	      (error 'syntax-error
 		     "Invalid package-get database entry found"))
-          (package-get-update-base-entry
-           (car (cdr (car (cdr entry)))))
-          (setq count (1+ count))))
+	  (package-get-update-base-entry
+	   (car (cdr (car (cdr entry)))))
+	  (setq count (1+ count))))
       (message "Got %d package-get database entries" count))))
 
 ;;;###autoload
@@ -586,28 +586,28 @@ Note: This database will be unsigned of course."
   (package-get-require-base t)
   (let ((buf (get-buffer-create "*package database*")))
     (unwind-protect
-        (save-excursion
-          (set-buffer buf)
-          (erase-buffer buf)
-          (goto-char (point-min))
-          (let ((entries package-get-base) entry plist)
-            (insert ";; Package Index file -- Do not edit manually.\n")
-            (insert ";;;@@@\n")
-            (while entries
-              (setq entry (car entries))
-              (setq plist (car (cdr entry)))
-              (insert "(package-get-update-base-entry (quote\n")
-              (insert (format "(%s\n" (symbol-name (car entry))))
-              (while plist
-                (insert (format "  %s%s %S\n"
-                                (if (eq plist (car (cdr entry))) "(" " ")
-                                (symbol-name (car plist))
-                                (car (cdr plist))))
-                (setq plist (cdr (cdr plist))))
-              (insert "))\n))\n;;;@@@\n")
-              (setq entries (cdr entries))))
-          (insert ";; Package Index file ends here\n")
-          (write-region (point-min) (point-max) file))
+	(save-excursion
+	  (set-buffer buf)
+	  (erase-buffer buf)
+	  (goto-char (point-min))
+	  (let ((entries package-get-base) entry plist)
+	    (insert ";; Package Index file -- Do not edit manually.\n")
+	    (insert ";;;@@@\n")
+	    (while entries
+	      (setq entry (car entries))
+	      (setq plist (car (cdr entry)))
+	      (insert "(package-get-update-base-entry (quote\n")
+	      (insert (format "(%s\n" (symbol-name (car entry))))
+	      (while plist
+		(insert (format "  %s%s %S\n"
+				(if (eq plist (car (cdr entry))) "(" " ")
+				(symbol-name (car plist))
+				(car (cdr plist))))
+		(setq plist (cdr (cdr plist))))
+	      (insert "))\n))\n;;;@@@\n")
+	      (setq entries (cdr entries))))
+	  (insert ";; Package Index file ends here\n")
+	  (write-region (point-min) (point-max) file))
       (kill-buffer buf))))
 
 (defun package-get-interactive-package-query (get-version package-symbol)
@@ -707,7 +707,7 @@ Returns nil upon error."
 	      (if (not (setq fetched-packages
 			     (package-get-all reqd-name reqd-version
 					      fetched-packages
-                                              install-dir)))
+					      install-dir)))
 		  (throw 'exit nil))))
 	(setq this-requires (cdr this-requires))))
     fetched-packages))
@@ -720,32 +720,32 @@ package provides that functionality.  Returns the list of packages
 required by PACKAGES."
   (package-get-require-base t)
   (let ((orig-packages packages)
-        dependencies provided)
+	dependencies provided)
     (while packages
       (let* ((package (car packages))
-             (the-package (package-get-info-find-package
-                           package-get-base package))
-             (this-package (package-get-info-version
-                            the-package nil))
-             (this-requires (package-get-info-prop this-package 'requires))
-             (new-depends   (set-difference
-                             (mapcar
-                              #'(lambda (reqd)
-                                  (let* ((reqd-package (package-get-package-provider reqd))
-                                         (reqd-name    (car reqd-package)))
-                                    (if (null reqd-name)
-                                        (error 'search-failed
+	     (the-package (package-get-info-find-package
+			   package-get-base package))
+	     (this-package (package-get-info-version
+			    the-package nil))
+	     (this-requires (package-get-info-prop this-package 'requires))
+	     (new-depends   (set-difference
+			     (mapcar
+			      #'(lambda (reqd)
+				  (let* ((reqd-package (package-get-package-provider reqd))
+					 (reqd-name    (car reqd-package)))
+				    (if (null reqd-name)
+					(error 'search-failed
 					       (format "Unable to find a provider for %s" reqd)))
-                                    reqd-name))
-                              this-requires)
-                             dependencies))
-             (this-provides (package-get-info-prop this-package 'provides)))
-        (setq dependencies
-              (union dependencies new-depends))
-        (setq provided
-              (union provided (union (list package) this-provides)))
-        (setq packages
-              (union new-depends (cdr packages)))))
+				    reqd-name))
+			      this-requires)
+			     dependencies))
+	     (this-provides (package-get-info-prop this-package 'provides)))
+	(setq dependencies
+	      (union dependencies new-depends))
+	(setq provided
+	      (union provided (union (list package) this-provides)))
+	(setq packages
+	      (union new-depends (cdr packages)))))
     (set-difference dependencies orig-packages)))
 
 (defun package-get-load-package-file (lispdir file)
@@ -896,7 +896,7 @@ current buffer."
 	       (when (memq item (package-get-info (caar pkgs) field))
 		 (setq results (push (caar pkgs) results)))
 	       (setq pkgs (cdr pkgs)))))
-	  (t 
+	  (t
 	   (error 'wrong-type-argument field)))
     (if (interactive-p)
 	(if arg
@@ -932,8 +932,8 @@ successfully installed but errors occurred during initialization, or
 	  (package-get-info-version
 	   (package-get-info-find-package package-get-base
 					  package) version))
-         (latest (package-get-info-prop this-package 'version))
-         (installed (package-get-key package :version))
+	 (latest (package-get-info-prop this-package 'version))
+	 (installed (package-get-key package :version))
 	 (found nil)
 	 (search-dir package-get-remote)
 	 (base-filename (package-get-info-prop this-package 'filename))
@@ -941,7 +941,7 @@ successfully installed but errors occurred during initialization, or
 	 filenames full-package-filename)
     (if (and (equal (package-get-info package 'category) "mule")
 	     (not (featurep 'mule)))
-	(error 'invalid-state 
+	(error 'invalid-state
 	       "Mule packages can't be installed with a non-Mule SXEmacs"))
     (if (null this-package)
 	(if package-get-remote
@@ -959,18 +959,18 @@ successfully installed but errors occurred during initialization, or
     ;; If they asked for the latest using version=nil, don't get an older
     ;; version than we already have.
     (if installed
-        (if (> (if (stringp installed)
-                   (string-to-number installed)
-                 installed)
-               (if (stringp latest)
-                   (string-to-number latest)
-                 latest))
-            (if (not (null version))
-                (warn "Installing %s package version %s, you had a newer version %s"
+	(if (> (if (stringp installed)
+		   (string-to-number installed)
+		 installed)
+	       (if (stringp latest)
+		   (string-to-number latest)
+		 latest))
+	    (if (not (null version))
+		(warn "Installing %s package version %s, you had a newer version %s"
 		  package latest installed)
-              (warn "Skipping %s package, you have a newer version %s"
+	      (warn "Skipping %s package, you have a newer version %s"
 		package installed)
-              (throw 'skip-update t))))
+	      (throw 'skip-update t))))
 
     ;; Contrive a list of possible package filenames.
     ;; Ugly.  Is there a better way to do this?
@@ -1219,8 +1219,8 @@ lead to Emacs accessing remote sites."
       (setq packages (cdr packages)))
     (when (interactive-p)
       (if found
-          (message "%S" found)
-        (message "No appropriate package found")))
+	  (message "%S" found)
+	(message "No appropriate package found")))
     found))
 
 (defun package-get-ever-installed-p (pkg &optional notused)

@@ -153,7 +153,7 @@ the last entry in the menu."
 		 (function)))
 
 (defvar font-menu-preferred-resolution
-  (make-specifier-and-init 'generic '((global 
+  (make-specifier-and-init 'generic '((global
 				       ((x) . "*-*"))) t)
   "Preferred horizontal and vertical font menu resolution (e.g. \"75:75\").")
 
@@ -343,7 +343,7 @@ or if you change your font path, you can call this to re-initialize the menus."
 	 (from-size   (aref font-data 2))
 	   (from-weight (aref font-data 3))
 	 (from-slant  (aref font-data 4))
-  	 (face-list-to-change (delq 'default (face-list)))
+	 (face-list-to-change (delq 'default (face-list)))
 	 new-default-face-font)
     (unless from-family
       (signal 'error '("couldn't parse font name for default face")))

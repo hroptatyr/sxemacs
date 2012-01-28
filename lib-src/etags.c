@@ -908,15 +908,15 @@ Absolute names are stored in the output file as they are.\n\
 Relative ones are stored relative to the output file's directory.\n");
 
 	puts ("-a, --append\n\
-        Append tag entries to existing tags file.");
+	Append tag entries to existing tags file.");
 
 	puts ("--packages-only\n\
-        For Ada files, only generate tags for packages.");
+	For Ada files, only generate tags for packages.");
 
 	if (CTAGS)
 		puts ("-B, --backward-search\n\
-        Write the search commands for the tag entries using '?', the\n\
-        backward-search command instead of '/', the forward-search command.");
+	Write the search commands for the tag entries using '?', the\n\
+	backward-search command instead of '/', the forward-search command.");
 
 	/* This option is mostly obsolete, because etags can now automatically
 	   detect C++.  Retained for backward compatibility and for debugging and
@@ -936,20 +936,20 @@ Relative ones are stored relative to the output file's directory.\n");
 
 	if (CTAGS)
 		puts ("-d, --defines\n\
-        Create tag entries for C #define constants and enum constants, too.");
+	Create tag entries for C #define constants and enum constants, too.");
 	else
 		puts ("-D, --no-defines\n\
-        Don't create tag entries for C #define constants and enum constants.\n\
+	Don't create tag entries for C #define constants and enum constants.\n\
 	This makes the tags file smaller.");
 
 	if (!CTAGS)
 		puts ("-i FILE, --include=FILE\n\
-        Include a note in tag file indicating that, when searching for\n\
-        a tag, one should also consult the tags file FILE after\n\
-        checking the current file.");
+	Include a note in tag file indicating that, when searching for\n\
+	a tag, one should also consult the tags file FILE after\n\
+	checking the current file.");
 
 	puts ("-l LANG, --language=LANG\n\
-        Force the following files to be considered as written in the\n\
+	Force the following files to be considered as written in the\n\
 	named language up to the next --language=LANG option.");
 
 	if (CTAGS)
@@ -962,7 +962,7 @@ Relative ones are stored relative to the output file's directory.\n");
 
 	if (PRINT_UNDOCUMENTED_OPTIONS_HELP)
 		puts ("--no-line-directive\n\
-        Ignore #line preprocessor directives in C and derived languages.");
+	Ignore #line preprocessor directives in C and derived languages.");
 
 	if (CTAGS)
 		puts ("--members\n\
@@ -973,7 +973,7 @@ Relative ones are stored relative to the output file's directory.\n");
 	in some languages.");
 
 	puts ("-r REGEXP, --regex=REGEXP or --regex=@regexfile\n\
-        Make a tag for each line matching a regular expression pattern\n\
+	Make a tag for each line matching a regular expression pattern\n\
 	in the following files.  {LANGUAGE}REGEXP uses REGEXP for LANGUAGE\n\
 	files only.  REGEXFILE is a file containing one REGEXP per line.\n\
 	REGEXP takes the form /TAGREGEXP/TAGNAME/MODS, where TAGNAME/ is\n\
@@ -986,65 +986,65 @@ Relative ones are stored relative to the output file's directory.\n");
 	causes dot to match any character, including newline.");
 
 	puts ("-R, --no-regex\n\
-        Don't create tags from regexps for the following files.");
+	Don't create tags from regexps for the following files.");
 
 	puts ("-I, --ignore-indentation\n\
-        In C and C++ do not assume that a closing brace in the first\n\
-        column is the final brace of a function or structure definition.");
+	In C and C++ do not assume that a closing brace in the first\n\
+	column is the final brace of a function or structure definition.");
 
 	puts ("-o FILE, --output=FILE\n\
-        Write the tags to FILE.");
+	Write the tags to FILE.");
 
 	puts ("--parse-stdin=NAME\n\
-        Read from standard input and record tags as belonging to file NAME.");
+	Read from standard input and record tags as belonging to file NAME.");
 
 	if (CTAGS)
 	{
 		puts ("-t, --typedefs\n\
-        Generate tag entries for C and Ada typedefs.");
+	Generate tag entries for C and Ada typedefs.");
 		puts ("-T, --typedefs-and-c++\n\
-        Generate tag entries for C typedefs, C struct/enum/union tags,\n\
-        and C++ member functions.");
+	Generate tag entries for C typedefs, C struct/enum/union tags,\n\
+	and C++ member functions.");
 	}
 
 	if (CTAGS)
 		puts ("-u, --update\n\
-        Update the tag entries for the given files, leaving tag\n\
-        entries for other files in place.  Currently, this is\n\
-        implemented by deleting the existing entries for the given\n\
-        files and then rewriting the new entries at the end of the\n\
-        tags file.  It is often faster to simply rebuild the entire\n\
-        tag file than to use this.");
+	Update the tag entries for the given files, leaving tag\n\
+	entries for other files in place.  Currently, this is\n\
+	implemented by deleting the existing entries for the given\n\
+	files and then rewriting the new entries at the end of the\n\
+	tags file.  It is often faster to simply rebuild the entire\n\
+	tag file than to use this.");
 
 	if (CTAGS)
 	{
 		puts ("-v, --vgrind\n\
-        Print on the standard output an index of items intended for\n\
-        human consumption, similar to the output of vgrind.  The index\n\
-        is sorted, and gives the page number of each item.");
+	Print on the standard output an index of items intended for\n\
+	human consumption, similar to the output of vgrind.  The index\n\
+	is sorted, and gives the page number of each item.");
 
 		if (PRINT_UNDOCUMENTED_OPTIONS_HELP)
 			puts ("-w, --no-duplicates\n\
-        Do not create duplicate tag entries, for compatibility with\n\
+	Do not create duplicate tag entries, for compatibility with\n\
 	traditional ctags.");
 
 		if (PRINT_UNDOCUMENTED_OPTIONS_HELP)
 			puts ("-w, --no-warn\n\
-        Suppress warning messages about duplicate tag entries.");
+	Suppress warning messages about duplicate tag entries.");
 
 		puts ("-x, --cxref\n\
-        Like --vgrind, but in the style of cxref, rather than vgrind.\n\
-        The output uses line numbers instead of page numbers, but\n\
-        beyond that the differences are cosmetic; try both to see\n\
-        which you like.");
+	Like --vgrind, but in the style of cxref, rather than vgrind.\n\
+	The output uses line numbers instead of page numbers, but\n\
+	beyond that the differences are cosmetic; try both to see\n\
+	which you like.");
 	}
 
 	puts ("-V, --version\n\
-        Print the version of the program.\n\
+	Print the version of the program.\n\
 -h, --help\n\
-        Print this help message.\n\
-        Followed by one or more `--language' options prints detailed\n\
-        help about tag generation for the specified languages.");
+	Print this help message.\n\
+	Followed by one or more `--language' options prints detailed\n\
+	help about tag generation for the specified languages.");
 
 	print_language_names ();
 
@@ -1339,7 +1339,7 @@ char *argv[];
 				break;
 			case at_language:
 			case at_regexp:
-		        case at_end:
+			case at_end:
 			default:
 				continue;		/* the for loop */
 			}
@@ -1371,11 +1371,11 @@ char *argv[];
 			   setenv ("LC_COLLATE", "C", 1);
 			   setenv ("LC_ALL", "C", 1); */
 			int len = snprintf (cmd, sizeof(cmd),
-					    "sort -u -o %.*s %.*s", 
-					    BUFSIZ, tagfile, 
+					    "sort -u -o %.*s %.*s",
+					    BUFSIZ, tagfile,
 					    BUFSIZ, tagfile);
 			if (len >= 0 && (size_t)len < sizeof(cmd))
-				fatal("failed to build sort shell command line", 
+				fatal("failed to build sort shell command line",
 				      (char *)NULL);
 			exit (system (cmd));
 		}
@@ -2017,8 +2017,8 @@ register fdesc *fdp;
 /*
  * add_node ()
  *	Adds a node to the tree of nodes.  In etags mode, sort by file
- *  	name.  In ctags mode, sort by tag name.  Make no attempt at
- *    	balancing.
+ *	name.  In ctags mode, sort by tag name.  Make no attempt at
+ *	balancing.
  *
  *	add_node is the only function allowed to add nodes, so it can
  *	maintain state.
@@ -2704,7 +2704,7 @@ static void make_C_tag __P((bool));
  * consider_token ()
  *	checks to see if the current token is at the start of a
  *	function or variable, or corresponds to a typedef, or
- * 	is a struct/union/enum tag, or #define, or an enum constant.
+ *	is a struct/union/enum tag, or #define, or an enum constant.
  *
  *	*IS_FUNC gets TRUE if the token is a function or #define macro
  *	with args.  C_EXTP points to which language we are looking at.
@@ -3202,8 +3202,8 @@ bool isfun;
 /*
  * C_entries ()
  *	This routine finds functions, variables, typedefs,
- * 	#define's, enum constants and struct/union/enum definitions in
- * 	C syntax and adds them to the list.
+ *	#define's, enum constants and struct/union/enum definitions in
+ *	C syntax and adds them to the list.
  */
 static void
 C_entries (c_ext, inf)
@@ -5758,7 +5758,7 @@ FILE *inf;
 			continue;
 		else if (cp[0] == '"')	/* Sometimes, strings start in column one */
 			continue;
-		else if (cp[0] == '-') 	/* attribute, e.g. "-define" */
+		else if (cp[0] == '-')	/* attribute, e.g. "-define" */
 		{
 			erlang_attribute (cp);
 			if (last != NULL)
@@ -6275,14 +6275,14 @@ regex_tag_multiline ()
 					/* Force explicit tag name, if a name
 					   is there. */
 					pfnote (name, TRUE, buffer + linecharno,
-						charno - linecharno + 1, lineno, 
+						charno - linecharno + 1, lineno,
 						linecharno);
 				else if(name == NULL)
 					abort();
-				else 
-					make_tag (name, strlen (name), TRUE, 
+				else
+					make_tag (name, strlen (name), TRUE,
 						  buffer + linecharno,
-						  charno - linecharno + 1, 
+						  charno - linecharno + 1,
 						  lineno, linecharno);
 				free(name);
 				name = NULL;
@@ -6597,7 +6597,7 @@ FILE *stream;
 							  lbp->buffer, match, lineno, linecharno);
 						free(name);
 						name = NULL;
-					} else 
+					} else
 						make_tag (rp->name, strlen (rp->name), TRUE,
 							  lbp->buffer, match, lineno, linecharno);
 					break;

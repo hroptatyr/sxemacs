@@ -1,4 +1,3 @@
-
 @node Mouse Selection, Additional Mouse Operations, Mark, Top
 @comment  node-name,  next,  previous,  up
 @section Selecting Text with the Mouse
@@ -31,7 +30,7 @@ while the mouse cursor is over the word.  The word is highlighted when
 selected. On monochrome monitors, a stippled background indicates that a
 region of text has been highlighted. On color monitors, a color
 background indicates highlighted text. You can triple-click to select
-whole lines. 
+whole lines.
 
 To select an arbitrary region of text:
 
@@ -40,7 +39,7 @@ To select an arbitrary region of text:
 Move the mouse cursor over the character at the beginning of the region of
 text you want to select.
 @item
-Press and hold the left mouse button. 
+Press and hold the left mouse button.
 @item
 While holding the left mouse button down, drag the cursor to the
 character at the end of the region of text you want to select.
@@ -104,13 +103,13 @@ Select the Emacs window the mouse is on.
 @item mouse-select-and-split
 Select the Emacs window mouse is on, then split it vertically in half.
 @item mouse-set-mark
-Select the Emacs window the mouse is on and set the mark at the mouse 
+Select the Emacs window the mouse is on and set the mark at the mouse
 position.  Display the cursor at that position for a second.
 @item mouse-set-point
 Select the Emacs window that the mouse is on and move point to the
 mouse position.
 @item mouse-track
-Make a selection with the mouse.   This is the default binding of 
+Make a selection with the mouse.   This is the default binding of
 the left mouse button (@key{button1}).
 @item mouse-track-adjust
 Extend the existing selection.  This is the default binding of
@@ -130,7 +129,7 @@ Narrow a window to the region between the cursor and the mouse pointer.
 The @kbd{M-x mouse-track} command should be bound to a mouse button.  If
 you click-and-drag, the selection is set to the region between the
 point of the initial click and the point at which you release the
-button.  These positions do not need to be ordered. 
+button.  These positions do not need to be ordered.
 
 If you click-and-release without moving the mouse, the point is moved,
 and the selection is disowned (there will be no selection owner.)  The

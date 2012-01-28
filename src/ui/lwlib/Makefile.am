@@ -75,7 +75,7 @@ stage2: stage1
 
 all: stage1 stage2
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## Create preprocessor output (debugging purposes only)

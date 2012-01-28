@@ -325,7 +325,7 @@
   (Assert (= (ase-interval-lebesgue-measure tiny) 3))
   (Assert
    (almost= (ase-interval-lebesgue-measure (ase-interval 0.1 1.2)) 1.1 1e-4))
-  (Assert 
+  (Assert
    (almost= (ase-interval-lebesgue-measure (ase-interval -0.1 0.2)) 0.3 1e-4))
   (Assert
    (almost= (ase-interval-lebesgue-measure (ase-interval -1.2 -1.1)) 0.1 1e-4))

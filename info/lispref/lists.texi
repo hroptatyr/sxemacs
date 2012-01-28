@@ -1894,7 +1894,7 @@ args, each key and value in @var{skiplist}.
 
 @var{function} may not modify @var{skiplist}, with the one exception
 that @var{function} may remove or reput the entry currently being
-processed by @var{function}. 
+processed by @var{function}.
 @end defun
 
 
@@ -2028,7 +2028,7 @@ Remove the back element of @var{dllist} and return it.
 In box notation a dllist looks like
 @smallexample
 @group
-car         _______     _______     
+car         _______     _______
 |          |       |   |       |    --> nil
 |     _____|_     _v___|_     _v___|_
  --> |_______|   |_______|   |_______| <--
@@ -2089,7 +2089,7 @@ the first element in @var{dllist} and traverse through the back.
 @defun dllist-to-list-reversed dllist
 Return the ordinary list induced by @var{dllist} in reverse order,
 that is start with the last element in @var{dllist} and traverse
-through the front. 
+through the front.
 @end defun
 
 @example
@@ -2184,7 +2184,7 @@ Remove @var{element} from the bloom-filter @var{bloom}.
 The membership decision is done with @code{bloom-owns-p}.
 
 @defun bloom-owns-p bloom element
-Return non-@code{nil} if @var{element} is in the bloom-filter 
+Return non-@code{nil} if @var{element} is in the bloom-filter
 @var{bloom}.
 @end defun
 

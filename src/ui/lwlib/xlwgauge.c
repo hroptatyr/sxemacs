@@ -457,14 +457,14 @@ static void GaugeExpose(Widget w, XEvent * event, Region region)
 			if (gw->gauge.labels == NULL) {
 				n = snprintf(label, sizeof(label),
 					     "%d",
-					     v0 + i * (v1 - v0) / 
-					          (gw->gauge.nlabels - 1));
+					     v0 + i * (v1 - v0) /
+						  (gw->gauge.nlabels - 1));
 				assert(n >= 0 &&  (size_t)n < sizeof(label));
 			}
 			else
 				s = gw->gauge.labels[i];
 			if (s != NULL) {
-				x = e0 + i * (e1 - e0 - 1) / 
+				x = e0 + i * (e1 - e0 - 1) /
 					     (gw->gauge.nlabels - 1);
 				xlen = strlen(s);
 				if (gw->gauge.orientation == XtorientHorizontal) {
@@ -897,7 +897,7 @@ static void MaxLabel(GaugeWidget gw, Dimension * wid,	/* max label width */
 		w = 0;
 		for (i = 0; i < gw->gauge.nlabels; ++i) {
 			if (gw->gauge.labels == NULL)	{ /* numeric labels */
-				int sz = snprintf(lbl = lstr, sizeof(lstr), 
+				int sz = snprintf(lbl = lstr, sizeof(lstr),
 						  "%d", v0 + i * dv / n);
 				assert(sz >= 0 && (size_t)sz < sizeof(lstr));
 			} else

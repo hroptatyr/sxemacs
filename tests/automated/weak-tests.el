@@ -18,7 +18,7 @@
 ;; General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Synched up with: Not in FSF.
 
@@ -95,7 +95,7 @@
     (Assert-Equal (weak-list-list weaklist2) testlist)
     (Assert-Equal (weak-list-list weaklist3) testlist)
     (Assert-Equal (weak-list-list weaklist4) testlist)))
-  
+
 (garbage-collect)
 
 ;; tests for key-assoc weak-lists
@@ -193,4 +193,3 @@
 
 
 (garbage-collect)
-

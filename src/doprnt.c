@@ -489,7 +489,7 @@ __ulong_to_bit_string(char *p, long unsigned int number)
 {
 	int i, seen_high_order = 0;
 	char *origp = p;
-  
+
 	for (i = ((SIZEOF_LONG * 8) - 1); i >= 0; --i) {
 		if (number & 1UL << i) {
 			seen_high_order = 1;
@@ -1332,7 +1332,7 @@ emacs_doprnt_1(Lisp_Object stream, const Bufbyte * format_nonreloc,
 	} else {
 		args = get_doprnt_args(specs, vargs);
 	}
-	
+
 	for (i = 0; specs && i < Dynarr_length(specs); i++) {
 		printf_spec_t spec = Dynarr_atp(specs, i);
 		char ch;
@@ -1363,7 +1363,7 @@ emacs_doprnt_1(Lisp_Object stream, const Bufbyte * format_nonreloc,
 			} else {
 				printf_spec_t nextspec = Dynarr_atp(specs, i + 1);
 				Lisp_Object obj = largs[spec->argnum - 1];
-			
+
 				if (INTP(obj)) {
 					if (spec->forwarding_precision) {
 						nextspec->precision = XINT(obj);

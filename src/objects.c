@@ -155,9 +155,9 @@ is deallocated as well.
 
 	XSETCOLOR_INSTANCE(val, c);
 	GCPRO2(val,dev);
- 	retval = MAYBE_INT_DEVMETH(XDEVICE(dev), initialize_color_instance,
- 				   (c, name, dev,
- 				    decode_error_behavior_flag(noerror)));
+	retval = MAYBE_INT_DEVMETH(XDEVICE(dev), initialize_color_instance,
+				   (c, name, dev,
+				    decode_error_behavior_flag(noerror)));
 	if (!retval) {
 	  unbind_to(count, Qnil);
 	  UNGCPRO;

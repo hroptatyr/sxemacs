@@ -118,7 +118,7 @@ match.
 
 If the CDR of the elements of this list are strings, then they are
 assumed to name a TAGS file.  If they name a directory, then the string
-\"TAGS\" is appended to them to get the file name.  If they are not 
+\"TAGS\" is appended to them to get the file name.  If they are not
 strings, then they are evaluated, and must return an appropriate string.
 
 For example:
@@ -141,7 +141,7 @@ If the buffer-local variable `buffer-tag-table' is set, then it names a tags
 table that is searched before all others when find-tag is executed from this
 buffer.
 
-If there is a file called \"TAGS\" in the same directory as the file in 
+If there is a file called \"TAGS\" in the same directory as the file in
 question, then that tags file will always be used as well (after the
 `buffer-tag-table' but before the tables specified by this list.)
 
@@ -174,7 +174,7 @@ If nil, prompt whether to re-read the changed TAGS file."
   :group 'etags)
 
 (defcustom make-tags-files-invisible nil
-  "*If non-nil, TAGS-files will not show up in buffer-lists or be 
+  "*If non-nil, TAGS-files will not show up in buffer-lists or be
 selectable (or deletable.)"
   :type 'boolean
   :group 'etags)
@@ -193,7 +193,7 @@ This affects the `tags-search' and `tags-query-replace' commands."
 (defcustom tags-exuberant-ctags-optimization-p nil
   "*If this variable is nil (the default), then exact tag search is able
 to find tag names in the name part of the tagtable (enclosed by  ^?..^A)
-and in the sourceline part of the tagtable ( enclosed by ^..^?). 
+and in the sourceline part of the tagtable ( enclosed by ^..^?).
 This is needed by xemacs etags as not every tag has a name field.
 It is slower for large tables and less precise than the other option.
 
@@ -208,7 +208,7 @@ entry for every tag."
 ;; Buffer tag tables.
 
 (defun buffer-tag-table-list ()
-  "Returns a list (ordered) of the tags tables which should be used for 
+  "Returns a list (ordered) of the tags tables which should be used for
 the current buffer."
   (let (result)
     ;; Explicitly set buffer-tag-table
@@ -289,7 +289,7 @@ A directory name is ok too; it means file TAGS in that directory."
 				     default-directory
 				     (expand-file-name "TAGS" default-directory)
 				     t)))
-  (if (string-equal file "") 
+  (if (string-equal file "")
       (setq tags-file-name nil)
     (setq file (expand-file-name file))
     (when (file-directory-p file)
@@ -474,7 +474,7 @@ File name returned is relative to tag table file's directory."
 	#'string<))
 
 (defun buffer-tag-table-files ()
-  "Returns a list of all files referenced by all TAGS tables that 
+  "Returns a list of all files referenced by all TAGS tables that
 this buffer uses."
   (when (zerop (bloom-size tag-table-files-bloom))
     (tag-loop for table in (buffer-tag-table-list)
@@ -697,7 +697,7 @@ If it returns non-nil, this file needs processing by evalling
 (autoload 'get-symbol-syntax-table "symbol-syntax")
 
 (defun find-tag-internal (tagname)
-  
+
   (let ((next (null tagname))
 	(tmpnext (null tagname))
 	;; If tagname is a list: (TAGNAME), this indicates
@@ -719,7 +719,7 @@ If it returns non-nil, this file needs processing by evalling
 	   (setq tag-table-currently-matching-exact t)))
     ;; \_ in the tagname is used to indicate a symbol boundary.
     (if tags-exuberant-ctags-optimization-p
-        (setq exact-tagname (format "\C-?%s\C-a" tagname))
+	(setq exact-tagname (format "\C-?%s\C-a" tagname))
       (setq exact-tagname (format "\C-?%s\C-a\\|\
 \\_%s.?\C-?[0-9]*,[0-9]*$" tagname tagname))
       )
@@ -997,14 +997,14 @@ Value is nil if the file was already visited;
 if the file was newly read in, the value is the filename."
   (interactive "P")
   (cond ((not initialize)
-         ;; Not the first run.
-         )
-        ((eq initialize t)
-         ;; Initialize the list from the tags table.
+	 ;; Not the first run.
+	 )
+	((eq initialize t)
+	 ;; Initialize the list from the tags table.
 	 (setq next-file-list (buffer-tag-table-files)))
-        (t
-         ;; Initialize the list by evalling the argument.
-         (setq next-file-list (eval initialize))))
+	(t
+	 ;; Initialize the list by evalling the argument.
+	 (setq next-file-list (eval initialize))))
   (when (null next-file-list)
     (and novisit
 	 (get-buffer " *next-file*")
@@ -1016,7 +1016,7 @@ if the file was newly read in, the value is the filename."
     (pop next-file-list)
 
     (if (not (and new novisit))
-        (switch-to-buffer (find-file-noselect file novisit) t)
+	(switch-to-buffer (find-file-noselect file novisit) t)
       ;; Like find-file, but avoids random junk.
       (set-buffer (get-buffer-create " *next-file*"))
       (kill-all-local-variables)
@@ -1041,7 +1041,7 @@ If the latter returns non-nil, we exit; otherwise we scan the next file."
   (interactive)
   (let ((messaged nil)
 	(more-files-p t)
-        new)
+	new)
     (while more-files-p
       ;; Scan files quickly for the first or next interesting one.
       (while (or first-time
@@ -1075,8 +1075,8 @@ If the latter returns non-nil, we exit; otherwise we scan the next file."
       ;; If value is non-nil, continue to scan the next file.
       (setq more-files-p (eval tags-loop-operate)))
     (and messaged
-         (null tags-loop-operate)
-         (message "Scanning file %s...found" buffer-file-name))))
+	 (null tags-loop-operate)
+	 (message "Scanning file %s...found" buffer-file-name))))
 
 ;;;###autoload
 (defun tags-search (regexp &optional file-list-form)
@@ -1087,13 +1087,13 @@ To continue searching for next match, use command \\[tags-loop-continue].
 See documentation of variable `tag-table-alist'."
   (interactive "sTags search (regexp): ")
   (if (and (equal regexp "")
-           (eq (car tags-loop-scan) 'with-search-caps-disable-folding)
-           (null tags-loop-operate))
+	   (eq (car tags-loop-scan) 'with-search-caps-disable-folding)
+	   (null tags-loop-operate))
       ;; Continue last tags-search as if by `M-,'.
       (tags-loop-continue nil)
     (setq tags-loop-scan `(with-search-caps-disable-folding ,regexp t
-                            (re-search-forward ,regexp nil t))
-          tags-loop-operate nil)
+			    (re-search-forward ,regexp nil t))
+	  tags-loop-operate nil)
     (tags-loop-continue (or file-list-form t))))
 
 ;;;###autoload
@@ -1107,13 +1107,13 @@ See documentation of variable `tag-table-alist'."
   (interactive
    "sTags query replace (regexp): \nsTags query replace %s by: \nP")
   (setq tags-loop-scan `(with-search-caps-disable-folding ,from t
-                          (if (re-search-forward ,from nil t)
-                              ;; When we find a match, move back
-                              ;; to the beginning of it so perform-replace
-                              ;; will see it.
-                              (progn (goto-char (match-beginning 0)) t)))
-        tags-loop-operate (list 'perform-replace from to t t 
-                                (not (null delimited))))
+			  (if (re-search-forward ,from nil t)
+			      ;; When we find a match, move back
+			      ;; to the beginning of it so perform-replace
+			      ;; will see it.
+			      (progn (goto-char (match-beginning 0)) t)))
+	tags-loop-operate (list 'perform-replace from to t t
+				(not (null delimited))))
    (tags-loop-continue (or file-list-form t)))
 
 ;; Miscellaneous

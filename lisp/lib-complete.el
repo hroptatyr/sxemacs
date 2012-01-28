@@ -62,7 +62,7 @@
 
 (defun library-all-completions (FILE SEARCH-PATH &optional FULL FAST)
   "Return all completions for FILE in any directory on SEARCH-PATH.
-If optional third argument FULL is non-nil, returned pathnames should be 
+If optional third argument FULL is non-nil, returned pathnames should be
   absolute rather than relative to some directory on the SEARCH-PATH.
 If optional fourth argument FAST is non-nil, don't sort the completions,
   or remove duplicates."
@@ -71,26 +71,26 @@ If optional fourth argument FAST is non-nil, don't sort the completions,
       ;; It's an absolute file name, so don't need SEARCH-PATH
       (progn
 	(setq FILE (expand-file-name FILE))
-	(file-name-all-completions 
+	(file-name-all-completions
 	 (file-name-nondirectory FILE) (file-name-directory FILE)))
     (let ((subdir (file-name-directory FILE))
 	  (file (file-name-nondirectory FILE))
 	  all-completions)
       ;; Make list of completions in each directory on SEARCH-PATH
       (while SEARCH-PATH
-	(let* ((dir (concat (file-name-as-directory 
+	(let* ((dir (concat (file-name-as-directory
 			     (expand-file-name (car SEARCH-PATH)))
 			    subdir))
 	       (dir-prefix (if FULL dir subdir)))
 	  (if (file-directory-p dir)
-	      (let ((subdir-completions 
+	      (let ((subdir-completions
 		     (file-name-all-completions file dir)))
 		(while subdir-completions
-		  (setq all-completions 
+		  (setq all-completions
 			(cons (concat dir-prefix (car subdir-completions))
 			      all-completions))
 		  (setq subdir-completions (cdr subdir-completions))))))
-	(setq SEARCH-PATH (cdr SEARCH-PATH)))   
+	(setq SEARCH-PATH (cdr SEARCH-PATH)))
       (if FAST all-completions
 	(let ((sorted (nreverse (sort all-completions 'string<)))
 	      compressed)
@@ -126,7 +126,7 @@ Display MESSAGE and evaluate FORMS, returning value of the last one."
 ;;=== Completion caching ==================================================
 
 (defconst lib-complete:cache nil
-  "Used within `read-library' and `read-library-internal' to prevent 
+  "Used within `read-library' and `read-library-internal' to prevent
 costly repeated calls to `library-all-completions'.
 Format is a list of lists of the form
 
@@ -146,50 +146,50 @@ where each <cache-record> has the form
 (defun lib-complete:get-completion-table (FILE PATH FILTER)
   (let* ((subdir (file-name-directory FILE))
 	 (root (file-name-nondirectory FILE))
-	 (PATH 
-	  (mapcar 
+	 (PATH
+	  (mapcar
 	   (function (lambda (dir) (file-name-as-directory
 				    (expand-file-name (or dir "")))))
 	   PATH))
 	 (key (vector PATH subdir FILTER))
-	 (real-dirs 
+	 (real-dirs
 	  (if subdir
 	      (mapcar (function (lambda (dir) (concat dir subdir))) PATH)
 	    PATH))
 	 (path-modtimes
-	  (mapcar 
-	   (function (lambda (fn) (if fn (nth 5 (file-attributes fn))))) 
+	  (mapcar
+	   (function (lambda (fn) (if fn (nth 5 (file-attributes fn)))))
 	   real-dirs))
 	 (cache-entry (assoc key lib-complete:cache))
 	 (cache-records (cdr cache-entry)))
     ;; Look for cached entry
     (catch 'table
       (while cache-records
-	(if (and 
+	(if (and
 	     (lib-complete:better-root (nth 0 (car cache-records)) root)
 	     (equal (nth 1 (car cache-records)) path-modtimes))
 	    (throw 'table (nth 2 (car cache-records))))
 	(setq cache-records (cdr cache-records)))
       ;; Otherwise build completions
-      (let ((completion-list 
+      (let ((completion-list
 	     (progn-with-message "(building completion table...)"
 	       (library-all-completions FILE PATH nil 'fast)))
 	    (completion-table (make-vector 127 0)))
 	(while completion-list
 	  (let ((completion
-		 (if (or (not FILTER) 
-			 (file-directory-p (car completion-list))) 
+		 (if (or (not FILTER)
+			 (file-directory-p (car completion-list)))
 		     (car completion-list)
 		   (funcall FILTER (car completion-list)))))
 	    (if completion
 		(intern completion completion-table)))
 	  (setq completion-list (cdr completion-list)))
 	;; Cache the completions
-	(lib-complete:cache-completions key root 
+	(lib-complete:cache-completions key root
 					path-modtimes completion-table)
 	completion-table))))
 
-(defvar lib-complete:max-cache-size 40 
+(defvar lib-complete:max-cache-size 40
   "*Maximum number of search paths which are cached.")
 
 (defun lib-complete:cache-completions (key root modtimes table)
@@ -204,7 +204,7 @@ where each <cache-record> has the form
 	(if (or (equal root (nth 0 (car cache-records)))
 		(lib-complete:better-root root (nth 0 (car cache-records))))
 	    nil
-	  (setq new-cache-records 
+	  (setq new-cache-records
 		(cons (car cache-records) new-cache-records)))
 	(setq cache-records (cdr cache-records))))
     ;; Add entry to front of cache
@@ -232,7 +232,7 @@ where each <cache-record> has the form
      ((eq FLAG 'lambda) (and (intern-soft FILE completion-table) t))
      )))
 
-(defun read-library (PROMPT SEARCH-PATH &optional DEFAULT MUST-MATCH 
+(defun read-library (PROMPT SEARCH-PATH &optional DEFAULT MUST-MATCH
 			    FULL FILTER)
   "Read library name, prompting with PROMPT and completing in directories
 from SEARCH-PATH.  A nil in the search path represents the current
@@ -241,16 +241,16 @@ cache being invalidated whenever one of the directories on the path changes.
 Default to DEFAULT if user enters a null string.
 Optional fourth arg MUST-MATCH non-nil means require existing file's name.
   Non-nil and non-t means also require confirmation after completion.
-Optional fifth argument FULL non-nil causes a full pathname, rather than a 
+Optional fifth argument FULL non-nil causes a full pathname, rather than a
   relative pathname, to be returned.  Note that FULL implies MUST-MATCH.
 Optional sixth argument FILTER can be used to provide a function to
   filter the completions.  This function is passed the filename, and should
-  return a transformed filename (possibly a null transformation) or nil, 
+  return a transformed filename (possibly a null transformation) or nil,
   indicating that the filename should not be included in the completions."
   (let* ((read-library-internal-search-path SEARCH-PATH)
-	 (library (completing-read PROMPT 'read-library-internal 
+	 (library (completing-read PROMPT 'read-library-internal
 				   FILTER (or MUST-MATCH FULL) nil)))
-    (cond 
+    (cond
      ((equal library "") DEFAULT)
      (FULL (locate-file library read-library-internal-search-path
 			 '(".el" ".el.gz" ".elc")))
@@ -262,8 +262,8 @@ Optional sixth argument FILTER can be used to provide a function to
   (declare (special read-library-internal-search-path))
   (let ((read-library-internal-search-path load-path))
     (completing-read prompt
-		     'read-library-internal 
-		     (lambda (fn) 
+		     'read-library-internal
+		     (lambda (fn)
 		       (cond
 			((string-match #r"\.el\(\.gz\|\.Z\)?$" fn)
 			 (substring fn 0 (match-beginning 0)))))
@@ -280,13 +280,13 @@ Optional sixth argument FILTER can be used to provide a function to
 (defun load-library (library)
   "Load the library named LIBRARY.
 This is an interface to the function `load'."
-  (interactive 
+  (interactive
    (list (read-library "Load library: " load-path nil nil nil
-		       (function (lambda (fn) 
-				   (cond 
+		       (function (lambda (fn)
+				   (cond
 				    ((string-match "\\.elc?$" fn)
 				     (substring fn 0 (match-beginning 0))))))
-		       ))) 
+		       )))
   (load library))
 
 ;;=== find-library with completion (Author: Bob Weiner) ===================
@@ -299,14 +299,14 @@ specifies the coding system to use when decoding the file.  Interactively,
 with a prefix argument, this prompts for the coding system.  Optional third
 argument DISPLAY-FUNCTION must take two arguments, the filename to display
 and CODESYS.  The default for DISPLAY-FUNCTION is `find-file'."
-  (interactive 
+  (interactive
    (list (read-library-name "Find library: ")
 	 (if current-prefix-arg
 	     (read-coding-system "Coding System: "))))
   (let ((path (if (or (null library) (equal library ""))
 		   nil
 		(locate-file library load-path
-                             '("" ".el" ".el.gz" ".el.Z")))))
+			     '("" ".el" ".el.gz" ".el.Z")))))
     (if path (funcall (if (fboundp display-function)
 			  display-function 'find-file)
 		      path codesys)
@@ -318,7 +318,7 @@ LIBRARY should be a name without any path information and may include or omit
 the \".el\" suffix.  Under XEmacs/Mule, the optional second argument CODESYS
 specifies the coding system to use when decoding the file.  Interactively,
 with a prefix argument, this prompts for the coding system."
-  (interactive 
+  (interactive
    (list (read-library-name "Find library in other window: ")
 	 (if current-prefix-arg
 	     (read-coding-system "Coding System: "))))
@@ -330,7 +330,7 @@ LIBRARY should be a name without any path information and may include or omit
 the \".el\" suffix.  Under XEmacs/Mule, the optional second argument CODESYS
 specifies the coding system to use when decoding the file.  Interactively,
 with a prefix argument, this prompts for the coding system."
-  (interactive 
+  (interactive
    (list (read-library-name "Find library in other frame: ")
 	 (if current-prefix-arg
 	     (read-coding-system "Coding System: "))))

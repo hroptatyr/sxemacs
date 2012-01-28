@@ -112,7 +112,7 @@ Bufbyte *quatern_to_string(quatern g, int base)
 {
 	Bufbyte *z_str, *i_str, *j_str, *k_str;
 	int z_len, i_len, j_len, k_len;
-        int sign_i, sign_j, sign_k, neg_i, neg_j, neg_k;
+	int sign_i, sign_j, sign_k, neg_i, neg_j, neg_k;
 
 	z_str = (Bufbyte*)bigz_to_string(quatern_z(g), base);
 	i_str = (Bufbyte*)bigz_to_string(quatern_i(g), base);
@@ -223,7 +223,7 @@ void quatern_set_bigz_bigz_bigz_bigz(
 
 /* void bigc_set_quatern(bigc c, quatern g)
  * {
- * 	bigc_set_bigfr_bigfr(quatern_z(g), z1);
+ *	bigc_set_bigfr_bigfr(quatern_z(g), z1);
  * }
  */
 
@@ -615,7 +615,7 @@ Lisp_Object read_quatern_string(char *cp)
 		/* jump over a leading minus */
 		cp++;
 	}
-		
+
 	while ((*cp >= '0' && *cp <= '9'))
 		cp++;
 
