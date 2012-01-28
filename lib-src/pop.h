@@ -1,6 +1,6 @@
 /* pop.h: Header file for the "pop.c" client POP3 protocol.
    Copyright (C) 1991, 1993, 2001, 2002, 2003, 2004,
-                 2005, 2006, 2007  Free Software Foundation, Inc.
+		 2005, 2006, 2007  Free Software Foundation, Inc.
    Written by Jonathan Kamens, jik@security.ov.com.
 
 This file is part of SXEmacs.
@@ -45,7 +45,7 @@ typedef struct _popserver *popserver;
 
 #define POP_NO_KERBEROS	(1<<0)
 #define POP_NO_HESIOD	(1<<1)
-#define POP_NO_GETPASS 	(1<<2)
+#define POP_NO_GETPASS	(1<<2)
 
 #ifdef __STDC__
 #define _ARGS(a) a
@@ -80,4 +80,3 @@ extern int pop_quit _ARGS((popserver server));
 extern void pop_close _ARGS((popserver));
 
 #undef _ARGS
-

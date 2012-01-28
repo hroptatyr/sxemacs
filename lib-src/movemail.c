@@ -1,7 +1,7 @@
 /* movemail foo bar -- move file foo to file bar,
    locking file foo.
    Copyright (C) 1986, 1992, 1993, 1994, 1996 Free Software Foundation, Inc.
-   
+
    Copyright (C) 2005 Johann "Myrkraverk" Oskarsson <johann@myrkraverk.com>
 
 This file is part of SXEmacs.
@@ -45,11 +45,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * form "po:username".  This will cause movemail to open a connection
  * to a pop server running on $MAILHOST (environment variable).
  * Movemail must be setuid to root in order to work with POP.
- * 
+ *
  * New module: popmail.c
  * Modified routines:
  *	main - added code within #ifdef MAIL_USE_POP; added setuid
- *             (getuid ()) after POP code. 
+ *             (getuid ()) after POP code.
  * New routines in movemail.c:
  *	get_errmsg - return pointer to system error message
  *
@@ -169,12 +169,12 @@ struct option longopts[] = {
 	{"verbose", no_argument, NULL, 'v'},
 	{0}
 };
-#endif 
+#endif
 
 #define DOTLOCKING	0
-#define FLOCKING 	1
+#define FLOCKING	1
 #define LOCKFING	2
-#define MMDF   		3
+#define MMDF		3
 #define LOCKING         4
 
 #if defined(MAIL_LOCK_FLOCK) && defined(HAVE_FLOCK)
@@ -429,7 +429,7 @@ int main(int argc, char *argv[])
 			char buf[1024];
 			while (1) {
 				nread = read(indesc, buf, sizeof buf);
-				if (nread < 0 ||  
+				if (nread < 0 ||
 				    nread != write(outdesc, buf, nread)) {
 					int saved_errno = errno;
 					unlink(outname);
@@ -600,7 +600,7 @@ static void lock_dot(char *filename)
 
 #ifdef HAVE_MKSTEMP
 		/* Remove all group and other permissions.. */
-	        umask(S_IRWXG|S_IRWXO);
+		umask(S_IRWXG|S_IRWXO);
 		desc = mkstemp(tempname);
 #else
 		desc = open(tempname, O_WRONLY | O_CREAT | O_EXCL, 0666);
@@ -716,7 +716,7 @@ static long *xmalloc(unsigned int size)
 #include <stdio.h>
 #include "../src/syspwd.h"
 
-#define POP_ERROR 	(-1)
+#define POP_ERROR	(-1)
 #define POP_RETRIEVED (0)
 #define POP_DONE (1)
 
