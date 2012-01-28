@@ -240,8 +240,8 @@ which are running in the same Emacs process.
 The arguments are the same as in `dbus-call-method'.
 
 usage: (dbus-call-method-non-blocking
-         BUS SERVICE PATH INTERFACE METHOD
-         &optional :timeout TIMEOUT &rest ARGS)"
+	 BUS SERVICE PATH INTERFACE METHOD
+	 &optional :timeout TIMEOUT &rest ARGS)"
 
   (let ((key
 	 (apply
@@ -281,19 +281,19 @@ usage: (dbus-name-owner-changed-handler service old-owner new-owner)"
 	  (when (not (string-match "^:" service))
 	    (maphash
 	     (lambda (key value)
-               (dolist (elt value)
-                 ;; key has the structure (BUS INTERFACE MEMBER).
-                 ;; elt has the structure (UNAME SERVICE PATH HANDLER).
-                 (when (string-equal old-owner (car elt))
-                   ;; Remove old key, and add new entry with changed name.
-                   (dbus-unregister-object (list key (cdr elt)))
-                   ;; Maybe we could arrange the lists a little bit better
-                   ;; that we don't need to extract every single element?
-                   (dbus-register-signal
-                    ;; BUS      SERVICE     PATH
-                    (nth 0 key) (nth 1 elt) (nth 2 elt)
-                    ;; INTERFACE MEMBER     HANDLER
-                    (nth 1 key) (nth 2 key) (nth 3 elt)))))
+	       (dolist (elt value)
+		 ;; key has the structure (BUS INTERFACE MEMBER).
+		 ;; elt has the structure (UNAME SERVICE PATH HANDLER).
+		 (when (string-equal old-owner (car elt))
+		   ;; Remove old key, and add new entry with changed name.
+		   (dbus-unregister-object (list key (cdr elt)))
+		   ;; Maybe we could arrange the lists a little bit better
+		   ;; that we don't need to extract every single element?
+		   (dbus-register-signal
+		    ;; BUS      SERVICE     PATH
+		    (nth 0 key) (nth 1 elt) (nth 2 elt)
+		    ;; INTERFACE MEMBER     HANDLER
+		    (nth 1 key) (nth 2 key) (nth 3 elt)))))
 	     (copy-hash-table dbus-registered-objects-table))))
       ;; The error is reported only in debug mode.
       (when  dbus-debug
@@ -635,11 +635,11 @@ object paths of the D-Bus service."
 It returns a list of strings, which are further object paths of SERVICE."
   (let ((result (list path)))
     (dolist (elt
-             (dbus-introspect-get-node-names bus service path)
-             result)
+	     (dbus-introspect-get-node-names bus service path)
+	     result)
       (setq elt (expand-file-name elt path))
       (setq result
-            (append result (dbus-introspect-get-all-nodes bus service elt))))))
+	    (append result (dbus-introspect-get-all-nodes bus service elt))))))
 
 (defun dbus-introspect-get-interface-names (bus service path)
   "Return all interface names of SERVICE in D-Bus BUS at object path PATH.
@@ -836,13 +836,13 @@ be \"out\"."
     (mapconcat
      (lambda (x)
        (let ((arg (dbus-introspect-get-argument
-                   bus service path interface name x)))
-         (if (or (not (stringp direction))
-                 (string-equal
-                  direction
-                  (dbus-introspect-get-attribute arg "direction")))
-             (dbus-introspect-get-attribute arg "type")
-           "")))
+		   bus service path interface name x)))
+	 (if (or (not (stringp direction))
+		 (string-equal
+		  direction
+		  (dbus-introspect-get-attribute arg "direction")))
+	     (dbus-introspect-get-attribute arg "type")
+	   "")))
      (dbus-introspect-get-argument-names bus service path interface name)
      "")))
 

@@ -91,4 +91,3 @@ SUFFIXES = .doc.c
 ## Create assembler output (debugging purposes only)
 .c.s:
 	$(COMPILE) -S -c $(cflags) $<
-

@@ -1,7 +1,7 @@
 /* dbusbind.c -- Elisp bindings for D-Bus. */
 
 /*
- * Time-stamp: <Wednesday Jan 25, 2012 14:23:45 steve>
+ * Time-stamp: <Sunday Jan 29, 2012 00:09:35 steve>
  * Created:    <2012-01-03>
  * Maintainer: Steve Youngs <steve@sxemacs.org>
  * Homepage:   http://www.sxemacs.org/
@@ -1581,7 +1581,7 @@ usage: (dbus-send-signal BUS SERVICE PATH INTERFACE SIGNAL &rest ARGS)
    BUS is either a Lisp symbol, :system or :session, or a string denoting
    the bus address.  */
 
-/* 
+/*
  * FIXME: Gotta fix this.
  * We kinda need it to get anything useful to happen. --SY.
  */

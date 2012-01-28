@@ -1,19 +1,19 @@
 /* dbusbind.h -- Definitions used in and for dbusbind.c  */
 
-/* 
+/*
  * Copyright (C) 2012 Steve Youngs
  */
 
 /*
- * Time-stamp: <Wednesday Jan 25, 2012 14:15:31 steve>
- * Created:    <2012-01-22>  
- * Author:     Steve Youngs <steve@sxemacs.org>  
- * Maintainer: Steve Youngs <steve@sxemacs.org>  
- * Homepage:   http://www.sxemacs.org/  
+ * Time-stamp: <Sunday Jan 29, 2012 00:09:59 steve>
+ * Created:    <2012-01-22>
+ * Author:     Steve Youngs <steve@sxemacs.org>
+ * Maintainer: Steve Youngs <steve@sxemacs.org>
+ * Homepage:   http://www.sxemacs.org/
  */
- 
+
 /*
- * This file is part of SXEmacs.  
+ * This file is part of SXEmacs.
 
  * SXEmacs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
