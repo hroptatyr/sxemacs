@@ -237,7 +237,7 @@ BUFFER defaults to the current buffer if omitted.
 /* The current syntax state */
 struct syntax_cache syntax_cache;
 
-/* 
+/*
    Update syntax_cache to an appropriate setting for position POS
 
    The sign of COUNT gives the relative position of POS wrt the

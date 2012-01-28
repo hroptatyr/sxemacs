@@ -816,11 +816,11 @@ static void unix_init_process(void)
 static void
 unix_init_process_io_handles(Lisp_Process * p, void *in, void *out, int flags)
 {
-        Lisp_Object process = Qnil;
+	Lisp_Object process = Qnil;
 	USID        usid = FD_TO_USID((EMACS_INT)in);
-        XSETPROCESS(process, p);
-        puthash((const void *)usid, LISP_TO_VOID(process),
-                usid_to_process);
+	XSETPROCESS(process, p);
+	puthash((const void *)usid, LISP_TO_VOID(process),
+		usid_to_process);
 	UNIX_DATA(p)->infd = (EMACS_INT)in;
 }
 
@@ -908,7 +908,7 @@ unix_create_process(Lisp_Process * p,
 			int xforkin = forkin;
 			int xforkout = forkout;
 
-			/* Checking for quit in the child is bad because that will 
+			/* Checking for quit in the child is bad because that will
 			   cause I/O, and that, in turn, can confuse the X connection. */
 			begin_dont_check_for_quit();
 
@@ -1274,9 +1274,9 @@ unix_send_process(Lisp_Object proc, lstream_t lstream)
 
 		do {
 			Lstream_data_count writeret;
-                        if (p->process_type!=PROCESS_TYPE_NETWORK_SERVER_LISTEN) {
+			if (p->process_type!=PROCESS_TYPE_NETWORK_SERVER_LISTEN) {
 				chunklen = Lstream_read(lstream, chunkbuf, 512);
-                        }
+			}
 			old_sigpipe =
 			    (SIGTYPE(*)(int))signal(SIGPIPE, send_process_trap);
 			if (chunklen > 0) {
@@ -1286,7 +1286,7 @@ unix_send_process(Lisp_Object proc, lstream_t lstream)
 				case PROCESS_TYPE_NETWORK_SERVER_LISTEN:
 					report_file_error ("no writing to listen process possible",
 							   list1 (proc));
-                                        break;
+					break;
 				case PROCESS_TYPE_SSL:
 				case PROCESS_TYPE_PROC:
 				case PROCESS_TYPE_NETWORK:
@@ -1412,8 +1412,8 @@ static USID unix_deactivate_process(Lisp_Process * p)
 	/* closing the outstream could result in SIGPIPE, so ignore it. */
 	old_sigpipe = (SIGTYPE(*)(int))signal(SIGPIPE, SIG_IGN);
 	usid =  FD_TO_USID(UNIX_DATA(p)->infd);
-        event_stream_delete_stream_pair(p->pipe_instream,
-                                        p->pipe_outstream);
+	event_stream_delete_stream_pair(p->pipe_instream,
+					p->pipe_outstream);
 
 	signal(SIGPIPE, old_sigpipe);
 
@@ -1516,7 +1516,7 @@ unix_kill_child_process(Lisp_Object proc, int signo,
 #ifdef SIGNALS_VIA_CHARACTERS
 		/* If possible, send signals to the entire pgrp
 		   by sending an input character to it.  */
-		if (d->subtty >= 0) 
+		if (d->subtty >= 0)
 		{
 			char sigchar = process_signal_char(d->subtty, signo);
 			if (sigchar) {
@@ -1531,8 +1531,8 @@ unix_kill_child_process(Lisp_Object proc, int signo,
 		if (pgid == -1)
 			ioctl(d->infd, TIOCGPGRP, &pgid);	/* BSD */
 		if (pgid == -1 && d->subtty >= 0)
-	                /* Only this works on AIX! */
-			ioctl(d->subtty, TIOCGPGRP, &pgid);	
+			/* Only this works on AIX! */
+			ioctl(d->subtty, TIOCGPGRP, &pgid);
 #endif				/* TIOCGPGRP */
 
 		if (pgid == -1) {
@@ -1956,24 +1956,24 @@ unix_open_network_stream(Lisp_Object name, Lisp_Object host,
 */
 static Lisp_Object unix_network_process_listener(Lisp_Object process)
 {
-        Lisp_Process *listener = 0,
-                     *p = XPROCESS(process);
-        Lisp_Object   ret = Qnil;
-        int           sock = 0;
-        struct  gcpro ngcpro1;
+	Lisp_Process *listener = 0,
+		     *p = XPROCESS(process);
+	Lisp_Object   ret = Qnil;
+	int           sock = 0;
+	struct  gcpro ngcpro1;
 
-        if (!PROCESS_READABLE_P(p)) 
-                return Qnil;
+	if (!PROCESS_READABLE_P(p))
+		return Qnil;
 
-        if (!CONSP(p->pid) || NILP(XCDR(XCDR(p->pid))))
-                return Qnil;
+	if (!CONSP(p->pid) || NILP(XCDR(XCDR(p->pid))))
+		return Qnil;
 
-        NGCPRO1(ret);
-        sock = XINT(XCAR(XCDR(p->pid)));
-        listener = get_process_from_usid(FD_TO_USID(sock));
-        ret = listener ? (Lisp_Object)listener : Qnil;
-        NUNGCPRO;
-        return ret;
+	NGCPRO1(ret);
+	sock = XINT(XCAR(XCDR(p->pid)));
+	listener = get_process_from_usid(FD_TO_USID(sock));
+	ret = listener ? (Lisp_Object)listener : Qnil;
+	NUNGCPRO;
+	return ret;
 }
 
 /*
@@ -1995,101 +1995,101 @@ static Lisp_Object exec_acceptor_unwind(Lisp_Object datum)
 */
 static void unix_network_server_accept(Lisp_Object process)
 {
-        Lisp_Process *p = XPROCESS(process);
-        Lisp_Object np = Qnil;
-        Lisp_Object acceptor = Qnil, filter = Qnil, sentinel = Qnil;
-        Lisp_Object bufname = Qnil;
-        Lisp_Object buffer = Qnil;
-        long int ns, inch, outch;
+	Lisp_Process *p = XPROCESS(process);
+	Lisp_Object np = Qnil;
+	Lisp_Object acceptor = Qnil, filter = Qnil, sentinel = Qnil;
+	Lisp_Object bufname = Qnil;
+	Lisp_Object buffer = Qnil;
+	long int ns, inch, outch;
 	struct sockaddr_in sa;
-        int sa_size = sizeof(sa);
-        struct gcpro ngcpro1, ngcpro2, ngcpro3, ngcpro4, ngcpro5;
+	int sa_size = sizeof(sa);
+	struct gcpro ngcpro1, ngcpro2, ngcpro3, ngcpro4, ngcpro5;
 
-        if (!PROCESS_READABLE_P(p)) 
-                return;
+	if (!PROCESS_READABLE_P(p))
+		return;
 
-        /* Make sure the listen process is not disconnected
-           afterwards.  We have to make this here because in process.c
-           we should not have any knowledge we need to do this, and in
-           unix_open_network_server_stream we have no access to the
-           process struct. It works, so I'm not complaining...
-         */
-        UNIX_DATA(p)->connected_via_filedesc_p = 1;
-        
-        errno = 0; /* if we got an error, let it be from the accept call */
-        ns = accept((int)UNIX_DATA(p)->infd, (struct sockaddr*)(&sa),
+	/* Make sure the listen process is not disconnected
+	   afterwards.  We have to make this here because in process.c
+	   we should not have any knowledge we need to do this, and in
+	   unix_open_network_server_stream we have no access to the
+	   process struct. It works, so I'm not complaining...
+	 */
+	UNIX_DATA(p)->connected_via_filedesc_p = 1;
+
+	errno = 0; /* if we got an error, let it be from the accept call */
+	ns = accept((int)UNIX_DATA(p)->infd, (struct sockaddr*)(&sa),
 		    (socklen_t*)&sa_size);
-        if ( ns < 0 ) 
-                return;
+	if ( ns < 0 )
+		return;
 
-        NGCPRO5(np,bufname,acceptor,filter,sentinel);
-        if (CONSP(p->process_type_data)) {
-                acceptor = XCAR(p->process_type_data);
-                filter = XCDR(p->process_type_data);
-                if (CONSP(filter)) {
-                        sentinel = XCDR(filter);
-                        filter   = XCAR(filter);
-                }
-                if (CONSP(sentinel)) {
-                        bufname  = XCDR(sentinel);
-                        sentinel = XCAR(sentinel);
-                }
-                if (CONSP(bufname)) {
-                        bufname  = XCAR(bufname);
-                }
-        }
-        if (!NILP(bufname)) {
-                Lisp_Object args[] = {
+	NGCPRO5(np,bufname,acceptor,filter,sentinel);
+	if (CONSP(p->process_type_data)) {
+		acceptor = XCAR(p->process_type_data);
+		filter = XCDR(p->process_type_data);
+		if (CONSP(filter)) {
+			sentinel = XCDR(filter);
+			filter   = XCAR(filter);
+		}
+		if (CONSP(sentinel)) {
+			bufname  = XCDR(sentinel);
+			sentinel = XCAR(sentinel);
+		}
+		if (CONSP(bufname)) {
+			bufname  = XCAR(bufname);
+		}
+	}
+	if (!NILP(bufname)) {
+		Lisp_Object args[] = {
 			build_string("<server port:%S listened_on:%S>"),
-                        make_int(sa.sin_port), bufname
+			make_int(sa.sin_port), bufname
 		};
-                bufname = Fformat( 3, args );
-        } else {
-                Lisp_Object args[] = {
+		bufname = Fformat( 3, args );
+	} else {
+		Lisp_Object args[] = {
 			build_string("<server proc:%S pid:%S service:%S>"),
 			p->name, p->pid, make_int(sa.sin_port)
 		};
-                bufname = Fformat( 5, args );
-        }
-        if (!NILP(bufname) ) {
-                bufname = Fgenerate_new_buffer_name(bufname,Qnil);
-                buffer  =  Fget_buffer_create(bufname);
-        }
-        np = make_process_internal(p->name);
-        XPROCESS(np)->pid = Fcons( make_int(sa.sin_port),
-                                   Fcons(make_int(UNIX_DATA(p)->infd),p->pid));
+		bufname = Fformat( 5, args );
+	}
+	if (!NILP(bufname) ) {
+		bufname = Fgenerate_new_buffer_name(bufname,Qnil);
+		buffer  =  Fget_buffer_create(bufname);
+	}
+	np = make_process_internal(p->name);
+	XPROCESS(np)->pid = Fcons( make_int(sa.sin_port),
+				   Fcons(make_int(UNIX_DATA(p)->infd),p->pid));
 	XPROCESS(np)->process_type = PROCESS_TYPE_NETWORK;
 	XPROCESS(np)->buffer = buffer;
-        inch = ns;
-        outch = dup(ns);
+	inch = ns;
+	outch = dup(ns);
 	set_socket_nonblocking_maybe(inch, sa.sin_port, "tcp");
 	init_process_io_handles(XPROCESS(np), (void *)inch, (void *)outch,
 				STREAM_NETWORK_CONNECTION);
-        /* Process the call backs.. */
-        if (CONSP(p->process_type_data)) {
-                if (!NILP(filter)) {
-                        XPROCESS(np)->filter = filter;
-                }
-                if (!NILP(sentinel)) {
-                        XPROCESS(np)->sentinel = sentinel;
-                }
-                if (!NILP(acceptor)) {
-                        int speccount = specpdl_depth();
-                        record_unwind_protect(exec_acceptor_unwind,
-                                              noseeum_cons(process, acceptor));
-                        running_asynch_code = 1;
-                        call1_trapping_errors("Error in server stream acceptor",
-                                              acceptor, np);
-                        running_asynch_code = 0;
-                        restore_match_data();
-                        unbind_to(speccount, Qnil);
-                        
-                }
-        } else {
-                /* We have to log something here... */
-        }
+	/* Process the call backs.. */
+	if (CONSP(p->process_type_data)) {
+		if (!NILP(filter)) {
+			XPROCESS(np)->filter = filter;
+		}
+		if (!NILP(sentinel)) {
+			XPROCESS(np)->sentinel = sentinel;
+		}
+		if (!NILP(acceptor)) {
+			int speccount = specpdl_depth();
+			record_unwind_protect(exec_acceptor_unwind,
+					      noseeum_cons(process, acceptor));
+			running_asynch_code = 1;
+			call1_trapping_errors("Error in server stream acceptor",
+					      acceptor, np);
+			running_asynch_code = 0;
+			restore_match_data();
+			unbind_to(speccount, Qnil);
+
+		}
+	} else {
+		/* We have to log something here... */
+	}
 	event_stream_select_process(XPROCESS(np));
-        NUNGCPRO;
+	NUNGCPRO;
 }
 
 /* Open a TCP network connection to a given HOST/SERVICE.
@@ -2100,8 +2100,8 @@ static void unix_network_server_accept(Lisp_Object process)
 
 static void
 unix_open_network_server_stream(Lisp_Object name, Lisp_Object host,
-                                Lisp_Object service, Lisp_Object protocol,
-                                void **vinfd, void **voutfd)
+				Lisp_Object service, Lisp_Object protocol,
+				void **vinfd, void **voutfd)
 {
 	EMACS_INT inch;
 	EMACS_INT outch;
@@ -2109,11 +2109,11 @@ unix_open_network_server_stream(Lisp_Object name, Lisp_Object host,
 	volatile int port;
 	volatile int retry = 0;
 	int retval;
-        /* FIXME: Limited to 5 since it is the maximum for several BSD
-           based implementations of sockets, and it is an acceptable
-           value for a low rate of service purpose like this facility
-           was designed for. */
-        int listenQ = 5; 
+	/* FIXME: Limited to 5 since it is the maximum for several BSD
+	   based implementations of sockets, and it is an acceptable
+	   value for a low rate of service purpose like this facility
+	   was designed for. */
+	int listenQ = 5;
 
 
 	if (!EQ(protocol, Qtcp) && !EQ(protocol, Qudp))
@@ -2152,24 +2152,24 @@ unix_open_network_server_stream(Lisp_Object name, Lisp_Object host,
 		else		/* EQ (protocol, Qudp) */
 			hints.ai_socktype = SOCK_DGRAM;
 		hints.ai_protocol = 0;
-                if (SYMBOLP(host) ) {
-                        if (EQ(host,Qip_any)) {
-                                hints.ai_flags |= AI_PASSIVE;
-                        } else if (!EQ(host,Qlocalhost)) {
-                                invalid_argument("invalid host ",host);
-                        } else {
-                                /* If using localhost, not passing
-                                   AI_PASSIVE will cause getaddrinfo
-                                   to return a proper addr spec for
-                                   listening only to local
-                                   connections. */
-                        }
-                        retval = getaddrinfo(NULL, portstring, &hints, &res);
-                } else {
-                        CHECK_STRING(host);
-                        LISP_STRING_TO_EXTERNAL(host, ext_host, Qnative);
-                        retval = getaddrinfo(ext_host, portstring, &hints, &res);
-                }
+		if (SYMBOLP(host) ) {
+			if (EQ(host,Qip_any)) {
+				hints.ai_flags |= AI_PASSIVE;
+			} else if (!EQ(host,Qlocalhost)) {
+				invalid_argument("invalid host ",host);
+			} else {
+				/* If using localhost, not passing
+				   AI_PASSIVE will cause getaddrinfo
+				   to return a proper addr spec for
+				   listening only to local
+				   connections. */
+			}
+			retval = getaddrinfo(NULL, portstring, &hints, &res);
+		} else {
+			CHECK_STRING(host);
+			LISP_STRING_TO_EXTERNAL(host, ext_host, Qnative);
+			retval = getaddrinfo(ext_host, portstring, &hints, &res);
+		}
 		if (retval != 0) {
 			char *gai_error_l;
 
@@ -2230,8 +2230,8 @@ unix_open_network_server_stream(Lisp_Object name, Lisp_Object host,
 			   a hung network. */
 			can_break_system_calls = 1;
 			retval = bind(s, lres->ai_addr, lres->ai_addrlen);
-                        if (retval >= 0 )
-                                retval = listen(s, listenQ); 
+			if (retval >= 0 )
+				retval = listen(s, listenQ);
 			can_break_system_calls = 0;
 			if (retval == -1) {
 				xerrno = errno;
@@ -2327,17 +2327,17 @@ unix_open_network_server_stream(Lisp_Object name, Lisp_Object host,
 				invalid_argument("Unknown service", service);
 			port = svc_info->s_port;
 		}
-                if (SYMBOLP(host)) {
-                        if (EQ(host,Qip_any)) {
-                                address.sin_addr.s_host = htonl(INADDR_ANY);
-                        } else if (EQ(host,Qlocalhost)) {
-                                address.sin_addr.s_host = htonl(INADDR_LOOPBACK);
-                        } else {
-                                invalid_argument("invalid host ",host);
-                        }
-                } else {
-                        get_internet_address(host, &address, ERROR_ME);
-                }
+		if (SYMBOLP(host)) {
+			if (EQ(host,Qip_any)) {
+				address.sin_addr.s_host = htonl(INADDR_ANY);
+			} else if (EQ(host,Qlocalhost)) {
+				address.sin_addr.s_host = htonl(INADDR_LOOPBACK);
+			} else {
+				invalid_argument("invalid host ",host);
+			}
+		} else {
+			get_internet_address(host, &address, ERROR_ME);
+		}
 		address.sin_port = port;
 
 		if (EQ(protocol, Qtcp))
@@ -2385,8 +2385,8 @@ unix_open_network_server_stream(Lisp_Object name, Lisp_Object host,
 		can_break_system_calls = 1;
 		retval =
 		    bind(s, (struct sockaddr *)&address, sizeof(address));
-                if ( retval >= 0 ) 
-                        listen( s, listenQ ); /* @@@ FIXME: This should be a parameter */
+		if ( retval >= 0 )
+			listen( s, listenQ ); /* @@@ FIXME: This should be a parameter */
 		can_break_system_calls = 0;
 		if (retval == -1 && errno != EISCONN) {
 			int xerrno = errno;

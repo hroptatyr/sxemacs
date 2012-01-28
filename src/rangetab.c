@@ -62,7 +62,7 @@ print_range_table(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		if (rte->first == rte->last)
 			write_fmt_str(printcharfun, "%ld ", (long)(rte->first));
 		else
-			write_fmt_str(printcharfun, "(%ld %ld) ", 
+			write_fmt_str(printcharfun, "(%ld %ld) ",
 				      (long)(rte->first),
 				      (long)(rte->last));
 		print_internal(rte->val, printcharfun, 1);

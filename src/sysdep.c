@@ -1976,7 +1976,7 @@ char *start_of_text(void)
  *
  */
 
-#if defined(ORDINARY_LINK) 
+#if defined(ORDINARY_LINK)
 extern char **environ;
 #endif
 
@@ -2893,7 +2893,7 @@ static int process_times_available;
 
 static int get_process_times_1(long *user_ticks, long *system_ticks)
 {
-#if defined (_SC_CLK_TCK) || defined (CLK_TCK) 
+#if defined (_SC_CLK_TCK) || defined (CLK_TCK)
 	/* We have the POSIX times() function available. */
 	struct tms tttt;
 	times(&tttt);
