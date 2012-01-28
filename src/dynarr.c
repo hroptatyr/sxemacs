@@ -137,16 +137,16 @@ void Dynarr_resize(void *d, int size)
        Dynarr *dy = (Dynarr *) d;
        int newsize = max(Dynarr_min_size,dy->max);
 
-       
+
        if (dy->max <= 16)
-               while(newsize < size)
-                       /* newsize *= 2 */
-                       newsize <<= 1;
+	       while(newsize < size)
+		       /* newsize *= 2 */
+		       newsize <<= 1;
        else
-               while(newsize < size)
-                       /* newsize *= 1.5 */
-                       newsize += (newsize>>1);
-       
+	       while(newsize < size)
+		       /* newsize *= 1.5 */
+		       newsize += (newsize>>1);
+
 
 	/* Don't do anything if the array is already big enough. */
 	if (newsize > dy->max) {

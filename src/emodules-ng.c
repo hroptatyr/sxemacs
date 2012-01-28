@@ -5,7 +5,7 @@
  * Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
  *
  * This file is part of SXEmacs.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -316,7 +316,7 @@ __emodng_find_or_create(emodng_t in)
 	new->filename = xstrdup(info->filename);
 	new->name = xstrdup(in->name);
 	new->dl = in->dl;
-	new->openedp = 	new->initialisedp = new->docsloadedp = false;
+	new->openedp =	new->initialisedp = new->docsloadedp = false;
 
 	new->deps = in->deps;
 	new->ndeps = in->ndeps;

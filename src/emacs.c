@@ -434,13 +434,13 @@ extern Lisp_Object Vlisp_EXEC_SUFFIXES;
    However, unexpected exits occur in a few different ways:
 
      -- a memory access violation or other hardware-generated exception
-        occurs.  This is the worst possible problem to deal with, because
-        the fault can occur while SXEmacs is in any state whatsoever, even
-        quite unstable ones.  As a result, we need to be *extremely* careful
-        what we do.
+	occurs.  This is the worst possible problem to deal with, because
+	the fault can occur while SXEmacs is in any state whatsoever, even
+	quite unstable ones.  As a result, we need to be *extremely* careful
+	what we do.
      -- we are using one X display (or if we've used more, we've closed the
-        others already), and some hardware or other problem happens and
-        suddenly we've lost our connection to the display.  In this situation,
+	others already), and some hardware or other problem happens and
+	suddenly we've lost our connection to the display.  In this situation,
 	things are not so dire as in the last one; our code itself isn't
 	trashed, so we can continue execution as normal, after having set
 	things up so that we can exit at the appropriate time.  Our exit
@@ -539,12 +539,12 @@ debug_can_access_memory(void *ptr, Bytecount len)
 		old_sigsegv =
 			(SIGTYPE(*)(int))signal(SIGSEGV, debug_memory_error);
 #endif
-                /*
-                 * Examine memory pool at PTR, trying to cheat
-                 * compiler's optimisations.
-                 */
-                while (len-- > 0) {
-                        dummy_char = ((char*)ptr)[len];
+		/*
+		 * Examine memory pool at PTR, trying to cheat
+		 * compiler's optimisations.
+		 */
+		while (len-- > 0) {
+			dummy_char = ((char*)ptr)[len];
 		}
 	} else {
 		retval = 0;
@@ -679,10 +679,10 @@ make_arg_list_1(int argc, Extbyte ** argv, int skip_args)
 	REGISTER int i;
 
 	for (i = argc - 1; i >= 0; i--) {
-                if (i != 0 && i <= skip_args)
-                        continue;
+		if (i != 0 && i <= skip_args)
+			continue;
 
-                result = Fcons(build_ext_string(argv[i], Qcommand_argument_encoding), result);
+		result = Fcons(build_ext_string(argv[i], Qcommand_argument_encoding), result);
 	}
 	return result;
 }
@@ -1868,7 +1868,7 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 #endif
 
 #ifdef HAVE_LIBFFI
-                vars_of_ffi();
+		vars_of_ffi();
 #endif
 
 		vars_of_dllist();
@@ -2104,7 +2104,7 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		reinit_complex_vars_of_minibuf();
 
 #ifdef HAVE_LIBFFI
-                reinit_vars_of_ffi();
+		reinit_vars_of_ffi();
 #endif
 
 #if defined USE_STATIC_ASE && USE_STATIC_ASE
@@ -2569,127 +2569,127 @@ extern void init_bdwgc(void);
 int
 main(int argc, char **argv, char **envp)
 {
-        int volatile vol_argc = argc;
-        char **volatile vol_argv = argv;
-        char **volatile vol_envp = envp;
-        /* This is hairy.  We need to compute where the SXEmacs binary was invoked
-           from because temacs initialization requires it to find the lisp
-           directories.  The code that recomputes the path is guarded by the
-           restarted flag.  There are three possible paths I've found so far
-           through this:
+	int volatile vol_argc = argc;
+	char **volatile vol_argv = argv;
+	char **volatile vol_envp = envp;
+	/* This is hairy.  We need to compute where the SXEmacs binary was invoked
+	   from because temacs initialization requires it to find the lisp
+	   directories.  The code that recomputes the path is guarded by the
+	   restarted flag.  There are three possible paths I've found so far
+	   through this:
 
-           temacs -- When running temacs for basic build stuff, the first main_1
-           will be the only one invoked.  It must compute the path else there
-           will be a very ugly bomb in startup.el (can't find obvious location
-           for doc-directory data-directory, etc.).
+	   temacs -- When running temacs for basic build stuff, the first main_1
+	   will be the only one invoked.  It must compute the path else there
+	   will be a very ugly bomb in startup.el (can't find obvious location
+	   for doc-directory data-directory, etc.).
 
-           temacs w/ run-temacs on the command line -- This is run to bytecompile
-           all the out of date dumped lisp.  It will execute both of the main_1
-           calls and the second one must not touch the first computation because
-           argc/argv are hosed the second time through.
+	   temacs w/ run-temacs on the command line -- This is run to bytecompile
+	   all the out of date dumped lisp.  It will execute both of the main_1
+	   calls and the second one must not touch the first computation because
+	   argc/argv are hosed the second time through.
 
-           sxemacs -- Only the second main_1 is executed.  The invocation path must
-           computed but this only matters when running in place or when running
-           as a login shell.
+	   sxemacs -- Only the second main_1 is executed.  The invocation path must
+	   computed but this only matters when running in place or when running
+	   as a login shell.
 
-           As a bonus for straightening this out, SXEmacs can now be run in place
-           as a login shell.  This never used to work.
+	   As a bonus for straightening this out, SXEmacs can now be run in place
+	   as a login shell.  This never used to work.
 
-           As another bonus, we can now guarantee that
-           (concat invocation-directory invocation-name) contains the filename
-           of the SXEmacs binary we are running.  This can now be used in a
-           definite test for out of date dumped files.  -slb */
-        int restarted = 0;
+	   As another bonus, we can now guarantee that
+	   (concat invocation-directory invocation-name) contains the filename
+	   of the SXEmacs binary we are running.  This can now be used in a
+	   definite test for out of date dumped files.  -slb */
+	int restarted = 0;
 #ifdef QUANTIFY
-        quantify_stop_recording_data();
-        quantify_clear_data();
+	quantify_stop_recording_data();
+	quantify_clear_data();
 #endif /* QUANTIFY */
 
-        inhibit_non_essential_printing_operations = 1;
-        suppress_early_error_handler_backtrace = 0;
-        lim_data = 0;	/* force reinitialization of this variable */
+	inhibit_non_essential_printing_operations = 1;
+	suppress_early_error_handler_backtrace = 0;
+	lim_data = 0;	/* force reinitialization of this variable */
 
-        /* Lisp_Object must fit in a word; check VALBITS and GCTYPEBITS */
-        assert(sizeof(Lisp_Object) == sizeof(void *));
+	/* Lisp_Object must fit in a word; check VALBITS and GCTYPEBITS */
+	assert(sizeof(Lisp_Object) == sizeof(void *));
 
 #ifdef LINUX_SBRK_BUG
-        sbrk(1);
+	sbrk(1);
 #endif
 
 	/* defined in alloc.c */
 	init_bdwgc();
 
-        if (!initialized) {
+	if (!initialized) {
 #ifdef DOUG_LEA_MALLOC
-                if (mallopt(M_MMAP_MAX, 0) != 1)
-                        abort();
+		if (mallopt(M_MMAP_MAX, 0) != 1)
+			abort();
 #endif
-                run_temacs_argc = 0;
-                if (!SETJMP(run_temacs_catch)) {
-                        main_1(vol_argc, vol_argv, vol_envp, 0);
-                }
-                /* run-emacs-from-temacs called */
-                restarted = 1;
-                vol_argc = run_temacs_argc;
-                vol_argv = run_temacs_argv;
+		run_temacs_argc = 0;
+		if (!SETJMP(run_temacs_catch)) {
+			main_1(vol_argc, vol_argv, vol_envp, 0);
+		}
+		/* run-emacs-from-temacs called */
+		restarted = 1;
+		vol_argc = run_temacs_argc;
+		vol_argv = run_temacs_argv;
 #ifdef _SCO_DS
-                /* This makes absolutely no sense to anyone involved.  There are
-                   several people using this stuff.  We've compared versions on
-                   everything we can think of.  We can find no difference.
-                   However, on both my systems environ is a plain old global
-                   variable initialized to zero.  _environ is the one that
-                   contains pointers to the actual environment.
+		/* This makes absolutely no sense to anyone involved.  There are
+		   several people using this stuff.  We've compared versions on
+		   everything we can think of.  We can find no difference.
+		   However, on both my systems environ is a plain old global
+		   variable initialized to zero.  _environ is the one that
+		   contains pointers to the actual environment.
 
-                   Since we can't figure out the difference (and we're hours
-                   away from a release), this takes a very cowardly approach and
-                   is bracketed with both a system specific preprocessor test
-                   and a runtime "do you have this problem" test
+		   Since we can't figure out the difference (and we're hours
+		   away from a release), this takes a very cowardly approach and
+		   is bracketed with both a system specific preprocessor test
+		   and a runtime "do you have this problem" test
 
-                   06/20/96 robertl@dgii.com */
-                {
-                        extern char **_environ;
-                        if ((unsigned)environ == 0)
-                                environ = _environ;
-                }
+		   06/20/96 robertl@dgii.com */
+		{
+			extern char **_environ;
+			if ((unsigned)environ == 0)
+				environ = _environ;
+		}
 #endif				/* _SCO_DS */
-                vol_envp = environ;
-        }
+		vol_envp = environ;
+	}
 #if defined (RUN_TIME_REMAP) && ! defined (PDUMP)
-        else
-                /* obviously no-one uses this because where it was before initialized was
-                 *always* true */
-                run_time_remap(argv[0]);
+	else
+		/* obviously no-one uses this because where it was before initialized was
+		 *always* true */
+		run_time_remap(argv[0]);
 #endif
 
 #ifdef DOUG_LEA_MALLOC
-        if (initialized && (malloc_state_ptr != NULL)) {
-                int rc = malloc_set_state(malloc_state_ptr);
-                if (rc != 0) {
-                        stderr_out("malloc_set_state failed, rc = %d\n",
-                                   rc);
-                        abort();
-                }
+	if (initialized && (malloc_state_ptr != NULL)) {
+		int rc = malloc_set_state(malloc_state_ptr);
+		if (rc != 0) {
+			stderr_out("malloc_set_state failed, rc = %d\n",
+				   rc);
+			abort();
+		}
 #if 0
-                free(malloc_state_ptr);
+		free(malloc_state_ptr);
 #endif
 		/* mmap works in glibc-2.1, glibc-2.0 (Non-Mule only)
 		 * and Linux libc5 */
 #if (defined(__GLIBC__) && __GLIBC_MINOR__ >= 1) ||                     \
-        defined(_NO_MALLOC_WARNING_) ||                                 \
-        (defined(__GLIBC__) && __GLIBC_MINOR__ < 1 && !defined(MULE)) || \
-        defined(DEBUG_DOUG_LEA_MALLOC)
-                if (mallopt(M_MMAP_MAX, 0) != 1)
-                        abort();
+	defined(_NO_MALLOC_WARNING_) ||                                 \
+	(defined(__GLIBC__) && __GLIBC_MINOR__ < 1 && !defined(MULE)) || \
+	defined(DEBUG_DOUG_LEA_MALLOC)
+		if (mallopt(M_MMAP_MAX, 0) != 1)
+			abort();
 #endif
 #ifdef REL_ALLOC
-                r_alloc_reinit();
+		r_alloc_reinit();
 #endif
-        }
+	}
  #endif				/* DOUG_LEA_MALLOC */
 
-        run_temacs_argc = -1;
+	run_temacs_argc = -1;
 
-        main_1(vol_argc, vol_argv, vol_envp, restarted);
+	main_1(vol_argc, vol_argv, vol_envp, restarted);
 
 	return 0;		/* unreached */
 }

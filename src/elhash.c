@@ -1435,7 +1435,7 @@ void prune_weak_hash_tables(void)
 						remhash_1(ht, entries, e);
 						if (!HENTRY_CLEAR_P(e)) {
 							goto again;
-							
+
 						}
 					}
 				}

@@ -51,7 +51,7 @@ typedef void(*dynacat_intprinter_f)(void*, Lisp_Object);
 struct dynacat_s {
 	struct lrecord_header lheader;
 
-        Lisp_Object type;               /* type of emod object */
+	Lisp_Object type;               /* type of emod object */
 	Lisp_Object plist;              /* properties list */
 
 	void *ptr;			/* pointer to foreign data */

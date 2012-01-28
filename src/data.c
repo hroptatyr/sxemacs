@@ -276,7 +276,7 @@ DEFUN("keywordp", Fkeywordp, 1, 1, 0,	/*
 Return t if OBJECT is a keyword.
 
 A symbol is a Lisp object with a name. It can optionally have any and all of
-a value, a property list and an associated function. 
+a value, a property list and an associated function.
 */
       (object))
 {
@@ -1171,10 +1171,10 @@ interpret that float.
 		Bufbyte *end, save;
 		bigq bq;
 		Lisp_Object result;
-		
+
 		if (*p == '+')
 			p++;
-		
+
 		end = (Bufbyte*)p;
 		if (*end == '-')
 			end++;
@@ -1197,7 +1197,7 @@ interpret that float.
 		*end = '\0';
 
 		bigq_init(bq);
-		
+
 		bigq_set_string(bq, (const char *) p, b);
 		*end = save;
 		bigq_canonicalize(bq);
@@ -1214,7 +1214,7 @@ interpret that float.
 	{
 		Bufbyte *end, save;
 		Lisp_Object retval;
-		
+
 		if (*p == '+')
 			p++;
 		end = (Bufbyte*)p;
@@ -1588,8 +1588,8 @@ In this case, zeros are shifted in on the left.
  */
 
 DEFUN("primep", Fprimep, 1, 2, 0,	/*
-Return `nil' if NUMBER is known to be composite, return `t' if 
-NUMBER is definitely prime and return 'probably-prime if 
+Return `nil' if NUMBER is known to be composite, return `t' if
+NUMBER is definitely prime and return 'probably-prime if
 NUMBER seems to be prime but it is not certain.
 
 If optional argument CERTAINTY-THRESHOLD is non-nil, it should be a
@@ -1607,7 +1607,7 @@ The default is 8.
 
 	bznumber = Fcoerce_number(number, Qbigz, Qnil);
 	if (NILP(certainty_threshold))
-	        result = mpz_probab_prime_p(XBIGZ_DATA(bznumber), 8);
+		result = mpz_probab_prime_p(XBIGZ_DATA(bznumber), 8);
 	else if (NATNUMP(certainty_threshold))
 		result = mpz_probab_prime_p(XBIGZ_DATA(bznumber),
 					    XINT(certainty_threshold));
@@ -1949,7 +1949,7 @@ Return t if NUMBER is congruent to C modulo M, nil otherwise.
 
 DEFUN("perfect-power-p", Fperfect_power_p, 1, 1, 0, /*
 Return t if NUMBER is a perfect power, nil otherwise.
-An integer NUMBER is said to be a perfect power if there 
+An integer NUMBER is said to be a perfect power if there
 exist integers, a and b, such that a^b = NUMBER.
 */
       (number))
@@ -1963,7 +1963,7 @@ exist integers, a and b, such that a^b = NUMBER.
 
 DEFUN("perfect-square-p", Fperfect_square_p, 1, 1, 0, /*
 Return t if NUMBER is a perfect square, nil otherwise.
-An integer NUMBER is said to be a perfect square if there 
+An integer NUMBER is said to be a perfect square if there
 exists an integer b such that b^2 = NUMBER.
 */
       (number))
@@ -2484,8 +2484,8 @@ int finish_marking_weak_lists(void)
 
 		for (rest2 = XWEAK_LIST(rest)->list;
 		     /* We need to be trickier since we're inside of GC;
-		        use CONSP instead of !NILP in case of user-visible
-		        imperfect lists */
+			use CONSP instead of !NILP in case of user-visible
+			imperfect lists */
 		     CONSP(rest2); rest2 = XCDR(rest2)) {
 			Lisp_Object elem;
 			/* If the element is "marked" (meaning depends on the type
@@ -2618,8 +2618,8 @@ void prune_weak_lists(void)
 
 			for (rest2 = XWEAK_LIST(rest)->list, tortoise = rest2;
 			     /* We need to be trickier since we're inside of GC;
-			        use CONSP instead of !NILP in case of user-visible
-			        imperfect lists */
+				use CONSP instead of !NILP in case of user-visible
+				imperfect lists */
 			     CONSP(rest2);) {
 				/* It suffices to check the cons for marking,
 				   regardless of the type of weak list:
@@ -2747,10 +2747,10 @@ to `simple'.  Recognized types are
 
   `simple'       Objects in the list disappear if not pointed to.
   `assoc'        Objects in the list disappear if they are conses
-                 and either the car or the cdr of the cons is not
-	         pointed to.
+		 and either the car or the cdr of the cons is not
+		 pointed to.
   `key-assoc'    Objects in the list disappear if they are conses
-	         and the car is not pointed to.
+		 and the car is not pointed to.
   `value-assoc'  Objects in the list disappear if they are conses
 		 and the cdr is not pointed to.
   `full-assoc'   Objects in the list disappear if they are conses
