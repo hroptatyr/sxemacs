@@ -65,7 +65,7 @@ AC_COPYRIGHT(
 ### If configure succeeds, it leaves its status in config.status.
 ### A log of configuration tests can be found in config.log.
 ### If configure fails after disturbing the status quo,
-### 	config.status is removed.
+###	config.status is removed.
 ])
 
 AC_REVISION([SXEM4CS_GIT_VERSION])
@@ -317,7 +317,7 @@ OG_ARG_WITH([regex-malloc],
 
 OG_ARG_WITH([ffi],
 	AS_HELP_STRING([--with-ffi],
-		[Compile in experimental support for 
+		[Compile in experimental support for
 		Foreign Function Interface.]),
 	[yes], [YES])
 
@@ -385,7 +385,7 @@ OG_MULTIARG_WITH([ase], [dnl
 OG_ARG_WITH([compre],
 	AS_HELP_STRING([--with-compre],[
 		Provide exhaustive caching of compiled regexps. This will
-		mean that frequently used regexps will be faster to use 
+		mean that frequently used regexps will be faster to use
 		since the compile step will not be needed after first use.]),
 	[yes], [By default do cache compiled regexps.])
 
@@ -487,36 +487,36 @@ OG_ARG_WITH([external-widget],
 
 OG_ARG_WITH([menubars],
 	AS_HELP_STRING([--with-menubars=TYPE],
- 		[Type of menubars to use.  The Lucid menubars emulate
- 		Motif (mostly) but are faster.]),
+		[Type of menubars to use.  The Lucid menubars emulate
+		Motif (mostly) but are faster.]),
 	[lucid], [Lucid], [lucid no])
 
 OG_ARG_WITH([scrollbars],
 	AS_HELP_STRING([--with-scrollbars=TYPE],
- 		[Type of scrollbars to use.
- 		*WARNING*  The Motif scrollbars are currently broken.]),
+		[Type of scrollbars to use.
+		*WARNING*  The Motif scrollbars are currently broken.]),
 	[lucid], [Lucid], [lucid motif athena no])
 
 OG_ARG_WITH([dialogs],
 	AS_HELP_STRING([--with-dialogs=TYPE],
- 		[Type of dialog boxes to use.  Athena dialogs will
-                 be used if Athena can be found.]),
- 	[athena], [], [athena motif no])
+		[Type of dialog boxes to use.  Athena dialogs will
+		 be used if Athena can be found.]),
+	[athena], [], [athena motif no])
 
 OG_ARG_WITH([widgets],
 	AS_HELP_STRING([--with-widgets=TYPE],
- 		[Type of native widgets to use.  Athena widgets will
- 		be used if Athena can be found.]),
+		[Type of native widgets to use.  Athena widgets will
+		be used if Athena can be found.]),
 	[athena], [], [athena motif no])
 
 OG_ARG_WITH([athena],
 	AS_HELP_STRING([--with-athena=TYPE],
- 		[Type of Athena widgets to use.]),
+		[Type of Athena widgets to use.]),
 	[auto], [Autodetect], [auto xaw 3d next 95 xpm no])
 
 OG_ARG_WITH([xim],
 	AS_HELP_STRING([--with-xim],
- 		[Type of Mule input method to use.]),
+		[Type of Mule input method to use.]),
 	[auto], [Autodetect], [yes no xlib motif])
 
 OG_ARG_WITH([wmcommand],
@@ -637,13 +637,13 @@ OG_OPTION_GROUP(Cryptography options)
 
 OG_ARG_WITH([openssl],
 	AS_HELP_STRING([--with-openssl],
-		[Compile in experimental support for 
+		[Compile in experimental support for
 		OpenSSL libcrypto and libssl.]),
 	[yes], [YES])
 
 OG_ARG_WITH([gnutls],
 	AS_HELP_STRING([--with-gnutls],
-		[Compile in experimental support for 
+		[Compile in experimental support for
 		GnuTLS transport security.]),
 	[no], [NO])
 
@@ -736,7 +736,7 @@ OG_ARG_WITH([wnn6],
 dnl dnl Other Options
 dnl dnl =============
 dnl OG_OPTION_GROUP(Other options)
-dnl 
+dnl
 
 ## -------------------------------------------------------------------------
 ## Check for users who regularly forget about running autoconf
@@ -746,7 +746,7 @@ if test -f $0.ac -a $0.ac -nt $0; then
 fi
 
 #
-# Turn off core generation. We are already verifying the program fails, no need 
+# Turn off core generation. We are already verifying the program fails, no need
 # poluting the workspace. Of course if you are a SXEmacs developer you may want
 # to comemnt this on occasion :-)
 ulimit -c 0
@@ -1043,20 +1043,20 @@ fi
 dnl what exactly do we determine here? and where is it used?
 dnl dnl Determine GCC version.
 dnl if test "$GCC" = "yes"; then
-dnl 	AC_RUN_IFELSE([AC_LANG_SOURCE([[
+dnl	AC_RUN_IFELSE([AC_LANG_SOURCE([[
 dnl int main ()
 dnl {
 dnl #if __GNUC__ >= 3
-dnl 	return 11;
+dnl	return 11;
 dnl #else
-dnl 	return 0;
+dnl	return 0;
 dnl #endif
 dnl }]])], [:], [dnl
 dnl case "$?" in
 dnl 11)
-dnl 	echo "You appear to be using GCC version 3 or above."
-dnl 	__GCC3=yes
-dnl 	;;
+dnl	echo "You appear to be using GCC version 3 or above."
+dnl	__GCC3=yes
+dnl	;;
 dnl esac], [__GCC3=no])
 dnl fi
 
@@ -1111,10 +1111,10 @@ fi
 
 dnl dnl For debugging...
 dnl SXE_PRINT_VAR([libs_machine libs_system libs_termcap libs_standard
-dnl 	objects_machine objects_system c_switch_machine c_switch_system
-dnl 	ld_switch_machine ld_switch_system unexec ld_switch_shared
-dnl 	ld lib_gcc ld_text_start_addr start_files ordinary_link
-dnl 	have_terminfo mail_use_flock mail_use_lockf]) && echo ""
+dnl	objects_machine objects_system c_switch_machine c_switch_system
+dnl	ld_switch_machine ld_switch_system unexec ld_switch_shared
+dnl	ld lib_gcc ld_text_start_addr start_files ordinary_link
+dnl	have_terminfo mail_use_flock mail_use_lockf]) && echo ""
 
 dnl bitch at build attempt on win32 machines
 case "$opsys" in mingw* | cygwin*)
@@ -1277,7 +1277,7 @@ if test "$opsys" = "sol2"; then
     AC_MSG_CHECKING(for "-z ignore" linker flag)
     case "`ld -h 2>&1`" in
       *-z\ ignore\|record* ) AC_MSG_RESULT(yes)
-        SXE_PREPEND_UNDUP(-z ignore, ld_switch_site) ;;
+	SXE_PREPEND_UNDUP(-z ignore, ld_switch_site) ;;
       *) AC_MSG_RESULT(no) ;;
     esac
   fi
@@ -1594,10 +1594,10 @@ AC_CHECK_FUNC(readdir64_r, [AC_DEFINE([HAVE_LARGEFILE], [1], [Description here!]
 dnl Check for nlist.h
 AC_CHECK_HEADER([nlist.h], [AC_DEFINE([NLIST_STRUCT], [1], [Description here!])], [])
 
-dnl firstly check for pthread support so that we can use the 
+dnl firstly check for pthread support so that we can use the
 dnl asynchronous playing routines
 
-dnl special pthread handling 
+dnl special pthread handling
 dnl AIX uses pthreads instead of pthread, and HP/UX uses cma
 dnl FreeBSD uses -pthread
 AC_CHECK_LIB(pthread, pthread_create)
@@ -1622,7 +1622,7 @@ if test $ac_cv_lib_pthreads_pthread_create = yes; then
   SXE_PREPEND(-lpthreads, MM_LIBS)
 fi
 
-dnl test for HPUX cma threads. 
+dnl test for HPUX cma threads.
 AC_CHECK_LIB(cma, pthread_create)
 if test $ac_cv_lib_cma_pthread_create = yes; then
   have_threads=yes
@@ -1643,9 +1643,9 @@ AC_CACHE_VAL(ac_cv_ldflag_pthread,
 ])
 if eval "test \"`echo $ac_cv_ldflag_pthread`\" = yes"; then
 	AC_MSG_RESULT(yes)
-        have_threads=yes
-        SXE_PREPEND_UNDUP("-pthread", ld_switch_site)
-        SXE_PREPEND_UNDUP("-D_THREAD_SAFE", c_switch_site)
+	have_threads=yes
+	SXE_PREPEND_UNDUP("-pthread", ld_switch_site)
+	SXE_PREPEND_UNDUP("-D_THREAD_SAFE", c_switch_site)
 else
 	AC_MSG_RESULT(no)
 fi])
@@ -1764,11 +1764,11 @@ if test "$with_module_support $have_module_support" = "yes"; then
 	SXE_APPEND([modules], [MAKE_AM_SUBDIR])
 	SXE_APPEND([modules], [SRC_SUBDIR_DEPS])
 dnl else
-dnl 	MOD_CC="$SXEMACS_CC"
-dnl 	MODCFLAGS="\$(SXE_CFLAGS) -I../../src -I\$(sxe_srcdir)/../../src"
-dnl 	INSTALLPATH=""
-dnl 	MOD_INSTALL_PROGRAM="true"
-dnl 	OBJECT_TO_BUILD="\$(MODNAME).o"
+dnl	MOD_CC="$SXEMACS_CC"
+dnl	MODCFLAGS="\$(SXE_CFLAGS) -I../../src -I\$(sxe_srcdir)/../../src"
+dnl	INSTALLPATH=""
+dnl	MOD_INSTALL_PROGRAM="true"
+dnl	OBJECT_TO_BUILD="\$(MODNAME).o"
 fi
 
 if test "$opsys" != "darwin"; then
@@ -2050,8 +2050,8 @@ return sin(0.0);
 return sin(0.0);
 ]])], [AC_MSG_RESULT([yes])], [
 	AC_MSG_RESULT([no])
-        AC_MSG_WARN([No way to use math functions found. Reverting option append.])
-        LIBS=$save_LIBS])])
+	AC_MSG_WARN([No way to use math functions found. Reverting option append.])
+	LIBS=$save_LIBS])])
 
 
 
@@ -2192,7 +2192,7 @@ SXE_CHECK_SUFFICIENCY([multicast], [multicast])
 
 dnl Decnet
 if test "$with_dnet" = "yes"; then
-  AC_CHECK_LIB(dnet, main, 
+  AC_CHECK_LIB(dnet, main,
     [AC_DEFINE([HAVE_LIBDNET], [1], [Description here!])],
     [SXE_DIE("DECnet requested but can't find libdnet")])
 fi
@@ -2228,7 +2228,7 @@ if test "$with_x" != "no"; then
 	dnl -------------------------------------------
 	dnl AC_PATH_XTRA thinks it can find our X headers and includes, but
 	dnl it often gets it wrong, so we only use it as a last resort.
-	
+
 	dnl $OPENWINHOME implies --x-includes and --x-libraries
 	dnl Not (yet) handled by autoconf2
 	if test "$x_includes $x_libraries" = "NONE NONE" \
@@ -2268,7 +2268,7 @@ if test "$with_x" != "no"; then
 			"/usr/X11R6/lib" "/usr/lib/X11R6" \
 			"/usr/local/lib" "/usr/local/lib/X11" \
 			"/usr/lib" "/usr/lib/X11"; do
-      			if test -r "$dir/libX11.a"; then
+			if test -r "$dir/libX11.a"; then
 				x_libraries="$dir"
 				break
 			fi
@@ -2322,15 +2322,15 @@ if test "$with_x11" = "yes"; then
 	if test "$ac_cv_header_Xm_Xm_h" = "yes"; then
 		AC_CHECK_LIB([Xm], [XmStringFree], [got_motif=yes])
 	fi
-	
+
 	if test "$got_motif" != "yes"; then
 		dnl Try to find Motif dirs
 		dnl These take precedence over other X libs/includes, so PRE-pend
 		for lib_dir in \
 			"/usr/dt/lib" "/usr/lib/Motif2.1" \
 			"/usr/lib/Motif1.2" "/usr/lib/Motif1.1"; do
-		  	inc_dir=`echo $lib_dir | sed -e 's/lib/include/'`
-		  	if test -d "$lib_dir" -a -d "$inc_dir"; then
+			inc_dir=`echo $lib_dir | sed -e 's/lib/include/'`
+			if test -d "$lib_dir" -a -d "$inc_dir"; then
 				case "$x_libraries" in
 				*"$lib_dir"* )
 					;;
@@ -2384,9 +2384,9 @@ if test "$with_x11" = "yes"; then
 		fi
 		;;
 	esac
-	
+
 	LDFLAGS="$LDFLAGS $X_LIBS"
-	
+
 	if test "$extra_verbose" = "yes"; then
 		echo
 		echo "X11 compilation variables:"
@@ -2423,7 +2423,7 @@ dnl   if mkdir conftestdir; then
 dnl     cd conftestdir
 dnl     cat > Imakefile <<'EOF'
 dnl xetest:
-dnl 	@echo ${PROTO_DEFINES} ${STD_DEFINES}
+dnl	@echo ${PROTO_DEFINES} ${STD_DEFINES}
 dnl EOF
 dnl     if (xmkmf) >/dev/null 2>/dev/null && test -f Makefile; then
 dnl       # GNU make sometimes prints "make[1]: Entering...", which would confuse us.
@@ -2435,18 +2435,18 @@ dnl     for word in $xmkmf_defines; do
 dnl       case "$word" in
 dnl       -D__STDC__*) ;;
 dnl       -D* )
-dnl 	sym=`echo '' $word | sed -e 's:^ *-D::' -e 's:=.*::'`
-dnl 	case "$word" in
-dnl 	  -D*=* ) val=`echo '' $word | sed -e 's:^.*=::'` ;;
-dnl 	  *     ) val=1 ;;
-dnl 	esac
+dnl	sym=`echo '' $word | sed -e 's:^ *-D::' -e 's:=.*::'`
+dnl	case "$word" in
+dnl	  -D*=* ) val=`echo '' $word | sed -e 's:^.*=::'` ;;
+dnl	  *     ) val=1 ;;
+dnl	esac
 dnl dnl Avoid re-AC_DEFINE-ing xmkmf symbols we've already defined above.
-dnl 	if grep "^#define $sym " confdefs.h >/dev/null; then :; else
-dnl 	  if test "$val" = "1"
-dnl 	    then AC_DEFINE_UNQUOTED([$sym], [], [Description here!])
-dnl 	    else AC_DEFINE_UNQUOTED([$sym], [$val], [Description here!])
-dnl 	  fi
-dnl 	fi  ;;
+dnl	if grep "^#define $sym " confdefs.h >/dev/null; then :; else
+dnl	  if test "$val" = "1"
+dnl	    then AC_DEFINE_UNQUOTED([$sym], [], [Description here!])
+dnl	    else AC_DEFINE_UNQUOTED([$sym], [$val], [Description here!])
+dnl	  fi
+dnl	fi  ;;
 dnl       esac
 dnl     done
 dnl   fi
@@ -2466,7 +2466,7 @@ dnl   fi
 
 	dnl -lXt and -lX11 are required
 	dnl Some broken systems require the magic "-b i486-linuxaout" flag
-	
+
 	dnl Other broken systems will not pass these tests unless the pre and
 	dnl extra libs are passed on...
 	LIBS="$LIBS $X_PRE_LIBS $X_EXTRA_LIBS"
@@ -2487,7 +2487,7 @@ dnl   fi
 	dnl Require -lXt
 	AC_CHECK_LIB([Xt], [XtOpenDisplay], [SXE_PREPEND([-lXt], [libs_x])], [
 		AC_MSG_ERROR([Unable to find X11 libraries. Try using --x-libraries=<path> if you know the path, or --with-x=no to disable X11 support.])])
-	
+
 	AC_MSG_CHECKING([the version of X11 being used])
 	AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <X11/Intrinsic.h>
@@ -2495,15 +2495,15 @@ int main(int c, char *v[]) { return c>1 ? XlibSpecificationRelease : 0; }]])],
 		[./conftest foobar; x11_release=$?],[x11_release=4],[x11_release=4])
 	AC_MSG_RESULT(R${x11_release})
 	AC_DEFINE_UNQUOTED([X11_RELEASE], [${x11_release}], [Description here!])
-	
+
 	AC_CHECK_FUNCS([XConvertCase])
 	AC_CHECK_LIB([Xt], [XtRegisterDrawable])
 	if test "$ac_cv_lib_Xt_XtRegisterDrawable" = "yes"; then
 		AC_DEFINE([HAVE_XTREGISTERDRAWABLE], [1], [Description])
 	fi
-	
+
 	AC_CHECK_HEADERS(X11/Xlocale.h)
-	
+
 	dnl XFree86 has a non-standard prototype for this X11R6 function
 	AC_CHECK_FUNCS(XRegisterIMInstantiateCallback)
 	AC_MSG_CHECKING(for standard XRegisterIMInstantiateCallback prototype)
@@ -2529,7 +2529,7 @@ extern Bool XRegisterIMInstantiateCallback(
 		SXE_PREPEND([-lXmu], [libs_x])
 		AC_DEFINE([HAVE_XMU], [1], [Description here!])
 	fi
-	
+
 	dnl Autodetect -lXbsd
 	dnl #### Someone, please add a better function than main
 	AC_CHECK_LIB([Xbsd], [main], SXE_PREPEND([-lXbsd], [libs_x]))
@@ -2744,8 +2744,8 @@ if test "$with_tty" != "no"  ; then
 	    AC_CHECK_HEADER(term.h,    curses_h_file=term.h)
       fi
       if test -n "$curses_h_file"
-        then AC_MSG_WARN([Your system has the bogus ncurses include bug.])
-        else c_switch_site="$save_c_switch_site"
+	then AC_MSG_WARN([Your system has the bogus ncurses include bug.])
+	else c_switch_site="$save_c_switch_site"
       fi
     fi
   fi
@@ -2760,14 +2760,14 @@ if test "$with_tty" != "no"  ; then
     done
 
     for lib in curses terminfo termlib termcap; do
-          have_lib_eval=`eval echo \\$have_$lib`
-          if test "$have_lib_eval" = "yes"; then
-		AC_CHECK_LIB($lib, tparm, 
+	  have_lib_eval=`eval echo \\$have_$lib`
+	  if test "$have_lib_eval" = "yes"; then
+		AC_CHECK_LIB($lib, tparm,
 			  SXE_ADD_SXEUITTY_OBJS(terminfo.o),
 			  SXE_ADD_SXEUITTY_OBJS(tparam.o))
-	  	SXE_PREPEND(-l${lib}, LIBS)
-                break
-          fi
+		SXE_PREPEND(-l${lib}, LIBS)
+		break
+	  fi
     done
   fi
   if test -n "$curses_h_file"; then
@@ -2948,7 +2948,7 @@ if test "$with_media_internal" != "no"; then
 	have_media_internal=yes
 fi
 
-## Since almost any of the below tests uses pkgconfig we make a 
+## Since almost any of the below tests uses pkgconfig we make a
 ## once-for-all-times check now
 SXE_SEARCH_CONFIG_PROG([pkg-config])
 
@@ -3156,7 +3156,7 @@ if test "$with_sound_jack" != "no"; then
 	AC_MSG_CHECKING([for sufficient Jack support])
 	if test "$have_sound_jack" = "yes"; then
 		AC_MSG_RESULT([yes])
-		dnl okay, we have Jack on the system, but we have no working 
+		dnl okay, we have Jack on the system, but we have no working
 		dnl interface to it :(
 		JACK_LIBS=`$PKG_CONFIG --libs jack`
 		JACK_VERSION=`$PKG_CONFIG --modversion jack`
@@ -3477,7 +3477,7 @@ test -d lock || mkdir lock
 for dir in $MAKE_SUBDIR; do
   case "$dir" in */* ) dnl Implement mkdir -p
     ( for d in `echo $dir | sed 's:/: :g'` ; do
-        test -d "$d" || mkdir "$d"; cd "$d"
+	test -d "$d" || mkdir "$d"; cd "$d"
       done ) ;;
    * ) test -d "$dir" || mkdir "$dir" ;;
   esac
@@ -3512,7 +3512,7 @@ fi
 
 ### whether to build with profile.o
 AC_RUN_IFELSE([AC_LANG_SOURCE([[
-int main(int c, char *v[]) 
+int main(int c, char *v[])
 {
 #ifdef HAVE_SETITIMER
 	return 1;
@@ -3525,7 +3525,7 @@ AM_CONDITIONAL([HAVE_SETITIMER], [test "$have_setitimer" = "1"])
 
 ## whether to build with sheap.o
 AC_RUN_IFELSE([AC_LANG_SOURCE([[
-int main(int c, char *v[]) 
+int main(int c, char *v[])
 {
 #if defined(HEAP_IN_DATA) && !defined(PDUMP)
 	return 1;
@@ -3763,11 +3763,11 @@ case `$MAKE --version 2>/dev/null` in
    ;;
    *)
 	echo ===================================
-        echo $MAKE does not seem to be GNU Make
-        echo If you find makefile errors please try using GNU Make as some 
-        echo autoconf constructs may not be proper for your make variant
+	echo $MAKE does not seem to be GNU Make
+	echo If you find makefile errors please try using GNU Make as some
+	echo autoconf constructs may not be proper for your make variant
 	echo ===================================
-   ;; 
+   ;;
 esac
 AC_SUBST(RECURSIVE_MAKE_ARGS)
 AC_SUBST(AM_MAKEFLAGS)
@@ -4056,7 +4056,7 @@ SXE_CANONICALISE_PATH([ABS_ETCDIR])
 AC_SUBST([ABS_PROGNAME])
 AC_SUBST([ABS_ETCDIR])
 
-AC_CONFIG_FILES([src/sxe-paths.h]) 
+AC_CONFIG_FILES([src/sxe-paths.h])
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([lib-src/Makefile])
 AC_CONFIG_FILES([src/Makefile])
