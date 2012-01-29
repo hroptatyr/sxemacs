@@ -1,7 +1,7 @@
 /* dbusbind.c -- Elisp bindings for D-Bus. */
 
 /*
- * Time-stamp: <Sunday Jan 29, 2012 00:09:35 steve>
+ * Time-stamp: <Sunday Jan 29, 2012 17:41:26 steve>
  * Created:    <2012-01-03>
  * Maintainer: Steve Youngs <steve@sxemacs.org>
  * Homepage:   http://www.sxemacs.org/
@@ -752,14 +752,10 @@ xd_initialize (Lisp_Object bus, int raise_error)
 static int
 xd_find_watch_fd (DBusWatch *watch)
 {
-#if HAVE_DBUS_WATCH_GET_UNIX_FD
-	/* TODO: Reverse these on Win32, which prefers the opposite.  */
 	int fd = dbus_watch_get_unix_fd (watch);
-	if (fd == -1)
+	if (fd == -1) {
 		fd = dbus_watch_get_socket (watch);
-#else
-	int fd = dbus_watch_get_fd (watch);
-#endif
+	}
 	return fd;
 }
 
@@ -834,7 +830,7 @@ Initialize connection to D-Bus BUS.
       (bus))
 {
 	DBusConnection *connection;
-	void *busp;
+	void *busp = NULL;
 
 	/* Check parameter.  */
 	if (SYMBOLP (bus))
@@ -1282,12 +1278,11 @@ usage: (dbus-call-method-asynchronously BUS SERVICE PATH INTERFACE METHOD HANDLE
 	RETURN_UNGCPRO (result);
 }
 
-DEFUN("dbus-method-return-internal", Fdbus_method_return_internal,
-      3, MANY, 0, /*
+DEFUN("dbus-method-return-internal", Fdbus_method_return_internal, 3, MANY, 0, /*
 Return for message SERIAL on the D-Bus BUS.
 This is an internal function, it shall not be used outside dbus.el.
 
-usage: (dbus-method-return-internal BUS SERIAL SERVICE &rest ARGS)
+usage: \(dbus-method-return-internal BUS SERIAL SERVICE &rest ARGS\)
 */
       (int nargs, Lisp_Object *args))
 {
@@ -1296,7 +1291,7 @@ usage: (dbus-method-return-internal BUS SERIAL SERVICE &rest ARGS)
 	DBusConnection *connection;
 	DBusMessage *dmessage;
 	DBusMessageIter iter;
-	dbus_uint32_t serial;
+	dbus_uint32_t serial = 0;
 	unsigned int ui_serial, dtype;
 	int i;
 	char signature[DBUS_MAXIMUM_SIGNATURE_LENGTH];
@@ -1371,8 +1366,7 @@ usage: (dbus-method-return-internal BUS SERIAL SERVICE &rest ARGS)
 	return Qt;
 }
 
-DEFUN("dbus-method-error-internal", Fdbus_method_error_internal,
-       3, MANY, 0, /*
+DEFUN("dbus-method-error-internal", Fdbus_method_error_internal, 3, MANY, 0, /*
 Return error message for message SERIAL on the D-Bus BUS.
 This is an internal function, it shall not be used outside dbus.el.
 
@@ -1385,7 +1379,7 @@ usage: (dbus-method-error-internal BUS SERIAL SERVICE &rest ARGS)
 	DBusConnection *connection;
 	DBusMessage *dmessage;
 	DBusMessageIter iter;
-	dbus_uint32_t serial;
+	dbus_uint32_t serial = 0;
 	unsigned int ui_serial, dtype;
 	int i;
 	char signature[DBUS_MAXIMUM_SIGNATURE_LENGTH];
@@ -1887,6 +1881,7 @@ usage: (dbus-register-service BUS SERVICE &rest FLAGS)
 	default:
 		/* This should not happen.  */
 		XD_SIGNAL2 (build_string ("Could not register service"), service);
+		return Qnil;
 	}
 }
 

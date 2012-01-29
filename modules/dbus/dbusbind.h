@@ -5,7 +5,7 @@
  */
 
 /*
- * Time-stamp: <Sunday Jan 29, 2012 00:09:59 steve>
+ * Time-stamp: <Sunday Jan 29, 2012 17:45:16 steve>
  * Created:    <2012-01-22>
  * Author:     Steve Youngs <steve@sxemacs.org>
  * Maintainer: Steve Youngs <steve@sxemacs.org>
@@ -73,7 +73,7 @@
 #define SREF(string, index)	(SDATA (string)[index] + 0)
 #define SSET(string, index, new) (SDATA (string)[index] = (new))
 #define SCHARS(string)		(XSTRING (string)->size + 0)
-#define SBYTES(string)		(XSTRING_LENGTH (XSTRING (string)) + 0)
+#define SBYTES(string)		(XSTRING_LENGTH (string + 0))
 
 /* Avoid "differ in sign" warnings.  */
 #define SSDATA(x)  ((char *) SDATA (x))
@@ -200,9 +200,11 @@ Lisp_Object Q_test;
 #define XD_ERROR(error)							\
 	do {								\
 		/* Remove the trailing newline.  */			\
-		char const *mess = error.message;			\
-		char const *nl = strchr (mess, '\n');			\
-		Lisp_Object err = make_string (mess, nl ? nl - mess : strlen (mess)); \
+		const char *mess = error.message;			\
+		const char *nl = strchr (mess, '\n');			\
+		Lisp_Object err = make_string				\
+			((const Bufbyte *)mess,				\
+			 nl ? nl - mess : strlen (mess));		\
 		dbus_error_free (&error);				\
 		XD_SIGNAL1 (err);					\
 	} while (0)
@@ -317,8 +319,9 @@ Lisp_Object Q_test;
 	while (0)
 
 
+void syms_of_dbusbind(void);
 
-#endif
+#endif	/* _DBUSBIND_H */
 
 
 
