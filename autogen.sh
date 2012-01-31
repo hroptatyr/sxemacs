@@ -36,7 +36,8 @@ fi
 
 # To cater for Solaris
 if test -d "/usr/xpg4/bin"; then
-    PATH=/usr/xpg4/bin:$PATH
+    # don't add xpg4 dir to PATH if on OpenIndiana
+    grep -q OpenIndiana /etc/release 2>/dev/null||PATH=/usr/xpg4/bin:$PATH
     export PATH
 fi
 
