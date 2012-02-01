@@ -155,7 +155,7 @@ print_process(Lisp_Object object, Lisp_Object printcharfun, int escapeflag)
 		int netp = ((process->process_type == PROCESS_TYPE_NETWORK) ||
 			    (process->process_type == PROCESS_TYPE_MULTICAST) ||
 			    (process->process_type == PROCESS_TYPE_SSL) ||
-                            (process->process_type == PROCESS_TYPE_NETWORK_SERVER_LISTEN));
+			    (process->process_type == PROCESS_TYPE_NETWORK_SERVER_LISTEN));
 		switch (process->process_type) {
 		case PROCESS_TYPE_NETWORK:
 			write_c_string(
@@ -247,7 +247,7 @@ Lisp_Process *get_process_from_usid(USID usid)
 		Lisp_Object process;
 		CVOID_TO_LISP(process, vval);
 		return XPROCESS(process);
-	} else 
+	} else
 		return 0;
 }
 
@@ -725,15 +725,15 @@ Returns the process that listened and accepted the given
 network-process. Returns nil if process is closed or was not accepted
 through a network server stream.
 
-Args are PROCESS 
+Args are PROCESS
 
 PROCESS should be a network-stream process accepted through a network
 */
       (process))
 {
 
-        CHECK_PROCESS(process);
-        return MAYBE_LISP_PROCMETH(network_process_listener, (process));
+	CHECK_PROCESS(process);
+	return MAYBE_LISP_PROCMETH(network_process_listener, (process));
 }
 
 
@@ -751,9 +751,9 @@ connection. If needed a new buffer is also created. If given the
 acceptor function is called. If defined filter and sentinel are set
 for the new connection process .
 
-Input and output work as for subprocesses; `delete-process' closes it.  
+Input and output work as for subprocesses; `delete-process' closes it.
 
-Args are NAME BUFFER HOST SERVICE &optional PROTOCOL ACCEPTOR .  
+Args are NAME BUFFER HOST SERVICE &optional PROTOCOL ACCEPTOR .
 
 NAME is name for process.  It is modified if necessary to make it
 unique.
@@ -763,10 +763,10 @@ BUFFER is the buffer (or buffer-name) to associate with the process.
  specify an output stream or filter function to handle the output. No
  real process output of listening process is expected. However the
  name of this buffer will be used as a base for generating a new
- buffer name for the accepted connections.  
+ buffer name for the accepted connections.
  The BUFFER may be also nil, meaning that this process is not
  associated with any buffer. In this case a filter should be specified
- otherwise there will be no way to retrieve the process output.  
+ otherwise there will be no way to retrieve the process output.
  BUFFER may also be 'auto in which case a buffer is automatically
  created for the accepted connection.
 
@@ -783,7 +783,7 @@ Sixt argument ACCEPTOR is a function which will be called upon connection
  acceptance with the accepted connection process as the single argument.
 Seventh argument FILTER is a function which will be set as filter for
  the accepted connections automatically. See `set-process-filter' for
- more details.  
+ more details.
 Eight argument SENTINEL is a function which will be set as sentinel
  the accepted connections automatically. see `set-process-sentinel'
  for more details.
@@ -806,7 +806,7 @@ will override the FILTER and SENTINEL args to this function.
 	/* !!#### This function has not been Mule-ized */
 	/* This function can GC */
 	Lisp_Object process = Qnil;
-        Lisp_Object bufname = Qnil;
+	Lisp_Object bufname = Qnil;
 	struct gcpro gcpro1, gcpro2, gcpro3, gcpro4, gcpro5, gcpro6, gcpro7, gcpro8, ngcpro1, ngcpro2;
 	void *inch, *outch;
 
@@ -823,37 +823,37 @@ will override the FILTER and SENTINEL args to this function.
 
 	/* Since this code is inside HAVE_SOCKETS, existence of
 	   open_network_stream is mandatory */
-	PROCMETH(open_network_server_stream, (name, host, service, protocol, 
+	PROCMETH(open_network_server_stream, (name, host, service, protocol,
 				       &inch, &outch));
 
 	NGCPRO2(process,bufname);
 	if (!NILP(buffer) && !SYMBOLP(buffer)) {
 		buffer = Fget_buffer_create(buffer);
-                bufname = Fbuffer_name(buffer);
+		bufname = Fbuffer_name(buffer);
 	} else if (SYMBOLP(buffer) && !NILP(buffer) && ! EQ(Qauto,buffer) ) {
-                        error("unknown buffer symbol %s",
-                              string_data(symbol_name(XSYMBOL(buffer))));
-                        return Qnil;
-                              
+			error("unknown buffer symbol %s",
+			      string_data(symbol_name(XSYMBOL(buffer))));
+			return Qnil;
+
 	} else {
-                Lisp_Object args[] = {
+		Lisp_Object args[] = {
 			build_string("<listen proc:%S host:%S service:%S protocol:%S>"),
 			name, host, service, protocol
 		};
-                bufname = Fformat( 5, args );
-        }
+		bufname = Fformat( 5, args );
+	}
 
 	process = make_process_internal(name);
 
 	XPROCESS(process)->pid = Fcons(service, host);
 	XPROCESS(process)->process_type = PROCESS_TYPE_NETWORK_SERVER_LISTEN;
 	XPROCESS(process)->buffer = buffer;
-        { 
-             	/* Just opened a scope because I like to keep definitions close to
-                   usage specially temporary ones... */
-                Lisp_Object args[] = { acceptor, filter, sentinel, bufname };
-	     	XPROCESS(process)->process_type_data = Flist(4,args);
-        }
+	{
+		/* Just opened a scope because I like to keep definitions close to
+		   usage specially temporary ones... */
+		Lisp_Object args[] = { acceptor, filter, sentinel, bufname };
+		XPROCESS(process)->process_type_data = Flist(4,args);
+	}
 	init_process_io_handles(XPROCESS(process), (void *)inch, (void *)outch,
 				STREAM_NETWORK_SERVER_CONNECTION);
 
@@ -952,7 +952,7 @@ INFD and OUTFD specify the file descriptors to use for input and
 */
       (name, buffer, infd, outfd))
 {
-        return connect_to_file_descriptor(name, buffer, infd, outfd);
+	return connect_to_file_descriptor(name, buffer, infd, outfd);
 }
 
 #ifdef HAVE_MULTICAST
@@ -1073,12 +1073,12 @@ Charcount read_process_output(Lisp_Object process)
 	}
 
 	switch (p->process_type) {
-        case PROCESS_TYPE_NETWORK_SERVER_LISTEN:
-                /* We must have add a connect... We should accept and call
-                   the sentinel.. */
-                PROCMETH(network_server_accept, (wrap_object(p)));
-                nbytes = 0;
-                break;
+	case PROCESS_TYPE_NETWORK_SERVER_LISTEN:
+		/* We must have add a connect... We should accept and call
+		   the sentinel.. */
+		PROCMETH(network_server_accept, (wrap_object(p)));
+		nbytes = 0;
+		break;
 	case PROCESS_TYPE_PROC:
 	case PROCESS_TYPE_NETWORK:
 	case PROCESS_TYPE_MULTICAST:
@@ -1429,7 +1429,7 @@ Set PROCESS's input coding system to CODESYS.
 	return Qnil;
 }
 
-DEFUN("set-process-output-coding-system", 
+DEFUN("set-process-output-coding-system",
       Fset_process_output_coding_system, 2, 2, 0, /*
 Set PROCESS's output coding system to CODESYS.
 */
@@ -2222,7 +2222,7 @@ Return t if PROCESS will be killed without query when emacs is exited.
 	return XPROCESS(process)->kill_without_query ? Qt : Qnil;
 }
 
-static void 
+static void
 mark_usid_to_process(Lisp_Object obj)
 {
 	struct hash_table *ht = get_dynacat(obj);
@@ -2307,8 +2307,8 @@ void syms_of_process(void)
 	DEFSUBR(Fprocess_list);
 	DEFSUBR(Fstart_process_internal);
 #ifdef HAVE_SOCKETS
-        defsymbol(&Qip_any, "ip_any");
-        defsymbol(&Qlocalhost, "localhost");
+	defsymbol(&Qip_any, "ip_any");
+	defsymbol(&Qlocalhost, "localhost");
 	DEFSUBR(Fopen_network_stream_internal);
 	DEFSUBR(Fopen_network_server_stream_internal);
 	DEFSUBR(Fnetwork_process_listener);

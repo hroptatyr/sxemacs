@@ -197,9 +197,9 @@ static void sanity_check_geometry_resource(Display * dpy)
 	XtGetApplicationNameAndClass(dpy, &app_name, &app_class);
 
 	strncpy(buf1, app_name, sizeof(buf1));
-        buf1[sizeof(buf1)-1] = '\0';
+	buf1[sizeof(buf1)-1] = '\0';
 	strncpy(buf2, app_class, sizeof(buf2));
-        buf2[sizeof(buf2)-1] = '\0';
+	buf2[sizeof(buf2)-1] = '\0';
 
 	for (s = buf1; *s; s++) {
 		if (*s == '.') {
@@ -208,10 +208,10 @@ static void sanity_check_geometry_resource(Display * dpy)
 	}
 	strncat(buf1, "._no_._such_._resource_.geometry",
 		sizeof(buf1) - strlen(buf1) - 1);
-        buf1[sizeof(buf1)-1] = '\0';
+	buf1[sizeof(buf1)-1] = '\0';
 	strncat(buf2, "._no_._such_._resource_.Geometry",
 		sizeof(buf2) - strlen(buf2) - 1);
-        buf2[sizeof(buf1)-1]='\0';
+	buf2[sizeof(buf1)-1]='\0';
 	if (XrmGetResource(XtDatabase(dpy), buf1, buf2, &type, &value)
 	    == True) {
 		warn_when_safe(Qgeometry, Qerror,
@@ -436,7 +436,7 @@ static int x_get_visual_depth(Display * dpy, Visual * visual)
 				&vi_in, &out_count);
 	if (!vi_out) {
 		abort();
-	        return 1;
+		return 1;
 	} else {
 		d = vi_out[0].depth;
 		XFree((char *)vi_out);
@@ -608,7 +608,7 @@ read_locale_specific_resources(Display *dpy)
 			/* C99 we need you ... VLA */
 			char path[strlen(data_dir) + 13 + strlen(locale) + 7];
 
-			int sz = snprintf(path, sizeof(path), 
+			int sz = snprintf(path, sizeof(path),
 					  "%sapp-defaults/%s/Emacs",
 					  data_dir, locale);
 			assert(sz >= 0 && (size_t)sz < sizeof(path));
@@ -1175,7 +1175,7 @@ int signal_if_x_error(Display * dpy, int resumable_p)
 	if (!resumable_p) {
 		while(1)
 			Fsignal(Qx_error, data);
-	} 
+	}
 	return 1;
 }
 
@@ -1218,10 +1218,10 @@ int x_IO_error_handler(Display * disp)
 	/* According to X specs, we should not return from this function, or
 	   Xlib might just decide to exit().  So we mark the offending
 	   console for deletion and throw to top level.  */
-        if (d) {
-          enqueue_magic_eval_event(io_error_delete_device, dev);
-          DEVICE_X_BEING_DELETED(d) = 1;
-        }
+	if (d) {
+	  enqueue_magic_eval_event(io_error_delete_device, dev);
+	  DEVICE_X_BEING_DELETED(d) = 1;
+	}
 	Fthrow(Qtop_level, Qnil);
 
 	return 0;		/* not reached */
@@ -1912,13 +1912,13 @@ Returns t if the grab is successful, nil otherwise.
 	XSync(dpy, False);
 	status = XGrabKeyboard(dpy, w, True,
 			       /* I don't really understand sync-vs-async
-			          grabs, but this is what xterm does. */
+				  grabs, but this is what xterm does. */
 			       GrabModeAsync, GrabModeAsync,
 			       /* Use the timestamp of the last user action
-			          read by emacs proper; xterm uses CurrentTime
-			          but there's a comment that says "wrong"...
-			          (Despite the name this is the time of the
-			          last key or mouse event.) */
+				  read by emacs proper; xterm uses CurrentTime
+				  but there's a comment that says "wrong"...
+				  (Despite the name this is the time of the
+				  last key or mouse event.) */
 			       DEVICE_X_MOUSE_TIMESTAMP(d));
 	if (status == GrabSuccess) {
 		/* The XUngrabKeyboard should generate a FocusIn back to this

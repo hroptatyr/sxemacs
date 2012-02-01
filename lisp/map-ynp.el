@@ -99,7 +99,7 @@ Returns the number of actions taken."
     (if (should-use-dialog-box-p)
 	;; Make a list describing a dialog box.
 	(let (;; (object (capitalize (or (nth 0 help) "object")))
- 	      ;; (objects (capitalize (or (nth 1 help) "objects")))
+	      ;; (objects (capitalize (or (nth 1 help) "objects")))
 	      ;; (action (capitalize (or (nth 2 help) "act on")))
 	      )
 	  (setq map `(("%_Yes" . act) ("%_No" . skip)

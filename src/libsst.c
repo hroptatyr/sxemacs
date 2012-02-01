@@ -309,7 +309,7 @@ int fd, dhz1, dhz2, thz, rhz, usec;
 	else {
 		dval1 = (dhz1 * 128 + 63) / 1000;
 		if ((dval1 < 1) || (dval1 > 255)) {
-			int sz = snprintf(buf, sizeof(buf), 
+			int sz = snprintf(buf, sizeof(buf),
 					  "sst_tones: dhz1 %d out of range", dhz1);
 			assert(sz >= 0 && sz < sizeof(buf));
 			warn(buf);

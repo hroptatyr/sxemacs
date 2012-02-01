@@ -101,7 +101,7 @@ extern void bigc_fini(bigc);
 #define bigc_get_prec(f)		max(bigfr_get_prec(bigc_re(f)), \
 					    bigfr_get_prec(bigc_im(f)))
 extern void bigc_set_prec(bigc, unsigned long);
-#define bigc_set_default_prec(prec) 
+#define bigc_set_default_prec(prec)
 #define bigc_get_default_prec()		bigfr_get_default_prec()
 
 /***** Bigc: conversions *****/

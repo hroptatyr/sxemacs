@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 # define REGISTER
 # endif
 
-/* In HPUX 10 the strcat function references memory past the last byte of 
-   the string!  This will core dump if the memory following the last byte is 
+/* In HPUX 10 the strcat function references memory past the last byte of
+   the string!  This will core dump if the memory following the last byte is
    not mapped.
 
    Here is a correct version from, glibc 1.09.

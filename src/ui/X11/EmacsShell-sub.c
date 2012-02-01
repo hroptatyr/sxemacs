@@ -366,9 +366,9 @@ static void ChangeManaged(Widget wid)
 		/* the managed child indicates what our size is */
 		for (i = 0; i < w->composite.num_children; i++) {
 			if (XtIsManaged(w->composite.children[i])) {
-				child = w->composite.children[i];	
-                                update_size_hints_internal(w, child->core.width,
-                                                           child->core.height);
+				child = w->composite.children[i];
+				update_size_hints_internal(w, child->core.width,
+							   child->core.height);
 			break;
 			}
 		}

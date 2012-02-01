@@ -623,7 +623,7 @@ AC_DEFUN([SXE_CHECK_NATIVE_INET_FUNS], [dnl
 
 AC_DEFUN([SXE_CHECK_LIBBIND_INET_FUNS], [dnl
 	## defines sxe_cv_feat_libbind_inet_funs, will be 'yes or 'no
-	## key question here is still how our ipv6 support concept looks like 
+	## key question here is still how our ipv6 support concept looks like
 	## of course it is an established thing today, but since other big
 	## players, like isc's bind, socks, etc. can still be configured
 	## without ipv6, and moreover, their ipv6 design may change any second
@@ -658,14 +658,14 @@ AC_DEFUN([SXE_CHECK_LIBBIND_INET_FUNS], [dnl
 		## grrrrrr, as for cppflags we just bang isc-config.sh --cflags
 		## and also isc-config.sh --cflags/bind and moreover, as
 		##    case "$includedir" in
-		##    	'${prefix}/include')
-		##    		includedir='${prefix}/bind/include'
-		##    		;;
+		##	'${prefix}/include')
+		##		includedir='${prefix}/bind/include'
+		##		;;
 		##    esac
 		##    case "$libdir" in
-		##    	'${prefix}/lib')
-		##    		libdir='${prefix}/bind/lib'
-		##    		;;
+		##	'${prefix}/lib')
+		##		libdir='${prefix}/bind/lib'
+		##		;;
 		##    esac
 		##               this is undocumented, don't abuse it ;)
 		##               vvvvvvvvvvvvv
@@ -675,7 +675,7 @@ AC_DEFUN([SXE_CHECK_LIBBIND_INET_FUNS], [dnl
 			bind_cppflags="${bind_cppflags} \
 				-I$(${ISC_CONFIG_SH} --prefix)/bind/include"
 		fi
-		
+
 		##              this is undocumented, don't abuse it ;)
 		##              vvvvvvvvvvvv
 		bind_ldflags="${BIND_LDFLAGS} $(${ISC_CONFIG_SH} --libs)"

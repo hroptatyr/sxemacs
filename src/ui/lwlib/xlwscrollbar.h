@@ -1,4 +1,4 @@
-/* Implements a lightweight scrollbar widget.  
+/* Implements a lightweight scrollbar widget.
    Copyright (C) 1992, 1993, 1994 Lucid, Inc.
 
 This file is part of the Lucid Widget Library.

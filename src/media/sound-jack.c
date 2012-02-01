@@ -501,7 +501,7 @@ sound_jack_process(jack_nframes_t nframes, void *userdata)
 	if ((curvol = aj->volume) != sjsd->volume) {
 		sjsd->fvol = (float)curvol / MEDIA_SAMPLE_VOLUME_NORM;
 		sjsd->volume = curvol;
-        }
+	}
 
 	if (aj->ratetrafo != sjsd->ratetrafo) {
 		sjsd->ratetrafo = aj->ratetrafo;

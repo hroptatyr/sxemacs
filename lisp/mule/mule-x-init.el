@@ -91,7 +91,7 @@ achieved by using a national variant roman font to display ASCII."
 
        ;; Chinese fonts
        "-*-*-medium-r-*--*-gb2312.1980-*"
-       
+
        ;; Use One font specification for CNS chinese
        ;; Too many variations in font naming
        "-*-fixed-medium-r-*--*-cns11643*-*"
@@ -101,14 +101,14 @@ achieved by using a national variant roman font to display ASCII."
        ;; "-*-fixed-medium-r-*--*-cns11643.5-0"
        ;; "-*-fixed-medium-r-*--*-cns11643.6-0"
        ;; "-*-fixed-medium-r-*--*-cns11643.7-0"
-       
+
        "-*-fixed-medium-r-*--*-big5*-*"
        "-*-fixed-medium-r-*--*-sisheng_cwnn-0"
 
        ;; Other fonts
-       
+
        ;; "-*-fixed-medium-r-*--*-viscii1.1-1"
-       
+
        ;; "-*-fixed-medium-r-*--*-mulearabic-0"
        ;; "-*-fixed-medium-r-*--*-mulearabic-1"
        ;; "-*-fixed-medium-r-*--*-mulearabic-2"

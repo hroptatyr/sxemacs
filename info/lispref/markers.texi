@@ -795,5 +795,3 @@ of each command that sets @code{zmacs-region-stays} to @code{t},
 indicating that the region should remain activated.  The motion
 commands do this.
 @end defvar
-
-

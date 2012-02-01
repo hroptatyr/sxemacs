@@ -310,7 +310,7 @@ and then move up one line.  Prefix arg means move that many lines."
 	    (progn (delete-char 1)
 		   (insert ? ))
 	  (delete-region (point) (progn (forward-line 1) (point)))
- 	  (backward-char 1))))))
+	  (backward-char 1))))))
 
 (defun Buffer-menu-select ()
   "Select this line's buffer; also display buffers marked with `>'.
@@ -349,7 +349,7 @@ in the selected frame."
 	(other-window 1)
 	(switch-to-buffer (car others))
 	(setq others (cdr others)))
-      (other-window 1)  			;back to the beginning!
+      (other-window 1)			;back to the beginning!
 )))
 
 
@@ -445,9 +445,9 @@ The current window remains selected."
       (beginning-of-line)
       (forward-char 2)
       (if (/= (following-char) char)
-          (let (buffer-read-only)
-            (delete-char 1)
-            (insert char))))))
+	  (let (buffer-read-only)
+	    (delete-char 1)
+	    (insert char))))))
 
 ;; XEmacs
 (defvar Buffer-menu-popup-menu
@@ -535,7 +535,7 @@ to generate such a string.  This variable is always buffer-local.")
 ;; #### not synched
 (defun list-buffers-internal (output &optional predicate)
   (let ((current (current-buffer))
-        (buffers (buffer-list)))
+	(buffers (buffer-list)))
     (save-excursion
       (set-buffer output)
       (setq buffer-read-only nil)
@@ -544,58 +544,58 @@ to generate such a string.  This variable is always buffer-local.")
       (insert list-buffers-header-line)
 
       (while buffers
-        (let* ((col1 19)
-               (buffer (car buffers))
-               (name (buffer-name buffer))
+	(let* ((col1 19)
+	       (buffer (car buffers))
+	       (name (buffer-name buffer))
 	       this-buffer-line-start)
-          (setq buffers (cdr buffers))
-          (cond ((null name))           ;deleted buffer
-                ((and predicate
-                      (not (if (stringp predicate)
-                               (string-match predicate name)
-                               (funcall predicate buffer))))
-                 nil)
-                (t
-                 (set-buffer buffer)
-                 (let ((ro buffer-read-only)
-                       (id list-buffers-identification))
-                   (set-buffer output)
+	  (setq buffers (cdr buffers))
+	  (cond ((null name))           ;deleted buffer
+		((and predicate
+		      (not (if (stringp predicate)
+			       (string-match predicate name)
+			       (funcall predicate buffer))))
+		 nil)
+		(t
+		 (set-buffer buffer)
+		 (let ((ro buffer-read-only)
+		       (id list-buffers-identification))
+		   (set-buffer output)
 		   (setq this-buffer-line-start (point))
-                   (insert (if (eq buffer current)
-                               (progn (setq current (point)) ?\.)
-                               ?\ ))
-                   (insert (if (buffer-modified-p buffer)
-                               ?\*
-                               ?\ ))
-                   (insert (if ro
-                               ?\%
-                               ?\ ))
-                   (if (string-match "[\n\"\\ \t]" name)
-                       (let ((print-escape-newlines t))
-                         (prin1 name output))
-                       (insert ?\  name))
-                   (indent-to col1 1)
-                   (cond ((stringp id)
-                          (insert id))
-                         (id
-                          (set-buffer buffer)
-                          (condition-case e
-                              (funcall id output)
-                            (error
-                             (princ "***" output) (prin1 e output)))
-                          (set-buffer output)
-                          (goto-char (point-max)))))
+		   (insert (if (eq buffer current)
+			       (progn (setq current (point)) ?\.)
+			       ?\ ))
+		   (insert (if (buffer-modified-p buffer)
+			       ?\*
+			       ?\ ))
+		   (insert (if ro
+			       ?\%
+			       ?\ ))
+		   (if (string-match "[\n\"\\ \t]" name)
+		       (let ((print-escape-newlines t))
+			 (prin1 name output))
+		       (insert ?\  name))
+		   (indent-to col1 1)
+		   (cond ((stringp id)
+			  (insert id))
+			 (id
+			  (set-buffer buffer)
+			  (condition-case e
+			      (funcall id output)
+			    (error
+			     (princ "***" output) (prin1 e output)))
+			  (set-buffer output)
+			  (goto-char (point-max)))))
 		 (put-nonduplicable-text-property this-buffer-line-start
 						  (point)
 						  'buffer-name name)
 		 (put-nonduplicable-text-property this-buffer-line-start
 						  (point)
 						  'highlight t)
-                 (insert ?\n)))))
+		 (insert ?\n)))))
 
       (Buffer-menu-mode)
       (if (not (bufferp current))
-          (goto-char current)))))
+	  (goto-char current)))))
 ;(define-key ctl-x-map "\C-b" 'list-buffers)
 
 (defun list-buffers (&optional files-only)

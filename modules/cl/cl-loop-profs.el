@@ -44,8 +44,8 @@
    (push "." load-path)
    (when (and (boundp 'load-file-name) (stringp load-file-name))
      (push (expand-file-name "../tests/benchmark"
-                             (file-name-directory load-file-name))
-           load-path))
+			     (file-name-directory load-file-name))
+	   load-path))
    (require 'benchmark)))
 
 (require 'cl-loop)
@@ -58,7 +58,7 @@
 (defun cl:loop-count (N)
   "C count clause"
   (cl:loop for i below N
-           count (primep i)))
+	   count (primep i)))
 
 (defun loop-for (N)
   "lisp for-arith clause"

@@ -91,7 +91,7 @@ _cl-loop_benchmarks: cl-loop.la
 
 benchmarks: _cl-loop_benchmarks
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## the libtool approach

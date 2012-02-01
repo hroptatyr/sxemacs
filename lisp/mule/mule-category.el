@@ -281,7 +281,7 @@ Each element is a list of a charset, a designator, and maybe a doc string.")
 ;;; be buffer-local---strategy for dealing with this: check all $language.el
 ;;; files and also mule-base/$language-utils.el files for variables set;
 ;;; these should be made buffer local and some kind of a- or p-list of vars
-;;; to be set for a language environment created. 
+;;; to be set for a language environment created.
 (defvar word-across-newline "\\(\\cj\\|\\cc\\|\\ct\\)"
   "Regular expression of such characters which can be a word across newline.")
 

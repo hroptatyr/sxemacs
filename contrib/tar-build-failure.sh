@@ -3,7 +3,7 @@
 # Build a tar of valuable information to figure out why the build failed.
 #
 # (C) 2008 Nelson Ferreira
-#   
+#
 # This program is free software; you can redistribute it and/or modify it
 # under a BSD-like licence.
 #
@@ -29,7 +29,7 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-# 
+#
 type tar >/dev/null 2>&1 && TAR=tar
 EXT=gz
 type gzip >/dev/null 2>&1 && COMPRESS=gzip

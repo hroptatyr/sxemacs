@@ -312,7 +312,7 @@ void bigc_set_bigfr_bigfr(bigc c, bigfr f1, bigfr f2)
 
 /* void bigc_set_bigc(bigc c, bigc c)
  * {
- * 	bigc_set_bigfr_bigfr(bigc_re(c), z1);
+ *	bigc_set_bigfr_bigfr(bigc_re(c), z1);
  * }
  */
 
@@ -550,7 +550,7 @@ void bigc_sqrt(bigc res, bigc c)
 	bigc_abs(tmpnorm, c);
 	bigfr_add(bigc_re(res), tmpnorm, bigc_re(c));
 	bigfr_sub(bigc_im(res), tmpnorm, bigc_re(c));
-	
+
 	/* compute 1/2 and divide the above by it */
 	bigfr_set_long(tmphalf, 2);
 	bigfr_div(bigc_re(res), bigc_re(res), tmphalf);

@@ -5,7 +5,7 @@
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
   * This file is part of SXEmacs.
-  * 
+  *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
   * are met:
@@ -289,28 +289,28 @@ Return the property list of WORKER-JOB.
 	Lisp_Object result = Qnil;
 	worker_job_t job;
 
-        CHECK_WORKER_JOB(worker_job);
+	CHECK_WORKER_JOB(worker_job);
 	job = XWORKER_JOB(worker_job);
 
 	lock_worker_job(job);
 	result = worker_job_plist(job);
 	unlock_worker_job(job);
-        return result;
+	return result;
 }
 
 static const struct lrecord_description worker_job_description[] = {
 	{XD_LISP_OBJECT, offsetof(struct worker_job_s, queue)},
-        {XD_OPAQUE_DATA_PTR, offsetof(struct worker_job_s, handler)},
-        {XD_OPAQUE_PTR, offsetof(struct worker_job_s, data)},
+	{XD_OPAQUE_DATA_PTR, offsetof(struct worker_job_s, handler)},
+	{XD_OPAQUE_PTR, offsetof(struct worker_job_s, data)},
 #if !defined(EF_USE_POM) && defined(HAVE_THREADS)
-        {XD_OPAQUE_PTR, offsetof(struct worker_job_s, mtx)},
+	{XD_OPAQUE_PTR, offsetof(struct worker_job_s, mtx)},
 #endif
 	{XD_LISP_OBJECT, offsetof(struct worker_job_s, result)},
 	{XD_LISP_OBJECT, offsetof(struct worker_job_s, plist)},
 	{XD_INT, offsetof(struct worker_job_s, state)},
 
-        {XD_OPAQUE_PTR, offsetof(struct worker_job_s, buffer)},
-        {XD_SIZE_T, offsetof(struct worker_job_s, buffer_alloc_size)},
+	{XD_OPAQUE_PTR, offsetof(struct worker_job_s, buffer)},
+	{XD_SIZE_T, offsetof(struct worker_job_s, buffer_alloc_size)},
 
 	{XD_END}
 };

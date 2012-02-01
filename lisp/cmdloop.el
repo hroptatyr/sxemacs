@@ -1,7 +1,7 @@
 ;;; cmdloop.el --- support functions for the top-level command loop.
 
 ;; Copyright (C) 1992-4, 1997 Free Software Foundation, Inc.
- 
+
 ;; Author: Richard Mlynarik
 ;; Date: 8-Jul-92
 ;; Maintainer: SXEmacs Development Team
@@ -158,14 +158,14 @@ or go back to just one window (by deleting all but the selected window)."
     (display-error error-object t)
 
     (if (noninteractive)
-        (progn
+	(progn
 	  (if old-debug-on-error
 	      (progn
 		(message "Backtrace:\n\n")
 		(backtrace)
 		(message "\n")))
-          (message "%s exiting\n." emacs-program-name)
-          (kill-emacs -1)))
+	  (message "%s exiting\n." emacs-program-name)
+	  (kill-emacs -1)))
     t))
 
 (defun describe-last-error ()
@@ -199,10 +199,10 @@ or go back to just one window (by deleting all but the selected window)."
   (if (not (noninteractive))
       (enqueue-eval-event
        #'(lambda (arg)
-           (let ((tail (nthcdr 30 command-history)))
-             (if tail (setcdr tail nil)))
-           (let ((tail (nthcdr 30 values)))
-             (if tail (setcdr tail nil))))
+	   (let ((tail (nthcdr 30 command-history)))
+	     (if tail (setcdr tail nil)))
+	   (let ((tail (nthcdr 30 values)))
+	     (if tail (setcdr tail nil))))
        nil)))
 
 (add-hook 'pre-gc-hook 'truncate-command-history-for-gc)
@@ -261,20 +261,20 @@ or go back to just one window (by deleting all but the selected window)."
 
 (put 'file-error 'display-error
      #'(lambda (error-object stream)
-         (let ((tail (cdr error-object))
-               (first t))
-           (princ (car tail) stream)
-           (while (setq tail (cdr tail))
-             (princ (if first ": " ", ") stream)
-             (princ (car tail) stream)
-             (setq first nil)))))
+	 (let ((tail (cdr error-object))
+	       (first t))
+	   (princ (car tail) stream)
+	   (while (setq tail (cdr tail))
+	     (princ (if first ": " ", ") stream)
+	     (princ (car tail) stream)
+	     (setq first nil)))))
 
 (put 'undefined-keystroke-sequence 'display-error
      #'(lambda (error-object stream)
-         (princ (key-description (car (cdr error-object))) stream)
+	 (princ (key-description (car (cdr error-object))) stream)
 	 ;; #### I18N3: doesn't localize properly.
-         (princ (gettext " not defined.") stream) ; doo dah, doo dah.
-         ))
+	 (princ (gettext " not defined.") stream) ; doo dah, doo dah.
+	 ))
 
 
 (defcustom teach-extended-commands-p t
@@ -316,24 +316,24 @@ when called from Lisp."
   ;; Note:  This doesn't hack "this-command-keys"
   (let ((prefix-arg prefix-arg))
     (setq this-command (read-command
-                        ;; Note: this has the hard-wired
-                        ;;  "C-u" and "M-x" string bug in common
-                        ;;  with all GNU Emacs's.
+			;; Note: this has the hard-wired
+			;;  "C-u" and "M-x" string bug in common
+			;;  with all GNU Emacs's.
 			;; (i.e. it prints C-u and M-x regardless of
 			;; whether some other keys were actually bound
-			;; to `execute-extended-command' and 
+			;; to `execute-extended-command' and
 			;; `universal-argument'.
-                        (cond ((eq prefix-arg '-)
-                               "- M-x ")
-                              ((equal prefix-arg '(4))
-                               "C-u M-x ")
-                              ((integerp prefix-arg)
-                               (format "%d M-x " prefix-arg))
-                              ((and (consp prefix-arg)
-                                    (integerp (car prefix-arg)))
-                               (format "%d M-x " (car prefix-arg)))
-                              (t
-                               "M-x ")))))
+			(cond ((eq prefix-arg '-)
+			       "- M-x ")
+			      ((equal prefix-arg '(4))
+			       "C-u M-x ")
+			      ((integerp prefix-arg)
+			       (format "%d M-x " prefix-arg))
+			      ((and (consp prefix-arg)
+				    (integerp (car prefix-arg)))
+			       (format "%d M-x " (car prefix-arg)))
+			      (t
+			       "M-x ")))))
 
   (if (and teach-extended-commands-p
 	   (interactive-p))
@@ -391,9 +391,9 @@ when called from Lisp."
 ;                (get _command 'disabled))
 ;           (run-hooks disabled-command-hook))
 ;          ((or (stringp _cmd) (vectorp _cmd))
-;           ;; If requested, place the macro in the command history.  
+;           ;; If requested, place the macro in the command history.
 ;           ;;  For other sorts of commands, call-interactively takes
-;           ;;  care of this. 
+;           ;;  care of this.
 ;           (if _record-flag
 ;               (setq command-history
 ;                     (cons (list 'execute-kbd-macro _cmd _prefix)
@@ -410,46 +410,46 @@ No confirmation of the answer is requested; a single character is enough.
 Also accepts Space to mean yes, or Delete to mean no."
   (save-excursion
     (let* ((pre "")
-           (yn (gettext "(y or n) "))
+	   (yn (gettext "(y or n) "))
 	   ;; we need to translate the prompt ourselves because of the
 	   ;; strange way we handle it.
 	   (prompt (gettext prompt))
-           event)
+	   event)
       (while (stringp yn)
-        (if (let ((cursor-in-echo-area t)
-                  (inhibit-quit t))
-              (message "%s%s%s" pre prompt yn)
-              (setq event (next-command-event event))
+	(if (let ((cursor-in-echo-area t)
+		  (inhibit-quit t))
+	      (message "%s%s%s" pre prompt yn)
+	      (setq event (next-command-event event))
 	      (condition-case nil
 		  (prog1
 		      (or quit-flag (eq 'keyboard-quit (key-binding event)))
 		    (setq quit-flag nil))
 		(wrong-type-argument t)))
-            (progn
-              (message "%s%s%s%s" pre prompt yn (single-key-description event))
-              (setq quit-flag nil)
-              (signal 'quit '())))
-        (let* ((keys (events-to-keys (vector event)))
+	    (progn
+	      (message "%s%s%s%s" pre prompt yn (single-key-description event))
+	      (setq quit-flag nil)
+	      (signal 'quit '())))
+	(let* ((keys (events-to-keys (vector event)))
 	       (def (lookup-key query-replace-map keys)))
-          (cond ((eq def 'skip)
-                 (message "%s%sNo" prompt yn)
+	  (cond ((eq def 'skip)
+		 (message "%s%sNo" prompt yn)
 		 (setq yn nil))
-                ((eq def 'act)
-                 (message "%s%sYes" prompt yn)
+		((eq def 'act)
+		 (message "%s%sYes" prompt yn)
 		 (setq yn t))
 		((eq def 'recenter)
 		 (recenter))
 		((or (eq def 'quit) (eq def 'exit-prefix))
 		 (signal 'quit '()))
-                ((button-release-event-p event) ; ignore them
-                 nil)
-                (t
-                 (message "%s%s%s%s" pre prompt yn
-                          (single-key-description event))
-                 (ding nil 'y-or-n-p)
-                 (discard-input)
-                 (if (= (length pre) 0)
-                     (setq pre (gettext "Please answer y or n.  ")))))))
+		((button-release-event-p event) ; ignore them
+		 nil)
+		(t
+		 (message "%s%s%s%s" pre prompt yn
+			  (single-key-description event))
+		 (ding nil 'y-or-n-p)
+		 (discard-input)
+		 (if (= (length pre) 0)
+		     (setq pre (gettext "Please answer y or n.  ")))))))
       yn)))
 
 (defun yes-or-no-p-minibuf (prompt)
@@ -460,18 +460,18 @@ The user must confirm the answer with RET,
 and can edit it until it has been confirmed."
   (save-excursion
     (let ((p (concat (gettext prompt) (gettext "(yes or no) ")))
-          (ans ""))
+	  (ans ""))
       (while (stringp ans)
-        (setq ans (downcase (read-string p nil t))) ;no history
-        (cond ((string-equal ans (gettext "yes"))
-               (setq ans t))
-              ((string-equal ans (gettext "no"))
-               (setq ans nil))
-              (t
-               (ding nil 'yes-or-no-p)
-               (discard-input)
-               (message "Please answer yes or no.")
-               (sleep-for 2))))
+	(setq ans (downcase (read-string p nil t))) ;no history
+	(cond ((string-equal ans (gettext "yes"))
+	       (setq ans t))
+	      ((string-equal ans (gettext "no"))
+	       (setq ans nil))
+	      (t
+	       (ding nil 'yes-or-no-p)
+	       (discard-input)
+	       (message "Please answer yes or no.")
+	       (sleep-for 2))))
       ans)))
 
 (defun yes-or-no-p (prompt)
@@ -510,13 +510,13 @@ the `next-command-event' function instead."
 	  (and (event-matches-key-specifier-p event (quit-char))
 	       (signal 'quit nil)))
       (prog1 (or (event-to-character event)
-                 ;; Kludge.  If the event we read was a mouse-release,
-                 ;; discard it and read the next one.
-                 (if (button-release-event-p event)
-                     (event-to-character (next-command-event event)))
-                 (error "Key read has no ASCII equivalent %S" event))
-        ;; this is not necessary, but is marginally more efficient than GC.
-        (deallocate-event event)))))
+		 ;; Kludge.  If the event we read was a mouse-release,
+		 ;; discard it and read the next one.
+		 (if (button-release-event-p event)
+		     (event-to-character (next-command-event event)))
+		 (error "Key read has no ASCII equivalent %S" event))
+	;; this is not necessary, but is marginally more efficient than GC.
+	(deallocate-event event)))))
 
 (defun read-char-exclusive ()
   "Read a character from the command input (keyboard or macro).
@@ -574,7 +574,7 @@ or three octal digits representing its character code."))
 ;	    (logand 255 code))))
     ))
 
-(defun momentary-string-display (string pos &optional exit-char message) 
+(defun momentary-string-display (string pos &optional exit-char message)
   "Momentarily display STRING in the buffer at POS.
 Display remains until next character is typed.
 If the char is EXIT-CHAR (optional third arg, default is SPC) it is swallowed;

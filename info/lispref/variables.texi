@@ -1379,5 +1379,3 @@ not a symbol, just return it.  Signal a
 @code{cyclic-variable-indirection} error if there is a loop in the
 variable chain of symbols.
 @end defun
-
-

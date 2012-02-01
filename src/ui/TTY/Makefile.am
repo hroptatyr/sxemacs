@@ -47,14 +47,14 @@ TAGS_DEPENDENCIES = $(ETAGS)
 
 all_sources=
 noinst_LIBRARIES=
-header_HEADERS=$(acgen_headers) 
+header_HEADERS=$(acgen_headers)
 
 libsxeuiTTY_a_headers = \
 	cm.h console-tty.h objects-tty.h systty.h gpmevent.h
-libsxeuiTTY_a_sources =  						\
+libsxeuiTTY_a_sources =						\
 	cm.c console-tty.c device-tty.c event-tty.c frame-tty.c		\
 	objects-tty.c redisplay-tty.c
-libsxeuiTTY_a_SOURCES = $(libsxeuiTTY_a_headers) $(libsxeuiTTY_a_sources) 
+libsxeuiTTY_a_SOURCES = $(libsxeuiTTY_a_headers) $(libsxeuiTTY_a_sources)
 EXTRA_libsxeuiTTY_a_SOURCES=                     \
 	gpmevent.c termcap.c terminfo.c tparam.c
 libsxeuiTTY_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general) $(X_CFLAGS)
@@ -64,7 +64,7 @@ all_sources += $(libsxeuiTTY_a_sources) $(libsxeuiTTY_objs:.o=.c)
 
 noinst_LIBRARIES += libsxeuiTTY.a
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## Create preprocessor output (debugging purposes only)

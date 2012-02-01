@@ -147,7 +147,7 @@ print_frame(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		error("printing unreadable object #<frame %s 0x%x>",
 		      XSTRING_DATA(frm->name), frm->header.uid);
 
-	write_fmt_string(printcharfun, "#<%s-frame ", 
+	write_fmt_string(printcharfun, "#<%s-frame ",
 			 (!FRAME_LIVE_P(frm) ? "dead" : FRAME_TYPE_NAME(frm)));
 	print_internal(frm->name, printcharfun, 1);
 	write_fmt_str(printcharfun, " 0x%x>", frm->header.uid);
@@ -3413,7 +3413,7 @@ including X Windows' defaults database.
 Values for the first Emacs frame are taken from `initial-frame-plist'.
 Since the first X frame is created before loading your .emacs file, you
 may wish use the X resource database to avoid flashing.
- 
+
 For values specific to the separate minibuffer frame, see
 `minibuffer-frame-plist'.  See also the variables `default-x-frame-plist'
 and `default-tty-frame-plist', which are like `default-frame-plist'

@@ -1,4 +1,3 @@
-
 @node Indentation, Text, Major Modes, Top
 @chapter Indentation
 @cindex indentation
@@ -89,9 +88,9 @@ regard, @kbd{C-M-o} resembles @kbd{C-o}.
 (@code{delete-indentation}) command to delete the indentation at the
 front of the current line, and the line boundary as well.  Empty spaces
 are replaced by a single space, or by no space if at the beginning of a
-line, before a close parenthesis, or after an open parenthesis.  
-To delete just the indentation of a line, go to the beginning of the 
-line and use @kbd{Meta-\} (@code{delete-horizontal-space}), which 
+line, before a close parenthesis, or after an open parenthesis.
+To delete just the indentation of a line, go to the beginning of the
+line and use @kbd{Meta-\} (@code{delete-horizontal-space}), which
 deletes all spaces and tabs around the cursor.
 
 @kindex C-M-\

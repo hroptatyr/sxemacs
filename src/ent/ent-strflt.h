@@ -1,11 +1,11 @@
 /*
-  ent-strflt.h -- String to float defines 
+  ent-strflt.h -- String to float defines
 
   Copyright (C) 2005, 2006 Sebastian Freundt
   Copyright (C) 2006 Nelson Ferreira
 
   Author:  Sebastian Freundt
-           Nelson Ferreira
+	   Nelson Ferreira
 
 This file is part of SXEmacs
 

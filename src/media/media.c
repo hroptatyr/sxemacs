@@ -138,7 +138,7 @@ static void determine_stream_type(Lisp_Media_Stream *ms, media_driver preferred)
 
 
 /*****************************************************************/
-/* 			    media streams			 */
+/*			    media streams			 */
 /*****************************************************************/
 static Lisp_Object media_stream_mark(Lisp_Object obj)
 {
@@ -352,12 +352,12 @@ media_stream_hash (Lisp_Object obj, int depth)
 }
 
 static const struct lrecord_description media_stream_description[] = {
-        { XD_LISP_OBJECT, offsetof(Lisp_Media_Stream, first) },
-        { XD_LISP_OBJECT, offsetof(Lisp_Media_Stream, last) },
+	{ XD_LISP_OBJECT, offsetof(Lisp_Media_Stream, first) },
+	{ XD_LISP_OBJECT, offsetof(Lisp_Media_Stream, last) },
 	{ XD_INT, offsetof(Lisp_Media_Stream, kind) },
 	{ XD_INT, offsetof(Lisp_Media_Stream, driver) },
-        { XD_OPAQUE_PTR, offsetof(Lisp_Media_Stream, kind_properties) },
-        { XD_OPAQUE_PTR, offsetof(Lisp_Media_Stream, stream_data) },
+	{ XD_OPAQUE_PTR, offsetof(Lisp_Media_Stream, kind_properties) },
+	{ XD_OPAQUE_PTR, offsetof(Lisp_Media_Stream, stream_data) },
 	{ XD_END }
 };
 
@@ -370,7 +370,7 @@ DEFINE_LRECORD_IMPLEMENTATION("media_stream", media_stream,
 
 
 /*****************************************************************/
-/* 			    media substreams			 */
+/*			    media substreams			 */
 /*****************************************************************/
 
 static void
@@ -440,7 +440,7 @@ media_substream_print_audio(media_substream *mss, Lisp_Object printcharfun)
 		break;
 	}
 
-	if (mtap->samplerate) 
+	if (mtap->samplerate)
 		write_fmt_str(printcharfun, ", %d Hz, %d Bit",
 			      mtap->samplerate,
 			      mtap->samplewidth);
@@ -804,7 +804,7 @@ Return a list of input formats in the underlying media libraries.
 	temp = media_ffmpeg_available_formats();
 #endif
 	formats = recons(formats, temp);
-	
+
 #ifdef HAVE_SNDFILE
 	temp = Qnil;
 #endif
@@ -1101,10 +1101,10 @@ the second element to the second one and so on.
 			num = mtvp->width;
 			den = mtvp->height;
 		}
-			
+
 		if (LIKELY(NILP(quotientp))) {
 			tmp = make_float((fpfloat)num / (fpfloat)den);
-		} 
+		}
 #if defined HAVE_MPQ && defined WITH_GMP
 		else {
 			tmp = make_bigq(num, den);

@@ -26,7 +26,7 @@
 # BSD's m4 probably isn't gonna cut it, use gm4 if it is available
 type gm4 >/dev/null 2>&1 && M4=gm4 || M4=m4
 
-M4_VERSION=$($M4 --version | head -n1 | sed -e 's/^\(m4 \)\?(\?GNU M4)\? *//g' ) 
+M4_VERSION=$($M4 --version | head -n1 | sed -e 's/^\(m4 \)\?(\?GNU M4)\? *//g' )
 GOOD_M4=$( echo $M4_VERSION | awk -F. '{if( ($1>1) || ( ($1==1) && ($2>4) ) || ( ($1==1) && ($2==4) && ($3>=6) )) print 1 }')
 
 if [ "$GOOD_M4" != "1" ]; then
@@ -36,7 +36,8 @@ fi
 
 # To cater for Solaris
 if test -d "/usr/xpg4/bin"; then
-    PATH=/usr/xpg4/bin:$PATH
+    # don't add xpg4 dir to PATH if on OpenIndiana
+    grep -q OpenIndiana /etc/release 2>/dev/null||PATH=/usr/xpg4/bin:$PATH
     export PATH
 fi
 
@@ -54,8 +55,8 @@ if test -n "$GIT" -a -n "$($GIT symbolic-ref HEAD 2>/dev/null)"; then
 	IN_GIT="1"
 fi
 if test -z "$TREE_VERSION"; then
-        TREE_VERSION="$EXPECTED_TREE_VERSION"
-        if test -n "$IN_GIT"; then
+	TREE_VERSION="$EXPECTED_TREE_VERSION"
+	if test -n "$IN_GIT"; then
 	    echo "If you cloned this branch into your own you should issue:"
 	    echo "\tgit tag -s v${TREE_VERSION}.<your branch_name>"
 	    echo "\tgit push --tag"
@@ -86,7 +87,7 @@ if test "$emacs_full_version" != "$EXPECTED_TREE_VERSION"; then
     git describe --long
     git config -l
     set +x
-    echo "*******************************************" 
+    echo "*******************************************"
 fi
 
 autoconf_ver=$(autoconf --version 2>/dev/null | head -n1)

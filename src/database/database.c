@@ -174,7 +174,7 @@ print_database(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 
 	tmp1 = db->funcs->get_type(db);
 	tmp2 = db->funcs->get_subtype(db);
-	write_fmt_string(printcharfun, 
+	write_fmt_string(printcharfun,
 			 "\" (%s/%s/%s) 0x%x>",
 			 (char *)string_data(XSYMBOL(tmp1)->name),
 			 (char *)string_data(XSYMBOL(tmp2)->name),

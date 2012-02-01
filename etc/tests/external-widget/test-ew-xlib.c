@@ -13,8 +13,8 @@
 #define TOO_SMALL 0
 #define BIG_ENOUGH 1
 
-/* These are used as arguments to nearly every Xlib routine, so it saves 
- * routine arguments to declare them global.  If there were 
+/* These are used as arguments to nearly every Xlib routine, so it saves
+ * routine arguments to declare them global.  If there were
  * additional source files, they would be declared extern there. */
 Display *display;
 int screen_num;
@@ -55,7 +55,7 @@ char **argv;
 	display_height = DisplayHeight(display, screen_num);
 
 	/* Note that in a real application, x and y would default to 0
-	 * but would be settable from the command line or resource database.  
+	 * but would be settable from the command line or resource database.
 	 */
 	x = y = 0;
 
@@ -88,12 +88,12 @@ char **argv;
 		XWMHints wm_hints;
 		XClassHint class_hints;
 
-		/* format of the window name and icon name 
+		/* format of the window name and icon name
 		 * arguments has changed in R4 */
 		XTextProperty windowName, iconName;
 
 		/* These calls store window_name and icon_name into
-		 * XTextProperty structures and set their other 
+		 * XTextProperty structures and set their other
 		 * fields properly. */
 		if (XStringListToTextProperty(&window_name, 1, &windowName) ==
 		    0) {
@@ -232,7 +232,7 @@ XFontStruct *font_info;
 	/* specify font */
 	XSetFont(display, *gc, font_info->fid);
 
-	/* specify black foreground since default window background is 
+	/* specify black foreground since default window background is
 	 * white and default foreground is undefined. */
 	XSetForeground(display, *gc, BlackPixel(display, screen_num));
 
@@ -314,7 +314,7 @@ draw_text(Window win, GC gc, XFontStruct *font_info, unsigned int win_width, uns
 	 * of the window.  Since the baseline of the string is what we
 	 * need to locate for XDrawString, and the baseline is one
 	 * font_info->ascent below the top of the character,
-	 * the final offset of the origin up from the center of the 
+	 * the final offset of the origin up from the center of the
 	 * window is one font_height + one descent. */
 
 	initial_y_offset = win_height / 2 - font_height - font_info->descent;

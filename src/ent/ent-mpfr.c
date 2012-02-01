@@ -136,7 +136,7 @@ Bufbyte *bigfr_to_string(mpfr_t f, int base)
 {
 	mp_exp_t expt;
 	Bufbyte *str;
-        int len;
+	int len;
 	const int sign = mpfr_sgn(f);
 	const int neg = (sign < 0) ? 1 : 0;
 
@@ -230,7 +230,7 @@ Lisp_Object read_bigc_string(char *cp)
 		/* jump over a leading minus */
 		cp++;
 	}
-		
+
 	while ((*cp >= '0' && *cp <= '9') ||
 	       (*cp == '.'))
 		cp++;
@@ -1633,4 +1633,3 @@ The value of pi (3.1415926...).
 
 	Fprovide(intern("bigfr"));
 }
-

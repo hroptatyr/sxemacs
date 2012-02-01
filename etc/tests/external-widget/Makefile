@@ -17,8 +17,8 @@ LDFLAGS += -R$(OPENWINHOME)/lib:$(EMACSLIBDIR) -g
 
 TM_OBJS = test-ew-motif.o
 TXL_OBJS = test-ew-xlib.o
-MOTIF_LIBS = -Bstatic -lextcli_Xm -Bdynamic -lXm -lXt -ltt -lX11 -lgen -lm 
-XLIB_LIBS = -Bstatic -lextcli_Xlib -Bdynamic -ltt -lX11 -lgen -lm 
+MOTIF_LIBS = -Bstatic -lextcli_Xm -Bdynamic -lXm -lXt -ltt -lX11 -lgen -lm
+XLIB_LIBS = -Bstatic -lextcli_Xlib -Bdynamic -ltt -lX11 -lgen -lm
 
 all: test-ew-motif
 
@@ -27,4 +27,3 @@ test-ew-motif: $(TM_OBJS)
 
 test-ew-xlib: $(TXL_OBJS)
 	$(CC) -o $@ $(LDFLAGS) $(TXL_OBJS) $(XLIB_LIBS)
-

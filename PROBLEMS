@@ -300,6 +300,45 @@ crashes on all applications.
 In order to give SXEmacs developers with good diagnosis information it
 is recommended the mode be Developer.
 
+** OpenIndiana
+
+SXEmacs does build and run on OpenIndiana (151a) but you will need to
+install a few files/packages beforehand.  Namely...
+
+    Common Name             OpenIndiana Package Name
+
+	GCC			gcc-3
+	GNU M4			gnu-m4
+	automake		automake-110
+	autoconf		autoconf
+	libtool			libtool (also install libltdl)
+	pkg-config		gettext
+	math.h			header-math
+	bison			bison
+	gmp			gmp
+	mpfr			mpfr
+
+Yes, you read that right... to get pkg-config you must install the
+"gettext" package. :-)
+
+In that list, `bison', `gmp', and `mpfr' are not critical, but you
+will get extra functionality in your SXEmacs if you have them.
+
+*** automake additional instructions for OpenIndiana
+
+When you install the automake-110 OpenIndiana package it won't set up
+the symlinks to /usr/bin/automake or /usr/bin/aclocal.  Fix that
+with...
+
+	sudo ln -sv automake-1.10 /usr/bin/automake
+	sudo ln -sv aclocal-1.10 /usr/bin/aclocal
+
+*** Running SXEmacs configure on OpenIndiana
+
+There's one more quirk with OpenIndiana when you try to run SXEmacs'
+configure... you MUST set $CONFIG_SHELL
+
+	     CONFIG_SHELL=/bin/bash ../configure [opts]
 
 * XEmacs Packages
 =================

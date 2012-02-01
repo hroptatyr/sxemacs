@@ -59,20 +59,20 @@ your favourite distributor, you may have SXEmacs PostgreSQL support
 by default.  @code{M-x describe-installation} will tell you if you do.
 
 If you are building SXEmacs from source, you need to install PostgreSQL
-first (see above example).  On some systems, PostgreSQL will come 
+first (see above example).  On some systems, PostgreSQL will come
 pre-installed in /usr or /usr/local.  In this case, it should be
 autodetected when you run configure.
 
 If PostgreSQL is installed into its default location (for example when
 passing no @samp{--prefix} to the configure; @file{/usr/local/pgsql} is
 default) you must specify @code{--site-prefixes=/usr/local/pgsql} when
-you run configure.  If PostgreSQL is installed into another location, 
+you run configure.  If PostgreSQL is installed into another location,
 use that instead of @file{/usr/local/pgsql} when specifying
 @code{--site-prefixes}.
 
 All versions of SXEmacs have been reported to work with PostgreSQL
 versions 6.5, 7.x, and 8.x.  SXEmacs Lisp support for V7.x and V8.x is
-somewhat more extensive than support for V6.5.  In particular, 
+somewhat more extensive than support for V6.5.  In particular,
 asynchronous queries are supported.
 
 

@@ -46,7 +46,7 @@ bldlispdir = $(abs_top_builddir)/lisp
 sxelibsrcdir = $(top_srcdir)/lib-src
 bldlibsrcdir = $(top_builddir)/lib-src
 
-AM_CFLAGS = 
+AM_CFLAGS =
 AM_CPPFLAGS = -I$(sxesrcdir) $(c_switch_all)
 AM_LDFLAGS = $(ld_switch_general) $(ld_libs_general)
 
@@ -92,7 +92,7 @@ ctags2_LDADD =
 if NEED_ALLOCA_C
 ctags2_LDADD += $(ALLOCA_C)
 endif
-ctags2_CPPFLAGS = $(AM_CPPFLAGS) 
+ctags2_CPPFLAGS = $(AM_CPPFLAGS)
 if WITH_BDWGC
 ctags2_CPPFLAGS += $(BDWGC_CPPFLAGS)
 ctags2_LDADD += $(BDWGC_LDFLAGS) $(BDWGC_LIBS)
@@ -115,7 +115,7 @@ etags_DEPENDENCIES = $(ALLOCA)
 
 ootags_SOURCES = $(REGEX_C) ootags.c
 ootags_CFLAGS = $(REGEX_CF) -DOOTAGS
-ootags_CPPFLAGS = $(AM_CPPFLAGS) 
+ootags_CPPFLAGS = $(AM_CPPFLAGS)
 if WITH_BDWGC
 ootags_CPPFLAGS += $(BDWGC_CPPFLAGS)
 ootags_LDADD = $(BDWGC_LDFLAGS) $(BDWGC_LIBS)
@@ -144,7 +144,7 @@ uninstall-hook:
 	cd $(DESTDIR)$(bindir) && \
 	$(RM) ctags
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## Create preprocessor output (debugging purposes only)

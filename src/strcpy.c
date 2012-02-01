@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /* Synched up with: Not in FSF. */
 
-/* In SunOS 4.1.1 the strcpy function references memory past the last byte of 
-   the string!  This will core dump if the memory following the last byte is 
+/* In SunOS 4.1.1 the strcpy function references memory past the last byte of
+   the string!  This will core dump if the memory following the last byte is
    not mapped.
 
    Here are correct versions by hbs@lucid.com.

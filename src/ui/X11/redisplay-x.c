@@ -73,29 +73,29 @@ static void x_clear_frame(struct frame *f);
 static void x_clear_frame_windows(Lisp_Object window);
 
      /* Note: We do not use the Xmb*() functions and XFontSets.
-        Those functions are generally losing for a number of reasons:
+	Those functions are generally losing for a number of reasons:
 
-        1) They only support one locale (e.g. you could display
-        Japanese and ASCII text, but not mixed Japanese/Chinese
-        text).  You could maybe call setlocale() frequently
-        to try to deal with this, but that would generally
-        fail because an XFontSet is tied to one locale and
-        won't have the other character sets in it.
-        2) Not all (or even very many) OS's support the useful
-        locales.  For example, as far as I know SunOS and
-        Solaris only support the Japanese locale if you get the
-        special Asian-language version of the OS.  Yuck yuck
-        yuck.  Linux doesn't support the Japanese locale at
-        all.
-        3) The locale support in X only exists in R5, not in R4.
-        (Not sure how big of a problem this is: how many
-        people are using R4?)
-        4) Who knows if the multi-byte text format (which is locale-
-        specific) is even the same for the same locale on
-        different OS's?  It's not even documented anywhere that
-        I can find what the multi-byte text format for the
-        Japanese locale under SunOS and Solaris is, but I assume
-        it's EUC.
+	1) They only support one locale (e.g. you could display
+	Japanese and ASCII text, but not mixed Japanese/Chinese
+	text).  You could maybe call setlocale() frequently
+	to try to deal with this, but that would generally
+	fail because an XFontSet is tied to one locale and
+	won't have the other character sets in it.
+	2) Not all (or even very many) OS's support the useful
+	locales.  For example, as far as I know SunOS and
+	Solaris only support the Japanese locale if you get the
+	special Asian-language version of the OS.  Yuck yuck
+	yuck.  Linux doesn't support the Japanese locale at
+	all.
+	3) The locale support in X only exists in R5, not in R4.
+	(Not sure how big of a problem this is: how many
+	people are using R4?)
+	4) Who knows if the multi-byte text format (which is locale-
+	specific) is even the same for the same locale on
+	different OS's?  It's not even documented anywhere that
+	I can find what the multi-byte text format for the
+	Japanese locale under SunOS and Solaris is, but I assume
+	it's EUC.
       */
 
 struct textual_run {
@@ -335,7 +335,7 @@ x_output_display_block(struct window *w, struct display_line *dl, int block,
 	if (end < 0)
 		end = Dynarr_length(rba);
 
-        buf = Dynarr_new (Emchar);
+	buf = Dynarr_new (Emchar);
 
 	while (elt < end) {
 		rb = Dynarr_atp(rba, elt);
@@ -734,20 +734,20 @@ x_get_gc(struct device *d, Lisp_Object font, Lisp_Object fg, Lisp_Object bg,
 
  W		Window that the text is to be displayed in.
  DL		Display line that this text is on.  The values in the
- 		structure are used to determine the vertical position and
+		structure are used to determine the vertical position and
 		clipping range of the text.
  BUF		Dynamic array of Emchars specifying what is actually to be
 		drawn.
  XPOS		X position in pixels where the text should start being drawn.
  XOFFSET	Number of pixels to be chopped off the left side of the
- 		text.  The effect is as if the text were shifted to the
+		text.  The effect is as if the text were shifted to the
 		left this many pixels and clipped at XPOS.
  CLIP_START	Clip everything left of this X position.
  WIDTH		Clip everything right of XPOS + WIDTH.
  FINDEX		Index for the face cache element describing how to display
- 		the text.
+		the text.
  CURSOR		#### I don't understand this.  There's something
- 		strange and overcomplexified with this variable.
+		strange and overcomplexified with this variable.
 		Chuck, explain please?
  CURSOR_START	Starting X position of cursor.
  CURSOR_WIDTH	Width of cursor in pixels.
@@ -1021,13 +1021,13 @@ x_output_string(struct window *w, struct display_line *dl,
 				ascent = xfont->ascent;
 			else
 				ascent = (int) ascent_ext;
-			
+
 			if (!XGetFontProperty
 			    (xfont, XA_STRIKEOUT_DESCENT, &descent_ext))
 				descent = xfont->descent;
 			else
 				descent = (int) descent_ext;
-			
+
 			if (!XGetFontProperty
 			    (xfont, XA_UNDERLINE_THICKNESS, &uthick_ext))
 				uthick = 1;

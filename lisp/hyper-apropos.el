@@ -349,7 +349,7 @@ See also `hyper-apropos-mode'."
 
 (defun hyper-apropos-mode (regexp)
   "Improved apropos mode for displaying Emacs documentation.  Function and
-variable names are displayed in the buffer \"*Hyper Apropos*\".  
+variable names are displayed in the buffer \"*Hyper Apropos*\".
 
 Functions are preceded by a single character to indicates their types:
     a = autoloaded, b = byte-compiled, i = internal, l = lambda, m = macro.
@@ -358,20 +358,20 @@ Variables are preceded by an asterisk if they are user variables.
 
 General Commands:
 
-  	SPC	- scroll documentation or apropos window forward
-  	  b	- scroll documentation or apropos window backward
+	SPC	- scroll documentation or apropos window forward
+	  b	- scroll documentation or apropos window backward
 	  k     - eliminate all hits that don't contain keyword
 	  n	- new search
-  	  /	- isearch-forward
-  	  q	- quit and restore previous window configuration
-  
+	  /	- isearch-forward
+	  q	- quit and restore previous window configuration
+
   Operations for Symbol on Current Line:
-  
-      	RET 	- toggle display of symbol's documentation
+
+	RET	- toggle display of symbol's documentation
 		  (also on button2 in xemacs)
-  	  w     - show the keybinding if symbol is a command
-  	  i	- invoke function on current line
-  	  s	- set value of variable on current line
+	  w     - show the keybinding if symbol is a command
+	  i	- invoke function on current line
+	  s	- set value of variable on current line
 	  t	- display the C or lisp source (find-tag)"
   (delete-other-windows)
   (setq mode-name "Hyper-Apropos"
@@ -398,9 +398,9 @@ General Commands:
 (defun hyper-describe-key-briefly (key &optional show)
   (interactive "kDescribe key briefly: \nP")
   (let (menup defn interm final msg)
-    (setq defn (key-or-menu-binding key 'menup))    
+    (setq defn (key-or-menu-binding key 'menup))
     (if (or (null defn) (integerp defn))
-        (or (numberp show) (message "%s is undefined" (key-description key)))
+	(or (numberp show) (message "%s is undefined" (key-description key)))
       (cond ((stringp defn)
 	     (setq interm defn
 		   final (key-binding defn)))
@@ -415,7 +415,7 @@ General Commands:
 	       (setq interm (butlast interm)))
 	     (if final
 		 (setq interm (vconcat interm))
-	       (setq interm defn 
+	       (setq interm defn
 		     final (key-binding defn)))))
       (setq msg (format
 		 "%s runs %s%s%s"
@@ -454,7 +454,7 @@ See also `hyper-apropos' and `hyper-describe-function'."
      (or (find-face v)
 	 (setq v (variable-at-point)))
      (setq val (let ((enable-recursive-minibuffers t))
-                 (completing-read
+		 (completing-read
 		  (concat (if (hyper-apropos-follow-ref-buffer current-prefix-arg)
 			      "Follow face"
 			    "Describe face")
@@ -623,7 +623,7 @@ See also `hyper-apropos' and `hyper-describe-function'."
 		"see below")
 	    "is void")))
 
-(defun hyper-apropos-follow-ref-buffer (this-ref-buffer) 
+(defun hyper-apropos-follow-ref-buffer (this-ref-buffer)
   (and (not this-ref-buffer)
        (eq major-mode 'hyper-apropos-help-mode)
        hyper-apropos-ref-buffer
@@ -763,8 +763,8 @@ See also `hyper-apropos' and `hyper-describe-function'."
 				   "()")))
 		       ((and (or (eq symtype 'subr) (eq symtype 'autoload))
 			     (string-match
-                              "[\n\t ]*\narguments: ?(\\([^)]*\\))\n?\\'"
- 			      doc))
+			      "[\n\t ]*\narguments: ?(\\([^)]*\\))\n?\\'"
+			      doc))
 			(insert (substring doc
 					   (match-beginning 1)
 					   (match-end 1)))
@@ -788,7 +788,7 @@ See also `hyper-apropos' and `hyper-describe-function'."
 	;; variable ----------------------------------------------------------
 	(and (memq 'variable type)
 	     (or (boundp symbol) (default-boundp symbol))
-	     (progn 
+	     (progn
 	       (setq ok t)
 	       (setq aliases (hyper-apropos-get-alias symbol
 						 'variable-alias
@@ -984,7 +984,7 @@ See also `hyper-apropos' and `hyper-describe-function'."
 		(setq symtype (cdr symtype)))))))
     (save-excursion
       (set-buffer hyper-apropos-help-buf)
-      (goto-char (point-min)) 
+      (goto-char (point-min))
       ;; pop up window and shrink it if it's wasting space
       (if hyper-apropos-shrink-window
 	  (shrink-window-if-larger-than-buffer

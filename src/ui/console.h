@@ -388,7 +388,7 @@ struct console_methods {
   CONTYPE_METH_OR_GIVEN (meth, m, args, Qnil)
 
 /******** Same functions, operating on a console instead of a
-          struct console_methods ********/
+	  struct console_methods ********/
 
 #define HAS_CONMETH_P(c, m) HAS_CONTYPE_METH_P ((c)->conmeths, m)
 #define CONMETH(c, m, args) CONTYPE_METH ((c)->conmeths, m, args)
@@ -520,7 +520,7 @@ extern_inline struct console *error_check_console_type(struct console *con,
 # define CONSOLE_DATA(con)	((struct console *)con)->console_data
 #else
 # define CONSOLE_TYPE_DATA(con, type)				\
-        ((struct type##_console *)(((struct console *)con)->console_data))
+	((struct type##_console *)(((struct console *)con)->console_data))
 # define CONSOLE_DATA(con)	((struct console *)con)->console_data
 #endif
 
@@ -616,7 +616,7 @@ int valid_console_type_p(Lisp_Object type);
 #define CDFW_CONSOLE(obj)				\
    (WINDOWP  (obj) ? WINDOW_CONSOLE (XWINDOW (obj))	\
  : (FRAMEP   (obj) ?  FRAME_CONSOLE (XFRAME  (obj))	\
- : (DEVICEP  (obj) ? DEVICE_CONSOLE (XDEVICE (obj))    	\
+ : (DEVICEP  (obj) ? DEVICE_CONSOLE (XDEVICE (obj))	\
  : (CONSOLEP (obj) ? obj				\
  : Qnil))))
 

@@ -1147,9 +1147,9 @@ and `END-INFO-DIR-ENTRY'."
 	(goto-char start)
 	(while (re-search-forward
 		(concat #r"^\* \([^:]+\):\("
-                        "[ \t]*"
-                        #r"(\([^)]*\))\w*\.\|:\)")
-                nil t)
+			"[ \t]*"
+			#r"(\([^)]*\))\w*\.\|:\)")
+		nil t)
 	  (setq entry (list (match-string 2)
 			    (match-string 1)
 			    (downcase (or (match-string 3)
@@ -1603,8 +1603,8 @@ annotation for any node of any file.  (See `a' and `x' commands.)"
 		     nil t))
   (let (filename)
     (string-match (concat #r"\s *\((\s *\("
-                          "[^\t)]*"
-                          #r"\)\s *)\s *\|\)\(.*\)")
+			  "[^\t)]*"
+			  #r"\)\s *)\s *\|\)\(.*\)")
 		  nodename)
     (setq filename (if (= (match-beginning 1) (match-end 1))
 		       ""
@@ -1746,23 +1746,23 @@ annotation for any node of any file.  (See `a' and `x' commands.)"
   (setq Info-last-search regexp)
   (with-search-caps-disable-folding regexp t
     (let ((found ())
-          (onode Info-current-node)
-          (ofile Info-current-file)
-          (opoint (point))
-          (osubfile Info-current-subfile))
+	  (onode Info-current-node)
+	  (ofile Info-current-file)
+	  (opoint (point))
+	  (osubfile Info-current-subfile))
       (save-excursion
-        (save-restriction
-          (widen)
-          (if (null Info-current-subfile)
-              (progn (re-search-forward regexp) (setq found (point)))
-            (condition-case nil
-                (progn (re-search-forward regexp) (setq found (point)))
-              (search-failed nil)))))
+	(save-restriction
+	  (widen)
+	  (if (null Info-current-subfile)
+	      (progn (re-search-forward regexp) (setq found (point)))
+	    (condition-case nil
+		(progn (re-search-forward regexp) (setq found (point)))
+	      (search-failed nil)))))
       (if (not found)
 	  ;; can only happen in subfile case -- else would have erred
-          (unwind-protect
-              (let ((list ()))
-                (save-excursion
+	  (unwind-protect
+	      (let ((list ()))
+		(save-excursion
 		  (set-buffer (marker-buffer Info-tag-table-marker))
 		  (goto-char (point-min))
 		  (search-forward "\n\^_\nIndirect:")
@@ -1784,26 +1784,26 @@ annotation for any node of any file.  (See `a' and `x' commands.)"
 		      (goto-char (1+ (match-end 0))))
 		    (setq list (nreverse list)
 			  list (cdr list))))
-                (while list
-                  (message "Searching subfile %s..." (cdr (car list)))
-                  (Info-read-subfile (car (car list)))
-                  (setq list (cdr list))
-                  (goto-char (point-min))
-                  (if (re-search-forward regexp nil t)
-                      (setq found (point) list ())))
-                (if found
-                    (message "")
-                  (signal 'search-failed (list regexp))))
-            (if (not found)
-                (progn (Info-read-subfile opoint)
-                       (goto-char opoint)
-                       (Info-select-node)))))
+		(while list
+		  (message "Searching subfile %s..." (cdr (car list)))
+		  (Info-read-subfile (car (car list)))
+		  (setq list (cdr list))
+		  (goto-char (point-min))
+		  (if (re-search-forward regexp nil t)
+		      (setq found (point) list ())))
+		(if found
+		    (message "")
+		  (signal 'search-failed (list regexp))))
+	    (if (not found)
+		(progn (Info-read-subfile opoint)
+		       (goto-char opoint)
+		       (Info-select-node)))))
       (widen)
       (goto-char found)
       (Info-select-node)
       (or (and (equal onode Info-current-node)
-               (equal ofile Info-current-file))
-          (Info-history-add ofile onode opoint)))))
+	       (equal ofile Info-current-file))
+	  (Info-history-add ofile onode opoint)))))
 
 ;; Extract the value of the node-pointer named NAME.
 ;; If there is none, use ERRORNAME in the error message;
@@ -1957,7 +1957,7 @@ NAME may be an abbreviation of the reference name."
 (defun Info-next-reference (n)
   (interactive "p")
   (let ((pat (format (concat "\\*%s[ \n\t]*"
-                             #r"\([^:]*\):\|^\* .*:\|<<.*>>")
+			     #r"\([^:]*\):\|^\* .*:\|<<.*>>")
 		     Info-footnote-tag))
 	(old-pt (point))
 	wrapped found-nomenu)
@@ -2077,8 +2077,8 @@ Completion is allowed, and the menu item point is on is the default."
 	 (if (string= item "")
 	     (if default
 		 (setq item default)
-	         ;; ask again
-	         (setq item nil))))
+		 ;; ask again
+		 (setq item nil))))
        (list item))))
   ;; there is a problem here in that if several menu items have the same
   ;; name you can only go to the node of the first with this command.
@@ -2440,7 +2440,7 @@ This command is designed to be used whether you are already in Info or not."
 					(format " (default %s)" fn)
 				      ""))
 			    obarray 'fboundp t
-                            nil nil (and fn (symbol-name fn))))
+			    nil nil (and fn (symbol-name fn))))
 		 (list (if (equal val "")
 			   fn (intern val)))))
   (save-window-excursion

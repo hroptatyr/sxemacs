@@ -60,7 +60,7 @@ BITCHENV = EMACSPACKAGEPATH= SOURCE_TREE_ROOT=$(abs_top_srcdir) BUILD_TREE_ROOT=
 BATCH = $(BITCHENV) $(BITCH)
 RM = rm -f
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## the libtool approach
@@ -80,4 +80,3 @@ SUFFIXES = .doc.c
 module_LTLIBRARIES =
 
 BUILT_SOURCES =
-

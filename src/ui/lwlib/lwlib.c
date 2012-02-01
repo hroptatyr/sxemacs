@@ -324,8 +324,8 @@ widget_value *replace_widget_value_tree(widget_value * node,
 
 		free_widget_value_contents(node);
 		*node = *copy;
-                /* free the node, but not its contents. */
-		free_widget_value(copy);	
+		/* free the node, but not its contents. */
+		free_widget_value(copy);
 	}
 	return node;
 }

@@ -52,7 +52,7 @@
 (defconst iso8859/1-code-to-x-keysym-table nil
   "Maps iso8859/1 to an X keysym name which corresponds to it.
 There may be more than one X name for this keycode; this returns the first one.
-Note that this is X specific; one should avoid using this table whenever 
+Note that this is X specific; one should avoid using this table whenever
 possible, in the interest of portability.")
 
 ;; (This esoteric little construct is how you do MACROLET in elisp.  It
@@ -67,7 +67,7 @@ possible, in the interest of portability.")
 	;;
 	;; First emit code that puts the `x-iso8859/1' property on all of
 	;; the keysym symbols.
-	;; 
+	;;
 	(mapcar '(lambda (sym-and-code)
 		  (list 'put (list 'quote (car sym-and-code))
 			''x-iso8859/1 (car (cdr sym-and-code))))
@@ -75,7 +75,7 @@ possible, in the interest of portability.")
 	;;
 	;; Then emit code that binds all of those keysym symbols to
 	;; `self-insert-command'.
-	;; 
+	;;
 	(mapcar '(lambda (sym-and-code)
 		  (list 'global-set-key (list 'quote (car sym-and-code))
 			''self-insert-command))
@@ -112,7 +112,7 @@ possible, in the interest of portability.")
  (currency		?\244)
  (yen			?\245)
  (brokenbar		?\246)
- (section 		?\247)
+ (section		?\247)
  (diaeresis		?\250)
  (copyright		?\251)
  (ordfeminine		?\252)
@@ -125,10 +125,10 @@ possible, in the interest of portability.")
  (plusminus		?\261)
  (twosuperior		?\262)
  (threesuperior		?\263)
- (acute			?\264)	; Why is there an acute keysym that is 
- (mu			?\265)	; distinct from apostrophe/quote, but 
+ (acute			?\264)	; Why is there an acute keysym that is
+ (mu			?\265)	; distinct from apostrophe/quote, but
  (paragraph		?\266)	; no grave keysym that is distinct from
- (periodcentered	?\267)	; backquote? 
+ (periodcentered	?\267)	; backquote?
  (cedilla		?\270)  ; I've added the grave keysym, because it's
  (onesuperior		?\271)  ; used in x-compose (Heiko Muenkel).
  (masculine		?\272)

@@ -102,10 +102,10 @@ If you quit, the process is killed with SIGINT, or SIGKILL if you
 	      (setq infile (expand-file-name infile))
 	      (setq inbuf (generate-new-buffer "*call-process*"))
 	      (with-current-buffer inbuf
-               ;; Make sure this works with jka-compr
-               (let ((file-name-handler-alist nil))
-                 (insert-file-contents-internal infile nil nil nil nil
-                                                'binary))))
+	       ;; Make sure this works with jka-compr
+	       (let ((file-name-handler-alist nil))
+		 (insert-file-contents-internal infile nil nil nil nil
+						'binary))))
 	    (let ((stderr (if (consp buffer) (second buffer) t)))
 	      (if (consp buffer) (setq buffer (car buffer)))
 	      (setq buffer
@@ -201,8 +201,8 @@ If you quit, the process is killed with SIGINT, or SIGKILL if you
   (apply 'call-process-internal program infile buffer displayp args))
 
 (defun call-process-region (start end program
-                            &optional deletep buffer displayp
-                            &rest args)
+			    &optional deletep buffer displayp
+			    &rest args)
   "Send text from START to END to a synchronous process running PROGRAM.
 Delete the text if fourth arg DELETEP is non-nil.
 
@@ -279,7 +279,7 @@ In either case, the output is inserted after point (leaving mark after it)."
 	      (error
 	       'unimplemented
 	       "backgrounding a shell command requires package `background'")))
-	    
+
 	(shell-command-on-region (point) (point) command output-buffer)))))
 
 ;; We have a sentinel to prevent insertion of a termination message
@@ -436,9 +436,9 @@ are usually fine.)  Note further that UDP protocol does not guard against
 lost packets."
   (open-network-stream-internal name buffer host service protocol))
 
-(defun open-network-server-stream 
+(defun open-network-server-stream
   (name buffer host service &optional
-        protocol acceptor filter sentinel)
+	protocol acceptor filter sentinel)
   "Returns a process object to represent the listening connection. When a
 new connection request arrives, it is automatically accepted. A
 network-stream process is automatically created for that
@@ -446,9 +446,9 @@ connection. If needed a new buffer is also created. If given the
 acceptor function is called. If defined filter and sentinel are set
 for the new connection process .
 
-Input and output work as for subprocesses; `delete-process' closes it.  
+Input and output work as for subprocesses; `delete-process' closes it.
 
-Args are NAME BUFFER HOST SERVICE &optional PROTOCOL ACCEPTOR .  
+Args are NAME BUFFER HOST SERVICE &optional PROTOCOL ACCEPTOR .
 
 NAME is name for process.  It is modified if necessary to make it
 unique.
@@ -458,10 +458,10 @@ BUFFER is the buffer (or buffer-name) to associate with the process.
  specify an output stream or filter function to handle the output. No
  real process output of listening process is expected. However the
  name of this buffer will be used as a base for generating a new
- buffer name for the accepted connections.  
+ buffer name for the accepted connections.
  The BUFFER may be also nil, meaning that this process is not
  associated with any buffer. In this case a filter should be specified
- otherwise there will be no way to retrieve the process output.  
+ otherwise there will be no way to retrieve the process output.
  BUFFER may also be 'auto in which case a buffer is automatically
  created for the accepted connection.
 
@@ -478,7 +478,7 @@ Sixt argument ACCEPTOR is a function which will be called upon connection
  acceptance with the accepted connection process as the single argument.
 Seventh argument FILTER is a function which will be set as filter for
  the accepted connections automatically. See `set-process-filter' for
- more details.  
+ more details.
 Eight argument SENTINEL is a function which will be set as sentinel
  the accepted connections automatically. see `set-process-sentinel'
  for more details.
@@ -496,7 +496,7 @@ buffers. If sentinels and/or filters are set in the ACCEPTOR they
 will override the FILTER and SENTINEL args to this function.
 "
   (open-network-server-stream-internal name buffer host service
-                                       protocol acceptor filter sentinel))
+				       protocol acceptor filter sentinel))
 
 (defun shell-quote-argument (argument)
   "Quote an argument for passing as argument to an inferior shell."

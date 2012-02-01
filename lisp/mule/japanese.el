@@ -68,7 +68,7 @@
       do (modify-category-entry `[japanese-jisx0208 ,row] ?C))
 (loop for char in '(?ー ?゛ ?゜)
       do (modify-category-entry char ?K)
-         (modify-category-entry char ?H))
+	 (modify-category-entry char ?H))
 (loop for char in '(?ヽ ?ヾ ?ゝ ?ゞ ?〃 ?仝 ?々 ?〆 ?〇)
       do (modify-category-entry char ?C))
 (modify-category-entry 'japanese-jisx0212 ?C)
@@ -134,7 +134,7 @@
 ;; locally.
 
 (defvar aletter (concat "\\(" ascii-char "\\|" kanji-char "\\)"))
-(defvar kanji-space-insertable (concat 
+(defvar kanji-space-insertable (concat
 	   "、" aletter                   "\\|"
 	   "。" aletter                   "\\|"
 	   aletter "（"                   "\\|"

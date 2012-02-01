@@ -53,7 +53,7 @@ DECLARE_LRECORD(lstream, struct lstream_s);
    functions.  This MUST BE SIGNED, since it also is used in functions
    that return the number of bytes actually read to or written from in
    an operation, and these functions can return -1 to signal error.
-   
+
    Note that the standard Unix read() and write() functions define the
    count going in as a size_t, which is UNSIGNED, and the count going
    out as an ssize_t, which is SIGNED.  This is a horrible design

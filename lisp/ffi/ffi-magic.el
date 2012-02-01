@@ -38,7 +38,7 @@
 ;; IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ;;; Commentary:
-;; 
+;;
 ;;    Mimic file(1)'s basic usage.  At the moment, this is quite raw
 ;;    and single-minded.  It will only use the default magic db and
 ;;    doesn't allow use of any of file(1)'s options.
@@ -101,7 +101,7 @@
 
   (let ((ftype (magic-file ffi-magic-shared (expand-file-name file))))
     (if (interactive-p)
-        (message ftype)
+	(message ftype)
       ftype)))
 
 (defun magic:error (&optional magic)

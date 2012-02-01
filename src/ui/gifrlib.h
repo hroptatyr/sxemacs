@@ -140,7 +140,7 @@ int DGifCloseFile(GifFileType * GifFile);
 #define D_GIF_ERR_EOF_TOO_SOON	113
 
 /******************************************************************************
-* O.K., here are the error routines 					      *
+* O.K., here are the error routines					      *
 ******************************************************************************/
 extern void GifSetErrorFunc(GifFileType * GifFile, Gif_error_func func,
 			    VoidPtr data);

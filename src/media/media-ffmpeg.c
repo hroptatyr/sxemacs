@@ -92,37 +92,37 @@ media_ffmpeg_bitrate(AVCodecContext *enc)
 {
 	int bitrate;
 
-        /* for PCM codecs, compute bitrate directly */
-        switch ((unsigned int)enc->codec_id) {
-        case CODEC_ID_PCM_S32LE:
-        case CODEC_ID_PCM_S32BE:
-        case CODEC_ID_PCM_U32LE:
-        case CODEC_ID_PCM_U32BE:
+	/* for PCM codecs, compute bitrate directly */
+	switch ((unsigned int)enc->codec_id) {
+	case CODEC_ID_PCM_S32LE:
+	case CODEC_ID_PCM_S32BE:
+	case CODEC_ID_PCM_U32LE:
+	case CODEC_ID_PCM_U32BE:
 		bitrate = enc->sample_rate * enc->channels * 32;
 		break;
-        case CODEC_ID_PCM_S24LE:
-        case CODEC_ID_PCM_S24BE:
-        case CODEC_ID_PCM_U24LE:
-        case CODEC_ID_PCM_U24BE:
-        case CODEC_ID_PCM_S24DAUD:
+	case CODEC_ID_PCM_S24LE:
+	case CODEC_ID_PCM_S24BE:
+	case CODEC_ID_PCM_U24LE:
+	case CODEC_ID_PCM_U24BE:
+	case CODEC_ID_PCM_S24DAUD:
 		bitrate = enc->sample_rate * enc->channels * 24;
 		break;
-        case CODEC_ID_PCM_S16LE:
-        case CODEC_ID_PCM_S16BE:
-        case CODEC_ID_PCM_U16LE:
-        case CODEC_ID_PCM_U16BE:
+	case CODEC_ID_PCM_S16LE:
+	case CODEC_ID_PCM_S16BE:
+	case CODEC_ID_PCM_U16LE:
+	case CODEC_ID_PCM_U16BE:
 		bitrate = enc->sample_rate * enc->channels * 16;
 		break;
-        case CODEC_ID_PCM_S8:
-        case CODEC_ID_PCM_U8:
-        case CODEC_ID_PCM_ALAW:
-        case CODEC_ID_PCM_MULAW:
+	case CODEC_ID_PCM_S8:
+	case CODEC_ID_PCM_U8:
+	case CODEC_ID_PCM_ALAW:
+	case CODEC_ID_PCM_MULAW:
 		bitrate = enc->sample_rate * enc->channels * 8;
 		break;
-        default:
+	default:
 		bitrate = enc->bit_rate;
 		break;
-        }
+	}
 	return bitrate;
 }
 
@@ -146,7 +146,7 @@ char *media_ffmpeg_streaminfo(Lisp_Media_Stream *ms)
 		chars_left -= 10;
 		strncat(out, avfc->author, chars_left);
 		chars_left -= strlen(avfc->author);
-	        strncat(out, "\"", chars_left--);
+		strncat(out, "\"", chars_left--);
 	}
 	if (avfc->title && *avfc->title) {
 		strncat(out, " :title: \"", chars_left);
@@ -241,7 +241,7 @@ static int64_t
 media_ffmpeg_vio_seek(URLContext *h, int64_t pos, int whence)
 {
 	media_data *sd = (media_data*)h->priv_data;
-    
+
 	FFMPEG_DEBUG_AVS("seeking to %ld via %d\n", (long int)pos, whence);
 
 	switch (whence) {
@@ -328,9 +328,9 @@ media_ffmpeg_open_data(char *data, size_t size)
 
 	/* take a probe */
 	pd = xnew_and_zero(AVProbeData);
- 	pd->filename = file;
- 	pd->buf = NULL;
- 	pd->buf_size = 0;
+	pd->filename = file;
+	pd->buf = NULL;
+	pd->buf_size = 0;
 
 	pd->buf = (void*)sd->data;
 	pd->buf_size = PROBE_BUF_MIN;
@@ -503,7 +503,7 @@ media_ffmpeg_open(Lisp_Media_Stream *ms)
 	AVStream *avst = NULL;
 	AVCodecContext *avcc = NULL;
 	AVCodec *avc = NULL;
-	
+
 	/* initialise */
 	av_register_all();
 
@@ -564,10 +564,10 @@ media_ffmpeg_open(Lisp_Media_Stream *ms)
 			    avcc->codec_type != CODEC_TYPE_DATA &&
 			    (avc = avcodec_find_decoder(avcc->codec_id)) &&
 			    (avc && (avcodec_open(avcc, avc) >= 0))) {
-				
+
 				/* create a substream */
 				mss = make_media_substream_append(ms);
-				
+
 				switch ((unsigned int)avcc->codec_type) {
 				case CODEC_TYPE_VIDEO:
 					/* assign substream props */
@@ -590,7 +590,7 @@ media_ffmpeg_open(Lisp_Media_Stream *ms)
 				}
 			}
 		}
-	
+
 	/* keep the format context */
 	media_stream_data(ms) = avfc;
 
@@ -1290,7 +1290,7 @@ stream_open(char *filename, size_t filelen)
 
 	memset(ap, 0, sizeof(*ap));
 	/* we force a pause when starting an RTSP stream */
-	ap->initial_pause = 1; 
+	ap->initial_pause = 1;
 
 	ap->width = 0; /* frame_width; */
 	ap->height= 0; /* frame_height; */
@@ -1324,7 +1324,7 @@ new_media_ffmpeg_open(Lisp_Media_Stream *ms)
 	mkind_file_properties *mkfp = NULL;
 	char *file;
 	int file_len = 0;
-	
+
 	/* initialise */
 	av_register_all();
 

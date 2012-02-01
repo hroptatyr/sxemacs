@@ -5,7 +5,7 @@
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
   * This file is part of SXEmacs.
-  * 
+  *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
   * are met:
@@ -80,7 +80,7 @@ If there is more than one argument, the second argument, must be
 numerically greater than the first, and the third, must be numerically
 greater than the second, and so on. At least one argument is required.
 
-The arguments may be numbers, characters or markers.  
+The arguments may be numbers, characters or markers.
 */
       (int nargs, Lisp_Object *args))
 {
@@ -233,7 +233,7 @@ All arguments must be numbers, characters or markers.
 The value is always a number; markers and characters are converted
 to numbers.
 */
-      (int nargs, Lisp_Object *args)) 
+      (int nargs, Lisp_Object *args))
 {
 	REGISTER int i, maxindex;
 	Lisp_Object compmax, compi;

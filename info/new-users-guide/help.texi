@@ -19,7 +19,7 @@ help, type @kbd{C-h} three times.
 @end menu
 
 @node The Help Menu,  , Help, Help
-@section Help menu 
+@section Help menu
 @cindex help
 
 When you click on the Help menu with any of the mouse buttons you will
@@ -30,7 +30,7 @@ get the following menu items:
 Selecting this item will take you to the Info page which is the online
 documentation browsing system. You can simply click on the highlighted
 items and "Info" will take you to the document providing information
-about that topic. 
+about that topic.
 
 @item Describe Mode
 After you select this item, you will get a documentation on the major
@@ -88,7 +88,7 @@ Apropos (regexp):
 Now you can give any string name, for example "mode" and hit
 @key{RET}. You will get a listing of all the variables and commands
 containing that string i.e "mode" with a short description of its
-function. 
+function.
 
 @item List Keybindings
 Select this item and you will get a listing of all the keys and the
@@ -108,7 +108,7 @@ C-c C-c @{      texinfo-insert-braces
 @end example
 @noindent
 These keybindings apply only to "Texinfo" mode. @xref{Modes}, for more
-information on various modes. 
+information on various modes.
 
 @item Describe Key...
 After you select this item, you will be see the following message in the
@@ -140,13 +140,13 @@ Describe function (default <some function name>):
 If you hit @key{RET} without giving a function name, you will get
 documentation for that default function name, otherwise if you type a
 function name and hit @key{RET}, you will get documentation for the
-given function. 
+given function.
 
 @kindex C-h k
 @item Describe Variable...
 You can get documentation on any variable by selecting this menu
 item. It is similar to @b{Describe Function} and will prompt you for a
-variable name. 
+variable name.
 
 @item Unix Manual...
 After you select this item you will be prompted for a Unix command for
@@ -163,25 +163,13 @@ lists who is on the system.
 
 @item Emacs Tutorial
 Select this item and you will get a tutorial on Emacs. It is good for new
-users. 
+users.
 
 @item Emacs News
 Select this item and you will get a lot of historical and current news
-on Emacs ! 
+on Emacs !
 
 @end table
 
 For more information on the Help facility, @xref{Help,,,sxemacs,SXEmacs
 User's Manual}.
-
-
-
-
-
-
-
-
-
-
-
-

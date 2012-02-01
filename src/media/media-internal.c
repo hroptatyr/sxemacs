@@ -257,7 +257,7 @@ static size_t parsewave(void **data, size_t * sz, void **outbuf)
 					   functioning of the sndcnv... routines */
 					if(waverequire(data, sz, rq) != 0)
 						return (count);
-				        else
+					else
 						return 0;
 				}
 			}

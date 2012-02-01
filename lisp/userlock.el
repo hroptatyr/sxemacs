@@ -41,7 +41,7 @@
 	(let ((tem (let ((inhibit-quit t)
 			 (cursor-in-echo-area t))
 		     (prog1 (downcase (read-char))
-		            (setq quit-flag nil)))))
+			    (setq quit-flag nil)))))
 	  (if (= tem help-char)
 	      (ask-user-about-lock-help)
 	    (setq answer (assoc tem '((?s . t)
@@ -80,7 +80,7 @@ You can <q>uit; don't modify this file.")
     (let (answer)
       (while (null answer)
 	(message "%s changed on disk; really edit the buffer? (y, n, r or C-h) "
-                 (file-name-nondirectory filename))
+		 (file-name-nondirectory filename))
 	(let ((tem (downcase (let ((cursor-in-echo-area t))
 			       (read-char)))))
 	  (setq answer
@@ -107,7 +107,7 @@ You can <q>uit; don't modify this file.")
 		 (signal 'file-supersession
 			 (list "File changed on disk" filename))))))
       (message
-        "File on disk now will become a backup file if you save these changes.")
+	"File on disk now will become a backup file if you save these changes.")
       (setq buffer-backed-up nil))))
 
 (defun ask-user-about-supersession-help ()

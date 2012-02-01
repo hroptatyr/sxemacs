@@ -953,7 +953,7 @@ In byte compilation, `function' causes its argument to be compiled.
 static Lisp_Object define_function(Lisp_Object name, Lisp_Object defn)
 {
 	Ffset(name, defn);
-        LOADHIST_ATTACH (Fcons (Qdefun, name));
+	LOADHIST_ATTACH (Fcons (Qdefun, name));
 	return name;
 }
 
@@ -3635,21 +3635,21 @@ not `make-local-variable'.
 {
 	REGISTER int i;
 
-        if (changing_major_mode) {
-                Lisp_Object Qhook = Qafter_change_before_major_mode_hook;
-                run_hook_with_args( 1, &Qhook,
+	if (changing_major_mode) {
+		Lisp_Object Qhook = Qafter_change_before_major_mode_hook;
+		run_hook_with_args( 1, &Qhook,
 				    RUN_HOOKS_TO_COMPLETION);
-        }
+	}
 
 	for (i = 0; i < nargs; i++)
 		run_hook_with_args(1, args + i, RUN_HOOKS_TO_COMPLETION);
 
-        if (changing_major_mode) {
-                Lisp_Object Qhook = Qafter_change_major_mode_hook;
-                changing_major_mode = 0;
-                run_hook_with_args( 1, &Qhook,
+	if (changing_major_mode) {
+		Lisp_Object Qhook = Qafter_change_major_mode_hook;
+		changing_major_mode = 0;
+		run_hook_with_args( 1, &Qhook,
 				    RUN_HOOKS_TO_COMPLETION);
-        }
+	}
 
 	return Qnil;
 }
@@ -3736,32 +3736,32 @@ run_hook_with_args_in_buffer(struct buffer * buf, int nargs, Lisp_Object * args,
 	if (UNBOUNDP(val) || NILP(val)) {
 		return ret;
 	} else if (!CONSP(val) || EQ(XCAR(val), Qlambda)) {
-                Lisp_Object old_running_hook = Qnil;
+		Lisp_Object old_running_hook = Qnil;
 		struct gcpro gcpro1;
 
-                ret = Qnil;
-                GCPRO1(old_running_hook);
-                {
-                        args[0] = val;
-                        old_running_hook = symbol_value_in_buffer(
-                                Qcurrent_running_hook,
-                                make_buffer(buf));
-                        Fset(Qcurrent_running_hook,sym);
-                        ret = Ffuncall(nargs, args);
-                        Fset(Qcurrent_running_hook,old_running_hook);
-                }
-                UNGCPRO;
-                return ret;
+		ret = Qnil;
+		GCPRO1(old_running_hook);
+		{
+			args[0] = val;
+			old_running_hook = symbol_value_in_buffer(
+				Qcurrent_running_hook,
+				make_buffer(buf));
+			Fset(Qcurrent_running_hook,sym);
+			ret = Ffuncall(nargs, args);
+			Fset(Qcurrent_running_hook,old_running_hook);
+		}
+		UNGCPRO;
+		return ret;
 	} else {
 		struct gcpro gcpro1, gcpro2, gcpro3, gcpro4;
 		Lisp_Object globals = Qnil;
-                Lisp_Object old_running_hook = Qnil;
+		Lisp_Object old_running_hook = Qnil;
 		GCPRO4(sym, val, globals, old_running_hook);
 
-                old_running_hook = symbol_value_in_buffer(
-                        Qcurrent_running_hook,
-                        make_buffer(buf));
-                Fset(Qcurrent_running_hook,sym);
+		old_running_hook = symbol_value_in_buffer(
+			Qcurrent_running_hook,
+			make_buffer(buf));
+		Fset(Qcurrent_running_hook,sym);
 
 		for (; CONSP(val) && ((cond == RUN_HOOKS_TO_COMPLETION)
 				      || (cond ==
@@ -3802,7 +3802,7 @@ run_hook_with_args_in_buffer(struct buffer * buf, int nargs, Lisp_Object * args,
 			}
 		}
 
-                Fset(Qcurrent_running_hook,old_running_hook);
+		Fset(Qcurrent_running_hook,old_running_hook);
 		UNGCPRO;
 		return ret;
 	}
@@ -4405,7 +4405,7 @@ static Lisp_Object catch_them_squirmers_call2(Lisp_Object cons)
 static Lisp_Object catch_them_squirmers_call3(Lisp_Object cons)
 {
 	/* This function can GC */
-        return call3(XCAR(cons), XCAR(XCDR(cons)), XCAR(XCDR(XCDR(cons))), XCAR(XCDR(XCDR(XCDR(cons)))));
+	return call3(XCAR(cons), XCAR(XCDR(cons)), XCAR(XCDR(XCDR(cons))), XCAR(XCDR(XCDR(XCDR(cons)))));
 }
 
 Lisp_Object
@@ -5028,9 +5028,9 @@ void syms_of_eval(void)
 	defsymbol(&Qvalues, "values");
 	defsymbol(&Qdisplay_warning, "display-warning");
 	defsymbol(&Qrun_hooks, "run-hooks");
-        defsymbol(&Qafter_change_major_mode_hook, "after-change-major-mode-hook");
-        defsymbol(&Qafter_change_before_major_mode_hook, "after-change-before-major-mode-hook");
-        defsymbol(&Qcurrent_running_hook, "current-running-hook");
+	defsymbol(&Qafter_change_major_mode_hook, "after-change-major-mode-hook");
+	defsymbol(&Qafter_change_before_major_mode_hook, "after-change-before-major-mode-hook");
+	defsymbol(&Qcurrent_running_hook, "current-running-hook");
 	defsymbol(&Qif, "if");
 
 	DEFSUBR(For);
@@ -5090,7 +5090,7 @@ void reinit_eval(void)
 	debug_on_next_call = 0;
 	lisp_eval_depth = 0;
 	entering_debugger = 0;
-        changing_major_mode = 0;
+	changing_major_mode = 0;
 }
 
 void reinit_vars_of_eval(void)
@@ -5214,17 +5214,17 @@ If due to error, args are `error' and a list of the args to `signal'.
 If due to `apply' or `funcall' entry, one arg, `lambda'.
 If due to `eval' entry, one arg, t.
 						 */ );
-        DEFVAR_LISP("after-change-major-mode-hook", &Vafter_change_major_mode_hook	/*
+	DEFVAR_LISP("after-change-major-mode-hook", &Vafter_change_major_mode_hook	/*
 Normal hook run at the very end of major mode functions.
 						*/);
 	Vafter_change_major_mode_hook = Qnil;
 
-        DEFVAR_LISP("after-change-before-major-mode-hook", &Vafter_change_before_major_mode_hook	/*
+	DEFVAR_LISP("after-change-before-major-mode-hook", &Vafter_change_before_major_mode_hook	/*
 Normal hook run before a major mode hook is run.
 						*/);
 	Vafter_change_before_major_mode_hook = Qnil;
 
-        DEFVAR_LISP("current-running-hook", &Vcurrent_running_hook	/*
+	DEFVAR_LISP("current-running-hook", &Vcurrent_running_hook	/*
 Symbol of the current running hook. nil if no hook is running.
 						*/);
 	Vcurrent_running_hook = Qnil;

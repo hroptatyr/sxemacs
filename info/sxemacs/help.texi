@@ -1,4 +1,3 @@
-
 @node Help, Mark, M-x, Top
 @chapter Help
 @kindex Help

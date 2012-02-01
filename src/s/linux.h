@@ -129,7 +129,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #define LIBS_SYSTEM
 #endif
 #ifdef LINUX_ELF
-/* 
+/*
  * everything is pdump now. --SY
  * #define UNEXEC "unexelf.o"
  */

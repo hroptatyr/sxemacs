@@ -47,7 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <sys/param.h>
 
-#if defined (NeXT) 
+#if defined (NeXT)
 /* what is needed from here?  Do others need it too? */
 # include <sys/fcntl.h>
 #endif				/* NeXT */

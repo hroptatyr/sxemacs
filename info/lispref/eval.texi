@@ -1257,4 +1257,3 @@ represent a concept nor a special elisp feature at all:
        (,,y ,x))
   (list x y ,x ,y ,,x ,,y))
 @end smallexample
-

@@ -44,7 +44,7 @@
 		     're-search-backward
 		   'search-backward))
 	       (glyph-image-property
-		(car (glyph-image-property 
+		(car (glyph-image-property
 		      (nth 1 (glyph-image-property
 			    search-dialog :items domain))
 		      :items domain)) :text domain))
@@ -54,7 +54,7 @@
   "Popup a search dialog box."
   (interactive)
   (let ((parent (selected-frame)))
-    (make-dialog-box 
+    (make-dialog-box
      'general
      :parent parent
      :title "Search"
@@ -62,15 +62,15 @@
      :spec
      (setq search-dialog
 	   (make-glyph
-	    `[layout 
-	      :orientation horizontal 
-	      :vertically-justify top 
-	      :horizontally-justify center 
+	    `[layout
+	      :orientation horizontal
+	      :vertically-justify top
+	      :horizontally-justify center
 	      :border [string :data "Search"]
-	      :items 
-	      ([layout :orientation vertical 
+	      :items
+	      ([layout :orientation vertical
 		       :justify top	; implies left also
-		       :items 
+		       :items
 		       ([string :data "Search for:"]
 			[button :descriptor "Match Case"
 				:style toggle
@@ -107,7 +107,7 @@
 				:callback-ex
 				(lambda (image-instance event)
 				  (isearch-dehighlight)
-				  (delete-frame 
+				  (delete-frame
 				   (event-channel event)))])])]))
      ;; These are no longer strictly necessary, but not setting a size
      ;; at all yields a much more noticeable resize since the initial

@@ -151,7 +151,7 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 	struct gc_cache_cell *cell = NULL, *next = NULL, *prev = NULL;
 	struct gcv_and_mask gcvm;
 
-	if (cache == NULL) 
+	if (cache == NULL)
 		abort();
 	else if ((!!cache->head) != (!!cache->tail))
 		abort();
@@ -163,12 +163,12 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 
 #ifdef GCCACHE_HASH
 
-		if (gethash(&gcvm, cache->table, 
+		if (gethash(&gcvm, cache->table,
 			    (const void **)((void*)&cell)))
 #else				/* !GCCACHE_HASH */
 
 		/* start at the end (most recently used) */
-		cell = cache->tail;	
+		cell = cache->tail;
 		while (cell) {
 			if (gc_cache_eql(&gcvm, &cell->gcvm))
 				break;
@@ -189,7 +189,7 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 			   be collected than a cell that was accessed
 			   less recently.
 			*/
-			
+
 			if (!cell) {
 				abort();
 				return NULL;
@@ -222,7 +222,7 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 				return cell->gc;
 			}
 		}
-		
+
 		/* else, cache miss. */
 		if (cache == NULL)
 			abort();
@@ -255,7 +255,7 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 			   it in. */
 			memcpy(&cell->gcvm.gcv, gcv, sizeof(XGCValues));
 			cell->gcvm.mask = mask;
-		
+
 			/* Put the cell on the end of the list. */
 			cell->next = 0;
 			cell->prev = cache->tail;
@@ -270,7 +270,7 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 			puthash(&cell->gcvm, cell, cache->table);
 #endif
 			/* Now make and return the GC. */
-			cell->gc = XCreateGC(cache->dpy, cache->window, 
+			cell->gc = XCreateGC(cache->dpy, cache->window,
 					     mask, gcv);
 			/* debug */
 			assert(cell->gc == gc_cache_lookup(cache, gcv, mask));

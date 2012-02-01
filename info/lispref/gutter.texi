@@ -467,4 +467,3 @@ time-consuming operations like downloading.
 @subsection Progress Bars
 
   Not documented yet.
-

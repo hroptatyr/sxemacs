@@ -163,28 +163,28 @@ Possible values for TYPE are:
 	(let ((path-list (paths-decode-directory-path env-value 'drop-empties)))
 	  (cond ((eq type 'site)
 		 (while path-list
-		   (if (equal (file-name-nondirectory 
+		   (if (equal (file-name-nondirectory
 			       (directory-file-name (car path-list)))
 			      "site-packages")
 		       (setq top-dir (car path-list)))
 		   (setq path-list (cdr path-list))))
 		((eq type 'sxemacs)
 		 (while path-list
-		   (if (equal (file-name-nondirectory 
+		   (if (equal (file-name-nondirectory
 			       (directory-file-name (car path-list)))
 			      "sxemacs-packages")
 		       (setq top-dir (car path-list)))
 		   (setq path-list (cdr path-list))))
 		((eq type 'std)
 		 (while path-list
-		   (if (equal (file-name-nondirectory 
+		   (if (equal (file-name-nondirectory
 			       (directory-file-name (car path-list)))
 			      "xemacs-packages")
 		       (setq top-dir (car path-list)))
 		   (setq path-list (cdr path-list))))
 		((eq type 'mule)
 		 (while path-list
-		   (if (equal (file-name-nondirectory 
+		   (if (equal (file-name-nondirectory
 			       (directory-file-name (car path-list)))
 			      "mule-packages")
 		       (setq top-dir (car path-list)))
@@ -212,28 +212,28 @@ Possible values for TYPE are:
 				 (packages-compute-package-locations user-init-directory)))))
 	  (cond ((eq type 'site)
 		 (while path-list
-		   (if (equal (file-name-nondirectory 
+		   (if (equal (file-name-nondirectory
 			       (directory-file-name (car path-list)))
 			      "site-packages")
 		       (setq top-dir (car path-list)))
 		   (setq path-list (cdr path-list))))
 		((eq type 'sxemacs)
 		 (while path-list
-		   (if (equal (file-name-nondirectory 
+		   (if (equal (file-name-nondirectory
 			       (directory-file-name (car path-list)))
 			      "sxemacs-packages")
 		       (setq top-dir (car path-list)))
 		   (setq path-list (cdr path-list))))
 		((eq type 'std)
 		 (while path-list
-		   (if (equal (file-name-nondirectory 
+		   (if (equal (file-name-nondirectory
 			       (directory-file-name (car path-list)))
 			      "xemacs-packages")
 		       (setq top-dir (car path-list)))
 		   (setq path-list (cdr path-list))))
 		((eq type 'mule)
 		 (while path-list
-		   (if (equal (file-name-nondirectory 
+		   (if (equal (file-name-nondirectory
 			       (directory-file-name (car path-list)))
 			      "mule-packages")
 		       (setq top-dir (car path-list)))
@@ -331,7 +331,7 @@ all else fails.  As a side effect of installing packages under
 		;; neither can the user, nothing left to do except barf. :-(
 		(error 'search-failed
 		       (format
-			"Can't find suitable installation directory for package: %s" 
+			"Can't find suitable installation directory for package: %s"
 			package))))))))))
 
 (defun package-admin-get-manifest-file (pkg-topdir package)
@@ -358,7 +358,7 @@ is the top-level directory under which the package was installed."
 	  (if (eq system-type 'windows-nt)
 	      (setq case-fold-search t))
 
-	  (setq regexp (concat "\\bpkginfo" 
+	  (setq regexp (concat "\\bpkginfo"
 			       (char-to-string directory-sep-char)
 			       "MANIFEST\\...*"))
 
@@ -373,7 +373,7 @@ is the top-level directory under which the package was installed."
 		;; Here, we don't use a single regexp because we want to search
 		;; the directories for a package name in a particular order.
 		(if (catch 'done
-		      (let ((dirs '("lisp" "man")) 
+		      (let ((dirs '("lisp" "man"))
 			    rexp)
 			(while dirs
 			  (setq rexp (concat "\\b" (car dirs)
@@ -487,25 +487,25 @@ is the top-level directory under which the package was installed."
 This is a feeble attempt at making a portable rmdir."
   (setq directory (file-name-as-directory directory))
   (let ((files (directory-files directory nil nil nil t))
-        (dirs (directory-files directory nil nil nil 'dirs)))
+	(dirs (directory-files directory nil nil nil 'dirs)))
     (while dirs
       (if (not (member (car dirs) '("." "..")))
-          (let ((dir (expand-file-name (car dirs) directory)))
-            (condition-case err
-                (if (file-symlink-p dir) ;; just in case, handle symlinks
-                    (delete-file dir)
-                  (package-admin-rmtree dir))
-              (file-error
-               (message "%s: %s: \"%s\"" (nth 1 err) (nth 2 err) (nth 3 err)))))
-        (setq dirs (cdr dirs))))
+	  (let ((dir (expand-file-name (car dirs) directory)))
+	    (condition-case err
+		(if (file-symlink-p dir) ;; just in case, handle symlinks
+		    (delete-file dir)
+		  (package-admin-rmtree dir))
+	      (file-error
+	       (message "%s: %s: \"%s\"" (nth 1 err) (nth 2 err) (nth 3 err)))))
+	(setq dirs (cdr dirs))))
     (while files
       (condition-case err
-          (delete-file (expand-file-name (car files) directory))
-        (file-error
-         (message "%s: %s: \"%s\"" (nth 1 err) (nth 2 err) (nth 3 err))))
+	  (delete-file (expand-file-name (car files) directory))
+	(file-error
+	 (message "%s: %s: \"%s\"" (nth 1 err) (nth 2 err) (nth 3 err))))
       (setq files (cdr files)))
     (condition-case err
-        (delete-directory directory)
+	(delete-directory directory)
       (file-error
        (message "%s: %s: \"%s\"" (nth 1 err) (nth 2 err) (nth 3 err))))))
 

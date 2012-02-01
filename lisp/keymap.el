@@ -115,7 +115,7 @@ KEYMAP are redefined.  See also `accessible-keymaps'."
     (if (or (null defn) (integerp defn))
 	(error "%s is undefined" (key-description key))
       (if (or (stringp defn) (vectorp defn))
-          (setq defn (key-binding defn))) ;; a keyboard macro
+	  (setq defn (key-binding defn))) ;; a keyboard macro
       (insert (format "%s" defn)))))
 
 (defun read-command-or-command-sexp (prompt)
@@ -126,10 +126,10 @@ Prompts with PROMPT."
   ;; commandp (as does 'read-command') but that is not easy to do
   ;; because we must supply arg4 = require-match = nil for sexp case.
   (let ((result (car (read-from-string
-                      (completing-read prompt obarray 'commandp)))))
+		      (completing-read prompt obarray 'commandp)))))
     (if (and (consp result)
-             (not (eq (car result) 'lambda)))
-        `(lambda ()
+	     (not (eq (car result) 'lambda)))
+	`(lambda ()
 	   (interactive)
 	   ,result)
       result)))
@@ -142,8 +142,8 @@ The binding is probably a symbol with a function definition; see
 the documentation for `lookup-key' for more information."
   (let ((map (current-local-map)))
     (if map
-        (lookup-key map keys accept-defaults)
-        nil)))
+	(lookup-key map keys accept-defaults)
+	nil)))
 
 (defun global-key-binding (keys &optional accept-defaults)
   "Return the binding for command KEYS in current global keymap only.
@@ -161,11 +161,11 @@ Note that if KEY has a local binding in the current buffer
 that local binding will continue to shadow any global binding."
   ;;(interactive "KSet key globally: \nCSet key %s to command: ")
   (interactive (list (setq key (read-key-sequence "Set key globally: "))
-                     ;; Command sexps are allowed here so that this arg
-                     ;; may be supplied interactively via insert-key-binding.
-                     (read-command-or-command-sexp
-                       (format "Set key %s to command: "
-                               (key-description key)))))
+		     ;; Command sexps are allowed here so that this arg
+		     ;; may be supplied interactively via insert-key-binding.
+		     (read-command-or-command-sexp
+		       (format "Set key %s to command: "
+			       (key-description key)))))
   (define-key (current-global-map) key command)
   nil)
 
@@ -178,11 +178,11 @@ The binding goes in the current buffer's local map,
 which is shared with other buffers in the same major mode."
   ;;(interactive "KSet key locally: \nCSet key %s locally to command: ")
   (interactive (list (setq key (read-key-sequence "Set key locally: "))
-                     ;; Command sexps are allowed here so that this arg
-                     ;; may be supplied interactively via insert-key-binding.
-                     (read-command-or-command-sexp
-                       (format "Set key %s locally to command: "
-                               (key-description key)))))
+		     ;; Command sexps are allowed here so that this arg
+		     ;; may be supplied interactively via insert-key-binding.
+		     (read-command-or-command-sexp
+		       (format "Set key %s locally to command: "
+			       (key-description key)))))
   (if (null (current-local-map))
       (use-local-map (make-sparse-keymap)))
   (define-key (current-local-map) key command)
@@ -218,37 +218,37 @@ that come after prefix bindings.
 If optional argument ACCEPT-DEFAULT is non-nil, recognize default
 bindings; see the description of `lookup-key' for more details about this."
   (let ((tail minor-mode-map-alist)
-        a s v)
+	a s v)
     (while tail
       (setq a (car tail)
-            tail (cdr tail))
+	    tail (cdr tail))
       (and (consp a)
-           (symbolp (setq s (car a)))
-           (boundp s)
-           (symbol-value s)
-           ;; indirect-function deals with autoloadable keymaps
-           (setq v (indirect-function (cdr a)))
-           (setq v (lookup-key v key accept-default))
-           ;; Terminate loop, with v set to non-nil value
-           (setq tail nil)))
+	   (symbolp (setq s (car a)))
+	   (boundp s)
+	   (symbol-value s)
+	   ;; indirect-function deals with autoloadable keymaps
+	   (setq v (indirect-function (cdr a)))
+	   (setq v (lookup-key v key accept-default))
+	   ;; Terminate loop, with v set to non-nil value
+	   (setq tail nil)))
     v))
 
 
 (defun current-minor-mode-maps ()
   "Return a list of keymaps for the minor modes of the current buffer."
   (let ((l '())
-        (tail minor-mode-map-alist)
-        a s v)
+	(tail minor-mode-map-alist)
+	a s v)
     (while tail
       (setq a (car tail)
-            tail (cdr tail))
+	    tail (cdr tail))
       (and (consp a)
-           (symbolp (setq s (car a)))
-           (boundp s)
-           (symbol-value s)
-           ;; indirect-function deals with autoloadable keymaps
-           (setq v (indirect-function (cdr a)))
-           (setq l (cons v l))))
+	   (symbolp (setq s (car a)))
+	   (boundp s)
+	   (symbol-value s)
+	   ;; indirect-function deals with autoloadable keymaps
+	   (setq v (indirect-function (cdr a)))
+	   (setq l (cons v l))))
     (nreverse l)))
 
 
@@ -264,11 +264,11 @@ Regardless of MAPVAR, COMMAND's function-value is always set to the keymap."
   (let ((map (make-sparse-keymap name)))
     (fset name map)
     (cond ((not mapvar)
-           (set name map))
-          ((eq mapvar 't)
-           )
-          (t
-           (set mapvar map)))
+	   (set name map))
+	  ((eq mapvar 't)
+	   )
+	  (t
+	   (set mapvar map)))
     name))
 
 
@@ -286,84 +286,84 @@ or a string (if they all fit in the ASCII range).
 Optional arg NO-MICE means that button events are not allowed."
  (if (and events (symbolp events)) (setq events (vector events)))
  (cond ((stringp events)
-        events)
+	events)
        ((not (vectorp events))
-        (signal 'wrong-type-argument (list 'vectorp events)))
+	(signal 'wrong-type-argument (list 'vectorp events)))
        ((let* ((length (length events))
-               (string (make-string length 0))
-               c ce
-               (i 0))
-          (while (< i length)
-            (setq ce (aref events i))
-            (or (eventp ce) (setq ce (character-to-event ce)))
-            ;; Normalize `c' to `?c' and `(control k)' to `?\C-k'
-            ;; By passing t for the `allow-meta' arg we could get kbd macros
-            ;; with meta in them to translate to the string form instead of
-            ;; the list/symbol form; but I expect that would cause confusion,
-            ;; so let's use the list/symbol form whenever there's
-            ;; any ambiguity.
-            (setq c (event-to-character ce))
-            (if (and c
-                     character-set-property
-                     (key-press-event-p ce))
-                (cond ((symbolp (event-key ce))
-                       (if (get (event-key ce) character-set-property)
-                           ;; Don't use a string for `backspace' and `tab' to
-                           ;;  avoid that unpleasant little ambiguity.
-                           (setq c nil)))
-                      ((and (= (event-modifier-bits ce) 1) ;control
-                            (integerp (event-key ce)))
-                       (let* ((te (character-to-event c)))
-                         (if (and (symbolp (event-key te))
-                                  (get (event-key te) character-set-property))
-                             ;; Don't "normalize" (control i) to tab
-                             ;;  to avoid the ambiguity in the other direction
-                             (setq c nil))
-                         (deallocate-event te)))))
-            (if c
-                (aset string i c)
-                (setq i length string nil))
-            (setq i (1+ i)))
-          string))
+	       (string (make-string length 0))
+	       c ce
+	       (i 0))
+	  (while (< i length)
+	    (setq ce (aref events i))
+	    (or (eventp ce) (setq ce (character-to-event ce)))
+	    ;; Normalize `c' to `?c' and `(control k)' to `?\C-k'
+	    ;; By passing t for the `allow-meta' arg we could get kbd macros
+	    ;; with meta in them to translate to the string form instead of
+	    ;; the list/symbol form; but I expect that would cause confusion,
+	    ;; so let's use the list/symbol form whenever there's
+	    ;; any ambiguity.
+	    (setq c (event-to-character ce))
+	    (if (and c
+		     character-set-property
+		     (key-press-event-p ce))
+		(cond ((symbolp (event-key ce))
+		       (if (get (event-key ce) character-set-property)
+			   ;; Don't use a string for `backspace' and `tab' to
+			   ;;  avoid that unpleasant little ambiguity.
+			   (setq c nil)))
+		      ((and (= (event-modifier-bits ce) 1) ;control
+			    (integerp (event-key ce)))
+		       (let* ((te (character-to-event c)))
+			 (if (and (symbolp (event-key te))
+				  (get (event-key te) character-set-property))
+			     ;; Don't "normalize" (control i) to tab
+			     ;;  to avoid the ambiguity in the other direction
+			     (setq c nil))
+			 (deallocate-event te)))))
+	    (if c
+		(aset string i c)
+		(setq i length string nil))
+	    (setq i (1+ i)))
+	  string))
        (t
-        (let* ((length (length events))
-               (new (copy-sequence events))
-               event mods key
-               (i 0))
-          (while (< i length)
-            (setq event (aref events i))
-            (cond ((key-press-event-p event)
-                   (setq mods (event-modifiers event)
-                         key (event-key event))
-                   (if (numberp key)
-                       (setq key (intern (make-string 1 key))))
-                   (aset new i (if mods
-                                   (nconc mods (cons key nil))
-                                   key)))
-                  ((misc-user-event-p event)
-                   (aset new i (list 'menu-selection
-                                     (event-function event)
-                                     (event-object event))))
-                  ((or (button-press-event-p event)
-                       (button-release-event-p event))
-                   (if no-mice
-                       (error
-                         "Mouse events can't be saved in keyboard macros."))
-                   (setq mods (event-modifiers event)
-                         key (intern (format "button%d%s"
-                                             (event-button event)
-                                             (if (button-release-event-p event)
-                                                 "up" ""))))
-                   (aset new i (if mods
-                                   (nconc mods (cons key nil))
-                                   key)))
-                  ((or (and event (symbolp event))
-                       (and (consp event) (symbolp (car event))))
-                   (aset new i event))
-                  (t
-                   (signal 'wrong-type-argument (list 'eventp event))))
-            (setq i (1+ i)))
-          new))))
+	(let* ((length (length events))
+	       (new (copy-sequence events))
+	       event mods key
+	       (i 0))
+	  (while (< i length)
+	    (setq event (aref events i))
+	    (cond ((key-press-event-p event)
+		   (setq mods (event-modifiers event)
+			 key (event-key event))
+		   (if (numberp key)
+		       (setq key (intern (make-string 1 key))))
+		   (aset new i (if mods
+				   (nconc mods (cons key nil))
+				   key)))
+		  ((misc-user-event-p event)
+		   (aset new i (list 'menu-selection
+				     (event-function event)
+				     (event-object event))))
+		  ((or (button-press-event-p event)
+		       (button-release-event-p event))
+		   (if no-mice
+		       (error
+			 "Mouse events can't be saved in keyboard macros."))
+		   (setq mods (event-modifiers event)
+			 key (intern (format "button%d%s"
+					     (event-button event)
+					     (if (button-release-event-p event)
+						 "up" ""))))
+		   (aset new i (if mods
+				   (nconc mods (cons key nil))
+				   key)))
+		  ((or (and event (symbolp event))
+		       (and (consp event) (symbolp (car event))))
+		   (aset new i event))
+		  (t
+		   (signal 'wrong-type-argument (list 'eventp event))))
+	    (setq i (1+ i)))
+	  new))))
 
 
 (defun next-key-event ()

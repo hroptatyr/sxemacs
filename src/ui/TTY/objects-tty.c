@@ -154,7 +154,7 @@ RED, GREEN and BLUE is expected to be in the range 0 through 65535
 
 	/* Add the color alias */
 	put_skiplist( XSKIPLIST(color_slist),sym_color,idx_tuple);
-	put_skiplist( XSKIPLIST(Vterm_color_alias_slist), 
+	put_skiplist( XSKIPLIST(Vterm_color_alias_slist),
 		      term, color_slist);
 	/* Add the index rgb */
 	put_skiplist( XSKIPLIST(map_slist),rgb_tuple,idx_tuple);
@@ -185,7 +185,7 @@ static Lisp_Object nearest_color_slist( Lisp_Object sym_color, Lisp_Object slist
 
 	map2_skiplist(XSKIPLIST(slist), tty_slist_key_accum, &rgblist );
 	result = call2_trapping_errors( "Error_nearest_color",
-					Qx_nearest_color, 
+					Qx_nearest_color,
 					sym_color, rgblist );
 	return result;
 }
@@ -233,7 +233,7 @@ the nearest available color.
 	}
 	if ( EQ(result,Qnil) ) {
 		/* If not, let's try the term */
-		default_term_slist = color_slist = 
+		default_term_slist = color_slist =
 			get_term_color_alias_slist(
 				CONSOLE_TTY_DATA(console)->terminal_type,0);
 		if ( ! EQ(color_slist,Qnil) ) {
@@ -264,11 +264,11 @@ the nearest available color.
 		 * default color, then terminal name, then specific
 		 * tty.  This way we get actual override of color defs
 		 * in the more specific definitions.
-		 */ 
+		 */
 		/* NOTE: sym_term was filled above... */
 		default_color_alist = color_alist = get_term_color_map_slist(sym_term,0);
 		args[0] = color_alist;
-		default_term_alist = args[1] = 
+		default_term_alist = args[1] =
 			get_term_color_map_slist(CONSOLE_TTY_DATA(console)->terminal_type,0);
 		if ( ! EQ(args[1],Qnil) ) {
 			color_alist = Fnconc(2,args);
@@ -292,23 +292,23 @@ the nearest available color.
 					cached = 1;
 				}
 			}
-			if ( ! cached && ! EQ(default_term_alist, Qnil) && 
+			if ( ! cached && ! EQ(default_term_alist, Qnil) &&
 			     ! EQ(default_term_slist, Qnil) ) {
 				result = Fget_skiplist(default_term_alist, nearest_rgb, Qnil);
 				if ( ! EQ(result, Qnil) ) {
 					put_skiplist( XSKIPLIST(default_term_slist),sym_color,result);
-					put_skiplist( XSKIPLIST(Vterm_color_alias_slist), 
-						      CONSOLE_TTY_DATA(console)->terminal_type, 
+					put_skiplist( XSKIPLIST(Vterm_color_alias_slist),
+						      CONSOLE_TTY_DATA(console)->terminal_type,
 						      default_term_slist);
 					cached = 1;
 				}
 			}
-			if ( ! cached && ! EQ(default_color_alist, Qnil) && 
+			if ( ! cached && ! EQ(default_color_alist, Qnil) &&
 			     ! EQ(default_color_slist, Qnil) ) {
 				result = Fget_skiplist(default_color_alist, nearest_rgb, Qnil);
 				if ( ! EQ(result, Qnil) ) {
 					put_skiplist( XSKIPLIST(default_color_slist),sym_color,result);
-					put_skiplist( XSKIPLIST(Vterm_color_alias_slist), 
+					put_skiplist( XSKIPLIST(Vterm_color_alias_slist),
 						      sym_term, default_color_slist);
 					cached = 1;
 				}
@@ -382,11 +382,11 @@ tty_initialize_color_instance(Lisp_Color_Instance * c, Lisp_Object name,
 	}
 
 	/* Don't allocate the data until we're sure that we will succeed. */
-	c->data = xnew(struct tty_color_instance_data); 
+	c->data = xnew(struct tty_color_instance_data);
 	if ( ! c->data ) {
 		return 0;
 	}
-	
+
 	COLOR_INSTANCE_TTY_SYMBOL(c) = sym_color;
 	return 1;
 }
@@ -583,7 +583,7 @@ void console_type_create_objects_tty(void)
 void vars_of_objects_tty(void)
 {
 	DEFVAR_LISP("term-color-alias-slist", &Vterm_color_alias_slist	/*
-Term => ( color => '(index bold) ) 
+Term => ( color => '(index bold) )
 								 */ );
 	DEFVAR_LISP("term-color-map-slist", &Vterm_color_map_slist	/*
 Term => ( [r g b] => '(index bold) )
@@ -595,4 +595,3 @@ Term => ( [r g b] => '(index bold) )
 	Vterm_color_alias_slist = Qnil;
 	Vterm_color_map_slist = Qnil;
 }
-

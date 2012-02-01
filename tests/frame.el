@@ -24,4 +24,3 @@
 	    (check-frame-geometry x (+ y 3))
 	    (set-frame-property frame 'left (+ x 3))
 	    (check-frame-geometry (+ x 3) (+ y 3))))
-

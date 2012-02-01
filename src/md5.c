@@ -69,7 +69,7 @@ typedef unsigned short md5_uint32;
 typedef unsigned long md5_uint32;
 #   else
      /* The following line is intended to evoke an error.
-        Using #error is not portable enough.  */
+	Using #error is not portable enough.  */
 "Cannot determine unsigned 32-bit data type."
 #   endif
 #  endif
@@ -324,12 +324,12 @@ md5_process_block(const void *buffer, size_t len, struct md5_ctx *ctx)
 
 #define OP(a, b, c, d, s, T)						\
       do								\
-        {								\
+	{								\
 	  a += FF (b, c, d) + (*cwp++ = SWAP (*words)) + T;		\
 	  ++words;							\
 	  CYCLIC (a, s);						\
 	  a += b;							\
-        }								\
+	}								\
       while (0)
 
 		/* It is unfortunate that C does not provide an operator for
@@ -365,7 +365,7 @@ md5_process_block(const void *buffer, size_t len, struct md5_ctx *ctx)
 		   argument specifying the function to use.  */
 #undef OP
 #define OP(f, a, b, c, d, k, s, T)					\
-      do 								\
+      do								\
 	{								\
 	  a += f (b, c, d) + correct_words[k] + T;			\
 	  CYCLIC (a, s);						\

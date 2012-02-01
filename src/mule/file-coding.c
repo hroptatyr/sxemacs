@@ -1735,7 +1735,7 @@ detect_eol_type(struct detection_state *st, const Extbyte * src,
    Returns:
 
    0 == st->eol_type is EOL_AUTODETECT and/or more than coding category
-        is present in st->mask
+	is present in st->mask
    1 == definitive answers are here for both st->eol_type and st->mask
 */
 
@@ -3576,7 +3576,7 @@ Return the UCS code (a positive integer) corresponding to CHARACTER.
    <GETA MARK> (U+3013) of JIS X 0208, which means correct character
    is not found, instead.
    #### do something more appropriate (use blob?)
-        Danger, Will Robinson!  Data loss.  Should we signal user? */
+	Danger, Will Robinson!  Data loss.  Should we signal user? */
 static void decode_ucs4(unsigned long ch, unsigned_char_dynarr * dst)
 {
 	Lisp_Object chr = ucs_to_char(ch);

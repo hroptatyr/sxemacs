@@ -63,26 +63,26 @@ They means `lf', `crlf', and `cr' respectively."
       (setq eol-type (cond ((or (eq eol-type 'unix)
 				(eq eol-type 'lf))
 			    'eol-lf)
-                           ((or (eq eol-type 'dos)
+			   ((or (eq eol-type 'dos)
 				(eq eol-type 'crlf))
 			    'eol-crlf)
-                           ((or (eq eol-type 'mac)
+			   ((or (eq eol-type 'mac)
 				(eq eol-type 'cr))
 			    'eol-cr)
-                           (t eol-type))))
+			   (t eol-type))))
   (let ((orig-eol-type (coding-system-eol-type coding-system)))
     (if (null orig-eol-type)
-        (if (not eol-type)
-            coding-system
-          (coding-system-property coding-system eol-type))
+	(if (not eol-type)
+	    coding-system
+	  (coding-system-property coding-system eol-type))
       (let ((base (coding-system-base coding-system)))
-        (if (not eol-type)
-            base
-          (if (= eol-type orig-eol-type)
-              coding-system
-            (setq orig-eol-type (coding-system-eol-type base))
-            (if (null orig-eol-type)
-                (coding-system-property base eol-type))))))))
+	(if (not eol-type)
+	    base
+	  (if (= eol-type orig-eol-type)
+	      coding-system
+	    (setq orig-eol-type (coding-system-eol-type base))
+	    (if (null orig-eol-type)
+		(coding-system-property base eol-type))))))))
 
 
 (defun universal-coding-system-argument ()

@@ -1,4 +1,4 @@
-/* Gauge Widget for SXEmacs. 
+/* Gauge Widget for SXEmacs.
    Copyright (C) 1999 Edward A. Falk
 
 This file is part of SXEmacs.
@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  *
  * Author: Edward A. Falk
  *         falk@falconer.vip.best.com
- *  
+ *
  * Date:   July 9, 1997
  */
 

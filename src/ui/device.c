@@ -117,7 +117,7 @@ print_device(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		error("printing unreadable object #<device %s 0x%x>",
 		      XSTRING_DATA(d->name), d->header.uid);
 
-	write_fmt_string(printcharfun, "#<%s-device", 
+	write_fmt_string(printcharfun, "#<%s-device",
 			 (!DEVICE_LIVE_P(d) ? "dead" :DEVICE_TYPE_NAME(d)));
 	if (DEVICE_LIVE_P(d) && !NILP(DEVICE_CONNECTION(d))) {
 		write_c_string(" on ", printcharfun);
@@ -1051,7 +1051,7 @@ DEVICE defaults to selected device when omitted.
 
 #define FROB(m)								\
   if (!UNBOUNDP ((one_metric =						\
-		  DEVMETH_OR_GIVEN (d, device_system_metrics,     	\
+		  DEVMETH_OR_GIVEN (d, device_system_metrics,	\
 				    (d, DM_##m), Qunbound))))		\
     plist = Fcons (Q##m, Fcons (one_metric, plist));
 

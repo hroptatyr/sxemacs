@@ -1,4 +1,3 @@
-
 @node Text, Programs, Indentation, Top
 @chapter Commands for Human Languages
 @cindex text
@@ -121,7 +120,7 @@ nroff commands) in the region (@code{count-text-lines}).
 @end table
 
 @findex electric-nroff-mode
-  The other feature of Nroff mode is Electric Nroff newline mode.  
+  The other feature of Nroff mode is Electric Nroff newline mode.
 This is a minor mode that you can turn on or off with
 @kbd{M-x electric-nroff-mode} (@pxref{Minor Modes}).  When the mode is
 on and you use @key{RET} to end a line containing an nroff command
@@ -191,7 +190,7 @@ Seattle, Washington 98195
 
 @noindent
 Purchase orders are acceptable, but there is an extra charge of
-$10.00 to pay for processing charges. (The total cost comes to $150 
+$10.00 to pay for processing charges. (The total cost comes to $150
 for domestic sites, $175 for foreign sites).
 
   The normal distribution is a tar tape, blocked 20, 1600 bpi, on an

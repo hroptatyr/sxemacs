@@ -10,7 +10,7 @@
 ;;	library directory names in finder-program-info, for fast display of
 ;;	Lisp libraries and associated commentaries.  Added {v}, finder-view,
 ;;	and {e}, finder-edit commands for displaying libraries.
-;;	
+;;
 ;;	Added user variable, 'finder-abbreviate-directory-list', used to
 ;;	abbreviate directories before they are saved to finder-program-info.
 ;;	Such relative directories can be portable from one Emacs installation
@@ -156,9 +156,9 @@ arguments compiles from `load-path'."
     (let ((processed nil)
 	  (directory-abbrev-alist
 	   (append
-           (mapcar (function (lambda (dir)
-                               (cons (concat "^" (regexp-quote dir))
-                                     "")))
+	   (mapcar (function (lambda (dir)
+			       (cons (concat "^" (regexp-quote dir))
+				     "")))
 		    finder-abbreviate-directory-list)
 	    directory-abbrev-alist))
 	  (using-load-path))
@@ -174,33 +174,33 @@ arguments compiles from `load-path'."
       (mapcar
        (lambda (d)
 	 (mapcar
-	  (lambda (f) 
-            (let ((exhau-f (expand-file-name f d)))
-              (when (and (not (member f processed))
-                         (file-readable-p exhau-f))
-                (let (summary keystart keywords)
-                  (setq processed (cons f processed))
-                  (if (not finder-compile-keywords-quiet)
-                      (message "Processing %s ..." f))
-                  (save-excursion
-                    (set-buffer (get-buffer-create "*finder-scratch*"))
-                    (buffer-disable-undo (current-buffer))
-                    (erase-buffer)
-                    (insert-file-contents (expand-file-name f d))
-                    (condition-case err
-                        (setq summary  (lm-synopsis)
-                              keywords (lm-keywords))
-                      (t (message "finder: error processing %s %S" f err))))
-                  (when summary
-                    (insert (format "    (\"%s\"\n        " f))
-                    (prin1 summary (current-buffer))
-                    (insert "\n        ")
-                    (setq keystart (point))
-                    (insert (if keywords (format "(%s)" keywords) "nil"))
-                    (subst-char-in-region keystart (point) ?, ? )
-                    (insert "\n        ")
-                    (prin1 (abbreviate-file-name d) (current-buffer))
-                    (insert ")\n"))))))
+	  (lambda (f)
+	    (let ((exhau-f (expand-file-name f d)))
+	      (when (and (not (member f processed))
+			 (file-readable-p exhau-f))
+		(let (summary keystart keywords)
+		  (setq processed (cons f processed))
+		  (if (not finder-compile-keywords-quiet)
+		      (message "Processing %s ..." f))
+		  (save-excursion
+		    (set-buffer (get-buffer-create "*finder-scratch*"))
+		    (buffer-disable-undo (current-buffer))
+		    (erase-buffer)
+		    (insert-file-contents (expand-file-name f d))
+		    (condition-case err
+			(setq summary  (lm-synopsis)
+			      keywords (lm-keywords))
+		      (t (message "finder: error processing %s %S" f err))))
+		  (when summary
+		    (insert (format "    (\"%s\"\n        " f))
+		    (prin1 summary (current-buffer))
+		    (insert "\n        ")
+		    (setq keystart (point))
+		    (insert (if keywords (format "(%s)" keywords) "nil"))
+		    (subst-char-in-region keystart (point) ?, ? )
+		    (insert "\n        ")
+		    (prin1 (abbreviate-file-name d) (current-buffer))
+		    (insert ")\n"))))))
 	  ;;
 	  ;; Skip null, non-existent or relative pathnames, e.g. "./", if
 	  ;; using load-path, so that they do not interfere with a scan of
@@ -234,8 +234,8 @@ arguments compiles from `load-path'."
 	       (= (preceding-char) ?\t))
 	  (let (indent-tabs-mode)
 	    (delete-char -1)
-            (indent-to col)
-            (move-to-column column)))))
+	    (indent-to col)
+	    (move-to-column column)))))
   (apply 'insert strings))
 
 (defun finder-list-keywords ()

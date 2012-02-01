@@ -231,7 +231,7 @@ AC_DEFUN([SXE_NPROCESSORS], [dnl
 AC_DEFUN([SXE_PROC_FLAGS], [dnl
 	AC_REQUIRE([AC_PROG_EGREP])
 	AC_REQUIRE([SXE_CHECK_PROC_CPUINFO])
-	
+
 	AC_CACHE_CHECK([for processor flags], [sxe_cv_proc_flags], [
 		if test "$sxe_cv_file_proc_cpuinfo" = "yes"; then
 			sxe_cv_proc_flags=$($EGREP "^flags" "/proc/cpuinfo" | \
@@ -436,7 +436,7 @@ AC_DEFUN([SXE_CHECK_PROC_SSE5], [
 
 AC_DEFUN([SXE_CHECK_SIMD_EXTENSIONS], [
 	## note that we enable "unsafe" fp optimisation with other compilers, too
-	
+
 	SXE_CHECK_PROC_MMX
 	SXE_CHECK_PROC_AMDMMX
 	SXE_CHECK_PROC_3DNOW

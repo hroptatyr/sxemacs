@@ -1,6 +1,6 @@
 /* pop.c: client routines for talking to a POP3-protocol post-office server
    Copyright (C) 1991, 1993, 1996, 1997, 1999, 2001, 2002, 2003, 2004,
-                 2005, 2006, 2007  Free Software Foundation, Inc.
+		 2005, 2006, 2007  Free Software Foundation, Inc.
    Written by Jonathan Kamens, jik@security.ov.com.
 
 This file is part of SXEmacs.
@@ -140,32 +140,32 @@ int pop_debug = 0;
 
 /*
  * Function: pop_open (char *host, char *username, char *password,
- * 		       int flags)
+ *		       int flags)
  *
  * Purpose: Establishes a connection with a post-office server, and
- * 	completes the authorization portion of the session.
+ *	completes the authorization portion of the session.
  *
  * Arguments:
- * 	host	The server host with which the connection should be
- * 		established.  Optional.  If omitted, internal
- * 		heuristics will be used to determine the server host,
- * 		if possible.
- * 	username
- * 		The username of the mail-drop to access.  Optional.
- * 		If omitted, internal heuristics will be used to
- * 		determine the username, if possible.
- * 	password
- * 		The password to use for authorization.  If omitted,
- * 		internal heuristics will be used to determine the
- * 		password, if possible.
- * 	flags	A bit mask containing flags controlling certain
- * 		functions of the routine.  Valid flags are defined in
- * 		the file pop.h
+ *	host	The server host with which the connection should be
+ *		established.  Optional.  If omitted, internal
+ *		heuristics will be used to determine the server host,
+ *		if possible.
+ *	username
+ *		The username of the mail-drop to access.  Optional.
+ *		If omitted, internal heuristics will be used to
+ *		determine the username, if possible.
+ *	password
+ *		The password to use for authorization.  If omitted,
+ *		internal heuristics will be used to determine the
+ *		password, if possible.
+ *	flags	A bit mask containing flags controlling certain
+ *		functions of the routine.  Valid flags are defined in
+ *		the file pop.h
  *
  * Return value: Upon successful establishment of a connection, a
- * 	non-null popserver will be returned.  Otherwise, null will be
- * 	returned, and the string variable pop_error will contain an
- * 	explanation of the error.
+ *	non-null popserver will be returned.  Otherwise, null will be
+ *	returned, and the string variable pop_error will contain an
+ *	explanation of the error.
  */
 popserver
 pop_open (host, username, password, flags)
@@ -317,14 +317,14 @@ pop_open (host, username, password, flags)
  * Function: pop_stat
  *
  * Purpose: Issue the STAT command to the server and return (in the
- * 	value parameters) the number of messages in the maildrop and
- * 	the total size of the maildrop.
+ *	value parameters) the number of messages in the maildrop and
+ *	the total size of the maildrop.
  *
  * Return value: 0 on success, or non-zero with an error in pop_error
- * 	in failure.
+ *	in failure.
  *
  * Side effects: On failure, may make further operations on the
- * 	connection impossible.
+ *	connection impossible.
  */
 int
 pop_stat (server, count, size)
@@ -374,20 +374,20 @@ pop_stat (server, count, size)
  * Function: pop_list
  *
  * Purpose: Performs the POP "list" command and returns (in value
- * 	parameters) two malloc'd zero-terminated arrays -- one of
- * 	message IDs, and a parallel one of sizes.
+ *	parameters) two malloc'd zero-terminated arrays -- one of
+ *	message IDs, and a parallel one of sizes.
  *
  * Arguments:
- * 	server	The pop connection to talk to.
- * 	message	The number of the one message about which to get
- * 		information, or 0 to get information about all
- * 		messages.
+ *	server	The pop connection to talk to.
+ *	message	The number of the one message about which to get
+ *		information, or 0 to get information about all
+ *		messages.
  *
  * Return value: 0 on success, non-zero with error in pop_error on
- * 	failure.
+ *	failure.
  *
  * Side effects: On failure, may make further operations on the
- * 	connection impossible.
+ *	connection impossible.
  */
 int
 pop_list (server, message, IDs, sizes)
@@ -508,17 +508,17 @@ pop_list (server, message, IDs, sizes)
  * Purpose: Retrieve a specified message from the maildrop.
  *
  * Arguments:
- * 	server	The server to retrieve from.
- * 	message	The message number to retrieve.
+ *	server	The server to retrieve from.
+ *	message	The message number to retrieve.
  *	markfrom
- * 		If true, then mark the string "From " at the beginning
- * 		of lines with '>'.
+ *		If true, then mark the string "From " at the beginning
+ *		of lines with '>'.
  *	msg_buf	Output parameter to which a buffer containing the
- * 		message is assigned.
+ *		message is assigned.
  *
  * Return value: The number of bytes in msg_buf, which may contain
- * 	embedded nulls, not including its final null, or -1 on error
- * 	with pop_error set.
+ *	embedded nulls, not including its final null, or -1 on error
+ *	with pop_error set.
  *
  * Side effects: May kill connection on error.
  */
@@ -760,11 +760,11 @@ pop_multi_flush (server)
  * Purpose: Delete a specified message.
  *
  * Arguments:
- * 	server	Server from which to delete the message.
- * 	message	Message to delete.
+ *	server	Server from which to delete the message.
+ *	message	Message to delete.
  *
  * Return value: 0 on success, non-zero with error in pop_error
- * 	otherwise.
+ *	otherwise.
  */
 int
 pop_delete (server, message)
@@ -794,10 +794,10 @@ pop_delete (server, message)
  * Purpose: Send a noop command to the server.
  *
  * Argument:
- * 	server	The server to send to.
+ *	server	The server to send to.
  *
  * Return value: 0 on success, non-zero with error in pop_error
- * 	otherwise.
+ *	otherwise.
  *
  * Side effects: Closes connection on error.
  */
@@ -822,11 +822,11 @@ pop_noop (server)
  * Purpose: Find out the highest seen message from the server.
  *
  * Arguments:
- * 	server	The server.
+ *	server	The server.
  *
  * Return value: If successful, the highest seen message, which is
- * 	greater than or equal to 0.  Otherwise, a negative number with
- * 	the error explained in pop_error.
+ *	greater than or equal to 0.  Otherwise, a negative number with
+ *	the error explained in pop_error.
  *
  * Side effects: Closes the connection on error.
  */
@@ -865,10 +865,10 @@ pop_last (server)
  * Purpose: Reset the server to its initial connect state
  *
  * Arguments:
- * 	server	The server.
+ *	server	The server.
  *
  * Return value: 0 for success, non-0 with error in pop_error
- * 	otherwise.
+ *	otherwise.
  *
  * Side effects: Closes the connection on error.
  */
@@ -892,13 +892,13 @@ pop_reset (server)
  * Purpose: Quit the connection to the server,
  *
  * Arguments:
- * 	server	The server to quit.
+ *	server	The server to quit.
  *
  * Return value: 0 for success, non-zero otherwise with error in
- * 	pop_error.
+ *	pop_error.
  *
  * Side Effects: The popserver passed in is unusable after this
- * 	function is called, even if an error occurs.
+ *	function is called, even if an error occurs.
  */
 int
 pop_quit (server)
@@ -929,15 +929,15 @@ pop_quit (server)
  * Function: socket_connection
  *
  * Purpose: Opens the network connection with the mail host, without
- * 	doing any sort of I/O with it or anything.
+ *	doing any sort of I/O with it or anything.
  *
  * Arguments:
- * 	host	The host to which to connect.
+ *	host	The host to which to connect.
  *	flags	Option flags.
  *
  * Return value: A file descriptor indicating the connection, or -1
- * 	indicating failure, in which case an error has been copied
- * 	into pop_error.
+ *	indicating failure, in which case an error has been copied
+ *	into pop_error.
  */
 static int
 socket_connection (host, flags)
@@ -1148,18 +1148,18 @@ socket_connection (host, flags)
  * Function: pop_getline
  *
  * Purpose: Get a line of text from the connection and return a
- * 	pointer to it.  The carriage return and linefeed at the end of
- * 	the line are stripped, but periods at the beginnings of lines
- * 	are NOT dealt with in any special way.
+ *	pointer to it.  The carriage return and linefeed at the end of
+ *	the line are stripped, but periods at the beginnings of lines
+ *	are NOT dealt with in any special way.
  *
  * Arguments:
- * 	server	The server from which to get the line of text.
+ *	server	The server from which to get the line of text.
  *
  * Returns: The number of characters in the line, which is returned in
- * 	LINE, not including the final null.  A return value of 0
- * 	indicates a blank line.  A negative return value indicates an
- * 	error (in which case the contents of LINE are undefined.  In
- * 	case of error, an error message is copied into pop_error.
+ *	LINE, not including the final null.  A return value of 0
+ *	indicates a blank line.  A negative return value indicates an
+ *	error (in which case the contents of LINE are undefined.  In
+ *	case of error, an error message is copied into pop_error.
  *
  * Notes: The line returned is overwritten with each call to pop_getline.
  *
@@ -1188,7 +1188,7 @@ pop_getline (server, line)
 			data_used = (cp + 2) - server->buffer - found;
 
 			/* terminate the string to be returned */
-			*cp = '\0';		
+			*cp = '\0';
 			server->data -= data_used;
 			server->buffer_index += data_used;
 
@@ -1278,17 +1278,17 @@ pop_getline (server, line)
  * Function: sendline
  *
  * Purpose: Sends a line of text to the POP server.  The line of text
- * 	passed into this function should NOT have the carriage return
- * 	and linefeed on the end of it.  Periods at beginnings of lines
- * 	will NOT be treated specially by this function.
+ *	passed into this function should NOT have the carriage return
+ *	and linefeed on the end of it.  Periods at beginnings of lines
+ *	will NOT be treated specially by this function.
  *
  * Arguments:
- * 	server	The server to which to send the text.
- * 	line	The line of text to send.
+ *	server	The server to which to send the text.
+ *	line	The line of text to send.
  *
  * Return value: Upon successful completion, a value of 0 will be
- * 	returned.  Otherwise, a non-zero value will be returned, and
- * 	an error will be copied into pop_error.
+ *	returned.  Otherwise, a non-zero value will be returned, and
+ *	an error will be copied into pop_error.
  *
  * Side effects: Closes the connection on error.
  */
@@ -1336,7 +1336,7 @@ sendline (server, line)
  * Procedure: fullwrite
  *
  * Purpose: Just like write, but keeps trying until the entire string
- * 	has been written.
+ *	has been written.
  *
  * Return value: Same as write.  Pop_error is not set.
  */
@@ -1362,11 +1362,11 @@ fullwrite (fd, buf, nbytes)
  * Procedure getok
  *
  * Purpose: Reads a line from the server.  If the return indicator is
- * 	positive, return with a zero exit status.  If not, return with
- * 	a negative exit status.
+ *	positive, return with a zero exit status.  If not, return with
+ *	a negative exit status.
  *
  * Arguments:
- * 	server	The server to read from.
+ *	server	The server to read from.
  *
  * Returns: 0 for success, else for failure and puts error in pop_error.
  *
@@ -1402,7 +1402,7 @@ getok (server)
  * Function: gettermination
  *
  * Purpose: Gets the next line and verifies that it is a termination
- * 	line (nothing but a dot).
+ *	line (nothing but a dot).
  *
  * Return value: 0 on success, non-zero with pop_error set on error.
  *
@@ -1432,13 +1432,13 @@ gettermination (server)
  * Function pop_close
  *
  * Purpose: Close a pop connection, sending a "RSET" command to try to
- * 	preserve any changes that were made and a "QUIT" command to
- * 	try to get the server to quit, but ignoring any responses that
- * 	are received.
+ *	preserve any changes that were made and a "QUIT" command to
+ *	try to get the server to quit, but ignoring any responses that
+ *	are received.
  *
  * Side effects: The server is unusable after this function returns.
- * 	Changes made to the maildrop since the session was started (or
- * 	since the last pop_reset) may be lost.
+ *	Changes made to the maildrop since the session was started (or
+ *	since the last pop_reset) may be lost.
  */
 void
 pop_close (server)
@@ -1454,8 +1454,8 @@ pop_close (server)
  * Function: pop_trash
  *
  * Purpose: Like pop_close or pop_quit, but doesn't deallocate the
- * 	memory associated with the server.  It is legal to call
- * 	pop_close or pop_quit after this function has been called.
+ *	memory associated with the server.  It is legal to call
+ *	pop_close or pop_quit after this function has been called.
  */
 static void
 pop_trash (server)

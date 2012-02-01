@@ -122,26 +122,26 @@ alloca:
    new space from stack..
    this is true at last until SVR3V7 . bug has reported to Motorola. */
 	set	MAXREG,10	# max no of registers to save (d2-d7, a2-a5)
-        mov.l   (%sp)+,%a1	# pop return addr from top of stack
-        mov.l   (%sp)+,%d0	# pop size in bytes from top of stack
+	mov.l   (%sp)+,%a1	# pop return addr from top of stack
+	mov.l   (%sp)+,%d0	# pop size in bytes from top of stack
 	mov.l	%sp,%a0		# save stack pointer for register copy
-        addq.l  &3,%d0		# round size up to long word
-        andi.l  &-4,%d0		# mask out lower two bits of size
+	addq.l  &3,%d0		# round size up to long word
+	andi.l  &-4,%d0		# mask out lower two bits of size
 	mov.l	%sp,%d1		# compute new value of sp to d1
-        sub.l	%d0,%d1		# pseudo-allocate by moving stack pointer
+	sub.l	%d0,%d1		# pseudo-allocate by moving stack pointer
 	sub.l	&MAXREG*4,%d1	# allocate more space for saved regs.
 	mov.l	%d1,%sp		# actual allocation.
 	move.w	&MAXREG-1,%d0	# d0 counts saved regs.
 	mov.l	%a2,%d1		# preserve a2.
 	mov.l	%sp,%a2		# make pointer to new reg save area.
-copy_regs_loop: 		# copy stuff from old save area.
+copy_regs_loop:		# copy stuff from old save area.
 	mov.l	(%a0)+,(%a2)+	# save saved register
 	dbra	%d0,copy_regs_loop
-        mov.l   %a2,%a0		# now a2 is start of allocated space.
+	mov.l   %a2,%a0		# now a2 is start of allocated space.
 	mov.l	%a2,%d0		# return it in both a0 and d0 to play safe.
 	mov.l	%d1,%a2		# restore a2.
-        subq.l  &4,%sp		# new top of stack
-        jmp     (%a1)		# far below normal return
+	subq.l  &4,%sp		# new top of stack
+	jmp     (%a1)		# far below normal return
 #else /* not MOTOROLA_DELTA */
 	mov.l	(%sp)+,%a1	# pop return addr from top of stack
 	mov.l	(%sp)+,%d0	# pop size in bytes from top of stack
@@ -256,9 +256,9 @@ alloca:
  *
  * Stack layout:
  * new	sp ->	junk
- *	 	registers (copy)
+ *		registers (copy)
  *	r0 ->	new data
- *		 | 	  (orig retval)
+ *		 |	  (orig retval)
  *		 |	  (orig arg)
  * old  sp ->	regs	  (orig)
  *		local data

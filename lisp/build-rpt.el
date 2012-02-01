@@ -79,9 +79,9 @@
   "*The list of mail addresses SXEmacs Build Reports should most likely
 go to."
   :type '(repeat
-          :custom-show t
-          :documentation-shown t
-          string)
+	  :custom-show t
+	  :documentation-shown t
+	  string)
   :group 'build-rpt)
 
 (defcustom build-rpt-keep-regexp
@@ -105,9 +105,9 @@ go to."
    "^\\(real\\|user\\|sys\\)\\s-+[0-9]+m")
   "*Regexp of make process output lines to keep in the report."
   :type '(repeat
-          :custom-show t
-          :documentation-shown t
-          regexp)
+	  :custom-show t
+	  :documentation-shown t
+	  regexp)
   :group 'build-rpt)
 
 (defcustom build-rpt-delete-regexp
@@ -119,23 +119,23 @@ go to."
    "wrong-error")
   "*Regexp of make process output lines to delete from the report."
   :type '(repeat
-          :custom-show t
-          :documentation-shown t
-          regexp)
+	  :custom-show t
+	  :documentation-shown t
+	  regexp)
   :group 'build-rpt)
 
 (defcustom build-rpt-make-output-dir (config-value 'sxe_blddir)
   "*Directory where the build report file is found."
   :type '(directory
-          :custom-show t
-          :documentation-shown t)
+	  :custom-show t
+	  :documentation-shown t)
   :group 'build-rpt)
 
 (defcustom build-rpt-make-output-files
   (list
    ",,vars.out"
    ",,beta.out"
-   ",,make-all.out" 
+   ",,make-all.out"
    ",,make-check-temacs.out"
    ",,make-check.out"
    ",,make-install.out")
@@ -148,18 +148,18 @@ redirection, like so...
   $ make check 2>&1 | tee ,,make-check.out
 "
   :type '(repeat
-          :custom-show t
-          :documentation-shown t
-          file)
+	  :custom-show t
+	  :documentation-shown t
+	  file)
   :group 'build-rpt)
 
 (defcustom build-rpt-installation-file
   (expand-file-name "Installation"
-                    (gethash 'sxe_blddir (config-value-hash-table)))
+		    (gethash 'sxe_blddir (config-value-hash-table)))
   "*Installation file produced by SXEmacs configure process."
   :type '(file
-          :custom-show t
-          :documentation-shown t)
+	  :custom-show t
+	  :documentation-shown t)
   :group 'build-rpt)
 
 (defcustom build-rpt-version-file
@@ -171,8 +171,8 @@ redirection, like so...
 	   "src"))))
   "*File containing version info."
   :type '(file
-          :custom-show t
-          :documentation-shown t)
+	  :custom-show t
+	  :documentation-shown t)
   :group 'build-rpt)
 
 (defcustom build-rpt-subject
@@ -183,8 +183,8 @@ redirection, like so...
   with user input through `build-rpt' according to
   `build-rpt-prompts' using `format'."
   :type '(string
-          :custom-show t
-          :documentation-shown t)
+	  :custom-show t
+	  :documentation-shown t)
   :group 'build-rpt)
 
 (defcustom build-rpt-prompts
@@ -195,14 +195,14 @@ redirection, like so...
   followed by any number of strings which can be chosen via the history
   mechanism."
   :type '(repeat
-          :custom-show t
-          :documentation-shown t
-          (list
-           :tag "Prompt"
-           string
-           (repeat
-            :tag "Values"
-            string)))
+	  :custom-show t
+	  :documentation-shown t
+	  (list
+	   :tag "Prompt"
+	   string
+	   (repeat
+	    :tag "Values"
+	    string)))
   :group 'build-rpt)
 
 (defcustom build-rpt-file-encoding
@@ -250,21 +250,21 @@ This is useful if there are customised settings along with the group."
   "Returns the filename the SXEmacs make output is saved in."
   (interactive)
   (if (or (string-equal build-rpt-make-output-dir "")
-          (null build-rpt-make-output-dir))
+	  (null build-rpt-make-output-dir))
       (mapcar
        (function
-        (lambda (f)
-          (expand-file-name
-           f
-           (file-name-as-directory
-            (gethash 'sxe_blddir (config-value-hash-table))))))
+	(lambda (f)
+	  (expand-file-name
+	   f
+	   (file-name-as-directory
+	    (gethash 'sxe_blddir (config-value-hash-table))))))
        build-rpt-make-output-files)
     (mapcar
      (function
       (lambda (f)
-        (expand-file-name
-         f
-         (file-name-as-directory build-rpt-make-output-dir))))
+	(expand-file-name
+	 f
+	 (file-name-as-directory build-rpt-make-output-dir))))
      build-rpt-make-output-files)))
 
 (defun build-rpt-read-destination ()
@@ -312,8 +312,8 @@ See also `mail-user-agent', `build-rpt-email', and
 			     (if (and (interactive-p)
 				      (featurep 'sendmail))
 				 (user-mail-address)
-			       (concat (user-real-login-name) 
-				       "-notconfigured@" 
+			       (concat (user-real-login-name)
+				       "-notconfigured@"
 				       (if mail-host-address
 					   mail-host-address
 					 "localhost"))))))
@@ -351,32 +351,32 @@ See also `mail-user-agent', `build-rpt-email', and
 	     nil
 	     nil)
 	    (goto-char (point-max))
-            (re-search-backward mail-header-separator)
-            (next-line 1))
+	    (re-search-backward mail-header-separator)
+	    (next-line 1))
 	(pop-to-buffer "*build-rpt*")
 	(insert (format (concat "Please save this buffer to a file and email it\n"
-                                "Or, alternatively, rerun `M-x build-rpt' after installing the\n"
-                                "\"mail-lib\" XEmacs package.\n\n"
-                                "To: SXEmacs Builds <sxemacs-builds@sxemacs.org>\n"
-                                "Subject: %s\n\n")
-                        (apply #'format build-rpt-subject args)))))
+				"Or, alternatively, rerun `M-x build-rpt' after installing the\n"
+				"\"mail-lib\" XEmacs package.\n\n"
+				"To: SXEmacs Builds <sxemacs-builds@sxemacs.org>\n"
+				"Subject: %s\n\n")
+			(apply #'format build-rpt-subject args)))))
     (let* ((rpt-begin (point))
-           (files (reverse (build-rpt-make-output-get)))
-           (file (car files)))
+	   (files (reverse (build-rpt-make-output-get)))
+	   (file (car files)))
       (while file
-        (if (file-exists-p file)
-            (insert (build-rpt-insert-make-output rpt-begin file))
-          (insert (format "%s not found!\n" file)))
-        (insert "\n")
-        (setq files (cdr files))
-        (setq file (car files)))
+	(if (file-exists-p file)
+	    (insert (build-rpt-insert-make-output rpt-begin file))
+	  (insert (format "%s not found!\n" file)))
+	(insert "\n")
+	(setq files (cdr files))
+	(setq file (car files)))
       (insert (build-rpt-insert-config-values rpt-begin))
       (insert "\n")
       (insert (build-rpt-insert-ldd rpt-begin))
       (insert "\n")
       (if (file-exists-p build-rpt-installation-file)
-          (insert (build-rpt-insert-installation-file rpt-begin))
-        (insert (format "%s not found!\n" build-rpt-installation-file)))
+	  (insert (build-rpt-insert-installation-file rpt-begin))
+	(insert (format "%s not found!\n" build-rpt-installation-file)))
       (insert "\n")
       (insert (build-rpt-insert-header rpt-begin))
       (if build-rpt-interactive
@@ -404,22 +404,22 @@ See also `mail-user-agent', `build-rpt-destination', and
   ;; `interactive' form returns value for formal parameter `args'.
   (interactive
    (let (prompt
-         hist
-         arg
-         (prompts build-rpt-prompts))
+	 hist
+	 arg
+	 (prompts build-rpt-prompts))
      (progn
        (while prompts
-         (defvar hist)
-         (setq prompt (caar prompts))
-         (setq hist (cdar prompts))
-         ;; `build-rpt-prompts' used to be a list of lists, the
-         ;; first element of each list being the prompt, the rest being
-         ;; the history.  The history is now in a separate list.  We
-         ;; better check for that.
-         (if (listp (car hist))
-             (setq hist (car hist)))
-         (setq prompts (cdr prompts))
-         (setq arg (cons (read-string prompt "" 'hist) arg)))
+	 (defvar hist)
+	 (setq prompt (caar prompts))
+	 (setq hist (cdar prompts))
+	 ;; `build-rpt-prompts' used to be a list of lists, the
+	 ;; first element of each list being the prompt, the rest being
+	 ;; the history.  The history is now in a separate list.  We
+	 ;; better check for that.
+	 (if (listp (car hist))
+	     (setq hist (car hist)))
+	 (setq prompts (cdr prompts))
+	 (setq arg (cons (read-string prompt "" 'hist) arg)))
        arg)))
   (let ((build-rpt-email (build-rpt-read-destination))
 	(build-rpt-interactive (interactive-p)))
@@ -446,34 +446,34 @@ The make process output must have been saved in
   (goto-char where)
   (with-temp-buffer
     (if (file-exists-p file)
-        (progn
-          (if (featurep 'mime-setup)
-              (progn
-                (mime-edit-insert-tag
-                 "text"
-                 "plain"
-                 (concat
-                  "\nContent-Disposition: attachment;"
-                  " filename=\""
-                  (file-name-nondirectory
-                   file)
-                  "\""))
-                (mime-edit-insert-binary-file
-                 file
-                 build-rpt-file-encoding))
-            (insert-file-contents file))
-          (when build-rpt-keep-regexp
-            (goto-char (point-min))
-            (delete-non-matching-lines (build-rpt-keep)))
-          (when build-rpt-delete-regexp
-            (goto-char (point-min))
-            (delete-matching-lines (build-rpt-delete)))
-          (goto-char (point-min))
-          (insert "\n")
-          (insert
-           (format "> Contents of %s\n" file)))
+	(progn
+	  (if (featurep 'mime-setup)
+	      (progn
+		(mime-edit-insert-tag
+		 "text"
+		 "plain"
+		 (concat
+		  "\nContent-Disposition: attachment;"
+		  " filename=\""
+		  (file-name-nondirectory
+		   file)
+		  "\""))
+		(mime-edit-insert-binary-file
+		 file
+		 build-rpt-file-encoding))
+	    (insert-file-contents file))
+	  (when build-rpt-keep-regexp
+	    (goto-char (point-min))
+	    (delete-non-matching-lines (build-rpt-keep)))
+	  (when build-rpt-delete-regexp
+	    (goto-char (point-min))
+	    (delete-matching-lines (build-rpt-delete)))
+	  (goto-char (point-min))
+	  (insert "\n")
+	  (insert
+	   (format "> Contents of %s\n" file)))
       (insert "> " file
-              " does not exist!\n\n"))
+	      " does not exist!\n\n"))
     (buffer-string)))
 
 (defun build-rpt-insert-installation-file (where)
@@ -483,28 +483,28 @@ created by the SXEmacs Beta configure process."
   (with-temp-buffer
     (if (file-exists-p build-rpt-installation-file)
 	(progn
-          (insert "> Contents of "
-                  build-rpt-installation-file
-                  ":\n")
-          (insert "> (Output from ./configure)\n\n")
-          (if (featurep 'mime-setup)
-              (progn
-                (mime-edit-insert-tag
-                 "text"
-                 "plain"
-                 (concat
-                  "\nContent-Disposition: attachment;"
-                  " filename=\""
-                  (file-name-nondirectory
-                   build-rpt-installation-file)
-                  "\""))
-                (mime-edit-insert-binary-file
-                 build-rpt-installation-file
-                 build-rpt-file-encoding))
-            (insert-file-contents
-             build-rpt-installation-file)))
+	  (insert "> Contents of "
+		  build-rpt-installation-file
+		  ":\n")
+	  (insert "> (Output from ./configure)\n\n")
+	  (if (featurep 'mime-setup)
+	      (progn
+		(mime-edit-insert-tag
+		 "text"
+		 "plain"
+		 (concat
+		  "\nContent-Disposition: attachment;"
+		  " filename=\""
+		  (file-name-nondirectory
+		   build-rpt-installation-file)
+		  "\""))
+		(mime-edit-insert-binary-file
+		 build-rpt-installation-file
+		 build-rpt-file-encoding))
+	    (insert-file-contents
+	     build-rpt-installation-file)))
       (insert "> " build-rpt-installation-file
-              " does not exist!\n\n"))
+	      " does not exist!\n\n"))
     (buffer-string)))
 
 (defun build-rpt-insert-config-values (where)
@@ -513,23 +513,23 @@ created by the SXEmacs Beta configure process."
   (goto-char where)
   (with-temp-buffer
     (if (null (config-value-hash-table))
-        (insert "> `config-value-hash-table' is empty, which is weird :(!\n\n")
+	(insert "> `config-value-hash-table' is empty, which is weird :(!\n\n")
 	(progn
-          (insert "> Contents of `config-value-hash-table':\n")
-          (let ((curp (point))
-                value-empty)
-            (maphash
-             #'(lambda (key value)
-                 (if (and (stringp value)
-                          (string= "" value))
-                     (setq value-empty (cons key value-empty))
-                   (insert (format "%s %S\n" key value))))
-             (config-value-hash-table))
-            (goto-char curp)
-            ;; we are at `curp' again
-            (insert (format "Empty keys: %s\n\n"
-                            (mapconcat #'prin1-to-string
-                                       value-empty "  "))))))
+	  (insert "> Contents of `config-value-hash-table':\n")
+	  (let ((curp (point))
+		value-empty)
+	    (maphash
+	     #'(lambda (key value)
+		 (if (and (stringp value)
+			  (string= "" value))
+		     (setq value-empty (cons key value-empty))
+		   (insert (format "%s %S\n" key value))))
+	     (config-value-hash-table))
+	    (goto-char curp)
+	    ;; we are at `curp' again
+	    (insert (format "Empty keys: %s\n\n"
+			    (mapconcat #'prin1-to-string
+				       value-empty "  "))))))
     (buffer-string)))
 
 (defun build-rpt-insert-ldd (where)
@@ -537,36 +537,36 @@ created by the SXEmacs Beta configure process."
   (goto-char where)
   (with-temp-buffer
     (let ((running-binary-tests
-           '((lambda ()
-               (expand-file-name (car command-line-args)
-                                 command-line-default-directory))
-             (lambda ()
-               (locate-file (car command-line-args)
-                            (split-string (getenv "PATH") ":")))))
-           (running-binary)
-           (ldd
-            (let ((sysconfl (split-string system-configuration "-")))
-              (cond
-               ((member "apple" sysconfl)
-                "otool -XL")
-               (t
-                "ldd")))))
+	   '((lambda ()
+	       (expand-file-name (car command-line-args)
+				 command-line-default-directory))
+	     (lambda ()
+	       (locate-file (car command-line-args)
+			    (split-string (getenv "PATH") ":")))))
+	   (running-binary)
+	   (ldd
+	    (let ((sysconfl (split-string system-configuration "-")))
+	      (cond
+	       ((member "apple" sysconfl)
+		"otool -XL")
+	       (t
+		"ldd")))))
 
       ;; perform binary finder tests
       (while (and (null running-binary) (car-safe running-binary-tests))
-        (let ((candidate (funcall (car running-binary-tests))))
-          (setq running-binary
-                (and candidate
-                     (file-exists-p candidate)
-                     candidate)
-                running-binary-tests (cdr running-binary-tests))))
+	(let ((candidate (funcall (car running-binary-tests))))
+	  (setq running-binary
+		(and candidate
+		     (file-exists-p candidate)
+		     candidate)
+		running-binary-tests (cdr running-binary-tests))))
 
       (if (null running-binary)
-          (insert "cannot obtain ld-dependencies.\n")
-        (insert (shell-command-to-string (concat ldd " " running-binary)))
-        (goto-char (point-min))
-        (while (re-search-forward "^\\s-+" nil t)
-          (replace-match "")))
+	  (insert "cannot obtain ld-dependencies.\n")
+	(insert (shell-command-to-string (concat ldd " " running-binary)))
+	(goto-char (point-min))
+	(while (re-search-forward "^\\s-+" nil t)
+	  (replace-match "")))
       (goto-char (point-min))
       (insert "> shared library dependencies:\n"))
     (buffer-string)))
@@ -576,14 +576,14 @@ created by the SXEmacs Beta configure process."
 MIME tag REGEXP.  The result is a REGEXP string matching either of the
 REGEXPs in `build-rpt-keep-regexp' or a general MIME tag REGEXP."
   (mapconcat #'identity
-             (cons #r"^--\[\[\|\]\]$" build-rpt-keep-regexp) "\\|"))
+	     (cons #r"^--\[\[\|\]\]$" build-rpt-keep-regexp) "\\|"))
 
 (defun build-rpt-delete ()
   "Concatenate elements of `build-rpt-delete-regexp' and a general
 MIME tag REGEXP.  The result is a REGEXP string matching either of the
 REGEXPs in `build-rpt-delete-regexp' or a general MIME tag REGEXP."
   (mapconcat '(lambda (item) item)
-             build-rpt-delete-regexp "\\|"))
+	     build-rpt-delete-regexp "\\|"))
 
 ;; To ensure we always get the right build reporter, alias the
 ;; incompatible one to ours if it is ever loaded.

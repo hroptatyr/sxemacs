@@ -1262,10 +1262,9 @@ value of @code{bell-volume} will be used.
 @c @defun play-sound sound &optional volume device
 @c ...
 @c @end defun
-@c 
+@c
 @c @deffn Command play-sound-file file &optional volume device
 @c ...
 @c @end deffn
 
 For more information about sounds or audio in general, see @xref{Media}.
-

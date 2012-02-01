@@ -129,7 +129,7 @@ AC_DEFUN([SXE_CHECK_WNN], [dnl
 		else
 			have_wnn=no
 		fi
-			
+
 		if test "$have_wnn" = "yes"; then
 			AC_DEFINE([HAVE_WNN], [1], [Description here!])
 			SXE_PREPEND([-l$libwnn], [libs_x])

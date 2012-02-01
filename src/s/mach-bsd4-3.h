@@ -18,7 +18,7 @@
 #undef SIGNALS_VIA_CHARACTERS
 
 /* XEmacs change */
-/* unistd.h defines _POSIX_VERSION, which leads some things to believe 
+/* unistd.h defines _POSIX_VERSION, which leads some things to believe
    that _POSIX_PATH_MAX should be defined.  Unfortunately, it isn't. */
 #ifndef NOT_C_CODE
 #include <sys/param.h>

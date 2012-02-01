@@ -61,7 +61,7 @@ move backward across N balanced expressions."
   (if (and (> arg 0) (looking-at "#s(\\|#r[uU]?\"\\|#p\\["))
     (goto-char (1+ (- (point) (- (match-end 0) (match-beginning 0))))))
   (goto-char (or (scan-sexps (point) arg) (buffer-end arg)))
-  (when (< arg 0) 
+  (when (< arg 0)
     (backward-prefix-chars)
     ;; XEmacs: evil hack! Skip back over #[sr] so that structures and raw
     ;; strings are read properly.  the current cheesified syntax tables just
@@ -231,7 +231,7 @@ If COUNT < 1, nothing is done.  \(This is a bug.)"
   (interactive "_p")
   (if (or (null count) (= count 0)) (setq count 1))
   (if end-of-defun-function
-      (if (> count 0) 
+      (if (> count 0)
 	  (dotimes (i count)
 	    (funcall end-of-defun-function)))
   (let ((first t))

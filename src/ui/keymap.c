@@ -42,11 +42,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /* A keymap contains six slots:
 
    parents	   Ordered list of keymaps to search after
-                   this one if no match is found.
+		   this one if no match is found.
 		   Keymaps can thus be arranged in a hierarchy.
 
    table	   A hash table, hashing keysyms to their bindings.
-   		   It will be one of the following:
+		   It will be one of the following:
 
 		   -- a symbol, e.g. 'home
 		   -- a character, representing something printable
@@ -58,8 +58,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 		   the Fwhere_is_internal() function be fast.  It needs to be
 		   fast because we want to be able to call it in realtime to
 		   update the keyboard-equivalents on the pulldown menus.
-                   Values of the table are either atoms (keysyms)
-                   or a dotted list of keysyms.
+		   Values of the table are either atoms (keysyms)
+		   or a dotted list of keysyms.
 
    sub_maps_cache  An alist; for each entry in this keymap whose binding is
 		   a keymap (that is, Fkeymapp()) this alist associates that
@@ -94,7 +94,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
    would look like
 
       keymap-1: associates the integer (XEMACS_MOD_CONTROL | XEMACS_MOD_HYPER)
-                with keymap-2
+		with keymap-2
       keymap-2: associates "a" with the command
 
    Note that a special exception is made for the meta modifier, in order
@@ -106,7 +106,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
       keymap-1: associates the integer XEMACS_MOD_META with keymap-2
       keymap-2: associates the integer (XEMACS_MOD_CONTROL | XEMACS_MOD_HYPER)
-                with keymap-3
+		with keymap-3
       keymap-3: associates "a" with the command
 
    Note that keymap-2 might have normal bindings in it; these would be
@@ -2607,7 +2607,7 @@ get_relevant_keymaps(Lisp_Object keys, int max_maps, Lisp_Object maps[])
 		relevant_map_push (Vglobal_tty_map, &closure);
 	else
 		relevant_map_push (Vglobal_window_system_map, &closure);
-  
+
 	{
 		int nmaps = closure.nmaps;
 		/* Silently truncate at 100 keymaps to prevent infinite lossage */
@@ -2806,12 +2806,12 @@ static Lisp_Object process_event_binding_result(Lisp_Object result)
    The return value will be
 
       -- nil (there is no binding; this will also be returned
-              whenever the event chain is "too long", i.e. there
+	      whenever the event chain is "too long", i.e. there
 	      is a non-nil, non-keymap binding for a prefix of
 	      the event chain)
       -- a keymap (part of a command has been specified)
       -- a command (anything that satisfies `commandp'; this includes
-                    some symbols, lists, subrs, strings, vectors, and
+		    some symbols, lists, subrs, strings, vectors, and
 		    compiled-function objects) */
 Lisp_Object event_binding(Lisp_Object event0, int accept_default)
 {
@@ -3384,8 +3384,8 @@ of a key read from the user rather than a character from a buffer.
 		char buf[255];
 		char *bufp = buf;
 		Lisp_Object rest;
-                buf[sizeof(buf)-1] = buf[0] = '\0';
-               
+		buf[sizeof(buf)-1] = buf[0] = '\0';
+
 		LIST_LOOP(rest, key) {
 			Lisp_Object keysym = XCAR(rest);
 			if (EQ(keysym, Qcontrol))
@@ -3426,15 +3426,15 @@ of a key read from the user rather than a character from a buffer.
 					strcpy(bufp, "BS");
 				else
 #endif
-                                {
+				{
 					strncpy(bufp,
-                                                (char *)
-                                                string_data(XSYMBOL(keysym)->
-                                                            name),
-                                                sizeof(buf)-(bufp-buf)-1);
-                                        /* bufp iterates over buf */
-                                        buf[sizeof(buf)-1]='\0'; 
-                                }
+						(char *)
+						string_data(XSYMBOL(keysym)->
+							    name),
+						sizeof(buf)-(bufp-buf)-1);
+					/* bufp iterates over buf */
+					buf[sizeof(buf)-1]='\0';
+				}
 				if (!NILP(XCDR(rest)))
 					signal_simple_error
 					    ("Invalid key description", key);
@@ -3784,8 +3784,8 @@ static Lisp_Object where_is_recursive_mapper(Lisp_Object map, void *arg)
 				       (const void*)c->keys_so_far,
 				       c->keys_so_far_total_size *
 				       sizeof(struct key_data));
-                                xfree(c->keys_so_far);
-                                c->keys_so_far = new;
+				xfree(c->keys_so_far);
+				c->keys_so_far = new;
 			} else
 				XREALLOC_ARRAY(c->keys_so_far, struct key_data,
 					       size);

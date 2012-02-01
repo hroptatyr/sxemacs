@@ -121,7 +121,7 @@ print_console(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		error("printing unreadable object #<console %s 0x%x>",
 		      XSTRING_DATA(con->name), con->header.uid);
 
-	write_fmt_string(printcharfun, "#<%s-console", 
+	write_fmt_string(printcharfun, "#<%s-console",
 			 (!CONSOLE_LIVE_P(con) ? "dead" : CONSOLE_TYPE_NAME(con)));
 	if (CONSOLE_LIVE_P(con) && !NILP(CONSOLE_CONNECTION(con))) {
 		write_c_string(" on ", printcharfun);
@@ -1159,7 +1159,7 @@ One argument, the to-be-deleted console.
 	0, /* uid  */								\
 	0  /* free */								\
       },									\
-      &(console_local_flags.field_name), 					\
+      &(console_local_flags.field_name),					\
       forward_type								\
     },										\
     magicfun									\
@@ -1193,7 +1193,7 @@ One argument, the to-be-deleted console.
 	0, /* uid  */								\
 	0  /* free */								\
       },									\
-      &(console_local_flags.field_name), 					\
+      &(console_local_flags.field_name),					\
       forward_type								\
     },										\
     magicfun									\
@@ -1435,7 +1435,7 @@ buffer's local map, and the minor mode keymaps and text property keymaps.
 	   DEFVAR_CONSOLE_LOCAL() calls. */
 #define MARKED_SLOT(slot)					\
   if ((XINT (console_local_flags.slot) != -2 &&			\
-         XINT (console_local_flags.slot) != -3)			\
+	 XINT (console_local_flags.slot) != -3)			\
       != !(NILP (XCONSOLE (Vconsole_local_symbols)->slot)))	\
   abort ()
 #include "conslots.h"

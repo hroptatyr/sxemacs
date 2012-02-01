@@ -60,7 +60,7 @@ mark_dllist(Lisp_Object obj)
 	/* unlock everything */
 	DLL_UNLOCK(dllist);
 
-        mark_object(XDLLIST_PLIST(obj));
+	mark_object(XDLLIST_PLIST(obj));
 	return XDLLIST_PLIST(obj);
 }
 
@@ -84,7 +84,7 @@ print_dllist(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		nex = tmp->next;
 		/* unlock the entire dllist */
 		DLL_UNLOCK(dllist);
-		
+
 		write_c_string(" ", printcharfun);
 		print_internal(ti, printcharfun, escapeflag);
 		tmp = nex;
@@ -227,8 +227,8 @@ Return the property list of DLLIST.
 */
       (dllist))
 {
-        CHECK_DLLIST(dllist);
-        return XDLLIST_PLIST(dllist);
+	CHECK_DLLIST(dllist);
+	return XDLLIST_PLIST(dllist);
 }
 
 static const struct lrecord_description dllist_description[] = {
@@ -471,7 +471,7 @@ void
 dllist_prepend(dllist_t dllist, void *element)
 {
 	dllist_item_t new = new_dllist_item();
-	
+
 	new->item = element;
 	dllist_prepend_item(dllist, new);
 	return;
@@ -761,7 +761,7 @@ with the original.
       (dllist))
 {
 	CHECK_DLLIST(dllist);
-	
+
 	return wrap_dllist(copy_dllist(XDLLIST(dllist)));
 }
 

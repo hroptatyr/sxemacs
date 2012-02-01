@@ -5,7 +5,7 @@
 
 ;; Maintainer: SXEmacs Development Team
 ;; Keywords: internal, dumped
- 
+
 ;; This file is part of SXEmacs.
 
 ;; SXEmacs is free software: you can redistribute it and/or modify

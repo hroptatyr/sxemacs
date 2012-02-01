@@ -75,26 +75,26 @@ They means `lf', `crlf', and `cr' respectively."
       (setq eol-type (cond ((or (eq eol-type 'unix)
 				(eq eol-type 'lf))
 			    'eol-lf)
-                           ((or (eq eol-type 'dos)
+			   ((or (eq eol-type 'dos)
 				(eq eol-type 'crlf))
 			    'eol-crlf)
-                           ((or (eq eol-type 'mac)
+			   ((or (eq eol-type 'mac)
 				(eq eol-type 'cr))
 			    'eol-cr)
-                           (t eol-type))))
+			   (t eol-type))))
   (let ((orig-eol-type (coding-system-eol-type coding-system)))
     (if (null orig-eol-type)
-        (if (not eol-type)
-            coding-system
-          (coding-system-property coding-system eol-type))
+	(if (not eol-type)
+	    coding-system
+	  (coding-system-property coding-system eol-type))
       (let ((base (coding-system-base coding-system)))
-        (if (not eol-type)
-            base
-          (if (eq eol-type orig-eol-type)
-              coding-system
-            (setq orig-eol-type (coding-system-eol-type base))
-            (if (null orig-eol-type)
-                (coding-system-property base eol-type))))))))
+	(if (not eol-type)
+	    base
+	  (if (eq eol-type orig-eol-type)
+	      coding-system
+	    (setq orig-eol-type (coding-system-eol-type base))
+	    (if (null orig-eol-type)
+		(coding-system-property base eol-type))))))))
 
 ;; (defun coding-system-change-text-conversion (coding-system coding)
 ;;   "Return a coding system which differs from CODING-SYSTEM in text conversion.
@@ -138,7 +138,7 @@ Meaningful values for KEY include
   setup-function     value is a function to call to switch to this
 			language environment.
   exit-function      value is a function to call to leave this
-		        language environment.
+			language environment.
   coding-system      value is a list of coding systems that are good
 			for saving text written in this language environment.
 			This list serves as suggestions to the user;
@@ -226,8 +226,8 @@ ALIST is an alist of KEY and INFO values.  See the documentation of
     ;; Set up menu items for this language env.
     (let ((doc (assq 'documentation alist)))
       (when doc
-        ;; (define-key-after describe-map (vector (intern lang-env))
-        ;;   (cons lang-env 'describe-specified-language-support) t)
+	;; (define-key-after describe-map (vector (intern lang-env))
+	;;   (cons lang-env 'describe-specified-language-support) t)
 	(when (featurep 'menubar)
 	  (eval-after-load
 	      "menubar-items.elc"
@@ -249,7 +249,7 @@ ALIST is an alist of KEY and INFO values.  See the documentation of
 	  (vector ,lang-env
 		  '(set-language-environment ,lang-env)
 		  t))))
-    
+
     (while alist
       (set-language-info lang-env (car (car alist)) (cdr (car alist)))
       (setq alist (cdr alist)))))
@@ -278,7 +278,7 @@ This file contains a list of libraries of Emacs input methods (LEIM)
 in the format of Lisp expression for registering each input method.
 Emacs loads this file at startup time.")
 
-(defvar leim-list-header (format 
+(defvar leim-list-header (format
 ";;; %s -- list of LEIM (Library of Emacs Input Method)
 ;;
 ;; This file contains a list of LEIM (Library of Emacs Input Method)
@@ -901,7 +901,7 @@ ISO-8859-5 and ISO-2022-JP are different coding categories.)"
 	   (if (memq eol-type '(lf crlf cr unix dos mac))
 	       (coding-system-change-eol-conversion default-coding eol-type)
 	     default-coding))
-          ;; (setq default-sendmail-coding-system default-coding)
+	  ;; (setq default-sendmail-coding-system default-coding)
 	  (while priority
 	    (unless (memq (setq category (car categories)) checked-categories)
 	      (set-coding-category-system category (car priority))
@@ -909,7 +909,7 @@ ISO-8859-5 and ISO-2022-JP are different coding categories.)"
 	    (setq priority (cdr priority)
 		  categories (cdr categories)))
 	  (set-coding-priority-list (nreverse checked-categories))
-          ;; (update-coding-systems-internal)
+	  ;; (update-coding-systems-internal)
 	  ))))
 
 ;; Print all arguments with `princ', then print "\n".
@@ -993,11 +993,11 @@ ISO-8859-5 and ISO-2022-JP are different coding categories.)"
 			   (car l)
 			   (coding-system-mnemonic (car l))
 			   (coding-system-doc-string (car l))))
-            ;; (let ((aliases (coding-system-get (car l) 'alias-coding-systems)))
-            ;;   (when aliases
-            ;;     (princ "\t")
-            ;;     (princ (cons 'alias: (cdr aliases)))
-            ;;     (terpri)))
+	    ;; (let ((aliases (coding-system-get (car l) 'alias-coding-systems)))
+	    ;;   (when aliases
+	    ;;     (princ "\t")
+	    ;;     (princ (cons 'alias: (cdr aliases)))
+	    ;;     (terpri)))
 	    (setq l (cdr l))))))))
 
 ;;; Charset property
@@ -1060,7 +1060,7 @@ It can be retrieved with `(get-char-code-property CHAR PROPNAME)'."
 ;;       (setq desc (or (cdr (assq char iso-2022-control-alist))
 ;;                      (char-to-string char)))
 ;;       (let ((i 1)
-;;             (len (length str))) 
+;;             (len (length str)))
 ;;         (while (< i len)
 ;;           (setq char (aref str i))
 ;;           (if (>= char 128)
@@ -1090,14 +1090,14 @@ It can be retrieved with `(get-char-code-property CHAR PROPNAME)'."
 ;;       ;; To exclude such tailing bytes, we at first encode one-char
 ;;       ;; string and two-char string, then check how many bytes at the
 ;;       ;; tail of both encoded strings are the same.
-;; 
+;;
 ;;       (setq enc1 (string-as-unibyte (encode-coding-string str1 coding-system))
 ;;             i1 (length enc1)
 ;;             enc2 (string-as-unibyte (encode-coding-string str2 coding-system))
 ;;             i2 (length enc2))
 ;;       (while (and (> i1 0) (= (aref enc1 (1- i1)) (aref enc2 (1- i2))))
 ;;         (setq i1 (1- i1) i2 (1- i2)))
-;; 
+;;
 ;;       ;; Now (substring enc1 i1) and (substring enc2 i2) are the same,
 ;;       ;; and they are the extra control sequences at the tail to
 ;;       ;; exclude.

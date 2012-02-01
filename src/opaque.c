@@ -133,7 +133,7 @@ static void
 print_opaque_ptr(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 {
 	const Lisp_Opaque_Ptr *p = XOPAQUE_PTR(obj);
-	
+
 	write_fmt_string(printcharfun,
 			 "#<INTERNAL OBJECT (SXEmacs bug?) "
 			 "(opaque-ptr, adr=%p) %p>", p->ptr, p);

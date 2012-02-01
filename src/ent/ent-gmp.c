@@ -72,7 +72,7 @@ bigz_hash (Lisp_Object obj, int SXE_UNUSED(depth))
 }
 
 static const struct lrecord_description bigz_description[] = {
-        { XD_OPAQUE_DATA_PTR, offsetof(Lisp_Bigz, data) },
+	{ XD_OPAQUE_DATA_PTR, offsetof(Lisp_Bigz, data) },
 	{ XD_END }
 };
 
@@ -109,7 +109,7 @@ bigq_hash (Lisp_Object obj, int SXE_UNUSED(depth))
 
 static const struct lrecord_description bigq_description[] = {
 	{ XD_OPAQUE_DATA_PTR, offsetof (Lisp_Bigq, data) },
- 	{ XD_END }
+	{ XD_END }
 };
 
 DEFINE_BASIC_LRECORD_IMPLEMENTATION("bigq", bigq,
@@ -239,7 +239,7 @@ read_bigz_string(const char *cp, int base)
 	bigz bz;
 
 	bigz_init(bz);
-		
+
 	/* MPZ bigz_set_string has no effect
 	 * with initial + sign */
 	if (*cp == '+') {
@@ -268,9 +268,9 @@ Lisp_Object read_bigq_string(char *cp)
 	   - If p has a '+' sign after the '/' (e.g., 300/+400), it sets the
 	   numerator from the string, but *leaves the denominator unchanged*.
 	   - If p has trailing nonnumeric characters, it sets the numerator from
-           the string, but leaves the denominator unchanged.
+	   the string, but leaves the denominator unchanged.
 	   - If p has more than one '/', (e.g., 1/2/3), then it sets the
-           numerator from the string, but leaves the denominator unchanged.
+	   numerator from the string, but leaves the denominator unchanged.
 
 	   Therefore, move p past any leading '+' signs, temporarily drop a null
 	   after the numeric characters we are trying to convert, and then put

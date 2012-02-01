@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  Author: Andy Norman (ange@hplb.hpl.hp.com), based on
-         'etc/emacsclient.c' from the GNU Emacs 18.52 distribution.
+	 'etc/emacsclient.c' from the GNU Emacs 18.52 distribution.
 
  Please mail bugs and suggestions to the XEmacs maintainer.
 */
@@ -170,7 +170,7 @@ static char *get_current_working_directory(void)
 
 /*
   filename_expand -- try to convert the given filename into a fully-qualified
-  		     pathname.
+		     pathname.
 */
 static void
 filename_expand(char *fullpath, char *filename, size_t fullsize)
@@ -182,12 +182,12 @@ filename_expand(char *fullpath, char *filename, size_t fullsize)
 
 	if (filename[0] && filename[0] == '/') {
 		/* Absolute (unix-style) pathname.  Do nothing */
-	        strncat(fullpath, filename, fullsize-1);
+		strncat(fullpath, filename, fullsize-1);
 	} else {
 		/* Assume relative Unix style path.  Get the current directory
 		 * and prepend it.  FIXME: need to fix the case of DOS paths
 		 * like "\foo", where we need to get the current drive. */
-	        strncat(fullpath, get_current_working_directory(), fullsize-1);
+		strncat(fullpath, get_current_working_directory(), fullsize-1);
 		len = strlen(fullpath);
 
 		/* trailing slash already? */
@@ -629,7 +629,7 @@ int main(int argc, char *argv[])
 			send_string(s, command);
 			free(path);
 		}
-		
+
 		SNPRINTF(sz, command, sizeof(command), ")%s%s",
 			 (quick || (nofiles && !suppress_windows_system))
 			 ? " 'quick"

@@ -53,16 +53,16 @@ Warning, this variable did not exist in XEmacs versions prior to 20.3")
 ;; +  (or (string-match "\\([0-9]+\\)\\.\\([0-9]+\\)" emacs-version)
 ;;        (error "dired does not work with emacs version %s" emacs-version))
 ;;    (setq ver (string-to-int (substring emacs-version (match-beginning 1)
-;;  				      (match-end 1)))
+;;				      (match-end 1)))
 ;; @@ -6617,7 +6617,7 @@
-;; 
+;;
 ;;  (let ((lucid-p (string-match "XEmacs" emacs-version))
 ;;        ver)
 ;; -  (or (string-match "^\\([0-9]+\\)\\." emacs-version)
 ;; +  (or (string-match "\\([0-9]+\\)\\." emacs-version)
 ;;        (error "Weird emacs version %s" emacs-version))
 ;;    (setq ver (string-to-int (substring emacs-version (match-beginning 1)
-;;  				      (match-end 1))))
+;;				      (match-end 1))))
 
 (if (featurep 'infodock)
     (require 'id-vers))
@@ -80,7 +80,7 @@ to the system configuration; look at `system-configuration' instead."
   (interactive "p")
   (save-match-data
     (let ((version-string
-	   (format 
+	   (format
 	    "SXEmacs: %s, built %s on %s"
 	    sxemacs-git-version
 	    emacs-build-time

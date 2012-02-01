@@ -9,15 +9,15 @@
 
  Copyright (C) 1989 Free Software Foundation, Inc.
 
- Author: Andy Norman (ange@hplb.hpl.hp.com), based on 
-         'etc/server.c' and 'etc/emacsclient.c' from the 18.52 GNU
-         Emacs distribution.
+ Author: Andy Norman (ange@hplb.hpl.hp.com), based on
+	 'etc/server.c' and 'etc/emacsclient.c' from the 18.52 GNU
+	 Emacs distribution.
 
  Please mail bugs and suggestions to the author at the above address.
 */
 
-/* HISTORY 
- * 11-Nov-1990		bristor@simba	
+/* HISTORY
+ * 11-Nov-1990		bristor@simba
  *    Added EOT stuff.
  */
 
@@ -121,7 +121,7 @@
  * since it limits the size of requests and responses. Don't make it bigger
  * than your system's max message size though (usually a couple of k) or else
  * msgsend will start failing. For sockets, using the system BUFSIZ is usually
- * what you want. 
+ * what you want.
  */
 
 # define GSERV_BUFSZ BUFSIZ

@@ -5,7 +5,7 @@
  * Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
  *
  * This file is part of SXEmacs.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -535,7 +535,7 @@ ase_resc_elm_from_string(char *cp)
 		/* jump over a leading minus */
 		cp++;
 	}
-		
+
 	while ((*cp >= '0' && *cp <= '9'))
 		cp++;
 
@@ -775,7 +775,7 @@ ase_resclass_check_rings(Lisp_Object l, Lisp_Object r)
 	} else if (!XASE_RESC_ELM_SMALLP(l) &&
 		   bigz_eql(XASE_RESC_RNG_RING(XASE_RESC_ELM_RING(l)),
 			    XASE_RESC_RNG_RING(XASE_RESC_ELM_RING(r)))) {
-                return 1;
+		return 1;
 #endif
 	}
 	goto domain_error;
@@ -1585,7 +1585,7 @@ or the modulus of a residue class, respectively.
 
 /* ###autoload */
 D3FUN("residue-class-representant", Fresidue_class_representant, 1, 1, 0, /*
-Return the representant of the residue class ELEMENT lifted 
+Return the representant of the residue class ELEMENT lifted
 to the ring of rational integers.
 									  */
        (element))

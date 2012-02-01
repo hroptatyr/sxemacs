@@ -76,4 +76,3 @@
 (define-key function-key-map "\eOP" [kp-numlock])
 
 ;;; linux.el ends here
-

@@ -1,4 +1,3 @@
-
 @node Glossary,, Intro, Top
 @unnumbered Glossary
 

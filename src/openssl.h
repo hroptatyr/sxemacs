@@ -100,7 +100,7 @@ struct Lisp_SSL_CONN {
 	int connected_p;
 	int protected_p;
 
-	/* Low level streams used in input and output, 
+	/* Low level streams used in input and output,
 	   backup streams if network stream is proselytised */
 	Lisp_Object pipe_instream;
 	Lisp_Object pipe_outstream;

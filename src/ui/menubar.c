@@ -592,7 +592,7 @@ After the menubar is clicked upon, but before any menus are popped up,
 the functions on the `activate-menubar-hook' are invoked to make top-level
 changes to the menus and menubar.  Note, however, that the use of menu
 filters (using the :filter keyword) is usually a more efficient way to
-dynamically alter or sensitize menus.  
+dynamically alter or sensitize menus.
 */ ,
 			  menubar_variable_changed);
 

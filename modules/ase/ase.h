@@ -5,7 +5,7 @@
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
   * This file is part of SXEmacs.
-  * 
+  *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
   * are met:
@@ -197,4 +197,3 @@ _ase_swap(Lisp_Object *args, int idx1, int idx2)
 	} while (0)
 
 #endif	/* INCLUDED_ase_h_ */
-

@@ -63,7 +63,7 @@ header_HEADERS = $(acgen_headers) $(libsxeevents_a_headers)
 
 noinst_LIBRARIES=libsxeevents.a
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## Create preprocessor output (debugging purposes only)

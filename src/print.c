@@ -160,8 +160,8 @@ int write_fmt_str(Lisp_Object stream, const char* fmt, ...)
 	char   *kludge;
 	va_list args;
 	int	bufsize, retval, tries = 3;
-        /* write_fmt_str is used for small prints usually... */
-	char	buffer[64+1];   
+	/* write_fmt_str is used for small prints usually... */
+	char	buffer[64+1];
 	int speccount = specpdl_depth();
 
 	va_start(args, fmt);
@@ -235,12 +235,12 @@ static int std_handle_out_va(FILE * stream, const char *fmt, va_list args)
 	kludge = buffer;
 
 	SXE_VSNPRINT_VA(retval,buffer,kludge,bufsize,speccount,tries,Bufbyte,fmt,args);
-	
+
 	if (retval == 0)
 		/* nothing to write */
 		return retval;
 
-	use_fprintf = ! initialized ||fatal_error_in_progress || 
+	use_fprintf = ! initialized ||fatal_error_in_progress ||
 		inhibit_non_essential_printing_operations;
 
 	if (retval > 0) {
@@ -292,9 +292,9 @@ int stdout_out(const char *fmt, ...)
 	int retval;
 	va_list args;
 	va_start(args, fmt);
-	retval = std_handle_out_va(stdout, 
-				   (initialized && !fatal_error_in_progress 
-				    ? GETTEXT(fmt) : fmt), 
+	retval = std_handle_out_va(stdout,
+				   (initialized && !fatal_error_in_progress
+				    ? GETTEXT(fmt) : fmt),
 				   args);
 	va_end(args);
 	return retval;
@@ -306,9 +306,9 @@ DOESNT_RETURN fatal(const char *fmt, ...)
 	va_start(args, fmt);
 
 	stderr_out("\nSXEmacs: ");
-	std_handle_out_va(stderr, 
-			  (initialized && !fatal_error_in_progress 
-			   ? GETTEXT(fmt) : fmt), 
+	std_handle_out_va(stderr,
+			  (initialized && !fatal_error_in_progress
+			   ? GETTEXT(fmt) : fmt),
 			  args);
 	stderr_out("\n");
 
@@ -344,7 +344,7 @@ write_string_to_stdio_stream(FILE * stream, struct console *con,
 		}
 	}
 
-	
+
 	if (stream) {
 		std_handle_out_external(stream, Qnil, extptr, extlen,
 					stream == stdout
@@ -923,7 +923,7 @@ Lisp_Object Vfloat_output_format;
  * I assume that IEEE-754 format numbers can take 329 bytes for the worst
  * case of -1e307 in 20d float_output_format. What is one to do (short of
  * re-writing _doprnt to be more sane)?
- * 			-wsr
+ *			-wsr
  */
 void float_to_string(char *buf, fpfloat data, int maxlen)
 {
@@ -1275,7 +1275,7 @@ printing_major_badness(Lisp_Object printcharfun,
 		len = snprintf(buf, sizeof(buf), "%s object %p", badness_string, val);
 		break;
 	default:
-		len = snprintf(buf, sizeof(buf), "%s unknown badness %d", 
+		len = snprintf(buf, sizeof(buf), "%s unknown badness %d",
 			       badness_string, badness);
 		break;
 	}
@@ -1321,12 +1321,12 @@ print_internal(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 	   output. */
 #endif
 
-        /* Try out custom printing */
-        if (UNLIKELY(!(bool)inhibit_autoloads && !(bool)nodumpfile) &&
+	/* Try out custom printing */
+	if (UNLIKELY(!(bool)inhibit_autoloads && !(bool)nodumpfile) &&
 	    !EQ(Qnil, Vcustom_object_printer) &&
-            !EQ(Qnil, apply1(Vcustom_object_printer,
-                             Fcons(obj, Fcons(printcharfun, Qnil))))) {
-                return;
+	    !EQ(Qnil, apply1(Vcustom_object_printer,
+			     Fcons(obj, Fcons(printcharfun, Qnil))))) {
+		return;
 	}
 
 	/* Detect circularities and truncate them.

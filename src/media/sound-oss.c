@@ -212,17 +212,17 @@ sound_oss_init_device(sound_oss_data_t *sod, sound_oss_aj_data_t *sosd)
 		sosd->msf = sxe_msf_U8;
 		sosd->framesize = sosd->channels * sizeof(uint8_t);
 		break;
-        case AFMT_S16_LE:
+	case AFMT_S16_LE:
 	case AFMT_S16_BE:
 		OSS_DEBUG_HW("Using S16.\n");
 		sosd->msf = sxe_msf_S16;
 		sosd->framesize = sosd->channels * sizeof(int16_t);
-	        break;
+		break;
 	default:
 		OSS_DEBUG_HW(".oO{ I must not be here }\n");
 		sosd->framesize = 0;
 		return -1;
-	        break;
+		break;
 	}
 
 	/* The PCSP driver does not support reading of the sampling rate via the

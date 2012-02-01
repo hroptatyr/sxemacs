@@ -82,7 +82,7 @@ to the cut buffer."
       (x-store-cutbuffer
        (mapconcat
 	#'identity
-	(declare-fboundp 
+	(declare-fboundp
 	 (extract-rectangle
 	  (extent-start-position (car primary-selection-extent))
 	  (extent-end-position (car (reverse primary-selection-extent)))))

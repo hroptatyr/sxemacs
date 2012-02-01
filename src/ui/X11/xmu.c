@@ -442,7 +442,7 @@ int XmuPrintDefaultErrorMessage(Display * dpy, XErrorEvent * event, FILE * fp)
 				      "Request Minor code %d", mesg, BUFSIZ);
 		fprintf(fp, mesg, event->minor_code);
 		if (ext) {
-			in sz = snprintf(mesg, sizeof(mesg), "%s.%d", ext->name, 
+			in sz = snprintf(mesg, sizeof(mesg), "%s.%d", ext->name,
 					 event->minor_code);
 			assert(sz >= 0 && sz < sizeof(mesg));
 			XGetErrorDatabaseText(dpy, "XRequest", mesg, "", buffer,
@@ -470,7 +470,7 @@ int XmuPrintDefaultErrorMessage(Display * dpy, XErrorEvent * event, FILE * fp)
 				break;
 		}
 		if (buffer[0]) {
-			int sz = snprintf(buffer, sizeof(buffer), "%s.%d", 
+			int sz = snprintf(buffer, sizeof(buffer), "%s.%d",
 					  ext->name,
 					  event->error_code - ext->codes.first_error);
 			assert(sz >= 0 && sz < sizeof(buffer));

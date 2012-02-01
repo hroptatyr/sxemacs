@@ -533,7 +533,7 @@ expressions every time they are referenced.
 @item \C@var{category}
 @cindex @samp{\C} in regexp
 matches any character outside @var{category}. @xref{Category Tables},
-again, and note that this is only available under Mule. 
+again, and note that this is only available under Mule.
 @end table
 
   The following regular expression constructs match the empty string---that is,

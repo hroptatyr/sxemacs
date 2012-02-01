@@ -45,10 +45,10 @@
      (princ "\nCharacter display glyph sequences:\n")
      (save-excursion
        (let ((vector (make-vector 256 nil))
-             (i 0))
-         (while (< i 256)
-           (aset vector i (aref dt i))
-           (incf i))
+	     (i 0))
+	 (while (< i 256)
+	   (aset vector i (aref dt i))
+	   (incf i))
 	 ;; FSF calls `describe-vector' here, but it is so incredibly
 	 ;; lame a function for that name that I cannot bring myself
 	 ;; to porting it.  Here is what `describe-vector' does:
@@ -107,8 +107,8 @@
    (list (cons fdt-locale
 	       (mapcar
 		(lambda (fdt-x)
-                  (funcall fdt-function (cdr fdt-x))
-                  fdt-x)
+		  (funcall fdt-function (cdr fdt-x))
+		  fdt-x)
 		(cdar (specifier-spec-list current-display-table
 					   fdt-locale)))))))
 
@@ -195,9 +195,9 @@ With prefix argument, enable European character display iff arg is positive."
   (frob-display-table
    (lambda (x)
      (if (or (<= (prefix-numeric-value arg) 0)
-             (and (null arg)
-                  (equal (aref x 160) (char-to-string 160))))
-         (standard-display-default-1 x 160 255)
+	     (and (null arg)
+		  (equal (aref x 160) (char-to-string 160))))
+	 (standard-display-default-1 x 160 255)
        (standard-display-8bit-1 x 160 255)))
    locale))
 

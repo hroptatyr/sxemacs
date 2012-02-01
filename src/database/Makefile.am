@@ -61,7 +61,7 @@ header_HEADERS= $(acgen_headers) $(libsxedb_a_headers)
 
 noinst_LIBRARIES=libsxedb.a
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## Create preprocessor output (debugging purposes only)

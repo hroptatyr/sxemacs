@@ -1,4 +1,4 @@
-;;;autoload 
+;;;autoload
 (deftheme europe
   "Settings for European users."
   :set-variable-settings

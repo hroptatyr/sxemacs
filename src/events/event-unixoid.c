@@ -47,14 +47,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
    These work as follows:
 
    input_wait_mask == mask of all file descriptors we select() on,
-                      including TTY/stream console descriptors,
+		      including TTY/stream console descriptors,
 		      process descriptors, and the signal event pipe.
 		      Only used in event-tty.c; event-Xt.c uses
 		      XtAppAddInput(), and the call to select() is down in
 		      the guts of Xt.
 
    non_fake_input_wait_mask == same as input_wait_mask but minus the
-                               signal event pipe.  Also only used in
+			       signal event pipe.  Also only used in
 			       event-tty.c.
 
    process_only_mask == only the process descriptors.

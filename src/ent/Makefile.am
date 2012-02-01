@@ -74,7 +74,7 @@ header_HEADERS = $(acgen_headers) $(libent_a_headers)
 
 noinst_LIBRARIES=libent.a
 
-# 
+#
 # Help the SXEmacs developers get nice post-processed source files
 
 ## Create preprocessor output (debugging purposes only)

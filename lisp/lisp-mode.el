@@ -178,12 +178,12 @@
 
 (defvar lisp-imenu-generic-expression
       '(
-	(nil 
+	(nil
 	 #r"^\s-*(def\(un\|subst\|macro\|advice\)\s-+\([-A-Za-z0-9+*|:]+\)" 2)
-	("Variables" 
+	("Variables"
 	 #r"^\s-*(def\(var\|const\|custom\)\s-+\([-A-Za-z0-9+*|:]+\)" 2)
-	("Types" 
-	 #r"^\s-*(def\(group\|type\|struct\|class\|ine-condition\)\s-+\([-A-Za-z0-9+*|:]+\)" 
+	("Types"
+	 #r"^\s-*(def\(group\|type\|struct\|class\|ine-condition\)\s-+\([-A-Za-z0-9+*|:]+\)"
 	 2))
 
   "Imenu generic expression for Lisp mode.  See `imenu-generic-expression'.")
@@ -221,8 +221,8 @@
   ;; Look within the line for a ; following an even number of backslashes
   ;; after either a non-backslash or the line beginning.
   (setq comment-start-skip (concat #r"\(\(^\|"
-                                   "[^\\\\\n]"
-                                   #r"\)\(\\\\\)*\);+ *"))
+				   "[^\\\\\n]"
+				   #r"\)\(\\\\\)*\);+ *"))
   (make-local-variable 'comment-column)
   (setq comment-column 40)
   (make-local-variable 'comment-indent-function)
@@ -312,7 +312,7 @@ if that value is non-nil."
 	mode-popup-menu emacs-lisp-mode-popup-menu
 	mode-name "Emacs-Lisp")
   (if (and (featurep 'menubar)
-           current-menubar)
+	   current-menubar)
       (progn
 	;; make a local copy of the menubar, so our modes don't
 	;; change the global menubar
@@ -399,7 +399,7 @@ if that value is non-nil."
   (setq mode-name "Lisp Interaction")
   (setq mode-popup-menu lisp-interaction-mode-popup-menu)
   (if (and (featurep 'menubar)
-           current-menubar)
+	   current-menubar)
       (progn
 	;; make a local copy of the menubar, so our modes don't
 	;; change the global menubar
@@ -584,44 +584,44 @@ of the start of the containing expression."
     (beginning-of-line)
     (let ((indent-point (point))
 	  ;; XEmacs change (remove paren-depth)
-          state ;;paren-depth
-          ;; setting this to a number inhibits calling hook
-          (desired-indent nil)
-          (retry t)
-          calculate-lisp-indent-last-sexp containing-sexp)
+	  state ;;paren-depth
+	  ;; setting this to a number inhibits calling hook
+	  (desired-indent nil)
+	  (retry t)
+	  calculate-lisp-indent-last-sexp containing-sexp)
       (if parse-start
-          (goto-char parse-start)
-          (beginning-of-defun))
+	  (goto-char parse-start)
+	  (beginning-of-defun))
       ;; Find outermost containing sexp
       (while (< (point) indent-point)
-        (setq state (parse-partial-sexp (point) indent-point 0)))
+	(setq state (parse-partial-sexp (point) indent-point 0)))
       ;; Find innermost containing sexp
       (while (and retry
 		  state
 		  ;; XEmacs change (remove paren-depth)
-                  (> ;;(setq paren-depth (elt state 0))
+		  (> ;;(setq paren-depth (elt state 0))
 		     (elt state 0)
 		     0))
-        (setq retry nil)
-        (setq calculate-lisp-indent-last-sexp (elt state 2))
-        (setq containing-sexp (elt state 1))
-        ;; Position following last unclosed open.
-        (goto-char (1+ containing-sexp))
-        ;; Is there a complete sexp since then?
-        (if (and calculate-lisp-indent-last-sexp
+	(setq retry nil)
+	(setq calculate-lisp-indent-last-sexp (elt state 2))
+	(setq containing-sexp (elt state 1))
+	;; Position following last unclosed open.
+	(goto-char (1+ containing-sexp))
+	;; Is there a complete sexp since then?
+	(if (and calculate-lisp-indent-last-sexp
 		 (> calculate-lisp-indent-last-sexp (point)))
-            ;; Yes, but is there a containing sexp after that?
-            (let ((peek (parse-partial-sexp calculate-lisp-indent-last-sexp
+	    ;; Yes, but is there a containing sexp after that?
+	    (let ((peek (parse-partial-sexp calculate-lisp-indent-last-sexp
 					    indent-point 0)))
-              (if (setq retry (car (cdr peek))) (setq state peek)))))
+	      (if (setq retry (car (cdr peek))) (setq state peek)))))
       (if retry
-          nil
-        ;; Innermost containing sexp found
-        (goto-char (1+ containing-sexp))
-        (if (not calculate-lisp-indent-last-sexp)
+	  nil
+	;; Innermost containing sexp found
+	(goto-char (1+ containing-sexp))
+	(if (not calculate-lisp-indent-last-sexp)
 	    ;; indent-point immediately follows open paren.
 	    ;; Don't call hook.
-            (setq desired-indent (current-column))
+	    (setq desired-indent (current-column))
 	  ;; Find the start of first element of containing sexp.
 	  (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t)
 	  (cond ((looking-at "\\s(")
@@ -656,25 +656,25 @@ of the start of the containing expression."
       ;; Call indentation hook except when overridden by lisp-indent-offset
       ;; or if the desired indentation has already been computed.
       (let ((normal-indent (current-column)))
-        (cond ((elt state 3)
-               ;; Inside a string, don't change indentation.
-               (goto-char indent-point)
-               (skip-chars-forward " \t")
-               (current-column))
-              (desired-indent)
-              ((and (boundp 'lisp-indent-function)
-                    lisp-indent-function
-                    (not retry))
-               (or (funcall lisp-indent-function indent-point state)
-                   normal-indent))
+	(cond ((elt state 3)
+	       ;; Inside a string, don't change indentation.
+	       (goto-char indent-point)
+	       (skip-chars-forward " \t")
+	       (current-column))
+	      (desired-indent)
+	      ((and (boundp 'lisp-indent-function)
+		    lisp-indent-function
+		    (not retry))
+	       (or (funcall lisp-indent-function indent-point state)
+		   normal-indent))
 	      ;; XEmacs change:
-              ;; lisp-indent-offset shouldn't override lisp-indent-function !
-              ((and (integerp lisp-indent-offset) containing-sexp)
-               ;; Indent by constant offset
-               (goto-char containing-sexp)
-               (+ normal-indent lisp-indent-offset))
-              (t
-               normal-indent))))))
+	      ;; lisp-indent-offset shouldn't override lisp-indent-function !
+	      ((and (integerp lisp-indent-offset) containing-sexp)
+	       ;; Indent by constant offset
+	       (goto-char containing-sexp)
+	       (+ normal-indent lisp-indent-offset))
+	      (t
+	       normal-indent))))))
 
 (defun lisp-indent-function (indent-point state)
   ;; free reference to `calculate-lisp-indent-last-sexp'
@@ -683,21 +683,21 @@ of the start of the containing expression."
     (goto-char (1+ (elt state 1)))
     (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t)
     (if (and (elt state 2)
-             (not (looking-at #r"\sw\|\s_")))
-        ;; car of form doesn't seem to be a symbol
-        (progn
-          (if (not (> (save-excursion (forward-line 1) (point))
-                      calculate-lisp-indent-last-sexp))
-              (progn (goto-char calculate-lisp-indent-last-sexp)
-                     (beginning-of-line)
-                     (parse-partial-sexp (point)
+	     (not (looking-at #r"\sw\|\s_")))
+	;; car of form doesn't seem to be a symbol
+	(progn
+	  (if (not (> (save-excursion (forward-line 1) (point))
+		      calculate-lisp-indent-last-sexp))
+	      (progn (goto-char calculate-lisp-indent-last-sexp)
+		     (beginning-of-line)
+		     (parse-partial-sexp (point)
 					 calculate-lisp-indent-last-sexp 0 t)))
-          ;; Indent under the list or under the first sexp on the same
-          ;; line as calculate-lisp-indent-last-sexp.  Note that first
-          ;; thing on that line has to be complete sexp since we are
-          ;; inside the innermost containing sexp.
-          (backward-prefix-chars)
-          (current-column))
+	  ;; Indent under the list or under the first sexp on the same
+	  ;; line as calculate-lisp-indent-last-sexp.  Note that first
+	  ;; thing on that line has to be complete sexp since we are
+	  ;; inside the innermost containing sexp.
+	  (backward-prefix-chars)
+	  (current-column))
       (let ((function (buffer-substring (point)
 					(progn (forward-sexp 1) (point))))
 	    method)
@@ -727,8 +727,8 @@ of the start of the containing expression."
 
 (defun lisp-indent-specform (count state indent-point normal-indent)
   (let ((containing-form-start (elt state 1))
-        (i count)
-        body-indent containing-form-column)
+	(i count)
+	body-indent containing-form-column)
     ;; Move to the start of containing form, calculate indentation
     ;; to use for non-distinguished forms (> count), and move past the
     ;; function symbol.  lisp-indent-function guarantees that there is at
@@ -742,33 +742,33 @@ of the start of the containing expression."
     ;; Now find the start of the last form.
     (parse-partial-sexp (point) indent-point 1 t)
     (while (and (< (point) indent-point)
-                (condition-case ()
-                    (progn
-                      (setq count (1- count))
-                      (forward-sexp 1)
-                      (parse-partial-sexp (point) indent-point 1 t))
-                  (error nil))))
+		(condition-case ()
+		    (progn
+		      (setq count (1- count))
+		      (forward-sexp 1)
+		      (parse-partial-sexp (point) indent-point 1 t))
+		  (error nil))))
     ;; Point is sitting on first character of last (or count) sexp.
     (if (> count 0)
-        ;; A distinguished form.  If it is the first or second form use double
-        ;; lisp-body-indent, else normal indent.  With lisp-body-indent bound
-        ;; to 2 (the default), this just happens to work the same with if as
-        ;; the older code, but it makes unwind-protect, condition-case,
-        ;; with-output-to-temp-buffer, et. al. much more tasteful.  The older,
-        ;; less hacked, behavior can be obtained by replacing below with
-        ;; (list normal-indent containing-form-start).
-        (if (<= (- i count) 1)
-            (list (+ containing-form-column (* 2 lisp-body-indent))
-                  containing-form-start)
-            (list normal-indent containing-form-start))
+	;; A distinguished form.  If it is the first or second form use double
+	;; lisp-body-indent, else normal indent.  With lisp-body-indent bound
+	;; to 2 (the default), this just happens to work the same with if as
+	;; the older code, but it makes unwind-protect, condition-case,
+	;; with-output-to-temp-buffer, et. al. much more tasteful.  The older,
+	;; less hacked, behavior can be obtained by replacing below with
+	;; (list normal-indent containing-form-start).
+	(if (<= (- i count) 1)
+	    (list (+ containing-form-column (* 2 lisp-body-indent))
+		  containing-form-start)
+	    (list normal-indent containing-form-start))
       ;; A non-distinguished form.  Use body-indent if there are no
       ;; distinguished forms and this is the first undistinguished form,
       ;; or if this is the first undistinguished form and the preceding
       ;; distinguished form has indentation at least as great as body-indent.
       (if (or (and (= i 0) (= count 0))
-              (and (= count 0) (<= body-indent normal-indent)))
-          body-indent
-          normal-indent))))
+	      (and (= count 0) (<= body-indent normal-indent)))
+	  body-indent
+	  normal-indent))))
 
 (defun lisp-indent-defform (state indent-point)
   (goto-char (car (cdr state)))

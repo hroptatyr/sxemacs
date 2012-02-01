@@ -117,8 +117,8 @@ case "$ac_cv_build" in
     case "ac_cv_build" in
       i[[3-9]]86-*-netbsd* ) machine=intel386 ;;
       hp300-*-netbsd* | amiga-*-netbsd* | sun3-*-netbsd* | mac68k-*-netbsd* | da30-*-netbsd* | m68k-*-netbsd* )
-                      dnl Yes, this is somewhat bogus.
-                      machine=hp9000s300 ;;
+		      dnl Yes, this is somewhat bogus.
+		      machine=hp9000s300 ;;
       pc532-*-netbsd* | ns32k-*-netbsd* )  machine=ns32000 ;;
       pmax-*-netbsd*  | mips-*-netbsd*  )  machine=pmax ;;
       macppc-*-netbsd* | powerpc-*-netbsd* ) machine=powerpc ;;
@@ -142,7 +142,7 @@ case "$ac_cv_build" in
       powerpc-*-freebsd* ) machine=powerpc ;;
     esac
   ;;
-      
+
 
   dnl Darwin, a.k.a. MacOS X (based on Mach and Freebsd)
   *-*-darwin*)
@@ -255,7 +255,7 @@ case "$ac_cv_build" in
   dnl Vaxen.
   vax-dec-* )
     case "$ac_cv_build" in
-      *-sysv[[01]]* | *-sysvr[[01]]* ) 	opsys=usg5-0 ;;
+      *-sysv[[01]]* | *-sysvr[[01]]* )	opsys=usg5-0 ;;
       *-sysv2* | *-sysvr2* )		opsys=usg5-2 ;;
       *-mach* )				opsys=mach-bsd4-3 ;;
     esac
@@ -603,7 +603,7 @@ AC_DEFUN([_SXE_CHECK_ASM_RETVAL_IN_EBX], [dnl
 	__asm__ volatile (
 		"	movl $[1], %%ebx\n"
 		: "=b" (cnt)
-		: 
+		:
 		: "cc");
 	return 0;
 		]])], [sxe_cv_asm_retval_in_ebx="yes"],
@@ -617,7 +617,7 @@ AC_DEFUN([_SXE_CHECK_ASM_ADCB], [dnl
 	__asm__ (
 		"	adcb $[1], %[cnt]	/* add 1 if carry was set*/\n"
 		: [cnt] "=r" (cnt)
-		: 
+		:
 		: "cc");
 	return 0;
 		]])], [sxe_cv_asm_adcb="yes"], [sxe_cv_asm_adcb="no"])

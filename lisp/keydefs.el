@@ -97,7 +97,7 @@ The normal global definition of the character C-x indirects to this keymap.")
 (let ((n 33))
   (while (<= n 255)
     (if (not (= n 127))
-        (define-key global-map n 'self-insert-command))
+	(define-key global-map n 'self-insert-command))
     (setq n (1+ n))))
 (define-key global-map " " 'self-insert-command)
 
@@ -191,8 +191,8 @@ The normal global definition of the character C-x indirects to this keymap.")
 
 ;; New FSF19 bindings: C-x n as a prefix for narrowing commands.
 (define-key global-map "\C-xn" (let ((map (make-sparse-keymap)))
-                                 (set-keymap-name map 'narrowing-prefix)
-                                 map))
+				 (set-keymap-name map 'narrowing-prefix)
+				 map))
 (put 'narrow-to-region 'disabled t)
 (define-key global-map "\C-xnn" 'narrow-to-region)
 (define-key global-map "\C-xnw" 'widen)
@@ -328,8 +328,8 @@ The normal global definition of the character C-x indirects to this keymap.")
 
 ;; New FSF19 bindings: C-x r as a prefix for register commands
 (define-key global-map "\C-xr" (let ((map (make-sparse-keymap)))
-                                 (set-keymap-name map 'rectangle-prefix)
-                                 map))
+				 (set-keymap-name map 'rectangle-prefix)
+				 map))
 (define-key global-map "\C-xr\C-@" 'point-to-register)
 (define-key global-map "\C-xr " 'point-to-register)
 (define-key global-map "\C-xrj" 'jump-to-register)
@@ -519,7 +519,7 @@ The normal global definition of the character C-x indirects to this keymap.")
 ;; expected behavior even in, for example, vi-mode.
 
 ;; We use here symbolic names, assuming that the corresponding keys will
-;; generate these keysyms.  This is not true on Suns, but x-win-sun.el 
+;; generate these keysyms.  This is not true on Suns, but x-win-sun.el
 ;; fixes that.  If it turns out that the semantics of these keys should
 ;; differ from server to server, this should be moved into server-specific
 ;; files, but these appear to be the standard Motif and PC bindings.
@@ -612,7 +612,7 @@ The normal global definition of the character C-x indirects to this keymap.")
 (define-key global-map 'delete	        'backward-or-forward-delete-char)
 (define-key global-map '(meta delete)	'backward-or-forward-kill-word)
 (define-key global-map [(control x) (delete)]
-				        'backward-or-forward-kill-sentence)
+					'backward-or-forward-kill-sentence)
 (define-key global-map 'kp-delete	'backward-or-forward-delete-char)
 (define-key global-map '(meta kp-delete) 'backward-or-forward-kill-word)
 (define-key global-map [(control x) (kp-delete)]

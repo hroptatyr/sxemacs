@@ -172,10 +172,10 @@ static struct scrollbar_instance *create_scrollbar_instance(struct frame *f,
   do {									\
     if (FRAME_SB_##cache (f))						\
       {									\
-        struct scrollbar_instance *retval = FRAME_SB_##cache (f);	\
-        FRAME_SB_##cache (f) = FRAME_SB_##cache (f)->next;		\
-        retval->next = NULL;						\
-        return retval;							\
+	struct scrollbar_instance *retval = FRAME_SB_##cache (f);	\
+	FRAME_SB_##cache (f) = FRAME_SB_##cache (f)->next;		\
+	retval->next = NULL;						\
+	return retval;							\
       }									\
   } while (0)
 
@@ -959,7 +959,7 @@ This is a specifier; use `set-specifier' to change it.
 		Lisp_Object fallback = list1(Fcons(Qnil, Qnil));
 #if defined (HAVE_X_WINDOWS)			\
     && !defined (LWLIB_SCROLLBARS_MOTIF)	\
-    && !defined (LWLIB_SCROLLBARS_LUCID) 	\
+    && !defined (LWLIB_SCROLLBARS_LUCID)	\
     && !defined (LWLIB_SCROLLBARS_ATHENA3D)
 
 		fallback = Fcons(Fcons(list1(Qx), Qt), fallback);

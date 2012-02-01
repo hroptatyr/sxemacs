@@ -36,13 +36,13 @@ Do not set this. Use `set-glyph-image' to change the properties of the tab.")
 
 (defcustom gutter-buffers-tab-visible-p
   (gutter-element-visible-p default-gutter-visible-p 'buffers-tab)
-  "Whether the buffers tab is globally visible. 
+  "Whether the buffers tab is globally visible.
 
 There are side-effects, so don't setq it; use Customize or the options menu."
   :group 'buffers-tab
   :type 'boolean
   :set #'(lambda (var val)
-	   (set-gutter-element-visible-p default-gutter-visible-p 
+	   (set-gutter-element-visible-p default-gutter-visible-p
 					 'buffers-tab val)
 	   (setq gutter-buffers-tab-visible-p val)))
 
@@ -128,7 +128,7 @@ list in `buffer-list' order (usual most-recently-selected-first)."
   :type 'face
   :group 'buffers-tab)
 
-(defcustom buffers-tab-grouping-regexp 
+(defcustom buffers-tab-grouping-regexp
   '(#r"^\(gnus-\|message-mode\|mime/viewer-mode\)"
     #r"^\(emacs-lisp-\|lisp-\)")
   "*If non-nil, a list of regular expressions for buffer grouping.
@@ -155,7 +155,7 @@ about a buffer."
   "*Maximum length of text which may appear in a \"Buffers\" tab.
 This is a specifier, use set-specifier to modify it.")
 
-(defcustom buffers-tab-max-buffer-line-length 
+(defcustom buffers-tab-max-buffer-line-length
   (specifier-instance buffers-tab-default-buffer-line-length)
   "*Maximum length of text which may appear in a \"Buffers\" tab.
 Buffer names over this length will be truncated with elipses.
@@ -183,7 +183,7 @@ If this is 0, then the full buffer name will be shown."
   "For use as a value of `buffers-tab-selection-function'.
 This selects buffers by major mode `buffers-tab-grouping-regexp'."
   (let ((mode1 (symbol-name (symbol-value-in-buffer 'major-mode buf1)))
-	(mode2 (symbol-name (symbol-value-in-buffer 'major-mode 
+	(mode2 (symbol-name (symbol-value-in-buffer 'major-mode
 						    buffer-to-select)))
 	(modenm1 (symbol-value-in-buffer 'mode-name buf1))
 	(modenm2 (symbol-value-in-buffer 'mode-name buffer-to-select)))
@@ -191,7 +191,7 @@ This selects buffers by major mode `buffers-tab-grouping-regexp'."
 	       (eq modenm1 modenm2)
 	       (and (string-match "^[^-]+-" mode1)
 		    (string-match
-		     (concat "^" (regexp-quote 
+		     (concat "^" (regexp-quote
 				  (substring mode1 0 (match-end 0))))
 		     mode2))
 	       (and buffers-tab-grouping-regexp
@@ -212,7 +212,7 @@ This just returns the buffer's name, optionally truncated."
     (if (and (> len 0)
 	     (> (length (buffer-name buffer)) len))
 	(if (string-match ".*<.>$" (buffer-name buffer))
-	    (concat (substring (buffer-name buffer) 
+	    (concat (substring (buffer-name buffer)
 			       0 (- len 6)) "..."
 			       (substring (buffer-name buffer) -3))
 	  (concat (substring (buffer-name buffer)
@@ -224,7 +224,7 @@ This just returns the buffer's name, optionally truncated."
     (mapcar
      #'(lambda (buffer)
 	 (prog1
-	     (vector 
+	     (vector
 	      (funcall buffers-tab-format-buffer-line-function
 		       buffer)
 	      (list buffers-tab-switch-to-buffer-function
@@ -250,7 +250,7 @@ redefining the function `format-buffers-menu-line'."
     ;; NB it is too late if we run the omit function as part of the
     ;; filter functions because we need to know which buffer is the
     ;; context buffer before they get run.
-    (let* ((buffers (delete-if 
+    (let* ((buffers (delete-if
 		     buffers-tab-omit-function (buffer-list frame)))
 	   (first-buf (car buffers)))
       ;; maybe force the selected window
@@ -260,14 +260,14 @@ redefining the function `format-buffers-menu-line'."
 	(setq buffers (cons (window-buffer (selected-window frame))
 			    (delq first-buf buffers))))
       ;; if we're in deletion ignore the current buffer
-      (when in-deletion 
+      (when in-deletion
 	(setq buffers (delq (current-buffer) buffers))
 	(setq first-buf (car buffers)))
       ;; filter buffers
       (when buffers-tab-filter-functions
 	(setq buffers
-	      (delete-if 
-	       #'null 
+	      (delete-if
+	       #'null
 	       (mapcar #'(lambda (buf)
 			   (let ((tmp-buf buf))
 			     (mapc #'(lambda (fun)
@@ -294,7 +294,7 @@ redefining the function `format-buffers-menu-line'."
   (let* ((gutter-string (copy-sequence "\n"))
 	 (gutter-buffers-tab-extent (make-extent 0 1 gutter-string)))
     (set-extent-begin-glyph gutter-buffers-tab-extent
-			    (setq gutter-buffers-tab 
+			    (setq gutter-buffers-tab
 				  (make-glyph)))
     ;; Nuke all existing tabs
     (remove-gutter-element top-gutter 'buffers-tab)
@@ -308,7 +308,7 @@ redefining the function `format-buffers-menu-line'."
 	   (cond ((eq gutter-buffers-tab-orientation 'top)
 		  ;; This looks better than a 3d border
 		  (set-specifier top-gutter-border-width 0 'global x)
-		  (set-gutter-element top-gutter 'buffers-tab 
+		  (set-gutter-element top-gutter 'buffers-tab
 				      gutter-string 'global x))
 		 ((eq gutter-buffers-tab-orientation 'bottom)
 		  (set-specifier bottom-gutter-border-width 0 'global x)
@@ -347,19 +347,19 @@ redefining the function `format-buffers-menu-line'."
 			 :pixel-width :pixel-height)
 		     (if (or (eq gutter-buffers-tab-orientation 'top)
 			     (eq gutter-buffers-tab-orientation 'bottom))
-			 '(gutter-pixel-width) '(gutter-pixel-height)) 
+			 '(gutter-pixel-width) '(gutter-pixel-height))
 		     :items items)
 	     frame)
 	    ;; set-glyph-image will not make the gutter dirty
 	    (set-gutter-dirty-p gutter-buffers-tab-orientation)))))))
 
 ;; A myriad of different update hooks all doing slightly different things
-(add-one-shot-hook 
+(add-one-shot-hook
  'after-init-hook
  #'(lambda ()
      ;; don't add the hooks if the user really doesn't want them
      (when gutter-buffers-tab-enabled
-       (add-hook 'create-frame-hook 
+       (add-hook 'create-frame-hook
 		 #'(lambda (frame)
 		     (when gutter-buffers-tab (update-tab-in-gutter frame t))))
        (add-hook 'buffer-list-changed-hook 'update-tab-in-gutter)
@@ -428,17 +428,17 @@ side-by-side."
 		    ,progress-text-instantiator)])
     (set-glyph-image progress-layout-glyph progress-layout-instantiator
 		     locale))
-   (t 
+   (t
     (setq progress-glyph-height 24)
     (setq progress-layout-instantiator
-	  `[layout 
+	  `[layout
 	    :orientation vertical :margin-width 4
 	    :horizontally-justify left :vertically-justify center
 	    :items (,progress-text-instantiator
-		    [layout 
+		    [layout
 		     :orientation horizontal
 		     :items (,progress-gauge-instantiator
-			     [button 
+			     [button
 			      :pixel-height (eval progress-glyph-height)
 			      :descriptor " Stop "
 			      ;; 'quit is special and acts "asynchronously".
@@ -503,7 +503,7 @@ you should just use (progress nil)."
 	    oldmsg)
 	;; nothing to display so get rid of the gauge
 	(set-specifier bottom-gutter-border-width 0 frame)
-	(set-gutter-element-visible-p bottom-gutter-visible-p 
+	(set-gutter-element-visible-p bottom-gutter-visible-p
 				      'progress nil frame)))))
 
 (defun progress-feedback-clear-when-idle (&optional label)
@@ -527,7 +527,7 @@ you should just use (progress nil)."
 
 (defun progress-feedback-dispatch-non-command-events ()
   ;; don't allow errors to hose things
-  (condition-case t 
+  (condition-case t
       ;; (sit-for 0) is too agressive and cause more display than we
       ;; want.
       (dispatch-non-command-events)
@@ -542,7 +542,7 @@ you should just use (progress nil)."
 	(progn
 	  (setcdr top message)
 	  (if (equal tmsg message)
-	      (progn 
+	      (progn
 		(set-instantiator-property progress-gauge-instantiator :value value)
 		(set-progress-feedback-instantiator (frame-selected-window frame)))
 	    (raw-append-progress-feedback message value frame))
@@ -579,7 +579,7 @@ you should just use (progress nil)."
 	  (set-instantiator-property progress-text-instantiator :data message)
 	  (set-progress-abort-instantiator (frame-selected-window frame))
 	  (set-specifier bottom-gutter-height 'autodetect frame)
-	  (set-gutter-element-visible-p bottom-gutter-visible-p 
+	  (set-gutter-element-visible-p bottom-gutter-visible-p
 					'progress t frame)
 	  ;; we have to do this so redisplay is up-to-date and so
 	  ;; redisplay-gutter-area performs optimally.
@@ -637,7 +637,7 @@ message."
 	 (abort-progress-feedback label message frame))
 	((or (not (valid-image-instantiator-format-p 'progress-gauge frame))
 	     progress-feedback-use-echo-area)
-	 (display-message label 
+	 (display-message label
 	   (concat message (if (eq value 100) "done."
 			     (make-string (/ value 5) ?.)))
 	   frame))

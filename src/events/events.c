@@ -26,11 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 #include "buffer.h"
 #include "ui/console.h"
-#include "ui/TTY/console-tty.h" 	/* for stuff in
+#include "ui/TTY/console-tty.h"	/* for stuff in
 					   character_to_event. needs
 					   refactoring */
 #include "ui/device.h"
-#include "ui/X11/console-x.h" 	/* for x_event_name prototype in
+#include "ui/X11/console-x.h"	/* for x_event_name prototype in
 				   format_event_object. Needs refactoring */
 #include "extents.h"		/* Just for the EXTENTP abort check... */
 #define INCLUDE_EVENTS_H_PRIVATE_SPHERE
@@ -2669,7 +2669,7 @@ This is in the form of a property list (alternating keyword/value pairs).
 		break;
 
 #ifdef EF_USE_ASYNEQ
-                /* are these right here? */
+		/* are these right here? */
 	case eaten_myself_event:
 	case work_started_event:
 	case work_finished_event:

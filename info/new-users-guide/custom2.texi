@@ -11,17 +11,17 @@ function call expressions. Each of these expressions will consist of a
 function name followed by arguments, all surrounded by parentheses. For
 example, to turn on the auto-fill-mode (i.e. break lines automatically
 when they become too long) , put the following  line in your
-@file{init.el} file: 
+@file{init.el} file:
 
 @example
-(add-hook 'text-mode-hook 
+(add-hook 'text-mode-hook
         '(lambda() (auto-fill-mode 1)))
 @end example
 
 @noindent
 Emacs has a function named "turn-on-auto-fill" which is defined as
 "(lambda() (auto-fill-mode 1))". Therefore you can also write the above
-as: 
+as:
 
 @example
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -58,13 +58,13 @@ functions, comments or other keywords  should be displayed in :
 ;;; the function names will now be displayed in blue color
 (set-face-foreground 'font-lock-function-name-face "blue")
 
-;;; the comments will be displayed in forest green 
+;;; the comments will be displayed in forest green
  (set-face-foreground 'font-lock-comment-face "forest green")
 @end example
 
 @noindent
 For other customizations regarding the font-lock face, look at the file
-@file{/usr/local/lib/sxemacs-VERSION/etc/sample.init.el}. 
+@file{/usr/local/lib/sxemacs-VERSION/etc/sample.init.el}.
 
 
 
@@ -155,7 +155,7 @@ If you want to change the value of any other variable, use :
 @end example
 
 @noindent
-"setq" will assign the "new value" to the "variable-name" .  
+"setq" will assign the "new value" to the "variable-name" .
 
 
 If you want a list of the "options" i.e. the variables available for
@@ -208,7 +208,7 @@ these options.
 you find any of them useful, just type them in your @file{init.el} file:
 
 @itemize @bullet
-@item 
+@item
 The following expression will make @key{TAB} in C mode insert a real tab
 character if the cursor or point is in the middle of the line. Now
 hitting the @key{TAB} key will indent a line only if the cursor is at
@@ -243,7 +243,7 @@ value. To change the value to 75 for example, use:
 @end example
 
 @noindent
-This will change the value of this variable globally. 
+This will change the value of this variable globally.
 
 @item
 @findex eval-expression
@@ -257,7 +257,7 @@ without confirmation:
 @noindent
 Now when you use @var{eval-expression}, it will print the value of the
 expression you specify in the @dfn{echo area} without confirming with
-you. 
+you.
 
 @item
 This expression will remove the binding of @kbd{C-x C-c}, because its
@@ -303,9 +303,9 @@ texinfo mode:
 @end example
 
 @noindent
-@xref{Minor Modes}, for information on font-lock mode. 
+@xref{Minor Modes}, for information on font-lock mode.
 
-@item 
+@item
 Rebinds the key @kbd{C-x l} to run the function
 @code{make-symbolic-link}:
 
@@ -349,7 +349,7 @@ example to @key{F2}:
 (global-set-key 'f2 'undo)
 @end example
 
-@item 
+@item
 The following statement will display the current time in the modeline of
 the buffer:
 
@@ -359,7 +359,7 @@ the buffer:
 (display-time)
 @end example
 
-@item 
+@item
 This displays the current line number on which the cursor is present in
 the modeline:
 
@@ -381,7 +381,7 @@ later, you can use the following expression in your @file{init.el} file:
 Now if you use a command like @kbd{C-x C-p} (@code{mark-page}), the text
 will not be highlighted.
 
-@item 
+@item
 To control the number of buffers listed when you select the @b{Buffers}
 menu, you need to set the variable @code{buffers-menu-max-size} to
 whatever value you wish. For example, if you want 20 buffers to be listed
@@ -427,15 +427,4 @@ examples in
 @xref{Init File,,,sxemacs,SXEmacs User's Manual}. You should also look at
 @file{/usr/local/lib/sxemacs-VERSION/etc/sample.init.el}, which is a sample
 @file{init.el} file. It contains some of the commonly desired
-customizations in Emacs. 
-
-
-
-
-
-
-
-
-
-
-
+customizations in Emacs.

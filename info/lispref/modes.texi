@@ -58,7 +58,7 @@ writing a minor mode, which is often difficult).
 the old one to serve two purposes, since it may become harder to use and
 maintain.  Instead, copy and rename an existing major mode definition
 and alter the copy---or define a @dfn{derived mode} (@pxref{Derived
-Modes}).  
+Modes}).
 @ignore @c does not exist here
 For example, Rmail Edit mode, which is in
 @file{lisp/rmailedit.el}, is a major mode that is very similar to
@@ -1478,7 +1478,7 @@ non-@code{nil}.  Then it stops, and returns whatever was returned by
 the last hook function that was called.  If all hook functions return
 @code{nil}, it returns @code{nil} as well.
 @end defun
- 
+
 @defun add-hook hook function &optional append local
 This function is the handy way to add function @var{function} to hook
 variable @var{hook}.  The argument @var{function} may be any valid Lisp

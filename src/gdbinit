@@ -492,4 +492,3 @@ define test_pobj
   printf "Vsxemacs_codename: "
   pobj Vsxemacs_codename
 end
-

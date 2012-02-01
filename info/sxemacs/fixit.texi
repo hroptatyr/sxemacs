@@ -1,11 +1,10 @@
-
 @node Fixit, Files, Search, Top
 @chapter Commands for Fixing Typos
 @cindex typos
 @cindex mistakes, correcting
 
   This chapter describes commands that are especially useful when you
-catch a mistake in your text just after you have made it, or when you 
+catch a mistake in your text just after you have made it, or when you
 change your mind while composing text on line.
 
 @menu

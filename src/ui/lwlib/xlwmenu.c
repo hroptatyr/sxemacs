@@ -569,7 +569,7 @@ static char *parameterize_string(const char *string, const char *value)
 	for (ntimes = 1, percent = string;
 	     (percent = strchr(percent, '%')); ntimes++)
 		percent++;
-	
+
 	res_left = (ntimes * strlen(value)) + strlen(string) + 3;
 	result = XtMalloc(res_left+1);
 	result[res_left] = result[0] = '\0';
@@ -581,9 +581,9 @@ static char *parameterize_string(const char *string, const char *value)
 		off_t offset = percent-string;
 
 		if (percent[1] == '%') {	/* it's a real % */
-			assert( offset >=0 && 
+			assert( offset >=0 &&
 				res_left >= (size_t)(1 + offset));
-					        /* incl % */
+						/* incl % */
 			strncat(result, string, 1 + offset);
 			res_left -= 1 + offset;
 			string = &percent[2];	/* after the second '%' */
@@ -599,7 +599,7 @@ static char *parameterize_string(const char *string, const char *value)
 			} else if (*p == '-') {	/* right pad */
 				right_pad++;
 			} else if (*p == '1') {	/* param and terminator */
-				assert( offset >= 0 && 
+				assert( offset >= 0 &&
 					res_left >= (size_t)offset );
 				res_left -= offset;
 				strncat(result, string, offset);
@@ -618,7 +618,7 @@ static char *parameterize_string(const char *string, const char *value)
 			} else {	/* bogus, copy the format as is */
 				/* out of for() loop */
 				off_t remain = 1 + p - string;
-				assert( remain >=0 && 
+				assert( remain >=0 &&
 					res_left >= (size_t)remain );
 				strncat(result, string, remain);
 				res_left -= remain;

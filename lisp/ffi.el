@@ -51,10 +51,10 @@
   (globally-declare-fboundp
    '(ffi-size-of-type make-ffi-object ffi-canonicalise-type
 		      ffi-basic-type-p ffi-load-library ffi-dlerror
-                      ffi-object-type ffi-fetch ffi-slot-offset
-                      ffi-store ffi-aref ffi-make-pointer
-                      ffi-object-address ffi-call-function
-                      ffi-defun ffi-bind)))
+		      ffi-object-type ffi-fetch ffi-slot-offset
+		      ffi-store ffi-aref ffi-make-pointer
+		      ffi-object-address ffi-call-function
+		      ffi-defun ffi-bind)))
 
 
 (require 'alist)
@@ -65,14 +65,14 @@
   "Create a foreign object of TYPE and set its value to VAL.
 Return created FFI object."
   (let* ((ctype (ffi-canonicalise-type type))
-         (size (cond ((or (eq ctype 'c-string) (eq ctype 'c-data))
-                      (1+ (length val)))
-                     ((and (consp ctype) (eq (car ctype) 'c-data)
-                           (intp (cdr ctype)))
-                      (cdr ctype))
-                     (t
-                      (ffi-size-of-type ctype))))
-         (fo (make-ffi-object type size)))
+	 (size (cond ((or (eq ctype 'c-string) (eq ctype 'c-data))
+		      (1+ (length val)))
+		     ((and (consp ctype) (eq (car ctype) 'c-data)
+			   (intp (cdr ctype)))
+		      (cdr ctype))
+		     (t
+		      (ffi-size-of-type ctype))))
+	 (fo (make-ffi-object type size)))
     (ffi-set fo val)
     fo))
 
@@ -117,7 +117,7 @@ BODY should use `value' to reference typed value."
 (defmacro ffi-translate-foreign (value type translators)
   `(let ((translator (assq ,type ,translators)))
      (if translator
-         (eval (cdr translator))
+	 (eval (cdr translator))
        value)))
 
 (defun ffi-translate-to-foreign (value type)
@@ -137,20 +137,20 @@ BODY should use `value' to reference typed value."
 
     ;; Try to get name from union or struct
     (when (and (null name)
-               (listp type)
-               (memq (car type) '(struct union)))
+	       (listp type)
+	       (memq (car type) '(struct union)))
       (setq name (cadr type)))
 
     (setq ffi-named-types
-          (put-alist name type ffi-named-types))
+	  (put-alist name type ffi-named-types))
 
     ;; Copy translators, if any
     (let ((fft (assq type ffi-type-to-translators))
-          (tft (assq type ffi-type-from-translators)))
+	  (tft (assq type ffi-type-from-translators)))
       (when fft
-        (pushnew (cons name (cdr fft)) ffi-type-to-translators :key #'car))
+	(pushnew (cons name (cdr fft)) ffi-type-to-translators :key #'car))
       (when tft
-        (pushnew (cons name (cdr tft)) ffi-type-from-translators :key #'car)))
+	(pushnew (cons name (cdr tft)) ffi-type-from-translators :key #'car)))
 
     name))
 
@@ -165,21 +165,21 @@ TYPE."
   "Define a new structure of NAME and SLOTS.
 SLOTS are in form (NAME TYPE &key :offset)."
   (let ((forms `(progn
-                  (define-ffi-type ,name (struct ,name ,@slots)))))
+		  (define-ffi-type ,name (struct ,name ,@slots)))))
     (loop for sn in slots
       do (setq sn (car sn))
       do (let ((sym (intern (format "%S->%S" name sn))))
-           (setq forms (append forms
-                               `((defun ,sym (obj)
-                                   (ffi-fetch obj (ffi-slot-offset ',name ',sn)
-                                              (ffi-slot-type ',name ',sn))))))
-           (setq forms
-                 (append forms
-                         `((defsetf ,sym (obj) (nv)
-                             (list 'ffi-store obj
-                                   (list 'ffi-slot-offset '',name '',sn)
-                                   (list 'ffi-slot-type '',name '',sn)
-                                   nv)))))))
+	   (setq forms (append forms
+			       `((defun ,sym (obj)
+				   (ffi-fetch obj (ffi-slot-offset ',name ',sn)
+					      (ffi-slot-type ',name ',sn))))))
+	   (setq forms
+		 (append forms
+			 `((defsetf ,sym (obj) (nv)
+			     (list 'ffi-store obj
+				   (list 'ffi-slot-offset '',name '',sn)
+				   (list 'ffi-slot-type '',name '',sn)
+				   nv)))))))
     forms))
 
 ;;;###autoload
@@ -192,40 +192,40 @@ NOTE: returned non-nil value is actuall canonicalised type."
   (setq type (ffi-canonicalise-type type))
   (if (cond ((ffi-basic-type-p type) type)
 
-            ;; Pointer
-            ((or (eq type 'pointer)
-                 (and (listp type)
-                      (eq (car type) 'pointer)
-                      (ffi-type-p (cadr type)))) type)
+	    ;; Pointer
+	    ((or (eq type 'pointer)
+		 (and (listp type)
+		      (eq (car type) 'pointer)
+		      (ffi-type-p (cadr type)))) type)
 
-            ;; Maybe TYPE is declared
-            ((ffi-declared-type-p type) type)
+	    ;; Maybe TYPE is declared
+	    ((ffi-declared-type-p type) type)
 
-            ;; Struct or Union
-            ((and (listp type)
-                  (memq (car type) '(struct union)))
-             type)
+	    ;; Struct or Union
+	    ((and (listp type)
+		  (memq (car type) '(struct union)))
+	     type)
 ;             (not (memq nil
 ;                        (mapcar #'(lambda (slot-type)
 ;                                    (ffi-type-p (cadr slot-type)))
 ;                                (cddr type)))))
 
-            ;; Complex c-data
-            ((and (consp type) (eq (car type) 'c-data)
-                  (or (numberp (cdr type)) (null (cdr type))))
-             type)
+	    ;; Complex c-data
+	    ((and (consp type) (eq (car type) 'c-data)
+		  (or (numberp (cdr type)) (null (cdr type))))
+	     type)
 
-            ;; Array
-            ((and (listp type) (eq 'array (car type))
-                  (ffi-type-p (cadr type))
-                  (integerp (caddr type))
-                  (> (caddr type) 0))
-             type)
+	    ;; Array
+	    ((and (listp type) (eq 'array (car type))
+		  (ffi-type-p (cadr type))
+		  (integerp (caddr type))
+		  (> (caddr type) 0))
+	     type)
 
-            ;; Function
-            ((and (listp type) (eq 'function (car type))
-                  (ffi-type-p (cadr type)))
-             (not (memq nil (mapcar 'ffi-type-p (cddr type))))))
+	    ;; Function
+	    ((and (listp type) (eq 'function (car type))
+		  (ffi-type-p (cadr type)))
+	     (not (memq nil (mapcar 'ffi-type-p (cddr type))))))
       type                              ; TYPE is valid FFI type
 
     (when signal-p
@@ -247,11 +247,11 @@ $LD_LIBRARY_PATH environment variable or the more global ld.so.cache."
       (error "Can't load library `%s': %s" libname (ffi-dlerror)))
 
     (setq ffi-loaded-libraries
-          (put-alist libname fo ffi-loaded-libraries))
+	  (put-alist libname fo ffi-loaded-libraries))
     fo))
 
 (defun* ffi-get (fo &key (type (ffi-object-type fo)) (off 0)
-                    (from-call nil))
+		    (from-call nil))
   "Return FO's value.
 Optional key :TYPE may be used to cast FO to the specified
 type, it defaults to the object's assigned type.
@@ -260,45 +260,45 @@ defaults to 0.
 FROM-CALL is magic, do not use it!"
   (let ((ctype (ffi-canonicalise-type type)))
     (cond ((ffi-basic-type-p ctype)
-           (ffi-fetch fo off type))
-          ;; Arrays
-          ((and (listp ctype)
-                (eq (car ctype) 'array))
-           (vconcat
-            (loop for idx from 0 below (third ctype)
-              collect (ffi-get
-                       fo :type (second ctype)
-                       :off (+ off (* idx (ffi-size-of-type
-                                           (second ctype))))))))
+	   (ffi-fetch fo off type))
+	  ;; Arrays
+	  ((and (listp ctype)
+		(eq (car ctype) 'array))
+	   (vconcat
+	    (loop for idx from 0 below (third ctype)
+	      collect (ffi-get
+		       fo :type (second ctype)
+		       :off (+ off (* idx (ffi-size-of-type
+					   (second ctype))))))))
 
-          ;; Structures
-          ((and (listp ctype)
-                (eq (car ctype) 'struct))
-           (loop for sslot in (cddr ctype)
-             collect (list (first sslot)
-                           (ffi-get
-                            fo :type (second sslot)
-                            :off (+ off (ffi-slot-offset
-                                         ctype (first sslot)))))))
+	  ;; Structures
+	  ((and (listp ctype)
+		(eq (car ctype) 'struct))
+	   (loop for sslot in (cddr ctype)
+	     collect (list (first sslot)
+			   (ffi-get
+			    fo :type (second sslot)
+			    :off (+ off (ffi-slot-offset
+					 ctype (first sslot)))))))
 
-          ;; Extremely special case for safe-string!
-          ((eq type 'safe-string)
-           (unless (ffi-null-p fo)
-             (ffi-fetch fo off 'c-string)))
+	  ;; Extremely special case for safe-string!
+	  ((eq type 'safe-string)
+	   (unless (ffi-null-p fo)
+	     (ffi-fetch fo off 'c-string)))
 
-          ((and (not from-call)
-                (or (eq ctype 'pointer)
-                    (and (listp ctype)
-                         (eq (car ctype) 'pointer)
-                         (ffi-type-p (cadr ctype)))))
-           (if (ffi-null-p fo)
-               nil
-             (ffi-fetch fo off type)))
+	  ((and (not from-call)
+		(or (eq ctype 'pointer)
+		    (and (listp ctype)
+			 (eq (car ctype) 'pointer)
+			 (ffi-type-p (cadr ctype)))))
+	   (if (ffi-null-p fo)
+	       nil
+	     (ffi-fetch fo off type)))
 
-          (t
-           ;; Can't get value in proper form,
-           ;; just return FO unmodified
-           fo))))
+	  (t
+	   ;; Can't get value in proper form,
+	   ;; just return FO unmodified
+	   fo))))
 
 (defun ffi-slot-type (type slot)
   "Return TYPE's SLOT type.
@@ -307,7 +307,7 @@ TYPE must be of structure or union type."
     (unless (memq (car ctype) '(struct union))
       (error "Not struct or union: %S" type))
     (or (cadr (find slot (cddr ctype) :key #'car :test #'eq))
-        (error "No such slot: %S" slot))))
+	(error "No such slot: %S" slot))))
 
 (defun ffi-slot (fo slot)
   "Setf-able slot accessor.
@@ -324,15 +324,15 @@ FO's SLOT."
 (defun ffi-set (fo val)
   "Set FO's foreign value to VAL."
   (let* ((type (ffi-object-type fo))
-         (ctype (ffi-canonicalise-type type)))
+	 (ctype (ffi-canonicalise-type type)))
     (if (or (ffi-basic-type-p ctype)
-            (eq ctype 'pointer))
-        (ffi-store fo 0 type val)
+	    (eq ctype 'pointer))
+	(ffi-store fo 0 type val)
 
       ;; Pointer type, same as for basic
       (when (or (eq ctype 'pointer)
-                (and (listp ctype) (eq (car ctype) 'pointer)))
-        (ffi-store fo 0 type val))
+		(and (listp ctype) (eq (car ctype) 'pointer)))
+	(ffi-store fo 0 type val))
 
       ;; TODO: Compound type
       )))
@@ -353,17 +353,17 @@ Error will be signaled if FO-POINTER is not of pointer type."
      (defun ,fsym ,args
        ,doc-string
        (let ((ffiargs nil)
-             (ret nil))
-         (mapcar* #'(lambda (type arg)
-                      (setq ffiargs (cons
-                                     (if (ffi-object-p arg)
-                                         arg
-                                       (ffi-create-fo type arg))
-                                     ffiargs)))
-                  (cddr ,ftype) (list ,@args))
-         (setq ffiargs (nreverse ffiargs))
-         (setq ret (apply #'ffi-call-function ,fsym ffiargs))
-         (ffi-get ret :from-call t)))))
+	     (ret nil))
+	 (mapcar* #'(lambda (type arg)
+		      (setq ffiargs (cons
+				     (if (ffi-object-p arg)
+					 arg
+				       (ffi-create-fo type arg))
+				     ffiargs)))
+		  (cddr ,ftype) (list ,@args))
+	 (setq ffiargs (nreverse ffiargs))
+	 (setq ret (apply #'ffi-call-function ,fsym ffiargs))
+	 (ffi-get ret :from-call t)))))
 
 (put 'define-ffi-function 'lisp-indent-function 'defun)
 
@@ -411,107 +411,107 @@ Both functions return nil if the symbol is not in the enumeration."
 
   ;; now build that pig of code
   (list 'prog1
-        ;; define the constant `name'
-        (list 'defconst name nil
-              docstring)
-        ;; fill in the values
-        (list 'setq name
-              (cons 'list
-                    (let ((tmpspecs specs)
-                          (i 0)
-                          (delayed (dllist))
-                          (result (dllist)))
-                      (while (car tmpspecs)
-                        (if (eq (cadr tmpspecs) '=)
-                            ;; this is the alias case
-                            ;; we append a cons (left-of-= . right-of-=)
-                            ;; to the dllist `delayed'
-                            ;; if `right-of-=' (i.e. the caddr) is an integer
-                            ;; we set the counter `i' to that value on go on
-                            ;; from there
-                            (let ((leftof (car tmpspecs))
-                                  (rightof (caddr tmpspecs)))
+	;; define the constant `name'
+	(list 'defconst name nil
+	      docstring)
+	;; fill in the values
+	(list 'setq name
+	      (cons 'list
+		    (let ((tmpspecs specs)
+			  (i 0)
+			  (delayed (dllist))
+			  (result (dllist)))
+		      (while (car tmpspecs)
+			(if (eq (cadr tmpspecs) '=)
+			    ;; this is the alias case
+			    ;; we append a cons (left-of-= . right-of-=)
+			    ;; to the dllist `delayed'
+			    ;; if `right-of-=' (i.e. the caddr) is an integer
+			    ;; we set the counter `i' to that value on go on
+			    ;; from there
+			    (let ((leftof (car tmpspecs))
+				  (rightof (caddr tmpspecs)))
 
-                              ;; pop off the cruft
-                              (setq tmpspecs (nthcdr 3 tmpspecs))
+			      ;; pop off the cruft
+			      (setq tmpspecs (nthcdr 3 tmpspecs))
 
-                              (cond ((intp rightof)
-                                     ;; reset the counter
-                                     (setq i rightof)
-                                     ;; prepend leftof again
-                                     (setq tmpspecs
-                                           (cons leftof tmpspecs)))
-                                    (t
-                                     ;; push the stuff to the delayed list
-                                     (dllist-append
-                                      delayed (cons leftof rightof)))))
+			      (cond ((intp rightof)
+				     ;; reset the counter
+				     (setq i rightof)
+				     ;; prepend leftof again
+				     (setq tmpspecs
+					   (cons leftof tmpspecs)))
+				    (t
+				     ;; push the stuff to the delayed list
+				     (dllist-append
+				      delayed (cons leftof rightof)))))
 
-                          ;; ordinary case
-                          (dllist-append result (cons (car tmpspecs) i))
-                          (setq i (1+ i))
-                          (setq tmpspecs (cdr tmpspecs))))
+			  ;; ordinary case
+			  (dllist-append result (cons (car tmpspecs) i))
+			  (setq i (1+ i))
+			  (setq tmpspecs (cdr tmpspecs))))
 
-                      ;; convert `result' to alist
-                      ;; this is necessary here, since we need the alist
-                      ;; property right now to look up the delayed symbols
-                      (setq result (dllist-to-list result))
+		      ;; convert `result' to alist
+		      ;; this is necessary here, since we need the alist
+		      ;; property right now to look up the delayed symbols
+		      (setq result (dllist-to-list result))
 
-                      ;; process those delayed thingies
-                      ;; these are basically conses (alias . resolved-symbol)
-                      ;; we lookup `resolved-symbol' in the alist `result'
-                      ;; first and assign (alias . value-of-resolved-symbol)
-                      ;; if that fails, we look at the cars of the delayed
-                      ;; list if we can find `resolved-symbol' there
-                      ;; if so, we re-append the whole cell to the delayed list
-                      ;; if not, we try to find a huge horsewhip to treat
-                      ;; the user to a little surprise :)
-                      (while (dllist-car delayed)
-                        (let ((alias (dllist-pop-car delayed)))
-                          (let ((val (cdr-safe (assoc (cdr alias) result))))
-                            (if (null val)
-                                ;; prevent infinite loops when the user
-                                ;; is too stupid to give us a valid alias
-                                (when (let ((presentp))
-                                        (mapc-internal
-                                         #'(lambda (item)
-                                             (and (eq (cdr alias) (car item))
-                                                  (setq presentp t)))
-                                         delayed)
-                                        presentp)
-                                    (dllist-append delayed alias))
-                              (setq result
-                                    (cons (cons (car alias) val)
-                                          result))))))
+		      ;; process those delayed thingies
+		      ;; these are basically conses (alias . resolved-symbol)
+		      ;; we lookup `resolved-symbol' in the alist `result'
+		      ;; first and assign (alias . value-of-resolved-symbol)
+		      ;; if that fails, we look at the cars of the delayed
+		      ;; list if we can find `resolved-symbol' there
+		      ;; if so, we re-append the whole cell to the delayed list
+		      ;; if not, we try to find a huge horsewhip to treat
+		      ;; the user to a little surprise :)
+		      (while (dllist-car delayed)
+			(let ((alias (dllist-pop-car delayed)))
+			  (let ((val (cdr-safe (assoc (cdr alias) result))))
+			    (if (null val)
+				;; prevent infinite loops when the user
+				;; is too stupid to give us a valid alias
+				(when (let ((presentp))
+					(mapc-internal
+					 #'(lambda (item)
+					     (and (eq (cdr alias) (car item))
+						  (setq presentp t)))
+					 delayed)
+					presentp)
+				    (dllist-append delayed alias))
+			      (setq result
+				    (cons (cons (car alias) val)
+					  result))))))
 
-                      ;; return `result'
-                      (mapcar
-                       #'(lambda (rescell)
-                           (list 'cons
-                                 (list 'quote (car rescell))
-                                 (list
-                                  'let
-                                  (list (list 'ffival
-                                              (list 'ffi-create-fo
-                                                    ''unsigned-int
-                                                    (cdr rescell))))
-                                  (list 'put 'ffival ''value (cdr rescell))
-                                  'ffival)))
-                       result))))
+		      ;; return `result'
+		      (mapcar
+		       #'(lambda (rescell)
+			   (list 'cons
+				 (list 'quote (car rescell))
+				 (list
+				  'let
+				  (list (list 'ffival
+					      (list 'ffi-create-fo
+						    ''unsigned-int
+						    (cdr rescell))))
+				  (list 'put 'ffival ''value (cdr rescell))
+				  'ffival)))
+		       result))))
 
-        ;; define the lookup function
-        (list 'defun name '(symbol)
-              (format "Lookup the value of SYMBOL in the enumeration `%s'."
-                      name)
-              (list 'cdr-safe
-                    (list 'assq 'symbol
-                          name)))
+	;; define the lookup function
+	(list 'defun name '(symbol)
+	      (format "Lookup the value of SYMBOL in the enumeration `%s'."
+		      name)
+	      (list 'cdr-safe
+		    (list 'assq 'symbol
+			  name)))
 
-        ;; define the lookup function for the elisp value
-        (list 'defun (intern (format "%s-value" name)) '(symbol)
-              (format (concat "Lookup the elisp value (an integer) of SYMBOL "
-                              "in the enumeration `%s'.")
-                      name)
-              (list 'get (list name 'symbol) ''value))))
+	;; define the lookup function for the elisp value
+	(list 'defun (intern (format "%s-value" name)) '(symbol)
+	      (format (concat "Lookup the elisp value (an integer) of SYMBOL "
+			      "in the enumeration `%s'.")
+		      name)
+	      (list 'get (list name 'symbol) ''value))))
 (put 'ffi-enum 'lisp-indent-function 'defun)
 ;;; example
 ;; (ffi-enum example-enum
@@ -535,27 +535,27 @@ For example:
   `(progn
      (define-ffi-type ,type-name int)
      (let* ((cv 0)
-            (fev (mapcar #'(lambda (sv)
-                             (prog1
-                                 (if (and (listp sv)
-                                          (symbolp (car sv))
-                                          (numberp (cadr sv)))
-                                     (prog1
-                                         (cons (car sv) (cadr sv))
-                                       (setq cv (cadr sv)))
-                                   (cons sv cv))
-                               (incf cv)))
-                         '(,@spec))))
+	    (fev (mapcar #'(lambda (sv)
+			     (prog1
+				 (if (and (listp sv)
+					  (symbolp (car sv))
+					  (numberp (cadr sv)))
+				     (prog1
+					 (cons (car sv) (cadr sv))
+				       (setq cv (cadr sv)))
+				   (cons sv cv))
+			       (incf cv)))
+			 '(,@spec))))
        (put ',type-name 'ffi-enum-values fev))
      ;; Translators
      (define-ffi-translator-to-foreign ,type-name
        (or (cdr (assq value (get ',type-name 'ffi-enum-values)))
-           0))
+	   0))
      (define-ffi-translator-from-foreign ,type-name
        (or (car (find-if #'(lambda (v)
-                             (= (cdr v) value))
-                         (get ',type-name 'ffi-enum-values)))
-           'undefined-enum-value))))
+			     (= (cdr v) value))
+			 (get ',type-name 'ffi-enum-values)))
+	   'undefined-enum-value))))
 
 (defun ffi-enum-values (enum-type)
   "Return alist for ENUM-TYPE.
@@ -579,7 +579,7 @@ For example:
 To get foreign object for this callback function use `ffi-callback-fo'
 and pass the name of the callback."
   (let ((argnames (mapcar #'first args))
-        (argtypes (mapcar #'second args)))
+	(argtypes (mapcar #'second args)))
   `(progn
      (defun ,sym ,argnames
        ,@body)
@@ -644,7 +644,7 @@ and pass the name of the callback."
   (etypecase name
     (list (second name))
     (string (intern (format "%s%s%s" (if fun-p "" "*")
-                            (downcase (substitute ?- ?_ name)) (if fun-p "" "*"))))
+			    (downcase (substitute ?- ?_ name)) (if fun-p "" "*"))))
     (symbol name)))
 
 (defun cffi:foreign-var-name (name)
@@ -653,7 +653,7 @@ and pass the name of the callback."
     (list (first name))
     (string name)
     (symbol (let ((dname (downcase (symbol-name name))))
-              (replace-in-string (substitute ?_ ?- dname) "\\*" "")))))
+	      (replace-in-string (substitute ?_ ?- dname) "\\*" "")))))
 
 (defun cffi:get-var-pointer (symbol)
   "Return a pointer to the foreign global variable relative to SYMBOL."
@@ -674,53 +674,53 @@ and pass the name of the callback."
     (unless (null docstring)
       (setq in-args (cons docstring in-args)))
     (setq docstring
-          (format "Lisp variant for `%s' foreign function."
-                  (cffi:foreign-var-name name))))
+	  (format "Lisp variant for `%s' foreign function."
+		  (cffi:foreign-var-name name))))
 
   (let* ((nsl (cffi:lisp-var-name name t))
-         (nsf (cffi:foreign-var-name name))
-         (with-rest (when (eq (car (last in-args)) '&rest)
-                      (setq in-args (butlast in-args))
-                      t))
-         (as (mapcar 'first in-args))
-         (at (mapcar 'second in-args))
-         (flet-form) (defun-form nil))
+	 (nsf (cffi:foreign-var-name name))
+	 (with-rest (when (eq (car (last in-args)) '&rest)
+		      (setq in-args (butlast in-args))
+		      t))
+	 (as (mapcar 'first in-args))
+	 (at (mapcar 'second in-args))
+	 (flet-form) (defun-form nil))
     (setq flet-form
-          (append (list `(mapcar* #'setarg ',at (list ,@as)))
-                  (when with-rest
-                    (list '(while rest-args
-                             (if (ffi-object-p (car rest-args))
-                                 (progn
-                                   (setarg (ffi-object-type (car rest-args))
-                                           (car rest-args))
-                                   (setq rest-args (cdr rest-args)))
-                             (setarg (car rest-args) (cadr rest-args))
-                             (setq rest-args (cddr rest-args))))))
-                  (list '(setq ffiargs (nreverse ffiargs)))
-                  (list `(setq ret (apply #'ffi-call-function
-                                          (get ',nsl 'ffi-fun) ffiargs)))
-                  (list `(ffi-get ret :from-call t))))
+	  (append (list `(mapcar* #'setarg ',at (list ,@as)))
+		  (when with-rest
+		    (list '(while rest-args
+			     (if (ffi-object-p (car rest-args))
+				 (progn
+				   (setarg (ffi-object-type (car rest-args))
+					   (car rest-args))
+				   (setq rest-args (cdr rest-args)))
+			     (setarg (car rest-args) (cadr rest-args))
+			     (setq rest-args (cddr rest-args))))))
+		  (list '(setq ffiargs (nreverse ffiargs)))
+		  (list `(setq ret (apply #'ffi-call-function
+					  (get ',nsl 'ffi-fun) ffiargs)))
+		  (list `(ffi-get ret :from-call t))))
     (setq defun-form
-          (append `(defun ,nsl)
-                  (list (if with-rest
-                            (append as '(&rest rest-args))
-                          as))
-                  (list docstring)
-                  (list (append
-                         '(let (ffiargs ret))
-                         (list (append
-                                '(flet ((setarg (type arg)
-                                          (setq ffiargs
-                                                (cons
-                                                 (if (ffi-object-p arg)
-                                                     arg
-                                                   (ffi-create-fo type arg))
-                                                 ffiargs)))))
-                                flet-form))
-                         ))))
+	  (append `(defun ,nsl)
+		  (list (if with-rest
+			    (append as '(&rest rest-args))
+			  as))
+		  (list docstring)
+		  (list (append
+			 '(let (ffiargs ret))
+			 (list (append
+				'(flet ((setarg (type arg)
+					  (setq ffiargs
+						(cons
+						 (if (ffi-object-p arg)
+						     arg
+						   (ffi-create-fo type arg))
+						 ffiargs)))))
+				flet-form))
+			 ))))
     (append '(progn) (list defun-form)
-            (list `(put ',nsl 'ffi-fun
-                        (ffi-defun '(function ,ret-type ,@at) ,nsf))))))
+	    (list `(put ',nsl 'ffi-fun
+			(ffi-defun '(function ,ret-type ,@at) ,nsf))))))
 
 (put 'cffi:defcfun 'lisp-indent-function 'defun)
 
@@ -747,15 +747,15 @@ pointer in VAR is invalid beyond the dynamic extent of BODY, and
 may be stack-allocated if supported by the implementation.  If
 SIZE-VAR is supplied, it will be bound to SIZE during BODY."
   (let ((var (car spec))
-        (size (cadr spec))
-        (size-var (caddr spec)))
+	(size (cadr spec))
+	(size-var (caddr spec)))
     (unless size-var
       (setf size-var (gensym "SIZE")))
     `(let* ((,size-var ,size)
-            (,var (cffi:foreign-alloc ,size-var)))
+	    (,var (cffi:foreign-alloc ,size-var)))
        (unwind-protect
-           (progn ,@body)
-         (cffi:foreign-free ,var)))))
+	   (progn ,@body)
+	 (cffi:foreign-free ,var)))))
 
 ;;;# Misc. Pointer Operations
 
@@ -763,9 +763,9 @@ SIZE-VAR is supplied, it will be bound to SIZE during BODY."
   "Return non-nil if ffi objct FO has pointer type."
   (let ((ctype (ffi-canonicalise-type (ffi-object-type fo))))
     (or (eq ctype 'pointer)
-        (and (listp ctype)
-             (eq (car ctype) 'pointer)
-             (ffi-type-p (cadr ctype))))))
+	(and (listp ctype)
+	     (eq (car ctype) 'pointer)
+	     (ffi-type-p (cadr ctype))))))
 
 (defalias 'cffi:make-pointer 'ffi-make-pointer)
 (defalias 'ffi-pointer-address 'ffi-object-address)

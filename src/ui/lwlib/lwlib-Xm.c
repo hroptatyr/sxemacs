@@ -1195,7 +1195,7 @@ make_dialog(char *name, Widget parent, Boolean pop_up_p,
 
 	for (i = 0; i < right_buttons; i++) {
 		char button_name[16];
-		int sz = snprintf(button_name, sizeof(button_name), 
+		int sz = snprintf(button_name, sizeof(button_name),
 				  "button%d", left_buttons + i + 1);
 		assert(sz >= 0 && sz < sizeof(button_name));
 		ac = 0;

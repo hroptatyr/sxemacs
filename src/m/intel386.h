@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /* Synched up with: FSF 19.31. */
 
-/* The following line tells the configuration script what sort of 
+/* The following line tells the configuration script what sort of
    operating system this machine is likely to run.
    USUAL-OPSYS="note"
 
@@ -60,7 +60,7 @@ NOTE-END */
    with no extra dummy args.  On USG and XENIX,
    NO_REMAP says this isn't used. */
 
-/* Mly 16-Jan-96 16:38:32: this is part of a prototype -- same bug present in 
+/* Mly 16-Jan-96 16:38:32: this is part of a prototype -- same bug present in
    other m*.h files */
 #define CRT0_DUMMIES int bogus_fp,
 

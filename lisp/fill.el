@@ -416,7 +416,7 @@ space does not end a sentence, so don't break a line there."
 	  ;; end patch
 	  (goto-char from)
 	  (skip-chars-forward " \t")
- 	  (if (and nosqueeze (not (eq justify 'full)))
+	  (if (and nosqueeze (not (eq justify 'full)))
 	      nil
 	    (canonically-space-region (or squeeze-after (point)) (point-max))
 	    (goto-char (point-max))
@@ -1020,7 +1020,7 @@ MAIL-FLAG for a mail message, i. e. don't fill header lines."
 			  (looking-at "[ \t]*$")))
 	    (if (looking-at "[ \t]*[^ \t\n]+:")
 		(search-forward "\n\n" nil 'move)
-                (forward-line 1))))
+		(forward-line 1))))
       (narrow-to-region (point) max)
       ;; Loop over paragraphs.
       (while (progn (skip-chars-forward " \t\n") (not (eobp)))
@@ -1061,11 +1061,11 @@ MAIL-FLAG for a mail message, i. e. don't fill header lines."
 					 (progn
 					   (forward-char (length fill-prefix))
 					   (looking-at paragraph-separate))))))
-                            ;; If this line has more or less indent
-                            ;; than the fill prefix wants, end the paragraph.
-                            (and (looking-at fill-prefix-regexp)
-                                 (save-excursion
-                                   (not
+			    ;; If this line has more or less indent
+			    ;; than the fill prefix wants, end the paragraph.
+			    (and (looking-at fill-prefix-regexp)
+				 (save-excursion
+				   (not
 				    (progn
 				      (forward-char (length fill-prefix))
 				      (or (looking-at paragraph-separate)

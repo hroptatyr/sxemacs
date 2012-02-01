@@ -315,7 +315,7 @@ do {									\
   INITIALIZE_SPECIFIER_TYPE (type, obj_name, pred_sym);			\
   type##_specifier_methods->extra_data_size =				\
     sizeof (struct type##_specifier);					\
-  type##_specifier_methods->extra_description = 			\
+  type##_specifier_methods->extra_description =			\
     type##_specifier_description;					\
 } while (0)
 

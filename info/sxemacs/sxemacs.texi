@@ -122,12 +122,12 @@ Indices, nodes containing large menus
 Important General Concepts
 * Frame::      How to interpret what you see on the screen.
 * Keystrokes::  Keyboard gestures SXEmacs recognizes.
-* Pull-down Menus:: 
+* Pull-down Menus::
                 The SXEmacs Pull-down Menus available under X.
-* Entering Emacs::    
+* Entering Emacs::
                 Starting Emacs from the shell.
 * Exiting::     Stopping or killing SXEmacs.
-* Command Switches::  
+* Command Switches::
                 Hairy startup options.
 * Startup Paths::
                 How SXEmacs finds Directories and Files.
@@ -142,7 +142,7 @@ Fundamental Editing Commands
 
 Important Text-Changing Commands
 * Mark::        The mark: how to delimit a ``region'' of text.
-* Mouse Selection:: 
+* Mouse Selection::
                 Selecting text with the mouse.
 * Additional Mouse Operations::
                 Other operations available from the mouse.
@@ -204,11 +204,11 @@ already listed, mentioned here so you can get to them in one step:
 
 The Organization of the Frame
 
-* Point::	        The place in the text where editing commands operate.  
-* Echo Area::           Short messages appear at the bottom of the frame.  
-* Mode Line::	        Interpreting the mode line.  
-* SXEmacs under X::      Some information on using SXEmacs under the X 
-                        Window System. 
+* Point::	        The place in the text where editing commands operate.
+* Echo Area::           Short messages appear at the bottom of the frame.
+* Mode Line::	        Interpreting the mode line.
+* SXEmacs under X::      Some information on using SXEmacs under the X
+                        Window System.
 
 Keystrokes
 
@@ -222,16 +222,16 @@ Keystrokes
 * Super and Hyper Keys::     Adding modifier keys on certain keyboards.
 * Character Representation:: How characters appear in SXEmacs buffers.
 * Commands::                 How commands are bound to key sequences.
-                    
+
 Pull-down Menus
 
 * File Menu::           Items on the File menu.
 * Edit Menu::           Items on the Edit menu.
 * Apps Menu::		Items on the Apps menu.
-* Options Menu::        Items on the Options menu. 
+* Options Menu::        Items on the Options menu.
 * Buffers Menu::        Information about the Buffers menu.
 * Tools Menu::		Items on the Tools menu.
-* Help Menu::           Items on the Help menu. 
+* Help Menu::           Items on the Help menu.
 * Menu Customization::  Adding and removing menu items and related
                         operations.
 
@@ -364,7 +364,7 @@ Version Control
 				  to check files in or out.
 * Log Entries::			Logging your changes.
 * Change Logs and VC::		Generating a change log file from log
-				  entries. 
+				  entries.
 * Old Versions::		Examining and comparing old versions.
 * VC Status::			Commands to view the VC status of files and
 				  look at log entries.
@@ -473,10 +473,10 @@ Indentation for Programs
 
 Tags Tables
 
-* Tag Syntax::		Tag syntax for various types of code and text files.  
+* Tag Syntax::		Tag syntax for various types of code and text files.
 * Create Tags Table::	Creating a tags table with @code{etags}.
 * Select Tags Table::	How to visit a tags table.
-* Find Tag::		Commands to find the definition of a specific tag. 
+* Find Tag::		Commands to find the definition of a specific tag.
 * Tags Search::		Using a tags table for searching and replacing.
 * List Tags::		Listing and finding tags defined in a file.
 
@@ -555,8 +555,8 @@ Customization
 * Syntax::          The syntax table controls how words and expressions
                      are parsed.
 * Init File::       How to write common customizations in the init file.
-* Audible Bell::    Changing how SXEmacs sounds the bell. 
-* Faces::           Changing the fonts and colors of a region of text. 
+* Audible Bell::    Changing how SXEmacs sounds the bell.
+* Faces::           Changing the fonts and colors of a region of text.
 * X Resources::	    X resources controlling various aspects of the
                      behavior of SXEmacs.
 

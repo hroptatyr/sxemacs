@@ -383,10 +383,10 @@ jpeg_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		Extcount len;
 
 #ifdef HAVE_FFI
-                if (EFFIOP(data)) {
-                        bytes = XEFFIO(data)->fostorage;
-                        len = XEFFIO(data)->storage_size;
-                } else
+		if (EFFIOP(data)) {
+			bytes = XEFFIO(data)->fostorage;
+			len = XEFFIO(data)->storage_size;
+		} else
 #endif  /* HAVE_FFI */
 		/* #### This is a definite problem under Mule due to the amount of
 		   stack data it might allocate.  Need to be able to convert and
@@ -660,10 +660,10 @@ gif_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 				(VoidPtr) & gif_err);
 
 #ifdef HAVE_FFI
-                if (EFFIOP(data)) {
-                        bytes = XEFFIO(data)->fostorage;
-                        len = XEFFIO(data)->storage_size;
-                } else
+		if (EFFIOP(data)) {
+			bytes = XEFFIO(data)->fostorage;
+			len = XEFFIO(data)->storage_size;
+		} else
 #endif  /* HAVE_FFI */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data, ALLOCA, (bytes, len),
 				   Qbinary);
@@ -951,10 +951,10 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		assert(!NILP(data));
 
 #ifdef HAVE_FFI
-                if (EFFIOP(data)) {
-                        bytes = XEFFIO(data)->fostorage;
-                        len = XEFFIO(data)->storage_size;
-                } else
+		if (EFFIOP(data)) {
+			bytes = XEFFIO(data)->fostorage;
+			len = XEFFIO(data)->storage_size;
+		} else
 #endif  /* HAVE_FFI */
 		/* #### This is a definite problem under Mule due to the amount of
 		   stack data it might allocate.  Need to think about using Lstreams */
@@ -988,11 +988,11 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		for (y = 0; y < height; y++) {
 			row_pointers[y] = NULL;
 		}
-		
+
 		for (y = 0; y < height; y++) {
-		 	row_pointers[y] = unwind.eimage + (width * 3 * y);
+			row_pointers[y] = unwind.eimage + (width * 3 * y);
 		}
-		 
+
 		{
 			/* if the png specifies a background chunk, go ahead and
 			 * use it, else use what we can get
@@ -1061,8 +1061,8 @@ png_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		 * of this yet, but it's not going to hurt, and you
 		 * never know... one of these days... --SY.
 		 */
-  		if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
-  			png_set_tRNS_to_alpha(png_ptr);
+		if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+			png_set_tRNS_to_alpha(png_ptr);
 		/* Turn on interlace handling */
 		if (interlace_type == PNG_INTERLACE_ADAM7)
 			passes = png_set_interlace_handling(png_ptr);
@@ -1290,10 +1290,10 @@ tiff_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		assert(!NILP(data));
 
 #ifdef HAVE_FFI
-                if (EFFIOP(data)) {
-                        bytes = XEFFIO(data)->fostorage;
-                        len = XEFFIO(data)->storage_size;
-                } else
+		if (EFFIOP(data)) {
+			bytes = XEFFIO(data)->fostorage;
+			len = XEFFIO(data)->storage_size;
+		} else
 #endif  /* HAVE_FFI */
 		/* #### This is a definite problem under Mule due to the amount of
 		   stack data it might allocate.  Think about Lstreams... */
@@ -1625,10 +1625,10 @@ rawrgb_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		assert(!NILP(data));
 
 #ifdef HAVE_FFI
-                if (EFFIOP(data)) {
-                        bytes = XEFFIO(data)->fostorage;
-                        len = XEFFIO(data)->storage_size;
-                } else
+		if (EFFIOP(data)) {
+			bytes = XEFFIO(data)->fostorage;
+			len = XEFFIO(data)->storage_size;
+		} else
 #endif  /* HAVE_FFI */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data,
 				   ALLOCA, (bytes, len), Qbinary);
@@ -1691,10 +1691,10 @@ rawrgba_instantiate(Lisp_Object image_instance, Lisp_Object instantiator,
 		assert(!NILP(data));
 
 #ifdef HAVE_FFI
-                if (EFFIOP(data)) {
-                        bytes = XEFFIO(data)->fostorage;
-                        len = XEFFIO(data)->storage_size;
-                } else
+		if (EFFIOP(data)) {
+			bytes = XEFFIO(data)->fostorage;
+			len = XEFFIO(data)->storage_size;
+		} else
 #endif  /* HAVE_FFI */
 		TO_EXTERNAL_FORMAT(LISP_STRING, data,
 				   ALLOCA, (bytes, len), Qbinary);
@@ -1736,10 +1736,10 @@ void syms_of_glyphs_eimage(void)
 static void check_valid_ffio_or_string(Lisp_Object data)
 {
 #ifdef HAVE_FFI
-        if (!EFFIOP(data) && !STRINGP(data))
-                dead_wrong_type_argument(Qstringp, data);
+	if (!EFFIOP(data) && !STRINGP(data))
+		dead_wrong_type_argument(Qstringp, data);
 #else
-        CHECK_STRING(data);
+	CHECK_STRING(data);
 #endif  /* HAVE_FFI */
 }
 

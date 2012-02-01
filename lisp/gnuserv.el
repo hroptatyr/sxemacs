@@ -127,7 +127,7 @@ only argument, and its return value will be interpreted as above."
   :tag "Gnuserv Frame"
   :type '(radio (const :tag "Create new frame each time" nil)
 		(const :tag "Use selected frame" t)
-	        (function-item :tag "Use main Emacs frame"
+		(function-item :tag "Use main Emacs frame"
 			       gnuserv-main-frame-function)
 		(function-item :tag "Use visible frame, otherwise create new"
 			       gnuserv-visible-frame-function)
@@ -229,11 +229,11 @@ will request editing of several files.
 
 ID       - Client id (integer).
 BUFFERS  - List of buffers that \"belong\" to the client.
-           NOTE: one buffer can belong to several clients.
+	   NOTE: one buffer can belong to several clients.
 DEVICE   - The device this client is on.  If the device was also created.
-           by a client, it will be placed to `gnuserv-devices' list.
+	   by a client, it will be placed to `gnuserv-devices' list.
 FRAME    - Frame created by the client, or nil if the client didn't
-           create a frame.
+	   create a frame.
 
 All the slots default to nil."
   (id nil)

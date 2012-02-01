@@ -736,15 +736,15 @@ static void x_set_frame_properties(struct frame *f, Lisp_Object plist)
 	Bool y_position_specified_p = False;
 	Bool internal_border_width_specified = False;
 	Lisp_Object tail;
-        Widget w;
+	Widget w;
 
-        /* We can be called after the X IO error handler has seen a
-           broken pipe on the relevant display. Don't do anything in
-           that case.  */
-        if (!FRAME_LIVE_P (f) || DEVICE_X_BEING_DELETED (XDEVICE (FRAME_DEVICE (f))))
-          return;
+	/* We can be called after the X IO error handler has seen a
+	   broken pipe on the relevant display. Don't do anything in
+	   that case.  */
+	if (!FRAME_LIVE_P (f) || DEVICE_X_BEING_DELETED (XDEVICE (FRAME_DEVICE (f))))
+	  return;
 
-        w = FRAME_X_TEXT_WIDGET (f);
+	w = FRAME_X_TEXT_WIDGET (f);
 
 	for (tail = plist; !NILP(tail); tail = Fcdr(Fcdr(tail))) {
 		Lisp_Object prop = Fcar(tail);
@@ -2632,46 +2632,46 @@ documented in `set-frame-properties' (they can be queried and
 set at any time, except as otherwise noted):
 
 window-id                    The X window ID corresponding to the
-                             frame.  May be set only at startup, and
-                             only if external widget support was
-                             compiled in; doing so causes the frame
-                             to be created as an "external widget"
-                             in another program that uses an existing
-                             window in the program rather than creating
-                             a new one.
+			     frame.  May be set only at startup, and
+			     only if external widget support was
+			     compiled in; doing so causes the frame
+			     to be created as an "external widget"
+			     in another program that uses an existing
+			     window in the program rather than creating
+			     a new one.
 initially-unmapped           If non-nil, the frame will not be visible
-                             when it is created.  In this case, you
-                             need to call `make-frame-visible' to make
-                             the frame appear.
+			     when it is created.  In this case, you
+			     need to call `make-frame-visible' to make
+			     the frame appear.
 popup                        If non-nil, it should be a frame, and this
-                             frame will be created as a "popup" frame
-                             whose parent is the given frame.  This
-                             will make the window manager treat the
-                             frame as a dialog box, which may entail
-                             doing different things (e.g. not asking
-                             for positioning, and not iconifying
-                             separate from its parent).
+			     frame will be created as a "popup" frame
+			     whose parent is the given frame.  This
+			     will make the window manager treat the
+			     frame as a dialog box, which may entail
+			     doing different things (e.g. not asking
+			     for positioning, and not iconifying
+			     separate from its parent).
 override-redirect	     If non-nil, the frame will not be subject to
 			     window-manager control.  In particular, it
 			     will lack decorations, for more attractive
-                             appearance of balloon help, aka tooltips.
+			     appearance of balloon help, aka tooltips.
 inter-line-space             Not currently implemented.
 toolbar-shadow-thickness     Thickness of toolbar shadows.
 background-toolbar-color     Color of toolbar background.
 bottom-toolbar-shadow-color  Color of bottom shadows on toolbars.
-                             (*Not* specific to the bottom-toolbar.)
+			     (*Not* specific to the bottom-toolbar.)
 top-toolbar-shadow-color     Color of top shadows on toolbars.
-                             (*Not* specific to the top-toolbar.)
+			     (*Not* specific to the top-toolbar.)
 internal-border-width        Width of internal border around text area.
 border-width                 Width of external border around text area.
 top                          Y position (in pixels) of the upper-left
-                             outermost corner of the frame (i.e. the
-                             upper-left of the window-manager
-                             decorations).
+			     outermost corner of the frame (i.e. the
+			     upper-left of the window-manager
+			     decorations).
 left                         X position (in pixels) of the upper-left
-                             outermost corner of the frame (i.e. the
-                             upper-left of the window-manager
-                             decorations).
+			     outermost corner of the frame (i.e. the
+			     upper-left of the window-manager
+			     decorations).
 border-color                 Color of external border around text area.
 cursor-color                 Color of text cursor.
 

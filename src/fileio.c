@@ -448,7 +448,7 @@ Bytecount file_basename_match_extension(Lisp_Object filename,
 	Bytecount match = -1;
 	Bytecount len = XSTRING_LENGTH( extension );
 	if ( len > 0 ) {
-		char     re[len+6], 
+		char     re[len+6],
 			*rep = re;
 		Bufbyte *ext = XSTRING_DATA(extension);
 		Lisp_Object regexp;
@@ -465,7 +465,7 @@ Bytecount file_basename_match_extension(Lisp_Object filename,
 		   terminator if need to append...
 		*/
 		rep += len-1;
-		if ( *rep++ != '$' ) 
+		if ( *rep++ != '$' )
 			*rep++ = '$';
 		*rep = '\0';
 		regexp = make_string( (Bufbyte*)re, strlen(re));
@@ -519,7 +519,7 @@ It ignores trailing slash.
 	res = make_string(p, end - p);
 	if ( STRINGP( extension ) ) {
 		Bytecount match;
-		match = file_basename_match_extension(res, 
+		match = file_basename_match_extension(res,
 						      extension);
 		if ( match >= 0 )
 			RETURN_UNGCPRO(make_string(p, match));
@@ -528,7 +528,7 @@ It ignores trailing slash.
 		do {
 			ext = XCAR(rest);
 			Bytecount match;
-			match = file_basename_match_extension(res, 
+			match = file_basename_match_extension(res,
 							      ext);
 			if ( match >= 0 )
 				RETURN_UNGCPRO(make_string(p, match));
@@ -1093,7 +1093,7 @@ in the realpath() function.
 	{
 		Lisp_Object handler =
 			Ffind_file_name_handler(expanded_name, Qfile_truename);
-		
+
 		if (!NILP(handler))
 			RETURN_UNGCPRO
 				(call2_check_string
@@ -1114,11 +1114,11 @@ in the realpath() function.
 			goto toolong;
 
 		/* Try doing it all at once. */
-		/* !! Does realpath() Mule-encapsulate?  Answer: Nope! 
+		/* !! Does realpath() Mule-encapsulate?  Answer: Nope!
 		   So we do it above */
 		if (path != NULL && !xrealpath((char *)path, resolved_path)) {
 			/* Didn't resolve it -- have to do it one
-			   component at a time. 
+			   component at a time.
 
 			   "realpath" is a typically useless, stupid
 			   un*x piece of crap.  It claims to return a
@@ -1141,7 +1141,7 @@ in the realpath() function.
 
 			   Since we depend on undocumented semantics
 			   of various system realpath()s, we just use
-			   our own version in realpath.c. 
+			   our own version in realpath.c.
 			*/
 			for (;;) {
 				Extbyte *pos = NULL;
@@ -1160,7 +1160,7 @@ in the realpath() function.
 						*p = DIRECTORY_SEP;
 					else
 						break;
-					
+
 				} else if (errno == ENOENT || errno == EACCES) {
 					/* Failed on this component.
 					   Just tack on the rest of
@@ -1174,13 +1174,13 @@ in the realpath() function.
 					   places in resolved_path the
 					   absolute pathname of the
 					   path component which could
-					   not be resolved." 
+					   not be resolved."
 					*/
 					if (p == NULL ) {
 						break;
 					}
 					int plen = elen - (p - path);
-					
+
 					if (rlen > 1 &&
 					    IS_DIRECTORY_SEP
 					    (resolved_path[rlen - 1]))
@@ -1203,10 +1203,10 @@ in the realpath() function.
 			Lisp_Object resolved_name;
 			int rlen = strlen(resolved_path);
 
-			if (elen > 0 
+			if (elen > 0
 			    && IS_DIRECTORY_SEP(
-				    XSTRING_BYTE(expanded_name, elen-1)) 
-			    && !(rlen > 0 && 
+				    XSTRING_BYTE(expanded_name, elen-1))
+			    && !(rlen > 0 &&
 				 IS_DIRECTORY_SEP(resolved_path[rlen-1]))) {
 				if (rlen + 1 > countof(resolved_path))
 					goto toolong;
@@ -1636,9 +1636,9 @@ Create a directory.  One argument, a file name string.
 	}
 	strncpy(dir, (char *)XSTRING_DATA(dirname_),
 		XSTRING_LENGTH(dirname_) + 1);
-        dir[XSTRING_LENGTH(dirname_)]='\0';
+	dir[XSTRING_LENGTH(dirname_)]='\0';
 	if (dir[XSTRING_LENGTH(dirname_) - 1] == '/')
-                dir[XSTRING_LENGTH(dirname_) - 1] = '\0';
+		dir[XSTRING_LENGTH(dirname_) - 1] = '\0';
 
 	if (mkdir(dir, 0777) != 0)
 		report_file_error("Creating directory", list1(dirname_));
@@ -3068,13 +3068,13 @@ here because write-region handler writers need to be aware of it.
 	   to avoid a "file has changed on disk" warning on
 	   next attempt to save.  */
 	if (visiting)
-           if (stat_res == 0)
+	   if (stat_res == 0)
 		current_buffer->modtime = st.st_mtime;
-	   /* else: 
+	   /* else:
 		If sxemacs_stat failed, we have bigger problems, and
 		   most likely the file is gone, so the error next time is
 		   the right behavior
-            */
+	    */
 
 	if (failure) {
 		errno = save_errno;

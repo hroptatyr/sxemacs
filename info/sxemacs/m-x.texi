@@ -1,4 +1,3 @@
-
 @node M-x, Help, Minibuffer, Top
 @chapter Running Commands by Name
 
@@ -12,7 +11,7 @@ separated by hyphens: for example, @code{auto-fill-mode} or
 @code{manual-entry}.  The use of English words makes the command name
 easier to remember than a key made up of obscure characters, even though
 it results in more characters to type.  You can run any command by name,
-even if it can be run by keys as well. 
+even if it can be run by keys as well.
 
 @kindex M-x
 @cindex minibuffer
@@ -39,10 +38,10 @@ M-x fo @key{TAB} c @key{RET}
 @end example
 
 @noindent
-After you type in @code{M-x fo TAB} emacs will give you a possible list of 
-completions from which you can choose. Note that @code{forward-char} is the 
-same command that you invoke with the key @kbd{C-f}.  You can call any 
-command (interactively callable function) defined in Emacs by its name 
+After you type in @code{M-x fo TAB} emacs will give you a possible list of
+completions from which you can choose. Note that @code{forward-char} is the
+same command that you invoke with the key @kbd{C-f}.  You can call any
+command (interactively callable function) defined in Emacs by its name
 using @kbd{M-x} regardless of whether or not any keys are bound to it.
 
   If you type @kbd{C-g} while Emacs reads the command name, you cancel
@@ -71,7 +70,7 @@ The argument of @var{interactive} is usually a string containing a code
 letter followed by a prompt.  Some code letters do not use I/O to get
 the argument and do not need prompts.  To prompt for multiple arguments,
 you must provide a code letter, its prompt, a newline, and another code
-letter, and so forth.  If the argument is not a string, it is evaluated 
+letter, and so forth.  If the argument is not a string, it is evaluated
 to get a list of arguments to pass to the function.  If you do not provide an
 argument to @code{interactive}, no arguments are passed when calling
 interactively.

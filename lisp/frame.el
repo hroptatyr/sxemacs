@@ -545,8 +545,8 @@ The value returned is the value of the last form in BODY."
   (let ((old-frame (gensym "ssf")))
     `(let ((,old-frame (selected-frame)))
        (unwind-protect
-           (progn ,@body)
-         (select-frame ,old-frame)))))
+	   (progn ,@body)
+	 (select-frame ,old-frame)))))
 
 (defmacro with-selected-frame (frame &rest body)
   "Execute forms in BODY with FRAME as the selected frame.
@@ -838,7 +838,7 @@ For use as the value of `deselect-frame-hook'."
   :group 'frames)
 
 (defcustom get-frame-for-buffer-default-instance-limit nil
-  "*The default instance limit for creating new frames; 
+  "*The default instance limit for creating new frames;
 see doc of `get-frame-for-buffer'."
   :type 'integer
   :group 'frames)
@@ -897,7 +897,7 @@ This is a subroutine of `get-frame-for-buffer' (which see)."
 	;; Sort the list so that iconic frames will be found last.  They
 	;; will be used too, but mapped frames take precedence.  And
 	;; fully visible frames come before occluded frames.
-        ;; Hidden frames come after really visible ones
+	;; Hidden frames come after really visible ones
 	(setq frames
 	      (sort (frame-list)
 		    #'(lambda (s1 s2)

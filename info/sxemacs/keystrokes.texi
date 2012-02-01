@@ -1,4 +1,3 @@
-
 @node Keystrokes, Pull-down Menus, Frame, Top
 @chapter Keystrokes, Key Sequences, and Key Bindings
 
@@ -18,7 +17,7 @@ How you can add to the available modifier keys by customizing your
 keyboard: for example, you could have the
 @key{Capslock} key be understood as the @key{Super} key by Emacs. A
 @key{Super} key is used like @key{Control} or @key{Meta} in that you hold
-it while typing another key. 
+it while typing another key.
 @end itemize
 
  You will also learn how to customize existing key bindings and
@@ -37,7 +36,7 @@ create new ones.
 * Character Representation:: How characters appear in Emacs buffers.
 * Commands::                 How commands are bound to key sequences.
 @end menu
- 
+
 @node Intro to Keystrokes, Representing Keystrokes, Keystrokes, Keystrokes
 @section Keystrokes as Building Blocks of Key Sequences
 @cindex character set
@@ -55,7 +54,7 @@ control characters, such as @kbd{Control-a} (also called @kbd{C-a}).
 keystrokes that can be represented in ASCII.  SXEmacs can tell the
 difference between, for example, @kbd{Control-h}, @kbd{Control-Shift-h},
 and @kbd{Backspace}.
-  
+
 @cindex modifier key
 @cindex keysym
 @kindex meta key
@@ -63,7 +62,7 @@ and @kbd{Backspace}.
 @kindex hyper key
 @kindex super key
 @kindex shift key
-@kindex button1 
+@kindex button1
 @kindex button2
 @kindex button3
 @kindex button1up
@@ -91,7 +90,7 @@ left mouse button
 middle mouse button
 @item button3
 right mouse button
-@item button1up 
+@item button1up
 upstroke on the left mouse button
 @item button2up
 upstroke on the middle mouse button
@@ -141,7 +140,7 @@ Yet another way of writing the keystroke @kbd{C-a}.
 Pressing the @key{BREAK} key.
 @item (control meta button2up)
 Release the middle mouse button, while pressing @key{CTRL} and
-@key{META}. 
+@key{META}.
 @end table
 @cindex shift modifier
   Note: As you define keystrokes, you can use the @kbd{shift} key only
@@ -251,10 +250,10 @@ strings.  For example, we have the following equivalent representations:
 @node Meta Key, Super and Hyper Keys, String Key Sequences, Keystrokes
 @comment  node-name,  next,  previous,  up
 @subsection Assignment of the @key{META} Key
- 
+
 @kindex META
 @kindex ESC
-  Not all terminals have the complete set of modifiers.  
+  Not all terminals have the complete set of modifiers.
 Terminals that have a @key{Meta} key allow you to type Meta characters
 by just holding that key down.  To type @kbd{Meta-a}, hold down
 @key{META} and press @kbd{a}.  On those terminals, the @key{META} key
@@ -268,8 +267,8 @@ using two-character sequences starting with @key{ESC}.  To enter
 would type @kbd{ESC C-a}.  @key{ESC} is allowed on terminals with
 Meta keys, too, in case you have formed a habit of using it.@refill
 
-If you are running under X and do not have a @key{META} key, it 
-is possible to reconfigure some other key to be a @key{META} 
+If you are running under X and do not have a @key{META} key, it
+is possible to reconfigure some other key to be a @key{META}
 key.  @xref{Super and Hyper Keys}. @refill
 
 @vindex meta-flag
@@ -280,7 +279,7 @@ the termcap entry is wrong, and then it is useful to set this variable
 yourself.  @xref{Variables}, for how to do this.
 
 Note: If you are running under the X window system, the setting of
-the @code{meta-flag} variable is irrelevant. 
+the @code{meta-flag} variable is irrelevant.
 
 @node Super and Hyper Keys, Character Representation, Meta Key, Keystrokes
 @comment  node-name,  next,  previous,  up
@@ -306,7 +305,7 @@ do the following:
 
 The first line says that the key that is currently called @code{Caps_Lock}
 should no longer behave as a ``lock'' key.  The second line says that
-this should now be called @code{Super_L} instead.  The third line says that 
+this should now be called @code{Super_L} instead.  The third line says that
 the key called @code{Super_L} should be a modifier key, which produces the
 @code{Mod2} modifier.
 
@@ -319,7 +318,7 @@ the command executed automatically.@refill
 
 If you have problems, see the documentation for the @code{xmodmap}
 program.  The X keyboard model is quite complicated, and explaining
-it is beyond the scope of this manual.  However, we reprint the 
+it is beyond the scope of this manual.  However, we reprint the
 following description from the X Protocol document for your convenience:
 
 @cindex keysyms
@@ -327,26 +326,26 @@ following description from the X Protocol document for your convenience:
 
  A list of keysyms is associated with each keycode. If that list
 (ignoring trailing @code{NoSymbol} entries) is a single keysym @samp{K},
-then the list is treated as if it were the list 
-@code{``K NoSymbol K NoSymbol''}. If the list (ignoring trailing 
-@code{NoSymbol} entries) is a pair of keysyms @samp{K1 K2}, then the 
-list is treated as if it were the list @code{``K1 K2 K1 K2''}. If the 
-list (ignoring trailing @code{NoSymbol} entries) is a triple of keysyms 
-@samp{K1 K2 K3}, then the list is treated as if it were the list 
+then the list is treated as if it were the list
+@code{``K NoSymbol K NoSymbol''}. If the list (ignoring trailing
+@code{NoSymbol} entries) is a pair of keysyms @samp{K1 K2}, then the
+list is treated as if it were the list @code{``K1 K2 K1 K2''}. If the
+list (ignoring trailing @code{NoSymbol} entries) is a triple of keysyms
+@samp{K1 K2 K3}, then the list is treated as if it were the list
 @code{``K1 K2 K3 NoSymbol''}.
 
- The first four elements of the list are split into two groups of 
+ The first four elements of the list are split into two groups of
 keysyms. Group 1 contains the first and second keysyms; Group 2 contains
 third and fourth keysyms. Within each group, if the second element of
 the group is NoSymbol, then the group should be treated as if the second
 element were the same as the first element, except when the first
-element is an alphabetic keysym @samp{K} for which both lowercase and 
-uppercase forms are defined. In that case, the group should be treated 
-as if the first element were the lowercase form of @samp{K} and the second 
+element is an alphabetic keysym @samp{K} for which both lowercase and
+uppercase forms are defined. In that case, the group should be treated
+as if the first element were the lowercase form of @samp{K} and the second
 element were the uppercase form of @samp{K}.
 
- The standard rules for obtaining a keysym from a KeyPress event make use of 
-only the Group 1 and Group 2 keysyms; no interpretation of other keysyms in 
+ The standard rules for obtaining a keysym from a KeyPress event make use of
+only the Group 1 and Group 2 keysyms; no interpretation of other keysyms in
 the list is given here. (That is, the last four keysyms are unused.)
 
  Which group to use is determined by modifier state. Switching between
@@ -357,26 +356,26 @@ modifier}. For any keycode, Group 1 is used when the group modifier is
 off, and Group 2 is used when the group modifier is on.
 
  Within a group, which keysym to use is also determined by modifier
-state. The first keysym is used when the @code{Shift} and @code{Lock} 
-modifiers are off. The second keysym is used when the @code{Shift} 
-modifier is on, or when the @code{Lock} modifier is on and the second 
-keysym is uppercase alphabetic, or when the @code{Lock} modifier is on 
-and is interpreted as @code{ShiftLock}. Otherwise, when the @code{Lock} 
-modifier is on and is interpreted as @code{CapsLock}, the state of the 
-@code{Shift} modifier is applied first to select a keysym, 
-but if that keysym is lower-case alphabetic, then the corresponding 
+state. The first keysym is used when the @code{Shift} and @code{Lock}
+modifiers are off. The second keysym is used when the @code{Shift}
+modifier is on, or when the @code{Lock} modifier is on and the second
+keysym is uppercase alphabetic, or when the @code{Lock} modifier is on
+and is interpreted as @code{ShiftLock}. Otherwise, when the @code{Lock}
+modifier is on and is interpreted as @code{CapsLock}, the state of the
+@code{Shift} modifier is applied first to select a keysym,
+but if that keysym is lower-case alphabetic, then the corresponding
 upper-case keysym is used instead.
 
- In addition to the above information on keysyms, we also provide the 
-following description of modifier mapping from the InterClient 
+ In addition to the above information on keysyms, we also provide the
+following description of modifier mapping from the InterClient
 Communications Conventions Manual:
 
 @cindex modifier mapping
 
- X11 supports 8 modifier bits, of which 3 are pre-assigned to 
-@code{Shift}, @code{Lock}, and @code{Control}. Each modifier bit is 
-controlled by the state of a set of keys, and these sets are specified 
-in a table accessed by @code{GetModifierMapping()} and 
+ X11 supports 8 modifier bits, of which 3 are pre-assigned to
+@code{Shift}, @code{Lock}, and @code{Control}. Each modifier bit is
+controlled by the state of a set of keys, and these sets are specified
+in a table accessed by @code{GetModifierMapping()} and
 @code{SetModifierMapping()}.
 
  A client needing to use one of the pre-assigned modifiers should assume
@@ -385,7 +384,7 @@ modifiers. The @code{Lock} modifier should be interpreted as @code{Caps
 Lock} or @code{Shift Lock} according to whether the keycodes in its
 controlling set include @code{XK_Caps_Lock} or @code{XK_Shift_Lock}.
 
- Clients should determine the meaning of a modifier bit from the keysyms 
+ Clients should determine the meaning of a modifier bit from the keysyms
 being used to control it.
 
 A client needing to use an extra modifier, for example @code{Meta}, should:
@@ -396,27 +395,27 @@ Scan the existing modifier mappings.
 
 @enumerate
 @item
-If it finds a modifier that contains a keycode whose set of keysyms 
-includes @code{XK_Meta_L} or @code{XK_Meta_R}, it should use that 
+If it finds a modifier that contains a keycode whose set of keysyms
+includes @code{XK_Meta_L} or @code{XK_Meta_R}, it should use that
 modifier bit.
 
 @item
-If there is no existing modifier controlled by @code{XK_Meta_L} or 
-@code{XK_Meta_R}, it should select an unused modifier bit (one with 
+If there is no existing modifier controlled by @code{XK_Meta_L} or
+@code{XK_Meta_R}, it should select an unused modifier bit (one with
 an empty controlling set) and:
 @end enumerate
 
 @item
-If there is a keycode with @code{XL_Meta_L} in its set of keysyms, 
+If there is a keycode with @code{XL_Meta_L} in its set of keysyms,
 add that keycode to the set for the chosen modifier, and then:
 
 @enumerate
 @item
-If there is a keycode with @code{XL_Meta_R} in its set of keysyms, 
+If there is a keycode with @code{XL_Meta_R} in its set of keysyms,
 add that keycode to the set for the chosen modifier, and then:
 
 @item
-If the controlling set is still empty, interact with the user to 
+If the controlling set is still empty, interact with the user to
 select one or more keys to be @code{Meta}.
 @end enumerate
 
@@ -425,14 +424,14 @@ select one or more keys to be @code{Meta}.
 If there are no unused modifier bits, ask the user to take corrective action.
 @end enumerate
 
- This means that the @code{Mod1} modifier does not necessarily mean 
-@code{Meta}, although some applications (such as twm and emacs 18) 
-assume that. Any of the five unassigned modifier bits could mean 
-@code{Meta}; what matters is that a modifier bit is generated by a 
+ This means that the @code{Mod1} modifier does not necessarily mean
+@code{Meta}, although some applications (such as twm and emacs 18)
+assume that. Any of the five unassigned modifier bits could mean
+@code{Meta}; what matters is that a modifier bit is generated by a
 keycode which is bound to the keysym @code{Meta_L} or @code{Meta_R}.
 
- Therefore, if you want to make a @key{META} key, the right way 
-is to make the keycode in question generate both a @code{Meta} keysym 
+ Therefore, if you want to make a @key{META} key, the right way
+is to make the keycode in question generate both a @code{Meta} keysym
 and some previously-unassigned modifier bit.
 
 @node Character Representation, Commands, Super and Hyper Keys, Keystrokes
@@ -441,7 +440,7 @@ and some previously-unassigned modifier bit.
 
 This section briefly discusses how characters are represented in Emacs
 buffers.  @xref{Key Sequences}, for information on representing key
-sequences to create key bindings. 
+sequences to create key bindings.
 
   ASCII graphic characters in Emacs buffers are displayed with their
 graphics.  @key{LFD} is the same as a newline character; it is displayed
@@ -511,6 +510,6 @@ Most of the variables documented in this manual exist just to facilitate
 customization: some command or other part of Emacs uses the variable
 and behaves differently depending on its setting.  Until you are interested in
 customizing, you can ignore the information about variables.  When you
-are ready to be interested, read the basic information on variables, and 
+are ready to be interested, read the basic information on variables, and
 then the information on individual variables will make sense.
 @xref{Variables}.

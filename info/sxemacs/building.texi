@@ -1,4 +1,3 @@
-
 @node Running, Abbrevs, Programs, Top
 @chapter Compiling and Testing Programs
 
@@ -230,7 +229,7 @@ isn't specified in @file{paths.h}, a default value is obtained from the
 file system, near the directory in which the Emacs executable resides.
 
 @findex locate-library
- Like @kbd{M-x load-library}, @kbd{M-x locate-library} searches the 
+ Like @kbd{M-x load-library}, @kbd{M-x locate-library} searches the
 directories in @code{load-path} to find the file that @kbd{M-x load-library}
 would load.  If the optional second argument @var{nosuffix} is
 non-@code{nil}, the suffixes @file{.elc} or @file{.el} are not added to
@@ -277,7 +276,7 @@ takes up less space when loaded, and executes faster.
 @item M-x batch-byte-compile
 Run byte-compile-file on the files remaining on the command line.
 @item M-x byte-compile-buffer &optional @var{buffer}
-Byte-compile and evaluate contents of @var{buffer} (default is current 
+Byte-compile and evaluate contents of @var{buffer} (default is current
 buffer).
 @item M-x byte-compile-file
 Compile a file of Lisp code named @var{filename} into a file of byte code.
@@ -289,8 +288,8 @@ Recompile every @file{.el} file in @var{directory} that needs recompilation.
 @item M-x disassemble
 Print disassembled code for @var{object} on (optional) @var{stream}.
 @findex make-obsolete
-@item M-x make-obsolete @var{function new} 
-Make the byte-compiler warn that @var{function} is obsolete and @var{new} 
+@item M-x make-obsolete @var{function new}
+Make the byte-compiler warn that @var{function} is obsolete and @var{new}
 should be used instead.
 @end table
 

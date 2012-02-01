@@ -240,7 +240,7 @@ Finds files and URLs. Returns nil if object does not contain URL data."
 		    (switch-to-buffer (find-file-noselect
 				       (substring (car data) 5))))
 		   ;; to-do: open ftp URLs with efs...
-		   (t 
+		   (t
 		    ;; some other URL, try to fire up some browser for it
 		    (if-fboundp 'browse-url
 			(browse-url (car data))
@@ -266,7 +266,7 @@ Returns nil if object does not contain MIME data."
 	   ;; insert drops of text/* into buffer
 	   ;; create new buffer if pointer is outside buffer...
 	   ;; but there are many other ways...
-	   ;;	
+	   ;;
 	   ;; first thing: check if it's only text/plain and if the
 	   ;; drop happened inside some buffer. if yes insert it into
 	   ;; this buffer (hope it is not encoded in some MIME way)
@@ -345,7 +345,7 @@ compare."
 (defun experimental-dragdrop-drag (event object)
   "*{EXPERIMENTAL} The generic drag function.
 Tries to do the best with object in the selected protocol.
-Object must comply to the standart drag'n'drop object 
+Object must comply to the standart drag'n'drop object
 format."
   (error "Not implemented"))
 

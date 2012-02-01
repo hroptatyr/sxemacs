@@ -147,11 +147,11 @@ Return a pseudo-random number.
 All integers representable in Lisp are equally likely.
 On most systems, this is 31 bits' worth.
 
-With positive integer argument LIMIT, return random number 
+With positive integer argument LIMIT, return random number
 in interval [0,LIMIT). LIMIT can be a big integer, in which
 case the range of possible values is extended.
 
-With argument t, set the random number seed from the 
+With argument t, set the random number seed from the
 current time and pid.
 */
       (limit))
@@ -698,8 +698,8 @@ concat(int nargs, Lisp_Object * args,
 	Bufbyte *string_result_ptr = NULL;
 	struct gcpro gcpro1;
 	int speccount = specpdl_depth();
-        Charcount total_length;
-        
+	Charcount total_length;
+
 
 	/* The modus operandi in Emacs is "caller gc-protects args".
 	   However, concat is called many times in Emacs on freshly
@@ -716,7 +716,7 @@ concat(int nargs, Lisp_Object * args,
 	   the result in the returned string's `string-translatable' property. */
 #endif
 	if (target_type == c_string)
-                XMALLOC_OR_ALLOCA(args_mse, nargs, struct merge_string_extents_struct);
+		XMALLOC_OR_ALLOCA(args_mse, nargs, struct merge_string_extents_struct);
 
 	/* In append, the last arg isn't treated like the others */
 	if (last_special && nargs > 0) {
@@ -758,7 +758,7 @@ concat(int nargs, Lisp_Object * args,
 		/* Charcount is a misnomer here as we might be dealing with the
 		   length of a vector or list, but emphasizes that we're not dealing
 		   with Bytecounts in strings */
-                /* Charcount total_length; */
+		/* Charcount total_length; */
 
 		for (argnum = 0, total_length = 0; argnum < nargs; argnum++) {
 #ifdef LOSING_BYTECODE
@@ -772,21 +772,21 @@ concat(int nargs, Lisp_Object * args,
 
 		switch (target_type) {
 		case c_cons:
-                        if (total_length == 0) {
+			if (total_length == 0) {
 				/* In append, if all but last arg are nil,
 				   return last arg */
-                                XMALLOC_UNBIND(args_mse, nargs, speccount);
+				XMALLOC_UNBIND(args_mse, nargs, speccount);
 				RETURN_UNGCPRO(last_tail);
-                        }
+			}
 			val = Fmake_list(make_int(total_length), Qnil);
 			break;
 		case c_dllist:
-                        if (total_length == 0) {
+			if (total_length == 0) {
 				/* In append, if all but last arg are nil,
 				   return last arg */
-                                XMALLOC_UNBIND(args_mse, nargs, speccount);
+				XMALLOC_UNBIND(args_mse, nargs, speccount);
 				RETURN_UNGCPRO(last_tail);
-                        }
+			}
 			val = Fmake_list(make_int(total_length), Qnil);
 			break;
 		case c_vector:
@@ -807,7 +807,7 @@ concat(int nargs, Lisp_Object * args,
 			   in order to make the char fit properly.  O(N^2)
 			   yuckage. */
 			val = Qnil;
-                        XMALLOC_ATOMIC_OR_ALLOCA( string_result, 
+			XMALLOC_ATOMIC_OR_ALLOCA( string_result,
 						  total_length * MAX_EMCHAR_LEN,
 						  Bufbyte );
 			string_result_ptr = string_result;
@@ -889,7 +889,7 @@ concat(int nargs, Lisp_Object * args,
 						   XINT(elt));
 			} else {
 				CHECK_CHAR_COERCE_INT(elt);
-                                if(string_result_ptr != NULL) {
+				if(string_result_ptr != NULL) {
 					string_result_ptr +=
 						set_charptr_emchar(string_result_ptr,
 								   XCHAR(elt));
@@ -1013,7 +1013,7 @@ END may be nil or omitted; then the substring runs to the end of STRING.
 If START or END is negative, it counts from the end.
 Relevant parts of the string-extent-data are copied to the new string.
 */
-      (string, start, end)) 
+      (string, start, end))
 {
 	Charcount ccstart, ccend;
 	Bytecount bstart, blen;
@@ -1898,7 +1898,7 @@ list_merge(Lisp_Object org_l1, Lisp_Object org_l2,
 }
 
 /************************************************************************/
-/*	  	        property-list functions				*/
+/*		        property-list functions				*/
 /************************************************************************/
 
 /* For properties of text, we need to do order-insensitive comparison of
@@ -2747,7 +2747,7 @@ internal_equalp (Lisp_Object obj1, Lisp_Object obj2, int depth)
 		const struct lrecord_implementation
 			*imp1 = XRECORD_LHEADER_IMPLEMENTATION (obj1),
 			*imp2 = XRECORD_LHEADER_IMPLEMENTATION (obj2);
-		
+
 		/* #### not yet implemented properly, needs another flag to specify
 		   equalp-ness */
 		return (imp1 == imp2) &&
@@ -3276,7 +3276,7 @@ static short base64_char_to_value[128] = {
 		 .--------.  .--------.  .--------.
 		 |aaaaaabb|  |bbbbcccc|  |ccdddddd|
 		 `--------'  `--------'  `--------'
-                    6   2      4   4       2   6
+		    6   2      4   4       2   6
 	       .--------+--------+--------+--------.
 	       |00aaaaaa|00bbbbbb|00cccccc|00dddddd|
 	       `--------+--------+--------+--------'
@@ -3635,7 +3635,7 @@ base16_decode_1(Lstream * istream, int length, Bufbyte * to)
 			low = ec - 'A' + 10;
 		else if (islower(ec))
 			low = ec - 'a' + 10;
-		else 
+		else
 			ignore_p = 1;
 
 		if (low < 0 || low >= 16)

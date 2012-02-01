@@ -690,7 +690,7 @@ value at the end, like this:
 @defun this-command-keys
 This function returns a vector containing the key and mouse events that
 invoked the present command, plus any previous commands that generated
-the prefix argument for this command. 
+the prefix argument for this command.
 
 Note: this is not the same as in FSF Emacs, which can return a string.
 @xref{Events}.
