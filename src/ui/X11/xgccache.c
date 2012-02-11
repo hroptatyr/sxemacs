@@ -233,8 +233,10 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 			*/
 		{
 			cell = cache->head;
-			cache->head = cell->next;
-			cache->head->prev = 0;
+			if (cache->head != null) {
+				cache->head = cell->next;
+				cache->head->prev = 0;
+			}
 			if (cache->tail == cell)
 				cache->tail = 0;	/* only one */
 			XFreeGC(cache->dpy, cell->gc);
