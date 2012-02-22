@@ -194,9 +194,6 @@ install them and incorporate them into SXEmacs.
   - PulseAudio:
     http://pulseaudio.org/
 
-  - aRts (Analog Realtime Synthesizer):
-    http://www.arts-project.org/
-
   - Jack (Jack Audio Connection Kit):
     http://jackit.sourceforge.net/
 

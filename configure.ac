@@ -603,7 +603,6 @@ OG_MULTIARG_WITH([sound], [dnl
 	[auto], [Autodetect all sound support (except Pulse)], [dnl
 	OG_MULTIARG_ITEM([alsa], [ALSA], [kernel-based linux sound standard])
 	OG_MULTIARG_ITEM([ao], [ao], [generic audio output layer])
-	OG_MULTIARG_ITEM([arts], [aRts], [discontinued realtime synthesizer])
 	OG_MULTIARG_ITEM([esd], [ESD], [Enlightenment Sound Daemon])
 	OG_MULTIARG_ITEM([jack], [Jack], [a low-latency audio server])
 	OG_MULTIARG_ITEM([nas], [NAS], [Network Audio System])
@@ -3126,29 +3125,6 @@ if test "$with_pulseaudio" != "no"; then
 	fi
 fi
 
-dnl aRts Sound support
-if test "$with_sound_arts" != "no"; then
-	SXE_MM_CHECK_ARTS([have_sound_arts=yes], [have_sound_arts=no])
-
-	AC_MSG_CHECKING([for sufficient aRts support])
-	if test "$have_sound_arts" = "yes"; then
-		AC_MSG_RESULT([yes])
-		ARTS_VERSION=`$ARTSC_CONFIG --arts-version`
-		ARTS_LIBS=`$ARTSC_CONFIG --libs`
-		ARTS_CPPFLAGS=`$ARTSC_CONFIG --cflags`
-		SXE_ADD_MM_OBJS([sound-arts.o])
-		SXE_PREPEND([$ARTS_LIBS], [MM_LIBS])
-		SXE_PREPEND_UNDUP([$ARTS_CPPFLAGS], [MM_CPPFLAGS])
-		AC_DEFINE([HAVE_ARTS_SOUND], [1], [Description here!])
-		AC_DEFINE_UNQUOTED([ARTS_VERSION], [$ARTS_VERSION],
-			[Version number of the underlying arts library])
-	else
-		AC_MSG_RESULT(no)
-		have_sound_arts=no
-	fi
-
-fi
-
 dnl Jack Sound support
 if test "$with_sound_jack" != "no"; then
 	SXE_MM_CHECK_JACK([have_sound_jack=yes], [have_sound_jack=no])
@@ -3208,11 +3184,10 @@ fi
 if test \
    "$have_sound_alsa \
     $have_sound_ao \
-    $have_sound_arts \
     $have_sound_esd \
     $have_sound_jack \
     $have_sound_nas \
-    $have_sound_pulse" != "no no no no no no no"; then
+    $have_sound_pulse" != "no no no no no no"; then
 	AC_DEFINE([HAVE_AUDIO], [1], [Description here!])
 fi
 if test "$need_internal_media" = "yes"; then

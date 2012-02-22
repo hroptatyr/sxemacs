@@ -195,6 +195,14 @@ To run configure successfully...
 
     CONFIG_SHELL=/path/to/bash $CONFIG_SHELL configure [option, ...]
 
+*** configure on FreeBSD
+
+Turning on the use of libssp and -fstack-protector from configure
+( --with-error-checking=stack ) will result in a broken build. 
+
+Do not, under any circumstances, add -fstack-protector to CFLAGS, even 
+independently of the stack error checking option. 
+
 ** bdwgc and gcc and code optimisation
 
 There are some weird optimisation issues with the Boehm-Demers-Weiser
@@ -552,11 +560,6 @@ not use ALSA at all.
 This is due to missing (hardware-)mixing capabilities of your
 soundcard.  There is a user-space plugin called dmix, which can
 effectively circumvent this issue.
-
-*** SXEmacs dumps core when using the aRts audio device
-
-Does it?  Please report details (version number of aRts, backtrace,
-etc.).
 
 *** SXEmacs crashes when using state sentinels with asynchronous sounds
 
