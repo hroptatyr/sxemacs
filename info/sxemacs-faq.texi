@@ -658,7 +658,7 @@ to handle.
 
 @item
 Support for modern sound libraries and sound servers: ESD, Polyp,
-aRts, Jack, ALSA, and ao
+Jack, ALSA, and ao
 
 @item
 Support for various media formats (provided by external libraries):
@@ -6618,7 +6618,7 @@ Portuguese added to etc/HELLO -- Ferreira.
 Massive improvements, enhancements for multimedia (audio) -- Freundt.
 
 SXEmacs supports several "sound servers" like: OSS, NAS, ESD, Polypaudio,
-ALSA, aRts, and Jack.  And media streams can be handled by sndfile, ffmpeg,
+ALSA, and Jack.  And media streams can be handled by sndfile, ffmpeg,
 sox, mad, xine, gstreamer.  The SXEmacs developers recommend Polyp/ffmpeg
 whenever possible.
 

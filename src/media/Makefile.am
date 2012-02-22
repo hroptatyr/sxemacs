@@ -49,8 +49,8 @@ all_sources=
 libmm_a_headers = media.h sound.h \
 	media-ffmpeg.h media-internal.h	media-mad.h media-sndfile.h \
 	media-sox.h media-magic.h \
-	sound-alsa.h sound-ao.h sound-arts.h sound-esd.h \
-	sound-jack.h sound-nas.h sound-oss.h sound-pulse.h
+	sound-alsa.h sound-ao.h sound-esd.h sound-jack.h \
+	sound-nas.h sound-oss.h sound-pulse.h
 ## what about these?: nativesound.h sound-sunplay.h libsst.h libst.h
 libmm_a_sources = \
 	media.c sound.c
@@ -58,8 +58,8 @@ libmm_a_SOURCES = $(libmm_a_headers) $(libmm_a_sources)
 EXTRA_libmm_a_SOURCES = \
 	media-ffmpeg.c media-internal.c media-mad.c media-sndfile.c \
 	media-sox.c media-magic.c \
-	sound-alsa.c sound-ao.c sound-arts.c sound-esd.c \
-	sound-jack.c sound-nas.c sound-oss.c sound-pulse.c \
+	sound-alsa.c sound-ao.c sound-esd.c sound-jack.c \
+	sound-nas.c sound-oss.c sound-pulse.c \
 	dgif_lib.c gif_io.c
 libmm_a_CFLAGS = $(AM_CFLAGS) -Wall
 libmm_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general) $(MM_CPPFLAGS) $(X_CFLAGS)

@@ -1023,7 +1023,7 @@ previous with \\[backward-sexp]."
 ;; The folloing requires that PulseAudio is installed.  But don't
 ;; fear, SXEmacs also supports:
 ;;
-;;    ALSA, ao, ESD, OSS, aRts, Jack, and NAS
+;;    ALSA, ao, ESD, OSS, Jack, and NAS
 ;;
 (setq default-audio-device (make-audio-device 'pulse))
 

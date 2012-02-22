@@ -561,11 +561,6 @@ This is due to missing (hardware-)mixing capabilities of your
 soundcard.  There is a user-space plugin called dmix, which can
 effectively circumvent this issue.
 
-*** SXEmacs dumps core when using the aRts audio device
-
-Does it?  Please report details (version number of aRts, backtrace,
-etc.).
-
 *** SXEmacs crashes when using state sentinels with asynchronous sounds
 
 This is a known bug (#13 in our bug database).  At the moment the only

@@ -76,13 +76,13 @@ audio library and FFmpeg as media library!
 @item Known caveats with SXE: none
 @end itemize
 
-Since OSS was one of the most spread architectures for audio many of
+Since OSS was one of the most widespread architectures for audio many of
 the new generation audio infrastructures support OSS with at least a
 compatibility layer.  For instance PulseAudio provides a tool
-@samp{padsp}, Esound calls it @samp{esddsp}, and @samp{artsdsp} is the
-arts version.  All these are intended to provide an OSS device
-emulation for applications which only speak OSS.  All read/write
-accesses are rerouted to the respective audio server.
+@samp{padsp}, and Esound calls it @samp{esddsp}. All these are 
+intended to provide an OSS device emulation for applications which 
+only speak OSS.  All read/write accesses are rerouted to the 
+respective audio server.
 
 
 @subsection Audio Library: NAS (Network Audio System)
@@ -160,34 +160,6 @@ compatible to esd.  Furthermore, you can use sound in both directions,
 i.e. record from pulse sources.  Pulse provides modules to not only
 directly attach to local hardware but also to other remotely running
 pulses or other running audio servers (like jack, esd, etc.).
-
-
-@subsection Audio Library: aRts (the analog realtime synthesizer)
-
-@itemize
-@item Availability: Unix-wide
-@item Dependencies: OSS, (KDE);
-optional: ALSA, Jack, ESD, mas, NAS, libaudiofile, Qt, sgilibaudio
-@item Webpage: @url{http://www.arts-project.org/}
-@item Download:
-
-@url{ftp://ftp.kde.org/pub/kde/stable/latest/src/arts-1.5.2.tar.bz2},
-
-standalone version:
-@url{http://arts-project.org/download/arts-0.5.4.tar.gz}
-
-@item Pros:
-device independent (if used with ALSA or other sound servers),
-network-mode possible, mixing possible, very flexible, very configurable
-@item Cons:
-standalone version discontinued, lots of processes, uses/needs MCOP
-@item Known caveats with SXE: none
-@end itemize
-
-Arts was designed as both audio server and synthesizer originally.
-It is usable locally and transparently downmixes incoming streams.
-However, since starting arts (even the standalone artsd) means
-starting 80% of a bloated KDE, we highly discourage its use.
 
 
 @subsection Audio Library: Jack (a low-latency audio server)
@@ -499,7 +471,7 @@ underlying driver libraries.
 @defun make-audio-device driver &rest device-options
 Create a new device to output audio via @var{driver}.
 @var{driver} should be a symbol out of 'oss, 'nas, 'esd, 'pulse,
-'jack, 'alsa, 'arts or 'ao.
+'jack, 'alsa, or 'ao.
 
 The rest arguments may be used to pass options to the selected
 output driver. These should be `:keyword value' pairs.
@@ -562,8 +534,6 @@ sensible default in this order:
   - use the display specified in $DISPLAY
   - try "localhost:0.0"
 
-Valid keywords for aRts are:
-none at the moment
 @end defun
 
 @example

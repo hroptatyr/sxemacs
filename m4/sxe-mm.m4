@@ -935,58 +935,6 @@ AC_DEFUN([SXE_MM_CHECK_AO], [
 		ao_open_live ao_close ao_shutdown ao_play], [ao/ao.h], [$1], [$2])
 ])dnl SXE_MM_CHECK_AO
 
-AC_DEFUN([SXE_MM_CHECK_ARTS], [
-	## arg #1: action on success
-	## arg #2: action on failure
-	pushdef([MM_SUCC], [$1])
-	pushdef([MM_FAIL], [$2])
-
-	SXE_SEARCH_CONFIG_PROG([artsc-config])
-
-	AC_MSG_CHECKING([for aRts support])
-	AC_MSG_RESULT([])
-
-	if test "$have_artsc_config" = "no" -o -z "$ARTSC_CONFIG"; then
-		AS_MESSAGE([*** artsc-config not found.])
-		AS_MESSAGE([*** Cannot check for aRts.])
-		have_artsc_config=no
-		ARTSC_CONFIG=
-		MM_FAIL
-	fi
-
-	if test "$have_artsc_config" = "yes"; then
-		ARTS_VERSION=`$ARTSC_CONFIG --arts-version`
-		ARTS_MAJOR_VERSION=`echo $ARTS_VERSION | awk -F. '{print $1}'`
-		ARTS_MINOR_VERSION=`echo $ARTS_VERSION | awk -F. '{print $2}'`
-
-		dnl since we are not using most of the arts features, it suffices
-		dnl to have a version 1.x (x >= 0)
-		dnl if test "$ARTS_MAJOR_VERSION" -eq 1 -a \
-		dnl   "$ARTS_MINOR_VERSION" -ge 0; then
-
-		SXE_DUMP_LIBS
-		ARTS_CPPFLAGS="`$ARTSC_CONFIG --cflags`"
-		ARTS_LDFLAGS="-L`$ARTSC_CONFIG --libs`"
-		CPPFLAGS="$CPPFLAGS $ARTS_CPPFLAGS"
-		LDFLAGS="$CPPFLAGS $ARTS_LDFLAGS"
-
-		MM_SUCC
-		SXE_CHECK_HEADERS([artsc.h], [:], [MM_FAIL])
-		AC_CHECK_LIB([artsc], [arts_init], [:], [MM_FAIL], [$arts_libs])
-		AC_CHECK_LIB([artsc], [arts_free], [:], [MM_FAIL], [$arts_libs])
-		AC_CHECK_LIB([artsc], [arts_write], [:], [MM_FAIL], [$arts_libs])
-		AC_CHECK_LIB([artsc], [arts_play_stream], [:], [MM_FAIL], [$arts_libs])
-		AC_CHECK_LIB([artsc], [arts_stream_set], [:], [MM_FAIL], [$arts_libs])
-		AC_CHECK_LIB([artsc], [arts_close_stream], [:], [MM_FAIL], [$arts_libs])
-
-		## restore anything
-		SXE_RESTORE_LIBS
-	fi
-
-	popdef([MM_SUCC])
-	popdef([MM_FAIL])
-])dnl SXE_MM_CHECK_ARTS
-
 AC_DEFUN([SXE_MM_CHECK_ESD], [
 	## arg #1: action on success
 	## arg #2: action on failure
