@@ -233,7 +233,7 @@ GC gc_cache_lookup(struct gc_cache *cache, XGCValues * gcv, unsigned long mask)
 			*/
 		{
 			cell = cache->head;
-			if (cache->head != null) {
+			if (cache->head != NULL) {
 				cache->head = cell->next;
 				cache->head->prev = 0;
 			}
