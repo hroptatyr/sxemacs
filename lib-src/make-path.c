@@ -39,15 +39,18 @@ static int touchy_mkdir(char *path)
 {
 	struct stat buf;
 
-	/* If PATH already exists and is a directory, return success.  */
-	if (stat(path, &buf) >= 0 && (buf.st_mode & S_IFMT) == S_IFDIR)
-		return 0;
-
-	/* Otherwise, try to make it.  If PATH exists but isn't a directory,
+	/* Try to make it.  If PATH exists, EEXIST will be the
+	   return. Anyway on error but isn't a directory,
 	   this will signal an error.  */
-	if (mkdir(path, 0777) < 0) {
-		fprintf(stderr, "%s: ", prog_name);
-		perror(path);
+	if (mkdir(path, 0777) < 0 && errno != EEXIST ) {
+		int serrno = errno; /* save errno because stat may
+				       change it... */
+
+		/* If PATH already exists and is a directory, return success.  */
+		if (stat(path, &buf) >= 0 && (buf.st_mode & S_IFMT) == S_IFDIR)
+			return 0;
+
+		fprintf(stderr, "%s: %s", prog_name, strerror(serrno));
 		return 1;
 	}
 
