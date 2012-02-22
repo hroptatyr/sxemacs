@@ -52,9 +52,6 @@ Lisp_Object Qplay_sound;
 #ifdef HAVE_AO_SOUND
 #include "sound-ao.h"
 #endif
-#ifdef HAVE_ARTS_SOUND
-#include "sound-arts.h"
-#endif
 #ifdef HAVE_POLYP_SOUND
 #include "sound-polyp.h"
 #endif
@@ -883,10 +880,6 @@ audio_device_print(Lisp_Object obj, Lisp_Object printcharfun, int escapeflag)
 		write_c_string("oss", printcharfun);
 		break;
 
-	case ADRIVER_ARTS:
-		write_c_string("arts", printcharfun);
-		break;
-
 	case ADRIVER_NAS:
 		write_c_string("nas", printcharfun);
 		break;
@@ -1015,10 +1008,6 @@ audio_driver decode_audio_type(Lisp_Object type)
 	else if (EQ(type, Qao))
 		ad = ADRIVER_AO;
 #endif
-#ifdef HAVE_ARTS_SOUND
-	else if (EQ(type, Qarts))
-		ad = ADRIVER_ARTS;
-#endif
 #ifdef HAVE_JACK_SOUND
 	else if (EQ(type, Qjack))
 		ad = ADRIVER_JACK;
@@ -1065,10 +1054,6 @@ audio_driver decode_audio_device(Lisp_Object device)
 #ifdef HAVE_ESD_SOUND
 		else if (DEVICE_CONNECTED_TO_ESD_P(d))
 			ad = ADRIVER_ESD;
-#endif
-#ifdef HAVE_ARTS_SOUND
-		else if (DEVICE_CONNECTED_TO_ARTS_P(d))
-			ad = ADRIVER_ARTS;
 #endif
 #ifdef HAVE_ALSA_SOUND
 		else if (DEVICE_CONNECTED_TO_ALSA_P(d))
@@ -1123,7 +1108,7 @@ DRIVER &rest DEVICE-OPTIONS
 
 Create a new device to output audio via DRIVER.
 DRIVER should be a symbol out of 'oss, 'nas, 'esd, 'pulse,
-'jack, 'alsa, 'arts or 'ao.
+'jack, 'alsa, or 'ao.
 
 The rest arguments may be used to pass options to the selected
 output driver. These should be `:keyword value' pairs.
@@ -1186,9 +1171,6 @@ sensible default in this order:
   - use the display specified in $DISPLAY
   - try "localhost:0.0"
 
-Valid keywords for aRts are:
-none at the moment
-
 */
       (int nargs, Lisp_Object *args))
 {
@@ -1207,11 +1189,6 @@ none at the moment
 	case ADRIVER_NAS:
 #ifdef HAVE_NAS_SOUND
 		XAUDIO_DEVICE_METHS(ad) = sound_nas;
-		break;
-#endif
-	case ADRIVER_ARTS:
-#ifdef HAVE_ARTS_SOUND
-		XAUDIO_DEVICE_METHS(ad) = sound_arts;
 		break;
 #endif
 	case ADRIVER_ALSA:
@@ -1317,9 +1294,6 @@ void syms_of_sound(void)
 #ifdef HAVE_AO_SOUND
 	defsymbol(&Qao, "ao");
 #endif
-#ifdef HAVE_ARTS_SOUND
-	defsymbol(&Qarts, "arts");
-#endif
 #ifdef HAVE_ALSA_SOUND
 	defsymbol(&Qalsa, "alsa");
 #endif
@@ -1387,9 +1361,6 @@ void vars_of_sound(void)
 #endif
 #ifdef HAVE_AO_SOUND
 	Fprovide(intern("ao-sound"));
-#endif
-#ifdef HAVE_ARTS_SOUND
-	Fprovide(intern("arts-sound"));
 #endif
 #ifdef HAVE_ALSA_SOUND
 	Fprovide(intern("alsa-sound"));
