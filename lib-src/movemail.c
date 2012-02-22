@@ -315,11 +315,6 @@ int main(int argc, char *argv[])
 	if (*outname == 0)
 		fatal("Destination file name is empty", 0);
 
-	VERBOSE(("checking access to output file\n"));
-	/* Check access to output file.  */
-	if (access(outname, F_OK) == 0 && access(outname, W_OK) != 0)
-		pfatal_with_name(outname);
-
 	/* Also check that outname's directory is writable to the real uid.  */
 	{
 		char *buf = (char *)xmalloc(strlen(outname) + 1);
@@ -345,9 +340,6 @@ int main(int argc, char *argv[])
 
 #ifndef DISABLE_DIRECT_ACCESS
 
-	/* Check access to input file.  */
-	if (access(inname, R_OK | W_OK) != 0)
-		pfatal_with_name(inname);
 
 	if (fork() == 0) {
 		setuid(getuid());
