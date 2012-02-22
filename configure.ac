@@ -1770,24 +1770,21 @@ dnl	MOD_INSTALL_PROGRAM="true"
 dnl	OBJECT_TO_BUILD="\$(MODNAME).o"
 fi
 
-if test "$opsys" != "darwin"; then
-
-	if test "$with_modules_ase" = "yes"; then
-		have_modules_ase=yes
-	fi
-	if test "$with_static_modules_ase" = "yes"; then
-		have_static_modules_ase=yes
-	fi
+if test "$with_modules_ase" = "yes"; then
+	have_modules_ase=yes
+fi
+if test "$with_static_modules_ase" = "yes"; then
+	have_static_modules_ase=yes
 fi
 SXE_EMOD_STATMOD([ase])
-if test "$opsys" != "darwin"; then
-	have_ase_cart="yes"
-	have_ase_dig="yes"
-	have_ase_intv="yes"
-	have_ase_metric="yes"
-	have_ase_nbhood="yes"
-	have_ase_perm="yes"
-	have_ase_resclass="yes"
+if test "$have_modules_ase $have_static_modules_ase" != " "; then
+ 	have_ase_cart="yes"
+ 	have_ase_dig="yes"
+ 	have_ase_intv="yes"
+ 	have_ase_metric="yes"
+ 	have_ase_nbhood="yes"
+ 	have_ase_perm="yes"
+ 	have_ase_resclass="yes"
 fi
 if test "$have_bison" = "yes"; then
 	if test "$with_modules_cl" = "yes" ; then
