@@ -1616,7 +1616,11 @@ AC_DEFUN([SXE_STACK_FLAGS], [dnl
 	if test "${sxe_cv_c_flags__fstack_protector}" = "yes" -a \
 		"${ac_cv_lib_ssp___stack_chk_guard}" = "yes"; then
 		## only if ssp is guaranteed to work
-		diagflags="${diagflags} -fstack-protector"
+		if test "$opsys" = "freebsd"; then
+			AS_MESSAGE("Disabling -fstack-protector because it is known to be broken in FreeBSD. Contact the sxemacs-devel@sxemacs.org if you disagree...")
+		else
+			diagflags="${diagflags} -fstack-protector"
+		fi
 	fi
 ])dnl SXE_STACK_FLAGS
 
