@@ -1196,15 +1196,17 @@ char *file;
 	FILE *inf;
 
 	canonicalize_filename(file);
-	if (stat(file, &stat_buf) == 0 && !S_ISREG(stat_buf.st_mode)) {
-		error("skipping %s: it is not a regular file.", file);
-		return;
-	}
 	if (streq(file, tagfile) && !streq(tagfile, "-")) {
 		error("skipping inclusion of %s in self.", file);
 		return;
 	}
 	inf = fopen(file, "r");
+	if (stat(file, &stat_buf) == 0 && !S_ISREG(stat_buf.st_mode)) {
+		error("skipping %s: it is not a regular file.", file);
+		if( inf != NULL)
+			fclose(inf);
+		return;
+	}
 	if (inf == NULL) {
 		perror(file);
 		return;

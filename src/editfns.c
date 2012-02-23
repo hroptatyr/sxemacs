@@ -619,12 +619,11 @@ On Unix it is obtained from TMPDIR, with /tmp as the default.
 			if ( home_env ) {
 				strncpy(path, home_env, sizeof(path)-1);
 				strncat(path, "/tmp/", sizeof(path)-1);
-				if (stat(path, &st) < 0 && errno == ENOENT) {
+				if ( mkdir(path, 0700) >= 0 || errno == EEXIST ) {
 					int fd;
 					char warnpath[
 						/* strlen(".created_by_sxemacs") */
 						19 + _POSIX_PATH_MAX + 1];
-					mkdir(path, 0700);	/* ignore retvals */
 					strncpy(warnpath, path, _POSIX_PATH_MAX);
 					warnpath[sizeof(warnpath)-1]=0;
 
