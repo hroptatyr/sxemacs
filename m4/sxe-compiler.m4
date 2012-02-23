@@ -1607,20 +1607,18 @@ extern void f(void*restrict[]);
 AC_DEFUN([SXE_STACK_FLAGS], [dnl
 	## actually this belongs to error-checking stuff
 	SXE_CHECK_COMPILER_FLAGS([-fstack-protector])
-	## check if ssp is actually working
 	if test "${sxe_cv_c_flags__fstack_protector}" = "yes"; then
-		## just check for ssp in this case
-		AC_CHECK_LIB([ssp], [__stack_chk_guard])
-	fi
-	## final thing
-	if test "${sxe_cv_c_flags__fstack_protector}" = "yes" -a \
-		"${ac_cv_lib_ssp___stack_chk_guard}" = "yes"; then
-		## only if ssp is guaranteed to work
-		if test "$opsys" = "freebsd"; then
-			AS_MESSAGE("Disabling -fstack-protector because it is known to be broken in FreeBSD. Contact the sxemacs-devel@sxemacs.org if you disagree...")
-		else
+		case "$opsys" in
+		freebsd)
 			diagflags="${diagflags} -fstack-protector"
-		fi
+			;;
+		*)
+			AC_CHECK_LIB([ssp], [__stack_chk_guard])
+			if test "${ac_cv_lib_ssp___stack_chk_guard}" = "yes"; then
+				diagflags="${diagflags} -fstack-protector"
+			fi
+			;;
+		esac
 	fi
 ])dnl SXE_STACK_FLAGS
 
