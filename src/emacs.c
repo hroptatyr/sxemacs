@@ -2606,6 +2606,8 @@ main(int argc, char **argv, char **envp)
 	int restarted = 0;
 
 	int arg;
+	assert(vol_argv[0] != NULL || vol_argv[0][0] != '\0');
+	assert(argc >= 1);
 	for( arg=1; arg < argc; arg++ ) {
 		assert(vol_argv[arg] != NULL);
 	}
