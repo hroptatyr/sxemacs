@@ -587,19 +587,20 @@ pdump_register_struct(const void *data,
 		if (me >= 65536) {
 			stderr_out("Backtrace overflow, loop ?\n");
 			abort();
+		} else {
+			backtrace[me].obj = 0;
+			backtrace[me].position = 0;
+			backtrace[me].offset = 0;
+			
+			pdump_add_entry(pdump_get_entry_list(sdesc),
+					data, sdesc->size, count);
+			for (i = 0; i < count; i++) {
+				pdump_register_sub(
+					((const char*)data) + sdesc->size * i,
+					sdesc->description, me);
+			}
+			--depth;
 		}
-		backtrace[me].obj = 0;
-		backtrace[me].position = 0;
-		backtrace[me].offset = 0;
-
-		pdump_add_entry(pdump_get_entry_list(sdesc),
-				data, sdesc->size, count);
-		for (i = 0; i < count; i++) {
-			pdump_register_sub(
-				((const char*)data) + sdesc->size * i,
-				sdesc->description, me);
-		}
-		--depth;
 	}
 }
 
