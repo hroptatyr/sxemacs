@@ -2572,34 +2572,45 @@ main(int argc, char **argv, char **envp)
 	int volatile vol_argc = argc;
 	char **volatile vol_argv = argv;
 	char **volatile vol_envp = envp;
-	/* This is hairy.  We need to compute where the SXEmacs binary was invoked
-	   from because temacs initialization requires it to find the lisp
-	   directories.  The code that recomputes the path is guarded by the
-	   restarted flag.  There are three possible paths I've found so far
-	   through this:
+	/* This is hairy.  We need to compute where the SXEmacs binary
+	   was invoked from because temacs initialization requires it
+	   to find the lisp directories.  The code that recomputes the
+	   path is guarded by the restarted flag.  There are three
+	   possible paths I've found so far through this:
 
-	   temacs -- When running temacs for basic build stuff, the first main_1
-	   will be the only one invoked.  It must compute the path else there
-	   will be a very ugly bomb in startup.el (can't find obvious location
-	   for doc-directory data-directory, etc.).
+	   temacs -- When running temacs for basic build stuff, the
+	   first main_1 will be the only one invoked.  It must compute
+	   the path else there will be a very ugly bomb in startup.el
+	   (can't find obvious location for doc-directory
+	   data-directory, etc.).
 
-	   temacs w/ run-temacs on the command line -- This is run to bytecompile
-	   all the out of date dumped lisp.  It will execute both of the main_1
-	   calls and the second one must not touch the first computation because
-	   argc/argv are hosed the second time through.
+	   temacs w/ run-temacs on the command line -- This is run to
+	   bytecompile all the out of date dumped lisp.  It will
+	   execute both of the main_1 calls and the second one must
+	   not touch the first computation because argc/argv are hosed
+	   the second time through.
 
-	   sxemacs -- Only the second main_1 is executed.  The invocation path must
-	   computed but this only matters when running in place or when running
-	   as a login shell.
+	   sxemacs -- Only the second main_1 is executed.  The
+	   invocation path must computed but this only matters when
+	   running in place or when running as a login shell.
 
-	   As a bonus for straightening this out, SXEmacs can now be run in place
-	   as a login shell.  This never used to work.
+	   As a bonus for straightening this out, SXEmacs can now be
+	   run in place as a login shell.  This never used to work.
 
-	   As another bonus, we can now guarantee that
-	   (concat invocation-directory invocation-name) contains the filename
-	   of the SXEmacs binary we are running.  This can now be used in a
-	   definite test for out of date dumped files.  -slb */
+	   As another bonus, we can now guarantee that (concat
+	   invocation-directory invocation-name) contains the filename
+	   of the SXEmacs binary we are running.  This can now be used
+	   in a definite test for out of date dumped files.  -slb 
+	*/
+
 	int restarted = 0;
+
+	int arg;
+	for( arg=1; arg < argc; arg++ ) {
+		assert(vol_argv[arg] != NULL);
+	}
+	assert(vol_argv[argc] == NULL);
+
 #ifdef QUANTIFY
 	quantify_stop_recording_data();
 	quantify_clear_data();
