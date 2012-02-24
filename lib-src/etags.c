@@ -1531,7 +1531,7 @@ language *lang;
 		error ("skipping inclusion of %s in self.", file);
 		return;
 	}
-	if ((compr = get_compressor_from_suffix (file, &ext)) == NULL)
+	if ( get_compressor_from_suffix (file, &ext) == NULL)
 	{
 		real_name = uncompressed_name = savestr (file);
 	}
@@ -1578,14 +1578,14 @@ language *lang;
  		if ( inf == NULL ) {
 			/* Reset real_name and try with a different name. */
 			free(compressed_name);
-			compressed_name = NULL;
 			real_name = NULL;
 			if (compressed_name != NULL) 
                                 /* try with the given suffix */
 			{
+				compressed_name = NULL;
 				real_name = uncompressed_name;
 			}
-			else if ( compr->suffix != NULL ) 
+			else if ( compr && compr->suffix != NULL ) 
                                 /* try all possible suffixes */
 			{
 				compressed_name = concat (file, ".", compr->suffix);
