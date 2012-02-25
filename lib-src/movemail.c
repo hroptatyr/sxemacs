@@ -291,6 +291,7 @@ int main(int argc, char *argv[])
 	}
 
 	while (optind < argc) {
+		assert(argv[optind] != NULL);
 		if (!inname) {
 			inname = argv[optind];
 		} else if (!outname) {

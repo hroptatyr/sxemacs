@@ -1516,11 +1516,13 @@ char *file;
 language *lang;
 {
 	struct stat stat_buf;
-	FILE *inf;
-	fdesc *fdp;
-	compressor *compr;
-	char *compressed_name, *uncompressed_name;
-	char *ext, *real_name;
+	FILE *inf = NULL;
+	fdesc *fdp = NULL;
+	compressor *compr = NULL;
+	char *compressed_name = NULL, 
+	     *uncompressed_name = NULL;
+	char *ext = NULL, 
+	     *real_name = NULL;
 	int retval;
 
 	canonicalize_filename (file);
@@ -1529,9 +1531,8 @@ language *lang;
 		error ("skipping inclusion of %s in self.", file);
 		return;
 	}
-	if ((compr = get_compressor_from_suffix (file, &ext)) == NULL)
+	if ( get_compressor_from_suffix (file, &ext) == NULL)
 	{
-		compressed_name = NULL;
 		real_name = uncompressed_name = savestr (file);
 	}
 	else
@@ -1549,52 +1550,50 @@ language *lang;
 			goto cleanup;
 	}
 
-	if (stat (real_name, &stat_buf) != 0)
-	{
-		/* Reset real_name and try with a different name. */
-		real_name = NULL;
-		if (compressed_name != NULL) /* try with the given suffix */
+	compr = compressors;
+	do {
+		/* First try to open ... */
+		if (real_name == compressed_name)
 		{
-			if (stat (uncompressed_name, &stat_buf) == 0)
-				real_name = uncompressed_name;
+			char *cmd = concat (compr->command, " ", real_name);
+			inf = (FILE *) popen (cmd, "r");
+			free (cmd);
 		}
-		else			/* try all possible suffixes */
-		{
-			for (compr = compressors; compr->suffix != NULL; compr++)
+		else
+			inf = fopen (real_name, "r");
+		if ( inf != NULL ) {
+			/* Open was successfull, check it is a regular file */
+			if (stat (real_name, &stat_buf) == 0 && 
+			    !S_ISREG (stat_buf.st_mode))
+			{
+				error ("skipping %s: it is not a regular file.", 
+				       real_name);
+				fclose(inf);
+				inf = NULL;
+			}
+		} 
+		/* Not else from previous if because inner check may reset inf
+		   to NULL, at which case we will want to try the next?
+		   compressed filename... */
+ 		if ( inf == NULL ) {
+			/* Reset real_name and try with a different name. */
+			free(compressed_name);
+			real_name = NULL;
+			if (compressed_name != NULL) 
+                                /* try with the given suffix */
+			{
+				compressed_name = NULL;
+				real_name = uncompressed_name;
+			}
+			else if ( compr && compr->suffix != NULL ) 
+                                /* try all possible suffixes */
 			{
 				compressed_name = concat (file, ".", compr->suffix);
-				if (stat (compressed_name, &stat_buf) != 0)
-				{
-					free (compressed_name);
-					compressed_name = NULL;
-				}
-				else
-				{
-					real_name = compressed_name;
-					break;
-				}
+				real_name = compressed_name;
+				compr++;
 			}
 		}
-		if (real_name == NULL)
-		{
-			perror (file);
-			goto cleanup;
-		}
-	} /* try with a different name */
-
-	if (!S_ISREG (stat_buf.st_mode))
-	{
-		error ("skipping %s: it is not a regular file.", real_name);
-		goto cleanup;
-	}
-	if (real_name == compressed_name)
-	{
-		char *cmd = concat (compr->command, " ", real_name);
-		inf = (FILE *) popen (cmd, "r");
-		free (cmd);
-	}
-	else
-		inf = fopen (real_name, "r");
+	} while( inf == NULL && real_name != NULL);
 	if (inf == NULL)
 	{
 		perror (real_name);
