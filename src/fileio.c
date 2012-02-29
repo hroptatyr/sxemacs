@@ -3714,6 +3714,8 @@ Non-nil second argument means save only current buffer.
 	if (listdesc < 0 && !auto_saved && STRINGP(listfile))
 		unlink((char *)XSTRING_DATA(listfile));
 
+	if (listdesc >= 0)
+		close(listdesc);
 	/* Show "...done" only if the echo area would otherwise be empty. */
 	if (auto_saved && NILP(no_message)
 	    && NILP(clear_echo_area(selected_frame(), Qauto_saving, 0))) {
