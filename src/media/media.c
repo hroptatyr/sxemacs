@@ -1103,7 +1103,9 @@ the second element to the second one and so on.
 		}
 
 		if (LIKELY(NILP(quotientp))) {
-			tmp = make_float((fpfloat)num / (fpfloat)den);
+			assert(den != 0);
+			if( den != 0)
+				tmp = make_float((fpfloat)num / (fpfloat)den);
 		}
 #if defined HAVE_MPQ && defined WITH_GMP
 		else {
