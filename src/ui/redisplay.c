@@ -1817,11 +1817,11 @@ static prop_block_dynarr *add_glyph_rune(pos_data * data,
 				data->bi_bufpos = 0;
 			{
 				prop_block_dynarr * tmp = NULL;
-				tmp = add_bufbyte_string_runes(data, 
+				tmp = add_bufbyte_string_runes(data,
 						       XSTRING_DATA(string),
 						       XSTRING_LENGTH(string),
 						       0, 1);
-				if(tmp) 
+				if(tmp)
 					Dynarr_free(tmp);
 			}
 			data->findex = orig_findex;
