@@ -233,6 +233,8 @@ extern int optind, opterr;
 
 #define bool int
 
+#define xstrncpy(d_,s_,l_) do { char* dst_=d_; dst_[0]='\0'; strncat((dst_),(s_),(l_)-1); } while(0)
+
 typedef void Lang_function __P((FILE *));
 
 typedef struct
@@ -2677,7 +2679,7 @@ char *qualifier;
 	{
 		len = strlen (cstack.cname[0]);
 		linebuffer_setlen (cn, len+1);
-		strncpy (cn->buffer, cstack.cname[0],len+1);
+		xstrncpy (cn->buffer, cstack.cname[0],len+1);
 	}
 	for (i = 1; i < cstack.nl; i++)
 	{
@@ -2978,7 +2980,7 @@ bool *is_func_or_var;	/* OUT: function or variable found */
 			fvdef = fvnone;
 			objdef = omethodtag;
 			linebuffer_setlen (&token_name, len);
-			strncpy (token_name.buffer, str, len);
+			xstrncpy (token_name.buffer, str, len);
 			token_name.buffer[len] = '\0';
 			return TRUE;
 		}
@@ -3525,7 +3527,7 @@ FILE *inf;			/* input file */
 									len -= 1;
 								}
 								linebuffer_setlen (&token_name, len);
-								strncpy (token_name.buffer,
+								xstrncpy (token_name.buffer,
 									 newlb.buffer + off, len);
 								token_name.buffer[len] = '\0';
 								if (defun)
@@ -3537,7 +3539,7 @@ FILE *inf;			/* input file */
 							else
 							{
 								linebuffer_setlen (&token_name, toklen);
-								strncpy (token_name.buffer,
+								xstrncpy (token_name.buffer,
 									 newlb.buffer + tokoff, toklen);
 								token_name.buffer[toklen] = '\0';
 								/* Name macros and members. */
@@ -5019,7 +5021,7 @@ FILE *inf;
 
 			/* Save all values for later tagging. */
 			linebuffer_setlen (&tline, lb.len);
-			strncpy(tline.buffer, lb.buffer, lb.len-1);
+			xstrncpy(tline.buffer, lb.buffer, lb.len-1);
 			save_lineno = lineno;
 			save_lcno = linecharno;
 			name = tline.buffer + (dbp - lb.buffer);
@@ -5498,7 +5500,7 @@ FILE * inf;
 						for (end = dbp; *end != '\0' && intoken (*end); end++)
 							continue;
 					linebuffer_setlen (&token_name, end - dbp);
-					strncpy (token_name.buffer, dbp, end - dbp);
+					xstrncpy (token_name.buffer, dbp, end - dbp);
 					token_name.buffer[end - dbp] = '\0';
 
 					dbp = end;
@@ -5599,7 +5601,7 @@ FILE *inf;
 			else if (len + 1 > allocated)
 				xrnew (last, len + 1, char);
 			allocated = len + 1;
-			strncpy (last, cp, len);
+			xstrncpy (last, cp, len);
 			last[len] = '\0';
 		}
 	}
@@ -5777,7 +5779,7 @@ FILE *inf;
 			else if (len + 1 > allocated)
 				xrnew (last, len + 1, char);
 			allocated = len + 1;
-			strncpy (last, cp, len);
+			xstrncpy (last, cp, len);
 			last[len] = '\0';
 		}
 	}
@@ -6172,7 +6174,7 @@ struct re_registers *regs;
 		{
 			dig = *out - '0';
 			diglen = regs->end[dig] - regs->start[dig];
-			strncpy (t, in + regs->start[dig], diglen);
+			xstrncpy (t, in + regs->start[dig], diglen);
 			t += diglen;
 		}
 		else
@@ -6398,7 +6400,7 @@ register FILE *stream;
 			filebuf.size *= 2;
 			xrnew (filebuf.buffer, filebuf.size, char);
 		}
-		strncpy (filebuf.buffer + filebuf.len, lbp->buffer, lbp->len);
+		xstrncpy (filebuf.buffer + filebuf.len, lbp->buffer, lbp->len);
 		filebuf.len += lbp->len;
 		filebuf.buffer[filebuf.len++] = '\n';
 		filebuf.buffer[filebuf.len] = '\0';
@@ -6629,7 +6631,7 @@ int len;
 	register char *dp;
 
 	dp = xnew (len + 1, char);
-	strncpy (dp, cp, len);
+	xstrncpy (dp, cp, len);
 	dp[len] = '\0';
 	return dp;
 }
@@ -6786,9 +6788,9 @@ char *s1, *s2, *s3;
 	int len1 = strlen (s1), len2 = strlen (s2), len3 = strlen (s3);
 	char *result = xnew (len1 + len2 + len3 + 1, char);
 
-	strncpy(result, s1, len1+1);
-	strncpy(result + len1, s2, len2+1);
-	strncpy(result + len1 + len2, s3, len3+1);
+	xstrncpy(result, s1, len1+1);
+	xstrncpy(result + len1, s2, len2+1);
+	xstrncpy(result + len1 + len2, s3, len3+1);
 	result[len1 + len2 + len3] = '\0';
 
 	return result;

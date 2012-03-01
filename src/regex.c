@@ -6537,6 +6537,7 @@ common_op_match_null_string_p(unsigned char **p, unsigned char *end,
 
 	case set_number_at:
 		p1 += 4;
+		break;
 
 	default:
 		/* All other opcodes mean we cannot match the empty string.  */

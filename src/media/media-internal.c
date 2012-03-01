@@ -504,12 +504,14 @@ static inline signed char int2ulaw(int i)
 
 	/* unrolling this condition (hopefully) improves execution speed */
 	if (i < 0) {
-		if ((i = (132 - i)) > 0x7FFF)
+		i = 132 - i;
+		if (i > 0x7FFF)
 			i = 0x7FFF;
 		logi = (i >> ((bits = t_bits[i / 256]) + 4));
 		return ((bits << 4 | logi) ^ 0x7F);
 	} else {
-		if ((i = 132 + i) > 0x7FFF)
+		i = 132 + i;
+		if ( i > 0x7FFF)
 			i = 0x7FFF;
 		logi = (i >> ((bits = t_bits[i / 256]) + 4));
 		return (~(bits << 4 | logi));

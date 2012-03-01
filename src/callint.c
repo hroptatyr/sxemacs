@@ -527,7 +527,8 @@ when reading the arguments.
 				   + argcount	/* visargs */
 				   + argcount	/* varies */
 		    );
-		Lisp_Object *args = alloca_array(Lisp_Object, alloca_size) + 1;
+		Lisp_Object *fcall= alloca_array(Lisp_Object, alloca_size);
+		Lisp_Object *args = fcall+1;
 		/* visargs is an array of either Qnil or user-friendlier
 		    versions (often
 		 *  strings) of previous arguments, to use in prompts for
@@ -545,7 +546,7 @@ when reading the arguments.
 		REGISTER int argnum;
 		struct gcpro gcpro1, gcpro2;
 
-		args[-1] = function;
+		fcall[0] = function;
 		for (argnum = 0; argnum < alloca_size - 1; argnum++)
 			args[argnum] = Qnil;
 

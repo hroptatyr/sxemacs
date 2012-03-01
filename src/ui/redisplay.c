@@ -1815,8 +1815,15 @@ static prop_block_dynarr *add_glyph_rune(pos_data * data,
 			data->bi_start_col_enabled = 0;
 			if (!allow_cursor)
 				data->bi_bufpos = 0;
-			add_bufbyte_string_runes(data, XSTRING_DATA(string),
-						 XSTRING_LENGTH(string), 0, 1);
+			{
+				prop_block_dynarr * tmp = NULL;
+				tmp = add_bufbyte_string_runes(data,
+						       XSTRING_DATA(string),
+						       XSTRING_LENGTH(string),
+						       0, 1);
+				if(tmp)
+					Dynarr_free(tmp);
+			}
 			data->findex = orig_findex;
 			data->bi_bufpos = orig_bufpos;
 			data->bi_start_col_enabled = orig_start_col_enabled;

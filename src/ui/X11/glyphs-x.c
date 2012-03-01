@@ -870,9 +870,12 @@ x_init_image_instance_from_eimage(Lisp_Image_Instance * ii,
 			init_image_instance_from_x_image(ii, ximage, dest_mask,
 							 cmap, pixtbl, npixels,
 							 slices, instantiator);
-		else
+		else {
+			if (pixtbl)
+				xfree(pixtbl);
 			image_instance_add_x_image(ii, ximage, slice,
 						   instantiator);
+		}
 
 		if (ximage) {
 			if (ximage->data) {

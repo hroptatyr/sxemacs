@@ -1534,6 +1534,7 @@ A prefix arg makes KEEP-TIME non-nil.
 				 O_RDONLY | OPEN_BINARY, 0);
 	if (ifd < 0) {
 		report_file_error("Opening input file", list1(filename));
+		return;
 	}
 	record_unwind_protect(close_file_unwind, make_int(ifd));
 
@@ -1580,6 +1581,8 @@ A prefix arg makes KEEP-TIME non-nil.
 				report_file_error("I/O error", list1(newname));
 		}
 
+		if(close(ifd) <0)
+			report_file_error("I/O error", list1(filename));
 		/* Closing the output clobbers the file times on some systems.  */
 		if (close(ofd) < 0)
 			report_file_error("I/O error", list1(newname));
@@ -3713,6 +3716,9 @@ Non-nil second argument means save only current buffer.
 	   (in that case we'd still want the old one around). */
 	if (listdesc < 0 && !auto_saved && STRINGP(listfile))
 		unlink((char *)XSTRING_DATA(listfile));
+
+	if (listdesc >= 0)
+		close(listdesc);
 
 	/* Show "...done" only if the echo area would otherwise be empty. */
 	if (auto_saved && NILP(no_message)

@@ -1039,15 +1039,20 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		char *term;
 		if (argmatch
 		    (argv, argc, "-t", "--terminal", 4, &term, &skip_args)) {
+			int tdesc = -1;
 			close(0);
 			close(1);
-			if (open(term, O_RDWR | OPEN_BINARY, 2) < 0)
+			tdesc = open(term, O_RDWR | OPEN_BINARY, 2);
+			if (tdesc < 0)
 				fatal("%s: %s", term, strerror(errno));
-			if( dup(0) < 0)
+			assert(tdesc==0);
+			tdesc = dup(0);
+			if ( tdesc < 0) {
 				fatal("dup failed %s: %s", term, strerror(errno));
-			if (!isatty(0))
+			}
+			if (!isatty(0)) {
 				fatal("%s: not a tty", term);
-
+			}
 #if 0
 			stderr_out("Using %s", ttyname(0));
 #endif
