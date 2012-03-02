@@ -189,8 +189,15 @@ extern_inline char *xdirname(const char *file);
 #define xstrcmp		strcmp
 #define xstrcat		strcat
 #define xstrncmp	strncmp
-#define xstrncpy	strncpy
 #define xstrncat	strncat
+
+extern_inline char*
+xstrncpy(char* target, const char*source, size_t len)
+{
+	*target ='\0';
+	strncat(target,source,len-1);
+}
+
 #if defined HAVE_STPCPY
 # define xstpcpy	stpcpy
 #else
@@ -218,7 +225,7 @@ extern_inline char*
 xstpncpy(char *target, const char *source, size_t len)
 {
 	char *p = target;
-	strncpy(target, source, len);
+	xstrncpy(target, source, len);
 	p += len;
 	return p;
 }
