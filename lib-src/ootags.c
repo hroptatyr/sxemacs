@@ -174,6 +174,14 @@ void oo_browser_check_and_clear_structtype(void);
 # define xrnew(op,n,Type) ((Type *) xrealloc ((op), (n) * sizeof (Type)))
 #endif
 
+#define xstrncpy(d_,s_,l_)			\
+	do {					\
+		char* dst_=d_;			\
+		dst_[0]='\0';			\
+		strncat((dst_),(s_),(l_)-1);	\
+	} while(0)
+
+
 typedef int bool;
 
 typedef void Lang_function(FILE *);
@@ -2387,7 +2395,7 @@ bool *is_func_or_var;		/* OUT: function or variable found */
 			objdef = omethodtag;
 			methodlen = len;
 			grow_linebuffer(&token_name, methodlen + 1);
-			strncpy(token_name.buffer, str, len);
+			xstrncpy(token_name.buffer, str, len);
 			token_name.buffer[methodlen] = '\0';
 			token_name.len = methodlen;
 			return TRUE;
@@ -2829,7 +2837,7 @@ FILE *inf;			/* input file */
 								    (&token_name,
 								     toklen +
 								     1);
-								strncpy
+								xstrncpy
 								    (token_name.
 								     buffer,
 								     newlb.
@@ -3903,7 +3911,7 @@ FILE *inf;
 
 			/* save all values for later tagging */
 			grow_linebuffer(&tline, lb.len + 1);
-			strncpy(tline.buffer, lb.buffer, lb.len);
+			xstrncpy(tline.buffer, lb.buffer, lb.len);
 			save_lineno = lineno;
 			save_lcno = linecharno;
 
@@ -4292,7 +4300,7 @@ FILE *inf;
 			else if (len + 1 > allocated)
 				last = xrnew(last, len + 1, char);
 			allocated = len + 1;
-			strncpy(last, cp, len);
+			xstrncpy(last, cp, len);
 			last[len] = '\0';
 		}
 	}
@@ -4447,7 +4455,7 @@ FILE *inf;
 			else if (len + 1 > allocated)
 				last = xrnew(last, len + 1, char);
 			allocated = len + 1;
-			strncpy(last, cp, len);
+			xstrncpy(last, cp, len);
 			last[len] = '\0';
 		}
 	}
@@ -4746,7 +4754,7 @@ struct re_registers *regs;
 			/* Using "dig2" satisfies my debugger.  Bleah. */
 			dig = *out - '0';
 			diglen = regs->end[dig] - regs->start[dig];
-			strncpy(t, in + regs->start[dig], diglen);
+			xstrncpy(t, in + regs->start[dig], diglen);
 			t += diglen;
 		} else
 			*t++ = *out;
@@ -4917,7 +4925,7 @@ int len;
 	register char *dp;
 
 	dp = xnew(len + 1, char);
-	strncpy(dp, cp, len);
+	xstrncpy(dp, cp, len);
 	dp[len] = '\0';
 	return dp;
 }

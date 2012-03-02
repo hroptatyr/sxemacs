@@ -34,6 +34,14 @@
 static void yow(FILE * fp);
 static void setup_yow(FILE * fp);
 
+#define xstrncpy(d_,s_,l_)			\
+	do {					\
+		char* dst_=d_;			\
+		dst_[0]='\0';			\
+		strncat((dst_),(s_),(l_)-1);	\
+	} while(0)
+
+
 int
 main(int argc, char *argv[])
 {
@@ -41,7 +49,7 @@ main(int argc, char *argv[])
 	char file[BUFSIZ];
 
 	if (argc > 2 && !strcmp(argv[1], "-f")) {
-		strncpy(file, argv[2], sizeof(file)-1);
+		xstrncpy(file, argv[2], sizeof(file)-1);
 		file[sizeof(file)-1]='\0';
 	} else {
 #ifdef PATH_DATA

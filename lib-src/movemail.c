@@ -143,6 +143,14 @@ static int pop_search_top(popserver server, int msgno, int lines,
 			  struct re_pattern_buffer *regexp);
 #endif
 
+
+#define xstrncpy(d_,s_,l_)			\
+	do {					\
+		char* dst_=d_;			\
+		dst_[0]='\0';			\
+		strncat((dst_),(s_),(l_)-1);	\
+	} while(0)
+
 int verbose = 0;
 #ifdef MAIL_USE_POP
 int reverse = 0;
@@ -681,9 +689,9 @@ static char *concat(char *s1, char *s2, char *s3)
 	int len1 = strlen(s1), len2 = strlen(s2), len3 = strlen(s3);
 	char *result = (char *)xmalloc(len1 + len2 + len3 + 1);
 
-	strncpy(result, s1, len1+1);
-	strncpy(result + len1, s2, len2+1);
-	strncpy(result + len1 + len2, s3, len3+1);
+	xstrncpy(result, s1, len1+1);
+	xstrncpy(result + len1, s2, len2+1);
+	xstrncpy(result + len1 + len2, s3, len3+1);
 	*(result + len1 + len2 + len3) = '\0';
 
 	return result;
@@ -847,7 +855,7 @@ pop_retr(popserver server, int msgno, int (*action) (char *, FILE *),
 	int ret;
 
 	if (pop_retrieve_first(server, msgno, &line)) {
-		strncpy(Errmsg, pop_error, sizeof(Errmsg));
+		xstrncpy(Errmsg, pop_error, sizeof(Errmsg));
 		Errmsg[sizeof(Errmsg) - 1] = '\0';
 		return (POP_ERROR);
 	}
@@ -864,7 +872,7 @@ pop_retr(popserver server, int msgno, int (*action) (char *, FILE *),
 	}
 
 	if (ret) {
-		strncpy(Errmsg, pop_error, sizeof(Errmsg));
+		xstrncpy(Errmsg, pop_error, sizeof(Errmsg));
 		Errmsg[sizeof(Errmsg) - 1] = '\0';
 		return (POP_ERROR);
 	}
@@ -882,7 +890,7 @@ pop_search_top(popserver server, int msgno, int lines,
 	int match = POP_DONE;
 
 	if (pop_top_first(server, msgno, lines, &line)) {
-		strncpy(Errmsg, pop_error, sizeof(Errmsg));
+		xstrncpy(Errmsg, pop_error, sizeof(Errmsg));
 		Errmsg[sizeof(Errmsg) - 1] = '\0';
 		return (POP_ERROR);
 	}
@@ -906,7 +914,7 @@ pop_search_top(popserver server, int msgno, int lines,
 	}
 
 	if (ret) {
-		strncpy(Errmsg, pop_error, sizeof(Errmsg));
+		xstrncpy(Errmsg, pop_error, sizeof(Errmsg));
 		Errmsg[sizeof(Errmsg) - 1] = '\0';
 		return (POP_ERROR);
 	}
