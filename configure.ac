@@ -787,6 +787,7 @@ dnl -------------------------------------------------------------------------
 SXE_CHECK_COMMAND_LINE
 
 AM_INIT_AUTOMAKE([foreign -Wall])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
 SXE_CHECK_BUILDCHAIN
 AC_SUBST(EGREP)
 
