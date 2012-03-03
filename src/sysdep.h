@@ -177,72 +177,9 @@ extern int h_errno;
 char *xrealpath(const char *path, char restrict resolved_path[]);
 #endif
 
-extern_inline size_t xmin_size_t(size_t a, size_t b);
 extern_inline void x__dirname(char *restrict res, const char *file, size_t len);
 extern_inline size_t x__dirlen(const char *file, size_t len);
 extern_inline char *xdirname(const char *file);
-
-
-/* str funs */
-/* thought these were defined already :O */
-#define xstrlen		strlen
-#define xstrcmp		strcmp
-#define xstrcat		strcat
-#define xstrncmp	strncmp
-#define xstrncat	strncat
-
-extern_inline char*
-xstrncpy(char* target, const char*source, size_t len)
-{
-	*target ='\0';
-	strncat(target,source,len-1);
-}
-
-#if defined HAVE_STPCPY
-# define xstpcpy	stpcpy
-#else
-extern_inline char*
-xstpcpy(char *target, const char *source)
-	__attribute__((always_inline));
-extern_inline char*
-xstpcpy(char *target, const char *source)
-{
-	char *p = target;
-	size_t len = xstrlen(source);
-
-	strcpy(target, source);
-	p += len;
-	return p;
-}
-#endif	/* !HAVE_STPCPY */
-#if defined HAVE_STPNCPY
-# define xstpncpy	stpncpy
-#else
-extern_inline char*
-xstpncpy(char *target, const char *source, size_t len)
-	__attribute__((always_inline));
-extern_inline char*
-xstpncpy(char *target, const char *source, size_t len)
-{
-	char *p = target;
-	xstrncpy(target, source, len);
-	p += len;
-	return p;
-}
-#endif	/* !HAVE_STPNCPY */
-
-#define xmemcmp		memcmp
-#define xmemcpy		memcpy
-
-extern_inline size_t
-xmin_size_t(size_t a, size_t b)
-{
-	if (a < b) {
-		return a;
-	} else {
-		return b;
-	}
-}
 
 
 /* big dirname magic, some of it stolen from dirname.c from coreutils 6.9 */
@@ -266,6 +203,9 @@ xmin_size_t(size_t a, size_t b)
 
 extern_inline size_t
 x__dirlen(const char *file, size_t len)
+	__attribute__((always_inline));
+extern_inline size_t
+x__dirlen(const char *file, size_t len)
 {
 	/* return the offset of the last / in FILE */
 	size_t pre = FILE_SYSTEM_PREFIX_LEN(file);
@@ -280,6 +220,9 @@ x__dirlen(const char *file, size_t len)
 	return len;
 }
 
+extern_inline void
+x__dirname(char *restrict res, const char *file, size_t len)
+	__attribute__((always_inline));
 #if defined(HAVE_DIRNAME) && defined(DIRNAME_SIDE_EFFECT)
 extern_inline void
 x__dirname(char *restrict res, const char *file, size_t len)
@@ -312,6 +255,9 @@ x__dirname(char *restrict res, const char *file, size_t len)
 }
 #endif
 
+extern_inline char*
+xdirname(const char *file)
+	__attribute__((always_inline));
 extern_inline char*
 xdirname(const char *file)
 {
