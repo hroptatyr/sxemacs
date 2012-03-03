@@ -2556,11 +2556,6 @@ fi
 
 dnl Test for features that require X11 support
 if test "$with_x11" != "yes"; then
-  dnl It ought to be reasonable to have no output device at all, and only use
-  dnl SXEmacs in --batch mode.
-  dnl if test "$with_tty" = "no" ; then
-  dnl   AC_MSG_ERROR([No window system support and no TTY support - Unable to proceed.])
-  dnl fi
   for feature in offix wmcommand xim xmu nas_sound
   do
     if eval "test -n \"\$with_${feature}\" -a \"\$with_${feature}\" != no" ; then
@@ -2589,6 +2584,11 @@ esac
 
 if test -n "$window_system" -a "$window_system" != "none"; then
 	AC_DEFINE_UNQUOTED([HAVE_WINDOW_SYSTEM], [1], [Description here!])
+else
+    dnl It ought to be reasonable to have no output device at all, and only use
+    dnl SXEmacs in --batch mode.
+    if test "$with_tty" = "no" ; then
+       AC_MSG_WARN([No window system support and no TTY support - You will only be able to use --batch mode.])
 fi
 
 case "$x_libraries" in *X11R4* )
