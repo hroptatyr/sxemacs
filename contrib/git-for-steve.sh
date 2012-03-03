@@ -61,7 +61,7 @@ REMOTE=$(git remote | grep -v origin)
 if [ -z "$REMOTE" ]; then
     echo "MANDATORY: You now must configure your remote repository "
     echo "           location using:"
-    echo "    git remote <myremote> <repository location>"
+    echo "    git remote add <myremote> <repository location>"
     echo ""
     echo "           We recommend that you use 'myremote' explicitly"
     echo "           for the remote name, but it can be whatever name"
