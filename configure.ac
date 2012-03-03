@@ -551,6 +551,27 @@ OG_ARG_WITH([ncurses],
 		[Use the ncurses library for tty support.]),
 	[auto], [Autodetect])
 
+OG_ARG_WITH([curses],
+	AS_HELP_STRING([--with-curses],
+		[Use the curses library for tty support.]),
+	[auto], [Autodetect])
+
+OG_ARG_WITH([terminfo],
+	AS_HELP_STRING([--with-terminfo],
+		[Use the terminfo library for tty support.]),
+	[auto], [Autodetect])
+
+OG_ARG_WITH([termlib],
+	AS_HELP_STRING([--with-termlib],
+		[Use the termlib library for tty support.]),
+	[auto], [Autodetect])
+
+OG_ARG_WITH([termcap],
+	AS_HELP_STRING([--with-termcap],
+		[Use the termcap library for tty support.]),
+	[auto], [Autodetect])
+
+
 OG_ARG_WITH([gpm],
 	AS_HELP_STRING([--with-gpm],
 		[Compile in GPM mouse support for ttys.]),
