@@ -207,6 +207,10 @@ esac
 echo "
 TTY:"
 test "$with_ncurses" = yes && echo "  Compiling in support for ncurses."
+test "$with_curses" = yes && echo "  Compiling in support for curses."
+test "$with_terminfo" = yes && echo "  Compiling in support for terminfo ."
+test "$with_termlib" = yes && echo "  Compiling in support for termlib."
+test "$with_termcap" = yes && echo "  Compiling in support for termcap."
 test "$with_gpm" = yes && echo "  Compiling in support for GPM (General Purpose Mouse)."
 
 echo "
