@@ -2610,6 +2610,7 @@ else
     dnl SXEmacs in --batch mode.
     if test "$with_tty" = "no" ; then
        AC_MSG_WARN([No window system support and no TTY support - You will only be able to use --batch mode.])
+    fi
 fi
 
 case "$x_libraries" in *X11R4* )
@@ -2716,7 +2717,7 @@ dnl checks for header files
 AC_CHECK_HEADERS([libintl.h nlist.h sgtty.h termio.h termios.h])
 
 if test "$with_tty" != "no"  ; then
-	AS_MESSAGE(checking for TTY-related features)
+       AS_MESSAGE(checking for TTY-related features)
 	AC_DEFINE([HAVE_TTY], [1], [Description here!])
 	AC_DEFINE([HAVE_UNIXOID_EVENT_LOOP], [1], [Description here!])
 	SXE_ADD_SXEUITTY_OBJS([console-tty.o device-tty.o event-tty.o frame-tty.o objects-tty.o redisplay-tty.o cm.o])
@@ -2816,7 +2817,7 @@ if test "$with_tty" != "no"  ; then
   fi
 
 else dnl "$with_tty" = "no"
-  for feature in ncurses gpm; do
+  for feature in ncurses curses termcap terminfo termlib gpm; do
     if eval "test -n \"\$with_${feature}\" -a \"\$with_${feature}\" != no" ; then
       AC_MSG_WARN([--with-${feature} ignored:  Not valid without TTY support])
     fi
