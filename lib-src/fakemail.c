@@ -128,6 +128,13 @@ struct linebuffer lb;
 #define MAIL_PROGRAM_NAME "/bin/mail"
 #endif
 
+#define xstrncpy(d_,s_,l_)			\
+	do {					\
+		char* dst_=d_;			\
+		dst_[0]='\0';			\
+		strncat((dst_),(s_),(l_)-1);	\
+	} while(0)
+
 static const char *my_name;
 static char *the_date;
 static char *the_user;
@@ -311,23 +318,23 @@ static line_list make_file_preface(void)
 	/* the_user */
 	the_user_len = strlen(temp);
 	the_user = alloc_string(the_user_len + 1);
-	strncpy(the_user, the_user_len, temp);
+	xstrncpy(the_user, the_user_len, temp);
 	/* alloc the_string */
 	the_string_len = 3 + prefix_length + the_user_len + date_length;
 	the_string = alloc_string(the_string_len);
 	temp_len = the_string_len;
 	temp = the_string;
-	strncpy(temp, temp_len, FROM_PREFIX);
+	xstrncpy(temp, temp_len, FROM_PREFIX);
 
 	temp = &temp[prefix_length];
 	*temp++ = ' ';
 	temp_len -= prefix_length + 1;
-	strncpy(temp, temp_len, the_user);
+	xstrncpy(temp, temp_len, the_user);
 
 	temp = &temp[the_user_len];
 	*temp++ = ' ';
 	temp_len -= the_user_len + 1;
-	strncpy(temp, temp_len, the_date);
+	xstrncpy(temp, temp_len, the_date);
 
 	result = new_list();
 	result->string = the_string;
@@ -563,7 +570,7 @@ static header read_header(void)
 		}
 		*next_line = new_list();
 		(*next_line)->string = alloc_string((size_t) length);
-		strncpy(((*next_line)->string), length, line);
+		xstrncpy(((*next_line)->string), length, line);
 		next_line = &((*next_line)->continuation);
 		*next_line = NIL;
 
@@ -610,7 +617,7 @@ int main(int argc, char *argv[])
 	the_header = read_header();
 	command_line_len = name_length + args_size(the_header);
 	command_line = alloc_string(command_line_len);
-	strncpy(command_line, command_line_len, mail_program_name);
+	xstrncpy(command_line, command_line_len, mail_program_name);
 	parse_header(the_header, &command_line[name_length]);
 
 	the_pipe = popen(command_line, "w");

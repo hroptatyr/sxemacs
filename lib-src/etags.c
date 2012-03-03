@@ -233,7 +233,12 @@ extern int optind, opterr;
 
 #define bool int
 
-#define xstrncpy(d_,s_,l_) do { char* dst_=d_; dst_[0]='\0'; strncat((dst_),(s_),(l_)-1); } while(0)
+#define xstrncpy(d_,s_,l_)			\
+	do {					\
+		char* dst_=d_;			\
+		dst_[0]='\0';			\
+		strncat((dst_),(s_),(l_)-1);	\
+	} while(0)
 
 typedef void Lang_function __P((FILE *));
 

@@ -59,6 +59,13 @@ char gnuserv_version[] = "gnuserv version" GNUSERV_VERSION;
 #include <string.h>
 #endif				/* HAVE_STRING_H */
 
+#define xstrncpy(d_,s_,l_)			\
+	do {					\
+		char* dst_=d_;			\
+		dst_[0]='\0';			\
+		strncat((dst_),(s_),(l_)-1);	\
+	} while(0)
+
 
 #if !defined(SYSV_IPC) && !defined(UNIX_DOMAIN_SOCKETS) && \
     !defined(INTERNET_DOMAIN_SOCKETS)
@@ -186,7 +193,7 @@ handle_ipc_request(struct msgbuf *msgp)
 	}
 	/* if */
 	msgctl(ipc_qid, IPC_STAT, &msg_st);
-	strncpy(buf, msgp->mtext, len);
+	xstrncpy(buf, msgp->mtext, len);
 	/* terminate buf */
 	buf[len] = '\0';
 
