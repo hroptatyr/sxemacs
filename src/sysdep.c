@@ -2131,7 +2131,7 @@ void init_system_name(void)
 				ssize_t canon_len=strlen(res->ai_canonname)+1;
 
 				hostname = (char *)alloca(canon_len);
-				strncpy(hostname, res->ai_canonname, canon_len);
+				xstrncpy(hostname, res->ai_canonname, canon_len);
 				freeaddrinfo(res);
 			}
 #  endif			/* !(HAVE_GETADDRINFO && HAVE_GETNAMEINFO) */
@@ -3281,7 +3281,7 @@ struct direct *readdir(DIR * dirp)
 
 		if (dp->od_ino != 0) {	/* not deleted entry */
 			dir_static.d_ino = dp->od_ino;
-			strncpy(dir_static.d_name, dp->od_name, DIRSIZ);
+			xstrncpy(dir_static.d_name, dp->od_name, DIRSIZ);
 			dir_static.d_name[DIRSIZ] = '\0';
 			dir_static.d_namlen = strlen(dir_static.d_name);
 			dir_static.d_reclen = sizeof(struct direct)
