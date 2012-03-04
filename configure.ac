@@ -758,9 +758,8 @@ dnl
 ## -------------------------------------------------------------------------
 ## Check for users who regularly forget about running autoconf
 ## -------------------------------------------------------------------------
-if test -f $0.ac -a $0.ac -nt $0; then
-	AC_MSG_ERROR([What are you doing? RUN autoreconf NOW!!!])
-fi
+AS_IF([test -f "$0.ac" -a "$0.ac" -nt "$0"],
+   AC_MSG_ERROR([What are you doing? RUN autoreconf NOW!!!]))
 
 #
 # Turn off core generation. We are already verifying the program fails, no need
@@ -829,22 +828,16 @@ AC_CHECK_PROG([have_git], [git], [yes], [no])
 AC_MSG_CHECKING([for SXEmacs version])
 AC_MSG_RESULT([SXEmacs SXEM4CS_VERSION])
 dnl Must do the following first to determine verbosity for AC_DEFINE
-if test -n "[]SXEM4CS_BETA_P[]"; then
-	beta=yes
-else
-	beta=no
-fi
+AS_IF([test -n "[]SXEM4CS_BETA_P[]"],beta=yes,beta=no)
 : "${extra_verbose=$beta}"
 
 AC_MSG_CHECKING([for SXEmacs patchlevel])
 CURDIR=$(pwd)
 cd "$sxe_srcdir"
-if test "$have_git" = "yes"; then
-	sxemacs_git_version="$(git describe | head -1)"
-fi
-if test -z "$sxemacs_git_version" ; then
-	sxemacs_git_version="[]SXEM4CS_GIT_VERSION[]"
-fi
+AS_IF([test "$have_git" = "yes"], 
+	    [sxemacs_git_version=`git describe | head -1`])
+AS_IF([test -z "$sxemacs_git_version"],
+	sxemacs_git_version="[]SXEM4CS_GIT_VERSION[]")
 AC_MSG_RESULT([$sxemacs_git_version])
 version="$sxemacs_git_version"
 cd "$CURDIR"
@@ -1269,9 +1262,8 @@ SXE_CHECK_FILE_LOCK
 
 case "$opsys" in decosf*)
 	AC_CHECK_LIB([pthreads], [cma_open])
-	if test "$ac_cv_lib_pthreads_cma_open" = "yes"; then
-		c_switch_site="$c_switch_site -threads"
-	fi
+	AS_IF([test "$ac_cv_lib_pthreads_cma_open" = "yes"],
+		c_switch_site="$c_switch_site -threads")
 	;;
 esac
 
@@ -2394,9 +2386,8 @@ if test "$with_x11" = "yes"; then
 	dnl Avoid version mismatch for shared library libXm.so on osf4
 	case "$opsys" in
 	decosf*)
-		if test "$GCC" = yes -a -d "/usr/shlib"; then
-			SXE_APPEND([-L/usr/shlib], [X_LIBS]);
-		fi
+		AS_IF([test "$GCC" = yes -a -d "/usr/shlib"],
+			SXE_APPEND([-L/usr/shlib], [X_LIBS]))
 		;;
 	esac
 
