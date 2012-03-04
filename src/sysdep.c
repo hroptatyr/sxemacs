@@ -2102,6 +2102,7 @@ void init_system_name(void)
 #   endif
 			if (hp) {
 				const char *fqdn = (const char *)hp->h_name;
+				size_t len = 0;
 
 				if (!strchr(fqdn, '.')) {
 					/* We still don't have a fully qualified domain name.
@@ -2112,8 +2113,9 @@ void init_system_name(void)
 					if (*alias)
 						fqdn = *alias;
 				}
-				hostname = (char *)alloca(strlen(fqdn) + 1);
-				strcpy(hostname, fqdn);
+				len = strlen(fqdn) + 1;
+				hostname = (char *)alloca(len);
+				xstrncpy(hostname, fqdn,len);
 			}
 #  else				/* !(HAVE_GETADDRINFO && HAVE_GETNAMEINFO) */
 			struct addrinfo hints, *res;
