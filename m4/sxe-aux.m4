@@ -623,6 +623,7 @@ AC_DEFUN([_SXE_CHECK_PURE_OPT], [dnl
 	--enable-largefile | --disable-largefile | \
 	--enable-dependency-tracking | --disable-dependency-tracking | \
 	--enable-option-checking | --disable-option-checking | \
+	--enable-silent-rules | --disable-silent-rules | \
 	--with-x | --x-includes | --x-libraries | \
 	--build | --host | \
 	--program-prefix | --program-suffix | --program-transform-name | \
