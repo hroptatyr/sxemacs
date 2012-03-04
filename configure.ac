@@ -551,6 +551,27 @@ OG_ARG_WITH([ncurses],
 		[Use the ncurses library for tty support.]),
 	[auto], [Autodetect])
 
+OG_ARG_WITH([curses],
+	AS_HELP_STRING([--with-curses],
+		[Use the curses library for tty support.]),
+	[auto], [Autodetect])
+
+OG_ARG_WITH([terminfo],
+	AS_HELP_STRING([--with-terminfo],
+		[Use the terminfo library for tty support.]),
+	[auto], [Autodetect])
+
+OG_ARG_WITH([termlib],
+	AS_HELP_STRING([--with-termlib],
+		[Use the termlib library for tty support.]),
+	[auto], [Autodetect])
+
+OG_ARG_WITH([termcap],
+	AS_HELP_STRING([--with-termcap],
+		[Use the termcap library for tty support.]),
+	[auto], [Autodetect])
+
+
 OG_ARG_WITH([gpm],
 	AS_HELP_STRING([--with-gpm],
 		[Compile in GPM mouse support for ttys.]),
@@ -787,6 +808,7 @@ dnl -------------------------------------------------------------------------
 SXE_CHECK_COMMAND_LINE
 
 AM_INIT_AUTOMAKE([foreign -Wall])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
 SXE_CHECK_BUILDCHAIN
 AC_SUBST(EGREP)
 
@@ -2555,11 +2577,6 @@ fi
 
 dnl Test for features that require X11 support
 if test "$with_x11" != "yes"; then
-  dnl It ought to be reasonable to have no output device at all, and only use
-  dnl SXEmacs in --batch mode.
-  dnl if test "$with_tty" = "no" ; then
-  dnl   AC_MSG_ERROR([No window system support and no TTY support - Unable to proceed.])
-  dnl fi
   for feature in offix wmcommand xim xmu nas_sound
   do
     if eval "test -n \"\$with_${feature}\" -a \"\$with_${feature}\" != no" ; then
@@ -2588,6 +2605,12 @@ esac
 
 if test -n "$window_system" -a "$window_system" != "none"; then
 	AC_DEFINE_UNQUOTED([HAVE_WINDOW_SYSTEM], [1], [Description here!])
+else
+    dnl It ought to be reasonable to have no output device at all, and only use
+    dnl SXEmacs in --batch mode.
+    if test "$with_tty" = "no" ; then
+       AC_MSG_WARN([No window system support and no TTY support - You will only be able to use --batch mode.])
+    fi
 fi
 
 case "$x_libraries" in *X11R4* )
@@ -2694,7 +2717,7 @@ dnl checks for header files
 AC_CHECK_HEADERS([libintl.h nlist.h sgtty.h termio.h termios.h])
 
 if test "$with_tty" != "no"  ; then
-	AS_MESSAGE(checking for TTY-related features)
+       AS_MESSAGE(checking for TTY-related features)
 	AC_DEFINE([HAVE_TTY], [1], [Description here!])
 	AC_DEFINE([HAVE_UNIXOID_EVENT_LOOP], [1], [Description here!])
 	SXE_ADD_SXEUITTY_OBJS([console-tty.o device-tty.o event-tty.o frame-tty.o objects-tty.o redisplay-tty.o cm.o])
@@ -2794,7 +2817,7 @@ if test "$with_tty" != "no"  ; then
   fi
 
 else dnl "$with_tty" = "no"
-  for feature in ncurses gpm; do
+  for feature in ncurses curses termcap terminfo termlib gpm; do
     if eval "test -n \"\$with_${feature}\" -a \"\$with_${feature}\" != no" ; then
       AC_MSG_WARN([--with-${feature} ignored:  Not valid without TTY support])
     fi

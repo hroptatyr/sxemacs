@@ -138,6 +138,13 @@ int pop_debug = 0;
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
+#define xstrncpy(d_,s_,l_)			\
+	do {					\
+		char* dst_=d_;			\
+		dst_[0]='\0';			\
+		strncat((dst_),(s_),(l_)-1);	\
+	} while(0)
+
 /*
  * Function: pop_open (char *host, char *username, char *password,
  *		       int flags)
@@ -345,7 +352,7 @@ pop_stat (server, count, size)
 
 	if (strncmp (fromserver, "+OK ", 4)) {
 		if (0 == strncmp (fromserver, "-ERR", 4)) {
-			strncpy (pop_error, fromserver, ERROR_MAX);
+			xstrncpy (pop_error, fromserver, ERROR_MAX);
 		} else {
 			strcpy (pop_error,
 				"Unexpected response from POP "
@@ -435,7 +442,7 @@ pop_list (server, message, IDs, sizes)
 		}
 		if (strncmp (fromserver, "+OK ", 4)) {
 			if (! strncmp (fromserver, "-ERR", 4)) {
-				strncpy (pop_error, fromserver, ERROR_MAX);
+				xstrncpy (pop_error, fromserver, ERROR_MAX);
 			} else {
 				strcpy (pop_error,
 					"Unexpected response from "
@@ -680,7 +687,7 @@ pop_multi_first (server, command, response)
 	}
 
 	if (0 == strncmp (*response, "-ERR", 4)) {
-		strncpy (pop_error, *response, ERROR_MAX);
+		xstrncpy (pop_error, *response, ERROR_MAX);
 		return (-1);
 	} else if (0 == strncmp (*response, "+OK", 3)) {
 		for (*response += 3; **response == ' ';
@@ -848,7 +855,7 @@ pop_last (server)
 		return (-1);
 
 	if (! strncmp (fromserver, "-ERR", 4)) {
-		strncpy (pop_error, fromserver, ERROR_MAX);
+		xstrncpy (pop_error, fromserver, ERROR_MAX);
 		return (-1);
 	} else if (strncmp (fromserver, "+OK ", 4)) {
 		strcpy (pop_error, "Unexpected response from server in pop_last");
@@ -1385,7 +1392,7 @@ getok (server)
 	if (! strncmp (fromline, "+OK", 3))
 		return (0);
 	else if (! strncmp (fromline, "-ERR", 4)) {
-		strncpy (pop_error, fromline, ERROR_MAX);
+		xstrncpy (pop_error, fromline, ERROR_MAX);
 		pop_error[ERROR_MAX-1] = '\0';
 		return (-1);
 	} else {

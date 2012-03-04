@@ -1375,7 +1375,7 @@ int pdump_load(const char *argv0)
 		/* invocation-name includes a directory component -- presumably it
 		   is relative to cwd, not $PATH */
 		assert(strlen(dir) < sizeof(exe_path));
-		strncpy(exe_path, dir, sizeof(exe_path)-1);
+		xstrncpy(exe_path, dir, sizeof(exe_path));
 		exe_path[sizeof(exe_path)-1]='\0';
 	} else {
 		const char *path = getenv("PATH");
@@ -1407,7 +1407,7 @@ int pdump_load(const char *argv0)
 				remain--;
 			}
 			if (remain > 0) {
-				strncpy(w, name, remain);
+				xstrncpy(w, name, remain);
 				w[remain]='\0';
 			}
 

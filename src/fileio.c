@@ -601,17 +601,18 @@ get a current directory to run processes in.
 	return Ffile_name_directory(filename);
 }
 
-static char *file_name_as_directory(char *out, char *in)
+static char *file_name_as_directory(char *out, const char *in, size_t len)
 {
 	/* This function cannot GC */
 	int size = strlen(in);
 
 	if (size == 0) {
+		assert(len >= 3);
 		out[0] = '.';
 		out[1] = DIRECTORY_SEP;
 		out[2] = '\0';
 	} else {
-		strcpy(out, in);
+		xstrncpy(out, in, len);
 		/* Append a slash if necessary */
 		if (!IS_ANY_SEP(out[size - 1])) {
 			out[size] = DIRECTORY_SEP;
@@ -633,8 +634,9 @@ except for (file-name-as-directory \"\") => \"./\".
       (filename))
 {
 	/* This function can GC.  GC checked 2000-07-28 ben */
-	char *buf;
-	Lisp_Object handler;
+	size_t len = 0;
+	char *buf = NULL;
+	Lisp_Object handler = Qnil;
 
 	CHECK_STRING(filename);
 
@@ -645,9 +647,10 @@ except for (file-name-as-directory \"\") => \"./\".
 		return call2_check_string(handler, Qfile_name_as_directory,
 					  filename);
 
-	buf = (char *)alloca(XSTRING_LENGTH(filename) + 10);
+	len = XSTRING_LENGTH(filename) + 10;
+	buf = (char *)alloca(len);
 	return build_string(file_name_as_directory
-			    (buf, (char *)XSTRING_DATA(filename)));
+			    (buf, (char*)XSTRING_DATA(filename), len));
 }
 
 /*
@@ -657,13 +660,13 @@ except for (file-name-as-directory \"\") => \"./\".
  * Value is nonzero if the string output is different from the input.
  */
 
-static int directory_file_name(const char *src, char *dst)
+static int directory_file_name(const char *src, char *dst, size_t len)
 {
 	/* This function cannot GC */
 	long slen = strlen(src);
 	/* Process as Unix format: just remove any final slash.
 	   But leave "/" unchanged; do not change it to "".  */
-	strcpy(dst, src);
+	xstrncpy(dst, src, len);
 	if (slen > 1 && IS_DIRECTORY_SEP(dst[slen - 1])
 	    )
 		dst[slen - 1] = 0;
@@ -680,7 +683,8 @@ In Unix-syntax, this function just removes the final slash.
       (directory))
 {
 	/* This function can GC.  GC checked 2000-07-28 ben */
-	char *buf;
+	size_t len = 0;
+	char *buf = NULL;
 	Lisp_Object handler;
 
 	CHECK_STRING(directory);
@@ -696,8 +700,9 @@ In Unix-syntax, this function just removes the final slash.
 	if (!NILP(handler))
 		return call2_check_string(handler, Qdirectory_file_name,
 					  directory);
-	buf = (char *)alloca(XSTRING_LENGTH(directory) + 20);
-	directory_file_name((char *)XSTRING_DATA(directory), buf);
+	len = XSTRING_LENGTH(directory) + 20;
+	buf = (char *)alloca(len);
+	directory_file_name((char *)XSTRING_DATA(directory), buf, len);
 	return build_string(buf);
 }
 
@@ -1024,12 +1029,12 @@ See also the function `substitute-in-file-name'.
 
 	if (newdir) {
 		if (nm[0] == 0 || IS_DIRECTORY_SEP(nm[0]))
-			strcpy((char *)target, (char *)newdir);
+			xstrncpy((char *)target, (char *)newdir, tlen);
 		else
-			file_name_as_directory((char *)target, (char *)newdir);
+			file_name_as_directory((char *)target, (char *)newdir, tlen);
 	}
 
-	strcat((char *)target, (char *)nm);
+	xstrncat((char *)target, (char *)nm, tlen);
 
 	/* ASSERT (IS_DIRECTORY_SEP (target[0])) if not VMS */
 
@@ -1245,6 +1250,7 @@ If `/~' appears, all of FILENAME through that `/' is discarded.
 	Bufbyte *target = 0;
 	int total = 0;
 	int substituted = 0;
+	size_t avail = 0;
 	Bufbyte *xnm;
 	Lisp_Object handler;
 
@@ -1321,19 +1327,22 @@ If `/~' appears, all of FILENAME through that `/' is discarded.
 
 	/* If substitution required, recopy the filename and do it */
 	/* Make space in stack frame for the new copy */
-	xnm = (Bufbyte *) alloca(XSTRING_LENGTH(filename) + total + 1);
+	avail = XSTRING_LENGTH(filename) + total + 1;
+	xnm = (Bufbyte *) alloca(avail);
 	x = xnm;
 
 	/* Copy the rest of the name through, replacing $ constructs with values */
 	for (p = nm; *p;)
-		if (*p != '$')
+		if (*p != '$') {
 			*x++ = *p++;
-		else {
+			avail--;
+		} else {
 			p++;
 			if (p == endp)
 				goto badsubst;
 			else if (*p == '$') {
 				*x++ = *p++;
+				avail--;
 				continue;
 			} else if (*p == '{') {
 				o = ++p;
@@ -1359,8 +1368,9 @@ If `/~' appears, all of FILENAME through that `/' is discarded.
 			if (!o)
 				goto badvar;
 
-			strcpy((char *)x, (char *)o);
+			xstrncpy((char *)x, (char *)o, avail);
 			x += strlen((char *)o);
+			avail -= strlen((char *)o);
 		}
 
 	*x = 0;

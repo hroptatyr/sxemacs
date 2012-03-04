@@ -59,6 +59,13 @@ char gnuserv_version[] = "gnuclient version " GNUSERV_VERSION;
 
 #include <signal.h>
 
+#define xstrncpy(d_,s_,l_)			\
+	do {					\
+		char* dst_=d_;			\
+		dst_[0]='\0';			\
+		strncat((dst_),(s_),(l_)-1);	\
+	} while(0)
+
 #if !defined(SYSV_IPC) && !defined(UNIX_DOMAIN_SOCKETS) && \
     !defined(INTERNET_DOMAIN_SOCKETS)
 int main(int argc, char *argv[])
@@ -400,7 +407,7 @@ int main(int argc, char *argv[])
 					break;
 				case 'r':
 					GET_ARGUMENT(remotearg, "-r");
-					strncpy(remotepath, remotearg, sizeof(remotepath));
+					xstrncpy(remotepath, remotearg, sizeof(remotepath));
 					remotepath[sizeof(remotepath)-1]='\0';
 					rflg = 1;
 					break;
@@ -545,7 +552,7 @@ int main(int argc, char *argv[])
 					 * to this machine */
 				if ((ptr = getenv("GNU_NODE")) != NULL) {
 					/* user specified a path */
-					strncpy(remotepath, ptr, sizeof(remotepath)-1);
+					xstrncpy(remotepath, ptr, sizeof(remotepath)-1);
 					remotepath[sizeof(remotepath)-1]='\0';
 				}
 			}

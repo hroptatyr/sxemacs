@@ -391,4 +391,119 @@ char *xstrdup(const char *);
 # endif	 /* ERROR_CHECK_MALLOC */
 #endif	/* BDWGC */
 
+
+/* str funs */
+#define xstrlen		strlen
+#define xstrcmp		strcmp
+#define xstrncmp	strncmp
+#define xstrncat	strncat
+
+extern_inline char*
+xstrncpy(char* target, const char*source, size_t len)
+	__attribute__((always_inline));
+extern_inline char*
+xstrncpy(char* target, const char*source, size_t len)
+{
+	*target ='\0';
+	return strncat(target,source,len-1);
+}
+
+#if !defined(FORBID_STRCPY)
+#  define xstrcat		strcat
+#  define xstrcpy		strcpy
+#  if defined(HAVE_STPCPY)
+#     define xstpcpy	stpcpy
+#   else
+extern_inline char*
+xstpcpy(char *target, const char *source)
+	__attribute__((always_inline));
+extern_inline char*
+xstpcpy(char *target, const char *source)
+{
+	char *p = target;
+	size_t len = xstrlen(source);
+
+	strcpy(target, source);
+	p += len;
+	return p;
+}
+#   endif
+#else
+#  if defined(strcpy)
+#    undef strcpy
+#  endif
+#  define strcpy  no_strcpy
+extern_inline char*
+no_strcpy(char*,const char*)
+	__attribute__((always_inline));
+extern_inline char*
+no_strcpy(char * SXE_UNUSED(target),const char * SXE_UNUSED(source))
+{
+	assert(0);
+	return NULL;
+}
+#  if defined(strcat)
+#    undef strcat
+#  endif
+#  define strcat  no_strcat
+extern_inline char*
+no_strcat(char*,const char*)
+	__attribute__((always_inline));
+extern_inline char*
+no_strcat(char * SXE_UNUSED(target), const char* SXE_UNUSED(source))
+{
+	assert(0);
+	return NULL;
+}
+#  if defined(stpcpy)
+#    undef stpcpy
+#  endif
+#  define stpcpy	no_stpcpy
+#  define xstpcpy	no_stpcpy
+extern_inline char*
+no_stpcpy(char*,const char*)
+	__attribute__((always_inline));
+extern_inline char*
+no_stpcpy(char* SXE_UNUSED(target),const char* SXE_UNUSED(source))
+{
+	assert(0);
+	return NULL;
+}
+#endif
+
+
+#if defined HAVE_STPNCPY
+# define xstpncpy	stpncpy
+#else
+extern_inline char*
+xstpncpy(char *target, const char *source, size_t len)
+	__attribute__((always_inline));
+extern_inline char*
+xstpncpy(char *target, const char *source, size_t len)
+{
+	char *p = target;
+	xstrncpy(target, source, len);
+	p += len;
+	return p;
+}
+#endif	/* !HAVE_STPNCPY */
+
+#define xmemcmp		memcmp
+#define xmemcpy		memcpy
+
+
+
+extern_inline size_t
+xmin_size_t(size_t a, size_t b)
+	__attribute__((always_inline));
+extern_inline size_t
+xmin_size_t(size_t a, size_t b)
+{
+	if (a < b) {
+		return a;
+	} else {
+		return b;
+	}
+}
+
 #endif

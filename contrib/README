@@ -7,7 +7,7 @@ File List:
 =========
 	do_builds.sh..................automate builds
 	git-post-receive-hook.sample..git hook to send email automatically for merge requests
-	git-to-steve.sh...............setup a for-steve branch to send patches to the master branch
+	git-for-steve.sh..............setup a for-steve branch to send patches to the master branch
 	make-pkg.sh...................bash script to create a SXEmacs tar package 
 	pop3.el.patch.................SXEmacs native OpenSSL goodies 
         report-build-failure.sh.......bash script to send a build report failure 
@@ -71,7 +71,7 @@ script which should come with your git install.
 Nelson Ferreira <njsf@sxemacs.org>
 
 
-git-to-steve.sh
+git-for-steve.sh
 ---------------
 
 This script will check your git configuration, give you some
