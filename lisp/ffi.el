@@ -347,24 +347,15 @@ Error will be signaled if FO-POINTER is not of pointer type."
 
 (defmacro define-ffi-function (fsym args doc-string ftype ename)
   "Define ffi function visible from Emacs lisp as FSYM."
-  `(progn
-     (declare (special ,fsym))
-     (setq ,fsym (ffi-defun ,ftype ,ename))
-     (defun ,fsym ,args
-       ,doc-string
-       (let ((ffiargs nil)
-	     (ret nil))
-	 (mapcar* #'(lambda (type arg)
-		      (setq ffiargs (cons
-				     (if (ffi-object-p arg)
-					 arg
-				       (ffi-create-fo type arg))
-				     ffiargs)))
-		  (cddr ,ftype) (list ,@args))
-	 (setq ffiargs (nreverse ffiargs))
-	 (setq ret (apply #'ffi-call-function ,fsym ffiargs))
-	 (ffi-get ret :from-call t)))))
+  `(defun ,fsym ,args ,doc-string
+    (ffi-get (ffi-call-function (load-time-value (ffi-defun ,ftype ,ename))
+                                ,@(mapcar* #'(lambda (type arg)
+                                               `(if (ffi-object-p ,arg)
+                                                    ,arg
+                                                  (ffi-create-fo ',type ,arg)))
+                                           (cddadr ftype) args))
 
+             :from-call t)))
 (put 'define-ffi-function 'lisp-indent-function 'defun)
 
 
