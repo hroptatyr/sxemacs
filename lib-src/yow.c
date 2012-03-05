@@ -49,8 +49,8 @@ main(int argc, char *argv[])
 	char file[BUFSIZ];
 
 	if (argc > 2 && !strcmp(argv[1], "-f")) {
-		xstrncpy(file, argv[2], sizeof(file)-1);
-		file[sizeof(file)-1]='\0';
+		assert(argv[2] != NULL);
+		xstrncpy(file, argv[2], sizeof(file));
 	} else {
 #ifdef PATH_DATA
 #ifdef vms

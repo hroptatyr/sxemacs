@@ -1696,7 +1696,12 @@ dnl Check for POSIX functions.
 dnl ----------------------------------------------------------------
 
 SXE_CHECK_BASIC_FUNS
-AC_CHECK_FUNCS([alarm cbrt closedir dup2 eaccess endpwent floor fmod fpathconf frexp fsync ftime ftruncate getaddrinfo getcwd gethostbyname gethostname getnameinfo getpagesize getrlimit gettimeofday getwd isascii link logb lrand48 matherr memchr memmove memset mkdir mktime munmap perror poll pow putenv random re_comp readlink regcomp rename res_init rint rmdir select setitimer setlocale setpgid setsid sigblock sighold sigprocmask snprintf socket sqrt stpcpy strcasecmp strchr strdup strerror strlwr strrchr strspn strtol strupr symlink tzset ulimit umask uname usleep utime vlimit vsnprintf waitpid wcscmp wcslen])
+AC_CHECK_FUNCS([alarm cbrt closedir dup2 eaccess endpwent floor fmod fpathconf frexp fsync ftime ftruncate getaddrinfo getcwd gethostbyname gethostname getnameinfo getpagesize getrlimit gettimeofday getwd isascii isatty link logb lrand48 matherr memchr memmove memset mkdir mktime munmap perror poll pow putenv random re_comp readlink regcomp rename res_init rint rmdir select setitimer setlocale setpgid setsid sigblock sighold sigprocmask snprintf socket sqrt stpcpy strncpy strncat strcasecmp strchr strdup strerror strlwr strrchr strspn strtol strupr symlink ttyname tzset ulimit umask uname usleep utime vlimit vsnprintf waitpid wcscmp wcslen])
+
+AS_IF([test "$have_isatty" = "yes"],
+	AC_DEFINE([HAVE_ISATTY], [1], [isatty is available]))
+AS_IF([test "$have_ttyname" = "yes"],
+	AC_DEFINE([HAVE_TTYNAME], [1], [ttyname is available]))
 
 
 ## combines all these time structures and funs

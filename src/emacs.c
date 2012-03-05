@@ -1040,9 +1040,27 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		if (argmatch
 		    (argv, argc, "-t", "--terminal", 4, &term, &skip_args)) {
 			int tdesc = -1;
+#ifdef HAVE_TTYNAME
+			stderr_out("Opening for terminal usage %s (current: %s)\n", term, ttyname(0));
+#else
+			stderr_out("Opening for terminal usage %s\n", term, ttyname(0));
+#endif
+#ifdef HAVE_DUP2
+			tdesc = raw_open(term, O_RDWR | OPEN_BINARY, 2);
+			if (tdesc < 0)
+				fatal("%s: %s", term, strerror(errno));
+			/* Request dup into fd 0 */
+			if ( dup2(tdesc,0) < 0 )
+				fatal("%s: %s", term, strerror(errno));
+			stderr_out("Dup(0) ok\n");
+			/* Requesr dup into fd 1 */
+			if ( dup2(tdesc,1) < 0 )
+				fatal("%s: %s", term, strerror(errno));
+			close(tdesc);
+#else
 			close(0);
 			close(1);
-			tdesc = open(term, O_RDWR | OPEN_BINARY, 2);
+			tdesc = raw_open(term, O_RDWR | OPEN_BINARY, 2);
 			if (tdesc < 0)
 				fatal("%s: %s", term, strerror(errno));
 			assert(tdesc==0);
@@ -1050,14 +1068,20 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 			if ( tdesc < 0) {
 				fatal("dup failed %s: %s", term, strerror(errno));
 			}
+			assert(tdesc==1);
+#endif
+#ifdef HAVE_ISATTY
 			if (!isatty(0)) {
 				fatal("%s: not a tty", term);
 			}
-#if 0
-			stderr_out("Using %s", ttyname(0));
 #endif
-			stderr_out("Using %s", term);
-			inhibit_window_system = 1;	/* -t => -nw */
+#ifdef HAVE_TTYNAME
+			stderr_out("Using tty %s\n", ttyname(0));
+#else
+			stderr_out("Using %tty s\n", term);
+#endif
+			inhibit_window_system = 1;	/* -t => -nw
+							 * */
 		}
 	}
 
