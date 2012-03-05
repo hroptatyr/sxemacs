@@ -304,6 +304,7 @@ ssize_t sys_write(int, const void *, size_t);
 
 #ifdef ENCAPSULATE_OPEN
 int sys_open(const char *, int, ...);
+int raw_open(const char *, int, ...);
 #endif
 #if defined (ENCAPSULATE_OPEN) && !defined (DONT_ENCAPSULATE)
 # undef open
@@ -311,6 +312,7 @@ int sys_open(const char *, int, ...);
 #endif
 #if !defined (ENCAPSULATE_OPEN) && defined (DONT_ENCAPSULATE)
 # define sys_open open
+# define raw_open open
 #endif
 
 #ifdef ENCAPSULATE_CLOSE

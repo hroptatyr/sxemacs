@@ -2300,6 +2300,19 @@ const char *strerror(int errnum)
    Jamie's home page (http://www.jwz.org/worse-is-better.html). */
 
 #ifdef ENCAPSULATE_OPEN
+
+int raw_open(const char *path, int oflag, ...)
+{
+	int mode;
+	va_list ap;
+	char *pout;
+
+	va_start(ap, oflag);
+	mode = va_arg(ap, int);
+	va_end(ap);
+	return open(pout, oflag, mode);
+}
+
 int sys_open(const char *path, int oflag, ...)
 {
 	int mode;
