@@ -1050,6 +1050,7 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 			if ( tdesc < 0) {
 				fatal("dup failed %s: %s", term, strerror(errno));
 			}
+			assert(tdesc==1);
 			if (!isatty(0)) {
 				fatal("%s: not a tty", term);
 			}
