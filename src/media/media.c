@@ -1079,7 +1079,7 @@ the second element to the second one and so on.
 	     (mss = media_substream_next(mss))) {
 		mtype_video_properties *mtvp;
 		long int num = 0, den = 0;
-		Lisp_Object tmp;
+		Lisp_Object tmp = Qnil;
 
 		if (LIKELY(media_substream_type(mss) != MTYPE_VIDEO)) {
 			continue;
