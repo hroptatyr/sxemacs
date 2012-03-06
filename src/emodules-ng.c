@@ -157,8 +157,8 @@ __emodng_open_append_exts(const char *filename)
 			continue;
 		}
 
-		strncpy(p, (const char*)XSTRING_DATA(XCAR(ext)),
-			(size_t)XSTRING_LENGTH(XCAR(ext))+1);
+		xstrncpy(p, (const char*)XSTRING_DATA(XCAR(ext)),
+			 name + sizeof(name) - p);
 
 		if (__file_exists_p(name)) {
 			EMOD_DEBUG_LOADER("trying %s\n", name);
@@ -189,9 +189,10 @@ __emodng_open_prepend_paths(const char *filename)
 			char *p;
 			p = xstpncpy(name,
 				     (const char*)XSTRING_DATA(XCAR(path)),
-				     (size_t)XSTRING_LENGTH(XCAR(path)));
+				     (size_t)XSTRING_LENGTH(XCAR(path)-2));
 			*p++ = '/';
-			strncpy(p, filename, nfilename+1);
+			*p = '\0';
+			xstrncpy(p, filename, name + sizeof(name) - p);
 
 			if (__file_exists_p(name)) {
 				EMOD_DEBUG_LOADER("trying %s\n", name);
@@ -225,11 +226,12 @@ __emodng_open_prepend_paths_append_exts(const char *filename)
 			char *p = xstpncpy(
 				name,
 				(const char*)XSTRING_DATA(XCAR(path)),
-				(size_t)XSTRING_LENGTH(XCAR(path)));
+				(size_t)XSTRING_LENGTH(XCAR(path))-2);
 			if (*(p-1) != '/') {
 				*p++ = '/';
+				*p = '\0';
 			}
-			p = xstpncpy(p, filename, nfilename);
+			p = xstpncpy(p, filename, name + sizeof(name) - p);
 
 			/* append all extensions now */
 			for (Lisp_Object ext = Vmodule_extensions;
@@ -238,9 +240,8 @@ __emodng_open_prepend_paths_append_exts(const char *filename)
 					continue;
 				}
 
-				strncpy(p,
-					(const char*)XSTRING_DATA(XCAR(ext)),
-					(size_t)XSTRING_LENGTH(XCAR(ext))+1);
+				xstrncpy(p,(const char*)XSTRING_DATA(XCAR(ext)),
+					 name + sizeof(name) - p);
 
 				if (__file_exists_p(name)) {
 					EMOD_DEBUG_LOADER("trying \"%s\"\n",
