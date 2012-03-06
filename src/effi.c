@@ -609,10 +609,10 @@ $LD_LIBRARY_PATH environment variable or the more global ld.so.cache.
 	dotpos = strrchr((char *)XSTRING_DATA(libname),'.');
 	if ( dotpos == NULL || strncmp(dotpos, EXT, sizeof(EXT))) {
 		ssize_t liblen = XSTRING_LENGTH(libname);
-		ssize_t soname_len = liblen + sizeof(EXT);
-		soname = xmalloc( soname_len + 1);
-		strncpy(soname, (char *)XSTRING_DATA(libname), liblen+1);
-		strncat(soname, EXT, sizeof(EXT)+1);
+		ssize_t soname_len = liblen + sizeof(EXT) + 1;
+		soname = xmalloc( soname_len);
+		xstrncpy(soname, (char *)XSTRING_DATA(libname), soname_len);
+		xstrncpy(soname+liblen, EXT, soname_len-liblen);
 	}
 
 	if ( soname == NULL ) {

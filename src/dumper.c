@@ -1442,7 +1442,7 @@ int pdump_load(const char *argv0)
 
 	/* Save exe_path because pdump_file_try() modifies it */
 	assert(strlen(exe_path) < sizeof(real_exe_path));
-	strcpy(real_exe_path, exe_path);
+	xstrncpy(real_exe_path, exe_path, sizeof(real_exe_path));
 	if (pdump_file_try(exe_path,sizeof(exe_path))
 	    || (xrealpath(real_exe_path, real_exe_path)
 		&& pdump_file_try(real_exe_path,sizeof(real_exe_path)))) {

@@ -465,6 +465,14 @@ sound_oss_play(audio_job_t aj)
 		SXE_MUTEX_UNLOCK(&sod->mtx);
 		return 0;
 	}
+	if(sosd->channels!=0) {
+		message(GETTEXT("audio-oss: "
+				"No channels."));
+		sound_oss_close_device(sod);
+		SXE_MUTEX_UNLOCK(&sod->mtx);
+		return 0;
+	}
+
 
 	/* the volume effect */
 	ADD_MEDIA_SAMPLE_EFFECT(
@@ -481,6 +489,7 @@ sound_oss_play(audio_job_t aj)
 
 	OSS_DEBUG_COE("have %d coerce functions in my chain.\n",
 		      sosd->coe_ch_cnt);
+
 
 	XAUDIO_DEVICE_STATE(device) = ASTATE_ALIVE;
 	SXE_MUTEX_UNLOCK(&sod->mtx);

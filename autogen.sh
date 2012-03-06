@@ -52,14 +52,21 @@ emacs_is_beta=t
 if test -n "$GIT" -a -n "$($GIT symbolic-ref HEAD 2>/dev/null)"; then
 	TREE_VERSION="$($GIT tag|tail -n1|tr -d v)"
 	GIT_VERSION="$($GIT describe | head -n1)"
+	GIT_BRANCH="$(git branch --no-color | awk '/^\*/ { print $2 }')"
 	IN_GIT="1"
 fi
 if test -z "$TREE_VERSION"; then
 	TREE_VERSION="$EXPECTED_TREE_VERSION"
 	if test -n "$IN_GIT"; then
-	    echo "If you cloned this branch into your own you should issue:"
+	    echo "If you cloned this branch into your own you could issue:"
 	    echo "\tgit tag -s v${TREE_VERSION}.<your branch_name>"
-	    echo "\tgit push --tag"
+	    echo ""
+	    echo "Be careful about pushing the tags as they probably will be "
+	    echo "more of a nuisance..."
+	    echo ""
+	    TREE_VERSION="$EXPECTED_TREE_VERSION.$GIT_BRANCH"
+	    echo "For now I am assuming the tre version will be $TREE_VERSION"
+	    echo ""
 	fi
 fi
 if test -z "$GIT_VERSION"; then

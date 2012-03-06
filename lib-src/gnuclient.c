@@ -217,21 +217,20 @@ static char *clean_string(const char *s)
 {
 	int i = 0;
 	char *p, *res;
+	const char *const_p;
 
-	{
-		const char *const_p;
-		for (const_p = s; *const_p; const_p++, i++) {
-			if (*const_p == '\\' || *const_p == '\"')
-				++i;
-			else if (*const_p == '\004')
-				i += 3;
-		}
+
+	for (const_p = s; *const_p; const_p++, i++) {
+		if (*const_p == '\\' || *const_p == '\"')
+			++i;
+		else if (*const_p == '\004')
+			i += 3;
 	}
 
 	p = res = (char *)malloc(i + 2 + 1);
 	*p++ = '\"';
-	for (; *s; p++, s++) {
-		switch (*s) {
+	for (const_p = s; *const_p; p++, const_p++) {
+		switch (*const_p) {
 		case '\\':
 			*p++ = '\\';
 			*p = '\\';
@@ -247,7 +246,7 @@ static char *clean_string(const char *s)
 			*p = 'd';
 			break;
 		default:
-			*p = *s;
+			*p = *const_p;
 		}
 	}
 	*p++ = '\"';

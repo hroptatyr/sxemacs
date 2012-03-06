@@ -2102,6 +2102,7 @@ void init_system_name(void)
 #   endif
 			if (hp) {
 				const char *fqdn = (const char *)hp->h_name;
+				size_t len = 0;
 
 				if (!strchr(fqdn, '.')) {
 					/* We still don't have a fully qualified domain name.
@@ -2112,8 +2113,9 @@ void init_system_name(void)
 					if (*alias)
 						fqdn = *alias;
 				}
-				hostname = (char *)alloca(strlen(fqdn) + 1);
-				strcpy(hostname, fqdn);
+				len = strlen(fqdn) + 1;
+				hostname = (char *)alloca(len);
+				xstrncpy(hostname, fqdn,len);
 			}
 #  else				/* !(HAVE_GETADDRINFO && HAVE_GETNAMEINFO) */
 			struct addrinfo hints, *res;
@@ -2131,7 +2133,7 @@ void init_system_name(void)
 				ssize_t canon_len=strlen(res->ai_canonname)+1;
 
 				hostname = (char *)alloca(canon_len);
-				strncpy(hostname, res->ai_canonname, canon_len);
+				xstrncpy(hostname, res->ai_canonname, canon_len);
 				freeaddrinfo(res);
 			}
 #  endif			/* !(HAVE_GETADDRINFO && HAVE_GETNAMEINFO) */
@@ -2298,6 +2300,19 @@ const char *strerror(int errnum)
    Jamie's home page (http://www.jwz.org/worse-is-better.html). */
 
 #ifdef ENCAPSULATE_OPEN
+
+int raw_open(const char *path, int oflag, ...)
+{
+	int mode;
+	va_list ap;
+	char *pout;
+
+	va_start(ap, oflag);
+	mode = va_arg(ap, int);
+	va_end(ap);
+	return open(pout, oflag, mode);
+}
+
 int sys_open(const char *path, int oflag, ...)
 {
 	int mode;
@@ -3281,7 +3296,7 @@ struct direct *readdir(DIR * dirp)
 
 		if (dp->od_ino != 0) {	/* not deleted entry */
 			dir_static.d_ino = dp->od_ino;
-			strncpy(dir_static.d_name, dp->od_name, DIRSIZ);
+			xstrncpy(dir_static.d_name, dp->od_name, DIRSIZ);
 			dir_static.d_name[DIRSIZ] = '\0';
 			dir_static.d_namlen = strlen(dir_static.d_name);
 			dir_static.d_reclen = sizeof(struct direct)
