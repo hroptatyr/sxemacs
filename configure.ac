@@ -2593,12 +2593,6 @@ esac
 
 if test -n "$window_system" -a "$window_system" != "none"; then
 	AC_DEFINE_UNQUOTED([HAVE_WINDOW_SYSTEM], [1], [Description here!])
-else
-    dnl It ought to be reasonable to have no output device at all, and only use
-    dnl SXEmacs in --batch mode.
-    if test "$with_tty" = "no" ; then
-       AC_MSG_WARN([No window system support and no TTY support - You will only be able to use --batch mode.])
-    fi
 fi
 
 case "$x_libraries" in *X11R4* )
@@ -2704,17 +2698,64 @@ dnl ---------------------
 dnl checks for header files
 AC_CHECK_HEADERS([libintl.h nlist.h sgtty.h termio.h termios.h])
 
-if test "$with_tty" != "no"  ; then
-       AS_MESSAGE(checking for TTY-related features)
-	AC_DEFINE([HAVE_TTY], [1], [Description here!])
-	AC_DEFINE([HAVE_UNIXOID_EVENT_LOOP], [1], [Description here!])
-	SXE_ADD_SXEUITTY_OBJS([console-tty.o device-tty.o event-tty.o frame-tty.o objects-tty.o redisplay-tty.o cm.o])
+AS_IF([test "$with_tty" != "no"],[
+   AS_MESSAGE(checking for TTY-related features)
+   dnl Check if needed calls are available at all...
+   tty_libs="ncurses curses terminfo termlib termcap"
+   tty_funcs="tgetent tgetstr tgetflag tparm tgoto tputs"
+   for func in $tty_funcs; do
+       AC_SEARCH_LIBS($func,$tty_libs)
+   done
+   AS_IF([test "$ac_cv_search_tgetent"  = "no" -a \
+   	       "$ac_cv_search_tgetflag" = "no" -a \
+	       "$ac_cv_search_tgetstr"  = "no" -a \
+	       "$ac_cv_search_tgoto"    = "no" -a \
+	       "$ac_cv_search_tparm"    = "no" -a \
+	       "$ac_cv_search_tputs"    = "no" ], 
+	       	   have_tty=no)
+   AS_IF([test "$with_tty" = "yes" -a "$have_tty" = "no" ],[
+      AC_MSG_ERROR([Your system lacks necessary functions for requested TTY support])])
+],[
+  for feature in ncurses curses termcap terminfo termlib gpm; do
+    if eval "test -n \"\$with_${feature}\" -a \"\$with_${feature}\" != no" ; then
+      AC_MSG_WARN([--with-${feature} ignored:  Not valid without TTY support])
+    fi
+    eval "with_${feature}=no"
+  done
+])
 
-  dnl Autodetect ncurses.
-  AC_CHECK_LIB(ncurses, tgetent, , with_ncurses=no)
-  AC_CHECK_LIB(ncurses, tgetstr, , with_ncurses=no)
-  AC_CHECK_LIB(ncurses, tparm, , with_ncurses=no)
-  if test "$with_ncurses" != "no"; then
+AS_IF([test "$with_tty" != "no" -a "$have_tty" != "no" ],[
+   for lib in $tty_libs; do 
+      SXE_CHECK_LINK_LIB($lib, , eval have_${lib}=no)
+      with_lib_eval=`eval echo \\$with_$lib`
+      have_lib_eval=`eval echo \\$have_$lib`
+      AS_IF([test "$have_lib_eval" = "yes" ], [
+      	 for func in $tty_funcs; do
+      	     AC_CHECK_LIB($lib, tgetent)
+	     AC_CHECK_LIB($lib, tgetstr)
+	     AC_CHECK_LIB($lib, tgetflags)
+	     AC_CHECK_LIB($lib, tparm)
+	     AC_CHECK_LIB($lib, tgoto)
+	     AC_CHECK_LIB($lib, tputs)
+	 done
+      ])
+      have_lib_eval=`eval echo \\$have_$lib`
+      AS_IF([test "$with_lib_eval" = "yes" -a \
+      		  "$have_lib_eval" = "no" ],
+	AC_MSG_WARN([Errors detected trying to use requested $lib. Continuing with autodetection.]))
+   done
+   AS_IF([test "$sxe_cv_c_lib_ncurses"  = "no" -a \
+               "$sxe_cv_c_lib_curses"   = "no" -a \
+	       "$sxe_cv_c_lib_termcap"  = "no" -a \
+	       "$sxe_cv_c_lib_terminfo" = "no" -a \
+	       "$sxe_cv_c_lib_termlib"  = "no"], 
+	       	   have_tty=no)
+   AS_IF([test "$with_tty" = "yes" -a "$have_tty" = "no"],
+      AC_MSG_ERROR([Your system lacks necessary libraries for requested TTY support.]))
+])
+
+
+AS_IF([test "$with_tty" != "no" -a "$have_tty" != "no" ],[
     AC_DEFINE([HAVE_NCURSES], [1], [Description here!])
     with_ncurses=yes
     AC_CHECK_HEADER(ncurses/ncurses.h, curses_h_file=ncurses/ncurses.h)
@@ -2755,7 +2796,9 @@ if test "$with_tty" != "no"  ; then
 	else c_switch_site="$save_c_switch_site"
       fi
     fi
-  fi
+])
+
+AS_IF([test "$with_tty" != "no" -a "$have_ncurses" != "no" ],[
   if test "$with_ncurses" = "no" -o -z "$curses_h_file" ; then
 
     # Check alternate library includes
@@ -2791,29 +2834,25 @@ if test "$with_tty" != "no"  ; then
   AC_DEFINE_UNQUOTED([TERM_H_FILE], ["${term_h_file-term.h}"], [The term.h header file])
 
   dnl General Purpose Mouse (libgpm) support
-  if test "$with_gpm" != "no"; then
+  AS_IF([test "$with_gpm" != "no"], [
     AC_CHECK_HEADER(gpm.h, [
       AC_CHECK_LIB(gpm, Gpm_Open, have_gpm=yes)])
-    if test "$have_gpm" = "yes"; then
+    AS_IF([test "$have_gpm" = "yes"], [
       with_gpm=yes
       AC_DEFINE([HAVE_GPM], [1], [General Purpose Mouse (libgpm) is available])
       SXE_ADD_SXEUITTY_OBJS(gpmevent.o)
-      SXE_PREPEND(-lgpm, LIBS)
-    else
-      with_gpm=no
-    fi
-  fi
-
-else dnl "$with_tty" = "no"
-  for feature in ncurses curses termcap terminfo termlib gpm; do
-    if eval "test -n \"\$with_${feature}\" -a \"\$with_${feature}\" != no" ; then
-      AC_MSG_WARN([--with-${feature} ignored:  Not valid without TTY support])
-    fi
-    eval "with_${feature}=no"
-  done
-fi dnl with_tty
+      SXE_PREPEND(-lgpm, LIBS) ],[ with_gpm=no ])
+  ])
+])
 
 SXE_CHECK_UI_SUFFICIENCY
+
+AS_IF([test -z "$window_system" -o "$window_system" != "none" ], [
+    dnl It ought to be reasonable to have no output device at all, and only use
+    dnl SXEmacs in --batch mode.
+    AS_IF([test "$with_tty" = "no"],
+       AC_MSG_WARN([No window system nor TTY support. You only can use --batch mode.]))
+])
 
 ## Uncertain options
 ## =================
