@@ -689,14 +689,12 @@ indicated built-in defaults are used.
 		/* Connection failed.  Destroy the connection and signal an
 		 * error. */
 		char buf[BLCKSZ];
-		strncpy(buf, error_message, sizeof(buf)-1);
-		buf[sizeof(buf) - 1] = '\0';
+		xstrncpy(buf, error_message, sizeof(buf));
 		if (P) {
 			/* storage for the error message gets erased when
 			 * call PQfinish */
 			/* so we must temporarily stash it somewhere */
-			strncpy(buf, PQerrorMessage(P), sizeof(buf)-1);
-			buf[sizeof(buf) - 1] = '\0';
+			xstrncpy(buf, PQerrorMessage(P), sizeof(buf));
 			PQfinish(P);
 		}
 		error("libpq: %s", buf);
@@ -740,11 +738,9 @@ See `pq-connectdb' for a complete description of conninfo.
 	} else {
 		/* capture the error message before destroying the object */
 		char buf[BLCKSZ];
-		strncpy(buf, error_message, sizeof(buf)-1);
-		buf[sizeof(buf) - 1] = '\0';
+		xstrncpy(buf, error_message, sizeof(buf));
 		if (P) {
-			strncpy(buf, PQerrorMessage(P), sizeof(buf)-1);
-			buf[sizeof(buf) - 1] = '\0';
+			xstrncpy(buf, PQerrorMessage(P), sizeof(buf));
 			PQfinish(P);
 		}
 		error("libpq: %s", buf);
@@ -1253,9 +1249,8 @@ Submit a query to Postgres and wait for the result.
 			case PGRES_FATAL_ERROR:
 				tag = "fatal error [%s]";
 			      err:
-				strncpy(buf, PQresultErrorMessage(R),
+				xstrncpy(buf, PQresultErrorMessage(R),
 					sizeof(buf));
-				buf[sizeof(buf) - 1] = '\0';
 				PQclear(R);
 				error(tag, buf);
 			 /*NOTREACHED*/ default:
@@ -1334,8 +1329,7 @@ NIL is returned when no more query work remains.
 		case PGRES_FATAL_ERROR:
 			tag = "fatal error [%s]";
 		      err:
-			strncpy(buf, PQresultErrorMessage(R), sizeof(buf));
-			buf[sizeof(buf) - 1] = '\0';
+			xstrncpy(buf, PQresultErrorMessage(R), sizeof(buf));
 			PQclear(R);
 			error(tag, buf);
 		 /*NOTREACHED*/ default:
