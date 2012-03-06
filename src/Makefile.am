@@ -338,7 +338,7 @@ sxemacs.dmp: $(SXEMACS) $(archlib_DATA) $(bldlispdir)/update-elc.stamp
 		fi; \
 		$(BATCHENV) \
 		SOURCE_TREE_ROOT= BUILD_TREE_ROOT= \
-			$(BITCH) -f list-load-path-shadows; \
+			$(BITCH) -l shadow -f list-load-path-shadows; \
 	fi
 
 ## alibi targets
