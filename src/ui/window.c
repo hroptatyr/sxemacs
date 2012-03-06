@@ -1422,14 +1422,16 @@ is non-nil, do not include space occupied by clipped lines.
 			    || Dynarr_atp(cache, i)->end >= eobuf)
 				return make_int(height);
 		}
-
+		
 		/* get here => need more cache lines.  try again. */
 		assert(height > prev_height);	/* progress? */
 		prev_height = height;
-
-		needed +=
-		    ((hlimit - height) * (nelt - elt) + height - 1) / height +
-		    3;
+		
+		needed += 3;
+		if ( height != 0)
+			needed += ((hlimit - height) * 
+				   (nelt - elt) + 
+				   height - 1) / height;
 	}
 
 	RETURN_NOT_REACHED(make_int(0))	/* shut up compiler */
