@@ -617,23 +617,24 @@ On Unix it is obtained from TMPDIR, with /tmp as the default.
 		} else {
 			const char* home_env = getenv("HOME");
 			if ( home_env ) {
-				strncpy(path, home_env, sizeof(path)-1);
-				strncat(path, "/tmp/", sizeof(path)-1);
+				xstrncpy(path, home_env, sizeof(path));
+				xstrncat(path, "/tmp/", sizeof(path));
 				if ( mkdir(path, 0700) >= 0 || errno == EEXIST ) {
 					int fd;
 					char warnpath[
 						/* strlen(".created_by_sxemacs") */
 						19 + _POSIX_PATH_MAX + 1];
-					strncpy(warnpath, path, _POSIX_PATH_MAX);
-					warnpath[sizeof(warnpath)-1]=0;
+					xstrncpy(warnpath, path, sizeof(warnpath));
 
 					/* we already are reserved these 20 bytes... */
-					strcat(warnpath, ".created_by_sxemacs");
+					xstrncat(warnpath, ".created_by_sxemacs", 
+						 sizeof(warnpath));
 					if ((fd = open(warnpath, O_WRONLY | O_CREAT,
 						       0644)) >= 0) {
 						write(fd, "SXEmacs created this directory "
 							  "because /tmp/<yourname> "
-							  "was unavailable -- \nPlease check !\n",  89);
+							  "was unavailable -- \nPlease check !\n",
+						      89);
 						close(fd);
 					}
 				}

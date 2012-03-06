@@ -477,6 +477,20 @@ quit again.
    The original file descriptor remains open.  */
 static int relocate_fd(int fd, int min)
 {
+#ifdef HAVE_DUP2
+	for( ; min >= 0 && lseek(min, SEEK_CUR,0) >= 0; min++ ) {
+		if (errno == EBADF) {
+			int newfd = dup2(fd,min);
+			if (newfd == -1) {
+				stderr_out("Error while setting up child: %s\n",
+					   strerror(errno));
+				_exit(1);
+			}
+			assert(newfd == min);
+			return newfd;
+		}
+	}
+#else
 	if (fd >= min)
 		return fd;
 	else {
@@ -485,9 +499,15 @@ static int relocate_fd(int fd, int min)
 			stderr_out("Error while setting up child: %s\n",
 				   strerror(errno));
 			_exit(1);
+		} else if (newfd >= min ) {
+			return newfd;
+		} else {
+			int recurse_fd = relocate_fd(newfd, min);
+			close(newfd);
+			return recurse_fd;
 		}
-		return relocate_fd(newfd, min);
 	}
+#endif
 }
 
 /* This is the last thing run in a newly forked inferior

@@ -1734,8 +1734,8 @@ typedef struct {
 	Dynarr_declare(Extbyte_dynarr *);
 } Extbyte_dynarr_dynarr;
 
-static Extbyte_dynarr_dynarr *conversion_out_dynarr_list;
-static Bufbyte_dynarr_dynarr *conversion_in_dynarr_list;
+static Extbyte_dynarr_dynarr *conversion_out_dynarr_list = NULL;
+static Bufbyte_dynarr_dynarr *conversion_in_dynarr_list = NULL;
 
 static int dfc_convert_to_external_format_in_use;
 static int dfc_convert_to_internal_format_in_use;
@@ -1764,7 +1764,7 @@ dfc_convert_to_external_format(dfc_conversion_type source_type,
 			       dfc_conversion_data * sink)
 {
 	int count = specpdl_depth();
-	Extbyte_dynarr *conversion_out_dynarr;
+	Extbyte_dynarr *conversion_out_dynarr = NULL;
 
 	type_checking_assert
 	    (((source_type == DFC_TYPE_DATA) ||
@@ -1778,6 +1778,7 @@ dfc_convert_to_external_format(dfc_conversion_type source_type,
 
 	record_unwind_protect(dfc_convert_to_external_format_reset_in_use,
 			      make_int(dfc_convert_to_external_format_in_use));
+	assert(conversion_out_dynarr_list != NULL);
 	if (Dynarr_length(conversion_out_dynarr_list) <=
 	    dfc_convert_to_external_format_in_use)
 		Dynarr_add(conversion_out_dynarr_list, Dynarr_new(Extbyte));
@@ -1920,7 +1921,7 @@ dfc_convert_to_internal_format(dfc_conversion_type source_type,
 			       dfc_conversion_data * sink)
 {
 	int count = specpdl_depth();
-	Bufbyte_dynarr *conversion_in_dynarr;
+	Bufbyte_dynarr *conversion_in_dynarr = NULL;
 
 	type_checking_assert
 	    ((source_type == DFC_TYPE_DATA ||
@@ -1931,6 +1932,7 @@ dfc_convert_to_internal_format(dfc_conversion_type source_type,
 
 	record_unwind_protect(dfc_convert_to_internal_format_reset_in_use,
 			      make_int(dfc_convert_to_internal_format_in_use));
+	assert(conversion_in_dynarr_list != NULL);
 	if (Dynarr_length(conversion_in_dynarr_list) <=
 	    dfc_convert_to_internal_format_in_use)
 		Dynarr_add(conversion_in_dynarr_list, Dynarr_new(Bufbyte));

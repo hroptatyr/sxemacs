@@ -4531,6 +4531,8 @@ call3_trapping_errors(char *warning_string, Lisp_Object function,
 void grow_specpdl(EMACS_INT reserved)
 {
 	EMACS_INT size_needed = specpdl_depth() + reserved;
+	if (specpdl_size == 0)
+		specpdl_size = 1;
 	if (size_needed >= max_specpdl_size) {
 		if (max_specpdl_size < min_max_specpdl_size)
 			max_specpdl_size = min_max_specpdl_size;

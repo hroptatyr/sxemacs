@@ -46,9 +46,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
  (!NILP (table) ? TRT_TABLE_OF (table, (Emchar) pos) : pos)
 
 #include "elhash.h"
+/* Make sure these are ALWAYS powers of 2 */
 #define REGEXP_CACHE_SIZE 0x80
 #define REGEXP_CACHE_HASH_MASK (REGEXP_CACHE_SIZE-1)
 #define REGEXP_FASTMAP_SIZE 0400
+#define REGEXP_FASTMAP_MASK (REGEXP_FASTMAP_SIZE-1)
 
 #define __REGEXP_DEBUG__(args...)	fprintf(stderr, "REGEXP " args)
 #ifndef REGEXP_DEBUG_FLAG
@@ -1867,9 +1869,9 @@ boyer_moore(struct buffer *buf, Bufbyte * base_pat, Bytecount len,
 				this_translated = 0;
 			}
 			if (ch > REGEXP_FASTMAP_SIZE)
-				j = ((unsigned char)ch | 0200);
+				j = ((unsigned char)(ch & REGEXP_FASTMAP_SIZE)| 0200);
 			else
-				j = (unsigned char)ch;
+				j = (unsigned char)(ch & REGEXP_FASTMAP_SIZE);
 
 			if (i == infinity)
 				stride_for_teases = BM_tab[j];
@@ -1882,9 +1884,9 @@ boyer_moore(struct buffer *buf, Bufbyte * base_pat, Bytecount len,
 				while (1) {
 					ch = TRANSLATE(inverse_trt, ch);
 					if (ch > REGEXP_FASTMAP_SIZE)
-						j = ((unsigned char)ch | 0200);
+						j = ((unsigned char)(ch & REGEXP_FASTMAP_SIZE) | 0200);
 					else
-						j = (unsigned char)ch;
+						j = (unsigned char)(ch & REGEXP_FASTMAP_SIZE);
 
 					/* For all the characters that map into CH,
 					   set up simple_translate to map the last byte
