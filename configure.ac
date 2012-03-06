@@ -2837,7 +2837,15 @@ AS_IF([test "$with_tty" != "no" -a "$have_ncurses" != "no" ],[
   AC_DEFINE_UNQUOTED([CURSES_H_FILE], ["${curses_h_file-curses.h}"], [The curses.h header file])
   AC_DEFINE_UNQUOTED([TERMCAP_H_FILE], ["${termcap_h_file-termcap.h}"], [The termcap.h header file])
   AC_DEFINE_UNQUOTED([TERM_H_FILE], ["${term_h_file-term.h}"], [The term.h header file])
+])
 
+AS_IF([test "$with_tty" != "no" -a "$have_tty" != no], [
+	AC_DEFINE([HAVE_TTY], [1], [Include TTY support for SXEmacs])
+	AC_DEFINE([HAVE_UNIXOID_EVENT_LOOP], [1], [Include Unixoid event loop - TTY provided])
+	SXE_ADD_SXEUITTY_OBJS([console-tty.o device-tty.o event-tty.o 
+		frame-tty.o objects-tty.o redisplay-tty.o cm.o])
+])
+AS_IF([test "$with_tty" != "no" -a "$have_tty" != no], [
   dnl General Purpose Mouse (libgpm) support
   AS_IF([test "$with_gpm" != "no"], [
     AC_CHECK_HEADER(gpm.h, [
