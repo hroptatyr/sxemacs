@@ -2842,8 +2842,7 @@ AS_IF([test "$with_tty" != "no" -a "$have_ncurses" != "no" ],[
 AS_IF([test "$with_tty" != "no" -a "$have_tty" != no], [
 	AC_DEFINE([HAVE_TTY], [1], [Include TTY support for SXEmacs])
 	AC_DEFINE([HAVE_UNIXOID_EVENT_LOOP], [1], [Include Unixoid event loop - TTY provided])
-	SXE_ADD_SXEUITTY_OBJS([console-tty.o device-tty.o event-tty.o 
-		frame-tty.o objects-tty.o redisplay-tty.o cm.o])
+	SXE_ADD_SXEUITTY_OBJS([console-tty.o device-tty.o event-tty.o frame-tty.o objects-tty.o redisplay-tty.o cm.o])
 ])
 AS_IF([test "$with_tty" != "no" -a "$have_tty" != no], [
   dnl General Purpose Mouse (libgpm) support
