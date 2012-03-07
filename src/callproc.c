@@ -509,7 +509,7 @@ static int relocate_fd(int fd, int minfd)
 			   minfd);
 		_exit(1);
 	}
-	if (fd >= min)
+	if (fd >= minfd)
 		return fd;
 	
 	newfd = dup(fd);
@@ -519,10 +519,10 @@ static int relocate_fd(int fd, int minfd)
 			   strerror(errno));
 		_exit(1);
 	}
-	if (newfd >= min )
+	if (newfd >= minfd )
 		return newfd;
 	else {
-		int recurse_fd = relocate_fd(newfd, min);
+		int recurse_fd = relocate_fd(newfd, minfd);
 		/* Close all the previously recursivelly dup'ed
 		   file descriptors 
 		*/
