@@ -1506,9 +1506,10 @@ bool case_sensitive;
 	for (lang = lang_names; lang->name != NULL; lang++)
 		if (lang->suffixes != NULL)
 			for (ext = lang->suffixes; *ext != NULL; ext++)
-				if ((case_sensitive)
-				    ? streq (*ext, suffix)
-				    : strcaseeq (*ext, suffix))
+				if (case_sensitive) {
+					if (streq (*ext, suffix))
+						return lang;
+				} else if (strcaseeq (*ext, suffix))
 					return lang;
 	return NULL;
 }

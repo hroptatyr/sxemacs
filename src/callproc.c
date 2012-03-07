@@ -473,41 +473,62 @@ quit again.
 	}
 }
 
+static int max_filedesc(void)
+{
+	/* Cache it to avoid calling getrlimit all the time.
+	   It won't really change over time 
+	*/
+	static int maxfd = -1;
+
+	if (maxfd >= 0)
+		return maxfd;
+	maxfd = MAXDESC;
+
+#  ifdef HAVE_GETRLIMIT64
+	struct rlimit64 rlim;
+	(void)getrlimit64(RLIMIT_NOFILE, &rlim);
+	maxfd = rlim.rlim_cur;
+#  elif  HAVE_GETRLIMIT
+	struct rlimit rlim;
+	(void)getrlimit(RLIMIT_NOFILE, &rlim);
+	maxfd = rlim.rlim_cur;
+#  endif
+
+	return maxfd;
+}
+
+
 /* Move the file descriptor FD so that its number is not less than MIN. *
    The original file descriptor remains open.  */
-static int relocate_fd(int fd, int min)
+static int relocate_fd(int fd, int minfd)
 {
-#ifdef HAVE_DUP2
-	for( ; min >= 0 && lseek(min, SEEK_CUR,0) >= 0; min++ ) {
-		if (errno == EBADF) {
-			int newfd = dup2(fd,min);
-			if (newfd == -1) {
-				stderr_out("Error while setting up child: %s\n",
-					   strerror(errno));
-				_exit(1);
-			}
-			assert(newfd == min);
-			return newfd;
-		}
+	int newfd = -1;
+
+	if (minfd < 0) {
+		stderr_out("Bad relocated_fd minimum file descriptor: %d\n", 
+			   minfd);
+		_exit(1);
 	}
-#else
-	if (fd >= min)
+	if (fd >= minfd)
 		return fd;
-	else {
-		int newfd = dup(fd);
-		if (newfd == -1) {
-			stderr_out("Error while setting up child: %s\n",
-				   strerror(errno));
-			_exit(1);
-		} else if (newfd >= min ) {
-			return newfd;
-		} else {
-			int recurse_fd = relocate_fd(newfd, min);
-			close(newfd);
-			return recurse_fd;
-		}
+	
+	newfd = dup(fd);
+
+	if (newfd == -1) {
+		stderr_out("Error while setting up child: %s\n",
+			   strerror(errno));
+		_exit(1);
 	}
-#endif
+	if (newfd >= minfd )
+		return newfd;
+	else {
+		int recurse_fd = relocate_fd(newfd, minfd);
+		/* Close all the previously recursivelly dup'ed
+		   file descriptors 
+		*/
+		close(newfd);
+		return recurse_fd;
+	}
 }
 
 /* This is the last thing run in a newly forked inferior
@@ -655,14 +676,26 @@ child_setup(int in, int out, int err, char **new_argv, const char *current_dir)
 	out = relocate_fd(out, 3);
 	err = relocate_fd(err, 3);
 
+
+#ifdef HAVE_DUP2
+	/* dup2 will automatically close STD* handles before duping
+	   them 
+	*/
+	dup2(in, STDIN_FILENO);
+	dup2(out, STDOUT_FILENO);
+	dup2(err, STDERR_FILENO);
+#else
 	/* Set the standard input/output channels of the new process.  */
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
 	close(STDERR_FILENO);
 
-	dup2(in, STDIN_FILENO);
-	dup2(out, STDOUT_FILENO);
-	dup2(err, STDERR_FILENO);
+	/* Sub-optimally hoping that dup will use the just closed STD*
+	   handles */
+	dup(in);
+	dup(out);
+	dup(err);
+#endif
 
 	close(in);
 	close(out);
@@ -675,7 +708,7 @@ child_setup(int in, int out, int err, char **new_argv, const char *current_dir)
 	{
 		int fd;
 
-		for (fd = 3; fd < MAXDESC; fd++)
+		for (fd = 3; fd < max_filedesc(); fd++)
 			close(fd);
 	}
 

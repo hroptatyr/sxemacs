@@ -628,7 +628,7 @@ On Unix it is obtained from TMPDIR, with /tmp as the default.
 
 					/* we already are reserved these 20 bytes... */
 					xstrncat(warnpath, ".created_by_sxemacs", 
-						 sizeof(warnpath));
+						 sizeof(warnpath)-1);
 					if ((fd = open(warnpath, O_WRONLY | O_CREAT,
 						       0644)) >= 0) {
 						write(fd, "SXEmacs created this directory "

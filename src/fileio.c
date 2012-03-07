@@ -1034,7 +1034,7 @@ See also the function `substitute-in-file-name'.
 			file_name_as_directory((char *)target, (char *)newdir, tlen);
 	}
 
-	xstrncat((char *)target, (char *)nm, tlen);
+	xstrncat((char *)target, (char *)nm, tlen-1);
 
 	/* ASSERT (IS_DIRECTORY_SEP (target[0])) if not VMS */
 

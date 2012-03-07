@@ -189,7 +189,7 @@ __emodng_open_prepend_paths(const char *filename)
 			char *p;
 			p = xstpncpy(name,
 				     (const char*)XSTRING_DATA(XCAR(path)),
-				     (size_t)XSTRING_LENGTH(XCAR(path)-2));
+				     sizeof(name)-2);
 			*p++ = '/';
 			*p = '\0';
 			xstrncpy(p, filename, name + sizeof(name) - p);
@@ -223,15 +223,14 @@ __emodng_open_prepend_paths_append_exts(const char *filename)
 			 * carries the correct extension
 			 * see __emodng_open_prepend_paths_append_exts for
 			 * cope with all the combinations */
-			char *p = xstpncpy(
-				name,
+			char *p = xstpncpy(name,
 				(const char*)XSTRING_DATA(XCAR(path)),
-				(size_t)XSTRING_LENGTH(XCAR(path))-2);
+				sizeof(name)-2);
 			if (*(p-1) != '/') {
 				*p++ = '/';
 				*p = '\0';
 			}
-			p = xstpncpy(p, filename, name + sizeof(name) - p);
+			p = xstpncpy(p, filename, name+sizeof(name)-p);
 
 			/* append all extensions now */
 			for (Lisp_Object ext = Vmodule_extensions;
@@ -845,7 +844,7 @@ _adapt_load_path(Lisp_Object sym, Lisp_Object *val,
 			if (LIKELY((STRINGP(lse)))) {
 				p = xstpncpy(p,
 					     (const char*)XSTRING_DATA(lse),
-					     XSTRING_LENGTH(lse));
+					     sp+sizeof(sp)-p-1);
 				*p++ = ':';
 			}
 		}

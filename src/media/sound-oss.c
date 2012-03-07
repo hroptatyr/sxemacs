@@ -465,7 +465,7 @@ sound_oss_play(audio_job_t aj)
 		SXE_MUTEX_UNLOCK(&sod->mtx);
 		return 0;
 	}
-	if(sosd->channels!=0) {
+	if(sosd->channels==0) {
 		message(GETTEXT("audio-oss: "
 				"No channels."));
 		sound_oss_close_device(sod);
