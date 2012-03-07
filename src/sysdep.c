@@ -2305,12 +2305,11 @@ int raw_open(const char *path, int oflag, ...)
 {
 	int mode;
 	va_list ap;
-	char *pout;
 
 	va_start(ap, oflag);
 	mode = va_arg(ap, int);
 	va_end(ap);
-	return open(pout, oflag, mode);
+	return open(path, oflag, mode);
 }
 
 int sys_open(const char *path, int oflag, ...)
