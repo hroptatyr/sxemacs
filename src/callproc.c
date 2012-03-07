@@ -490,6 +490,8 @@ static int relocate_fd(int fd, int min)
 			return newfd;
 		}
 	}
+	assert(min>=0);
+	return -1;
 #else
 	if (fd >= min)
 		return fd;
