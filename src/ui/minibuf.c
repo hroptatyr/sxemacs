@@ -680,7 +680,7 @@ echo_area_append(struct frame *f, const Bufbyte * nonreloc, Lisp_Object reloc,
 	fixup_internal_substring(nonreloc, reloc, offset, &length);
 
 	/* also check it here, in case the string was really blank. */
-	if (length == 0)
+	if (length <= 0)
 		return;
 
 	if (!NILP(Ffboundp(Qappend_message))) {
