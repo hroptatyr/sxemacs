@@ -2819,8 +2819,8 @@ and input is currently coming from the keyboard (not in keyboard macro).
 */
       ())
 {
-	REGISTER struct backtrace *btp;
-	REGISTER Lisp_Object fun;
+	REGISTER struct backtrace *btp = NULL;
+	REGISTER Lisp_Object fun = Qnil;
 
 	if (!INTERACTIVE)
 		return Qnil;
@@ -2877,7 +2877,8 @@ and input is currently coming from the keyboard (not in keyboard macro).
 
 #endif
 
-	fun = Findirect_function(*btp->function);
+	if (btp)
+		fun = Findirect_function(*btp->function);
 	if (SUBRP(fun))
 		return Qnil;
 	/* btp points to the frame of a Lisp function that called interactive-p.
