@@ -1869,9 +1869,9 @@ boyer_moore(struct buffer *buf, Bufbyte * base_pat, Bytecount len,
 				this_translated = 0;
 			}
 			if (ch > REGEXP_FASTMAP_SIZE)
-				j = ((unsigned char)(ch & REGEXP_FASTMAP_SIZE)| 0200);
+				j = ((unsigned char)(ch & REGEXP_FASTMAP_MASK)| 0200);
 			else
-				j = (unsigned char)(ch & REGEXP_FASTMAP_SIZE);
+				j = (unsigned char)(ch & REGEXP_FASTMAP_MASK);
 
 			if (i == infinity)
 				stride_for_teases = BM_tab[j];
@@ -1884,9 +1884,9 @@ boyer_moore(struct buffer *buf, Bufbyte * base_pat, Bytecount len,
 				while (1) {
 					ch = TRANSLATE(inverse_trt, ch);
 					if (ch > REGEXP_FASTMAP_SIZE)
-						j = ((unsigned char)(ch & REGEXP_FASTMAP_SIZE) | 0200);
+						j = ((unsigned char)(ch & REGEXP_FASTMAP_MASK) | 0200);
 					else
-						j = (unsigned char)(ch & REGEXP_FASTMAP_SIZE);
+						j = (unsigned char)(ch & REGEXP_FASTMAP_MASK);
 
 					/* For all the characters that map into CH,
 					   set up simple_translate to map the last byte

@@ -868,16 +868,16 @@ __sys_stk_sz(void)
 {
 /* return the stack size limit */
 #if defined HAVE_GETRLIMIT64
-	struct rlimit64 foo;
-	(void)getrlimit64(RLIMIT_STACK, &foo);
+	struct rlimit64 rlim;
+	(void)getrlimit64(RLIMIT_STACK, &rlim);
 #elif defined HAVE_GETRLIMIT
-	struct rlimit foo;
-	(void)getrlimit(RLIMIT_STACK, &foo);
+	struct rlimit rlim;
+	(void)getrlimit(RLIMIT_STACK, &rlim);
 #else
 	/* bollocks, maybe just a small one? 64k? */
-	struct {size_t rlim_cur;} foo = {65536};
+	struct {size_t rlim_cur;} rlim = {65536};
 #endif
-	return foo.rlim_cur;
+	return rlim.rlim_cur;
 }
 
 
