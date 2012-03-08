@@ -346,13 +346,11 @@ $(bldlispdir)/update-elc.stamp $(bldlispdir)/auto.stamp:
 
 ## improve me, make me (the dump file) independent from the binary
 install-exec-hook:
-	(cd $(DESTDIR)$(bindir) && $(RM) sxemacs.dmp)
+	(cd $(DESTDIR)$(archlibdir) && $(RM) sxemacs.dmp)
 	(cd $(abs_builddir); \
 	$(BITCHENV) $(DESTDIR)$(bindir)/sxemacs -nd -batch \
 		-l $(sxelispdir)/loadup.el \
-		--dump $(DESTDIR)$(bindir)/$(SXEDMP_FILENAME))
-	(cd $(DESTDIR)$(bindir) && \
-		$(LN_S) $(SXEDMP_FILENAME) sxemacs.dmp)
+		--dump $(DESTDIR)$(archlibdir)/$(SXEDMP_FILENAME))
 
 
 ## someone who wants to use this actually needs repeat the fuss above
