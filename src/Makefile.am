@@ -58,7 +58,7 @@ ETAGS = $(top_builddir)/lib-src/etags
 TAGS_DEPENDENCIES = $(ETAGS)
 
 bin_PROGRAMS = sxemacs
-bin_SCRIPTS = sxemacs.dmp
+noinst_DATA = sxemacs.dmp
 archlib_DATA = config.values DOC
 
 pdumplibs =
@@ -345,7 +345,9 @@ $(bldlispdir)/update-elc.stamp $(bldlispdir)/auto.stamp:
 	:
 
 ## improve me, make me (the dump file) independent from the binary
+## because of historical reasons we also delete $(bindir)/sxemacs.dmp here
 install-exec-hook:
+	(cd $(DESTDIR)$(bindir) && $(RM) sxemacs.dmp)
 	(cd $(DESTDIR)$(archlibdir) && $(RM) sxemacs.dmp)
 	(cd $(abs_builddir); \
 	$(BITCHENV) $(DESTDIR)$(bindir)/sxemacs -nd -batch \
