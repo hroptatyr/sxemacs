@@ -88,9 +88,7 @@
 #define PATH_PACKAGEPATH "@PACKAGE_PATH@"
 #endif
 
-#ifdef ARCHLIBDIR_USER_DEFINED
 #define PATH_EXEC "@ARCHLIBDIR@"
-#endif
 
 #ifdef ETCDIR_USER_DEFINED
 #define PATH_DATA "@ETCDIR@"
