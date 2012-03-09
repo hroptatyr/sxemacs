@@ -74,8 +74,9 @@ struct lrecord_header {
 	/* 1 if the object is readonly from lisp */
 	unsigned int lisp_readonly:1;
 
-	long unsigned int hash_cache;
 	unsigned int morphisms:/*number_of_cat_morphism_kinds => */6;
+
+	long unsigned int hash_cache;
 };
 
 struct lrecord_implementation;
