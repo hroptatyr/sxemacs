@@ -74,8 +74,9 @@ struct lrecord_header {
 	/* 1 if the object is readonly from lisp */
 	unsigned int lisp_readonly:1;
 
-	long unsigned int hash_cache;
 	unsigned int morphisms:/*number_of_cat_morphism_kinds => */6;
+
+	long unsigned int hash_cache;
 };
 
 struct lrecord_implementation;
@@ -88,6 +89,8 @@ int lrecord_type_index(const struct lrecord_implementation *implementation);
 		SLI_header->mark = 0;				\
 		SLI_header->c_readonly = 0;			\
 		SLI_header->lisp_readonly = 0;			\
+		SLI_header->morphisms = 0;			\
+		SLI_header->hash_cache = 0;			\
 	} while (0)
 
 struct lcrecord_header {
