@@ -89,6 +89,8 @@ int lrecord_type_index(const struct lrecord_implementation *implementation);
 		SLI_header->mark = 0;				\
 		SLI_header->c_readonly = 0;			\
 		SLI_header->lisp_readonly = 0;			\
+		SLI_header->morphisms = 0;			\
+		SLI_header->hash_cache = 0;			\
 	} while (0)
 
 struct lcrecord_header {
