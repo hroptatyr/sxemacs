@@ -34,6 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <sys/mman.h>
 #endif
 
+/* For PATH_EXEC */
+#include <sxe-paths.h>
+
 #ifndef SEPCHAR
 #define SEPCHAR ':'
 #endif
@@ -1356,6 +1359,7 @@ wipe_out_libtool_stuff(char *path)
 int pdump_load(const char *argv0)
 {
 	char exe_path[PATH_MAX], real_exe_path[PATH_MAX];
+	char libarchdir_path[PATH_MAX] = PATH_EXEC "/sxemacs";
 	char *w;
 	const char *dir, *p;
 
@@ -1445,7 +1449,8 @@ int pdump_load(const char *argv0)
 	xstrncpy(real_exe_path, exe_path, sizeof(real_exe_path));
 	if (pdump_file_try(exe_path,sizeof(exe_path))
 	    || (xrealpath(real_exe_path, real_exe_path)
-		&& pdump_file_try(real_exe_path,sizeof(real_exe_path)))) {
+		&& pdump_file_try(real_exe_path,sizeof(real_exe_path)))
+	    || pdump_file_try(libarchdir_path,sizeof(libarchdir_path)) ) {
 		pdump_load_finish();
 		return 1;
 	}
