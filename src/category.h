@@ -55,8 +55,6 @@ typedef enum cat_morphism_kind_e cat_morphism_kind_t;
 
 extern_inline bool __bit_set_p(int number, char bit);
 extern_inline char __nbits_right_of(int number, char bit);
-extern_inline void *cat_morphism(const void*, cat_morphism_kind_t);
-extern_inline void *const*cat_morphisms(const void*);
 extern cat_morphism_t morphisms;
 
 
@@ -167,7 +165,7 @@ __nbits_right_of(int number, char bit)
 #endif
 
 #if 1				/* using the global shit */
-extern_inline void*const*
+static inline void*const*
 cat_morphisms(const void *obj)
 {
 /* returns a pointer to the array of implementations or
@@ -179,7 +177,7 @@ cat_morphisms(const void *obj)
 	}
 }
 
-extern_inline void*
+static inline void*
 cat_morphism(const void *obj, cat_morphism_kind_t kind)
 {
 	unsigned int flags = ((const struct lrecord_header*)obj)->morphisms;
@@ -207,5 +205,8 @@ cat_morphism(const void *obj, cat_morphism_kind_t kind)
 		return mph[__nbits_right_of(flags, kind)-(flags&1)];
 	}
 }
+#else  /* use definition in category.c */
+extern void *cat_morphism(const void*, cat_morphism_kind_t);
+extern void *const*cat_morphisms(const void*);
 #endif
 #endif	/* INCLUDED_category_h_ */
