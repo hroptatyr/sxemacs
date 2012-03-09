@@ -61,6 +61,9 @@
   (test-setq 42  (setq-default test-setq-bar 99 test-setq-var 42))
   )
 
+;; Following test dies on recent libc's with MALLOC_PERTURB_=69
+(Check-Error wrong-type-argument (length (current-buffer)))
+
 (let ((my-vector [1 2 3 4])
       (my-bit-vector (bit-vector 1 0 1 0))
       (my-string "1234")
