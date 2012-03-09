@@ -62,6 +62,13 @@ Lisp_Object Qweak, Qdense, Qdynamic, Q_kind, Q_relation, Q_coloured;
 #define ASE_HEAP_MIN_SIZE	4096	/* 65536 */
 #define ALIGNED(n)	__attribute__((aligned(n), packed))
 
+static inline ase_yheap_t _ase_make_yheap(ase_heap_options_t opts);
+static inline Lisp_Object _ase_wrap_yheap(ase_yheap_t);
+static inline ase_dheap_t _ase_make_dheap(ase_heap_options_t opts);
+static inline Lisp_Object _ase_wrap_dheap(ase_dheap_t);
+static inline ase_wheap_t _ase_make_wheap(ase_heap_options_t opts);
+static inline Lisp_Object _ase_wrap_wheap(ase_wheap_t);
+
 /* the op tables */
 struct ase_heap_ops_s ase_heap_ops[NUMBER_OF_ASE_HEAP_KINDS] =
 {{(ase_heap_constr_f)_ase_make_yheap, (ase_heap_wrap_f)_ase_wrap_yheap,
@@ -527,7 +534,7 @@ _ase_make_heap_cell(ase_yheap_cell_t mother)
 	return c;
 }
 
-Lisp_Object
+static inline Lisp_Object
 _ase_wrap_yheap(ase_yheap_t h)
 {
 	Lisp_Object result;
@@ -547,7 +554,7 @@ _ase_wrap_yheap(ase_yheap_t h)
 	return result;
 }
 
-Lisp_Object
+static inline Lisp_Object
 _ase_wrap_dheap(ase_dheap_t h)
 {
 	Lisp_Object result;
@@ -567,7 +574,7 @@ _ase_wrap_dheap(ase_dheap_t h)
 	return result;
 }
 
-ase_dheap_t
+static inline ase_dheap_t
 _ase_make_dheap(ase_heap_options_t opts)
 {
 	ase_dheap_t h = xnew(struct ase_dheap_s);
@@ -604,7 +611,7 @@ Lisp_Object ase_make_dheap(ase_heap_options_t opts)
 	return _ase_wrap_dheap(h);
 }
 
-Lisp_Object
+static inline Lisp_Object
 _ase_wrap_wheap(ase_wheap_t h)
 {
 	Lisp_Object result;
@@ -624,7 +631,7 @@ _ase_wrap_wheap(ase_wheap_t h)
 	return result;
 }
 
-ase_wheap_t
+static inline ase_wheap_t
 _ase_make_wheap(ase_heap_options_t opts)
 {
 	ase_wheap_t h = xnew(struct ase_wheap_s);
@@ -664,7 +671,7 @@ Lisp_Object ase_make_wheap(ase_heap_options_t opts)
 	return _ase_wrap_wheap(h);
 }
 
-inline ase_yheap_t
+static inline ase_yheap_t
 _ase_make_yheap(ase_heap_options_t opts)
 {
 	ase_yheap_t h = xnew(struct ase_yheap_s);
