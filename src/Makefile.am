@@ -58,7 +58,7 @@ ETAGS = $(top_builddir)/lib-src/etags
 TAGS_DEPENDENCIES = $(ETAGS)
 
 bin_PROGRAMS = sxemacs
-bin_SCRIPTS = sxemacs.dmp
+noinst_DATA = sxemacs.dmp
 archlib_DATA = config.values DOC
 
 pdumplibs =
@@ -320,9 +320,8 @@ config.values: config.h
 ## relinked sxemacs
 ## one day (when SXE is linked with its own shared libraries) we HAVE to
 ## go that way but at the moment it's okay the way it is
-SXEDMP_FILEEXT=dmp
-SXEMACS_FILENAME=sxemacs
-SXEDMP_FILENAME=$(SXEMACS_FILENAME).$(SXEDMP_FILEEXT)
+SXE_SHOW_DUMP = $$($(BITCHENV) $(DESTDIR)$(bindir)/sxemacs -sd)
+SXEDMP_FILENAME=sxemacs-$(old_version)-$(SXE_SHOW_DUMP).dmp
 
 sxemacs.dmp: $(SXEMACS) $(archlib_DATA) $(bldlispdir)/update-elc.stamp
 	if test -e "$(bldlispdir)/update-elc.stamp"; then \
@@ -345,17 +344,15 @@ sxemacs.dmp: $(SXEMACS) $(archlib_DATA) $(bldlispdir)/update-elc.stamp
 $(bldlispdir)/update-elc.stamp $(bldlispdir)/auto.stamp:
 	:
 
-SXE_SHOW_DUMP = $$($(BITCHENV) $(DESTDIR)$(bindir)/sxemacs -sd)
-
 ## improve me, make me (the dump file) independent from the binary
+## because of historical reasons we also delete $(bindir)/sxemacs.dmp here
 install-exec-hook:
 	(cd $(DESTDIR)$(bindir) && $(RM) sxemacs.dmp)
+	(cd $(DESTDIR)$(archlibdir) && $(RM) sxemacs.dmp)
 	(cd $(abs_builddir); \
 	$(BITCHENV) $(DESTDIR)$(bindir)/sxemacs -nd -batch \
 		-l $(sxelispdir)/loadup.el \
-		--dump $(DESTDIR)$(bindir)/sxemacs-$(old_version)-$(SXE_SHOW_DUMP).dmp)
-	(cd $(DESTDIR)$(bindir) && \
-		$(LN_S) sxemacs-$(old_version)-$(SXE_SHOW_DUMP).dmp sxemacs.dmp)
+		--dump $(DESTDIR)$(archlibdir)/$(SXEDMP_FILENAME))
 
 
 ## someone who wants to use this actually needs repeat the fuss above
