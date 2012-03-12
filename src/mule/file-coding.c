@@ -1852,6 +1852,12 @@ void
 determine_real_coding_system(lstream_t stream, Lisp_Object * codesys_in_out,
 			     eol_type_t * eol_type_in_out)
 {
+	static const char []mime_name_valid_chars = 
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		"abcdefghijklmnopqrstuvwxyz"
+		"0123456789"
+		"!$%&*+-.^_{|}~";
+
 	struct detection_state decst;
 
 	if (*eol_type_in_out == EOL_AUTODETECT)
@@ -1873,8 +1879,7 @@ determine_real_coding_system(lstream_t stream, Lisp_Object * codesys_in_out,
 		int lines_checked = 0;
 
 		/* Look for initial "-*-"; mode line prefix */
-		for (p = buf,
-		     scan_end = buf + nread - LENGTH("-*-coding:?-*-");
+		for (p = buf, scan_end = buf + nread - LENGTH("-*-coding:?-*-");
 		     p <= scan_end && lines_checked < LINES_TO_CHECK; p++)
 			if (*p == '-' && *(p + 1) == '*' && *(p + 2) == '-') {
 				Extbyte *local_vars_beg = p + 3;
@@ -1904,10 +1909,7 @@ determine_real_coding_system(lstream_t stream, Lisp_Object * codesys_in_out,
 								/* Characters valid in a MIME charset name (rfc 1521),
 								   and in a Lisp symbol name. */
 								n = strspn((char *)p,
-									   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-									   "abcdefghijklmnopqrstuvwxyz"
-									   "0123456789"
-									   "!$%&*+-.^_{|}~");
+									   mime_name_valid_chars);
 								*suffix = save;
 								if (n > 0) {
 									save = p[n];
@@ -1939,7 +1941,7 @@ determine_real_coding_system(lstream_t stream, Lisp_Object * codesys_in_out,
 					p++;
 			}
 
-		if (NILP(coding_system))
+		if (NILP(coding_system)) {
 			do {
 				if (detect_coding_type(&decst, buf, nread,
 						       XCODING_SYSTEM_TYPE(*codesys_in_out)
@@ -1950,9 +1952,8 @@ determine_real_coding_system(lstream_t stream, Lisp_Object * codesys_in_out,
 					break;
 			}
 			while (1);
-
-		else if (XCODING_SYSTEM_TYPE(*codesys_in_out) == CODESYS_AUTODETECT
-			 && XCODING_SYSTEM_EOL_TYPE(coding_system) == EOL_AUTODETECT)
+		} else if (XCODING_SYSTEM_TYPE(*codesys_in_out) == CODESYS_AUTODETECT
+			   && XCODING_SYSTEM_EOL_TYPE(coding_system) == EOL_AUTODETECT) {
 			do {
 				if (detect_coding_type(&decst, buf, nread, 1))
 					break;
@@ -1961,7 +1962,7 @@ determine_real_coding_system(lstream_t stream, Lisp_Object * codesys_in_out,
 					break;
 			}
 			while (1);
-
+		}
 		*eol_type_in_out = decst.eol_type;
 		if (XCODING_SYSTEM_TYPE(*codesys_in_out) == CODESYS_AUTODETECT) {
 			if (NILP(coding_system))
