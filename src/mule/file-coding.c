@@ -1879,67 +1879,41 @@ determine_real_coding_system(lstream_t stream, Lisp_Object * codesys_in_out,
 			if (*p == '-' && *(p + 1) == '*' && *(p + 2) == '-') {
 				Extbyte *local_vars_beg = p + 3;
 				/* Look for final "-*-"; mode line suffix */
-				for (p = local_vars_beg,
-				     scan_end = buf + nread - LENGTH("-*-");
-				     p <= scan_end
-				     && lines_checked < LINES_TO_CHECK; p++)
-					if (*p == '-' && *(p + 1) == '*'
-					    && *(p + 2) == '-') {
+				for (p = local_vars_beg, scan_end = buf + nread - LENGTH("-*-");
+				     p <= scan_end && lines_checked < LINES_TO_CHECK; p++)
+					if (*p == '-' && *(p + 1) == '*' && *(p + 2) == '-') {
 						Extbyte *suffix = p;
 						/* Look for "coding:" */
-						for (p = local_vars_beg,
-						     scan_end =
-						     suffix -
-						     LENGTH("coding:?");
+						for (p = local_vars_beg, scan_end = suffix - LENGTH("coding:?");
 						     p <= scan_end; p++)
-							if (memcmp
-							    ("coding:", p,
-							     LENGTH("coding:"))
-							    == 0
-							    && (p ==
-								local_vars_beg
-								|| (*(p - 1) ==
-								    ' '
-								    || *(p -
-									 1) ==
-								    '\t'
-								    || *(p -
-									 1) ==
-								    ';'))) {
+							if (memcmp("coding:", p, LENGTH("coding:")) == 0
+							    && (p == local_vars_beg
+								|| (*(p - 1) == ' '
+								    || *(p - 1) == '\t'
+								    || *(p - 1) == ';'))) {
 								Extbyte save;
 								int n;
-								p += LENGTH
-								    ("coding:");
-								while (*p == ' '
-								       || *p ==
-								       '\t')
+								p += LENGTH("coding:");
+								while (*p == ' ' || *p == '\t') {
 									p++;
+								}
 
 								/* Get coding system name */
 								save = *suffix;
 								*suffix = '\0';
 								/* Characters valid in a MIME charset name (rfc 1521),
 								   and in a Lisp symbol name. */
-								n = strspn((char
-									    *)p,
+								n = strspn((char *)p,
 									   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 									   "abcdefghijklmnopqrstuvwxyz"
 									   "0123456789"
 									   "!$%&*+-.^_{|}~");
 								*suffix = save;
 								if (n > 0) {
-									save =
-									    p
-									    [n];
-									p[n] =
-									    '\0';
-									coding_system
-									    =
-									    Ffind_coding_system
-									    (intern
-									     ((char *)p));
-									p[n] =
-									    save;
+									save = p[n];
+									p[n] = '\0';
+									coding_system = Ffind_coding_system(intern((char *)p));
+									p[n] = save;
 								}
 								break;
 							}
@@ -1968,8 +1942,7 @@ determine_real_coding_system(lstream_t stream, Lisp_Object * codesys_in_out,
 		if (NILP(coding_system))
 			do {
 				if (detect_coding_type(&decst, buf, nread,
-						       XCODING_SYSTEM_TYPE
-						       (*codesys_in_out)
+						       XCODING_SYSTEM_TYPE(*codesys_in_out)
 						       != CODESYS_AUTODETECT))
 					break;
 				nread = Lstream_read(stream, buf, sizeof(buf));
@@ -1978,10 +1951,8 @@ determine_real_coding_system(lstream_t stream, Lisp_Object * codesys_in_out,
 			}
 			while (1);
 
-		else if (XCODING_SYSTEM_TYPE(*codesys_in_out) ==
-			 CODESYS_AUTODETECT
-			 && XCODING_SYSTEM_EOL_TYPE(coding_system) ==
-			 EOL_AUTODETECT)
+		else if (XCODING_SYSTEM_TYPE(*codesys_in_out) == CODESYS_AUTODETECT
+			 && XCODING_SYSTEM_EOL_TYPE(coding_system) == EOL_AUTODETECT)
 			do {
 				if (detect_coding_type(&decst, buf, nread, 1))
 					break;
