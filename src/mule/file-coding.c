@@ -1890,35 +1890,33 @@ determine_real_coding_system(lstream_t stream, Lisp_Object * codesys_in_out,
 						Extbyte *suffix = p;
 						/* Look for "coding:" */
 						for (p = local_vars_beg, scan_end = suffix - LENGTH("coding:?");
-						     p <= scan_end; p++)
-							if (memcmp("coding:", p, LENGTH("coding:")) == 0
-							    && (p == local_vars_beg
-								|| (*(p - 1) == ' '
-								    || *(p - 1) == '\t'
-								    || *(p - 1) == ';'))) {
-								Extbyte save;
-								int n;
-								p += LENGTH("coding:");
-								while (*p == ' ' || *p == '\t') {
-									p++;
-								}
-
-								/* Get coding system name */
-								save = *suffix;
-								*suffix = '\0';
-								/* Characters valid in a MIME charset name (rfc 1521),
-								   and in a Lisp symbol name. */
-								n = strspn((char *)p,
-									   mime_name_valid_chars);
-								*suffix = save;
-								if (n > 0) {
-									save = p[n];
-									p[n] = '\0';
-									coding_system = Ffind_coding_system(intern((char *)p));
-									p[n] = save;
-								}
-								break;
+						     p <= scan_end; p++) {
+							if (memcmp("coding:", p, LENGTH("coding:")) != 0)
+								continue;
+							if (p != local_vars_beg && strchr(" \t;", *p) == NULL )
+								continue;
+							Extbyte save;
+							int n;
+							p += LENGTH("coding:");
+							while (*p == ' ' || *p == '\t') {
+								p++;
 							}
+
+							/* Get coding system name */
+							save = *suffix;
+							*suffix = '\0';
+							/* Characters valid in a MIME charset name (rfc 1521),
+							   and in a Lisp symbol name. */
+							n = strspn((char *)p, mime_name_valid_chars);
+							*suffix = save;
+							if (n > 0) {
+								save = p[n];
+								p[n] = '\0';
+								coding_system = Ffind_coding_system(intern((char *)p));
+								p[n] = save;
+							}
+							break;
+						}
 						break;
 					}
 				/* #### file must use standard EOLs or we miss 2d line */
