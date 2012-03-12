@@ -1852,7 +1852,7 @@ void
 determine_real_coding_system(lstream_t stream, Lisp_Object * codesys_in_out,
 			     eol_type_t * eol_type_in_out)
 {
-	static const char []mime_name_valid_chars = 
+	static const char mime_name_valid_chars[] = 
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		"abcdefghijklmnopqrstuvwxyz"
 		"0123456789"
