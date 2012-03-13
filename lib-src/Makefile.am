@@ -59,7 +59,6 @@ bin_PROGRAMS = gnuclient etags ctags2 ootags
 archlib_PROGRAMS = gnuserv fakemail wakeup profile make-docfile \
 	sorted-doc movemail yow hexl mmencode
 noinst_PROGRAMS = make-path make-dump-id
-dist_noinst_SCRIPTS = ad2c
 
 ## how do we create
 gnuclient_SOURCES = gnuserv.h gnuslib.c gnuclient.c
