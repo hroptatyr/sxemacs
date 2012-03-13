@@ -63,7 +63,6 @@ sitepkg_DATA =
 
 subdirs = ffi mule term
 
-EXTRA_DIST = ffi/Makefile.in mule/Makefile.in
 nocompile_bldchainels =							\
 	build-autoloads.el compile-core.el loadup-el.el loadup.el       \
 	site-load.el update-elc.el update-elc-2.el very-early-lisp.el

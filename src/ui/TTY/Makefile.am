@@ -50,7 +50,7 @@ noinst_LIBRARIES=
 header_HEADERS=$(acgen_headers)
 
 libsxeuiTTY_a_headers = \
-	cm.h console-tty.h objects-tty.h systty.h gpmevent.h
+	cm.h console-tty.h objects-tty.h gpmevent.h
 libsxeuiTTY_a_sources =						\
 	cm.c console-tty.c device-tty.c event-tty.c frame-tty.c		\
 	objects-tty.c redisplay-tty.c
