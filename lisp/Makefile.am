@@ -163,6 +163,8 @@ nobase_dist_lisp_DATA = $(elfiles)
 nobase_lisp_DATA = $(builtels) $(elfiles:.el=.elc) $(builtels:.el=.elc)
 noinst_DATA = auto.stamp update-elc.stamp autoc.stamp
 
+EXTRA_DIST = $(nocompile_bldchainels) $(compile_bldchainels)
+
 BUILT_FILES = auto.stamp update-elc.stamp autoc.stamp
 
 CLEANFILES = core* stage1 stage2 $(builtels) $(builtels:.el=.elc)	\
@@ -263,3 +265,5 @@ auto.stamp: $(SXEMACS) $(compile_elfiles)
 #	@touch $@
 #
 #all: stage1 stage2
+
+.NOTPARALLEL:
