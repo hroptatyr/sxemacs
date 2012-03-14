@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "ui/console.h"
 #include "syssignal.h"		/* Always include before systty.h */
-#include "ui/systty.h"
+#include "systty.h"
 
 DECLARE_CONSOLE_TYPE(tty);
 

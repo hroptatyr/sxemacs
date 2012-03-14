@@ -174,7 +174,7 @@ version 18.59 released October 31, 1992.
 #include "sysdep.h"
 
 #include "syssignal.h"		/* Always include before systty.h */
-#include "ui/systty.h"
+#include "ui/TTY/systty.h"
 #include "sysfile.h"
 #include "systime.h"
 
