@@ -77,8 +77,11 @@ nodist_ase_la_SOURCES = ase.doc.c
 BUILT_SOURCES += ase.doc.c
 
 module_LTLIBRARIES += ase-set.la
-ase_set_la_SOURCES = ase-set.c						\
-	ase-cartesian.c ase-interval.c ase-metric.c ase-neighbourhood.c
+ase_set_la_SOURCES = ase-set.c ase-set.h
+ase_set_la_SOURCES += ase-cartesian.c ase-cartesian.h
+ase_set_la_SOURCES += ase-interval.c ase-interval.h
+ase_set_la_SOURCES += ase-metric.c ase-metric.h
+ase_set_la_SOURCES += ase-neighbourhood.c ase-neighbourhood.h
 nodist_ase_set_la_SOURCES = ase-set.doc.c				\
 	ase-cartesian.doc.c ase-interval.doc.c ase-metric.doc.c		\
 	ase-neighbourhood.doc.c
