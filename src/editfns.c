@@ -618,7 +618,7 @@ On Unix it is obtained from TMPDIR, with /tmp as the default.
 			const char* home_env = getenv("HOME");
 			if ( home_env ) {
 				xstrncpy(path, home_env, sizeof(path));
-				xstrncat(path, "/tmp/", sizeof(path));
+				xstrncat(path, "/tmp/", sizeof(path)-1);
 				if ( mkdir(path, 0700) >= 0 || errno == EEXIST ) {
 					int fd;
 					char warnpath[
