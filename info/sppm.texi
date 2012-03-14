@@ -1024,8 +1024,9 @@ accessible repo, @dfn{myremote}.
 If your repos is private, it is safe to skip the push and just advance
 to the next step.
 
-@subheading @anchor{Patch Submission}Patch Submission
+@subheading Patch Submission
 
+@anchor{Patch Submission}
 At this point, your changes are ready for @s{} to be incorporated into
 the main SXEmacs code base.  All you need to do is let him know, and
 you can easily do that with the following 2 git commands:
@@ -1559,8 +1560,9 @@ git push myremote master
 @end smallexample
 
 
-@subheading @anchor{Automation}Automation
+@subheading Automation
 
+@anchor{Automation}
 The last two commands for patch submission listed in @xref{Patch
 Submission}, @code{format-patch} and @code{send-email} are fairly long
 and hairy.  You'd no doubt have trouble remembering them.  But, never
@@ -1618,8 +1620,9 @@ sent to sxemacs-patches; this includes instances where you merely
 are pulling the latest from mainline and mirroring. Hence, the use of
 aliases as discussed below may be preferable.
 
-@subsection @anchor{Automating with Aliases}Automating with Aliases
+@subsection Automating with Aliases
 
+@anchor{Automating with Aliases}
 Git allows you to define aliases that will let you do all kinds of
 funky things.  Remember those hairy @code{format-patch} and
 @code{send-email} commands?
