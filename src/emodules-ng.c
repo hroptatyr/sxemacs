@@ -150,6 +150,7 @@ __emodng_open_append_exts(const char *filename)
 	char name[nname + /*length of longest extension:*/24];
 	/* note to myself: better check that length! */
 	char *p = xstpncpy(name, filename, nname+1);
+	size_t remain = name + sizeof(name) - p;
 
 	for (Lisp_Object ext = Vmodule_extensions;
 	     CONSP(ext); ext = XCDR(ext)) {
@@ -158,7 +159,7 @@ __emodng_open_append_exts(const char *filename)
 		}
 
 		xstrncpy(p, (const char*)XSTRING_DATA(XCAR(ext)),
-			 name + sizeof(name) - p);
+			 remain);
 
 		if (__file_exists_p(name)) {
 			EMOD_DEBUG_LOADER("trying %s\n", name);
@@ -226,11 +227,14 @@ __emodng_open_prepend_paths_append_exts(const char *filename)
 			char *p = xstpncpy(name,
 				(const char*)XSTRING_DATA(XCAR(path)),
 				sizeof(name)-2);
+			int remain;
 			if (*(p-1) != '/') {
 				*p++ = '/';
 				*p = '\0';
 			}
-			p = xstpncpy(p, filename, name+sizeof(name)-p);
+			remain = name+sizeof(name)-p;
+			p = xstpncpy(p, filename, remain);
+			remain = name+sizeof(name)-p;
 
 			/* append all extensions now */
 			for (Lisp_Object ext = Vmodule_extensions;
@@ -240,7 +244,7 @@ __emodng_open_prepend_paths_append_exts(const char *filename)
 				}
 
 				xstrncpy(p,(const char*)XSTRING_DATA(XCAR(ext)),
-					 name + sizeof(name) - p);
+					 remain);
 
 				if (__file_exists_p(name)) {
 					EMOD_DEBUG_LOADER("trying \"%s\"\n",
