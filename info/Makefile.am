@@ -29,6 +29,3 @@ info_TEXINFOS = cl.texi custom.texi emodules.texi sppm.texi		\
 	external-widget.texi sxemacs-faq.texi term.texi widget.texi	\
 	lispref/lispref.texi internals/internals.texi			\
 	sxemacs/sxemacs.texi new-users-guide/new-users-guide.texi
-
-TEXI2DVI_TEX = latex
-TEXI2DVI = TEX=$(TEXI2DVI_TEX) texi2dvi -c -s
