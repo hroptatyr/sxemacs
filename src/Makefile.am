@@ -355,6 +355,9 @@ install-exec-hook:
 		-l $(sxelispdir)/loadup.el \
 		--dump $(DESTDIR)$(archlibdir)/$(SXEDMP_FILENAME))
 
+uninstall-hook:
+	(cd $(DESTDIR)$(archlibdir) && $(RM) $(SXEDMP_FILENAME))
+
 
 ## someone who wants to use this actually needs repeat the fuss above
 sxemacs.dmp.gdb: $(SXEMACS) $(AALFILE) \
