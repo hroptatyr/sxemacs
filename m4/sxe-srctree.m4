@@ -67,13 +67,6 @@ AC_DEFUN([SXE_CHECK_SRCDIR_HEALTH], [dnl
 		AC_MSG_WARN([use GNU make.  If you do not have GNU make, then you must])
 		AC_MSG_WARN([now do `make distclean' in $sxe_srcdir,])
 		AC_MSG_WARN([and then run $progbasename again.])
-		extrasub="/^VPATH[[	 ]]*=/c\
-vpath %.c $sxe_srcdir/lib-src $sxe_srcdir/src\\n\
-vpath %.h $sxe_srcdir/lib-src $sxe_srcdir/src\\n\
-vpath %.y $sxe_srcdir/lib-src $sxe_srcdir/src\\n\
-vpath %.l $sxe_srcdir/lib-src $sxe_srcdir/src\\n\
-vpath %.s $sxe_srcdir/lib-src $sxe_srcdir/src\\n\
-vpath %.in $sxe_srcdir/lib-src $sxe_srcdir/src\\n"
 	fi
 
 ])dnl SXE_CHECK_SRCDIR_HEALTH

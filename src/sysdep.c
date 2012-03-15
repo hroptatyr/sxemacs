@@ -41,10 +41,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "ui/TTY/console-tty.h" /* for stuff in stuff_char and
 				   others. Seriously in need of
 				   refactoring... */
-#else
-#include "syssignal.h"
-#include "ui/systty.h"
-#endif				/* HAVE_TTY */
+#else  /* !HAVE_TTY */
+#include "syssignal.h"		/* always include before systty.h */
+#include "ui/TTY/systty.h"
+#endif  /* HAVE_TTY */
 
 #include "ui/console-stream.h"
 
