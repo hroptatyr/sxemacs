@@ -162,9 +162,3 @@ stage2: stage1
 ### dont use staged build
 ##all: stage1 stage2
 
-
-distdir: dist-hook
-
-dist-hook:
-	@echo "The dist targets do not work. Please read the sppm info section 'Making releases'."
-	@exit 1
