@@ -54,7 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "sysproc.h"
 #include "systime.h"
 #include "syssignal.h"		/* Always include before systty.h */
-#include "ui/systty.h"
+#include "ui/TTY/systty.h"
 #include "syswait.h"
 
 #if defined(HAVE_OPENSSL) && defined(OPENSSL_SSL)

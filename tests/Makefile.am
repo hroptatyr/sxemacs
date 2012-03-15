@@ -49,7 +49,7 @@ automated_tests = automated/ase-cartesian-tests.el                      \
 	automated/ase-interval-tests.el automated/ase-metric-tests.el   \
 	automated/ase-neighbourhood-tests.el                            \
 	automated/ase-permutation-tests.el				\
-	automated/ase-reclass-tests.el automated/base64-tests.el	\
+	automated/ase-resclass-tests.el automated/base64-tests.el	\
 	automated/bloom-tests.el automated/byte-compiler-tests.el       \
 	automated/case-tests.el	automated/ccl-tests.el			\
 	automated/cl-loop-tests.el automated/c-tests.el			\

@@ -63,7 +63,6 @@ sitepkg_DATA =
 
 subdirs = ffi mule term
 
-EXTRA_DIST = ffi/Makefile.in mule/Makefile.in
 nocompile_bldchainels =							\
 	build-autoloads.el compile-core.el loadup-el.el loadup.el       \
 	site-load.el update-elc.el update-elc-2.el very-early-lisp.el
@@ -163,6 +162,8 @@ elfiles = $(nocompile_elfiles) $(compile_elfiles)
 nobase_dist_lisp_DATA = $(elfiles)
 nobase_lisp_DATA = $(builtels) $(elfiles:.el=.elc) $(builtels:.el=.elc)
 noinst_DATA = auto.stamp update-elc.stamp autoc.stamp
+
+EXTRA_DIST = $(nocompile_bldchainels) $(compile_bldchainels)
 
 BUILT_FILES = auto.stamp update-elc.stamp autoc.stamp
 
@@ -264,3 +265,5 @@ auto.stamp: $(SXEMACS) $(compile_elfiles)
 #	@touch $@
 #
 #all: stage1 stage2
+
+.NOTPARALLEL:

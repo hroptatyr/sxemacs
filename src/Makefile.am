@@ -144,7 +144,8 @@ noinst_LIBRARIES = $(noinst_pdumplibs) $(noinst_nodumplibs)
 acgen_headers = config.h sxe-paths.h
 header_HEADERS = $(acgen_headers)		\
 	$(libsxecore_a_headers)			\
-	emodules-ng.h
+	emodules-ng.h				\
+	sxe-utils.h
 
 sheader_HEADERS = $(srcdir)/s/*.h
 mheader_HEADERS = $(srcdir)/m/*.h
