@@ -2237,6 +2237,16 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		if (NILP(Vinvocation_directory))
 			Vinvocation_directory = Vinvocation_name;
 
+		/* kick double /s as we want a standard posix name */
+		for (unsigned char *p = XSTRING_DATA(Vinvocation_name),
+			     *q = p; ((*q = *p));) {
+			if (*q++ == '/') {
+				while (*++p == '/');
+			} else {
+				p++;
+			}
+		}
+
 		Vinvocation_name =
 		    Ffile_name_nondirectory(Vinvocation_directory);
 		Vinvocation_directory =
