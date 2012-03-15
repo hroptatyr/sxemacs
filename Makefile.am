@@ -101,6 +101,10 @@ uninstall-hook:
 
 check-recursive: all-recursive
 
+distclean-local:
+	$(RM) $(builddir)/Installation
+	$(RM) $(builddir)/cpuid
+
 $(ETAGS):
 	cd $(top_builddir)/lib-src
 	$(MAKE) $(AM_MAKEFLAGS) etags
