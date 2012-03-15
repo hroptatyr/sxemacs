@@ -322,7 +322,7 @@ config.values: config.h
 ## one day (when SXE is linked with its own shared libraries) we HAVE to
 ## go that way but at the moment it's okay the way it is
 SXE_SHOW_DUMP = $$($(BITCHENV) $(DESTDIR)$(bindir)/sxemacs -sd)
-SXEDMP_FILENAME=sxemacs-$(old_version)-$(SXE_SHOW_DUMP).dmp
+SXEDMP_FILENAME=sxemacs-$(old_version).dmp
 
 sxemacs.dmp: $(SXEMACS) $(archlib_DATA) $(bldlispdir)/update-elc.stamp
 	if test -e "$(bldlispdir)/update-elc.stamp"; then \
@@ -354,6 +354,9 @@ install-exec-hook:
 	$(BITCHENV) $(DESTDIR)$(bindir)/sxemacs -nd -batch \
 		-l $(sxelispdir)/loadup.el \
 		--dump $(DESTDIR)$(archlibdir)/$(SXEDMP_FILENAME))
+
+uninstall-hook:
+	(cd $(DESTDIR)$(archlibdir) && $(RM) $(SXEDMP_FILENAME))
 
 
 ## someone who wants to use this actually needs repeat the fuss above
