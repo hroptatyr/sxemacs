@@ -122,7 +122,7 @@ environment to set your preferences for color, fonts, location, and the size
 of XEmacs frames.  Refer to your X documentation for more information
 about resources.
 
-@unnumberedsec New Commands and Variables
+@b{New Commands and Variables}
 
 There are many new functions in XEmacs, and many existing functions
 whose semantics have been expanded.  Most of these are only of interest
