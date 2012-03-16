@@ -229,10 +229,6 @@ extern void *GC_init(void);
 # endif
 #endif	/* HAVE_BDWGC */
 
-#if defined (HEAP_IN_DATA) && !defined(PDUMP)
-void report_sheap_usage(int die_if_pure_storage_exceeded);
-#endif
-
 #if !defined (SYSTEM_MALLOC) && !defined (DOUG_LEA_MALLOC)
 extern void *(*__malloc_hook) (size_t);
 extern void *(*__realloc_hook) (void *, size_t);
@@ -2594,9 +2590,6 @@ Do not call this.  It will reinitialize your SXEmacs.  You'll be sorry.
 	unbind_to(0, Qnil);	/* this closes loadup.el */
 	purify_flag = 0;
 	run_temacs_argc = nargs + 1;
-#if defined (HEAP_IN_DATA) && !defined(PDUMP)
-	report_sheap_usage(0);
-#endif
 	LONGJMP(run_temacs_catch, 1);
 	return Qnil;		/* not reached; warning suppression */
 }
@@ -3005,10 +2998,6 @@ and announce itself normally when it is run.
 
 	opurify = purify_flag;
 	purify_flag = 0;
-
-#if defined (HEAP_IN_DATA) && !defined(PDUMP)
-	report_sheap_usage(1);
-#endif
 
 	clear_message();
 
