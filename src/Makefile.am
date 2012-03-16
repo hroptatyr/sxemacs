@@ -313,7 +313,7 @@ config.values: config.h
 ## one day (when SXE is linked with its own shared libraries) we HAVE to
 ## go that way but at the moment it's okay the way it is
 SXE_SHOW_DUMP = $$($(BITCHENV) $(DESTDIR)$(bindir)/sxemacs -sd)
-SXEDMP_FILENAME=sxemacs-$(old_version).dmp
+SXEDMP_FILENAME=sxemacs.dmp
 
 sxemacs.dmp: $(SXEMACS) $(archlib_DATA) $(bldlispdir)/update-elc.stamp
 	if test -e "$(bldlispdir)/update-elc.stamp"; then \
