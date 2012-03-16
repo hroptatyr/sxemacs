@@ -1269,58 +1269,26 @@ static int pdump_file_get(const char *path)
 	return 1;
 }
 
-static int pdump_file_try(char *exe_path, size_t size)
+static int
+pdump_file_try(char *exe_path, size_t size)
 {
-	char *w = exe_path + strlen(exe_path);
-	int sz;
-	size -= strlen(exe_path);
+	static const char pdump_ext[] = ".dmp";
+	size_t exe_path_len = strlen(exe_path);
+	char *w = exe_path + exe_path_len;
 
-	do {
-
-#ifdef EMACS_PATCH_LEVEL
-		sz = snprintf(w, size, "-%d.%d.%d-%08x.dmp",
-			 EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
-			 EMACS_PATCH_LEVEL, dump_id);
-		if (sz >=0 && sz < size && pdump_file_get(exe_path)) {
+	if (exe_path_len + sizeof(pdump_ext) <= size) {
+		/* just hammer the pdump extension onto w */
+		memcpy(w, pdump_ext, sizeof(pdump_ext));
+		/* exists? */
+		if (pdump_file_get(exe_path)) {
+			/* works? */
 			if (pdump_load_check()) {
 				return 1;
 			}
+			/* bugger */
 			pdump_free();
 		}
-#endif	/* EMACS_PATCH_LEVEL */
-#ifdef EMACS_BETA_VERSION
-		sz = snprintf(w, size, "-%d.%d.%d-%08x.dmp",
-			 EMACS_MAJOR_VERSION, EMACS_MINOR_VERSION,
-			 EMACS_BETA_VERSION, dump_id);
-		if (sz >=0 && (size_t)sz < size && pdump_file_get(exe_path)) {
-			if (pdump_load_check()) {
-				return 1;
-			}
-			pdump_free();
-		}
-#endif	/* EMACS_BETA_VERSION */
-
-		sz = snprintf(w, size, "-%08x.dmp", dump_id);
-		if (sz >=0 && (size_t)sz < size && pdump_file_get(exe_path)) {
-			if (pdump_load_check()) {
-				return 1;
-			}
-			pdump_free();
-		}
-
-		sz = snprintf(w, size, ".dmp");
-		if (sz >=0 && (size_t)sz < size && pdump_file_get(exe_path)) {
-			if (pdump_load_check()) {
-				return 1;
-			}
-			pdump_free();
-		}
-
-		do {
-			w--;
-		} while (w > exe_path && !IS_DIRECTORY_SEP(*w) && (*w != '-')
-			 && (*w != '.'));
-	} while (w > exe_path && !IS_DIRECTORY_SEP(*w));
+	}
 	return 0;
 }
 

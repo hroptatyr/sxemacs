@@ -3557,19 +3557,6 @@ int main(int c, char *v[])
 	[have_setitimer=$?],[have_setitimer=0])
 AM_CONDITIONAL([HAVE_SETITIMER], [test "$have_setitimer" = "1"])
 
-## whether to build with sheap.o
-AC_RUN_IFELSE([AC_LANG_SOURCE([[
-int main(int c, char *v[])
-{
-#if defined(HEAP_IN_DATA) && !defined(PDUMP)
-	return 1;
-#else
-	return 0;
-#endif
-}]])], [./conftest; build_sheap=$?],
-	[build_sheap=$?],[build_sheap=0])
-AM_CONDITIONAL([BUILD_SHEAP], [test "$build_sheap" = "1"])
-
 
 dnl There are no more compile tests; remove the core they created.
 rm -f core
