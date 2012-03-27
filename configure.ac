@@ -2859,11 +2859,12 @@ AS_IF([test "$with_tty" != "no" -a "$have_tty" != no], [
 
 SXE_CHECK_UI_SUFFICIENCY
 
-AS_IF([test -z "$window_system" -o "$window_system" != "none" ], [
+AS_IF([test -z "$window_system" -o "$window_system" = "none" ], [
     dnl It ought to be reasonable to have no output device at all, and only use
     dnl SXEmacs in --batch mode.
-    AS_IF([test "$with_tty" = "no"],
-       AC_MSG_WARN([No window system nor TTY support. You only can use --batch mode.]))
+    AS_IF([test "$have_tty" = "no"],
+       AC_MSG_ERROR([No window system nor TTY support. SXEmacs cannot be compiled.
+Check INSTALL and PROBLEMS files for hints on how to solve.]))
 ])
 
 ## Uncertain options
