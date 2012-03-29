@@ -1164,7 +1164,7 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		display_use = "tty";
 
 #ifndef HAVE_TTY
-	if (inhibit_window_system)
+	if (inhibit_window_system && !noninteractive)
 		fatal("Sorry, this SXEmacs was not compiled with TTY support");
 #endif
 

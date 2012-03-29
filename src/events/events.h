@@ -680,10 +680,10 @@ USID event_stream_unixoid_create_stream_pair(void *inhandle, void *outhandle,
 USID event_stream_unixoid_delete_stream_pair(Lisp_Object instream,
 					     Lisp_Object outstream);
 
+#endif				/* HAVE_UNIXOID_EVENT_LOOP */
 /* Beware: this evil macro evaluates its arg many times */
 #define FD_TO_USID(fd) ((fd)==0 ? (USID)999999 : ((fd)<0 ? USID_DONTHASH : (USID)(fd)))
 
-#endif				/* HAVE_UNIXOID_EVENT_LOOP */
 
 /* Define this if you want the tty event stream to be used when the
    first console is tty, even if HAVE_X_WINDOWS is defined */

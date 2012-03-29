@@ -210,8 +210,7 @@ libsxecore_a_sources =							\
 	dynarr.c editfns.c elhash.c emacs.c eval.c dynacat.c		\
 	extents.c fileio.c filemode.c fns.c general.c hash.c indent.c	\
 	intl.c line-number.c lread.c lstream.c macros.c map.c marker.c	\
-	md5.c								\
-	objects.c opaque.c print.c process.c process-unix.c rangetab.c	\
+	md5.c opaque.c print.c process.c process-unix.c rangetab.c	\
 	regex.c search.c semaphore.c seq.c signal.c skiplist.c		\
 	strftime.c symbols.c syntax.c sysdep.c undo.c
 libsxecore_a_SOURCES = $(libsxecore_a_headers) $(libsxecore_a_sources)

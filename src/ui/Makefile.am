@@ -66,7 +66,8 @@ libsxeui_a_sources =							\
 	console.c console-stream.c device.c faces.c font-lock.c         \
 	frame.c glyphs.c glyphs-eimage.c glyphs-widget.c gui.c gutter.c \
 	imgproc.c keymap.c insdel.c minibuf.c redisplay.c               \
-	redisplay-output.c select.c specifier.c widget.c window.c
+	redisplay-output.c select.c specifier.c widget.c window.c       \
+	objects.c 
 libsxeui_a_SOURCES = $(libsxeui_a_headers) $(libsxeui_a_sources)
 libsxeui_a_CPPFLAGS = $(AM_CPPFLAGS) $(c_switch_general) $(X_CFLAGS)
 EXTRA_libsxeui_a_SOURCES=scrollbar.c menubar.c dialog.c toolbar.c
