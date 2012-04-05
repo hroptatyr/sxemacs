@@ -1313,6 +1313,9 @@ extern_inline EMACS_INT XCHAR_OR_INT(Lisp_Object obj)
     x = wrong_type_argument (Qinteger_char_or_marker_p, x);	\
 } while (0)
 
+/* basic integer definitions, used quite a lot */
+#include "ent/ent-int.h"
+
 /*--------------------------- readonly objects -------------------------*/
 
 #define CHECK_C_WRITEABLE(obj)					\
@@ -2469,8 +2472,6 @@ void staticpro_nodump(Lisp_Object *);
 
 /* allocation goodies */
 #include "opaque.h"
-/* for size computation */
-#include "ent/ent.h"
 
 /* also generally useful if you want to avoid arbitrary size limits
    but don't need a full dynamic array.  Assumes that BASEVAR points
