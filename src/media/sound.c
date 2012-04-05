@@ -75,6 +75,9 @@ Lisp_Object Qplay_sound;
 #include "sound-oss.h"
 #endif
 
+/* for CHECK_NUMBER and COMPARABLEP */
+#include "ent/ent.h"
+
 Lisp_Object Qaudio_devicep;
 Lisp_Object Qaudio_jobp;
 Lisp_Object Vdefault_audio_device;

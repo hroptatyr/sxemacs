@@ -2981,6 +2981,10 @@ get_process_times(double *user_time, double *system_time, double *real_time)
 #endif
 #endif
 
+#if defined HAVE_MPZ && (defined WITH_GMP || defined WITH_MP)
+# include "ent/ent-gmp.h"
+#endif	/* MPZ && (GMP || MP) */
+
 /* Figure out how many bits the system's random number generator uses.
    `random' and `lrand48' are assumed to return 31 usable bits.
    BSD `rand' returns a 31 bit value but the low order bits are unusable;

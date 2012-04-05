@@ -47,6 +47,7 @@
 #include "map.h"
 #include "dict.h"
 #include "skiplist.h"
+#include "ent/ent.h"
 
 Lisp_Object Qmap;
 Lisp_Object Q_arity, Q_result_type, Q_mode, Q_glue;

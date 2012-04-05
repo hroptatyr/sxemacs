@@ -46,6 +46,8 @@
 #include "lrecord.h"
 #include "lstream.h"
 
+/* for __ase_ffs() */
+#include "ent/ent.h"
 #include "skiplist.h"
 
 #define __SKIPLIST_DEBUG__(args...)	fprintf(stderr, "SKIPLIST " args)
@@ -112,8 +114,6 @@ skiplist_find_hash_path(skiplist_t, hcode_t, skiplist_level_t[])
 static inline skiplist_level_t
 skiplist_find_hash_return_level(skiplist_t, hcode_t)
 	__attribute__((always_inline));
-
-extern int get_random(void);
 
 /* high level bindings */
 
