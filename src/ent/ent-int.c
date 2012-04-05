@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 #include "sysproc.h"    /* For qxe_getpid */
 
-#include "ent-int.h"
+#include "ent.h"
 
 EMACS_INT Vmost_negative_int, Vmost_positive_int;
 Lisp_Object Qzero, Qone;

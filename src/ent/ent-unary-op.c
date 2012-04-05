@@ -1,6 +1,6 @@
 /*
   ent-unary-op.c -- Global Unary Operations
-  Copyright (C) 2006, 2007, 2008 Sebastian Freundt
+  Copyright (C) 2006-2012 Sebastian Freundt
 
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
@@ -38,7 +38,10 @@
 
 #include <config.h>
 #include "lisp.h"
+#include "ent-optable.h"
 #include "ent-unary-op.h"
+
+extern Lisp_Object Qoperation_error;
 
 ase_unary_operation_f ase_unary_optable
 [N_ASE_UNARY_OPS][ASE_OPTABLE_SIZE];

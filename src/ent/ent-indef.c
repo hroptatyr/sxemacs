@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 #include "sysproc.h"    /* For qxe_getpid */
 
-#include "ent-indef.h"
+#include "ent.h"
 
 static inline int indef_eq(Lisp_Object, Lisp_Object);
 static inline int indef_neq(Lisp_Object, Lisp_Object);

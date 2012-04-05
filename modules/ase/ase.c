@@ -39,6 +39,7 @@
 
 #include "config.h"
 #include "sxemacs.h"
+#include "lisp.h"
 #include "ent/ent.h"
 #include "ase.h"
 #ifdef EMOD_ASE_MONOMOD

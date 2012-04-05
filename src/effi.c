@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <dlfcn.h>
 #include <math.h>
 #include "sysdep.h"
+#include "ent/ent.h"
 #include "effi.h"
 
 #include "buffer.h"

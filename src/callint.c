@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <config.h>
 #include "lisp.h"
+#include "ent/ent.h"
 
 #include "buffer.h"
 #include "bytecode.h"
