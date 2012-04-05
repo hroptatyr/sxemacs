@@ -561,8 +561,10 @@ _put_skiplist(skiplist_t sl, skiplist_level_t *path, size_t psz,
 	      hcode_t h, Lisp_Object key, Lisp_Object value)
 {
 	/* entirely new data, build a node for it */
-	/* determine the number of levels to add */
-	size_t nlevels = __ase_ffsl(random()), cnt;
+	/* determine the number of levels to add, this is a log distribution
+	 * so we use ffs(3) of a random number */
+	size_t nlevels = __ase_ffsl(random());
+	size_t cnt;
 	skiplist_level_t levels, last = path[psz--];
 	skiplist_node_t node;
 
