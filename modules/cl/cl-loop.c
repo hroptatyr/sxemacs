@@ -40,6 +40,7 @@
 #include <sxemacs.h>
 #include "cl-loop.h"
 #include "elhash.h"
+#include "ent/ent.h"
 
 #if !defined EMOD_CL_MONOMOD
 PROVIDE(cl_loop);
