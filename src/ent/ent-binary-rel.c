@@ -1,6 +1,6 @@
 /*
   ent-binary-rel.c -- Global Binary Relations
-  Copyright (C) 2006, 2007, 2008 Sebastian Freundt
+  Copyright (C) 2006-2012 Sebastian Freundt
 
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
@@ -38,7 +38,12 @@
 
 #include <config.h>
 #include "lisp.h"
+#include "ent-optable.h"
+#include "ent-lift.h"
+#include "ent-binary-op.h"
 #include "ent-binary-rel.h"
+
+extern Lisp_Object Qrelation_error;
 
 ase_binary_relation_f ase_binary_reltable
 [N_ASE_BINARY_OPS][ASE_OPTABLE_SIZE][ASE_OPTABLE_SIZE];

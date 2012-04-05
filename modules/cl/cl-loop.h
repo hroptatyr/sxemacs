@@ -1,6 +1,6 @@
 /*
   cl-loop.h -- Common Lisp Goodness, the fast version
-  Copyright (C) 2006, 2007 Sebastian Freundt
+  Copyright (C) 2006-2012 Sebastian Freundt
 
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
@@ -41,6 +41,11 @@
 
 #include "cl.h"
 #include "cl-loop-parser.h"
+#include "ent/ent-optable.h"
+#include "ent/ent-binary-op.h"
+#include "ent/ent-binary-rel.h"
+#include "ent/ent-int.h"
+#include "ent/ent-indef.h"
 
 #define EMOD_CL_DEBUG_LOOP(args...)	EMOD_CL_DEBUG("[loop]: " args)
 

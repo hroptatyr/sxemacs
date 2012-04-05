@@ -92,6 +92,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "sysfile.h"
 #include "systime.h"		/* to set Vlast_input_time */
 
+/* for extract_float() and CHECK_NUMBER */
+#include "ent/ent.h"
+
 #include "events-mod.h"
 #ifdef EF_USE_ASYNEQ
 #include "event-queue.h"

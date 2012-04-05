@@ -1,6 +1,6 @@
 /*
   ent-lift.c -- Global Lifting
-  Copyright (C) 2006, 2007, 2008 Sebastian Freundt
+  Copyright (C) 2006-2012 Sebastian Freundt
 
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
@@ -38,6 +38,7 @@
 
 #include <config.h>
 #include "lisp.h"
+#include "ent-optable.h"
 #include "ent-lift.h"
 
 ase_lift_f ase_lifttable[ASE_OPTABLE_SIZE][ASE_OPTABLE_SIZE];

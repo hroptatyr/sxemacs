@@ -1227,6 +1227,8 @@ Return a new list of length LENGTH, with each element being OBJECT.
 /************************************************************************/
 /*			  Float allocation				*/
 /************************************************************************/
+/* used by many of the allocators below */
+#include "ent/ent.h"
 
 #ifdef HAVE_FPFLOAT
 #include <math.h>

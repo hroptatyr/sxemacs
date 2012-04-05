@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "buffer.h"
 #include "lstream.h"
+#include "ent/ent.h"
 
 static const char *const valid_flags = "-+ #0";
 static const char *const valid_converters = "dic" "oxX" "feEgG" "sS" "b"

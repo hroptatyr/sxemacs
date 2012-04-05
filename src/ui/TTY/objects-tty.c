@@ -31,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "ui/device.h"
 #include "mule/mule-charset.h"
 #endif
+
+/* for CHECK_INT_OR_FLOAT */
+#include "ent/ent.h"
+
 #include "skiplist.h"
 
 /* Term => ( color => '(index bold) ) */

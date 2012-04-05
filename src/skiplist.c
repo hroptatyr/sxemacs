@@ -46,6 +46,8 @@
 #include "lrecord.h"
 #include "lstream.h"
 
+/* for __ase_ffs() */
+#include "ent/ent.h"
 #include "skiplist.h"
 
 #define __SKIPLIST_DEBUG__(args...)	fprintf(stderr, "SKIPLIST " args)
@@ -112,8 +114,6 @@ skiplist_find_hash_path(skiplist_t, hcode_t, skiplist_level_t[])
 static inline skiplist_level_t
 skiplist_find_hash_return_level(skiplist_t, hcode_t)
 	__attribute__((always_inline));
-
-extern int get_random(void);
 
 /* high level bindings */
 
@@ -561,8 +561,10 @@ _put_skiplist(skiplist_t sl, skiplist_level_t *path, size_t psz,
 	      hcode_t h, Lisp_Object key, Lisp_Object value)
 {
 	/* entirely new data, build a node for it */
-	/* determine the number of levels to add */
-	size_t nlevels = __ase_ffsl(random()), cnt;
+	/* determine the number of levels to add, this is a log distribution
+	 * so we use ffs(3) of a random number */
+	size_t nlevels = __ase_ffsl(random());
+	size_t cnt;
 	skiplist_level_t levels, last = path[psz--];
 	skiplist_node_t node;
 

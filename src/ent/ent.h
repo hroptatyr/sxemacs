@@ -523,6 +523,20 @@ __ase_ffsl(long unsigned int x)
 	return 32 - cnt;
 }
 
+#elif defined __powerpc64__
+
+extern_inline long unsigned int
+__ase_ffsl(long unsigned int x)
+{
+	long unsigned int cnt;
+
+	__asm__ volatile(
+		"cntlzw %[out], %[in]\n"
+		: [out] "=r" (cnt)
+		: [in] "r" (x & -x));
+	return 64 - cnt;
+}
+
 #elif defined HAVE_FFSL
 extern_inline long unsigned int
 __ase_ffsl(long unsigned int x)
@@ -605,6 +619,34 @@ __ase_flsl(long unsigned int x)
 		"bsrl %[in], %[out]\n\t"
 		: [out] "=r" (x) : [in] "rm" (x));
 	return x;
+}
+
+#elif defined __ppc__
+extern_inline long unsigned int
+__ase_flsl(long unsigned int x)
+{
+	long unsigned int cnt;
+
+        __asm__ volatile(
+		"cntlzw %[out], %[in]"
+		: [out] "=r" (cnt)
+		: [in] "r" (x)
+		);
+        return 64 - cnt;
+}
+
+#elif defined __powerpc64__
+extern_inline long unsigned int
+__ase_flsl(long unsigned int x)
+{
+	long unsigned int cnt;
+
+        __asm__ volatile(
+		"cntlzd %[out], %[in]"
+		: [out] "=r" (cnt)
+		: [in] "r" (x)
+		);
+        return 64 - x;
 }
 
 #elif defined HAVE_FLSL

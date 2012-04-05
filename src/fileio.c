@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #ifdef FILE_CODING
 #include "mule/file-coding.h"
 #endif
+#include "ent/ent.h"
 
 #ifdef HAVE_LIBGEN_H		/* Must come before sysfile.h */
 #include <libgen.h>

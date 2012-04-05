@@ -1,6 +1,6 @@
 /*
   ent-nullary-op.c -- Global Nullary Operations
-  Copyright (C) 2006, 2007, 2008 Sebastian Freundt
+  Copyright (C) 2006-2012 Sebastian Freundt
 
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
@@ -38,6 +38,7 @@
 
 #include <config.h>
 #include "lisp.h"
+#include "ent-optable.h"
 #include "ent-nullary-op.h"
 
 ase_nullary_operation_f ase_nullary_optable
