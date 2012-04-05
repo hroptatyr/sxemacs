@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 #include "sysproc.h"    /* For qxe_getpid */
 
-#include "ent-float.h"
+#include "ent.h"
 
 
 Lisp_Object Vmost_positive_float;

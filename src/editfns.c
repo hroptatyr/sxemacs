@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "casetab.h"
 #include "chartab.h"
 #include "line-number.h"
+#include "ent/ent.h"
 
 #include "systime.h"
 #include "sysdep.h"

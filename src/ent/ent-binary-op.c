@@ -1,6 +1,6 @@
 /*
   ent-binary-op.c -- Global Binary Operations
-  Copyright (C) 2006, 2007, 2008 Sebastian Freundt
+  Copyright (C) 2006-2012 Sebastian Freundt
 
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
@@ -38,8 +38,11 @@
 
 #include <config.h>
 #include "lisp.h"
+#include "ent-optable.h"
 #include "ent-binary-op.h"
 #include "ent-unary-op.h"
+
+extern Lisp_Object Qoperation_error;
 
 int common_lisp_slash;
 ase_binary_operation_f ase_binary_optable
