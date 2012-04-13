@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #ifdef FILE_CODING
 #include "mule/file-coding.h"
 #endif
+#include "ent/ent.h"
 
 #include "sysfile.h"
 

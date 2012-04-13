@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 #include "sysproc.h"    /* For qxe_getpid */
 
-#include "ent-gmp.h"
+#include "ent.h"
 
 static mpf_t float_print_min, float_print_max;
 gmp_randstate_t random_state;

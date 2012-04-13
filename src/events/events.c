@@ -327,7 +327,7 @@ event_equal(Lisp_Object obj1, Lisp_Object obj2, int depth)
 	switch (e1->event_type) {
 	default:
 		abort();
-		break;
+		return 1; /* not reached */
 
 	case process_event:
 		return EQ(e1->event.process.process, e2->event.process.process);

@@ -1837,7 +1837,7 @@ Return an SQL-suited escaped version of binary DATA.
       (data))
 {
 	char *result;
-	unsigned int result_len;
+	size_t result_len;
 	/* buffers for our args */
 	char *data_ext;
 	int data_len;
@@ -1846,8 +1846,8 @@ Return an SQL-suited escaped version of binary DATA.
 			   C_STRING_ALLOCA, data_ext, PG_OS_CODING);
 	data_len = (int)XSTRING_CHAR_LENGTH(data);
 
-	result = (char*)PQescapeBytea((unsigned char*)data_ext, data_len,
-				      &result_len);
+	result = (char*)PQescapeBytea(
+		(unsigned char*)data_ext, data_len, &result_len);
 
 	if (result == NULL)
 		return Qnil;
@@ -1865,15 +1865,15 @@ so you may have to use `pq-unescape-bytea' twice.
       (data))
 {
 	char *result;
-	unsigned int result_len;
+	size_t result_len;
 	/* buffers for our args */
 	char *data_ext;
 
 	TO_EXTERNAL_FORMAT(LISP_STRING, data,
 			   C_STRING_ALLOCA, data_ext, PG_OS_CODING);
 
-	result = (char*)PQunescapeBytea((unsigned char*)data_ext,
-					&result_len);
+	result = (char*)PQunescapeBytea(
+		(unsigned char*)data_ext, &result_len);
 
 	if (result == NULL)
 		return Qnil;

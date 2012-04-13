@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "category.h"
 #include "seq.h"
 #include "dict.h"
+#include "ent/ent.h"
 
 Lisp_Object Qhash_tablep;
 static Lisp_Object Qhashtable, Qhash_table;

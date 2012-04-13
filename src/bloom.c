@@ -917,7 +917,7 @@ make_bloom_uninitted(uint32_t order, uint32_t degree)
 	Lisp_Bloom *bf = allocate_bloom();
 #if !BLOOM_USE_PRIMES
 	/* we must use a 2-power */
-	order = 1 << (1 + __ase_flsl(order - 1));
+	order = __next_2power(order);
 #endif
 
 	bloom_order(bf) = order;

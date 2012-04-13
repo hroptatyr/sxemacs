@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "bytecode.h"
 #include "syssignal.h"
 #include "dynacat.h"
+#include "ent/ent.h"
 
 Lisp_Object Qnil, Qt, Qquote, Qlambda, Qunbound;
 Lisp_Object Qerror_conditions, Qerror_message;

@@ -1,6 +1,6 @@
 /*
   ent-unary-rel.c -- Global Unary Relations
-  Copyright (C) 2006, 2007, 2008 Sebastian Freundt
+  Copyright (C) 2006-2012 Sebastian Freundt
 
   Author:  Sebastian Freundt <hroptatyr@sxemacs.org>
 
@@ -38,7 +38,10 @@
 
 #include <config.h>
 #include "lisp.h"
+#include "ent-optable.h"
 #include "ent-unary-rel.h"
+
+extern Lisp_Object Qrelation_error;
 
 ase_unary_relation_f ase_unary_reltable
 [N_ASE_UNARY_RELS][ASE_OPTABLE_SIZE];

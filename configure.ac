@@ -2859,11 +2859,12 @@ AS_IF([test "$with_tty" != "no" -a "$have_tty" != no], [
 
 SXE_CHECK_UI_SUFFICIENCY
 
-AS_IF([test -z "$window_system" -o "$window_system" != "none" ], [
+AS_IF([test -z "$window_system" -o "$window_system" = "none" ], [
     dnl It ought to be reasonable to have no output device at all, and only use
     dnl SXEmacs in --batch mode.
-    AS_IF([test "$with_tty" = "no"],
-       AC_MSG_WARN([No window system nor TTY support. You only can use --batch mode.]))
+    AS_IF([test "$have_tty" = "no"],
+       AC_MSG_ERROR([No window system nor TTY support. SXEmacs cannot be compiled.
+Check INSTALL and PROBLEMS files for hints on how to solve.]))
 ])
 
 ## Uncertain options
@@ -3556,19 +3557,6 @@ int main(int c, char *v[])
 }]])], [./conftest; have_setitimer=$?],
 	[have_setitimer=$?],[have_setitimer=0])
 AM_CONDITIONAL([HAVE_SETITIMER], [test "$have_setitimer" = "1"])
-
-## whether to build with sheap.o
-AC_RUN_IFELSE([AC_LANG_SOURCE([[
-int main(int c, char *v[])
-{
-#if defined(HEAP_IN_DATA) && !defined(PDUMP)
-	return 1;
-#else
-	return 0;
-#endif
-}]])], [./conftest; build_sheap=$?],
-	[build_sheap=$?],[build_sheap=0])
-AM_CONDITIONAL([BUILD_SHEAP], [test "$build_sheap" = "1"])
 
 
 dnl There are no more compile tests; remove the core they created.

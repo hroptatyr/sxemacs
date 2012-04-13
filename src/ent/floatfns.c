@@ -48,6 +48,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 #include "syssignal.h"
 
+#include "ent.h"
+
 #ifdef HAVE_FPFLOAT
 
 /* The code uses emacs_rint, so that it works to undefine HAVE_RINT

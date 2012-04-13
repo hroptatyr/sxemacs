@@ -174,7 +174,7 @@ version 18.59 released October 31, 1992.
 #include "sysdep.h"
 
 #include "syssignal.h"		/* Always include before systty.h */
-#include "ui/systty.h"
+#include "ui/TTY/systty.h"
 #include "sysfile.h"
 #include "systime.h"
 
@@ -228,10 +228,6 @@ extern void *GC_init(void);
 #  error Go back to your planet!
 # endif
 #endif	/* HAVE_BDWGC */
-
-#if defined (HEAP_IN_DATA) && !defined(PDUMP)
-void report_sheap_usage(int die_if_pure_storage_exceeded);
-#endif
 
 #if !defined (SYSTEM_MALLOC) && !defined (DOUG_LEA_MALLOC)
 extern void *(*__malloc_hook) (size_t);
@@ -1168,7 +1164,7 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		display_use = "tty";
 
 #ifndef HAVE_TTY
-	if (inhibit_window_system)
+	if (inhibit_window_system && !noninteractive)
 		fatal("Sorry, this SXEmacs was not compiled with TTY support");
 #endif
 
@@ -2237,6 +2233,16 @@ DOESNT_RETURN main_1(int argc, char **argv, char **envp, int restart)
 		if (NILP(Vinvocation_directory))
 			Vinvocation_directory = Vinvocation_name;
 
+		/* kick double /s as we want a standard posix name */
+		for (unsigned char *p = XSTRING_DATA(Vinvocation_name),
+			     *q = p; ((*q = *p));) {
+			if (*q++ == '/') {
+				while (*++p == '/');
+			} else {
+				p++;
+			}
+		}
+
 		Vinvocation_name =
 		    Ffile_name_nondirectory(Vinvocation_directory);
 		Vinvocation_directory =
@@ -2584,9 +2590,6 @@ Do not call this.  It will reinitialize your SXEmacs.  You'll be sorry.
 	unbind_to(0, Qnil);	/* this closes loadup.el */
 	purify_flag = 0;
 	run_temacs_argc = nargs + 1;
-#if defined (HEAP_IN_DATA) && !defined(PDUMP)
-	report_sheap_usage(0);
-#endif
 	LONGJMP(run_temacs_catch, 1);
 	return Qnil;		/* not reached; warning suppression */
 }
@@ -2995,10 +2998,6 @@ and announce itself normally when it is run.
 
 	opurify = purify_flag;
 	purify_flag = 0;
-
-#if defined (HEAP_IN_DATA) && !defined(PDUMP)
-	report_sheap_usage(1);
-#endif
 
 	clear_message();
 

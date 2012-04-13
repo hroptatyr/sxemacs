@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "systime.h"
 #include "ui/insdel.h"
 #include "lstream.h"
+#include "ent/ent.h"
 /* for the categorial views */
 #include "category.h"
 #include "seq.h"

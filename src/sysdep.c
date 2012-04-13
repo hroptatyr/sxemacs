@@ -41,10 +41,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "ui/TTY/console-tty.h" /* for stuff in stuff_char and
 				   others. Seriously in need of
 				   refactoring... */
-#else
-#include "syssignal.h"
-#include "ui/systty.h"
-#endif				/* HAVE_TTY */
+#else  /* !HAVE_TTY */
+#include "syssignal.h"		/* always include before systty.h */
+#include "ui/TTY/systty.h"
+#endif  /* HAVE_TTY */
 
 #include "ui/console-stream.h"
 
@@ -806,14 +806,14 @@ void setup_pty(int fd)
 
 void init_baud_rate(struct device *d)
 {
-	struct console *con = XCONSOLE(DEVICE_CONSOLE(d));
 	if (DEVICE_WIN_P(d) || DEVICE_STREAM_P(d)) {
 		DEVICE_BAUD_RATE(d) = 38400;
 		return;
-	}
+	} 
 #ifdef HAVE_TTY
 	assert(DEVICE_TTY_P(d));
 	{
+		struct console *con = XCONSOLE(DEVICE_CONSOLE(d));
 		int input_fd = CONSOLE_TTY_DATA(con)->infd;
 #if defined (HAVE_TERMIOS)
 		struct termios sg;
@@ -871,20 +871,26 @@ static void init_sigio_on_device(struct device *d)
 		int owner = getpid();
 		int ioctl_status;
 		if (DEVICE_TTY_P(d)) {
+#ifdef HAVE_UNIXOID_EVENT_LOOP
 			ioctl_status = ioctl(filedesc, FIOGSAIOOWN,
 					     &DEVICE_OLD_FCNTL_OWNER(d));
+#endif
 			ioctl_status = ioctl(filedesc, FIOSSAIOOWN, &owner);
 		}
 #ifdef HAVE_WINDOW_SYSTEM
 		else if (!DEVICE_STREAM_P(d)) {
+#ifdef HAVE_UNIXOID_EVENT_LOOP
 			ioctl_status = ioctl(filedesc, SIOCGPGRP,
 					     &DEVICE_OLD_FCNTL_OWNER(d));
+#endif
 			ioctl_status = ioctl(filedesc, SIOCSPGRP, &owner);
 		}
 #endif
 	}
 #elif defined (F_SETOWN) && !defined (F_SETOWN_BUG)
+#  ifdef HAVE_UNIXOID_EVENT_LOOP
 	DEVICE_OLD_FCNTL_OWNER(d) = fcntl(filedesc, F_GETOWN, 0);
+#  endif
 # ifdef F_SETOWN_SOCK_NEG
 	/* stdin is a socket here */
 	fcntl(filedesc, F_SETOWN, -getpid());
@@ -902,18 +908,24 @@ static void reset_sigio_on_device(struct device *d)
 	{			/* HPUX stuff */
 		int ioctl_status;
 		if (DEVICE_TTY_P(d)) {
+#  ifdef HAVE_UNIXOID_EVENT_LOOP
 			ioctl_status = ioctl(filedesc, FIOSSAIOOWN,
 					     &DEVICE_OLD_FCNTL_OWNER(d));
+#  endif
 		}
 #ifdef HAVE_WINDOW_SYSTEM
 		else if (!DEVICE_STREAM_P(d)) {
+#  ifdef HAVE_UNIXOID_EVENT_LOOP
 			ioctl_status = ioctl(filedesc, SIOCSPGRP,
 					     &DEVICE_OLD_FCNTL_OWNER(d));
+#  endif
 		}
 #endif
 	}
 #elif defined (F_SETOWN) && !defined (F_SETOWN_BUG)
+#  ifdef HAVE_UNIXOID_EVENT_LOOP
 	fcntl(filedesc, F_SETOWN, DEVICE_OLD_FCNTL_OWNER(d));
+#  endif
 #endif
 }
 
@@ -2968,6 +2980,10 @@ get_process_times(double *user_time, double *system_time, double *real_time)
 #define HAVE_RANDOM
 #endif
 #endif
+
+#if defined HAVE_MPZ && (defined WITH_GMP || defined WITH_MP)
+# include "ent/ent-gmp.h"
+#endif	/* MPZ && (GMP || MP) */
 
 /* Figure out how many bits the system's random number generator uses.
    `random' and `lrand48' are assumed to return 31 usable bits.

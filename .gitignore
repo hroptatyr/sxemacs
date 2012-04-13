@@ -73,8 +73,8 @@ config.values
 DOC
 dump-id.c
 sheap-adjust.h
-sxemacs
-sxemacs.dmp
+src/sxemacs
+src/sxemacs.dmp
 Emacs.ad.h
 ctags2
 etags

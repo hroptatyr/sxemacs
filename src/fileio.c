@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #ifdef FILE_CODING
 #include "mule/file-coding.h"
 #endif
+#include "ent/ent.h"
 
 #ifdef HAVE_LIBGEN_H		/* Must come before sysfile.h */
 #include <libgen.h>
@@ -1544,7 +1545,7 @@ A prefix arg makes KEEP-TIME non-nil.
 				 O_RDONLY | OPEN_BINARY, 0);
 	if (ifd < 0) {
 		report_file_error("Opening input file", list1(filename));
-		return;
+		goto end;
 	}
 	record_unwind_protect(close_file_unwind, make_int(ifd));
 
@@ -1617,6 +1618,7 @@ A prefix arg makes KEEP-TIME non-nil.
 		unbind_to(speccount, Qnil);
 	}
 
+end:
 	UNGCPRO;
 	return Qnil;
 }

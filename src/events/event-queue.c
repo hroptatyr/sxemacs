@@ -49,8 +49,10 @@ static void
 finalise_event_queue(void *obj, int for_disksave)
 {
 	event_queue_t eq = obj;
-	if (eq == NULL)
+
+	if (eq == NULL || for_disksave) {
 		return;
+	}
 
 	SXE_SEMAPH_FINI(&(eq_queue_sem(eq)));
 	free_noseeum_dllist(eq_queue(eq));

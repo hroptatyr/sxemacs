@@ -1313,6 +1313,9 @@ extern_inline EMACS_INT XCHAR_OR_INT(Lisp_Object obj)
     x = wrong_type_argument (Qinteger_char_or_marker_p, x);	\
 } while (0)
 
+/* basic integer definitions, used quite a lot */
+#include "ent/ent-int.h"
+
 /*--------------------------- readonly objects -------------------------*/
 
 #define CHECK_C_WRITEABLE(obj)					\
@@ -2469,8 +2472,29 @@ void staticpro_nodump(Lisp_Object *);
 
 /* allocation goodies */
 #include "opaque.h"
-/* for size computation */
-#include "ent/ent.h"
+
+static inline EMACS_INT
+__attribute__((always_inline))
+__next_2power(EMACS_INT v)
+{
+/* compute the next 2-power of in */
+	v--;
+	v |= v >> 1;
+	v |= v >> 2;
+	v |= v >> 4;
+	v |= v >> 8;
+#if SIZEOF_EMACS_INT >= 4
+	v |= v >> 16;
+#endif	/* sizeof(EMACS_INT) >= 4 */
+#if SIZEOF_EMACS_INT >= 8
+	v |= v >> 32;
+#endif	/* sizeof(EMACS_INT) >= 8 */
+#if SIZEOF_EMACS_INT >= 16
+	v |= v >> 64;
+#endif	/* sizeof(EMACS_INT) >= 16 */
+	v++;
+	return v;
+}
 
 /* also generally useful if you want to avoid arbitrary size limits
    but don't need a full dynamic array.  Assumes that BASEVAR points
@@ -2479,16 +2503,14 @@ void staticpro_nodump(Lisp_Object *);
    macro will realloc BASEVAR as necessary so that it can hold at
    least NEEDED_SIZE objects.  The reallocing is done by doubling,
    which ensures constant amortized time per element. */
-extern_inline EMACS_INT
-__alloc_size(EMACS_INT sz, EMACS_INT needed)
-	__attribute__((always_inline));
-extern_inline EMACS_INT
+static inline EMACS_INT
+__attribute__((always_inline))
 __alloc_size(EMACS_INT sz, EMACS_INT needed)
 {
 	if (UNLIKELY(needed <= 32)) {
 		return 32;
 	}
-	return 1 << (1 + __ase_flsl(needed - 1));
+	return __next_2power(needed);
 }
 
 #define DO_REALLOC(basevar, sizevar, needed_size, type)			\

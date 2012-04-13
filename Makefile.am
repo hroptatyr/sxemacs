@@ -42,6 +42,7 @@ ETAGS = $(top_builddir)/lib-src/etags
 TAGS_DEPENDENCIES = $(ETAGS)
 
 EXTRA_DIST = autogen.sh sxemacs_version.m4
+EXTRA_DIST += configfsf.guess configfsf.sub
 
 REPORT_VARS=PATH LD_LIBRARY_PATH LIBRARY_PATH SHLIB_PATH DYLD_LIBRARY_PATH CC CPATH CPPFLAGS CFLAGS LDFLAGS INCLUDE_PATH C_INCLUDE_PATH SHELL GCC_EXEC_PREFIX COMPILER_PATH DEPENDENCIES_OUTPUT GNUTARGET LDEMULATION
 
@@ -100,6 +101,10 @@ uninstall-hook:
 	$(RM) sxemacs-$(old_version)
 
 check-recursive: all-recursive
+
+distclean-local:
+	$(RM) $(builddir)/Installation
+	$(RM) $(builddir)/cpuid
 
 $(ETAGS):
 	cd $(top_builddir)/lib-src
@@ -162,9 +167,3 @@ stage2: stage1
 ### dont use staged build
 ##all: stage1 stage2
 
-
-distdir: dist-hook
-
-dist-hook:
-	@echo "The dist targets do not work. Please read the sppm info section 'Making releases'."
-	@exit 1
