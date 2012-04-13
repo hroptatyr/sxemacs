@@ -140,6 +140,7 @@ _ase_make_digraph(void)
 	ase_digraph_redges(a) = make_skiplist();
 
 	a->auto_add_nodes = 0;
+	a->auto_remove_nodes = 0;
 
 	EMOD_ASE_DEBUG_DIGRAPH("h:0x%08x shall be created...\n",
 			    (unsigned int)a);
