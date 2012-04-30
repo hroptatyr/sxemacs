@@ -64,6 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 # include <errno.h>
 #endif
 
+#include <ent/ent-optable.h>
 
 extern Lisp_Object Qfloat;
 
@@ -112,6 +113,7 @@ extern Lisp_Object make_float(fpfloat);
 
 #include "ent-inf.h"
 #include "ent-strflt.h"
+#include "ent-lift.h"
 
 #if fpfloat_long_double_p && defined(HAVE_MATHS_LDBL_MAX)
 # define FPFLOAT_MAX	LDBL_MAX
