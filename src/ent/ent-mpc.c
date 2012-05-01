@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 #include "sysproc.h"    /* For qxe_getpid */
 
+#include "ent.h"
+#include "ent-mpfr.h"
 #include "ent-mpc.h"
 
 bigc ent_scratch_bigc;

@@ -24,6 +24,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #ifndef INCLUDED_ent_inf_h_
 #define INCLUDED_ent_inf_h_
 
+#if defined HAVE_MATH_H
+# include <math.h>
+#endif	/* HAVE_MATH_H */
+#if defined HAVE_LIMITS_H
+# include <limits.h>
+#endif	/* HAVE_LIMITS_H */
+#if defined HAVE_VALUES_H
+# include <values.h>
+#endif	/* HAVE_VALUES_H */
+
 #if defined HAVE_STDBOOL_H
 # include <stdbool.h>
 #endif	/* HAVE_STDBOOL_H */

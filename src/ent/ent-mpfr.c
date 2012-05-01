@@ -26,6 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 #include "sysproc.h"    /* For qxe_getpid */
 
+#include "ent.h"
+#include "ent-optable.h"
+#include "ent-lift.h"
+#include "ent-indef.h"
 #include "ent-mpfr.h"
 
 

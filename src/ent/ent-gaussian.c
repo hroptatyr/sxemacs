@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "lisp.h"
 #include "sysproc.h"    /* For qxe_getpid */
 
+#include "ent.h"
+#include "ent-float.h"
+#include "ent-mpfr.h"
 #include "ent-gaussian.h"
 #ifdef HAVE_MPC
 #include "ent-mpc.h"
