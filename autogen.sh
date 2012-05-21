@@ -1,7 +1,7 @@
 #!/bin/sh
 # Configure script bootstrap for SXEmacs
 #
-# Copyright (C) 2005, 2006, 2007 Steve Youngs.
+# Copyright (C) 2005 - 2012 Steve Youngs.
 # Copyright (C) 2006, 2007, 2008 Sebastian Freundt.
 # Copyright (C) 2007, 2010, 2011 Nelson Ferreira
 
@@ -46,7 +46,7 @@ olddir=$(pwd)
 srcdir=$(dirname $0)
 cd "$srcdir"
 
-EXPECTED_TREE_VERSION="22.1.14"
+EXPECTED_TREE_VERSION="22.1.15"
 
 emacs_is_beta=t
 if test -n "$GIT" -a -n "$($GIT symbolic-ref HEAD 2>/dev/null)"; then
@@ -77,7 +77,7 @@ emacs_major_version="$(echo $TREE_VERSION|cut -d. -f1)"
 emacs_minor_version="$(echo $TREE_VERSION|cut -d. -f2)"
 emacs_beta_version="$(echo $TREE_VERSION|cut -d. -f3)"
 emacs_full_version="$emacs_major_version.$emacs_minor_version.$emacs_beta_version"
-sxemacs_codename="Geo"
+sxemacs_codename="Goggomobil"
 sxemacs_git_version="$GIT_VERSION"
 
 if test "$emacs_full_version" != "$EXPECTED_TREE_VERSION"; then

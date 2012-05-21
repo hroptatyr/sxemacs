@@ -26,17 +26,15 @@ The file `Makefile.in' is a template used by `configure' to create
 
 There are several subdirectories:
 
-`src' holds the C code for SXEmacs (the SXXEmacs Lisp interpreter and its
-    primitives, the redisplay code, and some basic editing functions).
-`lisp' holds the Emacs Lisp code for SXEmacs (most everything else).
-`lib-src' holds the source code for some utility programs for use by
-    or with SXEmacs, like movemail and etags.
-`etc' holds miscellaneous architecture-independent data files
-    SXEmacs uses, like the tutorial text and the Zippy the Pinhead quote
-    database.  The contents of the `lisp', `info' and `man'
-    subdirectories are architecture-independent too.
-`lwlib' holds the C code for the toolkit objects used by SXEmacs.
-
-`info' holds the Info documentation tree for SXEmacs.
-`man' holds the source code for the SXEmacs info documentation tree.
-
+`ChangeLog.d' -- ChangeLog files for all the SXEmacs versions.
+    `contrib' -- A few scripts and things to make life as a SXEmacs
+                 developer a little easier.
+        `etc' -- Tutorials, readme's, icons, developer images.
+       `info' -- SXEmacs documentation in Texinfo format.
+    `lib-src' -- Holds the source code for some utility programs for
+                 use by or with SXEmacs, like movemail and etags.
+       `lisp' -- Holds the Emacs Lisp code for SXEmacs.
+         `m4' -- The auxiliary m4 scripts used by the build chain.
+    `modules' -- Source code for the "emodules".
+        `src' -- The rest of the C sources are here.
+      `tests' -- The test suite.

@@ -1,5 +1,5 @@
 SXEmacs Installation Guide
-Copyright (C) 2005 - 2011 Steve Youngs
+Copyright (C) 2005 - 2012 Steve Youngs
 
 
 Building from tarball release: 
@@ -50,8 +50,8 @@ the feature-range of SXEmacs.  See section `Optional Libraries'.
 Stripping:
 ---------
 Our advice... _DON'T_ do it.  Stripping object files doesn't buy you
-anything other than a little bit of drive space.  And in an era where
-200 Gigabyte hard disks are common, the space saved by stripping is
+anything other than a little bit of disc space.  And in an era where
+multi-Terabyte hard discs are common, the space saved by stripping is
 inconsequential at best.
 
 But that isn't the only reason why we suggest that you don't strip
@@ -160,7 +160,7 @@ install them and incorporate them into SXEmacs.
     http://www.mega-nerd.com/libsndfile/
 
   - ffmpeg:
-    http://ffmpeg.sourceforge.net/
+    http://ffmpeg.org/
 
   - mad:
     http://www.underbit.com/products/mad/
@@ -186,7 +186,7 @@ install them and incorporate them into SXEmacs.
   - OSS (Open Sound System): native on Linux and BSD. DEPRECATED!
 
   - NAS (Network Audio System):
-    http://nas.codebrilliance.com/
+    http://www.radscan.com/nas.html
 
   - ESD (Enlightenment Sound Daemon):
     ftp://ftp.gnome.org/pub/gnome/sources/esound/0.2/
@@ -195,7 +195,7 @@ install them and incorporate them into SXEmacs.
     http://pulseaudio.org/
 
   - Jack (Jack Audio Connection Kit):
-    http://jackit.sourceforge.net/
+    http://jackaudio.org/
 
   - ALSA (Advanced Linux Sound Architecture): Linux-only
     http://www.alsa-project.org/
@@ -243,7 +243,7 @@ install them and incorporate them into SXEmacs.
   support.  We refer to enhanced number types as ENT.
 
   - GMP (GNU MultiPrecision arithmetics library):
-    http://swox.com/gmp
+    ftp://ftp.gnu.org/gnu/gmp/
 
   - BSD mp:
     Available natively on BSD distributions.  Also included in the
@@ -308,23 +308,23 @@ install them and incorporate them into SXEmacs.
 
 The build failed:
 ----------------
-Advise 1:
+Suggestion 1:
 Don't panic.  Take a look at the PROBLEMS file first and see if your
 issue is listed there.
 
-Advise 2:
+Suggestion 2:
 If the build fails at the configure script, try to examine the output
 and/or the more verbose config.log.  If the culprit seems to be a
 certain test or configure option, try to circumvent it.  You can for one
 disable almost any functionality using --without-<feature>.
 
-Advise 3:
+Suggestion 3:
 If the build fails at the make stage somewhere, try to figure out which
 functionality was attempted to make.  If it appears to be at some of the
 optional features, try configuring again with that option disabled.  If
-it seems to be a compiler or linker problem read advise number 4.
+it seems to be a compiler or linker problem read suggestion number 4.
 
-Advise 4:
+Suggestion 4:
 If the build fails and you have absolutely no clue why it does, contact
 the friendly people at SXEmacs.  For almost real-time help consider the
 IRC channel 

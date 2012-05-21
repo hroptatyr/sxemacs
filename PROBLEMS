@@ -1,6 +1,6 @@
                                                   -*- mode:outline -*-
 
-At the time of this release (SXEmacs 22.1.14), SXEmacs has the
+At the time of this release (SXEmacs 22.1.15), SXEmacs has the
 following idiosyncrasies: 
 
 * File Locations
@@ -118,7 +118,7 @@ Core 7, and Gentoo on x86_64.
 
 One user has reported that using `-O1' in CFLAGS prevents it.
 
-But even with this test failure, SXEmacs still runs and opperates
+But even with this test failure, SXEmacs still runs and operates
 without incident.  In fact, the failure can't be reproduced when
 running the test suite interactively.  With that in mind, it should be
 safe to install if you see this failure.
