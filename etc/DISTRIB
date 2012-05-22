@@ -1,32 +1,30 @@
 								-*- text -*-
 
-	   SXEmacs availability information.  Last Modified: December 6, 2006
+	   SXEmacs availability information.  Last Modified: May 23, 2012
 
-SXEmacs is available primarily via the GNU/arch repositories.  The
+SXEmacs is available primarily via the GIT repositories.  The
 main repository is:
 
-     steve@sxemacs.org--2006 http://arch.sxemacs.org/2006/
+      http://git.sxemacs.org/sxemacs
 
-The following tla (Tom Lord's Arch) commands will "check out" the
-latest SXEmacs sources from the above repository:
+The following git commands will "check out" the latest SXEmacs sources
+from the above repository:
 
-(assumes that you have already installed and configured tla)
+	$ git clone http://git.sxemacs.org/sxemacs
 
-	$ tla register-archive http://arch.sxemacs.org/2006/
+That will "check out" the latest SXEmacs sources and place them into
+$PWD/sxemacs
 
-	$ tla get steve@sxemacs.org--2006/sxemacs--main--22.1.6 sxemacs-main
-
-That will "check out" the latest 22.1.6 SXEmacs sources and place
-them into $PWD/sxemacs-main/  You can use:
-
-     `tla abrowse steve@sxemacs.org--2006' 
+Do: `git describe'
 
 to determine what is the most recent version
 
-Source tarballs are available for download via anonymous FTP at:
+Source tarballs are available for download at:
 
-     ftp://ftp.sxemacs.org/pub/sxemacs/
+     http://downloads.sxemacs.org/releases/
 
-and via HTTP:
 
-     http://ftp.sxemacs.org/pub/sxemacs/
+Occasional "snapshot" tarballs are made available between releases and
+they can be found at:
+
+     http://downloads.sxemacs.org/snapshots/
