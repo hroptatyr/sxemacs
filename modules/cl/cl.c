@@ -43,6 +43,8 @@
 #include "cl-loop.h"
 #endif
 
+#include <ent/ent.h>
+
 PROVIDE(cl);
 #if !defined EMOD_CL_MONOMOD
 #define INIT	cl_LTX_init

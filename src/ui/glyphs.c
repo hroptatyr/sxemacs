@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <config.h>
 #include "lisp.h"
 
-#include "mem/blocktype.h"
+#include <mem/blocktype.h>
 #include "buffer.h"
 #include "chartab.h"
 #include "device.h"
@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "redisplay.h"
 #include "specifier.h"
 #include "window.h"
+#include <ent/ent-float.h>
 
 #ifdef HAVE_XPM
 #include <X11/xpm.h>

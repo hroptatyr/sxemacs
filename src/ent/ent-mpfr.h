@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include <mpfr.h>
 
+#include <ent/ent-indef.h>
+
 typedef mpfr_t bigfr;
 typedef mp_prec_t bigfr_prec;
 typedef mp_rnd_t bigfr_rnd;

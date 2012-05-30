@@ -60,6 +60,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "ui/window.h"
 #include "ui/console-stream.h"
 
+#include <ent/ent.h>
+#include <ent/ent-float.h>
+#include <ent/ent-mpfr.h>
+
 #ifdef DOUG_LEA_MALLOC
 #include <malloc.h>
 #endif
