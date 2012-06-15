@@ -748,6 +748,12 @@ when doc strings are referred to in the dumped Emacs.
 		/* p points to ^_Ffunctionname\n or ^_Vvarname\n.  */
 		if (p != end) {
 			end = strchr(p, '\n');
+                        if (end == NULL) {
+                                report_file_error("Bad format in file",
+                                                  Fcons(build_string(name), Qnil)); 
+                                close(fd);
+                                return Qnil;
+                        }
 			sym =
 			    oblookup(Vobarray, (Bufbyte *) p + 2, end - p - 2);
 			if (SYMBOLP(sym)) {
