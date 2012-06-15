@@ -2,7 +2,7 @@
 
 ;; Copyright (c) 1997 Free Software Foundation, Inc.
 ;; Copyright (C) 2001 Ben Wing.
-;; Copyright (C) 2004 - 2008 Steve Youngs.
+;; Copyright (C) 2004 - 2012 Steve Youngs.
 
 ;; Keywords: extensions
 ;; Version: 3.0
@@ -171,9 +171,9 @@
 
 (defvar about-current-release-maintainers
   ;; this list should not necessarily be in sorted order.
-  '(steve hroptatyr njsf lg erik hynek))
+  '(steve hroptatyr njsf lg peanuthorst))
 
-(defvar about-other-current-hackers '(peanuthorst))
+(defvar about-other-current-hackers '(erik hynek))
 
 (defvar about-once-and-future-hackers
   '(adrian aj ajc alastair baw ben bw cgw chr craig cthomp daiki dan darrylo
@@ -217,9 +217,11 @@
     (pez        . "http://cbs.sportsline.com/")
     (piper      . "http://www.andypiper.com/")
     (rossini    . "http://faculty.washington.edu/rossini/")
-    (steve      . "http://www.youngs.au.com/~steve/")
+    (steve      . "http://www.steveyoungs.com/")
     (steve-emchat . "http://www.emchat.org/")
-    (steve-xwem . "http://www.xwem.org/")
+    (steve-g+   . "http://plus.steveyoungs.com/about/")
+    (steve-inits . "http://bastard.steveyoungs.com/~steve/SXEmacs/htmlinits/")
+    (steve-twit . "https://twitter.com/#!/SteveYoungs")
     (stigb      . "http://www.tihlde.hist.no/~stigb/")
     (sxemacs    . "http://www.sxemacs.org/")
     (sxemacs-shop . "http://store.sxemacs.org/")
@@ -1288,18 +1290,43 @@ agent, managed a computer firm and owned and operated my own
 business.  I now divide my time between my family, planning my
 next business, and maintaining a few open source projects.
 
-My current open source obsessions are:\n\n")
-     (widget-insert "\tSXEmacs \(of course\):           ")
+I am also having delusions of grandeur over becoming an honest to
+goodness author of fiction.  You know... books 'n' stories 'n' shit.
+
+"
+		    (about-with-face "My current open source obsessions are:"
+				     'font-lock-warning-face))
+     (widget-insert "\n\n")
+     (widget-insert (about-with-face "   SXEmacs:\t\t"
+				     'font-lock-string-face))
      (about-url-link 'sxemacs nil "Visit the SXEmacs homepage")
-     (widget-insert "  ")
-     (about-url-link 'sxemacs-shop nil "Cool SXEmacs merchandise")
-     (widget-insert "\n\tEMchat \(an ICQ client in elisp\): ")
+     (widget-insert (about-with-face "\n   My SXEmacs conf:     "
+				     'font-lock-string-face))
+     (about-url-link 'steve-inits nil "All my sexy SXEmacs init files")
+     (widget-insert (about-with-face "\n   EMchat:      \t"
+				     'font-lock-string-face))
      (about-url-link 'steve-emchat nil "Visit the EMchat homepage")
-     (widget-insert "\n\tXWEM \(a complete WM in elisp\): ")
-     (about-url-link 'steve-xwem nil "Visit the XWEM homepage")
-     (widget-insert "\n
-And if you get really hard up for something to do:\n\t")
-     (about-url-link 'steve nil "Visit my boring homepage")
+     (widget-insert "\n\n"
+		    (about-with-face "You got the software..."
+				     'font-lock-warning-face)
+		    "\n\n"
+		    (about-with-face "   Now get the"
+				     'font-lock-string-face)
+		    (about-with-face " T-Shirt:\t" 'bold))
+     (about-url-link 'sxemacs-shop nil "Cool SXEmacs merchandise")
+     (widget-insert "\n\n"
+		    (about-with-face
+		     "More of me on the Interwebz:\n\n"
+		     'font-lock-warning-face))
+     (widget-insert (about-with-face "   My Blog:\t\t"
+				     'font-lock-string-face))
+     (about-url-link 'steve nil "Visit my infrequently updated blog")
+     (widget-insert (about-with-face "\n   Google+:\t\t"
+				     'font-lock-string-face))
+     (about-url-link 'steve-g+ nil "My Google+ Profile")
+     (widget-insert (about-with-face "\n   Twitter:\t\t"
+				     'font-lock-string-face))
+     (about-url-link 'steve-twit nil "Follow me on Twitter")
      (widget-insert ".\n"))
     (stig
      (widget-insert "
