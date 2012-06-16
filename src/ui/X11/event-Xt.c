@@ -863,6 +863,7 @@ static void x_handle_sticky_modifiers(XEvent * ev, struct device *d)
 	struct x_device *xd;
 	KeyCode keycode;
 	int type;
+	bool key_event_p;
 
 	if (!modifier_keys_are_sticky) {
 		/* Optimize for non-sticky modifiers */
@@ -877,11 +878,10 @@ static void x_handle_sticky_modifiers(XEvent * ev, struct device *d)
 	    keycode > xd->x_keysym_map_max_code) {
 		return;
 	}
+	key_event_p = (type == KeyPress || type == KeyRelease);
 
-	if (!((type == KeyPress || type == KeyRelease) &&
-	      x_key_is_modifier_p(keycode, d))) {
+	if (!( key_event_p && x_key_is_modifier_p(keycode, d))) {
 		/* Not a modifier key */
-		bool key_event_p = (type == KeyPress || type == KeyRelease);
 
 		if (type == ButtonPress
 		    || (type == KeyPress
