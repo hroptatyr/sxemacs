@@ -16,7 +16,7 @@ Steve
 @end macro
 
 @macro syc
-Copyright @copyright{} 2004 - 2011 @sy{}
+Copyright @copyright{} 2004 - 2012 @sy{}
 @end macro
 
 @macro sye
@@ -24,11 +24,11 @@ Copyright @copyright{} 2004 - 2011 @sy{}
 @end macro
 
 @macro cver
-22.1.14
+22.1.15
 @end macro
 
 @macro nver
-22.1.15
+22.1.16
 @end macro
 
 
@@ -1228,6 +1228,16 @@ Finalise things like...
 @itemize
 @item
 Update @file{etc/NEWS}
+
+To get the numbers for the "Developer Stats" section, first get a list
+of unique committers for this release with@dots{}
+
+@code{git log --format=full v@cver{}..|grep Author|sort|uniq}
+
+And then for the number of actual commits for each developer do@dots{}
+
+@code{git log --oneline --no-merges --author=NAME v@cver{}..|wc -l}
+
 @item
 Make sure @file{INSTALL}, @file{PROBLEMS} etc are up to date.
 @item
@@ -1287,6 +1297,13 @@ Add a ChangeLog
 @smallexample
 git log --stat v@cver{}..v@nver{} > ~/upload/sxemacs-@nver{}/ChangeLog
 @end smallexample
+@item
+Create a diff against the previous version.
+
+@smallexample
+git diff v@cver{}..v@nver{} | \
+    gzip > ~/upload/sxemacs-@cver{}-@nver{}.diff.gz
+@end smallexample
 
 @item
 Create the tarball:
@@ -1301,19 +1318,6 @@ for type in bz2 gz lzma xz; do
       --output sxemacs-@nver{}.tar.$@{type@}.asc sxemacs-@nver{}.tar.$@{type@}
 done
 @end smallexample
-@item
-@c replace this with the appropriate git magic
-Create a diff against the previous version.
-@itemize
-@item
-Unpack the previous release's tarball
-@item
-@example
-diff -urNp sxemacs-@cver{} sxemacs-@nver{} > sxemacs-@cver{}-@nver{}.diff
-gzip sxemacs-@cver{}-@nver{}.diff
-@end example
-@end itemize
-
 @item
 Create md5 and gpg sig for diff file.
 

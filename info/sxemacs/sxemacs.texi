@@ -15,7 +15,7 @@ Copyright (C) 1985, 1986, 1988 Richard M. Stallman.
 Copyright @copyright{} 1991, 1992, 1993, 1994 Lucid, Inc.
 Copyright @copyright{} 1993, 1994 Sun Microsystems, Inc.
 Copyright @copyright{} 1995 Amdahl Corporation.
-Copyright @copyright{} 2005 - 2008 Steve Youngs.
+Copyright @copyright{} 2004 - 2012 Steve Youngs.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -96,7 +96,7 @@ the author instead of in the original English.
 SXEmacs is the extensible, customizable, self-documenting real-time
 display editor.  This Info file describes how to edit with Emacs
 and some of how to customize it, but not how to extend it.  It
-corresponds to: v22.1.14
+corresponds to: v22.1.15
 
 Although, it hasn't had a complete rewrite for quite some time.
 

@@ -20,6 +20,69 @@ in each release should look at the appropriate section of this file.
 
 
 
+* Changes in SXEmacs 22.1.15 (Goggomobil)
+=========================================
+
+** Developer Stats
+
+           Nelson Ferreira -- 435 commits
+
+         Sebastian Freundt --  87 commits
+              Steve Youngs --  63 commits
+                Rudi Meier --  12 commits
+             Evgeny Zajcev --   7 commits
+    Horst G. Burkhardt III --   4 commits
+               Aidan Kehoe --   2 commits
+               JD Horelick --   1 commit
+
+** Bugs closed in this release:
+
+76, 78, 88, 106, 108, 112, 121, 122, 125, 126, 127, 128, 131, 134,
+135, 136, 137, 138, 139, 140
+
+** Coverity integrity scan fixes -- Ferreira.
+
+Coverity (http://www.coverity.com/) offers source code integrity
+analysis scans.  These scans often uncover bugs and security issues
+that would otherwise go unnoticed.  When we first scanned the SXEmacs
+code base with the Coverity scanner we had ourselves roughly 500
+"defects".  Nelson Ferreira has pretty much single-handedly fixed them
+ALL!!  Well done, Nelson and thanks a million!!!
+
+** Build related fixes/updates -- Ferreira, Freundt, Horelick, Meier,
+                                  Youngs.
+
+Amongst the many, many, build chain updates I can also report that
+SXEmacs will now build and run on OpenIndiana.  Go us!
+
+There were also fixes for: SuSe, PowerPC, MacOS, FreeBSD, NetBSD.
+
+There were also many compiler warning fixes from Nelson and
+Sebastian.
+
+** FFI tweaks/fixes -- Keheo, Youngs, Zajcev.
+
+** Bitrot removal -- Burkhardt, Youngs.
+
+Over the years things get old, obsolete, and forgotten.  We've gone
+through and cleaned house.  Say goodbye to aRts, GTK1, tooltalk, and a
+heap of rubbish in lib-src.
+
+*** aRts -- Burkhardt.
+*** GTK 1 -- Youngs.
+*** tooltalk / CDE -- Youngs.
+*** lib-src -- Youngs.
+
+** Whitespace cleanup -- Youngs.
+
+Every file in the repository has had all trailing and otherwise
+spurious whitespace removed/fixed.  Obviously not an entirely critical
+thing, but tidy is tidy. :-)
+
+
+** Support libpng 1.5.x -- Youngs.
+
+
 * Changes in SXEmacs 22.1.14 (Geo)
 ==================================
 

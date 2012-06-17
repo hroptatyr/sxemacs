@@ -3,7 +3,7 @@
 ;; Copyright (C) 1985-1986, 1990, 1992-1997 Free Software Foundation, Inc.
 ;; Copyright (c) 1993, 1994 Sun Microsystems, Inc.
 ;; Copyright (C) 1995 Board of Trustees, University of Illinois
-;; Copyright (C) 2004 Steve Youngs
+;; Copyright (C) 2004 - 2012 Steve Youngs
 
 ;; Maintainer: SXEmacs Development Team
 ;; Keywords: internal, dumped
@@ -950,7 +950,7 @@ a new format, when variables have changed, etc."
   - And, above all, to have fun doing it.\n"
      "\n--\n"
      (face italic "
-Copyright (C) 2004 - 2009 Steve Youngs\n"))
+Copyright (C) 2004 - 2012 Steve Youngs\n"))
 ; Copyright (C) 1985-2001 Free Software Foundation, Inc.
 ; Copyright (C) 1990-1994 Lucid, Inc.
 ; Copyright (C) 1993-1997 Sun Microsystems, Inc. All Rights Reserved.
