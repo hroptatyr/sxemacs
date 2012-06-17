@@ -333,6 +333,7 @@ OG_MULTIARG_WITH([modules], [dnl
 	[all], [all], [dnl
 	OG_MULTIARG_ITEM([ase], [ase], [algebraic structures])
 	OG_MULTIARG_ITEM([cl], [cl], [fast Common Lisp implementation])
+	OG_MULTIARG_ITEM([dbus], [dbus], [D-BUS bindings])
 ])
 
 OG_MULTIARG_WITH([static-modules], [dnl
@@ -344,6 +345,7 @@ OG_MULTIARG_WITH([static-modules], [dnl
 	[none], [NONE], [dnl
 	OG_MULTIARG_ITEM([ase], [ase], [algebraic structures])
 	OG_MULTIARG_ITEM([cl], [cl], [fast Common Lisp implementation])
+	OG_MULTIARG_ITEM([dbus], [dbus], [D-BUS bindings])
 ])
 
 OG_MULTIARG_WITH([ent], [dnl
@@ -1814,7 +1816,22 @@ else
 		AC_MSG_WARN([Sorry no bison means no cl module for you.])
 	fi
 fi
+
 SXE_EMOD_STATMOD([cl])
+
+dnl D-Bus
+SXE_CHECK_DBUS
+if test "$have_dbus" = "yes"; then
+	if test "$with_modules_dbus" = "yes"; then
+		have_modules_dbus=yes
+	fi
+	if test "$with_static_modules_dbus" = "yes"; then
+		have_static_modules_dbus=yes
+	fi
+	SXE_EMOD_STATMOD([dbus])
+else
+	AC_MSG_WARN([I cannot believe you do not have d-bus.])
+fi
 
 AM_CONDITIONAL([AUTARKIC], [test "0" = "1"])
 MODARCHDIR=

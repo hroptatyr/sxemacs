@@ -36,7 +36,8 @@ static Lisp_Object Qhashtable, Qhash_table;
 static Lisp_Object Qweakness, Qvalue, Qkey_or_value, Qkey_and_value;
 static Lisp_Object Vall_weak_hash_tables;
 static Lisp_Object Qrehash_size, Qrehash_threshold;
-static Lisp_Object Q_size, Q_test, Q_weakness;
+static Lisp_Object Q_size, Q_weakness;
+Lisp_Object Q_test;
 static Lisp_Object Q_rehash_size, Q_rehash_threshold;
 
 /* obsolete as of 19990901 in xemacs-21.2 */
