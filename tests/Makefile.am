@@ -55,9 +55,11 @@ automated_tests = automated/ase-cartesian-tests.el                      \
 	automated/cl-loop-tests.el automated/c-tests.el			\
 	automated/database-tests.el automated/ent-tests.el		\
 	automated/extent-tests.el automated/hash-table-tests.el		\
+	automated/format-tests.el					\
 	automated/inplace-tests.el automated/lisp-reader-tests.el	\
 	automated/lisp-tests.el automated/md5-tests.el			\
 	automated/mule-tests.el automated/openssl-tests.el		\
+	automated/map-tests.el						\
 	automated/os-tests.el automated/regexp-tests.el			\
 	automated/region-tests.el automated/skiplist-tests.el		\
 	automated/symbol-tests.el automated/syntax-tests.el		\
