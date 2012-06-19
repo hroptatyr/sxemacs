@@ -25,40 +25,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #if defined HAVE_SOX_H
 # include <sox.h>
-#elif defined HAVE_ST_H
-# include <st.h>
 #else
 # error "How on earth did you get here?"
 #endif
 
 #if defined HAVE_SOX_FORMAT_T
 # define sxe_sox_t	sox_format_t*
-#elif defined HAVE_FT_T
-# define sxe_sox_t	ft_t
 #else
 # error "How could you ever reach this?"
 #endif
 
 #if defined HAVE_SOX_SIGNALINFO_T
 # define sxe_sox_signalinfo_t	sox_signalinfo_t
-#elif defined HAVE_ST_SIGNALINFO_T
-# define sxe_sox_signalinfo_t	st_signalinfo_t
 #else
 # error "Congrats! Y0u won 6 packs of V|AGRA! Go and have fun!"
 #endif
 
 #if defined HAVE_SOX_SSIZE_T
 # define sxe_sox_ssize_t	sox_ssize_t
-#elif defined HAVE_ST_SSIZE_T
-# define sxe_sox_ssize_t	st_ssize_t
 #else
 # define sxe_sox_ssize_t        ssize_t
 #endif
 
 #if defined HAVE_SOX_SAMPLE_T
 # define sxe_sox_sample_t	sox_sample_t
-#elif defined HAVE_ST_SAMPLE_T
-# define sxe_sox_sample_t	st_sample_t
 #else
 # error "Thou nutter!  Serves thee right!"
 #endif
@@ -68,11 +58,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 # define sxe_sox_close		sox_close
 # define sxe_sox_read		sox_read
 # define sxe_sox_seek		sox_seek
-#elif defined HAVE_ST_H
-# define sxe_sox_open_read	st_open_read
-# define sxe_sox_close		st_close
-# define sxe_sox_read		st_read
-# define sxe_sox_seek		st_seek
 #else
 # error "Nope! I'm upset now.  Gimme a pint or another to cheer me up!"
 #endif
@@ -91,17 +76,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 # define SXE_SIZE_24BIT		SOX_SIZE_24BIT
 # define SXE_SIZE_32BIT		SOX_SIZE_32BIT
 # define SXE_SIZE_64BIT		SOX_SIZE_64BIT
-#elif defined ST_SIZE_BYTE &&			\
-	defined ST_SIZE_8BIT &&		\
-	defined ST_SIZE_16BIT &&		\
-	defined ST_SIZE_32BIT &&		\
-	defined ST_SIZE_64BIT
-# define SXE_SIZE_BYTE		ST_SIZE_BYTE
-# define SXE_SIZE_8BIT		ST_SIZE_8BIT
-# define SXE_SIZE_16BIT		ST_SIZE_16BIT
-# define SXE_SIZE_24BIT		ST_SIZE_24BIT
-# define SXE_SIZE_32BIT		ST_SIZE_32BIT
-# define SXE_SIZE_64BIT		ST_SIZE_64BIT
 #elif defined HAVE_SOX_SIGNALINFO_T_PRECISION
 /* we don't need this bugger at all */
 #else
