@@ -3073,7 +3073,6 @@ fi
 
 dnl sox support
 if test "$with_media_sox" != "no"; then
-	## defines $LIBST_CONFIG
 	SXE_MM_CHECK_SOX([have_media_sox=yes], [have_media_sox=no])
 
 	AC_MSG_CHECKING([for sufficient SoX support])

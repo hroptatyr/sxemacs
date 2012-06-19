@@ -115,12 +115,8 @@ media_sox_open(Lisp_Media_Stream *ms)
 	}
 
 	/* retrieve the signal information */
-#if defined HAVE_STRUCT_SOX_FORMAT
+#if defined HAVE_STRUCT_SOX_FORMAT_T
 	stinfo = &ft->signal;
-#elif defined MEMBER_STRUCT_ST_SOUNDSTREAM_SIGNAL
-	stinfo = &ft->signal;
-#elif defined MEMBER_STRUCT_ST_SOUNDSTREAM_INFO
-	stinfo = &ft->info;
 #else
 #  error "What's the matter with you?! How did you reach this?"
 #endif
@@ -209,7 +205,7 @@ media_sox_read(media_substream *mss, void *outbuf, size_t length)
 	/* stream stuff */
 	Lisp_Media_Stream *ms = mss->up;
 	mtype_audio_properties *mtap;
-	/* libst stuff */
+	/* libsox stuff */
 	sxe_sox_t ft;
 	sxe_sox_ssize_t samples;
 	sxe_sox_sample_t *bptr;
@@ -251,7 +247,7 @@ media_sox_rewind(media_substream *mss)
 {
 /* rewind the stream to the first frame */
 	Lisp_Media_Stream *ms = mss->up;
-	/* libst stuff */
+	/* libsox stuff */
 	sxe_sox_t ft;
 
 	/* check the integrity of the media stream */
