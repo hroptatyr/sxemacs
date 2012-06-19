@@ -81,7 +81,7 @@ If DO-INIT is non-nil the file is loaded."
 					  (list initd-dir ".."))))
 	 (initd-elc    (concat initd-el "c"))
 	 (initd-files  (funcall lisp-initd-gather-func initd-dir
-				t "^.*\.el$" nil t))
+				t "^.*\\.el$" nil t))
 	 (init-file     (if lisp-initd-byte-compile-elisp initd-elc initd-el))
 	 init-buffer)
 
