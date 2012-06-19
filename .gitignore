@@ -112,7 +112,7 @@ finder-inf.el
 ## Because I'm so used to arch (tla)
 ,,*
 ++*
-=build
+=*
 
 ## Exceptions
 !cl-loop-parser.y

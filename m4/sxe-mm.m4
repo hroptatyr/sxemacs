@@ -534,12 +534,7 @@ AC_DEFUN([SXE_MM_CHECK_SOX], [dnl
 
 	AC_CACHE_CHECK([for SoX support], [sxe_cv_feat_sox], [_SXE_CHECK_SOX])
 
-	if test "$sox_too_old" = "yes"; then
-		AS_MESSAGE([*** Detected SoX, but it is too old.])
-		AS_MESSAGE([*** Consider upgrading, see http://sox.sourceforge.net])
-		ACTION_IF_NOT_FOUND
-		:
-	elif test "$sxe_cv_feat_sox" = "yes"; then
+	if test "$sxe_cv_feat_sox" = "yes"; then
 		ACTION_IF_FOUND
 		:
 	else
@@ -552,59 +547,38 @@ AC_DEFUN([SXE_MM_CHECK_SOX], [dnl
 ])dnl SXE_MM_CHECK_SOX
 
 AC_DEFUN([_SXE_CHECK_SOX], [dnl
-	AC_REQUIRE([SXE_CHECK_SOX_LOCATOR])
+	AC_REQUIRE([SXE_CHECK_SOX_LOCATIONS])
 
-	if test "$have_libst_config" = "no" -o -z "$LIBST_CONFIG"; then
-		AS_MESSAGE([*** libst-config not found.])
-		AS_MESSAGE([*** Cannot check for SoX.])
-		have_libst_config=no
-		LIBST_CONFIG=
-	else
-		AC_REQUIRE([SXE_CHECK_SOX_LOCATIONS])
-		AC_REQUIRE([SXE_CHECK_SOX_HEADERS])
-		AC_REQUIRE([SXE_CHECK_SOX_LIBS])
-		AC_REQUIRE([SXE_CHECK_SOX_STRUCTS])
-		:
-	fi
-
-	if test "$ac_cv_lib_sox_sox_open_read" = "yes" -a \
-		"$ac_cv_lib_sox_sox_close" = "yes" -a \
-		"$ac_cv_lib_sox_sox_seek" = "yes" -a \
-		"$ac_cv_header_sox_h" = "yes" -a \
-		"$ac_cv_type_sox_format_t" = "yes" -a \
-		"$ac_cv_type_struct_sox_format" = "yes" -a \
-		"$sxe_cv_mm_sox_open_read_fooked" != "yes"; then
-		sox_libs="-lsox $sox_libs"
-		sxe_cv_feat_sox="yes"
-	elif test "$ac_cv_lib_st_st_close" = "yes" -a \
-		"$ac_cv_lib_st_st_read" = "yes" -a \
-		"$ac_cv_lib_st_st_seek" = "yes" -a \
-		"$ac_cv_header_st_h" = "yes" -a \
-		"$ac_cv_type_ft_t" = "yes" -a \
-		"$ac_cv_type_struct_st_soundstream" = "yes" -a \
-		"$sxe_cv_mm_sox_open_read_fooked" != "yes"; then
-		sox_libs="-lst $sox_libs"
-		sxe_cv_feat_sox="yes"
-	else
+	if test "$have_smelly_sox" = "yes"; then
 		sxe_cv_feat_sox="no"
+	else
+		SXE_CHECK_SOX_HEADERS
+		SXE_CHECK_SOX_LIBS
+		SXE_CHECK_SOX_STRUCTS
+
+		if test "$ac_cv_lib_sox_sox_open_read" = "yes" -a \
+			"$ac_cv_lib_sox_sox_close" = "yes" -a \
+			"$ac_cv_lib_sox_sox_seek" = "yes" -a \
+			"$ac_cv_header_sox_h" = "yes" -a \
+			"$ac_cv_type_sox_format_t" = "yes" -a \
+			"$ac_cv_type_struct_sox_format_t" = "yes" -a \
+			"$sxe_cv_mm_sox_open_read_fooked" != "yes"; then
+			sxe_cv_feat_sox="yes"
+		else
+			sxe_cv_feat_sox="no"
+		fi
+		:
 	fi
 ])dnl _SXE_CHECK_SOX
 
-AC_DEFUN([SXE_CHECK_SOX_LOCATOR], [dnl
-	SXE_SEARCH_CONFIG_PROG([libst-config])
-])dnl SXE_CHECK_SOX_LOCATOR
-
 AC_DEFUN([SXE_CHECK_SOX_LOCATIONS], [dnl
-	AC_REQUIRE([SXE_CHECK_SOX_LOCATOR])
-	if test "$have_libst_config" = "no" -o -z "$LIBST_CONFIG"; then
-		sox_cppflags=
+	PKG_CHECK_MODULES([SOX], [sox >= 14.1.0], [dnl
+		have_smelly_sox="no"
+		sox_cppflags="$SOX_CFLAGS"
 		sox_ldflags=
-		sox_libs=
-	else
-		sox_cppflags="$($LIBST_CONFIG --cflags)"
-		sox_ldflags="-L$($LIBST_CONFIG --libdir)"
-		sox_libs="$($LIBST_CONFIG --libs)"
-	fi
+		sox_libs="$SOX_LIBS"], [dnl
+		have_smelly_sox="yes"
+		AC_MSG_WARN([Your SoX is too old or non-existant. You need >= 14.1.0])])
 ])dnl SXE_CHECK_SOX_PLACES
 
 AC_DEFUN([SXE_PUMP_SOX_LOCATIONS], [dnl
@@ -621,7 +595,6 @@ AC_DEFUN([SXE_DUMP_SOX_LOCATIONS], [dnl
 AC_DEFUN([SXE_CHECK_SOX_HEADERS], [dnl
 	AC_REQUIRE([SXE_CHECK_SOX_LOCATIONS])
 	SXE_PUMP_SOX_LOCATIONS
-	AC_CHECK_HEADERS([st.h])
 	AC_CHECK_HEADERS([sox.h])
 	SXE_DUMP_SOX_LOCATIONS
 ])dnl SXE_CHECK_SOX_HEADERS
@@ -633,13 +606,6 @@ AC_DEFUN([SXE_CHECK_SOX_LIBS], [dnl
 	$CC -c -o cleanup.o cleanup.c
 
 	SXE_PUMP_SOX_LOCATIONS
-	## we need 12.17.9 with st_open_read
-	AC_CHECK_LIB([st], [st_open_read], [:], [:],
-		[cleanup.o $sox_ldflags $sox_libs])
-	AC_CHECK_LIB([st], [st_close], [:], [:], [cleanup.o $sox_ldflags $sox_libs])
-	AC_CHECK_LIB([st], [st_read], [:], [:], [cleanup.o $sox_ldflags $sox_libs])
-	AC_CHECK_LIB([st], [st_seek], [:], [:], [cleanup.o $sox_ldflags $sox_libs])
-
 	## checks for the spankin' new sox
 	AC_CHECK_LIB([sox], [sox_open_read], [:], [:],
 		[cleanup.o $sox_ldflags $sox_libs])
@@ -706,53 +672,6 @@ I better disable SoX on your behalf.
 ])dnl SXE_CHECK_SOX_LIBS
 
 AC_DEFUN([SXE_CHECK_SOX_STRUCTS], [dnl
-	## the old structs
-	AC_CHECK_TYPES([ft_t], [:], [:], [
-#if defined HAVE_ST_H
-# include <st.h>
-#endif
-		])
-	AC_CHECK_TYPES([st_signalinfo_t], [:], [:], [
-#if defined HAVE_ST_H
-# include <st.h>
-#endif
-		])
-	AC_CHECK_TYPES([st_ssize_t], [:], [:], [
-#ifdef HAVE_ST_H
-# include <st.h>
-#endif
-		])
-	AC_CHECK_TYPES([st_sample_t], [:], [:], [
-#ifdef HAVE_ST_H
-# include <st.h>
-#endif
-		])
-	AC_CHECK_TYPES([struct st_soundstream], [:], [:], [
-#if defined HAVE_ST_H
-# include <st.h>
-#endif
-		])
-	AC_CHECK_MEMBERS([struct st_soundstream.info], [:], [:], [
-#if defined HAVE_ST_H
-# include <st.h>
-#endif
-		])
-	AC_CHECK_MEMBERS([struct st_soundstream.signal], [:], [:], [
-#if defined HAVE_ST_H
-# include <st.h>
-#endif
-		])
-
-	## evaluating the results
-	if test "$ac_cv_member_struct_st_soundstream_info" = "yes"; then
-		AC_DEFINE([MEMBER_STRUCT_ST_SOUNDSTREAM_INFO], [1],
-			[Whether we have the `info' slot])
-	fi
-	if test "$ac_cv_member_struct_st_soundstream_signal" = "yes"; then
-		AC_DEFINE([MEMBER_STRUCT_ST_SOUNDSTREAM_SIGNAL], [1],
-			[Whether we have the `signal' slot])
-	fi
-
 	## the new structs
 	AC_CHECK_TYPES([sox_format_t], [:], [:], [
 #ifdef HAVE_SOX_H
@@ -774,12 +693,12 @@ AC_DEFUN([SXE_CHECK_SOX_STRUCTS], [dnl
 # include <sox.h>
 #endif
 		])
-	AC_CHECK_TYPES([struct sox_format], [:], [:], [
+	AC_CHECK_TYPES([struct sox_format_t], [:], [:], [
 #ifdef HAVE_SOX_H
 # include <sox.h>
 #endif
 		])
-	AC_CHECK_MEMBERS([struct sox_format.signal], [:], [:], [
+	AC_CHECK_MEMBERS([struct sox_format_t.signal], [:], [:], [
 #ifdef HAVE_SOX_H
 # include <sox.h>
 #endif

@@ -165,7 +165,7 @@ install them and incorporate them into SXEmacs.
   - mad:
     http://www.underbit.com/products/mad/
 
-  - SoX:
+  - SoX (min version 14.1.0):
     http://sox.sourceforge.net/
 
   Note: Some of the media libraries above may in turn have dependencies

@@ -115,7 +115,7 @@ media_sox_open(Lisp_Media_Stream *ms)
 	}
 
 	/* retrieve the signal information */
-#if defined HAVE_STRUCT_SOX_FORMAT
+#if defined HAVE_STRUCT_SOX_FORMAT_T
 	stinfo = &ft->signal;
 #elif defined MEMBER_STRUCT_ST_SOUNDSTREAM_SIGNAL
 	stinfo = &ft->signal;
