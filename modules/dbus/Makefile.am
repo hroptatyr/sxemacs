@@ -60,11 +60,11 @@ BUILT_SOURCES = dbusbind.doc.c
 
 header_HEADERS = dbusbind.h
 
-dbus_la_SOURCES = dbusbind.c
+dbusbind_la_SOURCES = dbusbind.c
 
-nodist_dbus_la_SOURCES = dbusbind.doc.c
+nodist_dbusbind_la_SOURCES = dbusbind.doc.c
 
-dbus_la_CFLAGS = $(AM_CFLAGS) -DEMOD_SXE_DBUS
+dbusbind_la_CFLAGS = $(AM_CFLAGS) -DEMOD_SXE_DBUS
 
 CLEANFILES = $(BUILT_SOURCES) auto-autoloads.el{,c} libsxe-dbus.a
 
