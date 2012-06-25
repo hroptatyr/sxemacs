@@ -80,6 +80,7 @@ time_ev_cb(pa_mainloop_api*, pa_time_event*, const struct timeval*, void*);
 struct sound_pulse_data_s {
 	Lisp_Object stream; /* media has to deal with this actually */
 	Lisp_Object client;
+	Lisp_Object role;
 	Lisp_Object sink;
 	Lisp_Object source;
 	Lisp_Object server;
@@ -228,6 +229,7 @@ sound_pulse_create(Lisp_Object pulse_options)
 	Lisp_Object opt_sink = Qnil;
 	Lisp_Object opt_source = Qnil;
 	Lisp_Object opt_client = Qnil;
+	Lisp_Object opt_role = Qnil;
 	Lisp_Object opt_stream = Qnil;
 	Lisp_Object opt_immediate = Qnil;
 	Lisp_Object opt_threaded = Qnil;
@@ -252,6 +254,12 @@ sound_pulse_create(Lisp_Object pulse_options)
 		return NULL;
 	}
 
+	opt_role = Fplist_get(pulse_options, intern(":role"), Qnil);
+	if (!NILP(opt_role) && !STRINGP(opt_role)) {
+		wrong_type_argument(Qstringp, opt_role);
+		return NULL;
+	}
+
 	opt_stream = Fplist_get(pulse_options, intern(":stream"), Qnil);
 	if (!NILP(opt_stream) && !STRINGP(opt_stream)) {
 		wrong_type_argument(Qstringp, opt_stream);
@@ -266,6 +274,7 @@ sound_pulse_create(Lisp_Object pulse_options)
 	spd = xnew_and_zero(struct sound_pulse_data_s);
 	spd->server = opt_server;
 	spd->client = opt_client;
+	spd->role = opt_role;
 	spd->sink = opt_sink;
 	spd->source = opt_source;
 	spd->stream = opt_stream;
@@ -302,6 +311,7 @@ sound_pulse_finish(ad_device_data *data)
 		spd->stream = Qnil;
 		spd->server = Qnil;
 		spd->client = Qnil;
+		spd->role = Qnil;
 		spd->sink = Qnil;
 		spd->source = Qnil;
 	}
@@ -1117,6 +1127,9 @@ sound_pulse_init_mainloop(ad_device_data *devdata)
 	const char *server =
 		(NILP(spd->server) ? NULL :
 		 (const char*)XSTRING_DATA(spd->server));
+	const char *role =
+		(NILP(spd->role) ? "event" :
+		 (const char*)XSTRING_DATA(spd->role));
 	int threadedp = spd->ml_threaded_p;
 
 	/* cannot use Pulse on incomplete or corrupt audio devices */
@@ -1124,6 +1137,8 @@ sound_pulse_init_mainloop(ad_device_data *devdata)
 		return 0;
 
 	SXE_SEMAPH_INIT(&(spd->ctxsem));
+
+	setenv("PULSE_PROP_media.role", role, 1);
 
 	/* Set up a new main loop */
 	if (threadedp)

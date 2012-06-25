@@ -1137,6 +1137,16 @@ Valid keywords for Pulse are:
 :sink - the name of the sink to connect to (e.g. "output")
 :source - the name of the source to record from (e.g. "mic_in")
 :client - how to call the client on the server (default "SXEmacs")
+:role - a one-word description of the "type" of media to be played
+  on the server. It can be one of:
+          "video" - for movie/video streams
+          "music" - for music streams (like mp3's, oga's etc)
+           "game" - for audio from games
+          "event" - for event sounds (this is the default)
+          "phone" - for VoIP and Instant Messaging audio
+      "animation" - for animations
+     "production" - for audio production applications
+           "a11y" - for accessibility applications
 :stream - how to call the stream on the server (e.g. "fancy-sound")
 :immediate - connect to sink immediately and keep the connection
   alive as long as the audio device exists (default `t')
