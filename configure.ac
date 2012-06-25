@@ -1828,10 +1828,11 @@ if test "$have_dbus" = "yes"; then
 	if test "$with_static_modules_dbus" = "yes"; then
 		have_static_modules_dbus=yes
 	fi
-	SXE_EMOD_STATMOD([dbus])
 else
 	AC_MSG_WARN([I cannot believe you do not have d-bus.])
 fi
+
+SXE_EMOD_STATMOD([dbus])
 
 AM_CONDITIONAL([AUTARKIC], [test "0" = "1"])
 MODARCHDIR=
