@@ -65,9 +65,10 @@ automated_tests = automated/ase-cartesian-tests.el                      \
 	automated/symbol-tests.el automated/syntax-tests.el		\
 	automated/tag-tests.el automated/test-harness.el		\
 	automated/weak-tests.el automated/README
+benchmark_tests = benchmark/benchmark.el
 
 EXTRA_DIST = $(misc_tests) $(mule_tests)		\
-	$(DLL_tests) $(automated_tests)
+	$(DLL_tests) $(automated_tests) $(benchmark_tests)
 
 CLEANFILES = stage1 stage2
 
