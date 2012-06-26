@@ -83,7 +83,7 @@ media_sox_open(Lisp_Media_Stream *ms)
 	case MKIND_FILE: {
 		mkind_file_properties *mkfp = NULL;
 		const char *file = NULL;
-		int file_len = 0;
+		int file_len __attribute__((unused)) = 0;
 
 		/* open the file */
 		mkfp = media_stream_kind_properties(ms).fprops;
@@ -209,7 +209,7 @@ media_sox_read(media_substream *mss, void *outbuf, size_t length)
 	sxe_sox_t ft;
 	sxe_sox_ssize_t samples;
 	sxe_sox_sample_t *bptr;
-	uint16_t framesize;
+	uint16_t framesize __attribute__((unused));
 	media_sample_format_t *fmt;
 
 	/* check the integrity of the media stream */
