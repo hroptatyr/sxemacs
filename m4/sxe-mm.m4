@@ -814,22 +814,7 @@ AC_DEFUN([SXE_MM_CHECK_PULSE], [
 	## arg #1: action on success
 	## arg #2: action on failure
 
-	PULSE_REQUIRED_VERSION=0.9.3
-	_SXE_MM_CHECK_pkgconfig_based(dnl
-		[pulse], [libpulse], [$PULSE_REQUIRED_VERSION], [dnl
-		pa_mainloop_new pa_threaded_mainloop_new pa_mainloop_iterate dnl
-		pa_threaded_mainloop_lock pa_threaded_mainloop_unlock dnl
-		pa_mainloop_get_api pa_threaded_mainloop_get_api dnl
-		pa_mainloop_free pa_threaded_mainloop_free dnl
-		pa_threaded_mainloop_stop dnl
-		pa_context_new pa_context_get_state pa_context_is_pending dnl
-		pa_context_disconnect dnl
-		pa_operation_unref dnl
-		pa_stream_new pa_stream_get_state pa_stream_write dnl
-		pa_stream_set_state_callback pa_stream_set_write_callback dnl
-		pa_stream_unref pa_stream_connect_playback pa_stream_disconnect dnl
-		pa_stream_cork],
-		[pulse/pulseaudio.h], [$1], [$2])
+	PKG_CHECK_MODULES([PULSE], [libpulse >= 2.0.0], [$1], [$2])
 ])dnl SXE_MM_CHECK_PULSE
 
 AC_DEFUN([SXE_MM_CHECK_JACK], [

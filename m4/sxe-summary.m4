@@ -241,7 +241,6 @@ Media:"
 dnl
 OG_MULTIARG_SUMMARY([image], [Image Formats], [  ])
 OG_MULTIARG_SUMMARY([sound], [Audio Outputs], [  ])
-test "$with_pulseaudio" = yes && echo "    PulseAudio has been enabled.  Good luck!"
 OG_MULTIARG_SUMMARY([media], [Media Stream Handlers], [  ])
 
 dnl old stuff ... originally these were elifs

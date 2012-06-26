@@ -620,22 +620,15 @@ OG_MULTIARG_WITH([image], [dnl
 OG_MULTIARG_WITH([sound], [dnl
 	AS_HELP_STRING([--with-sound=TYPE],
 		[Compile with sound support.])],
-	[auto], [Autodetect all sound support (except Pulse)], [dnl
+	[auto], [Autodetect all sound support], [dnl
 	OG_MULTIARG_ITEM([alsa], [ALSA], [kernel-based linux sound standard])
 	OG_MULTIARG_ITEM([ao], [ao], [generic audio output layer])
 	OG_MULTIARG_ITEM([esd], [ESD], [Enlightenment Sound Daemon])
 	OG_MULTIARG_ITEM([jack], [Jack], [a low-latency audio server])
 	OG_MULTIARG_ITEM([nas], [NAS], [Network Audio System])
 	OG_MULTIARG_ITEM([oss], [OSS], [Open Sound System])
+	OG_MULTIARG_ITEM([pulse], [PulseAudio], [PulseAudio Sound Server])
 ])
-
-OG_ARG_WITH([pulseaudio],
-	AS_HELP_STRING([--with-pulseaudio],
-		[Compile with support for the PulseAudio audio server.
-		This has been turned off by default because of too many
-		bugs in recent versions of PA.  Use at your own risk,
-		YMMV, and all that.]),
-	[no], [NO])
 
 OG_MULTIARG_WITH([media], [dnl
 	AS_HELP_STRING([--with-media=TYPE],
@@ -3178,24 +3171,18 @@ if test "$with_sound_esd" != "no"; then
 fi
 
 dnl PulseAudio Sound support
-if test "$with_pulseaudio" != "no"; then
+if test "$with_sound_pulse" != "no"; then
 	SXE_MM_CHECK_PULSE([have_sound_pulse=yes], [have_sound_pulse=no])
 
 	AC_MSG_CHECKING([for sufficient PulseAudio support])
 	if test "$have_sound_pulse" = "yes"; then
 		AC_MSG_RESULT([yes])
-		PULSEAUDIO_LIBS=`$PKG_CONFIG --libs libpulse`
-		pulse_version=`$PKG_CONFIG --modversion libpulse`
-		pulse_major_version=0
-		pulse_minor_version=`echo $pulse_version | \
-			sed -e "s/0\.\([[0-9]]*\).*/\1/"`
 		need_internal_media=yes
 		SXE_ADD_MM_OBJS([sound-pulse.o])
-		SXE_PREPEND($PULSEAUDIO_LIBS, MM_LIBS)
+		SXE_PREPEND($PULSE_LIBS, MM_LIBS)
+		SXE_PREPEND_UNDUP($PULSE_CFLAGS, MM_CPPFLAGS)
 		AC_DEFINE([HAVE_PULSE_SOUND], [1],
 			[Whether to put in support for PulseAudio.])
-		AC_DEFINE_UNQUOTED([PULSE_VERSION], [$pulse_minor_version],
-			[Version of the underlying pulse lib.])
 	else
 		AC_MSG_RESULT(no)
 		have_sound_pulse=no

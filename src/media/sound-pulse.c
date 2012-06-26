@@ -638,13 +638,15 @@ stream_write_callback(pa_stream *stream, size_t length, void *userdata)
 {
 	audio_job_t aj = NULL;
 	media_substream *mss = NULL;
-	int resolution, channels;
+	int resolution __attribute__((unused));
+	int channels;
 	media_thread_play_state mtp;
-	size_t len, tmplen, real_frm_sz;
+	size_t len, tmplen;
+	size_t real_frm_sz __attribute__((unused));
 	long int i;
 	/* pulse and subthread stuff */
 	sound_pulse_aj_data_t spsd;
-	pa_context *ctx = NULL;
+	pa_context *ctx __attribute__((unused)) = NULL;
 	sxe_media_sample_t *tmpbuf;
 
 	assert(stream && length);
