@@ -44,7 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #if defined HAVE_SOX_SSIZE_T
 # define sxe_sox_ssize_t	sox_ssize_t
 #else
-# define sxe_sox_ssize_t        ssize_t
+# define sxe_sox_ssize_t        size_t
 #endif
 
 #if defined HAVE_SOX_SAMPLE_T
