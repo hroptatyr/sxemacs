@@ -245,6 +245,7 @@ dist_photos_DATA =					\
 	photos/golubev.png photos/golubevm.png		\
 	photos/heatxsink.png photos/heatxsinkm.png	\
 	photos/hniksic.png photos/hniksicm.png		\
+	photos/horst.png photos/horstm.png		\
 	photos/hroptatyr.png photos/hroptatyrm.png	\
 	photos/jan.png photos/janm.png			\
 	photos/jareth.png photos/jarethm.png		\
@@ -263,7 +264,6 @@ dist_photos_DATA =					\
 	photos/myrkraverk.png photos/myrkraverkm.png	\
 	photos/njsf.png photos/njsfm.png		\
 	photos/ograf.png photos/ografm.png		\
-	photos/peanuthorst.png photos/peanuthorstm.png  \
 	photos/pez.png photos/pezm.png			\
 	photos/piper.png photos/piperm.png		\
 	photos/rickc.png photos/rickcm.png		\
