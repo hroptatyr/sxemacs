@@ -118,6 +118,7 @@
     (hmuller   "Hans Muller"       "hmuller@xemacs.org")
     (hniksic   "Hrvoje Niksic"     "hniksic@xemacs.org")
     (hobley    "David hobley"      "hobley@xemacs.org")
+    (horst     "Horst Günther Burkhardt" "horst@sxemacs.org")
     (hroptatyr "Sebastian Freundt" "hroptatyr@sxemacs.org")
     (hynek     "Hynek Schlawack"   "hynek@sxemacs.org")
     (jan       "Jan Vroonhof"      "jan@xemacs.org")
@@ -144,7 +145,6 @@
     (ograf     "Oliver Graf"       "ograf@xemacs.org")
     (olivier   "Olivier Galibert"  "olivier@xemacs.org")
     (oscar     "Oscar Figueiredo"  "oscar@xemacs.org")
-    (peanuthorst "Horst Günther Burkhardt" "horst@sxemacs.org")
     (pelegri   "Eduardo Pelegri-Llopart" "pelegri@xemacs.org")
     (pez       "Peter Pezaris"     "pez@xemacs.org")
     (piper     "Andy Piper"        "andy@xemacs.org")
@@ -171,7 +171,7 @@
 
 (defvar about-current-release-maintainers
   ;; this list should not necessarily be in sorted order.
-  '(steve hroptatyr njsf lg peanuthorst))
+  '(steve hroptatyr njsf lg horst))
 
 (defvar about-other-current-hackers '(erik hynek))
 
@@ -204,6 +204,7 @@
     (dv         . "http://www.lrde.epita.fr/~didier/")
     (fabrice    . "http://www.ese-metz.fr/~popineau/")
     (fptex      . "http://www.fptex.org/")
+    (horst      . "http://midcom.steveyoungs.com/")
     (hroptatyr  . "http://www.math.tu-berlin.de/~freundt/")
     (jason      . "http://www.mastaler.com/")
     (juhp       . "http://www.01.246.ne.jp/~juhp/")
@@ -213,7 +214,6 @@
     (larsi      . "http://quimby.gnus.org/lmi/")
     (marcpa     . "http://www.positron911.com/products/power.htm")
     (ograf      . "http://www.fga.de/~ograf/")
-    (peanuthorst . "http://pan.doras-box.org/")
     (pez        . "http://cbs.sportsline.com/")
     (piper      . "http://www.andypiper.com/")
     (rossini    . "http://faculty.washington.edu/rossini/")
