@@ -949,6 +949,19 @@ muck around with things. As a result I started the NT port. Hopefully I
 will get to finish it sometime sooner rather than later. I do vaguely
 remember University where it seems like I had more spare time that I can
 believe now. Oh well, such is life.\n"))
+    (horst
+     (widget-insert "
+Horst is a student still working towards his HSC. He has a Unit II
+certification in Information Technology already, and is studying
+Chemistry, German, and Physics.
+
+He started using XEmacs relatively recently, when he started with Linux
+in 2003. He has since converted to using Linux full-time.
+
+He hopes to produce the first Linux distribution to use a decked-out
+SXEmacs as the default editor.\n")
+     (about-url-link 'horst nil "Pandora's Box")
+     (widget-insert ".\n"))
     (hroptatyr
      (widget-insert "
 In real life most of the time my name is Sebastian Freundt.
@@ -1196,19 +1209,6 @@ Oscar heads the Computer Science department at CPE Lyon, a french
 engineering school in France. Besides his administrative tasks he
 teaches networking basics, Internet technologies (you know, all these
 xxML and hairy script languages !)  and the Scheme language.\n"))
-    (peanuthorst
-     (widget-insert "
-Horst is a student still working towards his HSC. He has a Unit II
-certification in Information Technology already, and is studying
-Chemistry, German, and Physics.
-
-He started using XEmacs relatively recently, when he started with Linux
-in 2003. He has since converted to using Linux full-time.
-
-He hopes to produce the first Linux distribution to use a decked-out
-SXEmacs as the default editor.\n")
-     (about-url-link 'peanuthorst nil "Pandora's Box")
-     (widget-insert ".\n"))
     (pelegri
      (widget-insert
       "
@@ -1600,6 +1600,10 @@ since its inception in 1998.\n"))
      (widget-insert
       "
 Creator of the earliest version of the MS Windows port of XEmacs.\n"))
+    (horst
+     (widget-insert "
+He mainly contributes documentation and looks on in envy when the
+other hackers do neat things to SXEmacs.\n"))
     (hroptatyr
      (widget-insert
       "
@@ -1740,10 +1744,6 @@ Author of the portable dumper.\n"))
 Oscar's major contributions to XEmacs are the internal LDAP support
 and the EUDC package, an interface to query various directory services
 in a uniform manner (when composing mail for instance).\n"))
-    (peanuthorst
-     (widget-insert "
-He mainly contributes documentation and looks on in envy when the
-other hackers do neat things to SXEmacs.\n"))
     (pelegri
      (widget-insert "
 Author of EOS, a package included in the standard XEmacs distribution
