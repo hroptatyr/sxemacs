@@ -83,7 +83,7 @@ media_sox_open(Lisp_Media_Stream *ms)
 	case MKIND_FILE: {
 		mkind_file_properties *mkfp = NULL;
 		const char *file = NULL;
-		int file_len = 0;
+		int file_len __attribute__((unused)) = 0;
 
 		/* open the file */
 		mkfp = media_stream_kind_properties(ms).fprops;
@@ -191,8 +191,8 @@ media_sox_close(ms_driver_data_t arg)
 	sxe_sox_t ft = arg;
 	sxe_sox_close(ft);
 
-	SOX_DEBUG("closing SoX handle: 0x%x\n",
-		  (unsigned int)ft);
+	SOX_DEBUG("closing SoX handle: 0x%lx\n",
+		  (unsigned long int)ft);
 
 	return;
 }
@@ -209,7 +209,7 @@ media_sox_read(media_substream *mss, void *outbuf, size_t length)
 	sxe_sox_t ft;
 	sxe_sox_ssize_t samples;
 	sxe_sox_sample_t *bptr;
-	uint16_t framesize;
+	uint16_t framesize __attribute__((unused));
 	media_sample_format_t *fmt;
 
 	/* check the integrity of the media stream */
@@ -230,7 +230,7 @@ media_sox_read(media_substream *mss, void *outbuf, size_t length)
 	bptr = (sxe_sox_sample_t*)outbuf;
 	samples = sxe_sox_read(ft, bptr, mtap->channels*length);
 
-	SOX_DEBUG_S("read %d samples\n", samples);
+	SOX_DEBUG_S("read %zd samples\n", samples);
 
 	if (samples < 0)
 		return 0;
@@ -260,8 +260,8 @@ media_sox_rewind(media_substream *mss)
 	if (!(ft = media_stream_data(ms)))
 		return;
 
-	SOX_DEBUG_S("rewind stream 0x%x\n", (unsigned int)ft);
-	sxe_sox_seek(ft, 0, SEEK_SET);
+	SOX_DEBUG_S("rewind stream 0x%lx\n", (unsigned long int)ft);
+	sxe_sox_seek(ft, 0, SOX_SEEK_SET);
 }
 
 #undef MYSELF
