@@ -1380,7 +1380,6 @@ int pdump_load(const char *argv0)
 			}
 			if (remain > 0) {
 				xstrncpy(w, name, remain);
-				w[remain]='\0';
 			}
 
 			/* Check that exe_path is executable and not a

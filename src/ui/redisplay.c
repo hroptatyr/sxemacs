@@ -1094,9 +1094,9 @@ static prop_block_dynarr *add_bufbyte_string_runes(pos_data * data,
 
 				pb.type = PROP_STRING;
 				pb.data.p_string.str =
-					xnew_atomic_array(Bufbyte, len);
+					xnew_atomic_array(Bufbyte, len+1);
 				xstrncpy((char *)pb.data.p_string.str,
-					(char *)pos, len);
+					(char *)pos, len+1);
 				pb.data.p_string.len = len;
 
 				Dynarr_add(prop, pb);

@@ -399,10 +399,6 @@ static char *skip_spaces __P((char *));
 static char *skip_non_spaces __P((char *));
 static char *savenstr __P((char *, int));
 static char *savestr __P((char *));
-static char *etags_strchr __P((const char *, int));
-static char *etags_strrchr __P((const char *, int));
-static int etags_strcasecmp __P((const char *, const char *));
-static int etags_strncasecmp __P((const char *, const char *, int));
 static char *etags_getcwd __P((void));
 static char *relative_filename __P((char *, char *));
 static char *absolute_filename __P((char *, char *));
@@ -413,6 +409,112 @@ static void linebuffer_init __P((linebuffer *));
 static void linebuffer_setlen __P((linebuffer *, int));
 static PTR xmalloc __P((unsigned int));
 static PTR xrealloc __P((char *, unsigned int));
+
+
+
+#if HAVE_STRRCHR
+#define etags_strrchr strrchr
+#else
+/*
+ * Return the ptr in sp at which the character c last
+ * appears; NULL if not found
+ *
+ * Identical to POSIX strrchr, included for portability.
+ */
+static char *
+etags_strrchr (sp, c)
+register const char *sp;
+register int c;
+{
+	register const char *r;
+
+	r = NULL;
+	do
+	{
+		if (*sp == c)
+			r = sp;
+	} while (*sp++);
+	return (char *)r;
+}
+#endif
+
+#if HAVE_STRCHR
+#define etags_strchr strchr
+#else
+/*
+ * Return the ptr in sp at which the character c first
+ * appears; NULL if not found
+ *
+ * Identical to POSIX strchr, included for portability.
+ */
+static char *
+etags_strchr (sp, c)
+register const char *sp;
+register int c;
+{
+	do
+	{
+		if (*sp == c)
+			return (char *)sp;
+	} while (*sp++);
+	return NULL;
+}
+#endif
+
+#if HAVE_STRCASECMP
+#define etags_strcasecmp strcasecmp
+#else
+/*
+ * Compare two strings, ignoring case for alphabetic characters.
+ *
+ * Same as BSD's strcasecmp, included for portability.
+ */
+static int
+etags_strcasecmp (s1, s2)
+register const char *s1;
+register const char *s2;
+{
+	while (*s1 != '\0'
+	       && (ISALPHA (*s1) && ISALPHA (*s2)
+		   ? lowcase (*s1) == lowcase (*s2)
+		   : *s1 == *s2))
+		s1++, s2++;
+
+	return (ISALPHA (*s1) && ISALPHA (*s2)
+		? lowcase (*s1) - lowcase (*s2)
+		: *s1 - *s2);
+}
+#endif
+
+#if HAVE_STRCASECMP
+#define etags_strncasecmp strncasecmp
+#else
+/*
+ * Compare two strings, ignoring case for alphabetic characters.
+ * Stop after a given number of characters
+ *
+ * Same as BSD's strncasecmp, included for portability.
+ */
+static int
+etags_strncasecmp (s1, s2, n)
+register const char *s1;
+register const char *s2;
+register int n;
+{
+	while (*s1 != '\0' && n-- > 0
+	       && (ISALPHA (*s1) && ISALPHA (*s2)
+		   ? lowcase (*s1) == lowcase (*s2)
+		   : *s1 == *s2))
+		s1++, s2++;
+
+	if (n < 0)
+		return 0;
+	else
+		return (ISALPHA (*s1) && ISALPHA (*s2)
+			? lowcase (*s1) - lowcase (*s2)
+			: *s1 - *s2);
+}
+#endif
 
 
 static char searchar = '/';	/* use /.../ searches */
@@ -2985,8 +3087,8 @@ bool *is_func_or_var;	/* OUT: function or variable found */
 		{
 			fvdef = fvnone;
 			objdef = omethodtag;
-			linebuffer_setlen (&token_name, len);
-			xstrncpy (token_name.buffer, str, len);
+			linebuffer_setlen (&token_name, len+1);
+			xstrncpy (token_name.buffer, str, len+1);
 			token_name.buffer[len] = '\0';
 			return TRUE;
 		}
@@ -3532,10 +3634,9 @@ FILE *inf;			/* input file */
 									off += 1;
 									len -= 1;
 								}
-								linebuffer_setlen (&token_name, len);
+								linebuffer_setlen (&token_name, len+1);
 								xstrncpy (token_name.buffer,
-									 newlb.buffer + off, len);
-								token_name.buffer[len] = '\0';
+									 newlb.buffer + off, len+1);
 								if (defun)
 									while (--len >= 0)
 										if (token_name.buffer[len] == '_')
@@ -3544,9 +3645,9 @@ FILE *inf;			/* input file */
 							}
 							else
 							{
-								linebuffer_setlen (&token_name, toklen);
+								linebuffer_setlen (&token_name, toklen+1);
 								xstrncpy (token_name.buffer,
-									 newlb.buffer + tokoff, toklen);
+									 newlb.buffer + tokoff, toklen+1);
 								token_name.buffer[toklen] = '\0';
 								/* Name macros and members. */
 								token.named = (structdef == stagseen
@@ -5026,8 +5127,8 @@ FILE *inf;
 				continue;
 
 			/* Save all values for later tagging. */
-			linebuffer_setlen (&tline, lb.len);
-			xstrncpy(tline.buffer, lb.buffer, lb.len-1);
+			linebuffer_setlen (&tline, lb.len+1);
+			xstrncpy(tline.buffer, lb.buffer, lb.len+1);
 			save_lineno = lineno;
 			save_lcno = linecharno;
 			name = tline.buffer + (dbp - lb.buffer);
@@ -5505,8 +5606,8 @@ FILE * inf;
 					else
 						for (end = dbp; *end != '\0' && intoken (*end); end++)
 							continue;
-					linebuffer_setlen (&token_name, end - dbp);
-					xstrncpy (token_name.buffer, dbp, end - dbp);
+					linebuffer_setlen (&token_name, end - dbp+1);
+					xstrncpy (token_name.buffer, dbp, end - dbp+1);
 					token_name.buffer[end - dbp] = '\0';
 
 					dbp = end;
@@ -5607,8 +5708,7 @@ FILE *inf;
 			else if (len + 1 > allocated)
 				xrnew (last, len + 1, char);
 			allocated = len + 1;
-			xstrncpy (last, cp, len);
-			last[len] = '\0';
+			xstrncpy (last, cp, len+1);
 		}
 	}
 	free (last);
@@ -5785,8 +5885,7 @@ FILE *inf;
 			else if (len + 1 > allocated)
 				xrnew (last, len + 1, char);
 			allocated = len + 1;
-			xstrncpy (last, cp, len);
-			last[len] = '\0';
+			xstrncpy (last, cp, allocated);
 		}
 	}
 	free (last);
@@ -6173,18 +6272,22 @@ struct re_registers *regs;
 
 	/* Allocate space and do the substitutions. */
 	assert (size >= 0);
-	result = xnew (size + 1, char);
+	size_t avail = size + 1;
+	result = xnew (avail, char);
 
 	for (t = result; *out != '\0'; out++)
 		if (*out == '\\' && ISDIGIT (*++out))
 		{
 			dig = *out - '0';
 			diglen = regs->end[dig] - regs->start[dig];
-			xstrncpy (t, in + regs->start[dig], diglen);
+			xstrncpy (t, in + regs->start[dig], avail);
 			t += diglen;
+			avail -= diglen;
 		}
-		else
+		else {
 			*t++ = *out;
+			avail --;
+		}
 	*t = '\0';
 
 	assert (t <= result + size);
@@ -6400,13 +6503,12 @@ register FILE *stream;
 	if (need_filebuf		/* we need filebuf for multi-line regexps */
 	    && chars_deleted > 0)	/* not at EOF */
 	{
-		while (filebuf.size <= filebuf.len + lbp->len + 1) /* +1 for \n */
-		{
-			/* Expand filebuf. */
+		size_t need = filebuf.len + lbp->len + 1; /* +1 for \n */
+		while (filebuf.size <= need ) 
 			filebuf.size *= 2;
-			xrnew (filebuf.buffer, filebuf.size, char);
-		}
-		xstrncpy (filebuf.buffer + filebuf.len, lbp->buffer, lbp->len);
+		/* Expand filebuf. */
+		xrnew (filebuf.buffer, filebuf.size, char);
+		xstrncpy (filebuf.buffer + filebuf.len, lbp->buffer, filebuf.size - filebuf.len);
 		filebuf.len += lbp->len;
 		filebuf.buffer[filebuf.len++] = '\n';
 		filebuf.buffer[filebuf.len] = '\0';
@@ -6637,98 +6739,11 @@ int len;
 	register char *dp;
 
 	dp = xnew (len + 1, char);
-	xstrncpy (dp, cp, len);
+	xstrncpy (dp, cp, len+1);
 	dp[len] = '\0';
 	return dp;
 }
 
-/*
- * Return the ptr in sp at which the character c last
- * appears; NULL if not found
- *
- * Identical to POSIX strrchr, included for portability.
- */
-static char *
-etags_strrchr (sp, c)
-register const char *sp;
-register int c;
-{
-	register const char *r;
-
-	r = NULL;
-	do
-	{
-		if (*sp == c)
-			r = sp;
-	} while (*sp++);
-	return (char *)r;
-}
-
-/*
- * Return the ptr in sp at which the character c first
- * appears; NULL if not found
- *
- * Identical to POSIX strchr, included for portability.
- */
-static char *
-etags_strchr (sp, c)
-register const char *sp;
-register int c;
-{
-	do
-	{
-		if (*sp == c)
-			return (char *)sp;
-	} while (*sp++);
-	return NULL;
-}
-
-/*
- * Compare two strings, ignoring case for alphabetic characters.
- *
- * Same as BSD's strcasecmp, included for portability.
- */
-static int
-etags_strcasecmp (s1, s2)
-register const char *s1;
-register const char *s2;
-{
-	while (*s1 != '\0'
-	       && (ISALPHA (*s1) && ISALPHA (*s2)
-		   ? lowcase (*s1) == lowcase (*s2)
-		   : *s1 == *s2))
-		s1++, s2++;
-
-	return (ISALPHA (*s1) && ISALPHA (*s2)
-		? lowcase (*s1) - lowcase (*s2)
-		: *s1 - *s2);
-}
-
-/*
- * Compare two strings, ignoring case for alphabetic characters.
- * Stop after a given number of characters
- *
- * Same as BSD's strncasecmp, included for portability.
- */
-static int
-etags_strncasecmp (s1, s2, n)
-register const char *s1;
-register const char *s2;
-register int n;
-{
-	while (*s1 != '\0' && n-- > 0
-	       && (ISALPHA (*s1) && ISALPHA (*s2)
-		   ? lowcase (*s1) == lowcase (*s2)
-		   : *s1 == *s2))
-		s1++, s2++;
-
-	if (n < 0)
-		return 0;
-	else
-		return (ISALPHA (*s1) && ISALPHA (*s2)
-			? lowcase (*s1) - lowcase (*s2)
-			: *s1 - *s2);
-}
 
 /* Skip spaces (end of string is not space), return new pointer. */
 static char *
@@ -6999,10 +7014,8 @@ linebuffer *lbp;
 int toksize;
 {
 	while (lbp->size <= toksize)
-	{
 		lbp->size *= 2;
-		xrnew (lbp->buffer, lbp->size, char);
-	}
+	xrnew (lbp->buffer, lbp->size, char);
 	lbp->len = toksize;
 }
 
