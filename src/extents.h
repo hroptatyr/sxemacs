@@ -50,24 +50,29 @@ struct extent {
 	struct {
 		Lisp_Object face;
 
-		/* These flags are simply an optimization for common boolean properties
-		   which go onto the extent's property list.  Any of them would work if
-		   done in the normal way, but the space savings of doing these in this
-		   way is significant.  Note that if you add a flag, there are numerous
-		   places in extents.c that need to know about it.
+		/* These flags are simply an optimization for common
+		   boolean properties which go onto the extent's
+		   property list.  Any of them would work if done in
+		   the normal way, but the space savings of doing
+		   these in this way is significant.  Note that if you
+		   add a flag, there are numerous places in extents.c
+		   that need to know about it.
 
-		   Another consideration is that some of these properties are accessed
-		   during redisplay, so it's good for access to them to be fast (a bit
-		   reference instead of a search down a plist).
+		   Another consideration is that some of these
+		   properties are accessed during redisplay, so it's
+		   good for access to them to be fast (a bit reference
+		   instead of a search down a plist).
 
-		   `begin_glyph_layout' and `end_glyph_layout' are unusual in that
-		   they have 4 states instead of 2.
+		   `begin_glyph_layout' and `end_glyph_layout' are
+		   unusual in that they have 4 states instead of 2.
 
-		   Other special extent properties are stored in an auxiliary
-		   structure that sits at the beginning of the plist.  The has_aux
-		   flag indicates whether this structure exists.  The has_parent
-		   flag is an optimization indicating whether the extent has a parent
-		   (this could also be determined by looking in the aux structure). */
+		   Other special extent properties are stored in an
+		   auxiliary structure that sits at the beginning of
+		   the plist.  The has_aux flag indicates whether this
+		   structure exists.  The has_parent flag is an
+		   optimization indicating whether the extent has a
+		   parent (this could also be determined by looking in
+		   the aux structure). */
 
 		 enum_field(glyph_layout) begin_glyph_layout:2;
 		/*  2 text, margins, or whitespace */
