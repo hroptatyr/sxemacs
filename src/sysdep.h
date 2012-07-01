@@ -241,7 +241,7 @@ x__dirname(char *restrict res, const char *file, size_t len)
 	xstrncpy(res, file, len);
 	/* if we were using side effects we woulda matched the above cond */
 	result = dirname(res);
-	xstrncpy(res, result, xmin_size_t(len, xstrlen(result)));
+	xstrncpy(res, result, len);
 	return;
 }
 #elif defined(HAVE_DIRNAME)
@@ -250,7 +250,7 @@ x__dirname(char *restrict res, const char *file, size_t len)
 {
 	/* assumes res is malloc'd of size LEN */
 	char *result = dirname(res);
-	xstrncpy(res, result, xmin_size_t(len, xstrlen(result)));
+	xstrncpy(res, result, len);
 	return;
 }
 #endif
@@ -261,7 +261,7 @@ xdirname(const char *file)
 extern_inline char*
 xdirname(const char *file)
 {
-	size_t len = xstrlen(file);
+	size_t len = xstrlen(file)+1;
 	char *res = xmalloc_atomic(len);
 
 	x__dirname(res, file, len);

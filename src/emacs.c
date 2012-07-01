@@ -821,9 +821,9 @@ make_docfile(int c, char **v)
 	/* set up the program call */
 	xstrncpy(mdocfile,
 		 (char*)XSTRING_DATA(Vexec_directory),
-		 XSTRING_LENGTH(Vexec_directory));
-	xstrncpy(mdocfile+XSTRING_LENGTH(Vexec_directory),
-		 make_docfile_prog, countof(make_docfile_prog));
+		 sizeof(mdocfile));
+	xstrncpy(mdocfile+edlen,
+		 make_docfile_prog, sizeof(mdocfile)-edlen);
 
 	/* find the --make-docfile option */
 	for (p = v; *p; p++) {

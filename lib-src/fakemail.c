@@ -317,24 +317,24 @@ static line_list make_file_preface(void)
 	temp = cuserid((char *)NULL);
 	/* the_user */
 	the_user_len = strlen(temp);
-	the_user = alloc_string(the_user_len + 1);
-	xstrncpy(the_user, the_user_len, temp);
+	the_user = alloc_string(the_user_len);
+	xstrncpy(the_user, temp, the_user_len+1);
 	/* alloc the_string */
 	the_string_len = 3 + prefix_length + the_user_len + date_length;
 	the_string = alloc_string(the_string_len);
-	temp_len = the_string_len;
+	temp_len = the_string_len+1;
 	temp = the_string;
-	xstrncpy(temp, temp_len, FROM_PREFIX);
+	xstrncpy(temp, FROM_PREFIX, temp_len);
 
 	temp = &temp[prefix_length];
 	*temp++ = ' ';
 	temp_len -= prefix_length + 1;
-	xstrncpy(temp, temp_len, the_user);
+	xstrncpy(temp, the_user, temp_len);
 
 	temp = &temp[the_user_len];
 	*temp++ = ' ';
 	temp_len -= the_user_len + 1;
-	xstrncpy(temp, temp_len, the_date);
+	xstrncpy(temp, the_date, temp_len);
 
 	result = new_list();
 	result->string = the_string;

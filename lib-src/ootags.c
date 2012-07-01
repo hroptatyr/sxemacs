@@ -306,8 +306,6 @@ char *skip_spaces PP((char *cp));
 char *skip_non_spaces PP((char *cp));
 char *savenstr PP((char *cp, int len));
 char *savestr PP((char *cp));
-char *etags_strchr PP((char *sp, int c));
-char *etags_strrchr PP((char *sp, int c));
 char *etags_getcwd PP((void));
 char *relative_filename PP((char *file, char *dir));
 char *absolute_filename PP((char *file, char *dir));
@@ -317,6 +315,55 @@ void canonicalize_filename PP((char *fn));
 void grow_linebuffer PP((linebuffer * lbp, int toksize));
 long *xmalloc PP((unsigned int size));
 long *xrealloc PP((char *ptr, unsigned int size));
+
+#if HAVE_STRRCHR
+#define etags_strrchr strrchr
+#else
+/*
+ * Return the ptr in sp at which the character c last
+ * appears; NULL if not found
+ *
+ * Identical to POSIX strrchr, included for portability.
+ */
+static char *
+etags_strrchr (sp, c)
+register const char *sp;
+register int c;
+{
+	register const char *r;
+
+	r = NULL;
+	do
+	{
+		if (*sp == c)
+			r = sp;
+	} while (*sp++);
+	return (char *)r;
+}
+#endif
+
+#if HAVE_STRCHR
+#define etags_strchr strchr
+#else
+/*
+ * Return the ptr in sp at which the character c first
+ * appears; NULL if not found
+ *
+ * Identical to POSIX strchr, included for portability.
+ */
+static char *
+etags_strchr (sp, c)
+register const char *sp;
+register int c;
+{
+	do
+	{
+		if (*sp == c)
+			return (char *)sp;
+	} while (*sp++);
+	return NULL;
+}
+#endif
 
 char searchar = '/';		/* use /.../ searches */
 
@@ -2395,7 +2442,7 @@ bool *is_func_or_var;		/* OUT: function or variable found */
 			objdef = omethodtag;
 			methodlen = len;
 			grow_linebuffer(&token_name, methodlen + 1);
-			xstrncpy(token_name.buffer, str, len);
+			xstrncpy(token_name.buffer, str, methodlen+1);
 			token_name.buffer[methodlen] = '\0';
 			token_name.len = methodlen;
 			return TRUE;
@@ -2843,11 +2890,7 @@ FILE *inf;			/* input file */
 								     newlb.
 								     buffer +
 								     tokoff,
-								     toklen);
-								token_name.
-								    buffer
-								    [toklen] =
-								    '\0';
+								     toklen + 1);
 								token_name.len =
 								    toklen;
 								/* Name macros. */
@@ -3911,7 +3954,7 @@ FILE *inf;
 
 			/* save all values for later tagging */
 			grow_linebuffer(&tline, lb.len + 1);
-			xstrncpy(tline.buffer, lb.buffer, lb.len);
+			xstrncpy(tline.buffer, lb.buffer, lb.len + 1);
 			save_lineno = lineno;
 			save_lcno = linecharno;
 
@@ -4300,8 +4343,7 @@ FILE *inf;
 			else if (len + 1 > allocated)
 				last = xrnew(last, len + 1, char);
 			allocated = len + 1;
-			xstrncpy(last, cp, len);
-			last[len] = '\0';
+			xstrncpy(last, cp, allocated);
 		}
 	}
 	free(last);
@@ -4455,8 +4497,7 @@ FILE *inf;
 			else if (len + 1 > allocated)
 				last = xrnew(last, len + 1, char);
 			allocated = len + 1;
-			xstrncpy(last, cp, len);
-			last[len] = '\0';
+			xstrncpy(last, cp, allocated);
 		}
 	}
 	free(last);
@@ -4747,17 +4788,21 @@ struct re_registers *regs;
 			size -= 1;
 
 	/* Allocate space and do the substitutions. */
-	result = xnew(size + 1, char);
+	size_t avail = size + 1;
+	result = xnew(avail, char);
 
 	for (t = result; *out != '\0'; out++)
 		if (*out == '\\' && isdigit(*++out)) {
 			/* Using "dig2" satisfies my debugger.  Bleah. */
 			dig = *out - '0';
 			diglen = regs->end[dig] - regs->start[dig];
-			xstrncpy(t, in + regs->start[dig], diglen);
+			xstrncpy(t, in + regs->start[dig], avail);
 			t += diglen;
-		} else
+			avail -= diglen;
+		} else {
 			*t++ = *out;
+			avail --;
+		}
 	*t = '\0';
 
 	if (DEBUG && (t > result + size || t - result != strlen(result)))
@@ -4925,46 +4970,9 @@ int len;
 	register char *dp;
 
 	dp = xnew(len + 1, char);
-	xstrncpy(dp, cp, len);
+	xstrncpy(dp, cp, len+1);
 	dp[len] = '\0';
 	return dp;
-}
-
-/*
- * Return the ptr in sp at which the character c last
- * appears; NULL if not found
- *
- * Identical to System V strrchr, included for portability.
- */
-char *etags_strrchr(sp, c)
-register char *sp;
-register int c;
-{
-	register char *r;
-
-	r = NULL;
-	do {
-		if (*sp == c)
-			r = sp;
-	} while (*sp++);
-	return r;
-}
-
-/*
- * Return the ptr in sp at which the character c first
- * appears; NULL if not found
- *
- * Identical to System V strchr, included for portability.
- */
-char *etags_strchr(sp, c)
-register char *sp;
-register int c;
-{
-	do {
-		if (*sp == c)
-			return sp;
-	} while (*sp++);
-	return NULL;
 }
 
 /* Skip spaces, return new pointer. */

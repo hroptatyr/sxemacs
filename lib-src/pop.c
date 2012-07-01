@@ -354,9 +354,9 @@ pop_stat (server, count, size)
 		if (0 == strncmp (fromserver, "-ERR", 4)) {
 			xstrncpy (pop_error, fromserver, ERROR_MAX);
 		} else {
-			strcpy (pop_error,
+			xstrncpy (pop_error,
 				"Unexpected response from POP "
-				"server in pop_stat");
+				 "server in pop_stat", ERROR_MAX);
 			pop_trash (server);
 		}
 		return (-1);

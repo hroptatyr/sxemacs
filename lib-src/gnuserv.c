@@ -193,9 +193,7 @@ handle_ipc_request(struct msgbuf *msgp)
 	}
 	/* if */
 	msgctl(ipc_qid, IPC_STAT, &msg_st);
-	xstrncpy(buf, msgp->mtext, len);
-	/* terminate buf */
-	buf[len] = '\0';
+	xstrncpy(buf, msgp->mtext, sizeof(buf));
 
 	printf("%d %s", ipc_qid, buf);
 	fflush(stdout);
