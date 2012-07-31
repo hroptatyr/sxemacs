@@ -40,7 +40,6 @@
 #define INCLUDED_cl_loop_h_ 1
 
 #include "cl.h"
-#include "cl-loop-parser.h"
 #include "ent/ent-optable.h"
 #include "ent/ent-binary-op.h"
 #include "ent/ent-binary-rel.h"
@@ -91,6 +90,8 @@ typedef struct cl_loop_repeat_clause_s cl_loop_repeat_clause_t;
 typedef struct cl_loop_append_clause_s cl_loop_append_clause_t;
 typedef struct cl_loop_accu_clause_s cl_loop_accu_clause_t;
 typedef struct cl_loop_inifinret_clause_s cl_loop_inifinret_clause_t;
+
+#include "cl-loop-parser.h"
 
 /* nasty nasty nasty
  * tg reported that bison 2.4.1 may not define YYSTYPE, we go the
