@@ -113,8 +113,8 @@ $(ETAGS):
 .PHONY: stage1 stage2 build-report time-build-report time-check beta
 ## Convenience target for SXEmacs beta testers
 beta:
-	$(MAKE) -w $(MAKEFLAGS) clean
-	$(MAKE) -w $(MAKEFLAGS) all
+	$(MAKE) $(AM_MAKEFLAGS) clean
+	$(MAKE) $(AM_MAKEFLAGS) all
 	@ touch ,,build.done
 
 ## Convenience target for SXEmacs build reporters
@@ -134,23 +134,23 @@ env-report:
 	echo RECURSIVE_MAKE_ARGS="${RECURSIVE_MAKE_ARGS}"  ) | tee -a ,,vars.out
 
 time-beta:
-	(time $(MAKE) -w $(MAKEFLAGS) beta )2>&1 | tee ,,beta.out
+	(time $(MAKE) $(AM_MAKEFLAGS) beta )2>&1 | tee ,,beta.out
 
 time-all:
-	time $(MAKE) -w $(MAKEFLAGS) all
+	time $(MAKE) $(AM_MAKEFLAGS) all
 
 time-check:
-	(time $(MAKE) -w $(MAKEFLAGS) check ) 2>&1 | tee ,,make-check.out
+	(time $(MAKE) $(AM_MAKEFLAGS) check ) 2>&1 | tee ,,make-check.out
 
 build-report: env-report
-	$(MAKE) -w $(MAKEFLAGS) beta 2>&1 | tee ,,beta.out
+	$(MAKE) $(AM_MAKEFLAGS) beta 2>&1 | tee ,,beta.out
 	@ [ -f ,,build.done ] || exit 1
 	$(MAKE) -w $(MAKEFLAGS) check 2>&1 | tee ,,make-check.out
 
 time-build-report: env-report
-	(time $(MAKE) -w $(MAKEFLAGS) beta ) 2>&1 | tee ,,beta.out
+	$(MAKE) $(AM_MAKEFLAGS) time-beta
 	@ [ -f ,,build.done ] || exit 1
-	(time $(MAKE) -w $(MAKEFLAGS) check ) 2>&1 | tee ,,make-check.out
+	$(MAKE) $(AM_MAKEFLAGS) time-check 
 
 stage1:
 	@echo

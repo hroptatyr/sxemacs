@@ -1753,7 +1753,7 @@ DEFUN("insert-string", Finsert_string, 1, 2, 0,	/*
 Insert STRING into BUFFER at BUFFER's point.
 Point moves forward so that it ends up after the inserted text.
 Any other markers at the point of insertion remain before the text.
-If a string has non-null string-extent-data, new extents will be created.
+If a string has non-null, duplicable string-extent-data, new extents will be created.
 BUFFER defaults to the current buffer.
 */
       (string, buffer))
