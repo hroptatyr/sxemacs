@@ -1155,12 +1155,14 @@ int init_tty_for_redisplay(struct device *d, char *terminal_type)
 		TTY_SD(c).audio_bell_ = "\07";
 	}
 
-	TTY_SD(c).cursor_visible_ = tgetstr("ve", &bufptr);
-	TTY_SD(c).cursor_normal_  = tgetstr("vs", &bufptr);
-	TTY_SD(c).init_motion_    = tgetstr("ti", &bufptr);
-	TTY_SD(c).end_motion_     = tgetstr("te", &bufptr);
-	TTY_SD(c).keypad_on_      = tgetstr("ks", &bufptr);
-	TTY_SD(c).keypad_off_     = tgetstr("ke", &bufptr);
+	TTY_SD(c).cursor_visible_   = tgetstr("vs", &bufptr);
+	TTY_SD(c).cursor_invisible_ = tgetstr("vi", &bufptr);
+	TTY_SD(c).cursor_normal_    = tgetstr("ve", &bufptr);
+	TTY_SD(c).hard_cursor_      = tgetstr("HC", &bufptr);
+	TTY_SD(c).init_motion_      = tgetstr("ti", &bufptr);
+	TTY_SD(c).end_motion_       = tgetstr("te", &bufptr);
+	TTY_SD(c).keypad_on_        = tgetstr("ks", &bufptr);
+	TTY_SD(c).keypad_off_       = tgetstr("ke", &bufptr);
 
 	/*
 	 * Initialize additional terminal information.
