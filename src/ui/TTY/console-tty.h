@@ -182,7 +182,9 @@ struct tty_console {
 		const char *audio_bell_;	/* bel, bl */
 
 		const char *cursor_visible_;    /* cvvis, vs */
+		const char *cursor_invisible_;  /* civis, vi */
 		const char *cursor_normal_;	/* cnorm, ve */
+		const char *hard_cursor_;       /* chts, HC */
 		const char *init_motion_;	/* smcup, ti */
 		const char *end_motion_;        /* rmcup, te */
 		const char *keypad_on_;		/* smkx, ks */
