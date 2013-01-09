@@ -932,7 +932,8 @@ conversion, find-file-hooks, automatic uncompression, etc.
   "Find entry in `find-file-magic-files-alist' that matches FILENAME."
   (find filename find-file-magic-files-alist :key #'car
 	:test #'(lambda (fn predicate)
-		  (funcall predicate fn))))
+                  (and (file-exists-p fn)
+                       (funcall predicate fn)))))
 
 (defun find-file-noselect (filename &optional nowarn rawfile)
   "Read file FILENAME into a buffer and return the buffer.

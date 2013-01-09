@@ -544,6 +544,7 @@ Return FO's type.
 
 DEFUN("ffi-set-object-type", Fffi_set_object_type, 2, 2, 0, /*
 Cast FO to type TYPE and reassign the cast value.
+Return casted foreign object.
 */
       (fo, type))
 {
@@ -552,7 +553,7 @@ Cast FO to type TYPE and reassign the cast value.
 	ffi_check_type(type);
 	XEFFIO(fo)->type = type;
 
-	return type;
+	return fo;
 }
 
 DEFUN("ffi-object-size", Fffi_object_size, 1, 1, 0, /*
@@ -729,6 +730,7 @@ This is like `ffi-bind' but for function objects.
 /*
  * Return alignment policy for struct or union FFI_SU.
  * x86: Return 1, 2 or 4.
+ * x86_64: Return 1, 2, 4 or 8
  * mips: Return 1, 2, 4 or 8.
  */
 static int
@@ -741,12 +743,22 @@ ffi_type_align(Lisp_Object type)
 			return 1;
 		if (EQ(type, Qshort) || EQ(type, Qunsigned_short))
 			return 2;
+#ifdef __x86_64__
+                if (EQ(type, Qlong) || EQ(type, Qunsigned_long)
+                    || EQ(type, Qdouble))
+                        return 8;
+#endif  /* __x86_64__ */
+
 #ifdef FFI_MIPS
 		if (EQ(type, Qdouble))
 			return 8;
 #endif  /* FFI_MIPS */
 		return 4;
 		/* NOT REACHED */
+#ifdef __x86_64__
+        } else if (FFI_TPTR(type)) {
+                return 8;
+#endif  /* __x86_64__ */
 	} else if (CONSP(type)
 		   && (EQ(XCAR(type), Qstruct) || EQ(XCAR(type), Qunion))) {
 		int al;
@@ -776,6 +788,8 @@ Return TYPE alignment.
 	return make_int(ffi_type_align(type));
 }
 
+#define EFFI_ALIGN_OFF(off, a) (((off) + ((a)-1)) & ~((a)-1))
+
 DEFUN("ffi-slot-offset", Fffi_slot_offset, 2, 2, 0, /*
 Return the offset of SLOT in TYPE.
 SLOT can be either a valid (named) slot in TYPE or `nil'.
@@ -784,7 +798,7 @@ If SLOT is `nil' return the size of the struct.
       (type, slot))
 {
 	Lisp_Object slots;
-	int lpad, align, retoff;
+	size_t retoff = 0;
 
 	type = ffi_canonicalise_type(type);
 	if (!CONSP(type)) {
@@ -796,42 +810,19 @@ If SLOT is `nil' return the size of the struct.
 #endif	/* SXEMACS */
 	}
 
-	retoff = 0;
-	lpad = align = ffi_type_align(type);
 	slots = Fcdr(XCDR(type));
 	CHECK_CONS(slots);
 	while (!NILP(slots)) {
 		Lisp_Object tmp_slot = Fcar(Fcdr(XCAR(slots)));
-		int tmp_align;
-		int tmp_size;
 
-		/*
-		 * NOTE:
-		 *  - for basic types TMP_ALIGN and TMP_SIZE are equal
-		 */
-		tmp_align = ffi_type_align(tmp_slot);
-
+                retoff = EFFI_ALIGN_OFF(retoff, ffi_type_align(tmp_slot));
 		if (EQ(XCAR(XCAR(slots)), slot)) {
 			/* SLOT found */
 			/* TODO: add support for :offset keyword in SLOT */
-			if (lpad < tmp_align) {
-				retoff += lpad;
-				lpad = 0;
-			} else
-				lpad -= tmp_align;
-			break;
+                        break;
+                        /* NOT REACHED */
 		}
-
-		tmp_size = XINT(Fffi_size_of_type(tmp_slot));
-		while (tmp_size > 0) {
-			if (lpad < tmp_align) {
-				retoff += lpad;
-				lpad = align;
-			}
-			tmp_size -= tmp_align;
-			lpad -= tmp_align;
-			retoff += tmp_align;
-		}
+                retoff += XINT(Fffi_size_of_type(tmp_slot));
 
 		slots = XCDR(slots);
 	}
@@ -842,7 +833,7 @@ If SLOT is `nil' return the size of the struct.
 		signal_error(Qinternal_error, "FFI: Slot not found", slot);
 #endif	/* SXEMACS */
 	}
-	return make_int(retoff + lpad);
+	return make_int(retoff);
 }
 
 /*

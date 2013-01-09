@@ -2942,7 +2942,7 @@ Bindings are:
       (call-interactively (cdr op)))))
 
 (defcustom Wand-formats-read-unsupported
-  '("a" "b" "c" "g" "h" "o" "k" "m" "r" "x" "y" "txt" "text" "pm")
+  '("a" "b" "c" "g" "h" "o" "k" "m" "r" "x" "y" "txt" "text" "pm" "logo")
   "List of formats that are not intented to be opened by Wand."
   :type '(list string)
   :group 'Wand-mode)
