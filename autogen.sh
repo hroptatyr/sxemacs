@@ -149,6 +149,12 @@ else
     LIBTOOLIZE=libtoolize
 fi
 
+if test ! -d libtldl; then
+        # Force run of libtoolize before autoreconf because newer autoconf
+        # don't deal well with our inclusion of libtldl/m4 in sxe-libtool.m4
+        # if libltdl dir does not exist yet.
+	$LIBTOOLIZE --copy --ltdl > /dev/null 2>&1
+fi
 autoreconf $FORCE --verbose --install -Wall
 
 # hack-o-matic.  Using gmp's config.{guess,sub} lets us have properer
