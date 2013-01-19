@@ -28,7 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "ent.h"
 #include "ent-float.h"
+#ifdef HAVE_MPFR
 #include "ent-mpfr.h"
+#endif
 #include "ent-gaussian.h"
 #ifdef HAVE_MPC
 #include "ent-mpc.h"
