@@ -142,7 +142,7 @@ sxe_msemaphore_trigger(sxe_msemaphore_t sem, int idx)
 {
 	pthread_mutex_lock(&(sem->mtx));
         sem->generation++;
-B	pthread_cond_signal(&(sem->cnd[idx]));
+	pthread_cond_signal(&(sem->cnd[idx]));
 	pthread_mutex_unlock(&(sem->mtx));
 }
 
