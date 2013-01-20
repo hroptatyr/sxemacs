@@ -230,7 +230,8 @@ media_sox_read(media_substream *mss, void *outbuf, size_t length)
 	bptr = (sxe_sox_sample_t*)outbuf;
 	samples = sxe_sox_read(ft, bptr, mtap->channels*length);
 
-	SOX_DEBUG_S("read %zd samples\n", samples);
+	SOX_DEBUG_S("SoX handle: 0x%lx read %zd samples\n", 
+                    (unsigned long int)ft, samples);
 
 	if (samples < 0)
 		return 0;
@@ -245,7 +246,7 @@ media_sox_read(media_substream *mss, void *outbuf, size_t length)
 static void
 media_sox_rewind(media_substream *mss)
 {
-/* rewind the stream to the first frame */
+        /* rewind the stream to the first frame */
 	Lisp_Media_Stream *ms = mss->up;
 	/* libsox stuff */
 	sxe_sox_t ft;
@@ -257,11 +258,50 @@ media_sox_rewind(media_substream *mss)
 		return;
 
 	/* fetch the SNDFILE context and our audio props */
-	if (!(ft = media_stream_data(ms)))
+	if (!(ft = media_stream_data(ms))) 
 		return;
 
 	SOX_DEBUG_S("rewind stream 0x%lx\n", (unsigned long int)ft);
-	sxe_sox_seek(ft, 0, SOX_SEEK_SET);
+
+        /* Unfortunately it seems sex_sox_seek is broken, so we are
+           closing and reopening the stream,
+	*/
+#ifdef SXE_SOX_CAN_SEEK
+        if( sxe_sox_seek(ft, 0, SOX_SEEK_SET) == 0 ) {
+		return;
+	} 
+	SOX_DEBUG_S("rewind stream 0x%lx failed, trying reopen\n", 
+		    (unsigned long int)ft);
+#endif
+	sxe_sox_close(ft);
+	ft = NULL;
+	{
+		mkind_file_properties *mkfp = NULL;
+		const char *file = NULL;
+		int file_len __attribute__((unused)) = 0;
+		
+		/* open the file */
+		mkfp = media_stream_kind_properties(ms).fprops;
+		TO_EXTERNAL_FORMAT(LISP_STRING, mkfp->filename,
+				   ALLOCA, (file, file_len), Qnil);
+		if( file != NULL ) {
+#if defined HAVE_SOX_OPEN_READ_3ARGS
+			ft = sxe_sox_open_read(file, NULL, NULL);
+#elif defined HAVE_SOX_OPEN_READ_4ARGS
+			ft = sxe_sox_open_read(file, NULL, NULL, NULL);
+#else
+# error You shouldnt be here.  Wake up before you try to compile me.
+#endif
+		}
+	}
+	if (!ft) {
+		media_stream_set_meths(ms, NULL);
+		media_stream_driver(ms) = MDRIVER_UNKNOWN;
+		SOX_DEBUG_S("could not reopen stream");
+		return;
+	}
+	media_stream_data(ms) = ft;
+	media_substream_data(mss) = ft;
 }
 
 #undef MYSELF
