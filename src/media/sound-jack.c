@@ -184,6 +184,7 @@ sound_jack_subthread_create(void)
 	if (!sjsd->num_ports) {
 		message(GETTEXT("audio-jack: "
 				"no physical ports available."));
+		jack_client_close(client);
 		xfree(sjsd);
 		return NULL;
 	}
@@ -203,6 +204,7 @@ sound_jack_subthread_create(void)
 		if (!sjsd->ports[i]) {
 			message(GETTEXT("audio-jack: "
 					"not enough ports available."));
+			jack_client_close(client);
 			xfree(sjsd);
 			return NULL;
 		}
@@ -226,6 +228,7 @@ sound_jack_play(audio_job_t aj)
 	sound_jack_data_t *sjd = NULL;
 	sound_jack_aj_data_t *sjsd = NULL;
 	int i;
+	int code =  1;
 
 	SOUND_UNPACK_MT(aj, device, ms, mss, lad, sjd, mtap);
 
@@ -290,9 +293,11 @@ sound_jack_play(audio_job_t aj)
 	}
 
 	JACK_DEBUG("SEMAPHORE WAIT: 0x%x@0x%x@0x%x\n",
-		   (unsigned int)sem, (unsigned int)sjsd, (unsigned int)aj);
+		   (unsigned int)&(sjsd->sem), 
+		   (unsigned int)sjsd, 
+		   (unsigned int)aj);
 	SXE_SEMAPH_SYNCH(&(sjsd->sem));
-
+        code = 0;
 	/* close and shutdown */
 finish:
 	JACK_DEBUG("finish.\n");
@@ -321,9 +326,10 @@ finish:
 	sjsd = NULL;
 
 	aj->state = MTSTATE_FINISHED;
+        audio_job_device_data(aj) = NULL;
 	SXE_MUTEX_UNLOCK(&aj->mtx);
 
-	return 1;
+	return code;
 }
 
 
@@ -410,6 +416,7 @@ sound_jack_change_state(audio_job_t aj, audio_job_event_args_t args)
 		break;
 	case aj_start:
 		JACK_DEBUG_AJ("->start state\n");
+		aj->play_state = MTPSTATE_RUN;
 		break;
 	case aj_stop:
 		JACK_DEBUG_AJ("->stop state\n");
@@ -462,7 +469,7 @@ sound_jack_handle_aj_events(audio_job_t aj)
 
 	case no_audio_job_event_kinds:
 	default:
-		JACK_CRITICAL("unknown event\n");
+		JACK_CRITICAL("unknown event %d\n", audio_job_event_kind(ev));
 		break;
 	}
 	free_audio_job_event(ev);
@@ -486,6 +493,7 @@ sound_jack_process(jack_nframes_t nframes, void *userdata)
 	int curvol;
 
 	aj = userdata;
+	SXE_MUTEX_LOCK(&aj->mtx);
 	mss = aj->substream;
 	sjsd = audio_job_device_data(aj);
 	buffer = aj->buffer;
@@ -524,10 +532,11 @@ sound_jack_process(jack_nframes_t nframes, void *userdata)
 	case MTPSTATE_STOP:
 	case NUMBER_OF_MEDIA_THREAD_PLAY_STATES:
 	default:
-		JACK_DEBUG_S("DRAIN.\n");
+		JACK_DEBUG_S("DRAIN. MTP state:%d\n", mtp);
 		SXE_SEMAPH_TRIGGER(&(sjsd->sem));
 		break;
 	}
+	SXE_MUTEX_UNLOCK(&aj->mtx);
 	return 0;
 }
 
