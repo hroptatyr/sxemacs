@@ -419,7 +419,7 @@ make_audio_job(Lisp_Object stream, Lisp_Object device, Lisp_Object sentinel)
 	aj->buffer = NULL;
 	aj->buffer_alloc_size = 0;
 
-	SOUND_DEBUG_AJ("created: 0x%lx stream 0x%lx device 0x%lx sentinel 0x%lx\n", 
+	SOUND_DEBUG_AJ("created: 0x%lx stream 0x%lx device 0x%lx sentinel 0x%lx\n",
 		       (long unsigned int)aj, (long unsigned int)stream,
                        (long unsigned int)device, (long unsigned int) sentinel);
 	return aj;

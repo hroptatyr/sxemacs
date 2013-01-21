@@ -293,8 +293,8 @@ sound_jack_play(audio_job_t aj)
 	}
 
 	JACK_DEBUG("SEMAPHORE WAIT: 0x%x@0x%x@0x%x\n",
-		   (unsigned int)&(sjsd->sem), 
-		   (unsigned int)sjsd, 
+		   (unsigned int)&(sjsd->sem),
+		   (unsigned int)sjsd,
 		   (unsigned int)aj);
 	SXE_SEMAPH_SYNCH(&(sjsd->sem));
         code = 0;

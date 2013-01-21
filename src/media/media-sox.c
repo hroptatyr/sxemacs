@@ -230,7 +230,7 @@ media_sox_read(media_substream *mss, void *outbuf, size_t length)
 	bptr = (sxe_sox_sample_t*)outbuf;
 	samples = sxe_sox_read(ft, bptr, mtap->channels*length);
 
-	SOX_DEBUG_S("SoX handle: 0x%lx read %zd samples\n", 
+	SOX_DEBUG_S("SoX handle: 0x%lx read %zd samples\n",
                     (unsigned long int)ft, samples);
 
 	if (samples < 0)
@@ -258,7 +258,7 @@ media_sox_rewind(media_substream *mss)
 		return;
 
 	/* fetch the SNDFILE context and our audio props */
-	if (!(ft = media_stream_data(ms))) 
+	if (!(ft = media_stream_data(ms)))
 		return;
 
 	SOX_DEBUG_S("rewind stream 0x%lx\n", (unsigned long int)ft);
@@ -269,8 +269,8 @@ media_sox_rewind(media_substream *mss)
 #ifdef SXE_SOX_CAN_SEEK
         if( sxe_sox_seek(ft, 0, SOX_SEEK_SET) == 0 ) {
 		return;
-	} 
-	SOX_DEBUG_S("rewind stream 0x%lx failed, trying reopen\n", 
+	}
+	SOX_DEBUG_S("rewind stream 0x%lx failed, trying reopen\n",
 		    (unsigned long int)ft);
 #endif
 	sxe_sox_close(ft);
@@ -279,7 +279,7 @@ media_sox_rewind(media_substream *mss)
 		mkind_file_properties *mkfp = NULL;
 		const char *file = NULL;
 		int file_len __attribute__((unused)) = 0;
-		
+
 		/* open the file */
 		mkfp = media_stream_kind_properties(ms).fprops;
 		TO_EXTERNAL_FORMAT(LISP_STRING, mkfp->filename,
