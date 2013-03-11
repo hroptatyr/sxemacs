@@ -108,7 +108,7 @@ sound_ao_create(Lisp_Object ao_options)
 
 	/* -- initialise -- */
 	ao_initialize();
-	fmt = xmalloc(sizeof(ao_sample_format));
+	fmt = xmalloc_and_zero(sizeof(ao_sample_format));
 
 	/* -- Setup for driver -- */
 	if (optext_driver != NULL)

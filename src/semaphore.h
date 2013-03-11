@@ -51,13 +51,15 @@ typedef struct sxe_refcounter_s *sxe_refcounter_t;
 
 struct sxe_semaphore_s {
 	pthread_mutex_t mtx;
-	pthread_cond_t cnd;
+	pthread_cond_t  cnd;
+        int generation;
 };
 
 struct sxe_msemaphore_s {
 	pthread_mutex_t mtx;
 	pthread_cond_t cnd[SXE_MSEMAPH_MAX_CONDITIONS];
 	int num_cnd;
+        int generation;
 };
 
 /* a thread-safe reference counter */
@@ -95,6 +97,7 @@ extern_inline int sxe_refcounter_decref(sxe_refcounter_t);
 extern_inline void
 sxe_semaphore_init(sxe_semaphore_t sem)
 {
+        sem->generation = 0;
 	pthread_mutex_init(&(sem->mtx), NULL);
 	pthread_cond_init(&(sem->cnd), NULL);
 }
@@ -102,6 +105,7 @@ extern_inline void
 sxe_msemaphore_init(sxe_msemaphore_t sem)
 {
 	int i;
+        sem->generation = 0;
 	pthread_mutex_init(&(sem->mtx), NULL);
 	for (i = 0; i < SXE_MSEMAPH_MAX_CONDITIONS; i++)
 		pthread_cond_init(&(sem->cnd[i]), NULL);
@@ -129,6 +133,7 @@ extern_inline void
 sxe_semaphore_trigger(sxe_semaphore_t sem)
 {
 	pthread_mutex_lock(&(sem->mtx));
+        sem->generation++;
 	pthread_cond_signal(&(sem->cnd));
 	pthread_mutex_unlock(&(sem->mtx));
 }
@@ -136,6 +141,7 @@ extern_inline void
 sxe_msemaphore_trigger(sxe_msemaphore_t sem, int idx)
 {
 	pthread_mutex_lock(&(sem->mtx));
+        sem->generation++;
 	pthread_cond_signal(&(sem->cnd[idx]));
 	pthread_mutex_unlock(&(sem->mtx));
 }
@@ -144,6 +150,7 @@ extern_inline void
 sxe_semaphore_trigger_all(sxe_semaphore_t sem)
 {
 	pthread_mutex_lock(&(sem->mtx));
+	sem->generation++;
 	pthread_cond_broadcast(&(sem->cnd));
 	pthread_mutex_unlock(&(sem->mtx));
 }
@@ -151,6 +158,7 @@ extern_inline void
 sxe_msemaphore_trigger_all(sxe_msemaphore_t sem, int idx)
 {
 	pthread_mutex_lock(&(sem->mtx));
+        sem->generation++;
 	pthread_cond_broadcast(&(sem->cnd[idx]));
 	pthread_mutex_unlock(&(sem->mtx));
 }
@@ -158,15 +166,25 @@ sxe_msemaphore_trigger_all(sxe_msemaphore_t sem, int idx)
 extern_inline void
 sxe_semaphore_synchronise(sxe_semaphore_t sem)
 {
+        int generation;
+
 	pthread_mutex_lock(&(sem->mtx));
-	pthread_cond_wait(&(sem->cnd), &(sem->mtx));
+        generation = sem->generation;
+        do {
+		pthread_cond_wait(&(sem->cnd), &(sem->mtx));
+	} while(sem->generation == generation);
 	pthread_mutex_unlock(&(sem->mtx));
 }
 extern_inline void
 sxe_msemaphore_synchronise(sxe_msemaphore_t sem, int idx)
 {
+        int generation;
+
 	pthread_mutex_lock(&(sem->mtx));
-	pthread_cond_wait(&(sem->cnd[idx]), &(sem->mtx));
+        generation = sem->generation;
+        do {
+		pthread_cond_wait(&(sem->cnd[idx]), &(sem->mtx));
+	} while(sem->generation == generation);
 	pthread_mutex_unlock(&(sem->mtx));
 }
 
