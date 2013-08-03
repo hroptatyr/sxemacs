@@ -935,6 +935,7 @@ successfully installed but errors occurred during initialization, or
 	 (latest (package-get-info-prop this-package 'version))
 	 (installed (package-get-key package :version))
 	 (found nil)
+	 (host nil)
 	 (search-dir package-get-remote)
 	 (base-filename (package-get-info-prop this-package 'filename))
 	 (package-status t)
@@ -987,7 +988,7 @@ successfully installed but errors occurred during initialization, or
       ;; and copy it into the staging directory.  Then validate
       ;; the checksum.  Finally, install the package.
       (catch 'done
-	(let (search-filenames host dir current-filename dest-filename)
+	(let (search-filenames dir current-filename dest-filename)
 	  ;; In each search directory ...
 	  (when search-dir
 	    (setq host (car search-dir)
@@ -1048,7 +1049,8 @@ successfully installed but errors occurred during initialization, or
 			  (package-get-info-prop this-package
 						 'md5sum)))
 	    (progn
-	      (delete-file full-package-filename)
+	      (unless (null host) 
+		(delete-file full-package-filename))
 	      (error 'process-error
 		     (format "Package %s does not match md5 checksum %s has been deleted"
 			     base-filename full-package-filename)))))
@@ -1082,10 +1084,12 @@ successfully installed but errors occurred during initialization, or
 	  (message "Installation of package %s failed." base-filename)
 	  (sit-for 0)
 	  (switch-to-buffer package-admin-temp-buffer)
-	  (delete-file full-package-filename)
+	  ;; null host means a local package mirror
+	  (unless (null host) 
+	    (delete-file full-package-filename))
 	  (setq package-status nil)))
       (setq found t))
-    (if (and found package-get-remove-copy)
+    (if (and found package-get-remove-copy (not (null host)))
 	(delete-file full-package-filename))
     package-status)))
 
