@@ -1049,7 +1049,7 @@ successfully installed but errors occurred during initialization, or
 			  (package-get-info-prop this-package
 						 'md5sum)))
 	    (progn
-	      (unless (null host) 
+	      (unless (null host)
 		(delete-file full-package-filename))
 	      (error 'process-error
 		     (format "Package %s does not match md5 checksum %s has been deleted"
@@ -1085,7 +1085,7 @@ successfully installed but errors occurred during initialization, or
 	  (sit-for 0)
 	  (switch-to-buffer package-admin-temp-buffer)
 	  ;; null host means a local package mirror
-	  (unless (null host) 
+	  (unless (null host)
 	    (delete-file full-package-filename))
 	  (setq package-status nil)))
       (setq found t))
