@@ -137,7 +137,7 @@ the directory to be ignored."
 When SXEmacs searches for a file in the load path, it will ignore FILE
 if FORM evaluates to non-nil."
   (setq load-suppress-alist
-	(acons (expand-file-name file load-file-name) form
+	(acons (expand-file-name file (file-dirname load-file-name)) form
 	       load-suppress-alist)))
 
 (defun package-require (name version)
