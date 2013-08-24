@@ -381,7 +381,7 @@ static inline int
 suppressedp_loop(int len, char *nonreloc, Lisp_Object reloc)
 {
 	EXTERNAL_LIST_LOOP_2(_acons_, Vload_suppress_alist) {
-		if (CONSP(acons) && STRINGP(XCAR(_acons_))) {
+		if (CONSP(_acons_) && STRINGP(XCAR(_acons_))) {
 			Lisp_Object name = XCAR(_acons_);
 			if (XSTRING_LENGTH(name) == len &&
 			    !memcmp(XSTRING_DATA(name), nonreloc, len)) {
@@ -1061,6 +1061,9 @@ static int locate_file_in_directory_mapper(char *fn, void *arg)
 						    F_SETFD, FD_CLOEXEC);
 
 				return 1;
+			} else {
+				close(closure->fd);
+				closure->fd=-1;
 			}
 		}
 	}
