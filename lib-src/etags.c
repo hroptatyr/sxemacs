@@ -6882,7 +6882,7 @@ char *file, *dir;
 	res_left = 3 * i + strlen(fp);
 	res = xnew( res_left + 1, char);
 	res[0] = '\0';
-	for ( ; i-- > 0 ; res_left -= 4 )
+	for ( ; i-- > 0 ; res_left -= 3 )
 		strncat(res, "../", res_left );
 
 	/* Add the file name relative to the common root of file and dir. */
@@ -6920,7 +6920,8 @@ char *file, *dir;
 				while (cp >= res && !filename_is_absolute (cp));
 				if (cp < res)
 					cp = slashp;	/* the absolute name begins with "/.." */
-				strcpy (cp, slashp + 3);
+				slashp += 3;
+				memmove(cp, slashp,strlen(slashp)+1);
 				slashp = cp;
 				continue;
 			}
