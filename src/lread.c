@@ -1062,7 +1062,13 @@ static int locate_file_in_directory_mapper(char *fn, void *arg)
 
 				return 1;
 			} else {
-				close(closure->fd);
+				/* Avoid closing stdin upon success of
+				   access, where closure->fd would be
+				   0 but the file is not open on that
+				   descriptor
+				*/
+				if(closure->fd > 0)
+					close(closure->fd);
 				closure->fd=-1;
 			}
 		}
