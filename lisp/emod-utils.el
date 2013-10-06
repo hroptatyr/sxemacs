@@ -67,20 +67,13 @@ delimited path string."
 		      (split-string-by-char path ?:)
 		    path)
 		  module-load-path))
-	(types (concat "\\.\\("
-		       (mapconcat
-			#'(lambda (e)
-			    (replace-in-string e "\\." ""))
-			module-extensions "\\|")
-		       "\\)$"))
-               ;; http://issues.sxemacs.org/show_bug.cgi?id=162
-               ;; (mapfam
-	       ;;  #'(lambda (e)
-	       ;;      (replace-in-string e "\\." ""))
-	       ;;  :initiator "\\.\\("
-	       ;;  :terminator "\\)$"
-	       ;;  :separator "\\|"
-	       ;;  :result-type #'concat module-extensions))
+	(types (mapfam
+	        #'(lambda (e)
+	            (replace-in-string e "\\." ""))
+	        :initiator "\\.\\("
+	        :terminator "\\)$"
+	        :separator "\\|"
+	        :result-type #'concat module-extensions))
 	completions)
     (while dirs
       (let ((files (directory-files-recur (car dirs) nil types 'list t 0)))
@@ -132,9 +125,7 @@ delimited path string."
     (let ((emods (list-loaded-modules)))
       (if (interactive-p)
 	  (message "Loaded emodules: %s"
-		   (mapconcat #'identity emods " "))
-                   ;; http://issues.sxemacs.org/show_bug.cgi?id=162
-		   ;; (mapfam nil emods :separator " " :result-type #'concat))
+		   (mapfam nil emods :separator " " :result-type #'concat))
 	emods))))
 
 (provide 'emod-utils)

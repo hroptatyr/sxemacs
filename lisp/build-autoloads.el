@@ -65,21 +65,13 @@
 (defun find-emod-directories ()
   (let* ((objdir "../modules/")
 	 (files (directory-files-recur
-		 objdir 'full (concat
-			       "\\.\\("
-			       (mapconcat
-				#'(lambda (e)
-				    (replace-in-string e "\\." ""))
-				module-extensions "\\|")
-			       "\\)$")
-		              ;; http://issues.sxemacs.org/show_bug.cgi?id=162
-		              ;; (mapfam
-			      ;;  #'(lambda (e)
-			      ;;      (replace-in-string e "\\." ""))
-			      ;;  :initiator "\\.\\("
-			      ;;  :terminator "\\)$"
-			      ;;  :separator "\\|"
-			      ;;  :result-type #'concat module-extensions)
+		 objdir 'full (mapfam
+			       #'(lambda (e)
+			           (replace-in-string e "\\." ""))
+			       :initiator "\\.\\("
+			       :terminator "\\)$"
+			       :separator "\\|"
+			       :result-type #'concat module-extensions)
 		 'list t 1))
 	 (dir-bloom (make-bloom))
 	 directories)
