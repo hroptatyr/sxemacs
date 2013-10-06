@@ -73,10 +73,6 @@ struct decoration_s {
 	Lisp_Object ini, ter, sep;
 };
 
-#define deco_ini(x)	((x)->ini)
-#define deco_sep(x)	((x)->sep)
-#define deco_ter(x)	((x)->ter)
-
 
 /* auxiliary */
 static inline Lisp_Object
@@ -2248,13 +2244,12 @@ __cart_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 static Lisp_Object
 __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 	    glue_f gluef, Lisp_Object result_type,
-	    volatile struct decoration_s *deco)
+	    struct decoration_s deco)
 {
 	size_t nseq = __fam_size(seq);
 	/* C99 we need you */
 	size_t maxsz = __sys_stk_free() / sizeof(Lisp_Object);
-	size_t totlen = nseq + 2 /* for ini and ter */ +
-		(deco_sep(deco) ? nseq : 0);
+	size_t totlen = nseq + 2 /* for ini and ter */ + (deco.sep ? nseq : 0);
 	size_t leni =
 		/* leave room for stuff after us,
 		 * we call a function on this, so leave plenty of space */
@@ -2275,14 +2270,14 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 	}
 
 	/* start maybe with the initiator */
-	if (UNLIKELY(deco_ini(deco) != Qnull_pointer)) {
-		vals[len++] = deco_ini(deco);
+	if (UNLIKELY(deco.ini != Qnull_pointer)) {
+		vals[len++] = deco.ini;
 	}
 	/* explode the sequence */
-	if (LIKELY(deco_sep(deco) == Qnull_pointer)) {
+	if (LIKELY(deco.sep == Qnull_pointer)) {
 		seqelts = &vals[len];
 	} else {
-		seqelts = vals + (deco_sep(deco) ? nseq : 0);
+		seqelts = vals + (deco.sep ? nseq : 0);
 		memset(&vals[len], 0, sizeof(Lisp_Object) * nseq);
 	}
 	(void)seq_explode((void*restrict*)seqelts, nseq, (seq_t)seq);
@@ -2294,11 +2289,11 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 		struct gcpro gcpro1;
 	case 1:
 		if (UNLIKELY(NILP(fun))) {
-			if (LIKELY(deco_sep(deco) != Qnull_pointer)) {
+			if (LIKELY(deco.sep != Qnull_pointer)) {
 				/* weave */
 				for (size_t i = 0; i < nseq; i++) {
 					vals[len++] = seqelts[i];
-					vals[len++] = deco_sep(deco);
+					vals[len++] = deco.sep;
 				}
 				/* because we dont want the last element to
 				 * be followed by a separator */
@@ -2314,11 +2309,11 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 		for (size_t i = 0; i < nseq; i++) {
 			Lisp_Object args[2] = {fun, seqelts[i]};
 			vals[len++] = Ffuncall(2, args);
-			if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
-				vals[len++] = deco_sep(deco);
+			if (UNLIKELY(deco.sep != Qnull_pointer)) {
+				vals[len++] = deco.sep;
 			}
 		}
-		if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
+		if (UNLIKELY(deco.sep != Qnull_pointer)) {
 			/* strike the last separator */
 			len--;
 		}
@@ -2335,11 +2330,11 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 				vals[len++] = gluef
 					? gluef(2, &seqelts[i])
 					: list2(seqelts[i], seqelts[i+1]);
-				if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
-					vals[len++] = deco_sep(deco);
+				if (UNLIKELY(deco.sep != Qnull_pointer)) {
+					vals[len++] = deco.sep;
 				}
 			}
-			if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
+			if (UNLIKELY(deco.sep != Qnull_pointer)) {
 				/* strike the last separator */
 				len--;
 			}
@@ -2353,11 +2348,11 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 		     i < bar; i += 2) {
 			Lisp_Object args[3] = {fun, seqelts[i], seqelts[i+1]};
 			vals[len++] = Ffuncall(countof(args), args);
-			if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
-				vals[len++] = deco_sep(deco);
+			if (UNLIKELY(deco.sep != Qnull_pointer)) {
+				vals[len++] = deco.sep;
 			}
 		}
-		if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
+		if (UNLIKELY(deco.sep != Qnull_pointer)) {
 			/* strike the last separator */
 			len--;
 		}
@@ -2376,11 +2371,11 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 					: list3(seqelts[i],
 						seqelts[i+1],
 						seqelts[i+2]);
-				if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
-					vals[len++] = deco_sep(deco);
+				if (UNLIKELY(deco.sep != Qnull_pointer)) {
+					vals[len++] = deco.sep;
 				}
 			}
-			if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
+			if (UNLIKELY(deco.sep != Qnull_pointer)) {
 				/* strike the last separator */
 				len--;
 			}
@@ -2395,11 +2390,11 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 			Lisp_Object args[4] = {
 				fun, seqelts[i], seqelts[i+1], seqelts[i+2]};
 			vals[len++] = Ffuncall(countof(args), args);
-			if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
-				vals[len++] = deco_sep(deco);
+			if (UNLIKELY(deco.sep != Qnull_pointer)) {
+				vals[len++] = deco.sep;
 			}
 		}
-		if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
+		if (UNLIKELY(deco.sep != Qnull_pointer)) {
 			/* strike the last separator */
 			len--;
 		}
@@ -2416,11 +2411,11 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 				vals[len++] = gluef
 					? gluef(arity, &seqelts[i])
 					: Flist(arity, &seqelts[i]);
-				if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
-					vals[len++] = deco_sep(deco);
+				if (UNLIKELY(deco.sep != Qnull_pointer)) {
+					vals[len++] = deco.sep;
 				}
 			}
-			if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
+			if (UNLIKELY(deco.sep != Qnull_pointer)) {
 				/* kick the last one */
 				len--;
 			}
@@ -2443,12 +2438,12 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 				args[j+1] = seqelts[i+j];
 			}
 			vals[len++] = Ffuncall(countof(args), args);
-			if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
+			if (UNLIKELY(deco.sep != Qnull_pointer)) {
 				/* add separator */
-				vals[len++] = deco_sep(deco);
+				vals[len++] = deco.sep;
 			}
 		}
-		if (UNLIKELY(deco_sep(deco) != Qnull_pointer)) {
+		if (UNLIKELY(deco.sep != Qnull_pointer)) {
 			/* kick the last one */
 			len--;
 		}
@@ -2457,8 +2452,8 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 		break;
 	}
 	/* top off with the terminator */
-	if (UNLIKELY(deco_ter(deco) != Qnull_pointer)) {
-		vals[len++] = deco_ter(deco);
+	if (UNLIKELY(deco.ter != Qnull_pointer)) {
+		vals[len++] = deco.ter;
 	}
 
 	result = __dress_result(result_type, vals, len);
@@ -3879,7 +3874,7 @@ requires a `different separator'.
 	Lisp_Object fun = Qnil;
 	Lisp_Object mode = Qnil, arity = Qnil;
 	Lisp_Object res_type = Qlist;
-	volatile struct decoration_s deco = {
+	struct decoration_s deco = {
 		Qnull_pointer, Qnull_pointer, Qnull_pointer
 	};
 	int nfams = 0, arity_len;
@@ -3945,7 +3940,7 @@ requires a `different separator'.
 
 	if (POINTWISEP(mode) && nfams == 1 && NILP(arity) && !DICTP(args[0])) {
 		/* the arity is not specified and it's just one sequence */
-		return __pntw_1seq(args[0], fun, 1UL, gluef, res_type, &deco);
+		return __pntw_1seq(args[0], fun, 1UL, gluef, res_type, deco);
 
 	} else if (POINTWISEP(mode) && NILP(arity) && !DICTP(args[0])) {
 		/* the arity is not specified and it's more than one sequence */
@@ -3955,7 +3950,7 @@ requires a `different separator'.
 		/* the arity is not specified and it's just one sequence,
 		 * also we dont have to care about dicts since
 		 * keywise is specified */
-		return __pntw_1seq(args[0], fun, 1UL, gluef, res_type, &deco);
+		return __pntw_1seq(args[0], fun, 1UL, gluef, res_type, deco);
 
 	} else if (KEYWISEP(mode) && NILP(arity)) {
 		/* the arity is not specified and it's more than one sequence,
@@ -3973,7 +3968,7 @@ requires a `different separator'.
 		 * first sequence, in case of dicts this equals keywise
 		 * mode */
 		return __pntw_1seq(args[0], fun, XUINT(arity),
-				   gluef, res_type, &deco);
+				   gluef, res_type, deco);
 	} else if (POINTWISEP(mode) || KEYWISEP(mode)) {
 		/* the most general case */
 		size_t a[arity_len];
