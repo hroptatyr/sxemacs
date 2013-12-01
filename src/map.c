@@ -2513,7 +2513,7 @@ __pntw_1dict(Lisp_Object dict, Lisp_Object fun,
 
 	result = __dress_result(result_type, vals, len);
 	if (UNLIKELY(leni == 0)) {
-		xfree(vals);
+		xfree(keys);
 	}
 	return result;
 }
