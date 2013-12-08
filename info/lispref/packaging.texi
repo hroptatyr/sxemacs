@@ -600,7 +600,7 @@ Builds the HTML versions of the documentation.
 Does most of the work.  Builds the elcs, infos at a minimum.
 @end table
 
-@subsection The targets that most people would be interested in would be:
+@section The targets that most people would be interested in would be:
 
 @itemize @bullet
 @item @code{all}

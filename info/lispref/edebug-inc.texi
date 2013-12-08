@@ -1107,7 +1107,7 @@ followed by an alternative, equivalent specification.
 Here is a table of the possibilities for @var{specification} and how each
 directs processing of arguments.
 
-@table @bullet
+@itemize @bullet
 
 @item @code{t}
 All arguments are instrumented for evaluation.
@@ -1124,7 +1124,8 @@ found.  This allows you to inherit the specification for another macro.
 The elements of the list describe the types of the arguments of a
 calling form.  The possible elements of a specification list are
 described in the following sections.
-@end table
+
+@end itemize
 
 @menu
 * Specification List::		How to specify complex patterns of evaluation.

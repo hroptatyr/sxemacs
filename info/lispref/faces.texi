@@ -209,16 +209,20 @@ If @var{property} is a built-in property, the specifications to be added
 to this property can be supplied in many different ways:
 
 @itemize @bullet
+
+@item
 If @var{value} is a simple instantiator (e.g. a string naming a font or
 color) or a list of instantiators, then the instantiator(s) will be
 added as a specification of the property for the given @var{locale}
 (which defaults to @code{global} if omitted).
 
+@item
 If @var{value} is a list of specifications (each of which is a cons of a
 locale and a list of instantiators), then @var{locale} must be
 @code{nil} (it does not make sense to explicitly specify a locale in
 this case), and specifications will be added as given.
 
+@item
 If @var{value} is a specifier (as would be returned by
 @code{face-property} if no @var{locale} argument is given), then some or
 all of the specifications in the specifier will be added to the

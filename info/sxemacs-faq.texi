@@ -7,7 +7,7 @@
 @finalout
 @titlepage
 @title SXEmacs FAQ
-@subtitle Frequently Asked Questions about SXEmacs @hfill Edition 22.1.4
+@subtitle Frequently Asked Questions about SXEmacs @inlineraw{tex,\hfill Edition 22.1.15}
 @sp 1
 @author Sebastian Freundt <hroptatyr@@sxemacs.org
 @author Tony Rossini <rossini@@u.washington.edu>

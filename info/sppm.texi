@@ -388,7 +388,7 @@ Developers' mailing list, @email{sxemacs-devel@@sxemacs.org}.
 Who may call a vote?  The SXEmacs Project Lead, @sye{}.  Of course
 anyone may ask the Project Lead to call a vote.
 
-@subsection Mechanics of the Vote
+@section Mechanics of the Vote
 
 @enumerate
 @item
@@ -456,7 +456,7 @@ Issue undecided:
 SXEmacs has two main programming languages, Emacs Lisp, and C, therefore
 we need two sets of coding styles.
 
-@subsection Coding Style -- Emacs Lisp
+@section Coding Style -- Emacs Lisp
 @cindex emacs lisp coding style
 @cindex coding style, emacs lisp
 @cindex lisp coding style
@@ -1564,7 +1564,7 @@ git push myremote master
 @end smallexample
 
 
-@subheading Automation
+@section Automation
 
 @anchor{Automation}
 The last two commands for patch submission listed in @xref{Patch
@@ -1582,7 +1582,7 @@ settings you can tweak.} to host your publicly accessible repo you can
 set up a @dfn{post-receive} hook to automatically send your pull
 requests to the SXEmacs mailing list when you push to it.
 
-@subsubsection Setting Up The post-receive Hook
+@subsection Setting Up The post-receive Hook
 
 Remember: This hook runs from your publicly accessible repo (your
 remote), and @emph{NOT} from your local working directory.  It is
