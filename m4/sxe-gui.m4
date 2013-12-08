@@ -200,6 +200,15 @@ AC_DEFUN([SXE_CHECK_XTOOLKITS], [
 	CPPFLAGS="$CPPFLAGS $X_CFLAGS"
 	LDFLAGS="$LDFLAGS $X_PRE_LIBS $X_LIBS $libs_x"
 	AC_CHECK_HEADERS([X11/Xlib.h])
+
+	# Check for XkbKeycodeToKeysym to avoid XKeycodeToKeysym which is deprecated
+	AC_CHECK_HEADERS([X11/XKBlib.h])
+	if test "$ac_cv_header_X11_XKBlib_h" = "yes"; then
+		AC_CHECK_FUNC([XkbKeycodeToKeysym], [acx_xkbkeycodetokeysym=yes])
+                if test "$acx_xkbkeycodetokeysym" = "yes"; then
+			AC_DEFINE([HAVE_XKBKEYCODETOKEYSYM],[1],[Has XkbKeycodeToKeysym])
+		fi
+        fi
 	SXE_RESTORE_LIBS
 
 	## assume 3d first

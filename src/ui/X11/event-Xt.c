@@ -58,6 +58,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "mule/file-coding.h"
 #endif
 
+#ifdef HAVE_X11_XKBLIB_H
+#include <X11/XKBlib.h>
+#endif
+
 #include "events/events-mod.h"
 #ifdef EF_USE_ASYNEQ
 #include "events/event-queue.h"
@@ -597,7 +601,11 @@ whatever(Display *dspl, struct x_device *xd, struct mod_clo_s *clo)
 
 	for (int column = 0; column < 4; column += 2) {
 		KeySym sym = code
+#ifdef HAVE_XKBKEYCODETOKEYSYM
+			? XkbKeycodeToKeysym(dspl, code, 0, column)
+#else
 			? XKeycodeToKeysym(dspl, code, column)
+#endif
 			: 0;
 
 		if (LIKELY(sym == last_sym)) {
