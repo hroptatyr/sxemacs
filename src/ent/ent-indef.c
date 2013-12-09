@@ -62,12 +62,9 @@ indef_equal (Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
 }
 
 static unsigned long
-indef_hash (Lisp_Object obj, int depth)
+indef_hash (Lisp_Object obj, int SXE_UNUSED(depth))
 {
 	return (unsigned long)XINDEF_DATA(obj);
-
-	/* less warnings */
-	if (depth);
 }
 
 static const struct lrecord_description indef_description[] = {

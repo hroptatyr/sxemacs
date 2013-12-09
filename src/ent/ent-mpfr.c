@@ -70,14 +70,11 @@ bigfr_mark (Lisp_Object unused)
 }
 
 static void
-bigfr_finalise (void *header, int for_disksave)
+bigfr_finalise (void *SXE_UNUSED(header), int for_disksave)
 {
 	if (for_disksave)
 		signal_simple_error
 			("Can't dump an emacs containing MPFR objects", Qt);
-
-	/* less warnings */
-	if (header);
 }
 
 static const struct lrecord_description bigfr_description[] = {

@@ -41,19 +41,15 @@ Fixnum max_float_print_size = 0;
 
 
 static Lisp_Object
-mark_float(Lisp_Object obj)
+mark_float(Lisp_Object SXE_UNUSED(obj))
 {
 	return Qnil;
-
-	if (obj);
 }
 
 static inline int
-float_equal(Lisp_Object obj1, Lisp_Object obj2, int depth)
+float_equal(Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
 {
 	return (ent_float(obj1) == ent_float(obj2));
-
-	if (depth);
 }
 
 static inline unsigned long
@@ -188,15 +184,13 @@ ent_div_FLOAT_T_INT_T(Lisp_Object l, Lisp_Object r)
 }
 
 static inline Lisp_Object
-ent_rem_FLOAT_T(Lisp_Object l, Lisp_Object r)
+ent_rem_FLOAT_T(Lisp_Object SXE_UNUSED(l), Lisp_Object SXE_UNUSED(r))
 {
-	if (l);
 	return make_float(0.0);
 }
 static inline Lisp_Object
-ent_rem_FLOAT_T_INT_T(Lisp_Object l, Lisp_Object r)
+ent_rem_FLOAT_T_INT_T(Lisp_Object SXE_UNUSED(l), Lisp_Object SXE_UNUSED(r))
 {
-	if (l);
 	return make_float(0.0);
 }
 

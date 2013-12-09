@@ -1647,6 +1647,7 @@ make_bigg_bg(bigg gaussian_value)
 /*** Big complex numbers with correct rounding ***/
 #if defined HAVE_MPC && defined WITH_MPC || \
 	defined HAVE_PSEUC && defined WITH_PSEUC
+#include <ent/ent-mpc.h>
 DECLARE_FIXED_TYPE_ALLOC(bigc, Lisp_Bigc);
 #define MINIMUM_ALLOWED_FIXED_TYPE_CELLS_bigc 250
 
