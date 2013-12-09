@@ -253,9 +253,9 @@ Return t if OBJECT is a real, nil otherwise.
 }
 
 static int
-default_real_precision_changed (Lisp_Object sym, Lisp_Object *val,
-				Lisp_Object in_object,
-				int flags)
+default_real_precision_changed (Lisp_Object SXE_UNUSED(sym), Lisp_Object *val,
+				Lisp_Object SXE_UNUSED(in_object),
+				int SXE_UNUSED(flags))
 {
 	unsigned long prec;
 
@@ -270,11 +270,6 @@ default_real_precision_changed (Lisp_Object sym, Lisp_Object *val,
 		bigfr_set_default_prec(prec);
 #endif
 	return 0;
-
-	/* less warnings */
-	if (sym == Qnil);
-	if (in_object == Qnil);
-	if (flags);
 }
 
 DEFUN("real", Freal, 1, 2, 0,	/*

@@ -830,7 +830,7 @@ AC_MSG_CHECKING([for SXEmacs patchlevel])
 CURDIR=$(pwd)
 cd "$sxe_srcdir"
 AS_IF([test "$have_git" = "yes"], 
-	    [sxemacs_git_version=`git describe | head -1`])
+	    [sxemacs_git_version=`git describe 2> /dev/null | head -1`])
 AS_IF([test -z "$sxemacs_git_version"],
 	sxemacs_git_version="[]SXEM4CS_GIT_VERSION[]")
 AC_MSG_RESULT([$sxemacs_git_version])

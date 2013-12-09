@@ -63,14 +63,11 @@ bigc_mark (Lisp_Object SXE_UNUSED(obj))
 }
 
 static void
-bigc_finalise (void *header, int for_disksave)
+bigc_finalise (void *SXE_UNUSED(header), int for_disksave)
 {
 	if (for_disksave)
 		signal_simple_error
 			("Can't dump an emacs containing MPC objects",Qt);
-
-	/* less warnings */
-	if (header);
 }
 
 static const struct lrecord_description bigc_description[] = {
@@ -80,7 +77,6 @@ static const struct lrecord_description bigc_description[] = {
 
 #if ! defined(HAVE_MPC_SET_UI_FR) || ! HAVE_MPC_SET_UI_FR
 #if defined(MPC_SET_X_Y)
-int mpc_set_ui_fr (mpc_t rop, unsigned long int re, mpfr_t im, mpc_rnd_t rnd);
 int mpc_set_ui_fr (mpc_t rop, unsigned long int re, mpfr_t im, mpc_rnd_t rnd)
 	      MPC_SET_X_Y (ui, fr, rop, re, im, rnd);
 #else

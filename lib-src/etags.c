@@ -1606,13 +1606,14 @@ bool case_sensitive;
 		return NULL;
 	suffix += 1;
 	for (lang = lang_names; lang->name != NULL; lang++)
-		if (lang->suffixes != NULL)
+		if (lang->suffixes != NULL) {
 			for (ext = lang->suffixes; *ext != NULL; ext++)
 				if (case_sensitive) {
 					if (streq (*ext, suffix))
 						return lang;
 				} else if (strcaseeq (*ext, suffix))
 					return lang;
+	        }
 	return NULL;
 }
 

@@ -38,7 +38,7 @@
 
 @node  Introduction, User Interface, Top, Top
 @comment  node-name,  next,  previous,  up
-@section Introduction
+@chapter Introduction
 
 Most graphical user interface toolkits, such as Motif and XView, provide
 a number of standard user interface controls (sometimes known as
@@ -129,7 +129,7 @@ it will be autoloaded when needed.
 
 @node User Interface, Programming Example, Introduction, Top
 @comment  node-name,  next,  previous,  up
-@section User Interface
+@chapter User Interface
 
 A form consists of read only text for documentation and some fields,
 where each of the fields contains two parts, a tag and a value.  The
@@ -175,7 +175,7 @@ The top level widgets in is example are tagged @samp{Name},
 a form, namely editing the editable text fields and activating the
 buttons.
 
-@subsection Editable Text Fields
+@section Editable Text Fields
 
 In the example, the value for the @samp{Name} is most likely displayed
 in an editable text field, and so are values for each of the members of
@@ -277,7 +277,7 @@ Move point @var{count} buttons or editing fields backward.
 
 @node Programming Example, Setting Up the Buffer, User Interface, Top
 @comment  node-name,  next,  previous,  up
-@section Programming Example
+@chapter Programming Example
 
 Here is the code to implement the user interface example (see @ref{User
 Interface}).
@@ -369,7 +369,7 @@ Interface}).
 
 @node Setting Up the Buffer, Basic Types, Programming Example, Top
 @comment  node-name,  next,  previous,  up
-@section Setting Up the Buffer
+@chapter Setting Up the Buffer
 
 Widgets are created with @code{widget-create}, which returns a
 @dfn{widget} object.  This object can be queried and manipulated by
@@ -422,7 +422,7 @@ when not on a button.  By default this is @code{global-map}.
 
 @node Basic Types, Sexp Types, Setting Up the Buffer, Top
 @comment  node-name,  next,  previous,  up
-@section Basic Types
+@chapter Basic Types
 
 The syntax of a type specification is given below:
 
@@ -635,7 +635,7 @@ If non-nil, allow glyphs to appear on displays where they are supported.
 
 @node link, url-link, Basic Types, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{link} Widget
+@section The @code{link} Widget
 
 Syntax:
 
@@ -659,7 +659,7 @@ String to suffix links.
 
 @node url-link, info-link, link, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{url-link} Widget
+@section The @code{url-link} Widget
 
 Syntax:
 
@@ -672,7 +672,7 @@ When this link is invoked, the @sc{www} browser specified by
 
 @node info-link, push-button, url-link, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{info-link} Widget
+@section The @code{info-link} Widget
 
 Syntax:
 
@@ -685,7 +685,7 @@ When this link is invoked, the built-in info browser is started on
 
 @node  push-button, editable-field, info-link, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{push-button} Widget
+@section The @code{push-button} Widget
 
 Syntax:
 
@@ -709,7 +709,7 @@ String to suffix push buttons.
 
 @node editable-field, text, push-button, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{editable-field} Widget
+@section The @code{editable-field} Widget
 
 Syntax:
 
@@ -753,7 +753,7 @@ Pressing return invokes the function specified by @code{:action}.
 
 @node text, menu-choice, editable-field, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{text} Widget
+@section The @code{text} Widget
 
 This is just like @code{editable-field}, but intended for multiline text
 fields.  The default @code{:keymap} is @code{widget-text-keymap}, which
@@ -761,7 +761,7 @@ does not rebind the return key.
 
 @node menu-choice, radio-button-choice, text, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{menu-choice} Widget
+@section The @code{menu-choice} Widget
 
 Syntax:
 
@@ -796,7 +796,7 @@ The list of types.
 
 @node radio-button-choice, item, menu-choice, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{radio-button-choice} Widget
+@section The @code{radio-button-choice} Widget
 
 Syntax:
 
@@ -856,7 +856,7 @@ you call @code{widget-delete}.
 
 @node item, choice-item, radio-button-choice, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{item} Widget
+@section The @code{item} Widget
 
 Syntax:
 
@@ -870,7 +870,7 @@ buffer.  This widget will only match the specified value.
 
 @node choice-item, toggle, item, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{choice-item} Widget
+@section The @code{choice-item} Widget
 
 Syntax:
 
@@ -886,7 +886,7 @@ the specified value.
 
 @node toggle, checkbox, choice-item, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{toggle} Widget
+@section The @code{toggle} Widget
 
 Syntax:
 
@@ -914,7 +914,7 @@ that supports it.
 
 @node checkbox, checklist, toggle, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{checkbox} Widget
+@section The @code{checkbox} Widget
 
 The widget has two possible states, `selected' and `unselected', which
 corresponds to a @code{t} or @code{nil} value.
@@ -927,7 +927,7 @@ TYPE ::= (checkbox [KEYWORD ARGUMENT]...)
 
 @node checklist, editable-list, checkbox, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{checklist} Widget
+@section The @code{checklist} Widget
 
 Syntax:
 
@@ -978,7 +978,7 @@ The list of types.
 
 @node editable-list, group, checklist, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{editable-list} Widget
+@section The @code{editable-list} Widget
 
 Syntax:
 
@@ -1030,7 +1030,7 @@ List whose car is the type of the list elements.
 
 @node group,  , editable-list, Basic Types
 @comment  node-name,  next,  previous,  up
-@subsection The @code{group} Widget
+@section The @code{group} Widget
 
 This widget simply groups other widgets together.
 
@@ -1044,7 +1044,7 @@ The value is a list, with one member for each @var{type}.
 
 @node Sexp Types, Widget Properties, Basic Types, Top
 @comment
-@section Sexp Types
+@chapter Sexp Types
 
 A number of widgets for editing s-expressions (lisp types) are also
 available.  These basically fall in the following categories.
@@ -1058,7 +1058,7 @@ available.  These basically fall in the following categories.
 
 @node constants, generic, Sexp Types, Sexp Types
 @comment  node-name,  next,  previous,  up
-@subsection The Constant Widgets.
+@section The Constant Widgets.
 
 The @code{const} widget can contain any lisp expression, but the user is
 prohibited from editing it, which is mainly useful as a component of one
@@ -1094,7 +1094,7 @@ An immutable symbol that is bound as a function.
 
 @node generic, atoms, constants, Sexp Types
 @comment  node-name,  next,  previous,  up
-@subsection Generic Sexp Widget.
+@section Generic Sexp Widget.
 
 The @code{sexp} widget can contain any lisp expression, and allows the
 user to edit it inline in the buffer.
@@ -1115,7 +1115,7 @@ The @code{sexp} widget takes the same keyword arguments as the
 
 @node atoms, composite, generic, Sexp Types
 @comment  node-name,  next,  previous,  up
-@subsection Atomic Sexp Widgets.
+@section Atomic Sexp Widgets.
 
 The atoms are s-expressions that does not consist of other
 s-expressions.  A string is an atom, while a list is a composite type.
@@ -1192,7 +1192,7 @@ either nil meaning false, or non-nil meaning true.
 
 @node composite,  , atoms, Sexp Types
 @comment  node-name,  next,  previous,  up
-@subsection Composite Sexp Widgets.
+@section Composite Sexp Widgets.
 
 The syntax for the composite are
 
@@ -1265,7 +1265,7 @@ and has a similar syntax.
 
 @node Widget Properties, Defining New Widgets, Sexp Types, Top
 @comment  node-name,  next,  previous,  up
-@section Properties
+@chapter Properties
 
 You can examine or set the value of a widget by using the widget object
 that was returned by @code{widget-create}.
@@ -1353,7 +1353,7 @@ its ancestors have been deactivated.  Do not attempt to set the
 
 @node Defining New Widgets, Widget Browser, Widget Properties, Top
 @comment  node-name,  next,  previous,  up
-@section Defining New Widgets
+@chapter Defining New Widgets
 
 You can define specialized widgets with @code{define-widget}.  It allows
 you to create a shorthand for more complex widgets.  This includes
@@ -1565,7 +1565,7 @@ is called implicitly through the @samp{widget-create*} functions.
 
 @node Widget Browser, Widget Minor Mode, Defining New Widgets, Top
 @comment  node-name,  next,  previous,  up
-@section Widget Browser
+@chapter Widget Browser
 
 There is a separate package to browse widgets.  This is intended to help
 programmers who want to examine the content of a widget.  The browser
@@ -1589,7 +1589,7 @@ When called interactively, use the position of point.
 
 @node  Widget Minor Mode, Utilities, Widget Browser, Top
 @comment  node-name,  next,  previous,  up
-@section Widget Minor Mode
+@chapter Widget Minor Mode
 
 There is a minor mode for manipulating widgets in major modes that
 doesn't provide any support for widgets themselves.  This is mostly
@@ -1606,7 +1606,7 @@ Keymap used in @code{widget-minor-mode}.
 
 @node  Utilities, Widget Wishlist, Widget Minor Mode, Top
 @comment  node-name,  next,  previous,  up
-@section Utilities.
+@chapter Utilities.
 
 @defun widget-prompt-value widget prompt [ value unbound ]
 Prompt for a value matching @var{widget}, using @var{prompt}.@*
@@ -1621,7 +1621,7 @@ This is only meaningful for radio buttons or checkboxes in a list.
 
 @node Widget Wishlist, Widget Internals, Utilities, Top
 @comment  node-name,  next,  previous,  up
-@section Wishlist
+@chapter Wishlist
 
 @itemize @bullet
 @item
@@ -1693,7 +1693,7 @@ symbol, it should pop up a menu.
 @end itemize
 
 @node Widget Internals, , Widget Wishlist, Top
-@section Internals
+@chapter Internals
 
 This (very brief!) section provides a few notes on the internal
 structure and implementation of Emacs widgets.  Avoid relying on this
@@ -1701,7 +1701,7 @@ information.  (We intend to improve it, but this will take some time.)
 To the extent that it actually describes APIs, the information will be
 moved to appropriate sections of the manual in due course.
 
-@subsection The @dfn{Widget} and @dfn{Type} Structures
+@section The @dfn{Widget} and @dfn{Type} Structures
 
 Widgets and types are currently both implemented as lists.
 

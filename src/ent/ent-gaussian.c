@@ -51,42 +51,30 @@ bigg_print(Lisp_Object obj, Lisp_Object printcharfun, int SXE_UNUSED(escapeflag)
 }
 
 static int
-bigg_equal(Lisp_Object obj1, Lisp_Object obj2, int depth)
+bigg_equal(Lisp_Object obj1, Lisp_Object obj2, int SXE_UNUSED(depth))
 {
 	return bigg_eql(XBIGG_DATA(obj1), XBIGG_DATA(obj2));
-
-	/* less warnings */
-	if (depth);
 }
 
 static unsigned long
-bigg_hash(Lisp_Object obj, int depth)
+bigg_hash(Lisp_Object obj, int SXE_UNUSED(depth))
 {
 	return bigg_hashcode(XBIGG_DATA(obj));
-
-	/* less warnings */
-	if (depth);
 }
 
 static Lisp_Object
-bigg_mark(Lisp_Object obj)
+bigg_mark(Lisp_Object SXE_UNUSED(obj))
 {
 	return Qnil;
-
-	/* less warnings */
-	if (obj == Qnil);
 }
 
 static void
-bigg_finalise(void *header, int for_disksave)
+bigg_finalise(void *SXE_UNUSED(header), int for_disksave)
 {
 	if (for_disksave)
 		signal_simple_error
 			("Can't dump an emacs containing "
 			 "pseudo-gaussian objects",Qt);
-
-	/* less warnings */
-	if (header);
 }
 
 static const struct lrecord_description bigg_description[] = {

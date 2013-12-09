@@ -110,6 +110,14 @@ extern bigc ent_scratch_bigc;
 extern Bufbyte *bigc_to_string(bigc, int);
 
 /***** Bigc: converting assignments *****/
+#if ! defined(HAVE_MPC_SET_UI_FR) || ! HAVE_MPC_SET_UI_FR
+#if defined(MPC_SET_X_Y)
+int mpc_set_ui_fr (mpc_t rop, unsigned long int re, mpfr_t im, mpc_rnd_t rnd);
+#else
+#error Cannot derived mpc_set_ui_fr without MPC_SET_X_Y!
+#endif
+#endif
+
 #define bigc_set(f1, f2)		mpc_set(f1, f2, GMP_RNDN)
 #define bigc_set_long(f, l)		mpc_set_si(f, l, GMP_RNDN)
 #define bigc_set_ulong(f, l)		mpc_set_ui(f, l, GMP_RNDN)
