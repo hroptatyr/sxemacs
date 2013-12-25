@@ -47,6 +47,7 @@ might be wrong as well.
 AC_DEFUN([_SXE_CHECK_LT2], [dnl
 	LT_CONFIG_LTDL_DIR([libltdl], [recursive])
 	LT_PREREQ([2.1])
+	AC_REQUIRE([_LT_SYS_DYNAMIC_LINKER])
 	LT_INIT([dlopen])
 	LTDL_INSTALLABLE
 	LTDL_INIT
