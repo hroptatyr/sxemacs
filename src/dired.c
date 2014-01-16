@@ -581,7 +581,7 @@ directory_files_resultify(Lisp_Object result, Lisp_Object result_type)
 	} else if (EQ(result_type, Qdesc_sorted_list)) {
 		final_result = Fdllist_to_list(result);
 		final_result = Fsort(final_result, Qstring_greaterp);
-	} else if (EQ(result_type, Qt) || EQ(result_type, Qlist)) {
+	} else if (!NILP(result_type) || EQ(result_type, Qlist)) {
 		final_result = Fdllist_to_list(result);
 	}
 
@@ -633,6 +633,10 @@ Optional argument RESULT-TYPE can be one of:
 - dllist  to return an unsorted dllist
 The two latter types can be useful if you plan to sort the result
 yourself, or want to feed the result to further processing.
+
+For compatibility with XEmacs' NOSORT argument to this function,
+RESULT-TYPE can also be any non-nil value.  In that case it will
+return an unsorted list. (http://issues.sxemacs.org/show_bug.cgi?id=163)
 
 Optional argument FILES-ONLY can be one of:
 - t  to return only files and symlinks in DIRECTORY
