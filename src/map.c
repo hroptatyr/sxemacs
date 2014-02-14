@@ -2285,11 +2285,10 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 	/* fill the rest with naughts */
 	memset(&seqelts[nseq], 0, (totlen - len - nseq) * sizeof(Lisp_Object));
 
-	switch (arity) {
-		struct gcpro gcpro1;
-	case 1:
-		if (UNLIKELY(NILP(fun))) {
-			if (LIKELY(deco.sep != Qnull_pointer)) {
+	if (NILP(fun)) {
+		switch (arity) {
+		case 1:
+			if (deco.sep != Qnull_pointer) {
 				/* weave */
 				for (size_t i = 0; i < nseq; i++) {
 					vals[len++] = seqelts[i];
@@ -2302,27 +2301,7 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 				len = nseq;
 			}
 			break;
-		}
-
-		GCPROn(vals, totlen);
-
-		for (size_t i = 0; i < nseq; i++) {
-			Lisp_Object args[2] = {fun, seqelts[i]};
-			vals[len++] = Ffuncall(2, args);
-			if (UNLIKELY(deco.sep != Qnull_pointer)) {
-				vals[len++] = deco.sep;
-			}
-		}
-		if (UNLIKELY(deco.sep != Qnull_pointer)) {
-			/* strike the last separator */
-			len--;
-		}
-
-		UNGCPRO;
-		break;
-
-	case 2:
-		if (UNLIKELY(NILP(fun))) {
+		case 2:
 			/* condense the stuff */
 			for (size_t i = 0, bar = nseq & -2;
 			     /* traverse to the previous even number */
@@ -2339,29 +2318,7 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 				len--;
 			}
 			break;
-		}
-
-		GCPROn(vals, totlen);
-
-		for (size_t i = 0, bar = nseq & -2;
-		     /* traverse to the last even index */
-		     i < bar; i += 2) {
-			Lisp_Object args[3] = {fun, seqelts[i], seqelts[i+1]};
-			vals[len++] = Ffuncall(countof(args), args);
-			if (UNLIKELY(deco.sep != Qnull_pointer)) {
-				vals[len++] = deco.sep;
-			}
-		}
-		if (UNLIKELY(deco.sep != Qnull_pointer)) {
-			/* strike the last separator */
-			len--;
-		}
-
-		UNGCPRO;
-		break;
-
-	case 3:
-		if (UNLIKELY(NILP(fun))) {
+		case 3:
 			/* condense the stuff */
 			for (size_t i = 0;
 			     /* traverse to the last 3-divisible index */
@@ -2380,30 +2337,7 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 				len--;
 			}
 			break;
-		}
-
-		GCPROn(vals, len);
-
-		for (size_t i = 0;
-		     /* traverse to the last 3-divisible index */
-		     i+3 <= nseq; i += 3) {
-			Lisp_Object args[4] = {
-				fun, seqelts[i], seqelts[i+1], seqelts[i+2]};
-			vals[len++] = Ffuncall(countof(args), args);
-			if (UNLIKELY(deco.sep != Qnull_pointer)) {
-				vals[len++] = deco.sep;
-			}
-		}
-		if (UNLIKELY(deco.sep != Qnull_pointer)) {
-			/* strike the last separator */
-			len--;
-		}
-
-		UNGCPRO;
-		break;
-
-	default:
-		if (UNLIKELY(NILP(fun))) {
+		default:
 			/* condense the stuff */
 			for (int i = 0;
 			     /* traverse to the last sane index */
@@ -2419,37 +2353,101 @@ __pntw_1seq(Lisp_Object seq, Lisp_Object fun, size_t arity,
 				/* kick the last one */
 				len--;
 			}
+		}
+	} else {
+		struct gcpro gcpro1;
+
+		switch (arity) {
+		case 1:
+			GCPROn(vals, totlen);
+
+			for (size_t i = 0; i < nseq; i++) {
+				Lisp_Object args[2] = {fun, seqelts[i]};
+				vals[len++] = Ffuncall(2, args);
+				if (UNLIKELY(deco.sep != Qnull_pointer)) {
+					vals[len++] = deco.sep;
+				}
+			}
+			if (UNLIKELY(deco.sep != Qnull_pointer)) {
+				/* strike the last separator */
+				len--;
+			}
+
+			UNGCPRO;
+			break;
+
+		case 2:
+			GCPROn(vals, totlen);
+
+			for (size_t i = 0, bar = nseq & -2;
+			     /* traverse to the last even index */
+			     i < bar; i += 2) {
+				Lisp_Object args[3] = {fun, seqelts[i], seqelts[i+1]};
+				vals[len++] = Ffuncall(countof(args), args);
+				if (UNLIKELY(deco.sep != Qnull_pointer)) {
+					vals[len++] = deco.sep;
+				}
+			}
+			if (UNLIKELY(deco.sep != Qnull_pointer)) {
+				/* strike the last separator */
+				len--;
+			}
+
+			UNGCPRO;
+			break;
+
+		case 3:
+			GCPROn(vals, len);
+
+			for (size_t i = 0;
+			     /* traverse to the last 3-divisible index */
+			     i+3 <= nseq; i += 3) {
+				Lisp_Object args[4] = {
+					fun, seqelts[i], seqelts[i+1], 
+					seqelts[i+2]};
+				vals[len++] = Ffuncall(countof(args), args);
+				if (UNLIKELY(deco.sep != Qnull_pointer)) {
+					vals[len++] = deco.sep;
+				}
+			}
+			if (UNLIKELY(deco.sep != Qnull_pointer)) {
+				/* strike the last separator */
+				len--;
+			}
+
+			UNGCPRO;
+			break;
+
+		default:
+			GCPROn(vals, len);
+
+			for (size_t i = 0;
+			     /* traverse to the last 3-divisible index */
+			     i+arity <= nseq; i += arity) {
+				Lisp_Object args[arity+1];
+
+				args[0] = fun;
+				args[1] = seqelts[i];
+				args[2] = seqelts[i+1];
+				args[3] = seqelts[i+2];
+				args[4] = seqelts[i+3];
+				for (size_t j = 4; j < arity; j++) {
+					args[j+1] = seqelts[i+j];
+				}
+				vals[len++] = Ffuncall(countof(args), args);
+				if (UNLIKELY(deco.sep != Qnull_pointer)) {
+					/* add separator */
+					vals[len++] = deco.sep;
+				}
+			}
+			if (UNLIKELY(deco.sep != Qnull_pointer)) {
+				/* kick the last one */
+				len--;
+			}
+
+			UNGCPRO;
 			break;
 		}
-
-		GCPROn(vals, len);
-
-		for (size_t i = 0;
-		     /* traverse to the last 3-divisible index */
-		     i+arity <= nseq; i += arity) {
-			Lisp_Object args[arity+1];
-
-			args[0] = fun;
-			args[1] = seqelts[i];
-			args[2] = seqelts[i+1];
-			args[3] = seqelts[i+2];
-			args[4] = seqelts[i+3];
-			for (size_t j = 4; j < arity; j++) {
-				args[j+1] = seqelts[i+j];
-			}
-			vals[len++] = Ffuncall(countof(args), args);
-			if (UNLIKELY(deco.sep != Qnull_pointer)) {
-				/* add separator */
-				vals[len++] = deco.sep;
-			}
-		}
-		if (UNLIKELY(deco.sep != Qnull_pointer)) {
-			/* kick the last one */
-			len--;
-		}
-
-		UNGCPRO;
-		break;
 	}
 	/* top off with the terminator */
 	if (UNLIKELY(deco.ter != Qnull_pointer)) {
