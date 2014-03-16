@@ -763,24 +763,62 @@ This ignores the environment variables LOGNAME and USER, so it differs from
 	return tem;
 }
 
-DEFUN("user-uid", Fuser_uid, 0, 0, 0,	/*
-Return the effective uid of Emacs, as an integer.
+DEFUN("user-uid", Fuser_uid, 0, 1, 0,	/*
+Return the effective uid of the Emacs process, as an integer.
+If the optional argument `user_name' is specified it returns the uid of
+the user with that name. Will return `nil' if there is no user with the
+specified name,
 */
-      ())
+      (user_name))
 {
-	return make_int(geteuid());
+	if (!NILP(user_name)) {
+		const char * user_name_ext = NULL;
+
+		CHECK_STRING(user_name);
+
+		TO_EXTERNAL_FORMAT(LISP_STRING, user_name,
+				   C_STRING_ALLOCA, user_name_ext, Qnative);
+
+		struct passwd *pw = getpwnam(user_name_ext);
+		if (pw) {
+			return make_int(pw->pw_uid);
+		} else {
+			return Qnil;
+		}
+	} else {
+		return make_int(geteuid());
+	}
 }
 
-DEFUN("user-gid", Fuser_gid, 0, 0, 0,	/*
-Return the effective gid of Emacs, as an integer.
+DEFUN("user-gid", Fuser_gid, 0, 1, 0,	/*
+Return the effective gid of the Emacs process, as an integer.
+If the optional argument `group_name' is specified it returns the gid of
+the group with that name. It will return `nil' if the system has no
+group with the specified name. 
 */
-      ())
+      (group_name))
 {
-	return make_int(getegid());
+	if (!NILP(group_name)) {
+		const char *group_name_ext = NULL;
+
+		CHECK_STRING(group_name);
+
+		TO_EXTERNAL_FORMAT(LISP_STRING, group_name,
+				   C_STRING_ALLOCA, group_name_ext, Qnative);
+
+		struct group *grp = getgrnam(group_name_ext);
+		if (grp) {
+			return make_int(grp->gr_gid);
+		} else {
+			return Qnil;
+		}
+	} else {
+		return make_int(getegid());
+	}
 }
 
 DEFUN("user-real-uid", Fuser_real_uid, 0, 0, 0,	/*
-Return the real uid of Emacs, as an integer.
+Return the real uid of the Emacs process, as an integer.
 */
       ())
 {
@@ -788,7 +826,7 @@ Return the real uid of Emacs, as an integer.
 }
 
 DEFUN("user-real-gid", Fuser_real_gid, 0, 0, 0,	/*
-Return the real gid of Emacs, as an integer.
+Return the real gid of the Emacs process, as an integer.
 */
       ())
 {
