@@ -199,7 +199,7 @@ libsxecore_a_headers =							\
 	process.h							\
 	procimpl.h rangetab.h regex.h semaphore.h seq.h skiplist.h	\
 	specifier.h symeval.h symsinit.h syntax.h syscommctrl.h		\
-	sysdep.h sysdir.h sysfile.h sysproc.h syspwd.h			\
+	sysdep.h sysdir.h sysfile.h sysproc.h syspwd.h sysgrp.h 	\
 	syssignal.h systime.h syswait.h \
 	sxemacs.h
 libsxecore_a_sources =							\

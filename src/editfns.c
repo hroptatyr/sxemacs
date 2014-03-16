@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "systime.h"
 #include "sysdep.h"
 #include "syspwd.h"
+#include "sysgrp.h"
 #include "sysfile.h"		/* for getcwd */
 
 /* Some static data, and a function to initialize it for each run */
@@ -697,9 +698,7 @@ char *user_login_name(uid_t * uid)
 		   environment variables should be disregarded in that case.  --Stig */
 		char *user_name = getenv("LOGNAME");
 		if (!user_name)
-			user_name = getenv(
-						  "USER"
-			    );
+			user_name = getenv("USER");
 		if (user_name)
 			return (user_name);
 		else {
@@ -707,6 +706,47 @@ char *user_login_name(uid_t * uid)
 			return pw ? pw->pw_name : NULL;
 		}
 	}
+}
+
+DEFUN("user-group-name", Fuser_group_name, 0, 1, 0,	/*
+Return the group name under which the user logged in, as a string.
+This is based on the effective gid, not the real gid.
+If the optional argument GID is present, then this function returns 
+the group name for that UID, or nil.
+*/
+      (gid))
+{
+	char *returned_name;
+	uid_t local_gid;
+
+	if (!NILP(gid)) {
+		CHECK_INT(gid);
+		local_gid = XINT(gid);
+		returned_name = user_group_name(&local_gid);
+	} else {
+		returned_name = user_group_name(NULL);
+	}
+	/* #### - I believe this should return nil instead of "unknown" when pw==0
+	   pw=0 is indicated by a null return from user_login_name
+	 */
+	return returned_name ? build_string(returned_name) : Qnil;
+}
+
+/* This function may be called from other C routines when a
+   character string representation of the user_group_name is
+   needed but a Lisp Object is not.  The GID is passed by
+   reference.  If GID == NULL, then the group for
+   for the user running XEmacs will be returned.  This
+   corresponds to a nil argument to Fuser_group_name.
+*/
+char *user_group_name(gid_t * gid)
+{
+	/* gid == NULL to return the group of this user */
+	struct group * grp = getgrgid( gid ? *gid : getegid());
+	if (grp == NULL) {
+		return NULL;
+	}
+	return grp->gr_name;
 }
 
 DEFUN("user-real-login-name", Fuser_real_login_name, 0, 0, 0,	/*
@@ -731,12 +771,28 @@ Return the effective uid of Emacs, as an integer.
 	return make_int(geteuid());
 }
 
+DEFUN("user-gid", Fuser_gid, 0, 0, 0,	/*
+Return the effective gid of Emacs, as an integer.
+*/
+      ())
+{
+	return make_int(getegid());
+}
+
 DEFUN("user-real-uid", Fuser_real_uid, 0, 0, 0,	/*
 Return the real uid of Emacs, as an integer.
 */
       ())
 {
 	return make_int(getuid());
+}
+
+DEFUN("user-real-gid", Fuser_real_gid, 0, 0, 0,	/*
+Return the real gid of Emacs, as an integer.
+*/
+      ())
+{
+	return make_int(getgid());
 }
 
 DEFUN("user-full-name", Fuser_full_name, 0, 1, 0,	/*
@@ -2695,9 +2751,12 @@ void syms_of_editfns(void)
 
 	DEFSUBR(Ftemp_directory);
 	DEFSUBR(Fuser_login_name);
+	DEFSUBR(Fuser_group_name);
 	DEFSUBR(Fuser_real_login_name);
 	DEFSUBR(Fuser_uid);
 	DEFSUBR(Fuser_real_uid);
+	DEFSUBR(Fuser_gid);
+	DEFSUBR(Fuser_real_gid);
 	DEFSUBR(Fuser_full_name);
 	DEFSUBR(Fuser_home_directory);
 	DEFSUBR(Femacs_pid);

@@ -2886,6 +2886,7 @@ Lisp_Object emacs_doprnt_string_lisp_2(const Bufbyte *, Lisp_Object,
 void uncache_home_directory(void);
 Extbyte *get_home_directory(void);
 char *user_login_name(uid_t *);
+char *user_group_name(gid_t *);
 Bufpos bufpos_clip_to_bounds(Bufpos, Bufpos, Bufpos);
 Bytind bytind_clip_to_bounds(Bytind, Bytind, Bytind);
 void buffer_insert1(struct buffer *, Lisp_Object);
@@ -3643,6 +3644,7 @@ EXFUN(Fupcase_initials_region, 3);
 EXFUN(Fupcase_region, 3);
 EXFUN(Fuser_home_directory, 0);
 EXFUN(Fuser_login_name, 1);
+EXFUN(Fuser_group_name, 1);
 EXFUN(Fvector, MANY);
 EXFUN(Fverify_visited_file_modtime, 1);
 EXFUN(Fvertical_motion, 3);
